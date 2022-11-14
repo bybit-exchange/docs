@@ -23,6 +23,15 @@ $ cd docs-v2
 $ yarn  # install the dependencies
 ```
 
+
+Running the below script copies our custom js files into untracked an untracked lib directory to enable sending authenticated requests to the bybit API.
+
+It should be run on the first installation and on subsequent yarn upgrades.
+```
+$ chmod +x setup.sh
+$ ./setup.sh
+```
+
 ### Local Development
 As we have english and chinese in the application, so you need to start them separately.
 ```
@@ -70,4 +79,3 @@ This command generates static content into the `build` directory and can be serv
 ```shell
 yarn deploy
 ```
-
