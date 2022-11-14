@@ -1,0 +1,46 @@
+---
+title: Authentication
+sidebar_label: Authentication
+---
+
+:::info
+Please visit Bybit's <a href="https://testnet.bybit.com/en-US/">testnet</a> or <a href="https://www.bybit.com/en-US/">mainnet</a> to generate an API key.
+:::
+
+:::info
+REST Base Endpoint:<br/>
+* **Testnet**:<br/>
+https://api-testnet.bybit.com
+* **Mainnet**(both endpoints are available):<br/>
+https://api.bybit.com<br/>
+https://api.bytick.com
+:::
+
+All requests made to private endpoints must be authenticated. Requests made to public endpoints do not require additional authentication.
+
+
+## Parameters for Authenticated Endpoints
+The following parameters must be used for authentication:
+
+* api_key
+* timestamp - UTC timestamp in milliseconds
+* sign - a signature derived from the request's parameters
+<br/>
+
+We also provide `recv_window` (unit in millisecond and default value is 5,000) to specify how long an HTTP request is valid. It is also used to prevent replay attacks.
+
+A smaller `recv_window` is more secure, but your request may fail if the transmission time is greater than your `recv_window`.
+
+Please make sure that your `timestamp` is in sync with our server time. You can use the Server Time endpoint.
+
+:::warning
+Please make sure that the `timestamp` parameter adheres to the following rule: **server_time - recv_window <= timestamp < server_time + 1000**; server_time stands for Bybit server time, which can be queried via the Server Time endpoint.
+:::
+
+
+## Create A Request
+**STEP 1** &emsp;timestamp + api-key + (recv_window) + [queryString(order not needed) | jsonBodyString]
+
+**STEP 2** &emsp;Use the HMAC_SHA256 algorithm to sign the string in step 1, and convert it to a hex string to obtain the sign parameter.
+
+**STEP 3** &emsp;Append the sign parameter to request header, and send the HTTP request. Note that the message format for `GET` and `POST` requests is different. Please refer to the <a href="https://github.com/bybit-exchange/api-usage-examples">examples</a>.

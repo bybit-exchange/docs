@@ -1,0 +1,221 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Here is decription
+  version: 2.0.0
+  title: Swagger Bybit YAML
+  termsOfService: "http://swagger.io/terms/"
+tags:
+  - name: market
+    description: Market endpoints for contract
+    x-displayName: Market Endpoints
+  - name: trade
+    description: Trade endpoints for contract
+    x-displayName: Trade Endpoints
+  - name: account
+    description: Account asset related endpoints
+    x-displayName: Account Asset
+x-tagGroups:
+  - name: General
+    tags:
+      - market
+      - trade
+  - name: User Account
+    tags:
+      - account
+paths:
+  /contract/v3/private/position/set-leverage:
+    post:
+      tags:
+        - trade
+      summary: Set the leverage
+      description: ""
+      operationId: setLevg
+      parameters:
+        - name: apiKey
+          in: header
+          description: Input your api key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Input your api secret
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Invalid Order
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Invalid Order"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                symbol:
+                  type: string
+                  description: Symbol name
+                buyLeverage:
+                  type: string
+                  decription: Must be greater than 0 and less than the risk limit leverage.
+                sellLeverage:
+                  type: string
+                  decription: Must be greater than 0 and less than the risk limit leverage.
+        description: To set the leverage before or after the position
+        required: true
+
+  /contract/v3/private/account/wallet/balance:
+    get:
+      tags:
+        - account
+      summary: Get account wallet balance
+      description: Get account wallet balance
+      operationId: getAcctBal
+      parameters:
+        - name: coin
+          in: query
+          description: Specify the coin
+          required: false
+          schema:
+            type: string
+        - name: apiKey
+          in: header
+          description: Input your api key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Input your api secret
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Invalid param
+        "404":
+          description: Route is not avilable
+
+  /derivatives/v3/public/order-book/L2:
+    get:
+      tags:
+        - market
+      summary: Query orderbook
+      description: Get orderbook via v3 market endpoint
+      operationId: getOrderbookV3
+      parameters:
+        - name: category
+          in: query
+          description: Derivatives products
+          required: false
+          schema:
+            type: array
+            minItems: 1
+            maxItems: 3
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+              default: linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: the limit of each page. default 25
+          required: false
+          schema:
+            type: int
+            default: 25
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Invalid status value
+
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        retCode:
+          type: integer
+        retMsg:
+          type: string
+        result:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  coin:
+                    type: string
+                  equity:
+                    type: string
+                  walletBalance:
+                    type: string
+                  positionMargin:
+                    type: string
+                  availableBalance:
+                    type: string
+                  orderMargin:
+                    type: string
+                  occClosingFee:
+                    type: string
+                  occFundingFee:
+                    type: string
+                  unrealisedPnl:
+                    type: string
+                  cumRealisedPnl:
+                    type: string
+                  givenCash:
+                    type: string
+                  serviceCash:
+                    type: string
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: int32
+
+#  requestBodies:
+#    levg:
+#      content:
+#        application/json:
+#          schema:
+#            type: object
+#            properties:
+#              symbol:
+#                type: string
+#                description: Symbol name
+#              buyLeverage:
+#                type: string
+#                decription: Must be greater than 0 and less than the risk limit leverage.
+#              setLeverage:
+#                type: string
+#                decription: Must be greater than 0 and less than the risk limit leverage.
+#      required: true

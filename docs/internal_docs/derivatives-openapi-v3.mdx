@@ -1,0 +1,3692 @@
+---
+title: Bybit Derivatives Open API V3 (Internal Version)
+sidebar_title: Bybit Derivatives Open API V3 (Internal Version)
+---
+
+[TOC]
+
+
+
+# 更新记录：
+
+| 版本 | 更新日期  | 更新内容                                                     |
+| ---- | --------- | ------------------------------------------------------------ |
+| 1.0  | 2022/5/13 | - 增加合约 V3 API - 统保 API 调整 URL 规则 - 错误码调整规则 - 分页规则调整 - 变更内容看评论 |
+| 1.01 | 2022/6/2  | - 增加合约 V3 WS 反向公共行情                                |
+| 1.02 | 2022/6/13 | 补充 Restful 鉴权和 WS auth 的 Example                       |
+| 1.03 | 2022/6/28 | - 增加币币兑换接口 - 增加利息账单接口 - 增加利率查询接口     |
+| 1.04 | 2022/7/23 | 统保 Open API 去掉 Session 字段   统保 Open API 支持多资产需求 |
+| 1.05 | 2022/8/24 | 统保 Open API 支持 PM 模式                                   |
+| 1.06 | 2022/10/6 | 增加支持 USDC 的字段，标记为黄色的字段。                     |
+
+ 
+
+# **连接地址：**
+
+• REST：https://api-testnet.bybit.com
+
+• WebSocket 公共频道：
+
+​	￮ usdt 合约：wss://stream-testnet.bybit.com/contract/usdt/public/v3
+
+​	￮ usdc 合约：wss://stream-testnet.bybit.com/contract/usdc/public/v3
+
+​	￮ 反向合约：wss://stream-testnet.bybit.com/contract/inverse/public/v3
+
+​	￮ usdc 期权：wss://stream-testnet.bybit.com/option/usdc/public/v3
+
+• WebSocket 私有频道：
+
+• 统一保证金账户：
+
+​	￮ wss://[stream-testnet.bybit.com/unified/private/v3](http://stream-testnet.bybit.com/unified/private/v3)
+
+• 合约账户：
+
+​	￮ wss://stream-testnet.bybit.com/contract/private/v3
+
+## 鉴权/认证：
+
+构建请求：
+
+\1. 参数为json格式
+
+\2. 使用HMAC_SHA256算法对第1步中拼接的query string签名，并转换为16进制字符串，得出sign参数。
+
+\3. 将sign参数加到请求参数中即可；注意GET和POST请求参数格式不同。
+
+**Example****：**
+
+ 
+
+  
+
+ 
+
+# **Market**
+
+### **查询** **K** **线数据**
+
+**接口说明：**
+
+查询K线数据
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/kline
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | true     | string  | 衍生品产品 symbol 名称                                       |
+| interval  | true     | string  | K线时间粒度， 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | true     | integer | 起始时间戳（单位毫秒）                                       |
+| end       | true     | integer | 结束时间戳（单位毫秒）                                       |
+| limit     | false    | integer | 每页数量, 最大200. 默认每页200条                             |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment                                                      |
+| --------- | ------- | ------------------------------------------------------------ |
+| category  | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | string  | 合约类型                                                     |
+| interval  | string  | 数据更新频率. 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | integer | 开盘时间，返回数据为毫秒。                                   |
+| open      | string  | 开始价格                                                     |
+| high      | string  | 最高价格                                                     |
+| low       | string  | 最低价格                                                     |
+| close     | string  | 结束价格（当前K线未结束的为最新价格）                        |
+| volume    | string  | 交易量，数值为合约张数                                       |
+| turnover  | string  | 成交金额，数值为计价货币的数量                               |
+
+**新版返回参数****:**
+
+• 元素为单个蜡烛的数组，以 StartAt 倒序排列
+
+• 数组内默认排序规则为 start，open，close，high，low，volume，turnover
+
+ 
+
+  JSON  {    **"result"**:{      **"symbol"**:**"BTCUSDT"**,      **"category"**:**"linear"**,      **"list"**:[        [          **"1621162800"**,          **"49592.43"**,          **"49644.91"**,          **"49342.37"**,          **"49349.42"**,          **"1451.59"**,          **"2.4343353100000003"**        ]      ]    }  }  
+
+ 
+
+ 
+
+ 
+
+ 
+
+### **查询标记价格** **K** **线数据**
+
+**接口说明：**
+
+查询标记价格K线
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/mark-price-kline
+
+**请求参数：**
+
+ 
+
+| Parameter | Requied | Type    | Comment                                                      |
+| --------- | ------- | ------- | ------------------------------------------------------------ |
+| category  | true    | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | true    | string  | 衍生品产品 symbol                                            |
+| interval  | true    | string  | K线时间粒度， 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | true    | integer | 起始时间戳（单位毫秒）                                       |
+| end       | true    | integer | 结束时间戳（单位毫秒）                                       |
+| limit     | false   | integer | 每页数量, 最大200. 默认每页200条                             |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment                                                      |
+| --------- | ------- | ------------------------------------------------------------ |
+| category  | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | string  | 合约类型                                                     |
+| interval  | string  | 数据更新频率. 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | integer | 开盘时间，返回数据为毫秒。                                   |
+| open      | string  | 开始价格                                                     |
+| high      | string  | 最高价格                                                     |
+| low       | string  | 最低价格                                                     |
+| close     | string  | 结束价格（当前K线未结束的为最新价）                          |
+
+### **查询指数价格****K****线数据**
+
+**接口说明：**
+
+指数价格K线
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/index-price-kline
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | true     | string  | 衍生品产品 symbol                                            |
+| interval  | true     | string  | K线时间粒度， 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | true     | integer | 起始时间戳（单位毫秒）                                       |
+| end       | true     | integer | 起始时间戳（单位毫秒）                                       |
+| limit     | false    | integer | 每页数量, 最大200. 默认每页200条                             |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment                                                      |
+| --------- | ------- | ------------------------------------------------------------ |
+| category  | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | string  | 合约类型                                                     |
+| start     | integer | 开盘时间，返回数据为毫秒。                                   |
+| open      | string  | 开始价格                                                     |
+| high      | string  | 最高价格                                                     |
+| low       | string  | 最低价格                                                     |
+| close     | string  | 结束价格（当前K线未结束的为最新价）                          |
+
+### **查询溢价指数价格****K线数据（待评审）**
+
+**接口说明：**
+
+溢价指数价格K线
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/premium-index-price-kline
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | true     | string  | 衍生品产品 symbol                                            |
+| interval  | true     | string  | K线时间粒度， 枚举值： 1 3 5 15 30 60 120 240 360 720  "D" "M" "W" |
+| start     | true     | integer | 起始时间戳（单位毫秒）                                       |
+| end       | true     | integer | 起始时间戳（单位毫秒）                                       |
+| limit     | false    | integer | 每页数量, 最大200. 默认每页200条                             |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment                                                      |
+| --------- | ------- | ------------------------------------------------------------ |
+| category  | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | string  | 合约类型                                                     |
+| start     | integer | 开盘时间，返回数据为毫秒。                                   |
+| open      | string  | 开始价格                                                     |
+| high      | string  | 最高价格                                                     |
+| low       | string  | 最低价格                                                     |
+| close     | string  | 结束价格（当前K线未结束的为最新价）                          |
+
+ 
+
+### **Orderbook**
+
+**接口说明：**
+
+获取Bybit当前Orderbook信息.
+
+响应数据是当前时间的切片数据.
+
+增加 500 档位的 OrderBook数据
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/order-book/L2
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | true     | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse；期权：option。 |
+| symbol    | true     | string | 衍生品产品名称                                               |
+| limit     | false    | int    | 默认 25; 可选值: [25, 500]                                   |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type   | Comment                    | Short Name |
+| --------- | ------ | -------------------------- | ---------- |
+| price     | string | 委托价格                   | p          |
+| volume    | string | 数量                       | v          |
+| bids      | Arrays | 买方，排序按照价格从小到大 | b          |
+| asks      | Arrays | 卖方，排序按照价格从小到大 | a          |
+| updateId  | string | 表示数据连续性的 id        | u          |
+| timestamp | int    | 时间戳，精度毫秒           | ts         |
+
+### **查询衍生品交易规格**
+
+**接口说明：**
+
+获取可交易的衍生品信息列表。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /derivatives/v3/public/instruments-info
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | true     | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse；期权：option。 |
+| symbol    | false    | string | 合约名称                                                     |
+| status    | false    | string | 合约状态                                                     |
+| direction | false    | string | 翻页方向：prev: prev , next: next.                           |
+| limit     | false    | string | Limit for data size per page, max size is 1000. Default as  showing 500 pieces of data per page |
+| cursor    | false    | string | API pass-through                                             |
+
+**返回参数：**
+
+ 
+
+| Parameter                     | Type   | Comment                                                      | category                |
+| ----------------------------- | ------ | ------------------------------------------------------------ | ----------------------- |
+| category                      | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse；期权：option。 |                         |
+| symbol                        | string | 衍生品名称                                                   |                         |
+| contractType                  | string | 合约类型：linear：正向合约；inverse：反向合约。仅适用于交割/永续 |                         |
+| status                        | string | 合约状态                                                     |                         |
+| baseCoin                      | string | 交易货币币种，如 BTC-USDT 中的 BTC ，仅适用于币币            |                         |
+| quoteCoin                     | string | 计价货币币种，如 BTC-USDT 中的USDT ，仅适用于币币            |                         |
+| settleCoin                    | string | 盈亏结算和保证金币种，如 BTC 仅适用于交割/永续/期权          |                         |
+| optionsType                   | string | 期权类型，Option Type：Call / Put                            | option                  |
+| launchTime                    | number | 上线时间                                                     |                         |
+| deliveryTime                  | number | 到期日/交割/行权时间；永续合约返回：perpetual                | option，inverse furures |
+| deliveryFeeRate               | number | 交割费率                                                     | option，inverse furures |
+| priceScale                    | number | 价格范围                                                     |                         |
+| leverageFilter > minLeverage  | number | 最小杠杆数                                                   |                         |
+| leverageFilter > maxLeverage  | number | 最大杠杆数                                                   |                         |
+| leverageFilter > leverageStep | string | 杠杆最小增加或减少的步长                                     |                         |
+| priceFilter > minPrice        | string | 最小价格                                                     |                         |
+| priceFilter > maxPrice        | string | 最大价格                                                     |                         |
+| priceFilter > tickSize        | string | 价格最小增加或减少数量                                       |                         |
+| lotSizeFilter > maxOrderQty   | number | 单笔订单最大下单数量                                         |                         |
+| lotSizeFilter > minOrderQty   | number | 单笔订单最小交易数量                                         |                         |
+| lotSizeFilter > qtyStep       | number | 合约数量最小单位                                             |                         |
+| nextPageCursor                | string | API pass-through                                             |                         |
+
+### **查询衍生品最新行情信息**
+
+**接口说明：**
+
+所有衍生品产品最新行情信息
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/tickers
+
+**请求参数：**
+
+ 
+
+| Parameter | Required         | Type   | Comment                                          |
+| --------- | ---------------- | ------ | ------------------------------------------------ |
+| category  | 是               | String | 衍生品产品类型，正向合约：linear；期权：option。 |
+| symbol    | 否（期权为必填） | String | 交易对名称                                       |
+
+**返回参数：**
+
+ 
+
+| Parameter              | Type   | Comment                                                      | category                |
+| ---------------------- | ------ | ------------------------------------------------------------ | ----------------------- |
+| category               | string | 衍生品产品类型：linear：正向合约（目前仅支持）               |                         |
+| askIv                  | string | Implied volatility for best ask                              | option                  |
+| deliveryTime           | string | 交割时间                                                     | option，inverse furures |
+| price24hPcnt           | string | 市价相对24h变化百分比                                        |                         |
+| nextFundingTime        | string | 下次结算资金费用时间                                         |                         |
+| predictedDeliveryPrice | string | 预期交割价，仅交割合约有效category为期权时，显示期权的预估交割价格 | option，inverse furures |
+| countdownHour          | number | 结算资金费用剩余时间                                         |                         |
+| indexPrice             | string | 指数价格                                                     |                         |
+| prevPrice24h           | string | 24小时前的整点市价                                           |                         |
+| openInterest           | number | 未平仓合约数量                                               |                         |
+| openInterestValue      | string | 未平仓合约价值                                               |                         |
+| underlyingPrice        | string | Underlying price                                             |                         |
+| volume24h              | number | 最近 24 小时成交量                                           |                         |
+| symbol                 | string | 产品名称                                                     |                         |
+| vega                   | string | Vega value                                                   | option                  |
+| lastPrice              | string | 最新成交价                                                   |                         |
+| bidPrice               | string | 买一价                                                       | option                  |
+| turnover24h            | string | 24小时成交量                                                 |                         |
+| askPrice               | string | 卖一价                                                       |                         |
+| fundingRate            | string | 资金费率                                                     |                         |
+| bidSize                | string | 买一价的挂单数量                                             |                         |
+| bidIv                  | string | Implied volatility for best bid                              | option                  |
+| highPrice24h           | string | 最近 24 小时最高价                                           |                         |
+| delta                  | string | Delta value                                                  | option                  |
+| theta                  | string | Theta value                                                  | option                  |
+| askSize                | string | 卖一价的挂单数量                                             |                         |
+| price1hPcnt            | string | 市价相对1小时前变化百分比                                    |                         |
+| prevPrice1h            | string | 1小时前的整点市价                                            |                         |
+| markPrice              | string | 标记价格                                                     |                         |
+| gamma                  | string | Gamma value                                                  | option                  |
+| deliveryFeeRate        | string | 交割费率，仅交割合约有效category为期权时，显示期权的交割费率 | option，inverse furures |
+| lowPrice24h            | string | 最近 24 小时最低价                                           |                         |
+| markPriceIv            | string | Implied volatility for mark price                            | option                  |
+| predictedFundingRate   | string | 预测资金费率                                                 |                         |
+| basisRate              | string | 交割合约基差率，小数点后4位                                  | inverse furures         |
+
+### **查询历史资金费率**
+
+**接口说明：**
+
+UTC时间每天0点、8点、16点产生一个资金费率。 假设当前时间是UTC12点，则返回的是上一次结算即UTC8点产生的资金费率。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/funding/history-funding-rate
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                     |
+| --------- | -------- | ------- | ----------------------------------------------------------- |
+| category  | true     | string  | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse |
+| symbol    | true     | string  | 衍生品产品 symbol                                           |
+| startTime | false    | integer | 起始时间戳（单位毫秒）                                      |
+| endTime   | false    | integer | 结束时间戳（单位毫秒）                                      |
+| limit     | false    | integer | 每页数量, 最大200. 默认每页200条                            |
+
+**返回参数：**
+
+ 
+
+| Parameter            | Type   | Comment                                                      |
+| -------------------- | ------ | ------------------------------------------------------------ |
+| category             | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol               | string | 合约产品名称                                                 |
+| fundingRate          | string | 资金费率                                                     |
+| fundingRateTimestamp | number | 资金费率时间戳                                               |
+
+### **查询风险限额表**
+
+**接口说明：**
+
+查询风险限额表。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/derivatives/v3/public/risk-limit/list
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | true     | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol    | true     | string | 合约类型                                                     |
+
+**返回参数：**
+
+ 
+
+| Parameter      | Type   | Comment                                                      |
+| -------------- | ------ | ------------------------------------------------------------ |
+| category       | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| id             | number | 风险限额ID                                                   |
+| symbol         | string | 合约类型                                                     |
+| limit          | string | 风险限额                                                     |
+| maintainMargin | number | 维持保证金                                                   |
+| initialMargin  | number | 起始保证金                                                   |
+| section        | string | 区间点                                                       |
+| isLowestRisk   | number | 是否最低风险限额0:不是 1:是                                  |
+| createdTime    | string | 创建时间                                                     |
+| updatedTime    | string | 更新时间                                                     |
+| maxLeverage    | string | 最大杠杆                                                     |
+
+### **查询期权交割价格**
+
+**接口说明：**
+
+查询期权交割价格
+
+**请求方式：**
+
+HTTP
+
+**接口地址：**
+
+GET /derivatives/v3/public/delivery-price
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | true     | string | 衍生品产品类型：目前仅支持期权：option                       |
+| symbol    | false    | string | Contract name                                                |
+| direction | false    | string | prev: prev page, next: next page.                            |
+| limit     | false    | string | Number of data per page; the max. value is 200, and the default  value is 50 |
+| cursor    | false    | string | API pass-through                                             |
+
+Response Parameters
+
+ 
+
+| Parameter      | Type   | Comment                                |
+| -------------- | ------ | -------------------------------------- |
+| category       | string | 衍生品产品类型：目前仅支持期权：option |
+| symbol         | string | Contract name                          |
+| deliveryPrice  | string | Delivery price                         |
+| deliveryTime   | number | Delivery time, unit in milliseconds    |
+| nextPageCursor | string | API pass-through                       |
+
+### **查询平台成交历史**
+
+**接口说明：**
+
+获取Bybit的最近成交数据。如果您想获取历史所有的成交记录，请通过[这里](https://public.bybit.com/)下载历史行情。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /derivatives/v3/public/recent-trade
+
+**请求参数：**
+
+ 
+
+| **参数**                                                     | **是否必须** | **类型** | **说明**                                                     |
+| ------------------------------------------------------------ | ------------ | -------- | ------------------------------------------------------------ |
+| category                                                     | true         | string   | 衍生品产品类型：linear：正向合约；inverse：反向合约；option：期权。 |
+| [symbol](http://127.0.0.1:4567/zh-cn/openapi_v3#symbol-symbol) | **true**     | string   | 合约名称                                                     |
+| optionType                                                   | false        | string   | call or  put, 仅期权                                         |
+| limit                                                        | false        | int      | 默认返回500条数据. 最大返回1000条数据                        |
+
+**返回参数：**
+
+ 
+
+| **参数**                                                     | **类型** | **说明**                                                     |
+| ------------------------------------------------------------ | -------- | ------------------------------------------------------------ |
+| category                                                     | string   | 衍生品产品类型：linear：正向合约；inverse：反向合约；option：期权。 |
+| execId                                                       | string   | 最新数据ID                                                   |
+| [symbol](http://127.0.0.1:4567/zh-cn/openapi_v3#symbol-symbol) | string   | 合约类型                                                     |
+| price                                                        | string   | 交易价格                                                     |
+| size                                                         | string   | 交易数量                                                     |
+| [side](http://127.0.0.1:4567/zh-cn/openapi_v3#side-side)     | string   | 方向 buy：买  sell：卖                                       |
+| time                                                         | string   | 成交时间，毫秒时间戳                                         |
+| isBlockTrade                                                 | bool     | 成交类型是否是大宗交易：是 ：true ；否：false。              |
+
+### **未平合约持仓数量**
+
+**接口说明：**
+
+获取Bybit各个合约的持仓数量
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /derivatives/v3/public/open-interest
+
+**请求参数：**
+
+ 
+
+| **参数**                                                     | **是否必须** | **类型** | **说明**                                              |
+| ------------------------------------------------------------ | ------------ | -------- | ----------------------------------------------------- |
+| category                                                     | true         | string   | 衍生品产品类型：linear：正向合约；inverse：反向合约； |
+| [symbol](http://127.0.0.1:4567/zh-cn/openapi_v3#symbol-symbol) | **true**     | string   | 合约类型                                              |
+| interval                                                     | **true**     | string   | 数据记录周期. 5min 15min 30min 1h 4h 1d               |
+| startTime                                                    | false        | string   | 记录查询的开始时间                                    |
+| endTime                                                      | false        | string   | 记录查询的结束时间                                    |
+| limit                                                        | false        | int      | 返回数据最大200条. 默认返回50条                       |
+
+**返回参数：**
+
+ 
+
+| **参数**          | **类型** | **说明**                                                   |
+| ----------------- | -------- | ---------------------------------------------------------- |
+| category          | string   | 衍生品产品类型：linear：正向合约；inverse：反向合约；      |
+| symbol            | string   | 合约名称                                                   |
+| openInterest      | string   | 未平仓合约数量                                             |
+| openInterestValue | string   | 未平仓合约的价值  07.07 版本不上线，后面提需求给 Trading。 |
+| timestamp         | string   | 数据产生时间，精确到毫秒                                   |
+
+### **查询期权波动率接口说明（新增）：**
+
+查询期权交割价格
+
+**请求方式：**
+
+HTTP
+
+**接口地址：**
+
+GET /derivatives/v3/public/historical-volatility
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                             |
+| --------- | -------- | ------ | --------------------------------------------------- |
+| category  | true     | string | 衍生品产品类型：目前仅支持期权：option              |
+| baseCoin  | false    | string | Base coin. If not passed, BTC returned by default   |
+| period    | false    | string | Period. if not passed, it returns 7 days by default |
+| startTime | false    | string | Starting timestamp (unit: ms)                       |
+| endTime   | false    | string | Ending timestamp (unit: ms)                         |
+
+Response Parameters
+
+ 
+
+| Parameter | Type   | Comment                                             |
+| --------- | ------ | --------------------------------------------------- |
+| category  | string | 衍生品产品类型：目前仅支持期权：option              |
+| period    | string | Period. if not passed, it returns 7 days by default |
+| value     | string | Volatility                                          |
+| time      | string | Timestamp, unit in milliseconds                     |
+
+ 
+
+# **Unified Margin Account**
+
+## **Order**
+
+### **创建委托订单**
+
+**接口说明：**
+
+市价活动委托: 一个传统的市场价格订单,会以当前的最优价格为您成交订单。当且仅当选择市价单时，
+
+price可为空！**为了保护市价单遭遇严重的滑点，****Bybit****将市价单转为限价单进入撮合，买单价格高于最优卖价，卖单价格低于最优买价。限价价格和成交价格均可通过用户成交记录接口查询。**
+
+限价活动委托: 您可以为您的订单设置一个执行价格，当市场价格达到您的设置价格时，系统会为您成交订单。
+
+**止盈止损****:** **您仅能在开仓时设置止盈止损条件单，一旦持有仓位后提交活动委托时关联的止盈止损则不会生效。**
+
+委托数量: 表示您要购买/卖出的永续合约数，对于委托数量目前Bybit只允许提交正整数。
+
+委托价格: 如果是下**限价单**，该参数为**必填**. 在没有仓位时，做多的委托价格需高于市价的10%、低于1百万。如有仓位时则需优于强平价。价格增减最小单位请参考[交易对接口](http://127.0.0.1:4567/zh-cn/openapi_v3#t-querysymbol)响应中的**price_filter**字段。
+
+自定义条件单ID: 您可以自定义活动委托订单ID，我们会为您关联到系统的订单ID，并把系统的唯一订单ID在活动委托创建成功后一并返回给您，您可以使用该订单ID去取消活动委托，同时要求您传递的自定义订单ID
+
+最大长度不超过36个字段且唯一。
+
+**每个账户最多可同时持有****500****个活动订单。这是针对合约的，因此可以允许出现例如：账户同时持有****300****个****BTCUSD****的活动单、****280****个****ETHUSD****合约的活动单。**
+
+**当您达到订单上限的时候的时候，仍然可以下单设置了参数**
+
+**reduce_only** **或** 
+
+**closeOnTrigger****的订单。**
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/create
+
+**请求参数：**
+
+ 
+
+| Parameter        | Required | Type   | Comment                                                      |
+| ---------------- | -------- | ------ | ------------------------------------------------------------ |
+| category         | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| symbol           | true     | string | 合约类型                                                     |
+| side             | true     | string | 方向：Buy，Sell                                              |
+| positionIdx      | false    | string | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓；1-双向持仓Buy；2-双向持仓Sell. linear 必传。inverse，option 不传。 |
+| orderType        | true     | string | 委托单价格类型                                               |
+| qty              | true     | string | 委托数量                                                     |
+| price            | false    | string | 委托价格                                                     |
+| triggerDirection | false    | int    | 用于当前条件委托是看空到stop_px时触发还是看多到stop_px触发。主要是用来标识当前条件单预期的方向：0为 < stop_px 时触发，1 为 > stop_px 时触发。 |
+| triggerPrice     | false    | string | 触发价格                                                     |
+| triggerBy        | false    | string | 触发价格类型：市价/标记价格                                  |
+| iv               | false    | string | 隐含波动率 Implied volatility，仅期权; 按照实际值传惨，如10%，则传0.1 |
+| timeInForce      | true     | string | 执行策略                                                     |
+| orderLinkId      | false    | string | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合。期货业务非必填，期权业务必填。 |
+| takeProfit       | false    | string | 止盈价格，仅开仓时生效                                       |
+| stopLoss         | false    | string | 止损价格，仅开仓时生效                                       |
+| tpTriggerBy      | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy      | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| reduceOnly       | false    | bool   | 只减仓                                                       |
+| closeOnTrigger   | false    | bool   | What is a close on trigger order? For a closing order. It can  only reduce your position, not increase it. If the account has insufficient available  balance when the closing order is triggered, then other active orders of  similar contracts will be cancelled or reduced. It can be used to ensure your  stop loss reduces your position regardless of current available margin. |
+| mmp              | false    | bool   | Market maker protection，true表示此订单为做市商保护订单      |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment                                          |
+| ----------- | ------ | ------------------------------------------------ |
+| category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| orderId     | string | 订单 ID                                          |
+| orderLinkId | string | 策略关联订单号                                   |
+
+### **修改订单信息**
+
+**接口说明：**
+
+本接口可以修改您的活动单信息.
+
+请注意，只有未成交或未完全成交的订单才可以被修改。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/replace
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| category     | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| orderId      | false    | string | 订单ID。如果未填order_link_id则为必填字段。                  |
+| orderLinkId  | false    | string | 机构交易 ID。如果未填order_id则为必填字段。机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| symbol       | true     | string | 合约名称                                                     |
+| orderFilter  | false    | string | 条件单或是活动单。linear 必传。Options 非必传。              |
+| iv           | false    | string | 隐含波动率                                                   |
+| triggerPrice | false    | string | 修改触发价格                                                 |
+| qty          | false    | string | 修改后的订单数量。如果是未完全成交订单，则表示修改剩余未成交的部分。如果不修改这个字段，请不要传这个参数。 |
+| price        | false    | string | 修改后的订单价格。如果不修改这个字段，请不要传这个参数。     |
+| takeProfit   | false    | number | 修改后的止盈价格。如果不修改这个字段，请不要传这个参数。     |
+| stopLoss     | false    | number | 修改后的止损价格。如果不修改这个字段，请不要传这个参数。     |
+| tpTriggerBy  | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy  | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| triggerBy    | false    | string | 触发价格类型：市价/标记价格                                  |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment                                                      |
+| ----------- | ------ | ------------------------------------------------------------ |
+| category    | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| orderId     | string | 订单ID                                                       |
+| orderLinkId | string | Custom ID used for cross-platform strategy remarks; a max. of 36  characters |
+
+### **撤销委托单**
+
+**接口说明：**
+
+所有撤销活动委托都必须填写
+
+order_id或
+
+order_link_id。 
+
+order_id - 当您成功创建了活动委托时会为您返回36位唯一的订单ID。
+
+您可以撤销未成交、部分成交的活动委托单。但全部成交的活动委托不可取消。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/cancel
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                          |
+| ----------- | -------- | ------ | ------------------------------------------------ |
+| category    | true     | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| symbol      | true     | string | 合约类型                                         |
+| orderFilter | false    | string | 条件单或是活动单                                 |
+| orderId     | false    | string | 订单ID。如果未填order_link_id则为必填字段。      |
+| orderLinkId | false    | string | 机构ID。如果未填order_id则为必填字段。           |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment                                          |
+| ----------- | ------ | ------------------------------------------------ |
+| category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| orderId     | string | 订单ID                                           |
+| orderLinkId | string | 客户自定义订单ID                                 |
+
+### **实时查询委托**
+
+**接口说明：**
+
+实时查询活动委托。当传递参数
+
+orderId或orderLinkId其中任意一个时，将返回单条订单数据，如果参数
+
+orderId和orderLinkId都不传递时，将返回所有**未成交**的订单，最多500条。
+
+按照 createdTime 从近到远排序
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/unified/v3/private/order/unfilled-orders
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                                      |
+| ----------- | -------- | ------ | ------------------------------------------------------------ |
+| category    | true     | string | 衍生品产品类型，正向合约：linear；期权：option。只能传一个参数 |
+| symbol      | false    | string | 合约类型                                                     |
+| orderId     | false    | string | 订单ID                                                       |
+| orderLinkId | false    | string | 機構自定義訂單ID, 最大長度36位，且同一機構下自定義ID不可重復。支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| orderFilter | false    | string | 条件单或是活动单。order，stopOrder                           |
+| direction   | false    | string | prev: prev, next: next.                                      |
+| limit       | false    | number | 每页的数量。Limit for data size per page, max  size is 50. Default as showing 20 pieces of data per page |
+| cursor      | false    | string | API pass-through. accountType + category + cursor + , 如果不一致，则返回为: 账户类型和业务查询不匹配。 |
+
+**返回参数：**
+
+ 
+
+| Parameter             | Type   | Comment                                                      |
+| --------------------- | ------ | ------------------------------------------------------------ |
+| category              | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| list > symbol         | string | 合約類型                                                     |
+| list > orderId        | string | 委托訂單ID。                                                 |
+| list > side           | string | 方向                                                         |
+| list > orderType      | string | 訂單類型                                                     |
+| list > stopOrderType  | string | 条件单类型                                                   |
+| list > price          | string | 委托價格                                                     |
+| list > qty            | string | 委托數量                                                     |
+| list > iv             | string | 隐含波动率                                                   |
+| list > orderIM        | string | Initial margin，订单初始保证金。                             |
+| list > timeInForce    | string | 執行策略                                                     |
+| list > orderStatus    | string | 訂單狀態                                                     |
+| list > triggerPrice   | string | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| list > orderLinkId    | string | 機構自定義訂單ID                                             |
+| list > createdTime    | number | 創建時間                                                     |
+| list > updatedTime    | number | 更新時間                                                     |
+| list > takeProfit     | string | 止盈價格                                                     |
+| list > stopLoss       | string | 止損價格                                                     |
+| list > tpTriggerBy    | string | 止盈激活價格類型，默認為LastPrice                            |
+| list > slTriggerBy    | string | 止損激活價格類型，默認為LastPrice                            |
+| list > basePrice      | string | 下單時市價                                                   |
+| list > triggerBy      | string | 觸發價格類型. 默認為最新市價                                 |
+| list > reduceOnly     | bool   | 是否平倉單 true-平倉 false-開倉                              |
+| list > closeOnTrigger | bool   | 是否平倉委托 true-平倉 false-開倉                            |
+| nextPageCursor        | string | API pass-through                                             |
+
+### **查询订单**
+
+**接口说明：**
+
+获取我的活动委托单列表。
+
+创建/取消订单是异步的，因此**该接口可能返回的数据可能会有延迟**。如果要获取订单的实时信息，可以调用接口[实时查询活动单信息](http://127.0.0.1:4567/zh-cn/openapi_v3#t-queryactive).
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/unified/v3/private/order/list
+
+请求参数：
+
+ 
+
+| Parameter   | Required | Type    | Comment                                                      |
+| ----------- | -------- | ------- | ------------------------------------------------------------ |
+| category    | true     | string  | 衍生品产品类型，正向合约：linear；期权：option。只能传一个参数 |
+| symbol      | true     | string  | 合约名称                                                     |
+| orderId     | false    | string  | Order ID                                                     |
+| orderLinkId | false    | string  | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复，支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| orderStatus | false    | string  | 指定订单状态查询订单列表。不传该参数则默认查询所有状态订单。该参数支持多状态查询，状态之间用英文逗号分割。 |
+| orderFilter | false    | string  | 条件单或是活动单                                             |
+| direction   | false    | string  | 搜索方向：prev:上一页,next:下一页,默认为 next                |
+| limit       | false    | integer | 每页数量, 最大50. 默认每页20条。按照更新时间倒序排序         |
+| cursor      | false    | string  | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+
+**返回参数：**
+
+ 
+
+| Parameter             | Type   | Comment                                                      |
+| --------------------- | ------ | ------------------------------------------------------------ |
+| category              | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| list > symbol         | string | 合约类型                                                     |
+| list > side           | string | 方向                                                         |
+| list > orderType      | string | 交易记录类型                                                 |
+| list > price          | string | 委托价格                                                     |
+| list > qty            | string | 委托数量                                                     |
+| list > iv             | string | Implied volatility                                           |
+| list > orderIM        | string | Initial margin                                               |
+| list > reduceOnly     | string | Reduce-only                                                  |
+| list > timeInForce    | string | 执行策略                                                     |
+| list > orderStatus    | string | 订单状态                                                     |
+| list > leavesQty      | string | 剩余委托数量                                                 |
+| list > leavesValue    | string | 剩余挂单数量对应的预估价值                                   |
+| list > cumExecQty     | string | 累计成交数量                                                 |
+| list > cumExecValue   | string | 累计成交价值                                                 |
+| list > cumExecFee     | string | 累计成交手续费                                               |
+| list > basePrice      | string | 下单时的市价                                                 |
+| list > rejectReason   | string | 被拒单的原因                                                 |
+| list > orderLinkId    | string | 机构自定义订单ID                                             |
+| list > createdTime    | number | 创建时间                                                     |
+| list > updatedTime    | number | 更新时间                                                     |
+| list > orderId        | string | 订单ID                                                       |
+| list > stopOrderType  | string | refer to Stop Order Type                                     |
+| list > takeProfit     | string | 止盈价格                                                     |
+| list > stopLoss       | string | 止损价格                                                     |
+| list > tpTriggerBy    | string | 止盈激活价格类型，默认为LastPriceUSDC是Mark Price            |
+| list > slTriggerBy    | string | 止损激活价格类型，默认为LastPriceUSDC是Mark Price            |
+| list > triggerPrice   | string | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| list > closeOnTrigger | bool   | Close on trigger                                             |
+| nextPageCursor        | string | API pass-through                                             |
+
+### **修改订单信息**
+
+**接口说明：**
+
+本接口可以修改您的活动单信息.
+
+请注意，只有未成交或未完全成交的订单才可以被修改。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/replace
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| category     | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| orderId      | false    | string | 订单ID。如果未填order_link_id则为必填字段。                  |
+| orderLinkId  | false    | string | 机构交易 ID。如果未填order_id则为必填字段。机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| symbol       | true     | string | 合约名称                                                     |
+| orderFilter  | false    | string | 条件单或是活动单。Linear/Inverse 必传。Options 非必传。      |
+| iv           | false    | string | 隐含波动率                                                   |
+| triggerPrice | false    | string | 修改触发价格                                                 |
+| qty          | false    | string | 修改后的订单数量。如果是未完全成交订单，则表示修改剩余未成交的部分。如果不修改这个字段，请不要传这个参数。 |
+| price        | false    | string | 修改后的订单价格。如果不修改这个字段，请不要传这个参数。     |
+| takeProfit   | false    | number | 修改后的止盈价格。如果不修改这个字段，请不要传这个参数。     |
+| stopLoss     | false    | number | 修改后的止损价格。如果不修改这个字段，请不要传这个参数。     |
+| tpTriggerBy  | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy  | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| triggerBy    | false    | string | 触发价格类型：市价/标记价格                                  |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment                                                      |
+| ----------- | ------ | ------------------------------------------------------------ |
+| category    | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| orderId     | string | 订单ID                                                       |
+| orderLinkId | string | Custom ID used for cross-platform strategy remarks; a max. of 36  characters |
+
+### **批量创建订单**
+
+**接口说明：**
+
+Batch Place Orders
+
+本API提供了交易保证金账户下的合约批量下单模式。
+
+下单时需保证账户内有足够的资金。一旦下单，根据订单所需资金，您的账户资金将在订单生命周期内冻结相应额度，被冻结的资金额度取决于订单指定的参数。
+
+同一个请求中只能包含同一种合约的订单，期权、期货不可同时下单。仅支持 Limit / Market order，不支持条件单。
+
+如果期货和期权的订单都在一个请求里 ，则根据 category 的类型，仅会操作 symbol 与 category 相匹配的订单。
+
+每个请求包含的订单数最大 10 笔订单。返回的数据列表中分成两个 list，订单创建的 list 和创建的信息返回，两个 list 的订单是完全序列保持一致的。
+
+ 
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/create-batch
+
+**请求参数：** 
+
+**Request Parameters**
+
+ 
+
+| Parameter             | Required | Type   | Comment                                                      |
+| --------------------- | -------- | ------ | ------------------------------------------------------------ |
+| category              | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| request               | true     | array  | 请求列表参数如下                                             |
+| list > symbol         | true     | string | 合约类型： category = linear，仅支持请求永续symbol名称 category = option，仅支持请求期权symbol名称 |
+| list > orderType      | true     | string | category = linear，默认：限价单 Limit；支持请求Limit、市价单 category = option，默认：限价单 Limit；支持请求Limit、市价单，(Market is only supported  currently for IOC(Immediate or cancel) orders ) |
+| list > side           | true     | string | 方向：Buy，Sell                                              |
+| list > price          | false    | string | category = linear时，orderPrice 必为 true，且为tickSize的整数倍 category = option时，if iv has value, the final order  price will be calculated by Implied volatility. If orderType is Market,  orderPrice is not required. |
+| list > qty            | true     | string | 委托数量                                                     |
+| list > iv             | false    | string | Implied volatility. If orderType is Market, iv is not  required, otherwise the order will fail. |
+| list > timeInForce    | true     | string | 执行策略                                                     |
+| list > orderLinkId    | true     | string | Custom ID used for cross-platform strategy remarks; a max. of  36 characters |
+| list > closeOnTrigger | false    | string | category = linear时使用 触发后平仓. 如果下平仓单，请设置为true |
+| list > reduceOnly     | false    | string | 只减仓                                                       |
+| list > mmp            | false    | bool   | Market maker protection，true表示此订单为做市商保护订单      |
+
+**返回参数：**
+
+result：
+
+ 
+
+| Parameter          | Type   | Comment                                          |
+| ------------------ | ------ | ------------------------------------------------ |
+| list > category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| list > symbol      | string | Symbol名称                                       |
+| list > orderId     | string | 订单 ID                                          |
+| list > orderLinkId | string | 策略关联订单号，最大36位                         |
+
+retExtInfo：
+
+ 
+
+| Parameter   | Type   | Comment                      |
+| ----------- | ------ | ---------------------------- |
+| list > code | string | Error code. 0 means success. |
+| list > msg  | string | Error description            |
+
+ 
+
+### **批量修改订单信息**
+
+**接口说明：**
+
+本接口可以批量修改活动单信息. 暂时不支持修改条件单信息。
+
+请注意，只有未成交或未完全成交的订单才可以被修改。
+
+如果期货和期权的订单都在一个请求里 ，则根据 category 的类型，仅会操作与 category 相匹配的订单
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/replace-batch
+
+**请求参数：**
+
+ 
+
+| Parameter          | Required | Type   | Comment                                                      |
+| ------------------ | -------- | ------ | ------------------------------------------------------------ |
+| category           | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| request            | true     | array  | 请求列表参数如下                                             |
+| list > symbol      | true     | string | 合约类型： category = linear，仅支持请求永续symbol名称 category = option，仅支持请求期权symbol名称 |
+| list > orderId     | false    | string | 订单ID                                                       |
+| list > orderLinkId | false    | string | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合。期货业务非必填，期权业务必填。 |
+| list > qty         | false    | string | 委托数量                                                     |
+| list > price       | false    | string | category = linear时，orderPrice 必为 true，且为tickSize的整数倍 category = option时，orderPrice 可为 false，若 false，不传参，若 true，需为tickSize的整数倍 category = Option 且 iv 为 true，此字段传参请求无效，最终以iv反推的价格作为订单价格 |
+| list > iv          | false    | int    | category = linear时，iv必须为false category = option，iv 可为 false，默认不传参 |
+
+ 
+
+**返回参数：**
+
+result：
+
+ 
+
+| Parameter          | Type   | Comment                                          |
+| ------------------ | ------ | ------------------------------------------------ |
+| list > category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| list > symbol      | string | Symbol名称                                       |
+| list > orderId     | string | 订单 ID                                          |
+| list > orderLinkId | string | 策略关联订单号，最大36位                         |
+
+retExtInfo：
+
+ 
+
+| Parameter   | Type   | Comment                      |
+| ----------- | ------ | ---------------------------- |
+| list > code | string | Error code. 0 means success. |
+| list > msg  | string | Error description            |
+
+ 
+
+### **批量撤销订单**
+
+**接口说明：**
+
+Batch Place Orders
+
+本API提供了交易统一保证金账户下的批量撤销订单，期货和期权的订单撤销无法同时在一次请求里同时撤单。如果期货和期权的订单都在一个请求里 ，则根据 category 的类型，仅会操作与 category 相匹配的订单。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/cancel-batch
+
+**请求参数：**
+
+ 
+
+| Parameter          | Required | Type   | Comment                                                      |
+| ------------------ | -------- | ------ | ------------------------------------------------------------ |
+| category           | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| request            | false    | array  | 请求列表参数如下                                             |
+| list > symbol      | true     | string | Symbol名称                                                   |
+| list > orderId     | false    | string | 订单ID                                                       |
+| list > orderLinkId | false    | string | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合。期货业务非必填，期权业务必填。 |
+
+ 
+
+**返回参数：**
+
+result：
+
+ 
+
+| Parameter          | Type   | Comment                                          |
+| ------------------ | ------ | ------------------------------------------------ |
+| list > category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| list > symbol      | string | Symbol名称                                       |
+| list > orderId     | string | 订单 ID                                          |
+| list > orderLinkId | string | 策略关联订单号，最大36位                         |
+
+retExtInfo：
+
+ 
+
+| Parameter   | Type   | Comment                      |
+| ----------- | ------ | ---------------------------- |
+| list > code | string | Error code. 0 means success. |
+| list > msg  | string | Error description            |
+
+### **撤销全部订单**
+
+**接口说明：**
+
+**Cancel All Active Orders**
+
+This is used to cancel all active orders. The real-time response indicates whether the request is successful, depending on retCode.
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/order/cancel-all
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                                      |
+| ----------- | -------- | ------ | ------------------------------------------------------------ |
+| category    | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| baseCoin    | false    | string | 资产币种 - 不传入，则撤销所有baseCoin的全部active orders - 若只传入baseCoin，未传入symbol，则撤销所有传入baseCoin下的全部active orders - 若传入了symbol，则忽略baseCoin，只撤销该symbol下的全部active orders |
+| settleCoin  | false    | string | category=option时，本参数无效                                |
+| symbol      | false    | string | Contract name 如果category=linear，则为TRUE 如果category=option，则为FALSE |
+| orderFilter | false    | string | 仅期货有效，期权下该参数无效。订单类型                       |
+
+**返回参数：**
+
+result：
+
+ 
+
+| Parameter          | Type   | Comment                                          |
+| ------------------ | ------ | ------------------------------------------------ |
+| list > category    | string | 衍生品产品类型，正向合约：linear；期权：option。 |
+| list > symbol      | string | Symbol名称                                       |
+| list > orderId     | string | 订单 ID                                          |
+| list > orderLinkId | string | 策略关联订单号，最大36位                         |
+| list > createdAt   |        | 创建时间，到毫秒                                 |
+
+retExtInfo：
+
+ 
+
+| Parameter   | Type   | Comment                      |
+| ----------- | ------ | ---------------------------- |
+| list > code | string | Error code. 0 means success. |
+| list > msg  | string | Error description            |
+
+ 
+
+## **Position**
+
+### **获取持仓（实时）**
+
+**接口说明：**
+
+获取我的仓位列表。通过该接口可以获取当前用户的持仓信息，如持仓数量、账户余额等信息。
+
+如果传 symbol ，则无论 symbol 下是否有持仓，都返回该 symbol 下的数据。如果不传 symbol，dataFilter 为 full ，则返回所有 symbol 的持仓数据。如果 dataFilter 为 valid，则仅返回有持仓的数据。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/unified/v3/private/position/list
+
+**请求参数：**
+
+ 
+
+| Parameter  | Required | Type   | Comment                                                      |
+| ---------- | -------- | ------ | ------------------------------------------------------------ |
+| category   | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| symbol     | false    | string | 合约名称。如果 category 和 symbol 不匹配，则返回为空。       |
+| dataFilter | false    | string | 获取 category 下所有的数据：full；仅仅获取有持仓的 symbol 数据：valid |
+| cursor     | false    | string | API pass-through                                             |
+| direction  | false    | string | prev: prev, next: next.                                      |
+| limit      | false    | number | Number of data per page; the max. value is 200, and the default  value is 20 |
+
+**返回参数：**
+
+ 
+
+| Parameter              | Type    | Comment                                                      |
+| ---------------------- | ------- | ------------------------------------------------------------ |
+| category               | string  | 衍生品产品类型，正向合约：linearUSDC，linearUSDT，inverse ，option。 |
+| list > positionIdx     | integer | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓1-双向持仓Buy2-双向持仓Sell |
+| list > riskId          | number  | 风险限额ID                                                   |
+| list > symbol          | string  | 合约类型                                                     |
+| list > side            | string  | 方向，Buy：多头；Sell：空头                                  |
+| list > size            | string  | 仓位数量                                                     |
+| list > entryPrice      | string  | 平均入场价                                                   |
+| list > sessionAvgPrice | string  | Settlement price，仅USDC perps                               |
+| list > leverage        | string  | 逐仓模式下, 值为用户设置的杠杆；全仓模式下，值为当前风险限额下最大杠杆；仅适用于合约，不适用于期权 |
+| list > markPrice       | string  | 标记价格                                                     |
+| list > sessionUPL      | string  | Session UPL，仅 USDC                                         |
+| list > sessionRPL      | string  | Session RPL，仅 USDC                                         |
+| list > positionIM      | string  | Initial margin                                               |
+| list > positionMM      | string  | Maintenance margin                                           |
+| list > takeProfit      | string  | 止盈价格                                                     |
+| list > stopLoss        | string  | 止损价格                                                     |
+| list > trailingStop    | string  | 追踪止损                                                     |
+| list > positionValue   | string  | Position value                                               |
+| list > unrealisedPnl   | string  | 未结盈亏                                                     |
+| list > cumRealisedPnl  | string  | 累计已结盈亏                                                 |
+| list > createdTime     | number  | The account creation time                                    |
+| list > updatedTime     | number  | Update time                                                  |
+| list > tpslMode        | string  | 止盈止损模式                                                 |
+| nextPageCursor         | string  | API pass-through                                             |
+
+### **修改杠杆**
+
+**接口说明：**
+
+设置杠杆
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/position/leverage/save
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| category     | true     | string | 衍生品产品类型，目前支持正向合约：linear；反向合约：inverse（包含 inverse futures） |
+| symbol       | true     | string | 合约类型                                                     |
+| buyLeverage  | true     | number | 杠杆大于0，小于风险限额对应的杠杆                            |
+| sellLeverage | true     | number | 杠杆大于0，小于风险限额对应的杠杆                            |
+
+**返回参数：**
+
+ 
+
+| Parameter | Comment  |
+| --------- | -------- |
+| leverage  | 用户杠杆 |
+
+### **切换止盈止损模式**
+
+**接口说明：**
+
+切换止盈止损模式至全仓或部分
+
+当设置部分止盈止损模式时，止盈或者止损的订单数量可以小于仓位大小, 请使用[Trading-Stop endpoint](http://127.0.0.1:4567/zh-cn/openapi_v3#t-tradingstop)。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/position/tpsl/switch-mode
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                    |
+| --------- | -------- | ------ | ------------------------------------------ |
+| category  | true     | string | 衍生品产品类型：目前仅支持正向合约：linear |
+| symbol    | true     | string | 合约类型                                   |
+| tpSlMode  | true     | string | 止盈止损模式Full ：1 ，Partial ：2         |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type   | Comment                              |
+| --------- | ------ | ------------------------------------ |
+| tpslMode  | string | 止盈止损模式 Full ：1 ，Partial ： 2 |
+
+### **设置风险限额**
+
+**接口说明：**
+
+关于风险限额，点击[这里](https://help.bybit.com/hc/en-us/articles/360007107454-Risk-Limit-Overview)了解更多。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/position/set-risk-limit
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type    | Comment                                                      |
+| ----------- | -------- | ------- | ------------------------------------------------------------ |
+| category    | true     | string  | 衍生品产品类型：目前仅支持正向合约：linear                   |
+| symbol      | Yes      | string  | 合约类型                                                     |
+| riskId      | Yes      | integer | 风险限额ID                                                   |
+| positionIdx | Yes      | integer | Position idx, 用於在不同倉位模式下標識倉位： 0-單向持倉 1-雙向持倉Buy 2-雙向持倉Sell |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type   | Comment                                    |
+| --------- | ------ | ------------------------------------------ |
+| category  | string | 衍生品产品类型：目前仅支持正向合约：linear |
+| riskId    | number | 风险限额ID                                 |
+
+### **设置止盈止损**
+
+**接口说明：**
+
+设置仓位止盈止损、追踪止损。
+
+传递以下参数后将会由系统创建条件单。如果仓位关闭，系统将会取消这些订单，同时调整开仓的仓位数量。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /unified/v3/private/position/trading-stop
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| category     | true     | string | 衍生品产品类型：目前仅支持正向合约：linear                   |
+| symbol       | true     | string | 合约类型                                                     |
+| takeProfit   | false    | string | 不小于0,如果等于0则是取消止盈(TP)                            |
+| stopLoss     | false    | string | 不小于0,如果等于0则是取消止损(SL)                            |
+| trailingStop | false    | string | 不小于0,如果等于0则是取消追踪止损(TS)                        |
+| tpTriggerBy  | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy  | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| activePrice  | false    | string | 追踪止损触发价格。追踪止损会在到达该价格后才会触发（追踪止损默认立即触发）。 |
+| slSize       | false    | string | 在部分止盈止损模式下，止损合约数量                           |
+| tpSize       | false    | string | 在部分止盈止损模式下，止盈合约数量                           |
+| positionIdx  | false    | string | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓；1-双向持仓Buy；2-双向持仓Sell. Linear 必传。Inverse，Options 不传。 |
+
+### **查询成交记录**
+
+**接口说明：**
+
+获取用户成交记录，按时间降序排列。
+
+一个订单可能有多笔成交记录。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/unified/v3/private/execution/list
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                                      |
+| ----------- | -------- | ------ | ------------------------------------------------------------ |
+| category    | true     | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| orderId     | false    | string | 订单号，如果没有填写订单号，将返回用户全部交易记录           |
+| orderLinkId | false    | string | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| orderFilter | false    | string | category = linear/inverse 时使用category= linear/inverse 时必填，入参枚举：Order 或 StopOrder如果选择orderFileter = StopOrderType， 默认就要筛选StopOrderType = 1/2/3的 |
+| symbol      | false    | string | 如果category是option，symbol变为选填                         |
+| startTime   | false    | int    | 开始时间戳（毫秒）                                           |
+| endTime     | false    | int    | 结束时间戳（毫秒）                                           |
+| direction   | false    | string | prev: prev , next: next.                                     |
+| limit       | false    | string | Limit for data size per page, max size is 200. Default as  showing 50 pieces of data per page |
+| cursor      | false    | string |                                                              |
+| execType    | false    | string | Exec type (exec_type) Trade AdlTrade Funding BustTrade 。（仅 USDT Perps ，Inverse Perps，Inverse Futures）生效 |
+
+**返回参数：**
+
+ 
+
+| Parameter               | Type   | Comment                                                      |
+| ----------------------- | ------ | ------------------------------------------------------------ |
+| category                | string | 衍生品产品类型，正向合约：linear；期权：option。             |
+| list > symbol           | string | 衍生品名称                                                   |
+| list > execFee          | string | 交易手续费                                                   |
+| list > execId           | string | 成交ID                                                       |
+| list > execPrice        | string | 成交价格                                                     |
+| list > execQty          | string | 成交数量                                                     |
+| list > execType         | string | 交易类型枚举                                                 |
+| list > execValue        | string | 成交价值                                                     |
+| list > feeRate          | string | 手续费率                                                     |
+| list > lastLiquidityInd | string | 流动性类型枚举, 只有当exec_type字段类型为Trade、AdlTrade、BustTrade时有效 |
+| list > leavesQty        | string | 剩余委托数量                                                 |
+| list > orderId          | string | 订单ID                                                       |
+| list > orderLinkId      | string | 用户自定义订单ID                                             |
+| list > orderPrice       | string | 订单价格                                                     |
+| list > orderQty         | string | 订单数量                                                     |
+| list > orderType        | string | 订单类型枚举                                                 |
+| list > stopOrderType    | string | Stop order type 枚举：                                       |
+| list > side             | string | 方向                                                         |
+| list > execTime         | number | 交易时间，精确到毫秒                                         |
+| nextPageCursor          | string | API pass-through                                             |
+
+### **查询期权交割记录**
+
+**接口说明：**
+
+获取交割记录，按时间降序排列。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /unified/v3/private/delivery-record
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型：目前仅支持期权：option                       |
+| symbol    | false    | string  | symbol名称，默认为全部                                       |
+| expDate   | false    | string  | 到期日，年月日。默认为全部， 参数格式为：25MAR22             |
+| cursor    | false    | string  | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+| direction | false    | string  | 搜索方向：prev:上一页,next:下一页,默认为 next                |
+| limit     | false    | integer | 每页数量, 最大50. 默认每页20条                               |
+
+**返回参数：**
+
+返回单条或数组
+
+ 
+
+| 返回字段             | 类型   | 定义                                                        |
+| -------------------- | ------ | ----------------------------------------------------------- |
+| category             | string | 衍生品产品类型：option：期权                                |
+| list > deliveryTime  | number | 年月日时分秒                                                |
+| list > symbol        | string | symbol名称                                                  |
+| list > side          | string | 方向                                                        |
+| list > position      | string | 该笔交割记录对应的exec size数量                             |
+| list > deliveryPrice | string | 交割价.保证金：exec_price， 资产tradePrice                  |
+| list > strike        | string | 行权价                                                      |
+| list > fee           | string | 手续费，取资产的fee，正数表示用户付出xx手续费，负数表示赚取 |
+| list > deliveryRpl   | string | 交割已实现盈亏                                              |
+| nextPageCursor       | string | 翻页标记                                                    |
+
+### **查询结算记录**
+
+**接口说明：**
+
+Query session settlement records
+
+Only for USDC Perpetual
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /unified/v3/private/settlement-record
+
+请求参数**：**
+
+默认路由到USDC Perpetual业务，因为目前只有这个业务有8小时结算功能。
+
+接口逻辑、参数 与当前USDC V1版的接口内容一致。
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | true     | string | 衍生品产品类型：目前仅支持正向合约：linear，且仅支持 USDC Perpetual |
+| symbol    | false    | string | Contract name                                                |
+| direction | false    | string | prev: prev page, next: next page.                            |
+| limit     | false    | number | Number of data per page; the max. value is 50, and the default  value is 20 |
+| cursor    | false    | string | API pass-through                                             |
+
+**返回参数：**
+
+ 
+
+| Parameter              | Type   | Comment                                    |
+| ---------------------- | ------ | ------------------------------------------ |
+| category               | string | 衍生品产品类型：目前仅支持正向合约：linear |
+| list > symbol          | string | Contract name                              |
+| list > side            | string | Direction                                  |
+| list > size            | string | size                                       |
+| list > sessionAvgPrice | string | Settlement price                           |
+| list > markPrice       | string | 标记价格                                   |
+| list > sessionRpl      | string | Session RPL                                |
+| nextPageCursor         | string | API pass-through                           |
+
+## **Account**
+
+### **获取钱包余额**
+
+**接口说明：**
+
+获取钱包余额
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/unified/v3/private/account/wallet/balance
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| coin      | false    | string | currency alias，如果不传参数coin，将返回所有钱包余额。允许传多个，用逗号分隔，例如：USDC,USDT |
+
+**返回参数：**
+
+ 
+
+| Parameter                             | Type   | Comment                                                      |
+| ------------------------------------- | ------ | ------------------------------------------------------------ |
+| accountIMRate                         | string | 起始保证金比率：Account Total Initial Margin Base  Coin / Account Margin Balance Base Coin |
+| accountMMRate                         | string | 维持保证金比率：Account Total Maintenance Margin Base  Coin / Account Margin Balance Base Coin |
+| totalEquity                           | string | 账户维度换算成usd的资产净值：Account Margin Balance Base Coin  + Account Option Value Base Coin |
+| totalWalletBalance                    | string | 账户维度换算成usd的产钱包余额：∑ Asset Wallet Balance Base Coin |
+| totalMarginBalance                    | string | 账户维度换算成usd的保证金余额：Account Wallet Balance Base Coin  + Account Perp UPL Base Coin |
+| totalAvailableBalance                 | string | 账户维度换算成usd的可用余额：RM：Account Margin Balance Base Coin  - Account Initial Margin Base Coin |
+| totalPerpUPL                          | string | 账户维度换算成usd的永续浮动盈亏：∑ Asset Perp UPL Base Coin  |
+| totalInitialMargin                    | string | 账户维度换算成usd的总初始保证金：∑ Asset Total Initial Margin Base  Coin |
+| totalMaintenanceMargin                | string | 账户维度换算成usd的总维持保证金: ∑ Asset Total Maintenance  Margin Base Coin |
+| Coin > coin                           | string | 钱包币种的名称，例如 BTC，ETH，USDT，USDC                    |
+| Coin > equity                         | string | 用户资产                                                     |
+| Coin > usdValue                       | string | 折算成 usd 的价值                                            |
+| Coin > walletBalance                  | string | 钱包余额                                                     |
+| Coin > marginBalance                  | string | 其余资产贡献的MB+当前资产真实剩余的MB                        |
+| Coin > availableBalance               | string | 其余资产贡献的AB+当前资产真实剩余的AB（不能为负）            |
+| Coin > marginBalanceWithoutConvert    | string | 保证金余额                                                   |
+| Coin > availableBalanceWithoutConvert | string | 可用余额, Margin Balance - Total Initial  Margin             |
+| Coin >borrowSize                      | string | 已用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；    |
+| Coin >availableToBorrow               | string | 可用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；    |
+| Coin > accruedInterest                | string | 某资产应计利息                                               |
+| Coin > totalOrderIM                   | string | 订单委托预占用保证金                                         |
+| Coin > totalPositionIM                | string | 所有仓位起始保证金求和 + 预占用平仓手续费                    |
+| Coin > totalPositionMM                | string | 所有仓位维持保证金求和                                       |
+| Coin > unrealisedPnl                  | string | 未结盈亏                                                     |
+| Coin > cumRealisedPnl                 | string | 累计已结盈亏                                                 |
+
+ 
+
+### **升级统一保证金账户**
+
+**接口说明：**
+
+升级统一保证金账户
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /unified/v3/private/account/upgrade-unified-account
+
+**请求参数：**
+
+**返回参数：**
+
+ 
+
+| Parameter | Type   | Comment                                                   |
+| --------- | ------ | --------------------------------------------------------- |
+| result    | string | 用户账户的升级状态。1.处理中 2.升级成功 3.升级失败 4.拒绝 |
+| msg       | string | 返回的错误信息                                            |
+
+**错误原因：**
+
+ 
+
+| 错误原因         | Comment                                                      |
+| ---------------- | ------------------------------------------------------------ |
+| USDC有划转中记录 | update account failed. there are orders in the process of  transferring in USDC Account. please wait until the transfer is completed |
+| USDT有划转中记录 | update account failed. there are orders in the process of  transferring in USDT Account. please wait until the transfer is completed |
+| USDC永续有持仓   | update account failed. Please close the usdc perpetual positions  in USDC Account. |
+| USDC期权有持仓   | update account failed. Please close the usdc option positions in  USDC Account. |
+| USDT永续有持仓   | update account failed. Please close the usdt perpetual positions  in USDC Account. |
+| USDC永续有订单   | update account failed. Please cancel the usdc perpetual open  orders in USDC Account. |
+| USDC期权有订单   | update account failed. Please cancel the usdc option open orders  in USDC Account. |
+| USDT永续有订单   | update account failed. Please cancel the usdt perpetual open  orders in USDC Account. |
+
+### **查询交易日志**
+
+**接口说明：**
+
+升级统一保证金账户
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /unified/v3/private/account/transaction-log
+
+**请求参数**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型：linear：正向合约；option：期权               |
+| currency  | true     | string  | USDC、USDT、BTC、ETH                                         |
+| baseCoin  | false    | string  | 例如： USDC就是BTC；USDT就是现在现有的交易币种枚举，例如： BTCUSDT 的 baseCoin 是 BTC 不匹配时已确认返回空 |
+| type      | false    | string  | 默认返回该 category下所有交易日志（除划转/兑币/体验金外）   TRANSFER_IN 转入 TRANSFER_OUT 转出   TRADE 交易 SETTLEMENT 结算   DELIVERY 交割 LIQUIDATION 强平 BONUS 体验金领取 FEE_REFUND 手续费返还 INTEREST 利息   CURRENCY_BUY 统保币币兑换买入 CURRENCY_SELL 统保币币兑换卖出   注意：查询转入转出日志，必须要传type=TRANSFER_IN，type=TRANSFER_OUT，否则查不到划转日志 |
+| startTime | false    | int     | 开始时间, 毫秒时间戳                                         |
+| endTime   | false    | int     | 结束时间, 毫秒时间戳                                         |
+| direction | false    | string  | 搜索方向：prev:上一页,next:下一页,默认为 next                |
+| limit     | false    | integer | 每页数量, 最大50. 默认每页20条                               |
+| cursor    | false    | string  | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+
+**Responses**
+
+ 
+
+| Parameter              | Type   | Comment                                        |
+| ---------------------- | ------ | ---------------------------------------------- |
+| category               | string | 衍生品产品类型：linear：正向合约；option：期权 |
+| currency               | string | USDC、USDT、BTC、ETH                           |
+| list > transactionTime | number | 时间戳（毫秒）                                 |
+| list > type            | string | 类型（新增 Interest 枚举值）                   |
+| list > symbol          | string | symbol名称                                     |
+| list > side            | string | 方向                                           |
+| list > qty             | string | 数量                                           |
+| list > size            | string | 仓位                                           |
+| list > tradePrice      | string | 交易价格                                       |
+| list > funding         | string | 资金费用                                       |
+| list > fee             | string | 手续费，正数表示用户付出xx手续费，负数表示赚取 |
+| list > cashFlow        | string | 现金流                                         |
+| list > change          | string | 变更                                           |
+| list > cashBalance     | string | 余额（当前币种）                               |
+| list > feeRate         | string | 手续费率                                       |
+| list > tradeId         | string | 交易id                                         |
+| list > orderId         | string | 订单id                                         |
+| list > orderLinkId     | string | 机构订单号                                     |
+| nextPageCursor         | string | 翻页标记                                       |
+
+### **划转****(V2)**
+
+**接口说明：**
+
+各个账户内资金划转
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /asset/v1/private/transfer
+
+**请求参数**
+
+ 
+
+| Parameter         | Required | Type   | Comment                                                      |
+| ----------------- | -------- | ------ | ------------------------------------------------------------ |
+| transfer_id       | true     | string | UUID,全局唯一                                                |
+| coin              | true     | string | 幣種類型                                                     |
+| amount            | true     | string | 兌入數量                                                     |
+| from_account_type | true     | string | 账户类型，Account type： CONTRACT 期货账户；SPOT 现货账户； INVESTMENT 理财账户；OPTION 期权账户；新增：UNIFIED 统一保证金账户 |
+| to_account_type   | true     | string | 账户类型，Account type： CONTRACT 期货账户；SPOT 现货账户； INVESTMENT 理财账户；OPTION 期权账户；新增：UNIFIED 统一保证金账户 |
+
+**返回参数**
+
+ 
+
+| Parameter   | Required | Type   | Comment       |
+| ----------- | -------- | ------ | ------------- |
+| transfer_id | true     | string | UUID,全局唯一 |
+
+ 
+
+### **获取币币兑换记录查询**
+
+接口说明：
+
+获取当前统一保证金账户的币币兑换记录，兑换记录查询（全量）, 不支持分页。只能查询最近 500 条。按照创建时间倒序排序。
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET /asset/v2/private/exchange/exchange-order-all
+
+请求参数：
+
+ 
+
+| **参数** | **是否必须** | **类型** | **说明**            |
+| -------- | ------------ | -------- | ------------------- |
+| fromCoin | false        | String   | 兑出币种，比如 BTC  |
+| toCoin   | false        | string   | 兑入币种，比如 USDT |
+
+返回参数：
+
+ 
+
+| **参数**             | **类型** | **说明**            |
+| -------------------- | -------- | ------------------- |
+| totalCount           | int      | 返回数据总和        |
+| list >  fromCoin     | string   | *兑出的币种*        |
+| list >  fromAmount   | string   | *兑出数量**/**金额* |
+| list >  toCoin       | string   | *兑入币种*          |
+| list >  toAmount     | string   | *兑入数量**/**金额* |
+| list >  exchangeRate | string   | *兑换的汇率*        |
+| list >  createdAt    | string   | 兑换记录创建时间    |
+| list >  exchangeTxId | string   | 兑换订单号          |
+
+### **利息账单**
+
+接口说明：
+
+获取利息记录，按照创建时间倒叙排列。
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET  /unified/v3/private/account/borrow-history
+
+ 
+
+请求参数：
+
+ 
+
+| **参数**  | **是否必须** | **类型** | **说明**                                                     |
+| --------- | ------------ | -------- | ------------------------------------------------------------ |
+| currency  | false        | string   | USDC、USDT、BTC、ETH  。                                     |
+| startTime | false        | int      | 开始时间                                                     |
+| endTime   | false        | int      | 结束时间                                                     |
+| direction | false        | string   | 搜索方向：prev:上一页,next:下一页,默认为  next               |
+| limit     | false        | integer  | 每页数量, 最大50.  默认每页20条                              |
+| cursor    | false        | string   | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+
+返回参数：
+
+ 
+
+| **参数**                 | **类型** | **说明**             |
+| ------------------------ | -------- | -------------------- |
+| list >  currency         | string   | USDC、USDT、BTC、ETH |
+| list >  createdTime      | int64    | 时间戳（毫秒）       |
+| list >  borrowCost       | string   | 利息                 |
+| list >  hourlyBorrowRate | string   | 利率                 |
+| list >  BorrowSize       | string   | 计息借款             |
+| list >  costExemption    | string   | 豁免计息成本         |
+
+### **借贷利率查询**
+
+接口说明：
+
+获取当前统一保证金账户的借贷利率
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET /unified/v3/private/account/borrow-rate
+
+请求参数：
+
+ 
+
+| **参数** | **是否必须** | **类型** | **说明**                                                     |
+| -------- | ------------ | -------- | ------------------------------------------------------------ |
+| currency | false        | string   | 仅支持 USDC、USDT。  如果不传参数 currency，将返回 currency 的利率。  允许传多个，用逗号分隔，例如：USDC , USDT |
+
+返回参数：
+
+ 
+
+| **参数**                    | **类型** | **说明**       |
+| --------------------------- | -------- | -------------- |
+| list >  currency            | string   | USDC、USDT     |
+| list >  hourlyBorrowRate    | string   | 每小时借款利率 |
+| list >  maxBorrowingAmount  | string   | 最大可借贷额度 |
+| list >  freeBorrowingAmount | string   | 免息借贷额度   |
+
+### **查询****Greeks****信息（新增，待评审排期）** **@Derek Liu** 
+
+接口说明：
+
+获取当前账户Greeks信息
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET /unified/v3/private/account/coin_greeks
+
+请求参数：
+
+ 
+
+| **参数** | **是否必须** | **类型** | **说明**                                                     |
+| -------- | ------------ | -------- | ------------------------------------------------------------ |
+| coin     | false        | string   | baseCoin  • 不传入，默认返回全部baseCoin的greeks  • 传入枚举值，返回对应baseCoin的greeks  枚举值：  BTC  ETH  SOL  …… |
+
+返回参数：
+
+ 
+
+| **参数**           | **类型** | **说明**                          |
+| ------------------ | -------- | --------------------------------- |
+| list >  coin       | string   | baseCoin，例如：BTC、ETH、SOL、…… |
+| list >  totalDelta | string   | Delta  value                      |
+| list >  totalGamma | string   | Gamma  value                      |
+| list >  totalVega  | string   | Vega  value                       |
+| list >  totalTheta | string   | Theta  value                      |
+
+ 
+
+# **Contract Account****：**
+
+ 
+
+## **Order**
+
+### **创建委托订单**
+
+**接口说明：**
+
+市价活动委托: 一个传统的市场价格订单,会以当前的最优价格为您成交订单。当且仅当选择市价单时，
+
+price可为空！**为了保护市价单遭遇严重的滑点，****Bybit****将市价单转为限价单进入撮合，买单价格高于最优卖价，卖单价格低于最优买价。限价价格和成交价格均可通过用户成交记录接口查询。**
+
+限价活动委托: 您可以为您的订单设置一个执行价格，当市场价格达到您的设置价格时，系统会为您成交订单。
+
+**止盈止损****:** **您仅能在开仓时设置止盈止损条件单，一旦持有仓位后提交活动委托时关联的止盈止损则不会生效。**
+
+委托数量: 表示您要购买/卖出的永续合约数，对于委托数量目前Bybit只允许提交正整数。
+
+委托价格: 如果是下**限价单**，该参数为**必填**. 在没有仓位时，做多的委托价格需高于市价的10%、低于1百万。如有仓位时则需优于强平价。价格增减最小单位请参考[交易对接口](http://127.0.0.1:4567/zh-cn/openapi_v3#t-querysymbol)响应中的**price_filter**字段。
+
+自定义条件单ID: 您可以自定义活动委托订单ID，我们会为您关联到系统的订单ID，并把系统的唯一订单ID在活动委托创建成功后一并返回给您，您可以使用该订单ID去取消活动委托，同时要求您传递的自定义订单ID
+
+最大长度不超过36个字段且唯一。
+
+**每个账户最多可同时持有****500****个活动订单。这是针对合约的，因此可以允许出现例如：账户同时持有****300****个****BTCUSD****的活动单、****280****个****ETHUSD****合约的活动单。**
+
+**当您达到订单上限的时候的时候，仍然可以下单设置了参数**
+
+**reduce_only** **或** 
+
+**closeOnTrigger****的订单。**
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/order/create
+
+**请求参数：**
+
+ 
+
+| Parameter        | Required | Type   | Comment                                                      |
+| ---------------- | -------- | ------ | ------------------------------------------------------------ |
+| category         | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol           | true     | string | 合约类型                                                     |
+| side             | true     | string | 方向：Buy，Sell                                              |
+| positionIdx      | false    | int    | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓；1-双向持仓Buy；2-双向持仓Sell. Linear 必传。Inverse，Options 不传。 |
+| orderType        | true     | string | 委托单价格类型                                               |
+| qty              | true     | string | 委托数量                                                     |
+| price            | false    | string | 委托价格                                                     |
+| triggerDirection | false    | int    | 用于当前条件委托是看空到triggerPrice时触发还是看多到triggerPrice触发。主要是用来标识当前条件单预期的方向：2 为 触发价格 < triggerPrice 时触发，1 为 触发价格 > triggerPrice 时触发。 |
+| triggerPrice     | false    | string | 触发价格                                                     |
+| triggerBy        | false    | string | 触发价格类型：市价/标记价格                                  |
+| iv               | false    | string | 隐含波动率 Implied volatility，仅期权; 按照实际值传惨，如10%，则传0.1 |
+| timeInForce      | true     | string | 执行策略                                                     |
+| orderLinkId      | false    | string | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| takeProfit       | false    | string | 止盈价格，仅开仓时生效                                       |
+| stopLoss         | false    | string | 止损价格，仅开仓时生效                                       |
+| tpTriggerBy      | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy      | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| reduceOnly       | false    | bool   | 只减仓                                                       |
+| closeOnTrigger   | false    | bool   | What is a close on trigger order? For a closing order. It can  only reduce your position, not increase it. If the account has insufficient  available balance when the closing order is triggered, then other active  orders of similar contracts will be cancelled or reduced. It can be used to  ensure your stop loss reduces your position regardless of current available  margin. |
+| mmp              | false    | bool   | Market maker protection，true表示此订单为做市商保护订单      |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment        |
+| ----------- | ------ | -------------- |
+| orderId     | string | 订单 ID        |
+| orderLinkId | string | 策略关联订单号 |
+
+### **修改订单信息**
+
+**接口说明：**
+
+本接口可以修改您的活动单信息.
+
+请注意，只有未成交或未完全成交的订单才可以被修改。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/order/replace
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| category     | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol       | true     | string | 合约名称                                                     |
+| orderId      | false    | string | 订单ID。如果未填order_link_id则为必填字段。                  |
+| orderLinkId  | false    | string | 机构交易 ID。如果未填order_id则为必填字段。机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| triggerPrice | false    | string | 修改触发价格                                                 |
+| qty          | false    | string | 修改后的订单数量。如果是未完全成交订单，则表示修改剩余未成交的部分。如果不修改这个字段，请不要传这个参数。 |
+| price        | false    | string | 修改后的订单价格。如果不修改这个字段，请不要传这个参数。     |
+| takeProfit   | false    | string | 修改后的止盈价格。如果不修改这个字段，请不要传这个参数。     |
+| stopLoss     | false    | string | 修改后的止损价格。如果不修改这个字段，请不要传这个参数。     |
+| tpTriggerBy  | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy  | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| triggerBy    | false    | string | 触发价格类型：市价/标记价格                                  |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment                                                      |
+| ----------- | ------ | ------------------------------------------------------------ |
+| orderId     | string | 订单ID                                                       |
+| orderLinkId | string | Custom ID used for cross-platform strategy remarks; a max. of 36  characters |
+
+### **撤销委托单**
+
+**接口说明：**
+
+所有撤销活动委托都必须填写
+
+order_id或order_link_id。 order_id - 当您成功创建了活动委托时会为您返回36位唯一的订单ID。
+
+您可以撤销未成交、部分成交的活动委托单。但全部成交的活动委托不可取消。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/order/cancel
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                                      |
+| ----------- | -------- | ------ | ------------------------------------------------------------ |
+| category    | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol      | true     | string | 合约类型                                                     |
+| orderId     | false    | string | 订单ID。如果未填order_link_id则为必填字段。                  |
+| orderLinkId | false    | string | 机构ID。如果未填order_id则为必填字段。                       |
+
+**返回参数：**
+
+ 
+
+| Parameter   | Type   | Comment          |
+| ----------- | ------ | ---------------- |
+| orderId     | string | 订单ID           |
+| orderLinkId | string | 客户自定义订单ID |
+
+### **实时查询委托**
+
+**接口说明：**
+
+实时查询活动委托。当传递参数
+
+orderId或orderLinkId其中任意一个时，将返回单条订单数据，如果参数
+
+orderId和orderLinkId都不传递时，将返回所有**未成交**的订单，最多500条。
+
+按照 createdTime 从近到远排序
+
+symbol 支持输入多个 symbol，如果输入多个 symbol 的请求，限频计数为 10 。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/order/unfilled-orders
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type   | Comment                                                      |
+| ----------- | -------- | ------ | ------------------------------------------------------------ |
+| category    | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol      | false    | string | 合约名称，仅支持单个 symbol                                  |
+| baseCoin    | false    | string | 交易货币                                                     |
+| settleCoin  | false    | string | settleCoin 和 symbol 必须传 1 个。 settlecoin和symbol都有的话，以 symbol 为准。 |
+| orderId     | false    | string | 订单ID                                                       |
+| orderLinkId | false    | string |                                                              |
+| orderFilter | false    | string | 条件单或是活动单。活动单：Order，StopOrder                   |
+| limit       | false    | number | 每页的数量。Limit for data size per page, max  size is 50. Default as showing 20 pieces of data per page |
+| cursor      | false    | string | API pass-through. accountType + category + cursor + , 如果不一致，则返回为: 账户类型和业务查询不匹配。 |
+
+**返回参数：**
+
+ 
+
+| Parameter               | Type   | Comment                                                      |
+| ----------------------- | ------ | ------------------------------------------------------------ |
+| category                | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| list > symbol           | string | 合約類型                                                     |
+| list > orderId          | string | 委托訂單ID。                                                 |
+| list > side             | string | 方向                                                         |
+| list > orderType        | string | 訂單類型                                                     |
+| list > cancelType       | string | 订单被取消的类型                                             |
+| list > stopOrderType    | string | 条件单类型                                                   |
+| list > triggerDirection | int    | 用于当前条件委托是看空到stop_px时触发还是看多到stop_px触发。主要是用来标识当前条件单预期的方向：2 为 触发价格 < stop_px 时触发，1 为 触发价格 > stop_px 时触发。 |
+| list > basePrice        | string | 下单时的市场价格                                             |
+| list > price            | string | 委托價格                                                     |
+| list > qty              | string | 委托數量                                                     |
+| list > iv               | string |                                                              |
+| list > orderIM          | string | Initial margin，订单初始保证金。                             |
+| list > timeInForce      | string | 執行策略                                                     |
+| list > orderStatus      | string | 訂單狀態                                                     |
+| list > triggerPrice     | string | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| list > orderLinkId      | string | 機構自定義訂單ID                                             |
+| list > createdTime      | int64  | 創建時間                                                     |
+| list > updatedTime      | int64  | 更新時間                                                     |
+| list > takeProfit       | string | 止盈價格                                                     |
+| list > stopLoss         | string | 止損價格                                                     |
+| list > tpTriggerBy      | string | 止盈激活價格類型，默認為LastPrice                            |
+| list > slTriggerBy      | string | 止損激活價格類型，默認為LastPrice                            |
+| list > triggerDirection | int    | 用于当前条件委托是看空到stop_px时触发还是看多到stop_px触发。主要是用来标识当前条件单预期的方向：0为 < stop_px 时触发，1 为 > stop_px 时触发。 |
+| list > triggerBy        | string | 觸發價格類型. 默認為最新市價                                 |
+| list > closeOnTrigger   | bool   |                                                              |
+| list > reduceOnly       | bool   | 是否平倉單 true-平倉 false-開倉                              |
+| list > leavesQty        | string | 订单剩余未成交的数量                                         |
+| list > leavesValue      | string | 订单剩余未成交的价值                                         |
+| list > cumExecQty       | string | 订单累计成交数量                                             |
+| list > cumExecValue     | string | 订单累计成交数量                                             |
+| list > cumExecFee       | string | 累计成交的手续费                                             |
+| list > positionIdx      | int    |                                                              |
+| nextPageCursor          | string | API pass-through                                             |
+
+ 
+
+ 
+
+### **撤销全部订单**
+
+**接口说明：**
+
+所有撤销活动委托都必须填写
+
+order_id或order_link_id。 order_id - 当您成功创建了活动委托时会为您返回36位唯一的订单ID。
+
+您可以撤销未成交、部分成交的活动委托单。但全部成交的活动委托不可取消。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/order/cancel-all
+
+**请求参数：**
+
+ 
+
+| Parameter  | Required | Type   | Comment                                                      |
+| ---------- | -------- | ------ | ------------------------------------------------------------ |
+| category   | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol     | false    | string | 合约类型                                                     |
+| settleCoin | false    | string | 结算货币                                                     |
+
+**返回参数：**
+
+ 
+
+| Parameter          | Type   | Comment          |
+| ------------------ | ------ | ---------------- |
+| list > orderId     | string | 订单ID           |
+| list > orderLinkId | string | 客户自定义订单ID |
+
+### **查询订单**
+
+**接口说明：**
+
+获取我的活动委托单列表。
+
+创建/取消订单是异步的，因此**该接口可能返回的数据可能会有延迟**。如果要获取订单的实时信息，可以调用接口[实时查询活动单信息](http://127.0.0.1:4567/zh-cn/openapi_v3#t-queryactive).
+
+7 天内的订单，支持全量 order
+
+7 天之前的订单，仅支持查询全部有成交记录的
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/order/list
+
+请求参数：
+
+ 
+
+| Parameter   | Required | Type    | Comment                                                      |
+| ----------- | -------- | ------- | ------------------------------------------------------------ |
+| category    | false    | string  | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol      | false    | string  | 合约名称                                                     |
+| baseCoin    | false    | string  | 交易货币                                                     |
+| orderId     | false    | string  | Order ID                                                     |
+| orderLinkId | false    | string  | 机构自定义订单ID, 最大长度36位，且同一机构下自定义ID不可重复，支持数字、字母（大小写）、中划线、下划线这些字符的组合 |
+| orderStatus | false    | string  | 指定订单状态查询订单列表。不传该参数则默认查询所有状态订单。仅支持单个状态查询。 Created New Rejected  PartiallyFilled Filled Cancelled |
+| orderFilter | false    | string  | 条件单或是活动单                                             |
+| limit       | false    | integer | 每页数量, 最大50. 默认每页20条。按照更新时间倒序排序         |
+| cursor      | false    | string  | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+
+**返回参数：**
+
+ 
+
+| Parameter                 | Type   | Comment                                                      |
+| ------------------------- | ------ | ------------------------------------------------------------ |
+| category                  | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| list > symbol             | string | 合约类型                                                     |
+| list > side               | string | 方向                                                         |
+| list > orderType          | string | 交易记录类型                                                 |
+| list > price              | string | 委托价格                                                     |
+| list > qty                | string | 委托数量                                                     |
+| list > iv                 | string |                                                              |
+| list > cancelType         | string | 订单被取消的类型                                             |
+| list > orderIM            | string | Initial margin                                               |
+| list > reduceOnly         | bool   | Reduce-only                                                  |
+| list > timeInForce        | string | 执行策略                                                     |
+| list > orderStatus        | string | 订单状态                                                     |
+| list > leavesQty          | string | 剩余委托数量                                                 |
+| list > leavesValue        | string | 剩余挂单数量对应的预估价值                                   |
+| list > cumExecQty         | string | 累计成交数量                                                 |
+| list > cumExecValue       | string | 累计成交价值                                                 |
+| list > cumExecFee         | string | 累计成交手续费                                               |
+| list > lastPriceOnCreated | string | 下单时的市价                                                 |
+| list > rejectReason       | string | 被拒单的原因                                                 |
+| list > orderLinkId        | string | 机构自定义订单ID                                             |
+| list > createdTime        | int64  | 创建时间                                                     |
+| list > updatedTime        | int64  | 更新时间                                                     |
+| list > orderId            | string | 订单ID                                                       |
+| list > stopOrderType      | string | refer to Stop Order Type                                     |
+| list > triggerDirection   | int    | 用于当前条件委托是看空到stop_px时触发还是看多到stop_px触发。主要是用来标识当前条件单预期的方向：2 为 触发价格 < stop_px 时触发，1 为 触发价格 > stop_px 时触发。 |
+| list > takeProfit         | string | 止盈价格                                                     |
+| list > stopLoss           | string | 止损价格                                                     |
+| list > tpTriggerBy        | string | 止盈激活价格类型，默认为LastPriceUSDC是Mark Price            |
+| list > slTriggerBy        | string | 止损激活价格类型，默认为LastPriceUSDC是Mark Price            |
+| list > triggerPrice       | string | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| list > closeOnTrigger     | bool   | Close on trigger                                             |
+| list > positionIdx        | int    |                                                              |
+| nextPageCursor            | string | API pass-through                                             |
+
+ 
+
+## **Position**
+
+### **获取持仓（实时）**
+
+**接口说明：**
+
+获取我的仓位列表。通过该接口可以获取当前用户的持仓信息，如持仓数量、账户余额等信息。
+
+如果传 symbol ，则无论 symbol 下是否有持仓，都返回该 symbol 下的数据。如果不传 symbol，dataFilter 为 full ，则返回所有 symbol 的持仓数据。如果 dataFilter 为 valid，则仅返回有持仓的数据。
+
+ 
+
+限频：
+
+如果传 symbol 为单个 symbol ，每个 request 计数 1次
+
+如果传多个 symbol 或者不传 symbol，每个 request 计数 10 次。
+
+ 
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/position/list
+
+**请求参数：**
+
+ 
+
+| Parameter  | Required | Type   | Comment                                                      |
+| ---------- | -------- | ------ | ------------------------------------------------------------ |
+| category   | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| symbol     | false    | string | 合约名称                                                     |
+| baseCoin   | false    | string | 交易货币                                                     |
+| settleCoin | false    | string | settleCoin 和 symbol 必须传 1 个。 settlecoin和symbol都有的话，以 symbol 为准。 |
+| dataFilter | false    | string | 仅在 settleCoin 有值时生效。获取 settleCoin 对应的所有symbol的持仓数据：full；仅获取 settleCoin 对应有持仓的 symbol 数据：valid。举例 settleCoin 为 USDT，dataFilter 为 valid，仅会返回 USDT 正向合约下有持仓的 symbol 仓位信息。 |
+| limit      | false    | number | 每页的数量。Limit for data size per page, max  size is 50. Default as showing 20 pieces of data per page |
+| cursor     | false    | string | API pass-through                                             |
+
+**返回参数：**
+
+ 
+
+| Parameter              | Type   | Comment                                                      |
+| ---------------------- | ------ | ------------------------------------------------------------ |
+| category               | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| list > positionIdx     | int    | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓1-双向持仓Buy2-双向持仓Sell |
+| list > riskId          | int    | 风险限额ID                                                   |
+| list > riskLimitValue  | string | 当前风险限额 ID 对应的持仓 Value上限                         |
+| list > symbol          | string | 合约类型                                                     |
+| list > side            | string | 方向，Buy：多头；Sell：空头                                  |
+| list > size            | string | 仓位数量                                                     |
+| list > positionValue   | string | Position value                                               |
+| list > entryPrice      | string | 平均入场价                                                   |
+| list > tradeMode       | int    | 交易模式： 0 ：全仓；1：逐仓                                 |
+| list > autoAddMargin   | int    | 自动追加保证金模式，0 代表关闭，1 代表开启。全仓模式该字段无效。 |
+| list > leverage        | string | 值为用户设置的当前杠杆                                       |
+| list > positionIM      | string | 仓位起始保证金                                               |
+| list > positionMM      | string | 仓位维持保证金                                               |
+| list > positionBalance | string | 仓位占用的实际金额                                           |
+| list > sessionAvgPrice | string | session 结算价格（仅 USDC 有效）                             |
+| list > liqPrice        | string | 强制平仓价格                                                 |
+| list > bustPrice       | string | 破产价格                                                     |
+| list > takeProfit      | string | 止盈价格                                                     |
+| list > stopLoss        | string | 止损价格                                                     |
+| list > trailingStop    | string | 追踪止损                                                     |
+| list > activePrice     | string | 追踪止损的激活价格                                           |
+| list > unrealisedPnl   | string | 未结盈亏                                                     |
+| list > cumRealisedPnl  | string | 仓位累积已结算盈亏                                           |
+| list > markPrice       | string | 当前 symbol 的标记价格                                       |
+| list > createdTime     | int64  | The account creation time                                    |
+| list > updatedTime     | int64  | Update time                                                  |
+| list > tpslMode        | string | 止盈止损模式                                                 |
+| nextPageCursor         | string | API pass-through                                             |
+
+ 
+
+### **全仓****/****逐仓切换**
+
+ 
+
+**接口说明：**
+
+全仓/逐仓切换，从全仓切换至逐仓时需要传杠杆
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /contract/v3/private/position/switch-isolated 
+
+**请求参数：**
+
+ 
+
+| **参数**                                                     | **是否必须** | **类型** | **说明**                                                     |
+| ------------------------------------------------------------ | ------------ | -------- | ------------------------------------------------------------ |
+| [symbol](http://127.0.0.1:4567/zh-cn/openapi_v3#symbol-symbol) | **true**     | string   | 合约类型                                                     |
+| tradeMode                                                    | **true**     | int      | 交易模式： 0 ：全仓；1：逐仓                                 |
+| buyLeverage                                                  | **true**     | string   | 全仓/逐仓切换，需要传杠杆并且buy_leverage和sell_leverage必须传入相同参数； |
+| sellLeverage                                                 | **true**     | string   | 全仓/逐仓切换，需要传杠杆并且buy_leverage和sell_leverage必须传入相同参数； |
+
+**返回参数：**
+
+ 
+
+| **参数** | **类型** | **说明** |
+| -------- | -------- | -------- |
+|          |          |          |
+|          |          |          |
+|          |          |          |
+
+ 
+
+### **单双向持仓模式切换**
+
+ 
+
+**接口说明：**
+
+单仓模式下，只能在单方向下持仓
+
+双仓模式下，可以同时在两个方向持仓。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /contract/v3/private/position/switch-mode 
+
+**请求参数：**
+
+ 
+
+| **参数**                                                     | **是否必须** | **类型** | **说明**                                                     |
+| ------------------------------------------------------------ | ------------ | -------- | ------------------------------------------------------------ |
+| [symbol](http://127.0.0.1:4567/zh-cn/openapi_v3#symbol-symbol) | **false**    | string   | 合約類型，至少传symbol 和 coin其中的一个，如果两个都传，将以symbol为准。 |
+| coin                                                         | **false**    | string   | currency  alias，至少传symbol 和 coin其中的一个，如果两个都传，将以symbol为准。 |
+| mode                                                         | **true**     | int      | 倉位模式: MergedSingle - 單倉模式为 0；  BothSide - 雙倉模式为 3； |
+
+**返回参数：**
+
+ 
+
+ 
+
+### **修改杠杆**
+
+**接口说明：**
+
+设置杠杆
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/position/set-leverage
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                           |
+| ------------ | -------- | ------ | --------------------------------- |
+| symbol       | true     | string | 合约类型                          |
+| buyLeverage  | true     | string | 杠杆大于0，小于风险限额对应的杠杆 |
+| sellLeverage | true     | string | 杠杆大于0，小于风险限额对应的杠杆 |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type | Comment |
+| --------- | ---- | ------- |
+|           |      |         |
+
+### **切换止盈止损模式**
+
+**接口说明：**
+
+切换止盈止损模式至全仓或部分
+
+当设置部分止盈止损模式时，止盈或者止损的订单数量可以小于仓位大小, 请使用[Trading-Stop endpoint](http://127.0.0.1:4567/zh-cn/openapi_v3#t-tradingstop)。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /contract/v3/private/position/switch-tpsl-mode
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                               |
+| --------- | -------- | ------ | ----------------------------------------------------- |
+| symbol    | true     | string | 合约类型                                              |
+| tpSlMode  | true     | string | 止盈止损模式 Full - 仓位模式 Partial-部分止盈止损模式 |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type | Comment |
+| --------- | ---- | ------- |
+|           |      |         |
+
+### **设置风险限额**
+
+**接口说明：**
+
+关于风险限额，点击[这里](https://help.bybit.com/hc/en-us/articles/360007107454-Risk-Limit-Overview)了解更多。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/position/set-risk-limit
+
+**请求参数：**
+
+ 
+
+| Parameter   | Required | Type    | Comment                                                      |
+| ----------- | -------- | ------- | ------------------------------------------------------------ |
+| symbol      | true     | string  | 合约类型                                                     |
+| riskId      | true     | integer | 风险限额ID                                                   |
+| positionIdx | true     | integer | Position idx, 用於在不同倉位模式下標識倉位： 0-單向持倉 1-雙向持倉Buy 2-雙向持倉Sell |
+
+**返回参数：**
+
+ 
+
+| Parameter | Type | Comment |
+| --------- | ---- | ------- |
+|           |      |         |
+
+### **设置止盈止损**
+
+**接口说明：**
+
+设置仓位止盈止损、追踪止损。
+
+传递以下参数后将会由系统创建条件单。如果仓位关闭，系统将会取消这些订单，同时调整开仓的仓位数量。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST /contract/v3/private/position/trading-stop
+
+**请求参数：**
+
+ 
+
+| Parameter    | Required | Type   | Comment                                                      |
+| ------------ | -------- | ------ | ------------------------------------------------------------ |
+| symbol       | true     | string | 合约类型                                                     |
+| takeProfit   | false    | string | 不小于0,如果等于0则是取消止盈(TP)。仅仓位全部止盈止损时生效。 |
+| stopLoss     | false    | string | 不小于0,如果等于0则是取消止损(SL)                            |
+| activePrice  | false    | string | 追踪止损触发价格。追踪止损会在到达该价格后才会触发（追踪止损默认立即触发）。 |
+| trailingStop | false    | string | 不小于0,如果等于0则是取消追踪止损(TS)                        |
+| tpTriggerBy  | false    | string | 止盈激活价格类型，默认为LastPrice                            |
+| slTriggerBy  | false    | string | 止损激活价格类型，默认为LastPrice                            |
+| slSize       | false    | string | 在部分止盈止损模式下，止损合约数量                           |
+| tpSize       | false    | string | 在部分止盈止损模式下，止盈合约数量                           |
+| positionIdx  | false    | int    | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓；1-双向持仓Buy；2-双向持仓Sell. Linear 必传。Inverse，Options 不传。 |
+
+**返回参数：**
+
+ 
+
+| Parameter | Required | Type | Comment |
+| --------- | -------- | ---- | ------- |
+|           |          |      |         |
+
+### **自動追加保證金**
+
+ 
+
+設置自動追加保證金。
+
+**HTTP** **請求**
+
+POST /contract/v3/private/position/set-auto-add-margin
+
+![Generated](file:////Users/sh00456ml/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.jpg)
+
+**請求參數**
+
+ 
+
+| 參數          | 是否必須 | 類型   | 說明                                                         |
+| ------------- | -------- | ------ | ------------------------------------------------------------ |
+| symbol        | true     | string | 合約類型，只对正向合约逐仓设置生效                           |
+| autoAddMargin | true     | int    | 自动追加保证金模式，0 代表关闭，1 代表开启。                 |
+| positionIdx   | false    | int    | Position idx, 用於在不同倉位模式下標識倉位： 0-單向持倉 1-雙向持倉Buy 2-雙向持倉Sell |
+
+ 
+
+### **查询历史成交记录**
+
+**接口说明：**
+
+获取用户成交记录，按时间降序排列。
+
+一个订单可能有多笔成交记录。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/execution/list
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| category  | false    | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| orderId   | false    | string | 订单号，如果没有填写订单号，将返回用户全部交易记录           |
+| symbol    | false    | string | 如果category是option，symbol变为选填                         |
+| baseCoin  | false    | string | 交易货币                                                     |
+| startTime | false    | int    | 开始时间戳（毫秒）                                           |
+| endTime   | false    | int    | 结束时间戳（毫秒）                                           |
+| limit     | false    | int    | Limit for data size per page, max size is 200. Default as  showing 50 pieces of data per page |
+| cursor    | false    | string |                                                              |
+| execType  | false    | string | Exec type (exec_type) Trade AdlTrade Funding BustTrade 。（仅 USDT Perps ，Inverse Perps，Inverse Futures）生效 |
+
+**返回参数：**
+
+ 
+
+| Parameter               | Type   | Comment                                                      |
+| ----------------------- | ------ | ------------------------------------------------------------ |
+| category                | string | 衍生品产品类型，正向合约：linear；反向合约：inverse；期权：option。如果不传，则默认支持正反向合约。 |
+| list > symbol           | string | 衍生品名称                                                   |
+| list > underlyingPrice  | string | 仅对期权有效                                                 |
+| list > execFee          | string | 交易手续费                                                   |
+| list > execId           | string | 成交ID                                                       |
+| list > execPrice        | string | 成交价格                                                     |
+| list > execQty          | string | 成交数量                                                     |
+| list > execType         | string | 交易类型枚举                                                 |
+| list > execValue        | string | 成交价值                                                     |
+| list > feeRate          | string | 手续费率                                                     |
+| list > iv               | string | 仅对期权有效                                                 |
+| list > markIv           | string | 仅对期权有效                                                 |
+| list > blockTradeId     | string | 大宗交易 ID                                                  |
+| list > lastLiquidityInd | string | 流动性类型枚举, 只有当exec_type字段类型为Trade、AdlTrade、BustTrade时有效 |
+| list > leavesQty        | string | 剩余委托数量                                                 |
+| list > orderId          | string | 订单ID                                                       |
+| list > orderLinkId      | string | 用户自定义订单ID                                             |
+| list > orderPrice       | string | 订单价格                                                     |
+| list > orderQty         | string | 订单数量                                                     |
+| list > orderType        | string | 订单类型枚举                                                 |
+| list > stopOrderType    | string | Stop order type 枚举：                                       |
+| list > side             | string | 方向                                                         |
+| list > execTime         | int64  | 交易时间，精确到毫秒                                         |
+| nextPageCursor          | string | API pass-through                                             |
+
+### **查询平仓盈亏**
+
+**接口说明：**
+
+获取用户成交记录，按时间降序排列。
+
+一个订单可能有多笔成交记录。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/position/closed-pnl
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| symbol    | true     | string | 合约名称                                                     |
+| startTime | false    | int64  | 开始时间戳（毫秒）                                           |
+| endTime   | false    | int64  | 结束时间戳（单位秒）                                         |
+| limit     | false    | int    | Limit for data size per page, max size is 200. Default as showing  50 pieces of data per page |
+| cursor    | false    | string |                                                              |
+
+**返回参数：**
+
+ 
+
+| Parameter            | Type   | Comment                                                      |
+| -------------------- | ------ | ------------------------------------------------------------ |
+| list > symbol        | string | 合约类型                                                     |
+| list > orderId       | string | 订单ID                                                       |
+| list > side          | string | Side of the closing order                                    |
+| list > qty           | string | 委托数量                                                     |
+| list > orderPrice    | string | 订单价格                                                     |
+| list > orderType     | string | 订单类型                                                     |
+| list > execType      | string | 交易类型枚举                                                 |
+| list > closedSize    | string | 平仓委托对应的平仓大小                                       |
+| list > cumEntryValue | string | 被平掉的仓位价值                                             |
+| list > avgEntryPrice | string | 平均入场价                                                   |
+| list > cumExitValue  | string | 平仓订单累计成交价值                                         |
+| list > avgExitPrice  | string | 平均出场价                                                   |
+| list > closedPnl     | string | 与平仓size等比例对应的盈亏                                   |
+| list > fillCount     | string | 成交笔数                                                     |
+| list > leverage      | string | 逐仓模式下, 值为用户设置的杠杆；全仓模式下，值为当前风险限额下最大杠杆 |
+| list > createdAt     | int64  | 创建时间                                                     |
+| nextPageCursor       | string | API pass-through                                             |
+
+ 
+
+## **Account**
+
+### **获取钱包余额**
+
+**接口说明：**
+
+获取钱包余额
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/account/wallet/balance
+
+**请求参数：**
+
+ 
+
+| Parameter | Required | Type   | Comment                                                      |
+| --------- | -------- | ------ | ------------------------------------------------------------ |
+| coin      | false    | string | currency alias，如果不传参数coin，将返回所有钱包余额。允许传多个，用逗号分隔，例如：USDC,USDT |
+
+**返回参数：**
+
+ 
+
+| Parameter               | Type   | Comment                                             |
+| ----------------------- | ------ | --------------------------------------------------- |
+| Coin > coin             | string | 钱包币种名称                                        |
+| Coin > equity           | string | 用户资产                                            |
+| Coin > walletBalance    | string | 钱包余额                                            |
+| Coin > positionMargin   | string | 仓位保证金                                          |
+| Coin > availableBalance | string | 可用余额                                            |
+| Coin > orderMargin      | string | 当前委托订单占用的保证金                            |
+| Coin > occClosingFee    | string | 预占用平仓手续费                                    |
+| Coin > occFundingFee    | string | 预占用资金费用                                      |
+| Coin > unrealisedPnl    | string | 当前未结算盈亏                                      |
+| Coin > cumRealisedPnl   | string | 累计已结算盈亏                                      |
+| Coin > accountMM        | string | USDC 账户的 Maintenance margin，仅 USDC 资产有效    |
+| Coin > accountIM        | string | USDC 账户的 Initial margin margin，仅 USDC 资产有效 |
+| Coin > givenCash        | string | 体验金                                              |
+| Coin > serviceCash      | string | 抵扣金                                              |
+
+### **获取交易手续费率**
+
+接口说明：
+
+获取当前用户的交易手续费
+
+限频，每分钟 5 次
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET /contract/v3/private/account/fee-rate
+
+请求参数：
+
+ 
+
+| **参数** | **是否必须** | **类型** | **说明** |
+| -------- | ------------ | -------- | -------- |
+| symbol   | false        | string   | 合约名称 |
+
+返回参数：
+
+ 
+
+| **参数**             | **类型** | **说明**     |
+| -------------------- | -------- | ------------ |
+| list >  symbol       | string   |              |
+| list >  takerFeeRate | string   | 吃单手续费率 |
+| list >  makerFeeRate | string   | 挂单手续费率 |
+
+### **查询账户配置****(****新增****)**
+
+**接口说明：**
+
+该接口可以查询账户下的配置，第一版本是查询保证金模式。支持 RM 和 PM 模式查询。
+
+未来该接口会增加如下几个配置查询：是否是可交易状态，是否可划转状态等账户的配置。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET 
+
+/contract/v3/private/account/info
+
+**请求参数：**
+
+无
+
+**返回参数**
+
+ 
+
+| **参数**   | **类型** | **说明**                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| marginMode | string   | REGULAR_MARGIN（常规保证金模式）  PORTFOLIO_MARGIN（组合保证金模式） |
+| updateTime | number   | 账户数据更新的时间，毫秒时间戳                               |
+
+ 
+
+ 
+
+### **获取钱包资金记录**
+
+接口说明：
+
+获取当前用户的钱包资金记录
+
+请求方式：
+
+HTTP 请求
+
+接口地址：
+
+GET /contract/v3/private/account/wallet/fund-records
+
+请求参数：
+
+ 
+
+| **参数**                                                     | **是否必须** | **类型** | **说明**                                                     |
+| ------------------------------------------------------------ | ------------ | -------- | ------------------------------------------------------------ |
+| [start](https://bybit-exchange.github.io/docs/inverse/#date-start_date-end_date)Time | false        | int64    | 开始时间，毫秒时间戳                                         |
+| [end](https://bybit-exchange.github.io/docs/inverse/#date-start_date-end_date)Time | false        | int64    | 结束时间，毫秒时间戳，只能查最近 1 年记录                    |
+| [coin](https://bybit-exchange.github.io/docs/inverse/#currency-currency-coin) | false        | string   | Settlement  coin                                             |
+| [walletFundType](https://bybit-exchange.github.io/docs/inverse/#wallet-fund-type-wallet_fund_type-type) | false        | string   | Wallet  fund type                                            |
+| limit                                                        | false        | integer  | Limit for  data size per page, max size is 50. Default as showing 20 pieces of data per  page |
+| cursor                                                       | false        | string   |                                                              |
+
+返回参数：
+
+ 
+
+| **参数**              | **类型** | **说明**                                                     |
+| --------------------- | -------- | ------------------------------------------------------------ |
+| list >  coin          | string   | Coin type                                                    |
+| list >  type          | string   | Fund type    • Deposit 入金  • Withdraw 提幣  • RealisedPNL 已結盈虧  • Commission 傭金  • Refund 系統返還（如提幣審核拒絕返還、用戶提幣取消返還）  • Prize 贈金  • ExchangeOrderWithdraw 兌出  • ExchangeOrderDeposit 兌入  • ReturnServiceCash 返還手續費贈金  • Insurance 保險賬戶劃轉  • SubMember 母子賬號劃轉  • Coupon 生息券  • AccountTransfer 賬戶劃轉  • CashBack 返現 |
+| list >  amount        | string   | Fund  amount                                                 |
+| list >  walletBalance | string   | Wallet  balance                                              |
+| list >  execTime      | int64    | Transaction  time                                            |
+
+ 
+
+### **查询交易日志（新增）**
+
+**接口说明：**
+
+整个账户的交易日志，目前仅能支持 USDC 业务。
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+GET /contract/v3/private/account/transaction-log
+
+**请求参数**
+
+ 
+
+| Parameter | Required | Type    | Comment                                                      |
+| --------- | -------- | ------- | ------------------------------------------------------------ |
+| category  | true     | string  | 衍生品产品类型：linear：正向合约；option：期权               |
+| currency  | true     | string  | USDC、USDT、BTC、ETH                                         |
+| baseCoin  | false    | string  | 例如： USDC就是BTC；USDT就是现在现有的交易币种枚举，例如： BTCUSDT 的 baseCoin 是 BTC 不匹配时已确认返回空 |
+| type      | false    | string  | 默认返回该 category下所有交易日志（除划转/兑币/体验金外）   TRANSFER_IN 转入 TRANSFER_OUT 转出   TRADE 交易 SETTLEMENT 结算   DELIVERY 交割 LIQUIDATION 强平 BONUS 体验金领取 FEE_REFUND 手续费返还 INTEREST 利息   CURRENCY_BUY 统保币币兑换买入 CURRENCY_SELL 统保币币兑换卖出   注意：查询转入转出日志，必须要传type=TRANSFER_IN，type=TRANSFER_OUT，否则查不到划转日志 |
+| startTime | false    | int     | 开始时间, 毫秒时间戳                                         |
+| endTime   | false    | int     | 结束时间, 毫秒时间戳                                         |
+| direction | false    | string  | 搜索方向：prev:上一页,next:下一页,默认为 next                |
+| limit     | false    | integer | 每页数量, 最大50. 默认每页20条                               |
+| cursor    | false    | string  | 翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
+
+**Responses**
+
+ 
+
+| Parameter              | Type   | Comment                                        |
+| ---------------------- | ------ | ---------------------------------------------- |
+| category               | string | 衍生品产品类型：linear：正向合约；option：期权 |
+| currency               | string | USDC、USDT、BTC、ETH                           |
+| list > transactionTime | number | 时间戳（毫秒）                                 |
+| list > type            | string | 类型（新增 Interest 枚举值）                   |
+| list > symbol          | string | symbol名称                                     |
+| list > side            | string | 方向                                           |
+| list > qty             | string | 数量                                           |
+| list > size            | string | 仓位                                           |
+| list > tradePrice      | string | 交易价格                                       |
+| list > funding         | string | 资金费用                                       |
+| list > fee             | string | 手续费，正数表示用户付出xx手续费，负数表示赚取 |
+| list > cashFlow        | string | 现金流                                         |
+| list > change          | string | 变更                                           |
+| list > cashBalance     | string | 余额（当前币种）                               |
+| list > feeRate         | string | 手续费率                                       |
+| list > tradeId         | string | 交易id                                         |
+| list > orderId         | string | 订单id                                         |
+| list > orderLinkId     | string | 机构订单号                                     |
+| nextPageCursor         | string | 翻页标记                                       |
+
+### **设置保证金模式（新增）**
+
+**接口说明：**
+
+用户如果不设置，默认按常规保证金。该模式仅对 USDC Perp 和 USDC Option 有效，Portfolio Margin 不支持 USDT 结算的合约。
+
+ 
+
+**请求方式：**
+
+HTTP 请求
+
+**接口地址：**
+
+POST 
+
+/contract/v3/private/account/setMarginMode
+
+**请求参数：**
+
+ 
+
+| **参数**      | **是否必填** | **类型** | **说明**                                                     |
+| ------------- | ------------ | -------- | ------------------------------------------------------------ |
+| setMarginMode | true         | string   | REGULAR_MARGIN（常规保证金模式）  PORTFOLIO_MARGIN（组合保证金模式）  默认常规，传常规返回设置成功 |
+
+返回参数
+
+ 
+
+| **参数** | **说明**                                       |
+| -------- | ---------------------------------------------- |
+| result   | Success/Failure                                |
+| msg      | 若失败，返回失败原因。若成功，不显示原因字段。 |
+
+ 
+
+ 
+
+# **Websocket** 
+
+• usdt 合约：wss://stream-testnet.bybit.com/contract/usdt/public/v3
+
+• usdc 合约：wss://stream-testnet.bybit.com/contract/usdc/public/v3
+
+• 反向合约：wss://stream-testnet.bybit.com/contract/inverse/public/v3
+
+## **訂閱方式**
+
+ 
+
+订阅方式
+
+ws.send('{"op": "subscribe", "args": ["topic1", "topic2"]}');
+
+响应结果（ret_msg为失败原因，订阅成功为空）：
+
+{"success":true,"ret_msg":"","conn_id": "{conn_id}"}
+
+## **取消订阅方式**
+
+取消
+
+ws.send('{"op": "unsubscribe", "args": ["topic1", "topic2"]}');
+
+响应：
+
+{"success":true,"ret_msg":"","conn_id": "{conn_id}"}
+
+**鉴权认证：**
+
+建立連接後發送auth請求驗證
+
+**Example:**
+
+ 
+
+## **Websocket Public:**
+
+### **OrderBook** **深度**
+
+**说明：**
+
+获取25，500档orderbook数据.
+
+订阅成功后， 会立即得到一个当前快照包的推送信息. orderbook数据按订单价格升序排序， 从最低价格的买单到最高价格的卖单.
+
+快照包之后，每当orderbook发生变化，websocket将会继续推送这些增量数据.
+
+收到snapshot的报文，就需要重置本地的orderbook
+
+推送频率：**100ms**
+
+type : snapshot =完整的报文,delta 增量报文
+
+如果因为 Bybit 服务原因，会重新发送 snapshot 报文，已保证数据是最新且准确的。
+
+25 档数据，推送频率 20ms （预计 2022-11-01 将该 Topic 下线，请使用 50档的 topic）
+
+50 档数据，推送频率 20ms
+
+200 档数据，推送频率 100ms
+
+500档数据，推送频率 100ms （预计 2022-11-01 将该 Topic 下线，请使用 200档的 topic）
+
+**Topic****：（备注：****Option****只有****25****和****100****档）**
+
+orderBook50.{symbol}
+
+orderBook100.{symbol}（仅限期权）
+
+orderBook200.{symbol}（仅限期权）
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment  | Short name |
+| --------- | ------- | -------- | ---------- |
+| symbol    | string  | 合约名字 | s          |
+| bids      | 数组    | 买方     | b          |
+| asks      | 数组    | 卖方     | a          |
+| updateId  | integer | 更新 ID  | u          |
+
+### **平台成交数据**
+
+**说明：**
+
+获取Bybit平台最近成交数据
+
+从用户订阅开始，实时推送增量交易历史，有成交数据就推送
+
+**Topic****：**
+
+trade.{symbol}
+
+**返回参数：**
+
+ 
+
+| Parameter     | Type   | Comment                                               | Short name |
+| ------------- | ------ | ----------------------------------------------------- | ---------- |
+| tradeTimeMs   | number | 毫秒时间戳                                            | T          |
+| symbol        | string | symbol名称                                            | s          |
+| side          | string | 方向                                                  | S          |
+| size          | string | 成交数量                                              | v          |
+| price         | string | 成交价格                                              | p          |
+| tickDirection | string | 价格变化方向                                          | L          |
+| execId        | string | 交易ID                                                | i          |
+| time          | string | UTC 時間                                              | ts         |
+| isBlockTrade  | bool   | 备注：成交类型是否是大宗交易：是 ：true ；否：false。 | BT         |
+
+### **行情**
+
+**说明：**
+
+获取合约的最新数据.
+
+Push frequency: **100ms**
+
+注意，该topic只会推送数据. 和数据都为空. 如果数据也为空，则表明信息没有发生变化. 
+
+**Topic****：**
+
+tickers.{symbol}
+
+**返回参数：**
+
+期权合约行情：
+
+ 
+
+| Parameter              | Type   | Comment                           |
+| ---------------------- | ------ | --------------------------------- |
+| category               | string | 衍生品产品类别                    |
+| symbol                 | string | 产品名称                          |
+| bid1Price              | string | 买一价                            |
+| bidSize                | string | 买一价的挂单数量                  |
+| bidIv                  | string | Implied volatility for best bid   |
+| ask1Price              | string | 卖一价                            |
+| askSize                | string | 卖一价的挂单数量                  |
+| askIv                  | string | Implied volatility for best ask   |
+| lastPrice              | string | 最新成交价                        |
+| prevPrice24h           | string | 24小时前的整点市价                |
+| price24hPcnt           | string | 市价相对24h变化百分比             |
+| highPrice24h           | string | 最近 24 小时最高价                |
+| lowPrice24h            | string | 最近 24 小时最低价                |
+| prevPrice1h            | string | 1小时前的整点市价                 |
+| price1hPcnt            | string | 市价相对1小时前变化百分比         |
+| markPrice              | string | 标记价格                          |
+| indexPrice             | string | 指数价格                          |
+| markPriceIv            | string | Implied volatility for mark price |
+| underlyingPrice        | string | Underlying price                  |
+| openInterest           | number | 未平仓合约数量                    |
+| openInterestValue      | string | 未平仓合约价值                    |
+| turnover24h            | string | 24小时成交量                      |
+| volume24h              | number | 最近 24 小时成交量                |
+| totalVolume            | string | Total trading volume              |
+| totalTurnover          | string | Total turnover                    |
+| delta                  | string | Delta value                       |
+| gamma                  | string | Delta value                       |
+| vega                   | string | Vega value                        |
+| theta                  | string | Theta value                       |
+| fundingRate            | string | 资金费率                          |
+| predictedFundingRate   | string | 预测资金费率                      |
+| nextFundingTime        | string | 下次结算资金费用时间              |
+| countdownHour          | number | 结算资金费用剩余时间              |
+| deliveryFeeRate        | string | 交割费率，仅交割合约有效          |
+| predictedDeliveryPrice | string | 预期交割价，仅交割合约有效        |
+| deliveryTime           | string | 交割时间                          |
+| basisRate              | string | 交割合约基差率                    |
+
+ 
+
+期货合约行情：
+
+ 
+
+| Parameter              | Type   | Comment                                              |
+| ---------------------- | ------ | ---------------------------------------------------- |
+| symbol                 | string | 产品名称                                             |
+| bid1Price              | string | 买一价                                               |
+| bid1Size               | string | 买一价的挂单数量                                     |
+| ask1Price              | string | 卖一价                                               |
+| ask1Size               | string | 卖一价的挂单数量                                     |
+| lastPrice              | string | 最新成交价                                           |
+| prevPrice24h           | string | 24小时前的整点市价                                   |
+| price24hPcnt           | string | 市价相对24h变化百分比                                |
+| highPrice24h           | string | 最近 24 小时最高价                                   |
+| lowPrice24h            | string | 最近 24 小时最低价                                   |
+| prevPrice1h            | string | 1小时前的整点市价                                    |
+| markPrice              | string | 标记价格                                             |
+| indexPrice             | string | 指数价格                                             |
+| openInterest           | string | 未平仓合约数量                                       |
+| turnover24h            | string | 24小时成交量                                         |
+| volume24h              | string | 最近 24 小时成交量                                   |
+| fundingRate            | string | 资金费率，交割为""                                   |
+| predictedFundingRate   | string | 预测资金费率，反向交割、反向永续、usdt永续为""       |
+| nextFundingTime        | string | 下次结算资金费用时间 交割 ""                         |
+| deliveryFeeRate        | string | 交割费率，仅交割合约有效，显示反向交割的交割费率     |
+| predictedDeliveryPrice | string | 交割价格，仅交割合约有效，显示反向交割的预估交割价格 |
+| deliveryTime           | string | 交割时间                                             |
+| basisRate              | string | 交割合约基差率                                       |
+
+ 
+
+### **K****线**
+
+**说明：**
+
+目前所支持的周期:
+
+• 1 3 5 15 30
+
+• 60 120 240 360 720
+
+• D
+
+• W
+
+• M
+
+推送頻率：**1-60s**
+
+**註意如果字段**
+
+**confirm****為**
+
+**True,** **則表明這是這根****K****線的最後一個****tick****；否則，這只是一個快照數據，即中間價格**
+
+**Topic****：**
+
+candle.周期.symbol
+
+**返回参数：**
+
+ 
+
+| Parameter | Type    | Comment                                                      |
+| --------- | ------- | ------------------------------------------------------------ |
+| start     | integer | 開始時間戳（秒），返回数据为秒，但是转换成毫秒返回给客户。   |
+| end       | integer | 結束時間戳（秒），如果查询周期未到结束时间，则返回最新时间。返回数据为秒，但是转换成毫秒返回给客户。 |
+| interval  | string  | 周期                                                         |
+| open      | string  | 開始價格                                                     |
+| close     | string  | 結束價格                                                     |
+| high      | string  | 最高價格                                                     |
+| low       | string  | 最低價格                                                     |
+| volume    | string  | 交易量                                                       |
+| turnover  | string  | 成交金額                                                     |
+| confirm   | bool    | 确认 K 线是否结束                                            |
+| timestamp | integer | 当前时间（秒）返回数据为秒，但是转换成毫秒返回给客户。       |
+
+## **Websocket Private (Unified Margin Account):**
+
+### **持仓**
+
+仅推增量
+
+獲取我的倉位列表。通過該接口可以獲取當前用戶的持倉信息，如持倉數量、賬戶余額等信息
+
+Topic：
+
+user.position.unifiedAccount
+
+**返回參數**
+
+ 
+
+| Parameter         | Type    | Comment                                                      |
+| ----------------- | ------- | ------------------------------------------------------------ |
+| positionIdx       | integer | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓1-双向持仓Buy2-双向持仓Sell |
+| isIsolated        | string  | 仓位模式：false ：全仓；true：逐仓；统保模式下返回：false    |
+| riskId            | number  | 风险限额ID                                                   |
+| symbol            | string  | 合约类型                                                     |
+| side              | string  | 方向，long：多头；short：空头                                |
+| size              | number  | 仓位数量                                                     |
+| entryPrice        | string  | 平均入场价                                                   |
+| sessionAvgPrice   | string  | Settlement price，仅USDC perps                               |
+| leverage          | string  | 逐仓模式下, 值为用户设置的杠杆；全仓模式下，值为当前风险限额下最大杠杆；仅适用于合约，不适用于期权 |
+| effectiveLeverage | string  | 有效杠杆                                                     |
+| positionMargin    | string  | 仓位保证金                                                   |
+| markPrice         | string  | 标记价格                                                     |
+| sessionUPL        | string  | Session UPL                                                  |
+| sessionRPL        | string  | Session RPL                                                  |
+| positionIM        | string  | Initial margin                                               |
+| positionMM        | string  | Maintenance margin                                           |
+| takeProfit        | string  | 止盈价格                                                     |
+| stopLoss          | string  | 止损价格                                                     |
+| trailingStop      | string  | 追踪止损                                                     |
+| positionStatus    | string  | 仓位状态，正常，强平，减仓                                   |
+| positionValue     | string  | Position value                                               |
+| unrealisedPnl     | string  | 未结盈亏                                                     |
+| cumRealisedPnl    | string  | 累计已结盈亏                                                 |
+| positionSeq       | number  | 仓位变化版本号                                               |
+| createdTime       | string  | 仓位创建时间                                                 |
+| createdTime       | string  | Update time                                                  |
+| tpslMode          | string  | 止盈止损模式                                                 |
+
+### **个人成交**
+
+**说明：**
+
+獲取用戶成交記錄，按時間升序排列
+
+**Topic****：**
+
+user.execution.unifiedAccount
+
+**返回參數**
+
+ 
+
+| Parameter        | Type   | Comment                                                      |
+| ---------------- | ------ | ------------------------------------------------------------ |
+| symbol           | string | 衍生品名称                                                   |
+| execFee          | string | 交易手续费，正数表示用户付出xx手续费，负数表示赚取           |
+| execId           | string | 成交ID                                                       |
+| execPrice        | string | 成交价格                                                     |
+| execQty          | string | 成交数量                                                     |
+| execType         | string | 交易类型枚举                                                 |
+| execValue        | string | 成交价值                                                     |
+| feeRate          | string | 手续费率                                                     |
+| lastLiquidityInd | string | 流动性类型枚举, 只有当exec_type字段类型为Trade、AdlTrade（自动减仓，统保一期没有）、BustTrade（强平，统保一期没有）时有效 |
+| leavesQty        | string | 剩余委托数量                                                 |
+| orderId          | string | 订单ID                                                       |
+| orderLinkId      | string | 用户自定义订单ID                                             |
+| orderPrice       | string | 订单价格                                                     |
+| orderQty         | string | 订单数量                                                     |
+| orderType        | string | 订单类型枚举                                                 |
+| stopOrderType    | string | Stop order type 枚举： UNKNOWN、StopTakeProfitStopLoss       |
+| side             | string | 方向                                                         |
+| execTime         | number | 交易时间，精确到毫秒                                         |
+
+### **订单**
+
+仅推增量订单与条件单合并成一个 Topic
+
+**Topic****：**
+
+user.order.unifiedAccount
+
+**返回參數**
+
+ 
+
+| Parameter      | Type                   | Comment                                                      |
+| -------------- | ---------------------- | ------------------------------------------------------------ |
+| symbol         | string                 | 合約類型                                                     |
+| orderId        | string                 | 委托訂單ID。                                                 |
+| side           | string                 | 方向                                                         |
+| orderType      | string                 | 訂單類型                                                     |
+| stopOrderType  | string                 | 条件单类型                                                   |
+| price          | string                 | 委托價格                                                     |
+| qty            | string                 | 委托數量                                                     |
+| iv             | string                 | 隐含波动率                                                   |
+| orderIM        | string                 | Initial margin，订单初始保证金。                             |
+| timeInForce    | string                 | 執行策略                                                     |
+| orderStatus    | string                 | 訂單狀態                                                     |
+| triggerPrice   | string                 | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| orderLinkId    | string                 | 機構自定義訂單ID                                             |
+| createdTime    | int64 已确认改成number | 創建時間                                                     |
+| updatedTime    | int64 已确认改成number | 更新時間                                                     |
+| takeProfit     | string                 | 止盈價格                                                     |
+| stopLoss       | string                 | 止損價格                                                     |
+| tpTriggerBy    | string                 | 止盈激活價格類型，默認為LastPrice。 枚举值：LastPrice、MarkPrice、IndexPrice |
+| slTriggerBy    | string                 | 止損激活價格類型，默認為LastPrice。其他同上                  |
+| basePrice      | string                 | 下單時市價                                                   |
+| triggerBy      | string                 | 觸發價格類型. 默認為最新市價，枚举值同slTriggerBy            |
+| reduceOnly     | bool                   | 是否平倉單 true-平倉 false-開倉                              |
+| closeOnTrigger | bool                   | 是否平倉委托 true-平倉 false-開倉                            |
+
+### **钱包**
+
+**Topic****：**
+
+user.wallet.unifiedAccount
+
+**返回参数：**
+
+ 
+
+| Parameter                             | Type   | Comment                                                      |
+| ------------------------------------- | ------ | ------------------------------------------------------------ |
+| accountIMRate                         | string | 起始保证金比率：Account Total Initial Margin  Base Coin / Account Margin Balance Base Coin |
+| accountMMRate                         | string | 维持保证金比率：Account Total Maintenance Margin  Base Coin / Account Margin Balance Base Coin |
+| totalEquity                           | string | 账户维度换算成usd的资产净值：Account Margin Balance Base  Coin + Account Option Value Base Coin |
+| totalWalletBalance                    | string | 账户维度换算成usd的产钱包余额：∑ Asset Wallet Balance Base  Coin |
+| totalMarginBalance                    | string | 账户维度换算成usd的保证金余额：Account Wallet Balance Base  Coin + Account Perp UPL Base Coin |
+| totalAvailableBalance                 | string | 账户维度换算成usd的可用余额：RM：Account Margin Balance Base  Coin - Account Initial Margin Base Coin |
+| totalPerpUPL                          | string | 账户维度换算成usd的永续浮动盈亏：∑ Asset Perp UPL Base Coin  |
+| totalInitialMargin                    | string | 账户维度换算成usd的总初始保证金：∑ Asset Total Initial Margin  Base Coin |
+| totalMaintenanceMargin                | string | 账户维度换算成usd的总维持保证金: ∑ Asset Total Maintenance  Margin Base Coin |
+| Coin > coin                           | string | 钱包币种的名称，例如 BTC，ETH，USDT，USDC                    |
+| Coin > equity                         | string | 用户资产                                                     |
+| Coin > usdValue                       | string | 折算成 usd 的价值                                            |
+| Coin > walletBalance                  | string | 钱包余额                                                     |
+| Coin > marginBalance                  | string | 其余资产贡献的MB+当前资产真实剩余的MB                        |
+| Coin > availableBalance               | string | 其余资产贡献的AB+当前资产真实剩余的AB（不能为负）            |
+| Coin > marginBalanceWithoutConvert    | string | 保证金余额                                                   |
+| Coin > availableBalanceWithoutConvert | string | 可用余额, 钱包余额 - 仓位保证金，                            |
+| Coin >borrowSize                      | string | 已用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；    |
+| Coin >availableToBorrow               | string | 可用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；    |
+| Coin > accruedInterest                | string | 某资产应计利息                                               |
+| Coin > totalOrderIM                   | string | 订单委托预占用保证金                                         |
+| Coin > totalPositionIM                | string | 所有仓位起始保证金求和 + 预占用平仓手续费                    |
+| Coin > totalPositionMM                | string | 所有仓位维持保证金求和                                       |
+| Coin > unrealisedPnl                  | string | 未结盈亏                                                     |
+| Coin > cumRealisedPnl                 | string | 累计已结盈亏                                                 |
+
+### **用户希腊字母信息（仅期权）**
+
+**Topic****：**
+
+user.greeks.unifiedAccount
+
+**Response**
+
+ 
+
+| Parameter  | Type   | Comment       |
+| ---------- | ------ | ------------- |
+| coin       | string | Base currency |
+| totalDelta | string | Delta value   |
+| totalGamma | string | Gamma value   |
+| totalVega  | string | Vega value    |
+| totalTheta | string | Theta value   |
+
+ 
+
+## **Websocket Private (Contract Account):**
+
+**持仓**
+
+仅推增量
+
+獲取我的倉位列表。通過該接口可以獲取當前用戶的持倉信息，如持倉數量、賬戶余額等信息
+
+Topic：
+
+user.position.contractAccount
+
+**返回參數**
+
+ 
+
+| Parameter              | Type   | Comment                                                      |
+| ---------------------- | ------ | ------------------------------------------------------------ |
+| list > positionIdx     | int    | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓1-双向持仓Buy2-双向持仓Sell |
+| list > riskId          | int    | 风险限额ID                                                   |
+| list > riskLimitValue  | string | 当前风险限额 ID 对应的持仓上限                               |
+| list > symbol          | string | 合约类型                                                     |
+| list > side            | string | 方向，Buy：多头；Sell：空头                                  |
+| list > size            | string | 仓位数量                                                     |
+| list > positionValue   | string | Position value                                               |
+| list > entryPrice      | string | 平均入场价                                                   |
+| list > tradeMode       | int    | 交易模式： 0 ：全仓；1：逐仓                                 |
+| list > autoAddMargin   | bool   | 自动追加保证金模式，false 代表关闭，true 代表开启。全仓模式该字段无效。 |
+| list > leverage        | string | 逐仓模式下, 值为用户设置的杠杆；全仓模式下，值为当前风险限额下最大杠杆；仅适用于合约，不适用于期权 |
+| list > positionIM      | string | 仓位起始保证金                                               |
+| list > positionMM      | string | 仓位维持保证金                                               |
+| list > positionBalance | string | 仓位占用的实际金额                                           |
+| list > sessionAvgPrice | string | session 结算价格（仅 USDC 有效）                             |
+| list > positionBalance | string | 仓位余额                                                     |
+| list > liqPrice        | string | 强制平仓价格                                                 |
+| list > bustPrice       | string | 破产价格                                                     |
+| list > takeProfit      | string | 止盈价格                                                     |
+| list > stopLoss        | string | 止损价格                                                     |
+| list > trailingStop    | string | 追踪止损                                                     |
+| list > positionStatus  | string | 仓位状态，正常，强平，减仓。                                 |
+| list > unrealisedPnl   | string | 未结盈亏                                                     |
+| list > createdTime     | int64  | The account creation time                                    |
+| list > updatedTime     | int64  | Update time                                                  |
+| list > tpslMode        | string | 止盈止损模式                                                 |
+
+### **个人成交**
+
+**说明：**
+
+獲取用戶成交記錄，按時間升序排列
+
+**Topic****：**
+
+user.execution.contractAccount
+
+**返回參數**
+
+ 
+
+| Parameter              | Type   | Comment                                                      |
+| ---------------------- | ------ | ------------------------------------------------------------ |
+| symbol                 | string | 衍生品名称                                                   |
+| list > underlyingPrice | string | 仅对期权有效                                                 |
+| execFee                | string | 交易手续费，正数表示用户付出xx手续费，负数表示赚取           |
+| execId                 | string | 成交ID                                                       |
+| execPrice              | string | 成交价格                                                     |
+| execQty                | string | 成交数量                                                     |
+| execType               | string | 交易类型枚举                                                 |
+| execValue              | string | 成交价值                                                     |
+| feeRate                | string | 手续费率                                                     |
+| iv                     | string | 仅对期权有效                                                 |
+| markIv                 | string | 仅对期权有效                                                 |
+| blockTradeId           | string | 大宗交易 ID                                                  |
+| lastLiquidityInd       | string | 流动性类型枚举, 只有当exec_type字段类型为Trade、AdlTrade（自动减仓，统保一期没有）、BustTrade（强平）时有效 （AddedLiquidity，RemovedLiquidity） |
+| leavesQty              | string | 剩余委托数量                                                 |
+| orderId                | string | 订单ID                                                       |
+| orderLinkId            | string | 用户自定义订单ID                                             |
+| orderPrice             | string | 订单价格                                                     |
+| orderQty               | string | 订单数量                                                     |
+| orderType              | string | 订单类型枚举                                                 |
+| stopOrderType          | string | Stop order type 枚举： UNKNOWN、Stop，TakeProfit，StopLoss   |
+| side                   | string | 方向                                                         |
+| execTime               | int64  | 交易时间，精确到毫秒                                         |
+| closedSize             | string | 减仓的数量                                                   |
+
+### **订单**
+
+仅推增量订单与条件单合并成一个 Topic
+
+**Topic****：**
+
+user.order.contractAccount
+
+**返回參數**
+
+ 
+
+| Parameter      | Type   | Comment                                                      |
+| -------------- | ------ | ------------------------------------------------------------ |
+| symbol         | string | 合約類型                                                     |
+| orderId        | string | 委托訂單ID。                                                 |
+| side           | string | 方向                                                         |
+| orderType      | string | 訂單類型                                                     |
+| stopOrderType  | string | 条件单类型                                                   |
+| price          | string | 委托價格                                                     |
+| qty            | string | 委托數量                                                     |
+| iv             | string |                                                              |
+| cancelType     | string | 订单被取消的类型                                             |
+| timeInForce    | string | 執行策略                                                     |
+| orderStatus    | string | 訂單狀態                                                     |
+| triggerPrice   | string | 如果stop_order_type為TrailingProfit時，為激活價格，否則為觸發價格。 |
+| orderLinkId    | string | 機構自定義訂單ID                                             |
+| createdTime    | int64  | 創建時間                                                     |
+| updatedTime    | int64  | 更新時間                                                     |
+| takeProfit     | string | 止盈價格                                                     |
+| stopLoss       | string | 止損價格                                                     |
+| tpTriggerBy    | string | 止盈激活價格類型，默認為LastPrice。 枚举值：LastPrice、MarkPrice、IndexPrice |
+| slTriggerBy    | string | 止損激活價格類型，默認為LastPrice。其他同上                  |
+| basePrice      | string | 下單時市價                                                   |
+| triggerBy      | string | 觸發價格類型. 默認為最新市價，枚举值同slTriggerBy            |
+| reduceOnly     | bool   | 是否平倉單 true-平倉 false-開倉                              |
+| closeOnTrigger | bool   | 是否平倉委托 true-平倉 false-開倉                            |
+| positionIdx    | int    | Position idx, 用于在不同仓位模式下标识仓位：0-单向持仓1-双向持仓Buy2-双向持仓Sell |
+
+### **钱包**
+
+**Topic****：**
+
+user.wallet.contractAccount
+
+**返回参数：**
+
+ 
+
+| Parameter               | Type   | Comment                                             |
+| ----------------------- | ------ | --------------------------------------------------- |
+| Coin > coin             | string | 钱包币种名称                                        |
+| Coin > equity           | string | 用户资产                                            |
+| Coin > walletBalance    | string | 钱包余额                                            |
+| Coin > positionMargin   | string | 仓位保证金                                          |
+| Coin > availableBalance | string | 可用余额                                            |
+| Coin > orderMargin      | string | 当前委托订单占用的保证金                            |
+| Coin > unrealisedPnl    | string | 当前未结算盈亏                                      |
+| Coin > cumRealisedPnl   | string | 累计已结算盈亏                                      |
+| Coin > accountMM        | string | USDC 账户的 Maintenance margin，仅 USDC 资产有效    |
+| Coin > accountIM        | string | USDC 账户的 Initial margin margin，仅 USDC 资产有效 |
+
+# Error Code：
+
+ 
+
+ 
+
+| Error Code | Comment                                                      |
+| ---------- | ------------------------------------------------------------ |
+| 10001      | The contract name cannot be empty.                           |
+| 10001      | Invalid order direction.                                     |
+| 10001      | Please enter the order quantity.                             |
+| 10001      | Only Standard and Advanced versions are supported.           |
+| 10001      | Please enter the order price.                                |
+| 10001      | Order type must be price or implied volatility.              |
+| 10001      | Implied volatility must be greater than zero.                |
+| 10001      | Invalid order type.                                          |
+| 10001      | Invalid time in force.                                       |
+| 10001      | {{key0}} does not exist.                                     |
+| 10001      | The min tick size should be {{key0}}.                        |
+| 10001      | Order quantity below the lower limit {{key0}}.               |
+| 10001      | Order qty exceeds the upper limit {{key0}}.                  |
+| 10001      | The min order size increment is {{key0}}.                    |
+| 10001      | Order id can not be empty.                                   |
+| 10001      | The only modification to implied volatility, order price, or  quantity supported. |
+| 10001      | outRequestId can not be empty.                               |
+| 10001      | orderLinkId's length can not exceed 36.                      |
+| 10001      | {{key0}} does not exist.                                     |
+| 10001      | Invalid order price.                                         |
+| 10001      | orderLinkId should be numbers and letters.                   |
+| 10001      | The side parameter must be Buy or Sell.                      |
+| 10001      | orderLinkId can not be empty.                                |
+| 10001      | Please enter at least one of the two parameters: orderLinkId  and orderId. |
+| 10001      | Invalid parameter.                                           |
+| 10001      | Parameter verification failed for 'category'.                |
+| 10001      | Parameter verification failed for 'symbol'.                  |
+| 10001      | Invalid Cursor                                               |
+| 10001      | Parameter verification failed for 'limit'.                   |
+| 10001      | The contract doesn't exist.                                  |
+| 10001      | Parameter verification failed for 'direction'.               |
+| 10001      | Parameter verification failed for 'status'.                  |
+| 10001      | Incorrect MMP parameters.                                    |
+| 10001      | Modification to MMP parameters is not supported.             |
+| 10001      | Parameter paramName cannot be empty.                         |
+| 10003      | Account not found.                                           |
+| 10008      | Your account has been restricted for trades. Please contact  customer support. |
+| 10014      | Repeated Request.                                            |
+| 10016      | System error. Please try again later.                        |
+| 10016      | Server Error                                                 |
+| 10016      | Failed to fetch UID! Please check the authentication status. |
+| 110001     | The order does not exist.                                    |
+| 110003     | Order price cannot be lower than {{key0}}.                   |
+| 110003     | Order price cannot be higher than {{key0}}.                  |
+| 110008     | Request failed! The order has already been filled.           |
+| 110008     | No orders can be canceled.                                   |
+| 110008     | Failed to edit! The order has already been filled.           |
+| 110008     | There is no active order.                                    |
+| 110010     | Failed! The order has already been canceled.                 |
+| 110010     | Failed to edit! The order has already been canceled.         |
+| 110013     | Placing an order with the {{SymbolNames}} contract will  increase your maintenance margin utilization. Liquidation may be triggered. |
+| 110013     | Failed to place an order with the {{SymbolNames}} contract!  Your maintenance margin utilization has exceeded the upper limit. |
+| 110020     | The number of active orders exceeds the upper limit.         |
+| 110020     | The number of active orders exceeds the upper limit.         |
+| 110020     | This order exceeds the maximum clearance order quantity limit. |
+| 110023     | {{key0}} not yet available for trades.                       |
+| 110023     | {{key0}} no longer available for trades.                     |
+| 110023     | The contract hasn't been delivered yet.                      |
+| 110023     | The contract is not available for trades.                    |
+| 110044     | Insufficient margin balance.                                 |
+| 110044     | Insufficient margin balance.                                 |
+| 110044     | Insufficient margin balance.                                 |
+| 110044     | Insufficient margin balance.                                 |
+| 110062     | Institution MMP profile not found.                           |
+| 110063     | Settlement in progress! {{key0}} not available for trades.   |
+| 110064     | The number of contracts modified cannot be less than or equal  to the filled quantity |
+| 110065     | MMP hasn't yet been enabled for your account. Please contact  your BD manager. |
+
+ 

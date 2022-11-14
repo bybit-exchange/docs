@@ -1,0 +1,135 @@
+---
+title: 劃轉
+sidebar_label: 劃轉
+---
+
+import TOCInline from '@theme/TOCInline';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+> 請求示例
+
+<Tabs>
+
+<TabItem value="console" label="Console">
+
+```console
+curl POST 'https://api-testnet.bybit.com/asset/v3/private/transfer/inter-transfer'
+--header 'Content-Type: application/json' \
+--header 'X-BAPI-TIMESTAMP: 1660794864052' \
+--header 'X-BAPI-API-KEY: XXXXXXXXXXXXXX' \
+--header 'X-BAPI-RECV-WINDOW: 999999999' \
+--header 'X-BAPI-SIGN: c4f6cbc0581a8afa81cade431c9389a62ff7817e3e6c4aee456fd3f86796f619' \
+--data-raw '{
+    "transferId": "xxxxxxx",
+    "coin": "BTC",
+    "amount": "0.11",
+    "fromAccountType": "SPOT",
+    "toAccountType": "CONTRACT",
+}'
+```
+
+</TabItem>
+
+<TabItem value="py" label="Python">
+
+```python live
+import requests
+url = "https://api-testnet.bybit.com/derivatives/v3/public/order-book/L2?category=linear&symbol=BTCUSDT"
+response = requests.request("GET", url)
+return response.text
+```
+
+</TabItem>
+
+<TabItem value="js" label="JavaScript">
+
+```jsx live
+function Clock(props) {
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
+  return (
+    <div>
+      <h2>It is {date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
+```
+
+</TabItem>
+</Tabs>
+
+> 響應示例
+
+<Tabs>
+
+<TabItem value="js linear" label="JavaScript linear">
+
+```javascript
+{
+  "retCode":0,
+    "retMsg":"OK",
+    "result":{
+    "transferId": "xxxxxxxxxxx"
+  },
+  "retExtInfo":{},
+  "time":1652841868446
+}
+```
+
+</TabItem>
+
+<TabItem value="js option" label="JavaScript option">
+
+```javascript
+{
+  "retCode":0,
+    "retMsg":"OK",
+    "result":{
+    "transferId": "xxxxxxxxxxx"
+  },
+  "retExtInfo":{},
+  "time":1652841868446
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+要發送賬戶類型和父子不可知的轉賬，請使用創建萬能轉賬 接口。
+
+:::info
+請註意該接口入參請求數據中的transfer_id字段為UUID全局唯一。
+請註意該接口支持期貨賬戶、現貨賬戶、理財賬戶。
+轉入和轉出賬戶類型不能相同。
+升級到統一保證金帳戶後，僅支持從現貨帳戶轉帳USDT到統保帳戶。
+:::
+
+#### HTTP 請求
+POST <code>/asset/v3/private/transfer/inter-transfer</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID,全局唯一 |
+|coin |<b>true</b> |string |幣種類型 |
+|amount |<b>true</b> |string |兌入數量 |
+|fromAccountType |<b>true</b> |string |帳戶類型 |
+|toAccountType |<b>true</b> |string |帳戶類型 |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string |UUID,全局唯一 |
