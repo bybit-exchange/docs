@@ -96,7 +96,7 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'spot/market/get-all-symbols',
+            docId: 'spot/market/symbolInfo',
             position: 'left',
             label: 'Spot',
           },

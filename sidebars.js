@@ -86,7 +86,7 @@ const sidebars = {
           label: 'Market Data Endpoint',
           collapsed: true,
           items: [
-            'spot/market/get-all-symbols',
+            'spot/market/symbolInfo',
             'spot/market/order-book'
           ]
         },
