@@ -26,7 +26,7 @@ $ yarn add docusaurus-theme-openapi-docs
 ```
 
 
-Running the below script copies our custom js files into untracked an untracked lib directory to enable sending authenticated requests to the bybit API.
+Running the below script copies our custom js files into an untracked lib directory, which enables sending authenticated requests to the bybit API.
 
 It should be run on the first installation and on subsequent yarn upgrades.
 ```
