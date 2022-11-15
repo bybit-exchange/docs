@@ -29,8 +29,8 @@ const sidebars = {
           label: 'Market Data Endpoint',
           collapsed: true,
           items: [
-            'derivatives/market/get-order-book',
-            'derivatives/market/get-kline'
+            'derivatives/market/orderbook',
+            'derivatives/market/kline'
           ]
         },
         {
@@ -235,7 +235,6 @@ const sidebars = {
   ],
   labs: [
     'labs/example_01',
-    'labs/derivatives_api'
   ],
   contractSideBar: [
     {

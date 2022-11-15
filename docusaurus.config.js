@@ -62,7 +62,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/bybit-exchange/docs-v2/pulls',
           docLayoutComponent: "@theme/DocPage",
           docItemComponent: "@theme/ApiItem" // Derived from docusaurus-theme-openapi
         },
@@ -81,6 +81,12 @@ const config = {
         minHeadingLevel: 2,
         maxHeadingLevel: 5,
       },
+      docs: {
+        sidebar: {
+          hideable: true,
+          autoCollapseCategories: true,
+        },
+      },
       navbar: {
         title: '',
         logo: {
@@ -90,7 +96,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'derivatives/market/get-order-book',
+            docId: 'derivatives/market/orderbook',
             position: 'left',
             label: 'Derivatives',
           },
