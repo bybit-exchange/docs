@@ -21,6 +21,17 @@ $ cd docs-v2
 
 ```
 $ yarn  # install the dependencies
+$ yarn add docusaurus-plugin-openapi-docs
+$ yarn add docusaurus-theme-openapi-docs
+```
+
+
+Running the below script copies our custom js files into an untracked lib directory, which enables sending authenticated requests to the bybit API.
+
+It should be run on the first installation and on subsequent yarn upgrades.
+```
+$ chmod +x setup.sh
+$ ./setup.sh
 ```
 
 ### Local Development
@@ -70,4 +81,3 @@ This command generates static content into the `build` directory and can be serv
 ```shell
 yarn deploy
 ```
-
