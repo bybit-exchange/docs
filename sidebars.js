@@ -30,7 +30,9 @@ const sidebars = {
           collapsed: true,
           items: [
             'derivatives/market/orderbook',
-            'derivatives/market/kline'
+            'derivatives/market/kline',
+            'derivatives/market/tickerInfo',
+            'derivatives/market/instrumentInfo',
           ]
         },
         {
