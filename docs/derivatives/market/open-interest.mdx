@@ -1,0 +1,32 @@
+---
+title: Open Interest
+sidebar_label: Open Interest
+---
+
+Get open interest of each symbol in Bybit
+
+:::info
+TODO: 支持查詢多久的未平仓合约數據？
+:::
+
+#### HTTP Request
+GET `/derivatives/v3/public/open-interest`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Products category. `future` ONLY |
+|symbol |<b>true</b> |string |Symbol name|
+|interval |<b>true</b> |string |Interval. `5min` `15min` `30min` `1h` `4h` `1d` |
+|startTime |false |number |The start timestamp (ms)|
+|endTime |false |number |The end timestamp (ms)|
+|limit |false |number |Limit for data size per page. [1,200]. default: `50`|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|symbol |string |Symbol name |
+|category |string |Products category. Keeps empty string `""` when `category` is not passed |
+|list |array |Object |
+|> openInterest |string |Open interest |
+|> timestamp |string |The timestamp (ms) |

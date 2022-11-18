@@ -40,9 +40,9 @@ const config = {
         id: "openapi",
         docsPluginId: "classic",
         config: {
-          contract: {
-            specPath: "yml-folder/contract.yaml",
-            outputDir: "docs/api-explorer/contract",
+          dv_market: {
+            specPath: "yml-folder/derivatives/market.yaml",
+            outputDir: "docs/api-explorer/derivatives/market",
             sidebarOptions: {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
@@ -131,7 +131,7 @@ const config = {
             label: 'Change Log',
           },
           {
-            to: '/docs/category/contract-api',
+            to: '/docs/api-explorer/derivatives/category/',
             position: 'right',
             label: 'API explorer',
           },
