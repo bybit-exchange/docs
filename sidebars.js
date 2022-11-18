@@ -31,8 +31,16 @@ const sidebars = {
           items: [
             'derivatives/market/orderbook',
             'derivatives/market/kline',
-            'derivatives/market/tickerInfo',
-            'derivatives/market/instrumentInfo',
+            'derivatives/market/ticker-info',
+            'derivatives/market/instrument-info',
+            'derivatives/market/mark-kline',
+            'derivatives/market/index-kline',
+            'derivatives/market/premium-index-kline',
+            'derivatives/market/fund-rate-history',
+            'derivatives/market/risk-limit',
+            'derivatives/market/delivery-price',
+            'derivatives/market/public-trade',
+            'derivatives/market/open-interest',
           ]
         },
         {
@@ -40,7 +48,76 @@ const sidebars = {
           label: 'Trade',
           collapsed: true,
           items: [
-              'derivatives/trade/create-order'
+            {
+              type: 'category',
+              label: 'Unified Account',
+              collapsed: true,
+              items: [
+                {
+                  type: 'category',
+                  label: 'Order',
+                  collapsed: true,
+                  items: [
+                    'derivatives/trade/unified/order/place-order',
+                    'derivatives/trade/unified/order/replace-order',
+                    'derivatives/trade/unified/order/cancel-order',
+                    'derivatives/trade/unified/order/open-order',
+                    'derivatives/trade/unified/order/order-list',
+                    'derivatives/trade/unified/order/batch-place',
+                    'derivatives/trade/unified/order/batch-replace',
+                    'derivatives/trade/unified/order/batch-cancel',
+                    'derivatives/trade/unified/order/cancel-all',
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: 'Position',
+                  collapsed: true,
+                  items: [
+                    'derivatives/account/create-internal-transfer'
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: 'Account',
+                  collapsed: true,
+                  items: [
+                    'derivatives/account/create-internal-transfer'
+                  ]
+                },
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Contract Account',
+              collapsed: true,
+              items: [
+                {
+                  type: 'category',
+                  label: 'Order',
+                  collapsed: true,
+                  items: [
+                    'derivatives/account/create-internal-transfer'
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: 'Position',
+                  collapsed: true,
+                  items: [
+                    'derivatives/account/create-internal-transfer'
+                  ]
+                },
+                {
+                  type: 'category',
+                  label: 'Account',
+                  collapsed: true,
+                  items: [
+                    'derivatives/account/create-internal-transfer'
+                  ]
+                },
+              ]
+            }
           ]
         },
         {
@@ -238,19 +315,17 @@ const sidebars = {
   labs: [
     'labs/example_01',
   ],
-  contractSideBar: [
+  dvMarketSideBar: [
     {
       type: "category",
-      label: "Contract V3",
+      label: "Derivatives",
       link: {
         type: "generated-index",
-        title: "Contract API",
-        description:
-            "This is a sample api collection for contract",
-        slug: "/category/contract-api"
+        title: "Derivatives API",
+        slug: "/api-explorer/derivatives/category/"
       },
       // @ts-ignore
-      items: require("./docs/api-explorer/contract/sidebar.js")
+      items: require("./docs/api-explorer/derivatives/market/sidebar.js")
     }
   ]
 };
