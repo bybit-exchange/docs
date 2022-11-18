@@ -4,32 +4,32 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Unified APIs',
+    Svg: require('@site/static/img/power_plug_dark_mode.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Bybit's latest v3 suite of APIs allow for a smooth and easy
+        integration.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Learn Exchange Mechanisms',
+    Svg: require('@site/static/img/clipboard_light_mode.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Learn the intricate details of Bybit's market rules to fully
+        maximise your API usage.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Historical Market Data',
+    Svg: require('@site/static/img/candlesticks_dark_mode.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Get comprehensive public market data in CSV format
+        to speedily backtest and build strategies.
       </>
     ),
   },
