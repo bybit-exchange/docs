@@ -50,10 +50,11 @@
 
    其内容可以参考: https://dextertd.github.io/new-docs-openapi/docs/category/petstore-api
 
-   temp.yaml的可视化效果，即以上链接内容，可以借此去发现yaml该怎么玩。另外，`yml-folder/derivatives/market.yaml`是我编写
-的行情demo，也可参考。我会后续新增private接口的yaml以供参考
+   temp.yaml的可视化效果，即以上链接内容，可以借此去发现yaml该怎么玩。另外，`yml-folder/derivatives/market.yaml`是我编写的行情demo，也可参考。我会后续新增private接口的yaml以供参考
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121133805530.png" alt="image-20221121133805530" style="zoom:50%;" />
 
 2. 编写好yaml后，需要在`docusaurus.config.js`文件中，定义配置。比如以下例子中的`dv_market`是取了一个唯一的`id`，并且说明了yaml所在的目录`specPath`，以及输出到的目录`outputDir`
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121134108431.png" alt="image-20221121134108431" style="zoom:50%;" />
 
 3. 以上准备工作完成后，需要跑以下命令：
 
@@ -64,9 +65,3 @@
    ```shell
    $ yarn docusaurus clean-api-docs <id> # 移除之前生成过的mdx文件
    ```
-
-   
-
-<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121133805530.png" alt="image-20221121133805530" style="zoom:50%;" />
-
-<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121134108431.png" alt="image-20221121134108431" style="zoom:50%;" />
