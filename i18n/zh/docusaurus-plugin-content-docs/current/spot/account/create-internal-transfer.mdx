@@ -1,13 +1,13 @@
 ---
-title: 劃轉
-sidebar_label: 劃轉
+title: Create Internal Transfer
+sidebar_label: Create Internal Transfer
 ---
 
 import TOCInline from '@theme/TOCInline';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> 請求示例
+> Request Example
 
 <Tabs>
 
@@ -70,7 +70,7 @@ function Clock(props) {
 </TabItem>
 </Tabs>
 
-> 響應示例
+> Response Example
 
 <Tabs>
 
@@ -108,28 +108,27 @@ function Clock(props) {
 
 </Tabs>
 
-要發送賬戶類型和父子不可知的轉賬，請使用創建萬能轉賬 接口。
+Transfers funds between the different sections of an individual's account (not between subaccounts). For example, between the spot and derivatives accounts.
+To send a transfer which is account type & parent/sub agnostic, use the Create Universal Transfer endpoint.
 
 :::info
-請註意該接口入參請求數據中的transfer_id字段為UUID全局唯一。
-請註意該接口支持期貨賬戶、現貨賬戶、理財賬戶。
-轉入和轉出賬戶類型不能相同。
-升級到統一保證金帳戶後，僅支持從現貨帳戶轉帳USDT到統保帳戶。
+Please note that this interface supports Contract Account, Spot Account, Investment Account. The transferIn and transferOut account types cannot be the same.
+You may transfer USDT from **SPOT** ONLY after upgraded to Unified Margin Account.
 :::
 
-#### HTTP 請求
+#### HTTP Request
 POST <code>/asset/v3/private/transfer/inter-transfer</code>
 
-#### 請求參數
-| 參數 | 是否必須 | 類型 | 說明|
+#### Request Parameters
+| Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|transferId |<b>true</b> |string |UUID,全局唯一 |
-|coin |<b>true</b> |string |幣種類型 |
-|amount |<b>true</b> |string |兌入數量 |
-|fromAccountType |<b>true</b> |string |帳戶類型 |
-|toAccountType |<b>true</b> |string |帳戶類型 |
+|transferId |<b>true</b> |string |UUID, which is unique across the platform |
+|coin |<b>true</b> |string |Currency type |
+|amount |<b>true</b> |string |Exchange to amount |
+|fromAccountType |<b>true</b> |string |Account type |
+|toAccountType |<b>true</b> |string |Account type |
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|transferId |string |UUID,全局唯一 |
+|transferId |string |UUID, which is unique across the platform |

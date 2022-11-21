@@ -37,10 +37,10 @@ $ ./setup.sh
 ### Local Development
 As we have english and chinese in the application, so you need to start them separately.
 ```
-$ yarn run start  # start the default en site
+$ yarn start  # start the local EN site
 ```
 ```
-$ yarn run start -- --locale zh  # start cn site
+$ yarn start --locale zh  # start the local CN site
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
@@ -81,3 +81,7 @@ This command generates static content into the `build` directory and can be serv
 ```shell
 yarn deploy
 ```
+
+## How to write mdx file and display it?
+
+

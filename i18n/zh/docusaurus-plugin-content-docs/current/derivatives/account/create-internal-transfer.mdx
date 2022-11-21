@@ -1,7 +1,8 @@
 ---
-title: Create Subaccount Transfer
-sidebar_label: Create Subaccount Transfer
+title: Create Internal Transfer
+sidebar_label: Create Internal Transfer
 ---
+
 import TOCInline from '@theme/TOCInline';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -13,7 +14,7 @@ import TabItem from '@theme/TabItem';
 <TabItem value="console" label="Console">
 
 ```console
-curl POST 'https://api-testnet.bybit.com/asset/v3/private/transfer/sub-member-transfer' \
+curl POST 'https://api-testnet.bybit.com/asset/v3/private/transfer/inter-transfer'
 --header 'Content-Type: application/json' \
 --header 'X-BAPI-TIMESTAMP: 1660794864052' \
 --header 'X-BAPI-API-KEY: XXXXXXXXXXXXXX' \
@@ -23,8 +24,8 @@ curl POST 'https://api-testnet.bybit.com/asset/v3/private/transfer/sub-member-tr
     "transferId": "xxxxxxx",
     "coin": "BTC",
     "amount": "0.11",
-    "subMemberId": 12,
-    "type": "IN",
+    "fromAccountType": "SPOT",
+    "toAccountType": "CONTRACT",
 }'
 ```
 
@@ -107,15 +108,16 @@ function Clock(props) {
 
 </Tabs>
 
-Transfers funds between the parent and child (sub) accounts.
+Transfers funds between the different sections of an individual's account (not between subaccounts). For example, between the spot and derivatives accounts.
 To send a transfer which is account type & parent/sub agnostic, use the Create Universal Transfer endpoint.
 
 :::info
-A subaccount can only be attributed to a parent account.
+Please note that this interface supports Contract Account, Spot Account, Investment Account. The transferIn and transferOut account types cannot be the same.
+You may transfer USDT from **SPOT** ONLY after upgraded to Unified Margin Account.
 :::
 
 #### HTTP Request
-POST <code>/asset/v3/private/transfer/sub-member-transfer</code>
+POST <code>/asset/v3/private/transfer/inter-transfer</code>
 
 #### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -123,8 +125,8 @@ POST <code>/asset/v3/private/transfer/sub-member-transfer</code>
 |transferId |<b>true</b> |string |UUID, which is unique across the platform |
 |coin |<b>true</b> |string |Currency type |
 |amount |<b>true</b> |string |Exchange to amount |
-|subMemberId |<b>true</b> |string |Subaccount |
-|type |<b>true</b> |string |Determines the direction of transfer |
+|fromAccountType |<b>true</b> |string |Account type |
+|toAccountType |<b>true</b> |string |Account type |
 
 #### Response Parameters
 | Parameter | Type | Comments|
