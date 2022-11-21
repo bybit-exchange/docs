@@ -82,6 +82,4 @@ This command generates static content into the `build` directory and can be serv
 yarn deploy
 ```
 
-## How to write mdx file and display it?
-
 
