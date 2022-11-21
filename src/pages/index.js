@@ -18,7 +18,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/best_practice/intro">
-            Docusaurus Tutorial - 5min ⏱️
+            Introduction to the Bybit APIs – 5min ⏱️
           </Link>
         </div>
       </div>

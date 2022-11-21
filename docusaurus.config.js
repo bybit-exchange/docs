@@ -68,7 +68,7 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/bybit.css'),
         },
       }),
     ],
@@ -77,6 +77,9 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: 'dark',
+      },
       tableOfContents: {
         minHeadingLevel: 2,
         maxHeadingLevel: 5,
@@ -91,7 +94,8 @@ const config = {
         title: '',
         logo: {
           alt: 'Bybit Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo_lightmode.png',
+          srcDark: 'img/logo_darkmode.png',
         },
         items: [
           {
@@ -120,12 +124,6 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'best_practice/intro',
-            position: 'left',
-            label: 'Best Practice',
-          },
-          {
-            type: 'doc',
             docId: 'changelog/example_01',
             position: 'left',
             label: 'Change Log',
@@ -137,20 +135,9 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'labs/example_01',
-            position: 'left',
-            label: 'Labs',
-          },
-          {
-            type: 'doc',
             docId: 'pre_version/intro',
             position: 'right',
             label: 'Previous Version',
-          },
-          {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
-            position: 'right',
           },
           {
             type: 'localeDropdown',
@@ -167,30 +154,37 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'Telegram – English',
+                href: 'https://t.me/BybitAPI',
+              },
+              {
+                label: 'Telegram – Chinese',
+                href: 'https://t.me/BybitChineseAPI',
               },
               {
                 label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://discord.gg/VBwVwS2HUs',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'GitHub',
             items: [
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'API usage examples',
+                href: 'https://github.com/bybit-exchange/api-usage-examples',
+              },
+              {
+                label: 'Official python SDK – pybit',
+                href: 'https://github.com/bybit-exchange/pybit',
+              },
+              {
+                label: 'Community nodeJS SDK – bybit-api',
+                href: 'https://www.npmjs.com/package/bybit-api',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
