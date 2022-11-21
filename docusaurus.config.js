@@ -118,15 +118,21 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'usdc_contract/option/order-book',
-            position: 'left',
-            label: 'USDC Contract',
-          },
-          {
-            type: 'doc',
             docId: 'changelog/example_01',
             position: 'left',
             label: 'Change Log',
+          },
+          {
+            type: 'doc',
+            docId: 'best_practice/intro',
+            position: 'left',
+            label: 'Best Practice',
+          },
+          {
+            type: 'doc',
+            docId: 'labs/example_01',
+            position: 'left',
+            label: 'Lab',
           },
           {
             to: '/docs/api-explorer/derivatives/category/',

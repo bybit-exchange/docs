@@ -20,7 +20,7 @@ paths:
     get:
       tags:
         - market
-      summary: Get orderbook
+      summary: Order Book
       description: Get order book data
       operationId: orderbook
       parameters:
@@ -61,7 +61,7 @@ paths:
     get:
       tags:
         - market
-      summary: Get kline
+      summary: Kline
       description: Get kline data
       operationId: kline
       parameters:
@@ -129,7 +129,96 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/klineResp"
-
+  /derivatives/v3/public/tickers:
+    get:
+      tags:
+        - market
+      summary: Tikcer Info
+      description: Get all latest information of symbols. All parameters are needed for OPTION
+      operationId: ticker
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - future
+                - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            future:
+              schema:
+                $ref: "#/components/schemas/tickerFutureResp"
+            option:
+              schema:
+                $ref: "#/components/schemas/tickerOptionResp"
+  /derivatives/v3/public/instruments-info:
+    get:
+      tags:
+        - market
+      summary: Instrument Info
+      description: Get launched instruments information. `category`=option is required for option.
+      operationId: instrument
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - future
+                - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: for option ONLY
+          required: false
+          schema:
+            type: string
+            default: BTC
+        - name: limit
+          in: query
+          description: Maximum 1000
+          required: false
+          schema:
+            type: string
+            default: 500
+        - name: cusor
+          in: query
+          description: pass cursor from the response param "nagePageCursor" to paginate
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            future:
+              schema:
+                $ref: "#/components/schemas/instruFutureResp"
+            option:
+              schema:
+                $ref: "#/components/schemas/instruOptionResp"
 components:
   schemas:
     orderbookResp:
@@ -196,3 +285,367 @@ components:
           type: integer
           format: timestamp
           example: 1668740049062
+
+    tickerFutureResp:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          example: 0
+        retMsg:
+          type: string
+          example: OK
+        result:
+          type: object
+          properties:
+            category:
+              type: string
+              example: future
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  symbol:
+                    type: string
+                    example: BTCUSDT
+                  bidPrice:
+                    type: string
+                    example: 16046
+                  askPrice:
+                    type: string
+                    example: 16046.5
+                  lastPrice:
+                    type: string
+                    example: 16046.00
+                  lastTickDirection:
+                    type: string
+                    example: ZeroMinusTick
+                  prevPrice24h:
+                    type: string
+                    example: 16749.00
+                  price24hPcnt:
+                    type: string
+                    example: -0.041972
+                  highPrice24h:
+                    type: string
+                    example: 16950.00
+                  lowPrice24h:
+                    type: string
+                    example: 15739.00
+                  prevPrice1h:
+                    type: string
+                    example: 16169.50
+                  markPrice:
+                    type: string
+                    example: 16046.00
+                  indexPrice:
+                    type: string
+                    example: 16011.29
+                  openInterest:
+                    type: string
+                    example: 64201.768
+                  turnover24h:
+                    type: string
+                    example: 361859271.7860001
+                  volume24h:
+                    type: string
+                    example: 22120.49599999
+                  fundingRate:
+                    type: string
+                    example: 0.000922
+                  nextFundingTime:
+                    type: string
+                    example: 1669046400000
+                  predictedDeliveryPrice:
+                    type: string
+                    example: ""
+                  basisRate:
+                    type: string
+                    example: ""
+                  deliveryFeeRate:
+                    type: string
+                    example: ""
+                  deliveryTime:
+                    type: string
+                    example: 0
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: timestamp
+          example: 1669018848263
+
+    tickerOptionResp:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          example: 0
+        retMsg:
+          type: string
+          example: SUCCESS
+        result:
+          type: object
+          properties:
+            category:
+              type: string
+              example: option
+            symbol:
+              type: string
+              example: BTC-23NOV22-20000-C
+            bidPrice:
+              type: string
+              example: 0
+            bidSize:
+              type: string
+              example: 0
+            bidIv:
+              type: string
+              example: 0
+            askPrice:
+              type: string
+              example: 15
+            askSize:
+              type: string
+              example: 31
+            askIv:
+              type: string
+              example: 1.5156
+            lastPrice:
+              type: string
+              example: 0
+            highPrice24h:
+              type: string
+              example: 0
+            lowPrice24h:
+              type: string
+              example: 0
+            markPrice:
+              type: string
+              example: 1.33666525
+            indexPrice:
+              type: string
+              example: 15977.94
+            markPriceIv:
+              type: string
+              example: 1.1264
+            underlyingPrice:
+              type: string
+              example: 15961.7531
+            openInterest:
+              type: string
+              example: 0
+            turnover24h:
+              type: string
+              example: 0
+            volume24h:
+              type: string
+              example: 0
+            totalVolume:
+              type: string
+              example: 0
+            totalTurnover:
+              type: string
+              example: 0
+            delta:
+              type: string
+              example: 0.00341686
+            gamma:
+              type: string
+              example: 0.00000785
+            vega:
+              type: string
+              example: 0.11971518
+            theta:
+              type: string
+              example: -3.47397181
+            predictedDeliveryPrice:
+              type: string
+              example: 0
+            change24h:
+              type: string
+              example: 0
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: timestamp
+          example: 1669018848263
+
+    instruFutureResp:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          example: 0
+        retMsg:
+          type: string
+          example: OK
+        result:
+          type: object
+          properties:
+            category:
+              type: string
+              example: future
+            list:
+              type: array
+              items:
+                type: object
+                properties:
+                  symbol:
+                    type: string
+                    example: BTCUSDT
+                  contractType:
+                    type: string
+                    example: LinearPerpetual
+                  status:
+                    type: string
+                    example: Trading
+                  baseCoin:
+                    type: string
+                    example: BTC
+                  quoteCoin:
+                    type: string
+                    example: USDT
+                  launchTime:
+                    type: string
+                    example: 1584230400000
+                  deliveryTime:
+                    type: string
+                    example: 0
+                  deliveryFeeRate:
+                    type: string
+                    example: ""
+                  priceScale:
+                    type: string
+                    example: 2
+                  leverageFilter:
+                    type: object
+                    properties:
+                      minLeverage:
+                        type: string
+                        example: 1
+                      maxLeverage:
+                        type: string
+                        example: 100
+                      leverageStep:
+                        type: string
+                        example: 0.01
+                  priceFilter:
+                    type: object
+                    properties:
+                      minPrice:
+                        type: string
+                        example: 0.50
+                      maxPrice:
+                        type: string
+                        example: 999999.00
+                      tickSize:
+                        type: string
+                        example: 0.50
+                  lotSizeFilter:
+                    type: object
+                    properties:
+                      maxTradingQty:
+                        type: string
+                        example: 420.000
+                      minTradingQty:
+                        type: string
+                        example: 0.001
+                      qtyStep:
+                        type: string
+                        example: 0.001
+            nexPageCursor:
+              type: string
+              example: "NFRtZlVpbWRUMDZZU214U1hDVGFWcm1sakMwdUVUWTdPUVE0bXdKbThwdGkyRkM2c0xTbmxGMVlQYmxNQ1dsRVlLcnlrRjBOLzQvZkd2dUVxSWhrcTZGM1VkYytMWjE0K1lKeXUyMVdSZG89"
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: timestamp
+          example: 1669018848263
+
+    instruOptionResp:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          example: 0
+        retMsg:
+          type: string
+          example: success
+        result:
+          type: object
+          properties:
+            resultTotalSize:
+              type: integer
+              example: 1
+            cursor:
+              type: string
+              example: "0%2C500"
+            dataList:
+              type: array
+              items:
+                type: object
+                properties:
+                  category:
+                    type: string
+                    example: option
+                  symbol:
+                    type: string
+                    example: BTC-23NOV22-20000-C
+                  status:
+                    type: string
+                    example: ONLINE
+                  baseCoin:
+                    type: string
+                    example: BTC
+                  quoteCoin:
+                    type: string
+                    example: USD
+                  settleCoin:
+                    type: string
+                    example: USDC
+                  optionsType:
+                    type: string
+                    example: Call
+                  launchTime:
+                    type: string
+                    example: 1669017600000
+                  deliveryTime:
+                    type: string
+                    example: 1669190400000
+                  deliveryFeeRate:
+                    type: string
+                    example: 0.00015
+                  priceFilter:
+                    type: object
+                    properties:
+                      minPrice:
+                        type: string
+                        example: 5
+                      maxPrice:
+                        type: string
+                        example: 10000000
+                      tickSize:
+                        type: string
+                        example: 5
+                  lotSizeFilter:
+                    type: object
+                    properties:
+                      maxOrderQty:
+                        type: string
+                        example: 10000
+                      minOrderQty:
+                        type: string
+                        example: 0.01
+                      qtyStep:
+                        type: string
+                        example: 0.01
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: timestamp
+          example: 1669018848263

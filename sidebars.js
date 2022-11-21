@@ -244,36 +244,6 @@ const sidebars = {
       ]
     }
   ],
-  usdc: [
-    {
-      type: 'category',
-      label: 'Option',
-      collapsed: true,
-      items: [
-        {
-          type: 'category',
-          label: 'Market Data Endpoint',
-          items: [
-            'usdc_contract/option/order-book'
-          ]
-        }
-      ]
-    },
-    {
-      type: 'category',
-      label: 'USDC Perpetual',
-      collapsed: true,
-      items: [
-        {
-          type: 'category',
-          label: 'Market Data Endpoint',
-          items: [
-            'usdc_contract/perp/order-book'
-          ]
-        }
-      ]
-    }
-  ],
   bestprac: [
     'best_practice/intro',
     {
