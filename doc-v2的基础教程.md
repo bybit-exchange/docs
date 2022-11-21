@@ -4,7 +4,7 @@
 
 > 该篇目下的内容是指，编写纯文字的内容
 
-![image-20221121130451909](/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121130451909.png)
+![image-20221121130451909](https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130451909.png)
 
 >  除了红色框中的内容，都是直接编写`mdx`文件来完成。
 
@@ -18,9 +18,9 @@
 
    将那些行情接口mdx文件作为item放在items数组当中。每次新增一个文件，应当来这里新增一个item，否则无法展现在网站上。
 
-<img src="/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121130816316.png" alt="image-20221121130816316" style="zoom:50%;" />
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130816316.png" alt="image-20221121130816316" style="zoom:50%;" />
 
-<img src="/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121130956802.png" alt="image-20221121130956802" style="zoom:50%;" />
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130956802.png" alt="image-20221121130956802" style="zoom:50%;" />
 
 3. mdx书写，可以参考`derivatives/market/instrument-info`, 该文件使用了<Tabs><TabItem>标签书写了
 
@@ -28,7 +28,7 @@
 
 4. 以上為英文版本的教程，关于编写中文文档，即在`i18n/zh/docusaurus-plugin-content-docs`目录下存在一样的结构的目录，只需要去对应的mdx文件中，将可以改写成中文的地方，用中文写一遍即可（请使用<mark>繁体中文</mark>）
 
-   <img src="/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121132657143.png" alt="image-20221121132657143" style="zoom:50%;" />
+   <img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121132657143.png" alt="image-20221121132657143" style="zoom:50%;" />
 
 5. 还有很多可以玩的，可以参考官方文档：https://docusaurus.io/zh-CN/docs
 
@@ -69,6 +69,6 @@
 
    
 
-<img src="/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121133805530.png" alt="image-20221121133805530" style="zoom:50%;" />
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121133805530.png" alt="image-20221121133805530" style="zoom:50%;" />
 
-<img src="/Users/sh00377ml/Desktop/docs-v2/static/img/readme/image-20221121134108431.png" alt="image-20221121134108431" style="zoom:50%;" />
+<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121134108431.png" alt="image-20221121134108431" style="zoom:50%;" />
