@@ -13,18 +13,16 @@
 1. 首先，看下网站上的结构，分为了Rest API 和 WebSocket的顶级目录结构，该目录结构的定义是通过
 
    `sidebars.js`来展现的
-
+   <img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130816316.png" alt="image-20221121130816316" style="zoom:50%;" />
 2. 让我们看下`sidebars.js`内容，像Rest API, Market Data Endpoint，只是定义了一个label，然后做嵌套，
 
    将那些行情接口mdx文件作为item放在items数组当中。每次新增一个文件，应当来这里新增一个item，否则无法展现在网站上。
 
-<img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130816316.png" alt="image-20221121130816316" style="zoom:50%;" />
-
 <img src="https://github.com/bybit-exchange/docs-v2/blob/master/static/img/readme/image-20221121130956802.png" alt="image-20221121130956802" style="zoom:50%;" />
 
-3. mdx书写，可以参考`derivatives/market/instrument-info`, 该文件使用了<Tabs><TabItem>标签书写了
+3. mdx书写，可以参考`derivatives/market/instrument-info`, 该文件使用了`<Tabs><TabItem>`标签书写了
 
-   Response parameter，是因为option和future有不一样的响应体（字段）。若option和future的响应体是完全一样的，可以直接写成传统的markdown表格语法接口。
+   Response parameter，是因为option和future有不一样的响应体（字段）。若option和future的响应体是完全一样的，可以直接写成传统的markdown表格语法即可。
 
 4. 以上為英文版本的教程，关于编写中文文档，即在`i18n/zh/docusaurus-plugin-content-docs`目录下存在一样的结构的目录，只需要去对应的mdx文件中，将可以改写成中文的地方，用中文写一遍即可（请使用<mark>繁体中文</mark>）
 
@@ -32,7 +30,7 @@
 
 5. 还有很多可以玩的，可以参考官方文档：https://docusaurus.io/zh-CN/docs
 
-定义了一些书写规范：
+**定义了一些书写规范：**
 
 * mdx文件名，英文小写，若是词组，请用`-`短横线连接，尽量短，可以在定义title, 侧边栏名称时写具体些
 * 定义请求体和响应体的数据类型时，保持一致，我目前使用了以下类型：
@@ -62,7 +60,7 @@
    ```shell
    $ yarn docusaurus gen-api-docs <id> # 通过yaml生成mdx文件
    ```
-
+若不满意，执行以下命令，清除mdx文件，再去更新yaml
    ```shell
    $ yarn docusaurus clean-api-docs <id> # 移除之前生成过的mdx文件
    ```
