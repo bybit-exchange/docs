@@ -74,7 +74,10 @@ const sidebars = {
                   label: 'Position',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/unified/position/position-info',
+                    'derivatives/trade/unified/position/leverage',
+                    'derivatives/trade/unified/position/full-partial-tpsl',
+                    'derivatives/trade/unified/position/set-risk-limit',
                   ]
                 },
                 {
