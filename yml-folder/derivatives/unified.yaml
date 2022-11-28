@@ -1,0 +1,233 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of derivatives - unified account Restul API
+  version: 3.0.0
+  title: Bybit derivatives unified explorer
+tags:
+  - name: order
+    description: Place, modify, cancel and query orders
+    x-displayName: Orders
+  - name: position
+    description: Position, position config
+    x-displayName: Positions
+paths:
+  /unified/v3/private/order/create:
+    post:
+      tags:
+        - order
+      summary: Create order
+      description: Place a future or option order
+      operationId: createOrder
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please pass unified account api key
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please pass unified account api secret
+          required: false
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/orderResp"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum:
+                    - linear
+                    - option
+                  description: Product category
+                symbol:
+                  type: string
+                  decription: Symbol name
+                side:
+                  type: string
+                  enum:
+                    - Buy
+                    - Sell
+                orderType:
+                  type: string
+                  enum:
+                    - Market
+                    - Sell
+                  decription: Order type.
+                  example: Market
+                qty:
+                  type: string
+                  decription: Order qty
+                price:
+                  type: string
+                  decription: ignore it if Market order
+                  example:
+                triggerPrice:
+                  type: string
+                  decription: param for StopOrder
+                  example:
+                triggerBy:
+                  type: string
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  decription: The type of trigger price
+                  example: LastPrice
+                iv:
+                  type: string
+                  decription: param for placing option order
+                  example:
+                timeInForce:
+                  type: string
+                  decription: Time in force
+                  example: GoodTillCancel
+                positionIdx:
+                  type: string
+                  decription: Position mode. one-way mode only for unified.
+                  example: 0
+                orderLinkId:
+                  type: string
+                  decription: required param for option order
+                  example:
+                takeProfit:
+                  type: string
+                  decription: Take profit price
+                  example:
+                stopLoss:
+                  type: string
+                  decription: Stop loss price
+                  example:
+                tpTriggerBy:
+                  type: string
+                  decription: Trigger take profit price price type
+                  example:
+                slTriggerBy:
+                  type: string
+                  decription: Trigger stop loss price price type
+                  example:
+                reduceOnly:
+                  type: string
+                  decription: specify true if a close position order
+                  example: false
+                closeOnTrigger:
+                  type: string
+                  decription: close on trigger
+                  example: false
+                mmp:
+                  type: string
+                  decription: market marker protection. for option order
+                  example:
+  /unified/v3/private/position/list:
+    get:
+      tags:
+        - position
+      summary: Get position
+      description: Get your position info
+      operationId: myposition
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please pass unified account api key
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please pass unified account api secret
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: ""
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+              - option
+        - name: symbol
+          in: query
+          description: ""
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: for option only
+          required: false
+          schema:
+            type: string
+            default: BTC
+        - name: direction
+          in: query
+          description: direction to page
+          required: false
+          schema:
+            type: string
+            enum:
+              - prev
+              - next
+            default: next
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: string
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/orderResp"
+components:
+  schemas:
+    orderResp:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          example: 0
+        retMsg:
+          type: string
+          example: OK
+        result:
+          type: object
+          properties:
+            orderId:
+              type: string
+              example: e10b0716-7c91-4091-b98a-1fa0f401c7d5
+            orderLinkId:
+                type: string
+                example: test-001
+        retExtInfo:
+          type: object
+        time:
+          type: integer
+          format: timestamp
+          example: 1668740049062

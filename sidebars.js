@@ -45,7 +45,7 @@ const sidebars = {
         },
         {
           type: 'category',
-          label: 'Trade',
+          label: 'Trade Endpoints',
           collapsed: true,
           items: [
             {
@@ -74,7 +74,10 @@ const sidebars = {
                   label: 'Position',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/unified/position/position-info',
+                    'derivatives/trade/unified/position/leverage',
+                    'derivatives/trade/unified/position/full-partial-tpsl',
+                    'derivatives/trade/unified/position/set-risk-limit',
                   ]
                 },
                 {
@@ -82,9 +85,10 @@ const sidebars = {
                   label: 'Account',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/unified/account/create-order'
                   ]
                 },
+                'derivatives/trade/unified/rate-limit'
               ]
             },
             {
@@ -97,7 +101,7 @@ const sidebars = {
                   label: 'Order',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/contract/order/create-order'
                   ]
                 },
                 {
@@ -105,7 +109,7 @@ const sidebars = {
                   label: 'Position',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/contract/position/create-order'
                   ]
                 },
                 {
@@ -113,19 +117,12 @@ const sidebars = {
                   label: 'Account',
                   collapsed: true,
                   items: [
-                    'derivatives/account/create-internal-transfer'
+                    'derivatives/trade/contract/account/create-order'
                   ]
                 },
+                'derivatives/trade/contract/rate-limit'
               ]
-            }
-          ]
-        },
-        {
-          type: 'category',
-          label: 'Account Asset',
-          collapsed: true,
-          items: [
-            'derivatives/account/create-internal-transfer'
+            },
           ]
         },
       ]
@@ -165,24 +162,69 @@ const sidebars = {
           label: 'Market Data Endpoint',
           collapsed: true,
           items: [
-            'spot/market/symbolInfo',
-            'spot/market/order-book'
+            'spot/market/instrument-info',
+            'spot/market/orderbook',
+            'spot/market/merge-orderbook',
+            'spot/market/public-trade',
+            'spot/market/kline',
+            'spot/market/ticker-info',
+            'spot/market/last-trade-price',
+            'spot/market/best-bid-ask',
           ]
         },
         {
           type: 'category',
-          label: 'Trade',
+          label: 'Trade Endpoint',
           collapsed: true,
           items: [
-            'spot/trade/create-order'
+            {
+              type: 'category',
+              label: 'Order',
+              collapsed: true,
+              items: [
+                'spot/trade/order/place-order',
+                'spot/trade/order/get-order',
+                'spot/trade/order/cancel-order',
+                'spot/trade/order/batch-cancel',
+                'spot/trade/order/batch-cancel-by-id',
+                'spot/trade/order/open-order',
+                'spot/trade/order/order-history',
+                'spot/trade/order/trade-history',
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Account',
+              collapsed: true,
+              items: [
+                'spot/trade/account/wallet'
+              ]
+            },
           ]
         },
         {
           type: 'category',
-          label: 'Account Asset',
+          label: 'Leverage Token Endpoint',
           collapsed: true,
           items: [
-            'spot/account/create-internal-transfer'
+            'spot/leverage-token/asset-info',
+            'spot/leverage-token/market-info',
+            'spot/leverage-token/purchase',
+            'spot/leverage-token/redeem',
+            'spot/leverage-token/purchase-redeem-history',
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Cross Margin Trade Endpoint',
+          collapsed: true,
+          items: [
+            'spot/cross-margin/borrow',
+            'spot/cross-margin/repay',
+            'spot/cross-margin/borrow-info',
+            'spot/cross-margin/account-info',
+            'spot/cross-margin/interest-quota',
+            'spot/cross-margin/repay-history',
           ]
         },
       ]
@@ -217,7 +259,52 @@ const sidebars = {
       label: 'Rest API',
       collapsed: true,
       items: [
-          'copy_trade/symbol-list'
+        {
+          type: 'category',
+          label: 'Market',
+          collapsed: true,
+          items: [
+            'copy-trade/market/symbol-info'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'Trade',
+          collapsed: true,
+          items: [
+            {
+              type: 'category',
+              label: 'Order',
+              collapsed: true,
+              items: [
+                'copy-trade/trade/order/place-order',
+                'copy-trade/trade/order/order-list',
+                'copy-trade/trade/order/cancel-order',
+                'copy-trade/trade/order/close-order',
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Position',
+              collapsed: true,
+              items: [
+                'copy-trade/trade/position/position-info',
+                'copy-trade/trade/position/trade-stop',
+                'copy-trade/trade/position/close-position',
+                'copy-trade/trade/position/set-leverage',
+              ]
+            },
+            {
+              type: 'category',
+              label: 'Account',
+              collapsed: true,
+              items: [
+                'copy-trade/trade/account/wallet',
+                'copy-trade/trade/account/transfer',
+              ]
+            },
+          ]
+        },
       ]
     },
     {
@@ -230,7 +317,7 @@ const sidebars = {
           label: 'Public Channel',
           collapsed: true,
           items: [
-            'copy_trade/websocket/orderbook'
+            'copy-trade/websocket/orderbook'
           ]
         },
         {
@@ -238,20 +325,73 @@ const sidebars = {
           label: 'Private Channel',
           collapsed: true,
           items: [
-            'copy_trade/websocket/order'
+            'copy-trade/websocket/order'
           ]
         }
       ]
     }
   ],
+  asset: [
+    {
+      type: 'category',
+      label: 'Transfer Endpoint',
+      collapsed: true,
+      items: [
+        'asset/transfer/internal-transfer',
+        'asset/transfer/subacct-transfer',
+        'asset/transfer/internal-transfer-list',
+        'asset/transfer/subacct-transfer-list',
+        'asset/transfer/subacct-list',
+        'asset/transfer/enable-uni-transfer',
+        'asset/transfer/uni-transfer',
+        'asset/transfer/uni-transfer-list',
+        'asset/transfer/transferable-coin-list',
+        'asset/transfer/coin-balance',
+        'asset/transfer/asset-info',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Withdraw and Deposit endpoint',
+      collapsed: true,
+      items: [
+        'asset/withdraw-deposit/support-deposit-list',
+        'asset/withdraw-deposit/master-deposit-record',
+        'asset/withdraw-deposit/sub-deposit-record',
+        'asset/withdraw-deposit/withdraw-record',
+        'asset/withdraw-deposit/coin-info',
+        'asset/withdraw-deposit/withdraw',
+        'asset/withdraw-deposit/cancel-withdraw',
+        'asset/withdraw-deposit/master-deposit-addr',
+        'asset/withdraw-deposit/sub-deposit-addr',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Master-Sub User Endpoint',
+      collapsed: true,
+      items: [
+        'asset/user/create-subuid',
+        'asset/user/create-subuid-apikey',
+        'asset/user/subuid-list',
+        'asset/user/froze-subuid',
+        'asset/user/apikey-info',
+        'asset/user/modify-master-apikey',
+        'asset/user/modify-sub-apikey',
+        'asset/user/rm-master-apikey',
+        'asset/user/rm-sub-apikey',
+      ]
+    },
+    'asset/rate-limit',
+  ],
   bestprac: [
-    'best_practice/intro',
+    'best-practice/intro',
     {
       type: 'category',
       label: 'Broker',
       collapsed: true,
       items: [
-          'best_practice/broker/broker_example'
+          'best-practice/broker/broker-example'
       ]
     },
     {
@@ -259,7 +399,7 @@ const sidebars = {
       label: 'Copy Trade',
       collapsed: true,
       items: [
-        'best_practice/copy_trade/copytrade_example'
+        'best-practice/copy-trade/copytrade-example'
       ]
     },
     {
@@ -267,7 +407,7 @@ const sidebars = {
       label: 'Derivatives',
       collapsed: true,
       items: [
-        'best_practice/derivatives/derivatives_example'
+        'best-practice/derivatives/derivatives-example'
       ]
     },
     {
@@ -275,7 +415,7 @@ const sidebars = {
       label: 'Spot',
       collapsed: true,
       items: [
-        'best_practice/spot/spot_example'
+        'best-practice/spot/spot_example'
       ]
     }
   ],
@@ -292,10 +432,17 @@ const sidebars = {
       link: {
         type: "generated-index",
         title: "Derivatives API",
-        slug: "/api-explorer/derivatives/category/"
+        slug: "/api-explorer/category/"
       },
       // @ts-ignore
-      items: require("./docs/api-explorer/derivatives/market/sidebar.js")
+      items: [
+          require("./docs/api-explorer/derivatives/market/sidebar.js"),
+        {
+          type: "category",
+          label: "Unified",
+          items: require("./docs/api-explorer/derivatives/trade/unified/sidebar.js")
+        }
+      ]
     }
   ]
 };

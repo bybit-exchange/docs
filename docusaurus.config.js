@@ -47,7 +47,15 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
-          }
+          },
+          dv_unified: {
+            specPath: "yml-folder/derivatives/unified.yaml",
+            outputDir: "docs/api-explorer/derivatives/trade/unified",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],
@@ -106,15 +114,21 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'spot/market/symbolInfo',
+            docId: 'spot/market/instrument-info',
             position: 'left',
             label: 'Spot',
           },
           {
             type: 'doc',
-            docId: 'copy_trade/symbol-list',
+            docId: 'copy-trade/market/symbol-info',
             position: 'left',
             label: 'Copy Trading',
+          },
+          {
+            type: 'doc',
+            docId: 'asset/transfer/internal-transfer',
+            position: 'left',
+            label: 'Account Asset',
           },
           {
             type: 'doc',
@@ -124,7 +138,7 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'best_practice/intro',
+            docId: 'best-practice/intro',
             position: 'left',
             label: 'Best Practice',
           },
@@ -135,13 +149,13 @@ const config = {
             label: 'Lab',
           },
           {
-            to: '/docs/api-explorer/derivatives/category/',
+            to: '/docs/api-explorer/category',
             position: 'right',
             label: 'API explorer',
           },
           {
             type: 'doc',
-            docId: 'pre_version/intro',
+            docId: 'pre-version/intro',
             position: 'right',
             label: 'Previous Version',
           },
