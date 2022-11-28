@@ -432,10 +432,17 @@ const sidebars = {
       link: {
         type: "generated-index",
         title: "Derivatives API",
-        slug: "/api-explorer/derivatives/category/"
+        slug: "/api-explorer/category/"
       },
       // @ts-ignore
-      items: require("./docs/api-explorer/derivatives/market/sidebar.js")
+      items: [
+          require("./docs/api-explorer/derivatives/market/sidebar.js"),
+        {
+          type: "category",
+          label: "Unified",
+          items: require("./docs/api-explorer/derivatives/trade/unified/sidebar.js")
+        }
+      ]
     }
   ]
 };

@@ -47,7 +47,15 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
-          }
+          },
+          dv_unified: {
+            specPath: "yml-folder/derivatives/unified.yaml",
+            outputDir: "docs/api-explorer/derivatives/trade/unified",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],
@@ -141,7 +149,7 @@ const config = {
             label: 'Lab',
           },
           {
-            to: '/docs/api-explorer/derivatives/category/',
+            to: '/docs/api-explorer/category',
             position: 'right',
             label: 'API explorer',
           },
