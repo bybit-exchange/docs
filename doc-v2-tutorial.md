@@ -31,6 +31,7 @@
 * Use following data type for request and response params：
   * string
   * integer - covers integer, long integer
+  * number - float
   * array
   * object
   * boolean
