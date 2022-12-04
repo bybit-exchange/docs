@@ -66,6 +66,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -108,56 +109,48 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'derivatives/market/orderbook',
+            docId: 'v5/intro',
             position: 'left',
-            label: 'Derivatives',
+            label: 'v5 API',
           },
           {
             type: 'doc',
-            docId: 'spot/market/instrument-info',
+            docId: 'v3/intro',
             position: 'left',
-            label: 'Spot',
+            label: 'v3 API',
           },
           {
             type: 'doc',
-            docId: 'copy-trade/market/symbol-info',
-            position: 'left',
-            label: 'Copy Trading',
-          },
-          {
-            type: 'doc',
-            docId: 'asset/transfer/internal-transfer',
+            docId: 'account-asset/intro',
             position: 'left',
             label: 'Account Asset',
           },
           {
-            type: 'doc',
-            docId: 'changelog/example_01',
+            to: '/api-explorer/category',
             position: 'left',
-            label: 'Change Log',
-          },
-          {
-            type: 'doc',
-            docId: 'best-practice/intro',
-            position: 'left',
-            label: 'Best Practice',
-          },
-          {
-            type: 'doc',
-            docId: 'labs/example_01',
-            position: 'left',
-            label: 'Lab',
-          },
-          {
-            to: '/docs/api-explorer/category',
-            position: 'right',
             label: 'API explorer',
           },
           {
-            type: 'doc',
-            docId: 'pre-version/intro',
-            position: 'right',
             label: 'Previous Version',
+            position: 'right',
+            items: [
+              {
+                to: '/pre-version/spot/intro',
+                label: 'Spot v1'
+              },
+              {
+                to: '/pre-version/future/intro',
+                label: 'Future v2'
+              },
+              {
+                to: '/pre-version/usdc-contract/intro',
+                label: 'USDC Contract v1'
+              },
+              {
+                to: 'pre-version/account-asset/intro',
+                label: 'Account Asset v1'
+              },
+            ]
           },
           {
             type: 'localeDropdown',

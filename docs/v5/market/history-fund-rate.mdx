@@ -1,0 +1,31 @@
+---
+title: Get Funding Rate History
+sidebar_label: Get Funding Rate History
+---
+
+Query historical funding rate
+
+:::info
+TODO: 支持查詢多久的資金費率數據？
+:::
+
+#### HTTP Request
+GET `/v5/market/history-funding-rate`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Product type. `linear`,`inverse`|
+|symbol |<b>true</b> |string |Symbol name|
+|start |false |number |The start timestamp (ms)|
+|end |false |number |The end timestamp (ms)|
+|limit |false |number |Limit for data size per page. [1,200]. default: `200`|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Products category. Keeps empty string `""` when `category` is not passed |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> fundingRate |string |Funding rate |
+|> fundingRateTimestamp |string |Funding rate timestamp(ms) |
