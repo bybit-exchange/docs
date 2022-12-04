@@ -1,0 +1,38 @@
+---
+title: Batch Cancel Order
+sidebar_label: Batch Cancel Order
+---
+
+:::tip
+This endpoint provides the batch order mode to cancel a bunch of open orders.
+- Order cancellation of future and option cannot be cancelled in one request.
+- If both future and option orders are in one request, then by given the category type, only the orders whose
+symbol _matches the category_ will be operated.
+:::
+
+#### HTTP Request
+POST `/unified/v3/private/order/cancel-batch`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Products category. `linear`, `option` |
+|request |**true** |array |Object |
+|> symbol |**true** |string |Symbol name |
+|> orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
+|> orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |Object | |
+|> list |array |Object |
+|>> category |string |Products category |
+|>> symbol |string |Symbol name |
+|>> orderId |string |Order id |
+|>> orderLinkId |string |User customised order id |
+|retExtInfo |Object | |
+|> list |array |Object |
+|>> code |number |Success/error code |
+|>> msg |string |Success/error message |

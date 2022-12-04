@@ -1,0 +1,33 @@
+---
+title: Order Book
+sidebar_label: Order Book
+---
+
+Query order book data.
+
+:::tips
+The response is in the snapshot format.
+:::
+
+#### HTTP Request
+GET `/v5/market/orderbook`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
+|symbol |**true** |string |Symbol name|
+|limit |false |integer |`linear`&`inverse`: [1,500],default: `25`. `option` has 25 ONLY. `spot`: [1,50], default: `50`|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|s |string |Symbol name |
+|b |array |Bid, buyer. Sort by price desc |
+|> b[0] |string |Bid price |
+|> b[1] |string |Bid size |
+|a |array |Ask, seller. Order by price asc |
+|> a[0] |string |Ask price |
+|> a[1] |string |Ask size |
+|ts |integer |The timestamp(ms) that system generates the data |
+|u |integer |Update id, is always in sequence |
