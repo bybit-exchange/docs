@@ -1,6 +1,7 @@
 ---
 title: Get Open Orders
-sidebar_label: Get Open Orders
+sidebar_label: Get Open Orders (real-time)
+sidebar_position: 4
 ---
 :::tip
 Query unfilled or partially filled orders in **real-time**.
@@ -11,23 +12,24 @@ Query unfilled or partially filled orders in **real-time**.
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
-GET `/unified/v3/private/order/unfilled-orders`
+### HTTP Request
+GET `/order/realtime`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |false |string |Symbol name |
-|baseCoin |false |string |Base coin. default: **BTC**. Valid only when `category`=option |
+|baseCoin |false |string |Base coin. for `option` ONLY. Return all option open orders if not passed|
+|settleCoin |false |string |Settle coin. Query priority: `symbol` > `baseCoin` > `settleCoin`. `spot` not applicable.|
 |orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
+|open |false |boolean |<li>`true`: query open orders ONLY</li><li>`false` (default): return recent 500 all status orders</li>|
+|openFilter |false |string|`Order`: active order, `StopOrder`: conditional order|
 |limit |false |number |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
 <TabItem value="linear" label="linear" default>
     <table border="0.5">
@@ -202,5 +204,27 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> basePrice</td><td>string</td><td>Base price </td>
         </tr>
     </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
 </TabItem>
 </Tabs>

@@ -1,33 +1,37 @@
 ---
 title: Get Order List
 sidebar_label: Get Order List
+sidebar_position: 6
 ---
 
+Query order list. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
+real-time order information, you could query this [endpoint](open-order#)
+
 :::tip
-Query order list.<br/>
-As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay.
+* The orders in 7 days: support to query all status orders
+* The orders out of 7 days: support to query those filled orders ONLY
 :::
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
-GET `/unified/v3/private/order/list`
+### HTTP Request
+GET `/v5/order/history`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |false |string |Symbol name|
+|baseCoin |false |string |Base coin. `option` ONLY. All option open orders are returned if not passed |
 |orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|orderStatus |false |string |Return all status orders if not passed. You could pass multiple status, separated by comma |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
+|orderStatus |false |string |Return all status orders if not passed. `Created`,`New`,`Rejected`,`PartiallyFilled`,`Filled`,`Cancelled` |
 |limit |false |number |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
 <TabItem value="linear" label="linear" default>
     <table border="0.5">
@@ -211,5 +215,27 @@ GET `/unified/v3/private/order/list`
             <td>> basePrice</td><td>string</td><td>Base price </td>
         </tr>
     </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
 </TabItem>
 </Tabs>

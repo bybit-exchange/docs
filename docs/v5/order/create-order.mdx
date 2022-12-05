@@ -1,8 +1,9 @@
 ---
 title: Place Order
 sidebar_label: Place Order
+sidebar_position: 1
 ---
-:::tips
+:::tip
 - **<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>**: A traditional market order, which will be filled at the current optimal price. Only when the market
 order selected, the price could be `null`. To protect the market order from serious slippage, Bybit will convert the market
 order into a limit order with the buy order price higher than the optimal selling price, and the sell order price lower than
@@ -18,7 +19,7 @@ positions, the TP/SL linked when you submit active orders will not take effect. 
 
 - **Order price**: Place a limit order, this parameter is **required**. If you don't have position, the long order price
 should be higher than _10%_ of the market price and lower than 1 million. If you have position, the price should be higher than the _liquidation price_.
-For the minimum unit of the price change, please refer to the priceFilter field in the instrumentInfo.
+For the minimum unit of the price change, please refer to the priceFilter field in the [instrumentInfo](#).
 
 - **orderLinkId**: You can customize the active order ID. We can link this ID to the order ID in the system. Once the
 active order is successfully created, we will send the unique order ID in the system to you. Then, you can use this order
@@ -29,10 +30,10 @@ situation is allowed: _The same account can hold 300 BTCUSD active orders and 28
 When the upper limit of orders is reached, you can still place orders with parameters of **reduceOnly** or **closeOnTrigger**.
 :::
 
-#### HTTP Request
+### HTTP Request
 POST `v5/order/create`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `spot`,`linear`,`option`,`option` |
@@ -41,9 +42,9 @@ POST `v5/order/create`
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
 |price |false |string |Order price. Invalid if `orderType`=_Market_|
-|basePrice |false |string |<li>Used to compare with `triggerPrice`, to decide whether your _conditional order_ will be triggered by crossing trigger price from upper side or lower side.</li><li>Mainly used to identify the expected direction of the current conditional order.</li>|
-|triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > max(market price, basePrice)_<br/>Else, _triggerPrice < min(market price, basePrice)_|
-|triggerBy |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
+|triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> |
+|triggerPrice |false |string |Conditional order param. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > max(market price, basePrice)_<br/>Else, _triggerPrice < min(market price, basePrice)_|
+|triggerBy |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
 |timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
 |positionIdx |false |string |Position mode. `0`: one-way mode. |
@@ -54,10 +55,32 @@ POST `v5/order/create`
 |slTriggerBy |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
-|mmp |false |boolean |Market maker protection. `true` means this order is a market maker protection order |
+|mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |orderId |string |Order ID |
 |orderLinkId |string |User customised order id |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>
