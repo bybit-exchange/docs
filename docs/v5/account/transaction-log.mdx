@@ -11,37 +11,36 @@ GET `/v5/account/transaction-log`
 #### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-
-|accountType |false	|string	|钱包类型的枚举值，目前仅支持期货账户，统一保证金账户，USDC 账户|
-|category |**true** |string	|交易产品类型：spot：现货；linear：正向合约；option：期权|
-|currency |**true** |string	|USDC、USDT、BTC、ETH|
-|baseCoin |false |string |例如： USDC就是BTC；USDT就是现在现有的交易币种枚举，例如： BTCUSDT 的 baseCoin 是 BTC 不匹配时已确认返回空|
-|type |false |string |"默认返回该 category下所有交易日志（除划转/兑币/体验金外）TRANSFER_IN 转入 TRANSFER_OUT 转出 TRADE 交易 SETTLEMENT 结算 DELIVERY 交割 LIQUIDATION 强平 BONUS 体验金领取 FEE_REFUND 手续费返还 INTEREST 利息 CURRENCY_BUY 统保币币兑换买入 CURRENCY_SELL 统保币币兑换卖出|注意：查询转入转出日志，必须要传type=TRANSFER_IN，type=TRANSFER_OUT，否则查不到划转日志"
-|startTime |false |int |开始时间, 毫秒时间戳
-|endTime |false	|int |结束时间, 毫秒时间戳
-|direction |false |string |搜索方向：prev:上一页,next:下一页,默认为 next
-|limit |false |integer |每页数量, 最大50. 默认每页20条
-|cursor	|false |string |翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode
+|accountType |false |string |钱包类型的枚举值，目前仅支持期货账户，统一保证金账户，USDC账户 |
+|category |**true** |string	|交易产品类型 spot 现货, linear 正向合约, option 期权 |
+|currency |**true** |string	|USDC、USDT、BTC、ETH |
+|baseCoin |false |string |例如：USDC就是BTC；USDT就是现在现有的交易币种枚举，例如： BTCUSDT 的 baseCoin 是 BTC 不匹配时已确认返回空 |
+|type |false |string |默认返回该 category下所有交易日志（除划转/兑币/体验金外）TRANSFER_IN 转入 TRANSFER_OUT 转出 TRADE 交易 SETTLEMENT 结算 DELIVERY 交割 LIQUIDATION 强平 BONUS 体验金领取 FEE_REFUND 手续费返还 INTEREST 利息 CURRENCY_BUY 统保币币兑换买入 CURRENCY_SELL 统保币币兑换卖出。注意：查询转入转出日志，必须要传type=TRANSFER_IN，type=TRANSFER_OUT，否则查不到划转日志 |
+|startTime |false |int |开始时间, 毫秒时间戳 |
+|endTime |false	|int |结束时间, 毫秒时间戳 |
+|direction |false |string |搜索方向：prev:上一页,next:下一页,默认为 next |
+|limit |false |integer |每页数量, 最大50. 默认每页20条 |
+|cursor	|false |string |翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode |
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |衍生品产品类型：linear：正向合约；option：期权
-|currency |string |USDC、USDT、BTC、ETH
-|list > transactionTime	|string	|时间戳（毫秒）
-|list > type |string |类型（新增 Interest 枚举值）
-|list > symbol |string |symbol名称
-|list > side |string |方向
-|list > qty	|string	|数量
-|list > size |string |仓位
-|list > tradePrice |string |交易价格
-|list > funding	|string	|资金费用
-|list > fee	|string	|手续费，正数表示用户付出xx手续费，负数表示赚取
-|list > cashFlow |string |现金流
-|list > change |string |变更
-|list > cashBalance	|string	|余额（当前币种）
-|list > feeRate	|string	|手续费率
-|list > tradeId	|string |交易id
-|list > orderId	|string	|订单id
-|list > orderLinkId	|string	|机构订单号
-|nextPageCursor	|string	|翻页标记
+|category |string |衍生品产品类型：linear：正向合约；option：期权 |
+|currency |string |USDC、USDT、BTC、ETH |
+|list > transactionTime	|string	|时间戳（毫秒）|
+|list > type |string |类型（新增 Interest 枚举值）|
+|list > symbol |string |symbol名称 |
+|list > side |string |方向 |
+|list > qty	|string	|数量 |
+|list > size |string |仓位 |
+|list > tradePrice |string |交易价格 |
+|list > funding	|string	|资金费用 |
+|list > fee	|string	|手续费，正数表示用户付出xx手续费，负数表示赚取 |
+|list > cashFlow |string |现金流 |
+|list > change |string |变更 |
+|list > cashBalance	|string	|余额（当前币种）|
+|list > feeRate	|string	|手续费率 |
+|list > tradeId	|string |交易id |
+|list > orderId	|string	|订单id |
+|list > orderLinkId	|string	|机构订单号 |
+|nextPageCursor	|string	|翻页标记 |
