@@ -1,0 +1,73 @@
+---
+title: Get Premium Index Price Kline
+sidebar_label: Get Premium Index Price Kline
+sidebar_position: 4
+---
+
+Retrieve the premium index price kline data. This endpoint can retrieve the latest ? candles. Charts are returned in groups based on the requested interval.
+
+### HTTP Request
+GET `/v5/market/premium-index-price-kline`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------|
+|category |<b>true</b> |string |Product type. `linear`,`inverse`|
+|symbol |<b>true</b> |string |Symbol name|
+|interval |<b>true</b> |string |Kline interval. `1m`,`3m`,`5m`,`15m`,`30m`,`1h`,`2h`,`4h`,`6h`,`12h`,`1d`,`1w`,`1M`|
+|start |false |integer |The start timestamp (ms), corresponds to the `start` of the array|
+|end |false |integer |The end timestamp (ms), corresponds to the `start` of the array|
+|limit |false |integer |Limit for data size per page. [1,200]. default: `200`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|symbol |string |Symbol name |
+|list |array |<li>An string array of individual candle</li><li>Sort in reverse by `start`</li>|
+|> list[0] |string |Start time of the candle (ms) |
+|> list[1] |string |Open price |
+|> list[2] |string |Highest price |
+|> list[3] |string |Lowest price |
+|> list[4] |string |Close price. _To be last trade price when the candle is not closed_|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl GET 'https://api-testnet.bybit.com/v5/market/premium-index-price-kline?category=linear&symbol=BITUSDT&interval=D&start=1652112000000&end=1652544000000'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "category": "linear",
+    "symbol": "BITUSDT",
+    "list": [
+        [
+            "1659256500000",
+            "0.693",
+            "0.694",
+            "0.692",
+            "0.693"
+        ]
+    ]
+},
+    "retExtInfo": {},
+    "time": 1669346770906
+}
+```
+</TabItem>
+</Tabs>
