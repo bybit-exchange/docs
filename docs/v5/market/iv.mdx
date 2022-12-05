@@ -1,6 +1,7 @@
 ---
 title: Historical volatility
 sidebar_label: Historical volatility
+sidebar_position: 10
 ---
 
 Query option historical volatility
@@ -12,10 +13,10 @@ Query option historical volatility
 * This endpoint supports to query last 2 years data, but make sure [`endTime` - `startTime`] <= 30 days.
 :::
 
-#### HTTP Request
+### HTTP Request
 GET `/v5/market/historical-volatility`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `option` |
@@ -24,7 +25,7 @@ GET `/v5/market/historical-volatility`
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false |integer |The end timestamp (ms) |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |category |string |Product type |
@@ -32,3 +33,36 @@ GET `/v5/market/historical-volatility`
 |> period |string |Period |
 |> value |string |Volatility |
 |> time |string |Timestamp (ms) |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl GET 'https://api-testnet.bybit.com/v5/market/historical-volatility?baseCoin=ETH'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": [
+        {
+            "period": 7,
+            "value": "0.49780991",
+            "time": "1670209200000"
+        }
+    ]
+}
+```
+</TabItem>
+</Tabs>
