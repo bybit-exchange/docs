@@ -1,0 +1,48 @@
+---
+title: Wallet Balance
+sidebar_label: Wallet Balance
+sidebar_position: 1
+---
+获取钱包余额
+
+#### HTTP Request
+GET `/v5/account/wallet-balance`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|accountType |**true** |string |Account type. `CONTRACT`,`SPOT`,`INVESTMENT` - ByFi Account, `OPTION` - USDC Account, `UNIFIED`|
+|coin |false |string |Coin name|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|accountType |string |Account type. |
+|list > accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin|
+|list > accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。|
+|list > totalEquity |string |账户维度换算成usd的资产净值：Account Margin Balance Base Coin + Account Option Value Base Coin。|
+|list > totalWalletBalance |string |账户维度换算成usd的产钱包余额：∑ Asset Wallet Balance Base Coin。非统一保证金模式下，改字段返回为空。
+|list > totalMarginBalance |string |账户维度换算成usd的保证金余额：Account Wallet Balance Base Coin + Account Perp UPL Base Coin。非统一保证金模式下，改字段返回为空。
+|list > totalAvailableBalance |string |账户维度换算成usd的可用余额：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin。非统一保证金模式下，改字段返回为空。
+|list > totalPerpUPL |string |账户维度换算成usd的永续浮动盈亏：∑ Asset Perp UPL Base Coin。非统一保证金模式下，改字段返回为空。
+|list > totalInitialMargin |string |账户维度换算成usd的总初始保证金：∑ Asset Total Initial Margin Base Coin。非统一保证金模式下，改字段返回为空。
+|list > totalMaintenanceMargin |string |账户维度换算成usd的总维持保证金: ∑ Asset Total Maintenance Margin Base Coin。非统一保证金模式下，改字段返回为空。
+|list > coin |arrays |币种列表
+|coin > coin |string |钱包币种的名称，例如 BTC，ETH，USDT，USDC
+|coin > equity |string |用户资产
+|coin > usdValue |string |折算成 usd 的价值
+|coin > walletBalance |string |钱包余额
+|coin > marginBalance |string |其余资产贡献的MB+当前资产真实剩余的MB
+|coin > availableBalance |string |其余资产贡献的AB+当前资产真实剩余的AB（不能为负）
+|coin > marginBalanceWithoutConvert	|string	|保证金余额
+|coin > availableBalanceWithoutConvert |string |可用余额, Margin Balance - Total Initial Margin
+|coin > borrowAmount |string |已用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；
+|coin > availableToBorrow |string |可用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；
+|coin > accruedInterest	|string	|某资产应计利息
+|coin > totalOrderIM |string |订单委托预占用保证金
+|coin > totalPositionIM	|string	|所有仓位起始保证金求和 + 预占用平仓手续费
+|coin > totalPositionMM	|string |所有仓位维持保证金求和
+|coin > unrealisedPnl |string |未结盈亏
+|coin > cumRealisedPnl |string |累计已结盈亏
+|coin > givenCash |string |体验金
+|coin > serviceCash	|string |抵扣金

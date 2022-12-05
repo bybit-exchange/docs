@@ -1,0 +1,28 @@
+---
+title: Account Info
+sidebar_label: Account Info
+sidebar_position: 8
+---
+该接口可以查询账户下的配置，第一版本是查询保证金模式。支持 RM 和 PM 模式查询。
+
+
+:::caution
+未来该接口会增加如下几个配置查询：是否是可交易状态，是否可划转状态等账户的配置。
+:::
+
+
+#### HTTP Request
+GET `/v5/account/info`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|dcpStatus |string |ON/OFF 枚举值 查询当前的time window配置、DCP开关状态。接口限频：10次/秒|
+|timeWindow |string |断线计时窗口时间|
+|unifiedMarginStatus |string |1：常规未升级统一保证金账户。2：已升级统一保证金账户，仅期货和期权模式。3：已升级统一保证金账户，期货/期权/现货统一模式|
+|marginMode |string |REGULAR_MARGIN（常规保证金模式） PORTFOLIO_MARGIN（组合保证金模式） |
+|updateTime |string |账户数据更新的时间，毫秒时间戳|
