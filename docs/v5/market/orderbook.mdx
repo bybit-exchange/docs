@@ -1,9 +1,13 @@
 ---
 title: Order Book
 sidebar_label: Order Book
+sidebar_position: 5
 ---
 
-Query order book data.
+Query order book data
+* future: A maximum of 200-level of orderbook data can be returned.
+* spot: A maximum of 50-level of orderbook data can be returned.
+* option: 25-level of orderbook data can be returned ONLY.
 
 :::tips
 The response is in the snapshot format.
@@ -17,7 +21,7 @@ GET `/v5/market/orderbook`
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |**true** |string |Symbol name|
-|limit |false |integer |`linear`&`inverse`: [1,500],default: `25`. `option` has 25 ONLY. `spot`: [1,50], default: `50`|
+|limit |false |integer |Limit for data size per page.<li>`spot`: [1,50], default: `50`.</li><li>`linear`&`inverse`: [1,500],default: `25`.</li><li>`option` has 25 ONLY.</li>|
 
 #### Response Parameters
 | Parameter | Type | Comments|
@@ -31,3 +35,56 @@ GET `/v5/market/orderbook`
 |> a[1] |string |Ask size |
 |ts |integer |The timestamp(ms) that system generates the data |
 |u |integer |Update id, is always in sequence |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl GET 'https://api-testnet.bybit.com/v5/market/orderbook?category=linear&symbol=BITUSDT&limit=2'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "s": "BITUSDT",
+    "b": [
+            [
+                "0.306",
+                "478.3"
+            ],
+            [
+                "0.305",
+                "477.3"
+            ]
+        ],
+        "a": [
+            [
+                "0.308",
+                "646.5"
+            ],
+            [
+                "0.309",
+                "205.5"
+            ]
+        ],
+    "ts": 1670148386787,
+    "u": 261906
+},
+    "retExtInfo": {},
+    "time": 1670148388188
+}
+```
+</TabItem>
+</Tabs>
