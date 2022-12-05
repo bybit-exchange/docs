@@ -1,0 +1,33 @@
+---
+title: Risk Limit
+sidebar_label: Risk Limit
+---
+
+Get risk limit
+
+:::tip
+What is risk limit? <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">Risk Limit (USDT Contract)</a>
+:::
+
+#### HTTP Request
+GET `/derivatives/v3/public/risk-limit/list`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Products category. `future` ONLY |
+|symbol |false |string |Symbol name|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Products category. Keeps empty string `""` when `category` is not passed |
+|list |array |Object |
+|> id |string |Risk id |
+|> symbol |string |Symbol name |
+|> limit |string |Position limit |
+|> maintainMargin |string |Maintain margin rate |
+|> initialMargin |string |Initial margin rate |
+|> section |array |section array |
+|> isLowerRisk |integer |`1`: true, `0`: false |
+|> maxLeverage |string |Allowed max leverage |
