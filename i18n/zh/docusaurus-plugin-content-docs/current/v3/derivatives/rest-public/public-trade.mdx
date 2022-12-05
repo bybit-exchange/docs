@@ -1,0 +1,31 @@
+---
+title: Public Trading History
+sidebar_label: Public Trading History
+---
+
+Get recent public trading records in Bybit. You could download archived USDT contract trade records <a href="https://public.bybit.com/trading/">here</a>.
+
+#### HTTP Request
+GET `/derivatives/v3/public/recent-trade`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Products category. <li>`category`=null or future, then `symbol` is **required**</li><li>`category`=option, then `symbol` is **optional**</li> |
+|symbol |false |string |Symbol name|
+|baseCoin |false |string |Base coin. default: **BTC**. Valid only when `category`=option |
+|optionType |false |string |Option type. `Call` or `Put`. Valid only when `category`=option|
+|limit |false |string |Limit for data size per page. [1,1000]. default: `500`|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Products category |
+|list |array |Object |
+|> execId |string |Execution id |
+|> symbol |string |Symbol name |
+|> price |string |Trade price |
+|> size |string |Trade size |
+|> side |string |`Buy`, `Sell` |
+|> time |string |Trade time |
+|> isBlockTrade |boolean |Is block trade |

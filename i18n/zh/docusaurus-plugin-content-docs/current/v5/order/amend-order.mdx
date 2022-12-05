@@ -1,0 +1,57 @@
+---
+title: Amend Order
+sidebar_label: Amend Order
+sidebar_position: 2
+---
+:::caution
+You could modify those **unfilled** or **partially filled** orders.
+:::
+
+### HTTP Request
+GET `/v5/order/amend`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `linear`,`inverse`,`option` |
+|symbol |**true** |string |Symbol name|
+|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
+|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
+|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
+|triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > max(market price, basePrice)_ Else,<br/>_triggerPrice < min(market price, basePrice)_|
+|qty |false |string |Order quantity after modification. Don't pass it if not modify the qty|
+|price |false |string |Order price after modification. Don't pass it if not modify the price|
+|takeProfit |false |string |Take profit price after modification. Don't pass it if not modify the take profit |
+|stopLoss |false |string |Stop loss price after modification. Don't pass it if not modify the Stop loss |
+|tpTriggerBy |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
+|slTriggerBy |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
+|triggerBy |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |Order ID |
+|orderLinkId |string |User customised order id |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>
