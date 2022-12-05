@@ -1,23 +1,27 @@
 ---
 title: Get Instruments Info
 sidebar_label: Get Instruments Info
+sidebar_position: 12
 ---
 
 Query a list of instruments of online trading pair.
 
-#### HTTP Request
-GET `/v5/public/instruments-info`
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-#### Request Parameters
+### HTTP Request
+GET `/v5/market/instruments-info`
+
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`,`option`|
 |symbol |false |string |Symbol name|
-|baseCoin |false |string |Symbol name|
+|baseCoin |false |string |Base coin. for `option` ONLY.|
 |limit |false |integer |Limit for data size per page. [1,1000]. default: `500`|
 |cursor |false |integer |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
 <TabItem value="future" label="future" default>
     <table border="0.8">
@@ -171,103 +175,103 @@ GET `/v5/public/instruments-info`
 </TabItem>
 </Tabs>
 
-> Request Example
+### Request Example
 
 <Tabs>
 <TabItem value="console" label="Console">
 
-    ```http
-    curl GET 'https://api-testnet.bybit.com/derivatives/v3/public/instruments-info?symbol=BTCUSDT'
-    ```
+```http
+curl GET 'https://api-testnet.bybit.com/derivatives/v3/public/instruments-info?symbol=BTCUSDT'
+```
 
 </TabItem>
 </Tabs>
 
-> Response Example
+### Response Example
 
 <Tabs>
 <TabItem value="js linear" label="JavaScript linear">
 
-    ```javascript
-    {
-        "retCode": 0,
-        "retMsg": "OK",
-        "result": {
-        "category": "",
-        "list": [
-    {
-        "symbol": "BTCUSDT",
-        "contractType": "LinearPerpetual",
-        "status": "Trading",
-        "baseCoin": "BTC",
-        "quoteCoin": "USDT",
-        "launchTime": "1585526400000",
-        "deliveryTime": "0",
-        "deliveryFeeRate": "",
-        "priceScale": "2",
-        "leverageFilter": {
-        "minLeverage": "1",
-        "maxLeverage": "100",
-        "leverageStep": "0.01"
-    },
-        "priceFilter": {
-        "minPrice": "0.50",
-        "maxPrice": "999999.00",
-        "tickSize": "0.50"
-    },
-        "lotSizeFilter": {
-        "maxTradingQty": "420.000",
-        "minTradingQty": "0.001",
-        "qtyStep": "0.001"
-    },
-        "unifiedMarginTrade": true
-    }
-        ],
-        "nextPageCursor": ""
-    },
-        "retExtInfo": {},
-        "time": 1669001364275
-    }
-    ```
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "category": "",
+    "list": [
+{
+    "symbol": "BTCUSDT",
+    "contractType": "LinearPerpetual",
+    "status": "Trading",
+    "baseCoin": "BTC",
+    "quoteCoin": "USDT",
+    "launchTime": "1585526400000",
+    "deliveryTime": "0",
+    "deliveryFeeRate": "",
+    "priceScale": "2",
+    "leverageFilter": {
+    "minLeverage": "1",
+    "maxLeverage": "100",
+    "leverageStep": "0.01"
+},
+    "priceFilter": {
+    "minPrice": "0.50",
+    "maxPrice": "999999.00",
+    "tickSize": "0.50"
+},
+    "lotSizeFilter": {
+    "maxTradingQty": "420.000",
+    "minTradingQty": "0.001",
+    "qtyStep": "0.001"
+},
+    "unifiedMarginTrade": true
+}
+    ],
+    "nextPageCursor": ""
+},
+    "retExtInfo": {},
+    "time": 1669001364275
+}
+```
 
 </TabItem>
 <TabItem value="js option" label="JavaScript option">
 
-    ```javascript
-    {
-        "retCode": 0,
-        "retMsg": "success",
-        "result": {
-        "resultTotalSize": 1,
-        "cursor": "",
-        "dataList": [
-    {
-        "category": "option",
-        "symbol": "BTC-22NOV22-16750-C",
-        "status": "ONLINE",
-        "baseCoin": "BTC",
-        "quoteCoin": "USD",
-        "settleCoin": "USDC",
-        "optionsType": "Call",
-        "launchTime": "1668931200000",
-        "deliveryTime": "1669104000000",
-        "deliveryFeeRate": "0.00015",
-        "priceFilter": {
-        "minPrice": "5",
-        "maxPrice": "10000000",
-        "tickSize": "5"
-    },
-        "lotSizeFilter": {
-        "maxOrderQty": "10000",
-        "minOrderQty": "0.01",
-        "qtyStep": "0.01"
-    }
-    }
-        ]
-    },
-        "retExtInfo": {},
-        "time": 1669001502506
-    }
-    ```
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "resultTotalSize": 1,
+    "cursor": "",
+    "dataList": [
+{
+    "category": "option",
+    "symbol": "BTC-22NOV22-16750-C",
+    "status": "ONLINE",
+    "baseCoin": "BTC",
+    "quoteCoin": "USD",
+    "settleCoin": "USDC",
+    "optionsType": "Call",
+    "launchTime": "1668931200000",
+    "deliveryTime": "1669104000000",
+    "deliveryFeeRate": "0.00015",
+    "priceFilter": {
+    "minPrice": "5",
+    "maxPrice": "10000000",
+    "tickSize": "5"
+},
+    "lotSizeFilter": {
+    "maxOrderQty": "10000",
+    "minOrderQty": "0.01",
+    "qtyStep": "0.01"
+}
+}
+    ]
+},
+    "retExtInfo": {},
+    "time": 1669001502506
+}
+```
 </TabItem>
 </Tabs>
