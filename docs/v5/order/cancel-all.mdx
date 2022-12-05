@@ -1,6 +1,7 @@
 ---
 title: Cancel All Order
 sidebar_label: Cancel All Order
+sidebar_position: 5
 ---
 
 :::tip
@@ -8,18 +9,18 @@ This endpoint enables to cancel all open orders.
 - If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
 :::
 
-#### HTTP Request
-POST `/unified/v3/private/order/cancel-all`
+### HTTP Request
+POST `/v5/order/cancel-all`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `spot`,`linear`,`option` |
+|category |**true** |string |Products category. `spot`,`linear`,`inverse`,`option` |
 |symbol |false|string |Symbol name |
-|baseCoin |false|string |Cancel all open orders by base coin |
+|baseCoin |false|string |Base coin<li>null: cancel all open orders</li><li>`baseCoin` passed, `symbol`=null, then cancel all open orders by base coin</li><li>`symbol` passed, `baseCoin` will be ignored</li> |
 |settleCoin |false|string |Cancel all open orders by settle coin. `future` ONLY|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object | |
@@ -32,3 +33,25 @@ POST `/unified/v3/private/order/cancel-all`
 |> list |array |Object |
 |>> code |number |Success/error code |
 |>> msg |string |Success/error message |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>
