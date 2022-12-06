@@ -1,0 +1,55 @@
+---
+title: Set Trading Stop
+sidebar_label: Set Trading Stop
+sidebar_position: 4
+---
+
+Set the take profit, stop loss or trailing stop for the position.
+
+:::tip
+Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
+:::
+
+### HTTP Request
+POST `v5/position/trading-stop`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `linear`,`inverse` |
+|symbol |**true** |string |Symbol name|
+|takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
+|stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
+|trailingStop |false |string |Cannot be less than 0, 0 means cancel TS |
+|tpTriggerBy |false |string |Take profit trigger price type. default: `LastPrice` |
+|slTriggerBy |false |string |Stop loss trigger price type. default: `LastPrice` |
+|activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached ONLY |
+|tpSize |false |string |Take profit size. Valid in tp-sl partial mode |
+|slSize |false |string |Stop loss size. Valid in tp-sl partial mode |
+|positionIdx |false |string |Used to identify positions in different position modes. For one-way mode position, this param is **required**<li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>
