@@ -1,0 +1,56 @@
+---
+title: Get Option Delivery Record
+sidebar_label: Get Option Delivery Record
+sidebar_position: 12
+---
+
+Query option delivery records, sort by `deliveryTime` in descending order
+
+### HTTP Request
+POST `v5/asset/delivery-record`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `option` |
+|symbol |false |string |Symbol name |
+|expDate |false |string |Expiry date. `25MAR22`. default: return all |
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type|
+|list |array |Object |
+|> deliveryTime |integer |Delivery time (ms) |
+|> symbol |string |Symbol name |
+|> side |string |`Buy`,`Sell` |
+|> position |string |Executed size |
+|> deliveryPrice |string |Delivery price |
+|> strike |string |Exercise price |
+|> fee |string |Trading fee |
+|> deliveryRpl |string |Realized PnL of the delivery |
+|nextPageCursor |string |Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>

@@ -1,0 +1,178 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Query real-time position data, such as position size, accumulative realizedPNL.
+
+### HTTP Request
+POST `v5/position/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](enum#category) |**true** |string |Product type. `linear`,`inverse`,`option` |
+|symbol |false |string |Symbol name<li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li>|
+|baseCoin |false |string |Base coin. `option` ONLY. Return all positions if not passed|
+|settleCoin |false |string |Settle coin. Either `symbol` or `settleCon` is required, `symbol` has a higher priority |
+|limit |false |number |Limit for data size per page. [1,200]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+<Tabs>
+<TabItem value="linear" label="linear" default>
+    <table border="0.5">
+        <tr>
+            <th>Parameter</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>Products category</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
+        </tr>
+        <tr>
+            <td>> leverage</td><td>string</td><td>Leverage value </td>
+        </tr>
+        <tr>
+            <td>> updatedTime</td><td>integer</td><td>Update time of position </td>
+        </tr>
+        <tr>
+            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
+        </tr>
+        <tr>
+            <td>> positionValue</td><td>string</td><td>Total value of position </td>
+        </tr>
+        <tr>
+            <td>> takeProfit</td><td>string</td><td>Take profit price </td>
+        </tr>
+        <tr>
+            <td>> tpslMode</td><td>string</td><td>Tp/SL mode. `Partial`, `Full` </td>
+        </tr>
+        <tr>
+            <td>> riskId</td><td>integer</td><td>Risk limit id </td>
+        </tr>
+        <tr>
+            <td>> trailingStop</td><td>string</td><td>Trailing stop (the distance from the current price) </td>
+        </tr>
+        <tr>
+            <td>> entryPrice</td><td>string</td><td>Average entry price </td>
+        </tr>
+        <tr>
+            <td>> unrealisedPnl</td><td>string</td><td>Unrealised pnl </td>
+        </tr>
+        <tr>
+            <td>> markPrice</td><td>string</td><td>Mark price </td>
+        </tr>
+        <tr>
+            <td>> size</td><td>string</td><td>Position size </td>
+        </tr>
+        <tr>
+            <td>> stopLoss</td><td>string</td><td>Stop loss price </td>
+        </tr>
+        <tr>
+            <td>> cumRealisedPnl</td><td>string</td><td>Cumulative realised profit and loss </td>
+        </tr>
+        <tr>
+            <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
+        </tr>
+        <tr>
+            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
+        </tr>
+        <tr>
+            <td>> positionIdx</td><td>integer</td><td>Position idx, used to identify positions in different position modes<li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li> </td>
+        </tr>
+        <tr>
+            <td>> positionIM</td><td>string</td><td>Position initial margin </td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="option" label="option">
+    <table border="0.5">
+        <tr>
+            <th>Parameter</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>Products category</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
+        </tr>
+        <tr>
+            <td>> updatedTime</td><td>integer</td><td>Update time of position </td>
+        </tr>
+        <tr>
+            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
+        </tr>
+        <tr>
+            <td>> positionValue</td><td>string</td><td>Total value of position </td>
+        </tr>
+        <tr>
+            <td>> entryPrice</td><td>string</td><td>Average entry price </td>
+        </tr>
+        <tr>
+            <td>> unrealisedPnl</td><td>string</td><td>Unrealised pnl </td>
+        </tr>
+        <tr>
+            <td>> markPrice</td><td>string</td><td>Mark price </td>
+        </tr>
+        <tr>
+            <td>> size</td><td>string</td><td>Position size </td>
+        </tr>
+        <tr>
+            <td>> cumRealisedPnl</td><td>string</td><td>Cumulative realised profit and loss </td>
+        </tr>
+        <tr>
+            <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
+        </tr>
+        <tr>
+            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
+        </tr>
+        <tr>
+            <td>> positionIdx</td><td>integer</td><td>Not Applicable </td>
+        </tr>
+        <tr>
+            <td>> positionIM</td><td>string</td><td>Position initial margin </td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>
