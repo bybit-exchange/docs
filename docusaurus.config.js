@@ -70,8 +70,6 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/bybit-exchange/docs-v2/pulls',
           docLayoutComponent: "@theme/DocPage",
           docItemComponent: "@theme/ApiItem" // Derived from docusaurus-theme-openapi
         },
@@ -118,12 +116,6 @@ const config = {
             docId: 'v3/intro',
             position: 'left',
             label: 'v3 API',
-          },
-          {
-            type: 'doc',
-            docId: 'account-asset/intro',
-            position: 'left',
-            label: 'Account Asset',
           },
           {
             to: '/api-explorer/category',
