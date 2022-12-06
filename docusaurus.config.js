@@ -127,20 +127,32 @@ const config = {
             position: 'right',
             items: [
               {
-                to: '/pre-version/spot/intro',
+                href: 'https://bybit-exchange.github.io/docs/spot/v1/#t-introduction',
                 label: 'Spot v1'
               },
               {
-                to: '/pre-version/future/intro',
-                label: 'Future v2'
+                href: 'https://bybit-exchange.github.io/docs/usdc/perpetual/#t-introduction',
+                label: 'USDC Perpetual v1'
               },
               {
-                to: '/pre-version/usdc-contract/intro',
-                label: 'USDC Contract v1'
+                href: 'https://bybit-exchange.github.io/docs/usdc/option/#t-introduction',
+                label: 'USDC Option v1'
               },
               {
-                to: 'pre-version/account-asset/intro',
+                href: 'https://bybit-exchange.github.io/docs/account_asset/v1/#t-introduction',
                 label: 'Account Asset v1'
+              },
+              {
+                href: 'https://bybit-exchange.github.io/docs/futuresV2/linear/#t-introduction',
+                label: 'USDT Perpetual v2'
+              },
+              {
+                href: 'https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-introduction',
+                label: 'Inverse Perpetual v2'
+              },
+              {
+                href: 'https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-introduction',
+                label: 'Inverse Future v2'
               },
             ]
           },
