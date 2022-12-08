@@ -1,0 +1,37 @@
+---
+title: Cancel All Order
+sidebar_label: Cancel All Order
+---
+
+:::tip
+This endpoint enables to cancel all open orders.
+- If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
+:::
+
+#### HTTP Request
+POST `/unified/v3/private/order/cancel-all`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Products category. `linear`, `option` |
+|symbol |false|string |Symbol name |
+|baseCoin |false|string |Cancel all open orders by base coin |
+|settleCoin |false|string |Cancel all open orders by settle coin. `future` ONLY|
+|symbol |false|string |Symbol name |
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |Object | |
+|> list |array |Object |
+|>> category |string |Products category |
+|>> symbol |string |Symbol name |
+|>> orderId |string |Order id |
+|>> orderLinkId |string |User customised order id |
+|retExtInfo |Object | |
+|> list |array |Object |
+|>> code |integer |Success/error code |
+|>> msg |string |Success/error message |

@@ -1,0 +1,27 @@
+---
+title: Liquidation
+sidebar_label: Liquidation
+sidebar_position: 5
+---
+
+Subscribe liquidation data in Bybit.
+
+**Push frequency:** real-time
+
+**Topic:**<br/>
+`liquidation.{symbol}` e.g., liquidation.BTCUSDT
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot` |
+|ts |integer |The timestamp (ms) that system generates the data |
+|data |array |Object |
+|> updateTime |integer |The updated timestamp (ms) |
+|> symbol |string |Symbol name |
+|> side |string |Order side. `Buy`,`Sell` |
+|> positionSide |string |Position side. `long`,`short`. If `positionSide`=long and `side`=Sell, then it is the long position liquidated |
+|> size |string |Executed size  |
+|> price |string |Executed price |
+|> id |string |Trade Id |
