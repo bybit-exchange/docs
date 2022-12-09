@@ -18,31 +18,31 @@ GET `/v5/account/wallet-balance`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |accountType |string |Account type. |
-|list > accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin|
-|list > accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。|
-|list > totalEquity |string |账户维度换算成usd的资产净值：Account Margin Balance Base Coin + Account Option Value Base Coin。|
-|list > totalWalletBalance |string |账户维度换算成usd的产钱包余额：∑ Asset Wallet Balance Base Coin。非统一保证金模式下，改字段返回为空。
-|list > totalMarginBalance |string |账户维度换算成usd的保证金余额：Account Wallet Balance Base Coin + Account Perp UPL Base Coin。非统一保证金模式下，改字段返回为空。
-|list > totalAvailableBalance |string |账户维度换算成usd的可用余额：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin。非统一保证金模式下，改字段返回为空。
-|list > totalPerpUPL |string |账户维度换算成usd的永续浮动盈亏：∑ Asset Perp UPL Base Coin。非统一保证金模式下，改字段返回为空。
-|list > totalInitialMargin |string |账户维度换算成usd的总初始保证金：∑ Asset Total Initial Margin Base Coin。非统一保证金模式下，改字段返回为空。
-|list > totalMaintenanceMargin |string |账户维度换算成usd的总维持保证金: ∑ Asset Total Maintenance Margin Base Coin。非统一保证金模式下，改字段返回为空。
-|list > coin |arrays |币种列表
-|coin > coin |string |钱包币种的名称，例如 BTC，ETH，USDT，USDC
-|coin > equity |string |用户资产
-|coin > usdValue |string |折算成 usd 的价值
-|coin > walletBalance |string |钱包余额
-|coin > marginBalance |string |其余资产贡献的MB+当前资产真实剩余的MB
-|coin > availableBalance |string |其余资产贡献的AB+当前资产真实剩余的AB（不能为负）
-|coin > marginBalanceWithoutConvert	|string	|保证金余额
-|coin > availableBalanceWithoutConvert |string |可用余额, Margin Balance - Total Initial Margin
-|coin > borrowAmount |string |已用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；
-|coin > availableToBorrow |string |可用借贷额度。只有 USDC，USDT 有。BTC 和 ETH 则返回为 0；
-|coin > accruedInterest	|string	|某资产应计利息
-|coin > totalOrderIM |string |订单委托预占用保证金
-|coin > totalPositionIM	|string	|所有仓位起始保证金求和 + 预占用平仓手续费
-|coin > totalPositionMM	|string |所有仓位维持保证金求和
-|coin > unrealisedPnl |string |未结盈亏
-|coin > cumRealisedPnl |string |累计已结盈亏
-|coin > givenCash |string |体验金
-|coin > serviceCash	|string |抵扣金
+|list > accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|list > accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|list > totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|list > totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.
+|list > totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|list > totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|list > totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|list > totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|list > totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|list > coin |arrays |Coin list
+|coin > coin |string |Coin name, such as BTC, ETH, USDT, USDC
+|coin > equity |string |Equity
+|coin > usdValue |string |usd value
+|coin > walletBalance |string |Wallet balance
+|coin > marginBalance |string |Margin Balance contributed by other assets + remaining Margin Balance of current assets
+|coin > availableBalance |string |Available Balance contributed by other assets + remaining Available Balance of current assets（can not be negative）
+|coin > marginBalanceWithoutConvert	|string	|Margin Balance
+|coin > availableBalanceWithoutConvert |string |Available Balance, Margin Balance - Total Initial Margin
+|coin > borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0;
+|coin > availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0;
+|coin > accruedInterest	|string	|Accrued interest
+|coin > totalOrderIM |string |Pre-occupied margin for order
+|coin > totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee
+|coin > totalPositionMM	|string |Sum of maintenance margin for all positions
+|coin > unrealisedPnl |string |Unrealised P&L
+|coin > cumRealisedPnl |string |Cumulative Realised P&L
+|coin > givenCash |string |Given cash
+|coin > serviceCash	|string |Service cash
