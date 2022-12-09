@@ -3,10 +3,10 @@ title: Order Record
 sidebar_label: Order Record
 sidebar_position: 4
 ---
-申赎记录查询
+Purchase/Redemption History
 
 :::caution
-API权限:读写权限
+API permissions: Authentication required
 :::
 
 
@@ -16,25 +16,25 @@ POST `/v5/spot-lever-token/order-record`
 #### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|ltCoin |**true** |string |LT资产名称，例如BTC3L |
-|orderId |false	|string	|订单ID |
-|startTime |false |long	|起始时间 |
-|endTime |false	|long |截止时间 |
-|limit |false |int |返回數據最大500條. 默認返回100條 |
-|orderType |false |int |订单类型 1. 申购 2. 赎回 |
-|serialNo |false |string |序列号 |
+|ltCoin |**true** |string |Abbreviation of the LT，such as BTC3L |
+|orderId |false	|string	|order ID |
+|startTime |false |long	|Start time, unit in millisecond |
+|endTime |false	|long |End time, unit in millisecond |
+|limit |false |int |Limit for data size per page, max size is 500. Default as showing 100 pieces of data per page |
+|orderType |false |int |Order type; 1. Purchase; 2. Redemption |
+|serialNo |false |string |Serial number |
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|ltCoin |string |杠杆代币资产简称 |
-|orderId |string |订单ID |
-|orderType |string |订单类型 1. 申购 2. 赎回 |
-|orderTime |string |下单时间 |
-|excTime |string |订单状态最后一次更新时间 |
-|orderStatus |string |订单状态：1. 已成交。2. 等待中。3. 失败 |
-|fee |string |交易手续费 |
-|amount	|string	|下单的杠杆代币资产数量 |
-|value |string |成交价值 |
-|valueCoin |string |计价币种 |
-|serialNo |string |序列号 |
+|ltCoin |string |Abbreviation of the LT，such as BTC3L |
+|orderId |string |order ID |
+|orderType |string |Order type; 1. Purchase; 2. Redemption |
+|orderTime |string |Order time |
+|excTime |string |Last update time of the order status |
+|orderStatus |string |Order status; 1. Completed; 2. In progress; 3. Failed |
+|fee |string |Trading fees |
+|amount	|string	|Order quantity of the LT |
+|value |string |Filled value |
+|valueCoin |string |Quote asset |
+|serialNo |string |Serial number |

@@ -3,7 +3,7 @@ title: Borrow History
 sidebar_label: Borrow History
 sidebar_position: 4
 ---
-获取利息记录，按照创建时间倒叙排列。
+Get interest records, sorted in reverse order of creation time.
 
 #### HTTP Request
 GET `/v5/account/borrow-history`
@@ -12,18 +12,18 @@ GET `/v5/account/borrow-history`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |currency |false |string |USDC、USDT、BTC、ETH|
-|startTime |false |int |开始时间|
-|endTime |false |int |结束时间|
-|limit |false |integer |每页数量, 最大50. 默认每页20条|
-|cursor |false |string |翻页标记,请使用返回的cursor,签名时使用返回的原始数据，发送request时请进行urlencode|
+|startTime |false |int |Start time. timestamp in milliseconds|
+|endTime |false |int |End time. timestamp in milliseconds|
+|limit |false |integer |size per page, Maximum 50. The default is 20 items per page|
+|cursor	|false |string |cursor for pagination, please use the returned cursor, use the returned cursor when generating signature. Please use urlencode when sending the request|
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list > currency |string |USDC、USDT、BTC、ETH|
-|list > createdTime |int64 |时间戳（毫秒）|
-|list > borrowCost |string |利息|
-|list > hourlyBorrowRate |string |利率
-|list > InterestBearingBorrowSize |string |豁免利息额度
-|list > borrowSize |string |计息借款
-|list > costExemption |string |豁免计息成本
+|list > createdTime |int64 |created time, timestamp in milliseconds|
+|list > borrowCost |string |Interest|
+|list > hourlyBorrowRate |string |Hourly Borrow Rate
+|list > InterestBearingBorrowSize |string |Interest Bearing Borrow Size
+|list > borrowSize |string |borrowe size
+|list > costExemption |string |cost exemption
