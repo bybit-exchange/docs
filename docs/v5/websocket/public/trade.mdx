@@ -1,0 +1,29 @@
+---
+title: Public trade
+sidebar_label: Public trade
+sidebar_position: 2
+---
+
+Subscribe recent trades data in Bybit.<br/>
+After subscription, you will be pushed trade message in real-time once there is an order filled.
+
+Push frequency: **real-time**
+
+**Topic:**<br/>
+`publicTrade.{symbol}` **note**: option uses baseCoin, e.g., publicTrade.BTC
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot` |
+|ts |integer |The timestamp (ms) that system generates the data |
+|data |array |Object |
+|> T |string |The timestamp (ms) that the order is filled |
+|> s |array |Symbol name  |
+|> S |string |Side. `Buy`,`Sell` |
+|> v |string |Trade size |
+|> p |string |Trade price |
+|> [L](../../enum#tickDirection) |string |Direction of price change  |
+|> i |string |Trade Id |
+|> BT |boolean |Whether it is a block trade order or not|

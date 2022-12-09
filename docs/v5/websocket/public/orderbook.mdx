@@ -1,0 +1,47 @@
+---
+title: Orderbook
+sidebar_label: Orderbook
+sidebar_position: 1
+---
+
+Subscribe the different depths orderbook stream.
+:::tip
+* Once subscribe successfully, you will receive a snapshot.
+* Websocket will keep pushing delta message when orderbook is changed. If you receive a new snapshot data, it's necessary to reset your local orderbook.
+* `snapshot`=snapshot orderbook, `delta`=delta orderbook
+* If there is a problem in bybit end, it will re-send a snapshot, which is promised the latest and accurate.
+:::
+**linear & inverse:**<br/>
+  1 level data, push frequency: **10ms**<br/>
+ 50 level data, push frequency: **100ms**<br/>
+200 level data, push frequency: **100ms**<br/>
+
+**Spot:**<br/>
+  1 level data, push frequency: **10ms**<br/>
+ 50 level data, push frequency: **100ms**<br/>
+
+**Option:**<br/>
+ 25 level data, push frequency: **20ms**<br/>
+100 level data, push frequency: **100ms**<br/>
+
+
+**Topic:**<br/>
+`orderbook.{depth}.{symbol}` e.g., orderbook.1.BTCUSDT
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot`,`delta` |
+|ts |integer |The timestamp (ms) that system generates the data |
+|data |array |Object |
+|> s |string |Symbol name |
+|> b |array |Bids. The element is sort by price in descending order  |
+|>> b[0] |string |Bid price |
+|>> b[1] |string |Bid size |
+|> a |array |Asks. The element is sort by price in ascending order  |
+|>> a[0] |string |Ask price |
+|>> a[1] |string |Ask size |
+|u |integer |Update id, is always in sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite the locally saved orderbook  |
+|seq |integer |Cross sequence. Internal used |
+

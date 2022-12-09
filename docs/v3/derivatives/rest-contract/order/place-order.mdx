@@ -3,6 +3,9 @@ title: Place Order
 sidebar_label: Place Order
 sidebar_position: 1
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::tip
 - **<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>**: A traditional market order, which will be filled at the current optimal price. Only when the market
 order selected, the price could be `null`. To protect the market order from serious slippage, Bybit will convert the market
@@ -19,7 +22,7 @@ positions, the TP/SL linked when you submit active orders will not take effect. 
 
 - **Order price**: Place a limit order, this parameter is **required**. If you don't have position, the long order price
 should be higher than _10%_ of the market price and lower than 1 million. If you have position, the price should be higher than the _liquidation price_.
-For the minimum unit of the price change, please refer to the priceFilter field in the [instrumentInfo](#).
+For the minimum unit of the price change, please refer to the `priceFilter` field in the [_instrumentInfo_](../../rest-public/instrument-info#).
 
 - **orderLinkId**: You can customize the active order ID. We can link this ID to the order ID in the system. Once the
 active order is successfully created, we will send the unique order ID in the system to you. Then, you can use this order
@@ -28,34 +31,36 @@ ID to cancel active orders. Meanwhile, your customized order ID should be no lon
 - Each account can hold a maximum of _500_ active orders simultaneously. This is contract-specific, so the following
 situation is allowed: _The same account can hold 300 BTCUSD active orders and 280 ETHUSD active orders at the same time._
 When the upper limit of orders is reached, you can still place orders with parameters of **reduceOnly** or **closeOnTrigger**.
+
+- `option` **cannot** place conditional order
 :::
 
 ### HTTP Request
-POST `v5/order/create`
+POST `/contract/v3/private/order/create`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`option`,`option` |
+|[category](../../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear` |
 |symbol |**true** |string |Symbol name|
-|side |**true** |string |`Buy`, `Sell`|
+|side |**true** |string |`Buy`,`Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
+|[timeInForce](../../enum#timeInForce) |**true** |string |Read more about <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. |
 |price |false |string |Order price. Invalid if `orderType`=_Market_|
-|triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> |
-|triggerPrice |false |string |Conditional order param. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
-|triggerBy |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
-|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
-|timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
-|positionIdx |false |string |Position mode. `0`: one-way mode. |
-|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
+|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g., for 10%, 0.1 should be passed. It has a higher priority than `price` |
+|mmp |false |boolean |Market maker protection. `option` ONLY. `true` means this order is a market maker protection order |
+|triggerDirection |false |integer |_Conditional order param_. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li>|
+|triggerPrice |false |string |_Conditional order param_. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
+|[triggerBy](../../enum#triggerBy) |false |string |Trigger price type. default:`LastPrice`.|
+|positionIdx |false |string |Position index. It is **required** for one-way position mode |
+|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>This param is **required**</li><li>always unique</li>|
 |takeProfit |false |string |Take profit price. only take effect upon opening the position |
 |stopLoss |false |string |Stop loss price. only take effect upon opening the position |
-|tpTriggerBy |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|slTriggerBy |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
+|[tpTriggerBy](../../enum#triggerBy) |false |string |The price type to trigger take profit. default:`LastPrice` |
+|[slTriggerBy](../../enum#triggerBy) |false |string |The price type to trigger stop loss. default:`LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
-|mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -66,9 +71,53 @@ POST `v5/order/create`
 ### Request Example
 
 <Tabs>
-<TabItem value="console" label="Console">
+<TabItem value="console-linear" label="linear">
 
 ```http
+POST /contract/v3/private/order/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670487164902
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json; charset=utf-8
+{
+    "category": "linear",
+    "symbol": "BTCPERP",
+    "side": "Buy",
+    "orderType": "Limit",
+    "qty": "0.05",
+    "price": "18500",
+    "timeInForce": "GoodTillCancel",
+    "positionIdx": null,
+    "triggerDirection": 1,
+    "triggerPrice": "19000"
+}
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="option">
+
+```http
+POST /contract/v3/private/order/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670487164902
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json; charset=utf-8
+{
+    "category": "option",
+    "symbol": "BTC-9DEC22-15500-C",
+    "side": "Buy",
+    "orderType": "Limit",
+    "qty": "0.01",
+    "price": "2800",
+    "iv": "700", //higher priority
+    "timeInForce": "FillOrKill",
+    "orderLinkId": "test-option-001"
+}
 ```
 
 </TabItem>
@@ -80,7 +129,16 @@ POST `v5/order/create`
 <TabItem value="js linear" label="linear">
 
 ```javascript
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "orderId": "0cf62262-7dc2-4503-9566-8835c841509b",
+    "orderLinkId": ""
+},
+    "retExtInfo": {},
+    "time": 1670486764551
+}
 ```
 </TabItem>
 </Tabs>
