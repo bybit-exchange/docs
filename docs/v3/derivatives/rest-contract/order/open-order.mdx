@@ -1,6 +1,7 @@
 ---
 title: Get Open Orders
 sidebar_label: Get Open Orders
+sidebar_position: 1.5
 ---
 :::tip
 Query unfilled or partially filled orders in **real-time**.
@@ -12,7 +13,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 #### HTTP Request
-GET `/unified/v3/private/order/unfilled-orders`
+GET `/contract/v3/private/order/unfilled-orders`
 
 #### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -202,5 +203,75 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> basePrice</td><td>string</td><td>Base price </td>
         </tr>
     </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /contract/v3/private/order/unfilled-orders?symbol=SOLUSDT&category=linear HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670564324211
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "list": [
+{
+    "symbol": "SOLUSDT",
+    "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
+    "side": "Sell",
+    "orderType": "Limit",
+    "stopOrderType": "UNKNOWN",
+    "price": "14.500",
+    "qty": "50.0",
+    "timeInForce": "GoodTillCancel",
+    "orderStatus": "New",
+    "triggerPrice": "0.000",
+    "orderLinkId": "",
+    "createdTime": "1670554867548",
+    "updatedTime": "1670554904611",
+    "takeProfit": "0.000",
+    "stopLoss": "0.000",
+    "tpTriggerBy": "UNKNOWN",
+    "slTriggerBy": "UNKNOWN",
+    "triggerBy": "UNKNOWN",
+    "reduceOnly": false,
+    "leavesQty": "50.0",
+    "leavesValue": "725",
+    "cumExecQty": "0.0",
+    "cumExecValue": "0",
+    "cumExecFee": "0",
+    "triggerDirection": 0,
+    "cancelType": "UNKNOWN",
+    "lastPriceOnCreated": "",
+    "iv": "",
+    "closeOnTrigger": false
+}
+    ],
+    "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",
+    "category": "linear"
+},
+    "retExtInfo": {},
+    "time": 1670564327905
+}
+```
 </TabItem>
 </Tabs>
