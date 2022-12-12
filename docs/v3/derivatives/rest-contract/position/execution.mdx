@@ -1,0 +1,130 @@
+---
+title: Get Execution List
+sidebar_label: Get Execution List
+sidebar_position: 8
+---
+
+Query users' execution list, sort by `execTime` in descending order. Support USDT Perpetual, Inverse Perpetual, Inverse Future, USDC Perpetual and USDC Option.
+
+**Query time range:**<br/>
+* USDT perp, Inverse perp, Inverse future: up to 2 years
+* USDC perp, Option: up to 30 days
+
+:::tip
+You may have multiple executions in a single order.
+:::
+
+### HTTP Request
+GET `/contract/v3/private/execution/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Product type. `linear`,`inverse`,`option`. default: `linear` |
+|symbol |false |string |Symbol name. It is **required** if category=`linear` or `inverse` |
+|orderId |false |string |Order id. Return all records if not passed |
+|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|baseCoin |false |string |Base coin. for `option` ONLY. Return **BTC** data if not passed |
+|startTime |false |integer |The start timestamp (ms)|
+|endTime |false |integer |The end timestamp (ms)|
+|[execType](../../enum#exectype) |false |string |Execution type|
+|limit |false |integer |Limit for data size per page. [1,200]. default: `50`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|nextPageCursor |string |Cursor. Used to pagination |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> side |string |`Buy`,`Sell` |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customised order id |
+|> orderPrice |string |Order price |
+|> orderQty |string |Order qty |
+|> orderType |string |`Market`,`Limit` |
+|> [stopOrderType](../../enum#stopordertype) |string |Stop order type |
+|> execId |string |Trade Id |
+|> execPrice |string |Execution price |
+|> execQty |string |Execution qty |
+|> execFee |string |Execution fee |
+|> [execType](../../enum#exectype) |string |Execution type |
+|> execValue |string |Execution position value |
+|> feeRate |string |Trading fee rate |
+|> [lastLiquidityInd](../../enum#lastliquidityind) |string |`AddedLiquidity`, `RemovedLiquidity` |
+|> leavesQty |string |Remaining qty waiting for execution. Unique field for `linear` and `inverse` |
+|> closedSize |string |Close size |
+|> iv |string |Implied volatility |
+|> blockTradeId |string |Block trade id |
+|> markPrice |string |Mark price |
+|> indexPrice |string |Index price |
+|> markIv |string |Mark iv |
+|> underlyingPrice |string |Underlying price |
+|> execTime |string |Execution timestamp (ms) |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /contract/v3/private/execution/list?symbol=BTCUSDT&limit=1&category=linear HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670853954362
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "list": [
+        {
+            "symbol": "BTCUSDT",
+            "execFee": "0.0101562",
+            "execId": "8525d183-6412-546d-95c7-8fa5e9aeb962",
+            "execPrice": "16927.00",
+            "execQty": "0.001",
+            "execType": "Trade",
+            "execValue": "16.927",
+            "feeRate": "0.0006",
+            "lastLiquidityInd": "RemovedLiquidity",
+            "leavesQty": "0.043",
+            "orderId": "1f30b84e-48cd-40a8-a5c8-023961ec4783",
+            "orderLinkId": "",
+            "orderPrice": "17772.50",
+            "orderQty": "0.044",
+            "orderType": "Market",
+            "stopOrderType": "UNKNOWN",
+            "side": "Buy",
+            "execTime": "1670493167211",
+            "closedSize": "0.001",
+            "iv": "",
+            "blockTradeId": "",
+            "markPrice": "",
+            "markIv": "",
+            "underlyingPrice": "",
+            "indexPrice": ""
+        }
+    ],
+    "nextPageCursor": "ZzU3NlU4M1JlLzhFTWkzeW9hemRVajNEZlZocGRIbXU0VU9TK0xHQ1hpN1hLc0xpN2pKZXE2dm1BYkZra3hwRU9uc1JsQ25SRHZpUlg3OWkrV1FKREg2U3dnQzl1YlRUNG01MDdjQ0FBak5RRnpIQlpKbWdjUHZYZFc5aFpmQ1VYNm15YkNrUUhid2d3dkd0aDYxTGdXQWhZUFFmeUl5K1BRSzhMVXdXR0VqTWNzRGtESFVQb2EwWHFIMVZCTGVleG1FSGRRQ3g2akRuSGt6NzhkM2EwcTR2SDlpS2FpL3RhaG5FR0hJTnBOUGlYb1gxdHN0SHArVE5CWlZVNXYzRGJQN3VEcXZuWVE1V3gxclo1elpFMnpaVFp0VjJwSHp5ZUtUd1NUREkyM0k0M05OUW9jK2NuSHc2azdPOE1qMTV6R2RDZG9udEdrSHlSOU1LK3NHQ3JyM3JnZnpFK2hLVHVaOTlMMm1aQUdyajVFOENIdFpTTDIvUUU5UnlEYW82NVJYeWVBTm9jVmpKVENnS1BVSnV5a0lMTGYvZWFobUhOTlNpOFUrZ3U1OD0=",
+    "category": "linear"
+},
+    "retExtInfo": {},
+    "time": 1670853954539
+}
+```
+</TabItem>
+</Tabs>

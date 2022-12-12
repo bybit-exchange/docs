@@ -1,0 +1,80 @@
+---
+title: Set Trading Stop
+sidebar_label: Set Trading Stop
+sidebar_position: 6
+---
+
+Set the take profit, stop loss or trailing stop for the position. If under [Tp/SL partial mode](tpsl-mode#), TP/SL/TS orders will not close your entire position.
+
+:::tip
+* Passing these parameters will create conditional orders by the system internally.
+* The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
+* Support USDT Perpetual, Inverse Perpetual, Inverse Future and USDC Perpetual. **Note:** USDC Perpetual does not have partial TP/SL mode.
+:::
+
+### HTTP Request
+POST `/contract/v3/private/position/trading-stop`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol name|
+|takeProfit |false |string |Cannot be less than 0, 0 means cancel TP. Partial TP/SL cannot be cancelled by set it 0 |
+|stopLoss |false |string |Cannot be less than 0, 0 means cancel SL. Partial TP/SL cannot be cancelled by set it 0|
+|tpSize |false |string |Take profit size. Valid in tp-sl partial mode ONLY |
+|slSize |false |string |Stop loss size. Valid in tp-sl partial mode ONLY|
+|[tpTriggerBy](../../enum#triggerby) |false |string |Take profit trigger price type. default: `LastPrice` |
+|[slTriggerBy](../../enum#triggerby) |false |string |Stop loss trigger price type. default: `LastPrice` |
+|trailingStop |false |string |Cannot be less than 0, 0 means cancel TS |
+|activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached ONLY |
+|positionIdx |**true** |string |Used to identify positions in different position modes. <li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> |
+
+### Response Parameters
+None
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /contract/v3/private/position/trading-stop HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670852788387
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "symbol": "SOLPERP",
+    "takeProfit": "19",
+    "stopLoss": "10",
+    "activePrice": null,
+    "trailingStop": null,
+    "tpTriggerBy": null,
+    "slTriggerBy": null,
+    "slSize": null,
+    "tpSize": null,
+    "positionIdx": 0
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1670852788558
+}
+```
+</TabItem>
+</Tabs>
