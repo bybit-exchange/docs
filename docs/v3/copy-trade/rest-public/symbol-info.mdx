@@ -2,3 +2,90 @@
 title: Symbol List
 sidebar_label: Symbol List
 ---
+
+The following market data endpoints do not require authentication.
+
+Symbol List
+
+### HTTP Request
+GET `/contract/v3/public/copytrading/symbol/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|symbol |string |symbol   |
+|baseCurrency |string |Base currency   |
+|quoteCurrency |string |Quote currency |
+|priceScale |string |Price scale (the number of decimal places to which a price can be submitted, although the final price may be rounded to conform to the tick_size)    |
+|takerFee |string |Taker fee   |
+|makerFee |string |Maker fee   |
+|fundingInterval |string |Funding fee interval   |
+|leverageFilter |object[] ||
+|maxLeverage |string |Max leverage (indicates the max leverage, assuming the lowest risk limit setting)  |
+|minLeverage |string |Min leverage   |
+|priceFilter |object[] ||
+|minPrice |string |Min price  |
+|maxPrice |string |Max price    |
+|tickSize |string |Tick size   |
+|lotSizeFilter |object[] ||
+|qtyStep |string |Qty step   |
+|maxOrderQty |string |Max trading quantity   |
+|minOrderQty |string |Min trading quantity   |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl https://api-testnet.bybit.com/contract/v3/public/copytrading/symbol/list
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "list": [
+      {
+        "symbol": "BTCUSDT",
+        "baseCurrency": "BTC",
+        "quoteCurrency": "USDT",
+        "priceScale": "1",
+        "takerFee": "0.00075",
+        "makerFee": "-0.00025",
+        "fundingInterval": "480",
+        "leverageFilter": {
+          "maxLeverage": "100",
+          "minLeverage": "1"
+        },
+        "priceFilter": {
+          "minPrice": "0.5",
+          "maxPrice": "999999.0",
+          "tickSize": "0.5"
+        },
+        "lotSizeFilter": {
+          "qtyStep": "0.001",
+          "maxOrderQty": "100.000",
+          "minOrderQty": "0.001"
+        }
+      }
+    ]
+  }
+}
+```
+</TabItem>
+</Tabs>
+
