@@ -1,4 +1,64 @@
 ---
 title: Cancel Order
 sidebar_label: Cancel Order
+sidebar_position: 4
 ---
+
+Cancel Order
+
+### HTTP Request
+POST `/contract/v3/private/copytrading/order/cancel`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |symbol |
+|orderId |false |string |Order ID |
+|orderLinkId |false |string |Unique user-set order ID. Maximum length of 36 characters |
+
+
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |Order ID |
+|orderLinkId |string |Unique user-set order ID. Maximum length of 36 characters |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/order/cancel' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 901734bbab6ff1ac16bd08c39e3ba71da4b156bb82669daef849e84fc199fc41' \
+--header 'X-BAPI-API-KEY: IZXRDYUTQVVTRDHOKW' \
+--header 'X-BAPI-TIMESTAMP: 1670831398044' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: _abck=512C3D3FB42B850A275C054F2E57C004~-1~YAAQx8xNF8glAtt+AQAASLJw4QfCi9KA5o1iJaqNunJrSu6+D3rltm7ueRKEJHA83Rd59coJrjlnfhUQNBDakd09oETfoGfnqq9WpevA1M3IAsACPk9LIZpl5gEPOmRU2g9bFIgG8SYMSDmCs4ExED6/tyR84kYDpO9x8nRSQnW+NOIjf2+YVyOubDdebIqwjlYCNjBuS09x/awAwdjDjm8sUMZEvotXhSm9vxQt8a8FG9qQfHuvNwWnq5MiqDYIPli+zGIiB5o/A/rjR/RxP02P3hls0BZzIdg42ekt7QlLJ748gGV0jq6jugAr53vs+RkOzmVeKYelF8R27sA2Kj37rgjmY7EB2p2MyHZGPzcFUgm9JbEUrQ==~-1~-1~-1' \
+--data-raw '{"orderId": "a4f60d8d-2957-46cb-9fff-126367e7fdc6"}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "orderId": "419190fe-016c-469a-810e-936bef2f5d59",
+    "orderLinkId": ""
+  }
+}
+```
+</TabItem>
+</Tabs>

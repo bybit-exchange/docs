@@ -1,4 +1,57 @@
 ---
 title: Set Leverage
 sidebar_label: Set Leverage
+sidebar_position: 3
 ---
+Set Leverage
+
+### HTTP Request
+GET `/contract/v3/private/copytrading/position/set-leverage`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol   |
+|buyLeverage |**true** |string |The value of buy_leverage must be equal to sell_leverage. |
+|sellLeverage |**true** |string |The value of buy_leverage must be equal to sell_leverage. |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/position/set-leverage' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 7cef1d820b3e5cb59f0b6c852c800c8f1636e28790dcc13201ea5552fa8197b9' \
+--header 'X-BAPI-API-KEY: KAMz86BfHkKT5yWKWE' \
+--header 'X-BAPI-TIMESTAMP: 1670841373442' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{"symbol":"BTCUSDT","buyLeverage":"4","sellLeverage":"4"}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1670841190031
+}
+```
+</TabItem>
+</Tabs>

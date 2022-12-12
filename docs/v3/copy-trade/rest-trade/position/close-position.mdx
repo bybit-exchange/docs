@@ -1,4 +1,57 @@
 ---
 title: Close Position
 sidebar_label: Close Position
+sidebar_position: 2
 ---
+Close Position
+
+### HTTP Request
+GET `/contract/v3/private/copytrading/position/close`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol |
+|positionIdx |**true** |string |Position idx, used to identify positions in different position modes:1-Buy side of both side mode; 2-Sell side of both side mode|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/position/close' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 7eefa5db5f3da8ff333daefc9513d02a8e9bbafd08381b4780fdd774b14f692c' \
+--header 'X-BAPI-API-KEY: KAMz86BfHkKT5yWKWE' \
+--header 'X-BAPI-TIMESTAMP: 1670841189767' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{"symbol":"BTCUSDT","positionIdx":"1"}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1670841190031
+}
+```
+</TabItem>
+</Tabs>
