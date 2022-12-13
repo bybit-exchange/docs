@@ -1,0 +1,113 @@
+---
+title: orderBookL2_25
+sidebar_label: orderBookL2_25
+sidebar_position: 1
+---
+
+Fetches the orderbook with a depth of 25 orders per side.
+:::tip
+Want a greater depth? Take a look at the [orderBookL2_200](./orderbook-200) endpoint.
+:::
+After the subscription response, the first response will be the snapshot response. This shows the entire orderbook. The data is ordered by price, starting with the lowest buys and ending with the highest sells.<br/>
+Following this, all responses are in the delta format, which represents updates to the orderbook relative to the last response.<br/>
+
+Push frequency: **20ms**<br/>
+**Topic:**<br/>
+`orderbookL2_25.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|price |string |Order price |
+|symbol |string |Symbol |
+|side |string |Side |
+|size |number |Position qty |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT"]}');
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example (Snapshot)
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+     "topic": "orderBookL2_25.BTCUSDT",
+     "type": "snapshot",
+     "data": [
+        {
+            "price": "2999.00",
+            "symbol": "BTCUSDT",
+            "id": 29990000,
+            "side": "Buy",
+            "size": 9
+        },
+        {
+            "price": "3001.00",
+            "symbol": "BTCUSDT",
+            "id": 30010000,
+            "side": "Sell",
+            "size": 10
+        }
+     ],
+     "cross_seq": 11518,
+     "timestamp_e6": 1555647164875373
+}
+```
+</TabItem>
+</Tabs>
+
+### Response Example (Delta)
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+     "topic": "orderBookL2_25.BTCUSDT",
+     "type": "delta",
+     "data": {
+          "delete": [
+             {
+                   "price": "3001.00",
+                   "symbol": "BTCUSDT",
+                   "id": 30010000,
+                   "side": "Sell"
+             }
+          ],
+          "update": [
+             {
+                   "price": "2999.00",
+                   "symbol": "BTCUSDT",
+                   "id": 29990000,
+                   "side": "Buy",
+                   "size": 8
+             }
+          ],
+          "insert": [
+             {
+                   "price": "2998.00",
+                   "symbol": "BTCUSDT",
+                   "id": 29980000,
+                   "side": "Buy",
+                   "size": 8
+             }
+          ],
+          "transactTimeE6": 0
+     },
+     "cross_seq": 11519,
+     "timestamp_e6": 1555647221331673
+}
+```
+</TabItem>
+</Tabs>

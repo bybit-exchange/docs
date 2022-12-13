@@ -1,0 +1,52 @@
+---
+title: liquidation
+sidebar_label: liquidation
+sidebar_position: 7
+---
+
+Pushes liquidation orders.
+
+Push frequency: **real-time**<br/>
+**Topic:**<br/>
+`liquidation.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|symbol|string |Symbol |
+|side|string |Liquidated position's side |
+|price|string |Bankruptcy price |
+|qty|string |Order quantity in USD |
+|time|number |Millisecond timestamp |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op":"subscribe","args":["liquidation.ETHUSD"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic":"liquidation.ETHUSD",
+    "data": {
+        "symbol":"ETHUSD",
+        "side":"Sell",
+        "price":"3384.15",
+        "qty":"3655",
+        "time":1631608881954
+    }
+}
+```
+</TabItem>
+</Tabs>
