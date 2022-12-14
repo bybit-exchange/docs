@@ -1,0 +1,73 @@
+---
+title: Create Internal Transfer
+sidebar_label: Create Internal Transfer
+sidebar_position: 2
+---
+
+Create the internal transfer between different [account types](../enum#accounttype) under the same UID.
+
+:::tip
+Each account type has its own acceptable coins, e.g, you cannot transfer USDC from `SPOT` to `CONTRACT`.
+Please refer to [transferable coin list API](transferable-coin#) to find out more.
+:::
+
+### HTTP Request
+GET `v5/asset/transfer/inter-transfer`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId |**true** |string |UUID. Please manually generate a UUID |
+|coin |**true** |string |Coin |
+|amount |**true** |string |Amount |
+|[fromAccountType](../enum#accounttype) |**true** |string |From account type |
+|[toAccountType](../enum#accounttype) |**true** |string |To account type |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string|UUID |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST v5/asset/transfer/inter-transfer HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670986690556
+X-BAPI-RECV-WINDOW: 50000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+{
+    "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",
+    "coin": "USDT",
+    "amount": "10",
+    "fromAccountType": "SPOT",
+    "toAccountType": "CONTRACT"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbab16"
+    },
+    "retExtInfo": {},
+    "time": 1670986962783
+}
+```
+</TabItem>
+</Tabs>
