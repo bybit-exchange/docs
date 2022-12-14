@@ -2,3 +2,53 @@
 title: Borrow Margin Loan
 sidebar_label: Borrow Margin Loan
 ---
+
+
+#### HTTP Request
+POST <code>/spot/v3/private/cross-margin-loan</code>
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|<a href="#currency-currency-coin">coin</a>|<b>true</b>|string|currency|
+|qty|<b>true</b>|string|Amount To Borrow|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transactId|string|Loan order id|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-loan' \
+--header 'Content-Type: application/json' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662617848755' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: 03529daeca45ccf5c491a8e6569ff3dff39d1e984171e7aedca0dc2624d0c416' \
+--data-raw '{
+    "coin": "USDT",
+    "qty": "200"
+}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transactId": "14143"
+    },
+    "retExtInfo": null,
+    "time": 1662617848970
+}
+```

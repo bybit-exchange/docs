@@ -2,3 +2,54 @@
 title: Public Trading Records
 sidebar_label: Public Trading Records
 ---
+
+
+#### HTTP Request
+GET <code>/spot/v3/public/quote/trades</code>
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|<a href="#symbol-symbol">symbol</a> |<b>true</b>|string|Name of the trading pair|
+|limit| false | integer | t(:spot_trades_limit_2)
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| <a href="#price-price">price</a> | string | Order price |
+| time | long | Current timestamp, unit in millisecond |
+| qty | string | Order quantity |
+| isBuyerMaker | integer | t(:spotV3_comment_isBuyerMaker) |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/trades?symbol=BTCUSDT&limit=1'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [
+      {
+        "price": "21170.14",
+        "time": 1659429793926,
+        "qty": "0.907276",
+        "isBuyerMaker": 0
+      }
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1659429835311
+}
+```
