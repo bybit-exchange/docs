@@ -1,0 +1,67 @@
+---
+title: Set Risk Limit
+sidebar_label: Set Risk Limit
+sidebar_position: 7
+---
+:::tip
+Set the risk limit of the position. You could get risk limit information of each symbol [here](../../rest-public/risk-limit#).
+:::
+
+### HTTP Request
+POST `/contract/v3/private/position/set-risk-limit`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol name|
+|riskId |**true** |integer |Risk limit id|
+|positionIdx |**true** |integer |Used to identify positions in different position modes<li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li>|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Success/Error code |
+|retMsg |string |Success/Error message |
+|result |Object | |
+|retExtInfo |Object | |
+|time |integer |Timestamp |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /contract/v3/private/position/set-risk-limit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670853142896
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "symbol":"ETHUSDT",
+    "riskId": 12,
+    "positionIdx": 1
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1670853143027
+}
+```
+</TabItem>
+</Tabs>
