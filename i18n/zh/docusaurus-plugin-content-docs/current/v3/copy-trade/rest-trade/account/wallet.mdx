@@ -1,4 +1,72 @@
 ---
-title: Get Wallet Balance
-sidebar_label: Get Wallet Balance
+title: 交易員獲取錢包余額
+sidebar_label: 交易員獲取錢包余額
+sidebar_position: 1
 ---
+交易員獲取錢包余額
+
+### HTTP 請求
+GET `/contract/v3/private/copytrading/wallet/balance`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|coin |string |幣種類型 |
+|equity |string |用戶資產 (wallet_balance + unrealised_pnl)  |
+|availableBalance |string |可用余額 = wallet balance - used margin  |
+|usedMargin |string |已用保證金  |
+|orderMargin|string |委托預占用保證金 |
+|positionMargin |string |倉位保證金 |
+|walletBalance |string |錢包余額 |
+|realisedPnl |string |當日已結盈虧 |
+|unrealisedPnl |string |未結盈虧 |
+|cumRealisedPnl|string |累計已結盈虧|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/contract/v3/private/copytrading/wallet/balance' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 7cef1d820b3e5cb59f0b6c852c800c8f1636e28790dcc13201ea5552fa8197b9' \
+--header 'X-BAPI-API-KEY: KAMz86BfHkKT5yWKWE' \
+--header 'X-BAPI-TIMESTAMP: 1670841373442' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "availableBalance": "31346.23925718",
+        "usedMargin": "3.88804589",
+        "orderMargin": "1.34472",
+        "positionMargin": "2.54332589",
+        "walletBalance": "31350.12730307",
+        "realisedPnl": "0.00160755",
+        "unrealisedPnl": "0.1675",
+        "cumRealisedPnl": "247.35290307",
+        "coin": "USDT",
+        "equity": "31350.29480307"
+    },
+    "retExtInfo": {},
+    "time": 1670841734864
+}
+```
+</TabItem>
+</Tabs>

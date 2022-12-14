@@ -1,0 +1,67 @@
+---
+title: 設置止盈止損
+sidebar_label: 設置止盈止損
+sidebar_position: 2
+---
+設置止盈止損
+
+### HTTP 請求
+POST `/contract/v3/private/copytrading/order/trading-stop`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |<b>true</b> |string |合約類型   |
+|parentOrderId |<b>true</b> |string |母訂單Id  |
+|takeProfit |false |string |止盈觸發價格. 傳 0, 表示清除止盈設置; 傳"", 表示不做修改 |
+|stopLoss |false |string |止損觸發價格. 傳 0, 表示清除止損設置; 傳"", 表示不做修改 |
+|tpTriggerBy|false |string |止盈激活價格類型，默認為LastPrice |
+|slTriggerBy|false |string |止損激活價格類型，默認為LastPrice |
+|parentOrderLinkId |false |string |母訂單orderLinkid |
+
+
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api.bybit.com/contract/v3/private/copytrading/order/trading-stop' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 680d2f2d40500756a803a0d2558964896c6573b982b4fa32865f337d45534938' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662026807816' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "symbol": "BTCUSDT",
+    "parentOrderId": "XXXXXXXX",
+    "takeProfit": "0",
+    "stopLoss": "0",
+    "tpTriggerBy": "MarkPrice",
+    "slTriggerBy": "LastPrice",
+    "parentOrderLinkId": "XXXXXXXX"
+}'
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+  }
+}
+```
+</TabItem>
+</Tabs>
