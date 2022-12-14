@@ -1,0 +1,71 @@
+---
+title: klineV2
+sidebar_label: klineV2
+sidebar_position: 6
+---
+
+Currently supported intervals:
+
+1 3 5 15 30 60 120 240 360 720
+D
+W
+M
+
+
+Push frequency: **1-60s**<br/>
+**Topic:**<br/>
+`klineV2.{interval}.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|start|integer |Start timestamp point for result, in seconds   |
+|end|integer |End timestamp point for result, in seconds  |
+|open|number |Starting price |
+|close|number |Closing price |
+|high|number |Maximum price  |
+|low|number |Minimum price  |
+|volume|number |Trading volume  |
+|turnover|number |Turnover |
+|confirm|bool |Is confirm  |
+|cross_seq|integer |Cross sequence (internal value) |
+|timestamp|integer |End timestamp point for result, in seconds |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op":"subscribe","args":["klineV2.1.BTCUSDT"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic": "klineV2.1.BTCUSDT",                //topic name
+    "data": [{
+        "start": 1572425640,                    //start time of the candle
+        "end": 1572425700,                      //end time of the candle
+        "open": 9200,                           //open price
+        "close": 9202.5,                        //close price
+        "high": 9202.5,                         //max price
+        "low": 9196,                            //min price
+        "volume": 81790,                        //volume
+        "turnover": 8.889247899999999,          //turnover
+        "confirm": False,                       //snapshot flag
+        "cross_seq": 297503466,
+        "timestamp": 1572425676958323           //cross time
+    }],
+    "timestamp_e6": 1572425677047994            //server time
+}
+```
+</TabItem>
+</Tabs>
