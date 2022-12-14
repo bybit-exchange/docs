@@ -1,29 +1,29 @@
 ---
-title: orderBookL2_25
-sidebar_label: orderBookL2_25
+title: orderBook25檔
+sidebar_label: orderBook25檔
 sidebar_position: 1
 ---
 
-Fetches the orderbook with a depth of 25 orders per side.
+獲取25檔orderbook數據.
 :::tip
-Want a greater depth? Take a look at the [orderBookL2_200](./orderbook-200) endpoint.
+想要更多深度？請使用[orderBookL2_200](./orderbook-200) topic
 :::
-After the subscription response, the first response will be the snapshot response. This shows the entire orderbook. The data is ordered by price, starting with the lowest buys and ending with the highest sells.<br/>
-Following this, all responses are in the delta format, which represents updates to the orderbook relative to the last response.<br/>
+訂閱成功後, 會立即得到一個當前快照包的推送信息. orderbook數據按訂單價格升序排列, 從最低價格的買單到最高價格的賣單.
+快照包之後，每當orderbook發生變化，websocket都會推送這些變化的增量數據.
 
-Push frequency: **20ms**<br/>
+推送頻率： **20ms**<br/>
 **Topic:**<br/>
 `orderbookL2_25.{symbol}`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|price |string |Order price |
-|symbol |string |Symbol |
-|side |string |Side |
-|size |number |Position qty |
+|price |string |委托價格 |
+|symbol |string |合約類型 |
+|side |string |方向 |
+|size |number |倉位數量 |
 
-### Request Example
+### 請求訂閱
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -35,7 +35,7 @@ ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT"]}');
 </TabItem>
 </Tabs>
 
-### Response Example (Snapshot)
+### 快照推送示例 - 連接建立成功後首次推送
 
 <Tabs>
 <TabItem value="js linear" label="linear">
@@ -67,7 +67,7 @@ ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT"]}');
 </TabItem>
 </Tabs>
 
-### Response Example (Delta)
+### 增量推送示例 - 快照數據推送後，推送的增量數據
 
 <Tabs>
 <TabItem value="js linear" label="linear">

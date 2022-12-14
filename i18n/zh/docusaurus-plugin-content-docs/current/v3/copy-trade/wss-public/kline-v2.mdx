@@ -1,37 +1,36 @@
 ---
-title: klineV2
-sidebar_label: klineV2
+title: K線
+sidebar_label: K線
 sidebar_position: 6
 ---
 
-Currently supported intervals:
-
+目前所支持的周期:
 1 3 5 15 30 60 120 240 360 720
 D
 W
 M
 
 
-Push frequency: **1-60s**<br/>
+推送頻率： **1-60s**<br/>
 **Topic:**<br/>
 `klineV2.{interval}.{symbol}`
 
-### Response Parameters
+### 返回參數
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|start|integer |Start timestamp point for result, in seconds   |
-|end|integer |End timestamp point for result, in seconds  |
-|open|number |Starting price |
-|close|number |Closing price |
-|high|number |Maximum price  |
-|low|number |Minimum price  |
-|volume|number |Trading volume  |
-|turnover|number |Turnover |
-|confirm|bool |Is confirm  |
-|cross_seq|integer |Cross sequence (internal value) |
-|timestamp|integer |End timestamp point for result, in seconds |
+|start|integer |開始時間戳（秒）  |
+|end|integer |結束時間戳（秒） |
+|open|number |開始價格 |
+|close|number |結束價格 |
+|high|number |最高價格 |
+|low|number |最低價格 |
+|volume|number |交易量 |
+|turnover|number |成交金額 |
+|confirm|bool |是否確認 |
+|cross_seq|integer |撮合版本號 |
+|timestamp|integer |結束時間戳（秒） |
 
-### Request Example
+### 請求訂閱
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -43,7 +42,7 @@ ws.send('{"op":"subscribe","args":["klineV2.1.BTCUSDT"]}')
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">

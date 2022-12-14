@@ -1,27 +1,27 @@
 ---
-title: trade
-sidebar_label: trade
+title: 平臺成交
+sidebar_label: 平臺成交
 sidebar_position: 3
 ---
 
-Push frequency: **100ms**<br/>
+推送頻率：**100ms**<br/>
 **Topic:**<br/>
 `trade.{symbol}`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|timestamp |string |UTC time  |
-|trade_time_ms |number |Millisecond timestamp |
-|symbol|string |Symbol    |
-|side |string |Side |
-|size |number |Position qty |
-|price |number |Order price |
-|tick_direction |string |Direction of price change |
-|trade_id |string |Trade ID  |
-|cross_seq |number |Cross sequence (internal value) |
+|timestamp |string |UTC 時間 |
+|trade_time_ms |number |毫秒時間戳 |
+|symbol|string |合約類型 |
+|side |string |taker的買賣方向 |
+|size |number |倉位數量 |
+|price |number |委托價格 |
+|tick_direction |string |價格變化方向 |
+|trade_id |string |交易ID  |
+|cross_seq |number |撮合版本號 |
 
-### Request Example
+### 請求訂閱
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -33,7 +33,7 @@ ws.send('{"op": "subscribe", "args": ["trade.BTCUSDT"]}')
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
