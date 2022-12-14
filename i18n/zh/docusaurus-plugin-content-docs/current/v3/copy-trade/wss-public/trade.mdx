@@ -1,0 +1,60 @@
+---
+title: 平臺成交
+sidebar_label: 平臺成交
+sidebar_position: 3
+---
+
+推送頻率：**100ms**<br/>
+**Topic:**<br/>
+`trade.{symbol}`
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|timestamp |string |UTC 時間 |
+|trade_time_ms |number |毫秒時間戳 |
+|symbol|string |合約類型 |
+|side |string |taker的買賣方向 |
+|size |number |倉位數量 |
+|price |number |委托價格 |
+|tick_direction |string |價格變化方向 |
+|trade_id |string |交易ID  |
+|cross_seq |number |撮合版本號 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op": "subscribe", "args": ["trade.BTCUSDT"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic": "trade.BTCUSDT",
+    "data": [
+        {
+            "timestamp": "2020-01-12T16:59:59.000Z",
+            "trade_time_ms": 1582793344685, // trade time in millisecond
+            "symbol": "BTCUSDT",
+            "side": "Sell",
+            "size": 328,
+            "price": 8098,
+            "tick_direction": "MinusTick",
+            "trade_id": "00c706e1-ba52-5bb0-98d0-bf694bdc69f7",
+            "cross_seq": 1052816407
+        }
+    ]
+}
+```
+</TabItem>
+</Tabs>

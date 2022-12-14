@@ -1,0 +1,52 @@
+---
+title: 平臺強平推送
+sidebar_label: 平臺強平推送
+sidebar_position: 7
+---
+
+查詢平臺強平推送.
+
+推送頻率：**實時的**<br/>
+**Topic:**<br/>
+`liquidation.{symbol}`
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|symbol|string |合約類型 |
+|side|string |被強平倉位的方向 |
+|price|string |破產價格 |
+|qty|string |交易數量 |
+|time|number |毫秒時間戳 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op":"subscribe","args":["liquidation.ETHUSD"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic":"liquidation.ETHUSD",
+    "data": {
+        "symbol":"ETHUSD",
+        "side":"Sell",
+        "price":"3384.15",
+        "qty":"3655",
+        "time":1631608881954
+    }
+}
+```
+</TabItem>
+</Tabs>

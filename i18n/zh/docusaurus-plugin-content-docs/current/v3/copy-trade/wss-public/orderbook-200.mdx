@@ -1,0 +1,111 @@
+---
+title: orderBook200檔
+sidebar_label: orderBook200檔
+sidebar_position: 2
+---
+
+獲取200檔orderbook數據.<br/>
+
+訂閱成功後, 會立即得到一個當前快照包的推送信息. orderbook數據按訂單價格升序排序, 從最低價格的買單到最高價格的賣單.
+快照包之後，每當orderbook發生變化，websocket將會繼續推送這些增量數據.
+
+推送頻率：**100ms**<br/>
+**Topic:**<br/>
+`orderBook_200.100ms.{symbol}`
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|price |string |委托價格 |
+|symbol |string |合約類型 |
+|side |string |方向 |
+|size |number |倉位數量 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op": "subscribe", "args": ["orderBook_200.100ms.BTCUSDT"]}');
+```
+
+</TabItem>
+</Tabs>
+
+### 快照推送示例 - 連接建立成功後首次推送
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+     "topic": "orderBook_200.100ms.BTCUSDT",
+     "type": "snapshot",
+     "data": [
+        {
+            "price": "2999.00",
+            "symbol": "BTCUSDT",
+            "id": 29990000,
+            "side": "Buy",
+            "size": 9
+        },
+        {
+            "price": "3001.00",
+            "symbol": "BTCUSDT",
+            "id": 30010000,
+            "side": "Sell",
+            "size": 10
+        }
+     ],
+     "cross_seq": 11518,
+     "timestamp_e6": 1555647164875373
+}
+```
+</TabItem>
+</Tabs>
+
+### 增量推送示例 - 快照數據推送後，推送的增量數據
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+     "topic": "orderBook_200.100ms.BTCUSDT",
+     "type": "delta",
+     "data": {
+          "delete": [
+             {
+                   "price": "3001.00",
+                   "symbol": "BTCUSDT",
+                   "id": 30010000,
+                   "side": "Sell"
+             }
+          ],
+          "update": [
+             {
+                   "price": "2999.00",
+                   "symbol": "BTCUSDT",
+                   "id": 29990000,
+                   "side": "Buy",
+                   "size": 8
+             }
+          ],
+          "insert": [
+             {
+                   "price": "2998.00",
+                   "symbol": "BTCUSDT",
+                   "id": 29980000,
+                   "side": "Buy",
+                   "size": 8
+             }
+          ],
+          "transactTimeE6": 0
+     },
+     "cross_seq": 11519,
+     "timestamp_e6": 1555647221331673
+}
+```
+</TabItem>
+</Tabs>

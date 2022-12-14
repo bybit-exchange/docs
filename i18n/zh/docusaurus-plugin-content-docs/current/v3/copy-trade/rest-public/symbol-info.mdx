@@ -1,4 +1,88 @@
 ---
-title: Symbol List
-sidebar_label: Symbol List
+title: 交易員獲取可帶單合約
+sidebar_label: 交易員獲取可帶單合約
 ---
+交易員獲取可帶單合約
+
+### HTTP 請求
+GET `/contract/v3/public/copytrading/symbol/list`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|symbol |string |合約類型   |
+|baseCurrency |string |基礎貨幣  |
+|quoteCurrency |string |報價貨幣 |
+|priceScale |string |價格範圍（可以提交價格的小數位數，儘管最終價格可能會四捨五入以符合 價格最小增加或減少數量）)    |
+|takerFee |string |taker 手續費   |
+|makerFee |string |maker 手續費  |
+|fundingInterval |string |資金費用結算週期  |
+|leverageFilter |object[] ||
+|maxLeverage |string |最大杠桿數 (假設在最低風險限額設置時候的最大槓桿數) |
+|minLeverage |string |最小杠桿數 |
+|priceFilter |object[] ||
+|minPrice |string |最小價格 |
+|maxPrice |string |最大價格 |
+|tickSize |string |價格最小增加或減少數量 |
+|lotSizeFilter |object[] ||
+|qtyStep |string |合約數量最小單位 |
+|maxOrderQty |string |最大交易數量 |
+|minOrderQty |string |最小交易數量  |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl https://api-testnet.bybit.com/contract/v3/public/copytrading/symbol/list
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "list": [
+      {
+        "symbol": "BTCUSDT",
+        "baseCurrency": "BTC",
+        "quoteCurrency": "USDT",
+        "priceScale": "1",
+        "takerFee": "0.00075",
+        "makerFee": "-0.00025",
+        "fundingInterval": "480",
+        "leverageFilter": {
+          "maxLeverage": "100",
+          "minLeverage": "1"
+        },
+        "priceFilter": {
+          "minPrice": "0.5",
+          "maxPrice": "999999.0",
+          "tickSize": "0.5"
+        },
+        "lotSizeFilter": {
+          "qtyStep": "0.001",
+          "maxOrderQty": "100.000",
+          "minOrderQty": "0.001"
+        }
+      }
+    ]
+  }
+}
+```
+</TabItem>
+</Tabs>
+
