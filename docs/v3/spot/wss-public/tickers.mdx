@@ -1,0 +1,57 @@
+
+<p>The 24-hr statistics of a trading pair.</p>
+<p><b>Push frequency</b>: real-time</p>
+<p><b>Topic</b>: <code>tickers.BTCUSDT</code></p>
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|t | long | Timestamp (trading time in the match box) |
+|s | string | Trading pair |
+|o | string | Open price |
+|h | string | High price |
+|l | string | Low price |
+|c | string | Close price |
+|v | string | Trading volume |
+|qv | string | Trading quote volume |
+|m | string | Change |
+| ts | long | The time that message is sent out |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "ticker00001", //optional
+    "op": "subscribe",
+    "args": [
+        "tickers.BTCUSDT"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "data": {
+        "t": 1661742216005,
+        "s": "BTCUSDT",
+        "o": "19820",
+        "h": "20071.93",
+        "l": "19365.85",
+        "c": "19694.27",
+        "v": "9997.246174",
+        "qv": "197357775.97621786",
+        "m": "-0.0063"
+    },
+    "type": "delta",
+    "topic": "tickers.BTCUSDT",
+    "ts": 1661742216011
+}```

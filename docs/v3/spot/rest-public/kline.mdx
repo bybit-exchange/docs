@@ -2,3 +2,74 @@
 title: Query Kline
 sidebar_label: Query Kline
 ---
+
+
+:::info
+It only returns the results from latest 3500 candles regardless of what interval is specified
+:::
+
+:::info
+If startTime and endTime are not specified, only the latest candles will be sent
+:::
+
+#### HTTP Request
+GET <code>/spot/v3/public/quote/kline</code>
+
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|<a href="#symbol-symbol">symbol</a> |<b>true</b>|string|Name of the trading pair|
+| <a href="#kline-interval-interval">interval</a> |<b>true</b> | string | Chart interval|
+| limit | false | integer | Default value is 1000, max 1000 |
+| startTime | false | long | Start time, unit in millisecond |
+| endTime | false | long | End time, unit in millisecond |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|t| long | t(:spotV3_comment_t)|
+|s| string | Name of the trading pair|
+|sn| string | Alias|
+|c| string | Close price|
+|h| string | High price|
+|l| string | Low price|
+|o| string | Open price|
+|v| string | Trading volume|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/kline?symbol=BTCUSDT&interval=1m&limit=1'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [
+      {
+        "t": 1659430380000,
+        "s": "BTCUSDT",
+        "sn": "BTCUSDT",
+        "c": "21170.14",
+        "h": "21170.14",
+        "l": "21127.86",
+        "o": "21127.86",
+        "v": "0.907276"
+      }
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1659430400353
+}
+```
