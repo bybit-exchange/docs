@@ -1,0 +1,58 @@
+---
+title: Liquidation
+sidebar_label: Liquidation
+sidebar_position: 5
+---
+> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future
+
+Get recent liquidation orders in Bybit.
+
+Push frequency: **real-time**
+
+**Topic:**
+`liquidation.{symbol}`
+
+@确认结构体
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`|
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |array |Object |
+|> updatedTime |number |Data updated timestamp (ms) |
+|> symbol |string |Symbol name |
+|> positionSide |string |Position side. `long`,`short`. Used to compare with `side`, e.g., if positionSide=long, side=Sell, then it means long order is liquidated.|
+|> size |string |Filled size |
+|> price |string |Filled price |
+|> execID |string |Transaction id |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "op": "subscribe",
+    "args": [
+    "liquidation.BTCPERP"
+    ],
+    "req_id": "test" // optional
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="trade-linear" label="trade-linear">
+
+```json
+
+```
+
+</TabItem>
+</Tabs>
