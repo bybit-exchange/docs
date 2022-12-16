@@ -1,4 +1,115 @@
 ---
 title: Get API Key Information
 sidebar_label: Get API Key Information
+sidebar_position: 5
 ---
+Get the information of the api key. Use the api key pending to be checked to call the endpoint. Both `master` and `sub user's` api key are applicable.
+
+### HTTP Request
+GET `/user/v3/private/frozen-sub-member`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Unique id. Internal used|
+|note |string |The remark |
+|apiKey |string |Api key |
+|readOnly |string |`0`：Read and Write. `1`：Read only |
+|secret |string |Always `""` |
+|permissions |Object |The types of permission |
+|> ContractTrade |array |Permisson of contract trade |
+|> Spot |array |Permisson of spot |
+|> Wallet |array |Permisson of wallet |
+|> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
+|> Derivatives |array |Permission of derivatives |
+|> CopyTrading |array |Permission of copytrade. Not applicable to sub account, always `[]`|
+|> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]`|
+|> Exchange |array |Permission of exchange |
+|> NFT |array |Permission of NFT. Not applicable to sub account, always `[]` |
+|ips |array |IP bound|
+|type |int |The type of api key. `1`：personal, `2`：connected to the third-party app |
+|deadlineDay |int |The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed |
+|expiredAt |datetime |The expiry day of the api key. Only for those api key with no IP bound or the password has been changed|
+|createdAt |datetime |The create day of the api key |
+|unified |int |Whether the account to which the api key belongs is a unified account. `0`：regular account; `1`：unified account |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /user/v3/private/query-api HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671177977555
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "id": "111111111",
+        "note": "TESTING",
+        "apiKey": "xxxxxxxxxxxxx",
+        "readOnly": 0,
+        "secret": "",
+        "permissions": {
+            "ContractTrade": [
+                "Order",
+                "Position"
+            ],
+            "Spot": [
+                "SpotTrade"
+            ],
+            "Wallet": [
+                "AccountTransfer",
+                "SubMemberTransfer"
+            ],
+            "Options": [
+                "OptionsTrade"
+            ],
+            "Derivatives": [
+                "DerivativesTrade"
+            ],
+            "CopyTrading": [
+                "CopyTrading"
+            ],
+            "BlockTrade": [],
+            "Exchange": [
+                "ExchangeHistory"
+            ],
+            "NFT": []
+        },
+        "ips": [
+            "*"
+        ],
+        "type": 1,
+        "deadlineDay": 86,
+        "expiredAt": "2023-03-12T11:10:15Z",
+        "createdAt": "2022-09-12T09:42:20Z",
+        "unified": 1,
+        "uta": 0
+    },
+    "retExtInfo": null,
+    "time": 1671177977660
+}
+```
+</TabItem>
+</Tabs>

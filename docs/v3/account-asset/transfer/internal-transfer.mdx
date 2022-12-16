@@ -1,4 +1,76 @@
 ---
 title: Create Internal Transfer
 sidebar_label: Create Internal Transfer
+sidebar_position: 1
 ---
+Transfers funds between the different sections of an individual's account (not between subaccounts). For example, between the spot and derivatives accounts.
+
+To send a transfer which is [accountType](../enum#accounttype) & parent/sub agnostic, use the <a href="uni-transfer">Create Universal Transfer</a> endpoint.
+
+:::tip
+Please note that this interface supports Contract Account, Spot Account, Investment Account. The transferIn and transferOut account types cannot be the same.
+You may transfer USDT from SPOT ONLY after upgraded to Unified Margin Account.
+:::
+
+### HTTP Request
+POST `/asset/v3/private/transfer/inter-transfer`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|<b>true</b> |string |Currency type |
+|amount |<b>true</b> |string |Exchange to amount |
+|[fromAccountType](../enum#accounttype)|<b>true</b> |string |Account type |
+|[toAccountType](../enum#accounttype) |<b>true</b> |string |Account type |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string |UUID, which is unique across the platform |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/transfer/inter-transfer HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670925348932
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 164
+
+{
+    "transferId": "42c0cfb0-6bca-c242-bc73-4e6df6cbcb06",
+    "coin": "USDT",
+    "amount": "10",
+    "fromAccountType": "CONTRACT",
+    "toAccountType": "SPOT"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transferId": "42c0cfb0-6bca-c242-bc73-4e6df6cbcb06"
+    },
+    "retExtInfo": {},
+    "time": 1670925349100
+}
+```
+</TabItem>
+</Tabs>

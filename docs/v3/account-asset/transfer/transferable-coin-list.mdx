@@ -1,3 +1,70 @@
 ---
 title: Transferable coin list
 sidebar_label: Transferable coin list
+sidebar_position: 9
+---
+Transferable coin list
+
+Only transfers made with the universal transfer API will be returned by this endpoint. Transfers made by other endpoints will not be returned.
+
+### HTTP Request
+GET `/asset/v3/private/transfer/transfer-coin/list/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[fromAccountType](../enum#accounttype)|<b>true</b> |string |Account type |
+|[toAccountType](../enum#accounttype) |<b>true</b> |string |Account type |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |Array |The coins are enabled transfer between accounts|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/transfer-coin/list/query?fromAccountType=SPOT&toAccountType=CONTRACT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671163888641
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            "ETH",
+            "EOS",
+            "USDT",
+            "ADA",
+            "BIT",
+            "BTC",
+            "DAI",
+            "DOT",
+            "LTC",
+            "MANA",
+            "XRP"
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1671163888818
+}
+```
+</TabItem>
+</Tabs>

@@ -1,4 +1,73 @@
 ---
 title: Query Sub Acct Deposit Address Information
 sidebar_label: Query Sub Acct Deposit Address Information
+sidebar_position: 9
 ---
+Query Sub Acct Deposit Address Information
+
+:::info
+Get the deposit address information of sub account. Use <b>master user's api key ONLY</b>.
+:::
+
+### HTTP Request
+GET `/asset/v3/private/deposit/sub-member-address/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[coin](../enum#coin) |false |string |coin name|
+|chainType |false |string |Chain name. Return all if not passed.<li>pass chain name, e.g. `ETH` instead of `ERC20`</li>|
+|subMemberId |<b>true</b> |string |Sub user Id|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result|Object|result object|
+|[coin](../enum#coin)|string |Coin name |
+|chains|Array|Object|
+|chainType|string|chain type|
+|addressDeposit|string|deposit address|
+|tagDeposit|string|deposit tag|
+|chain|string|chain name|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/deposit/sub-member-address/query?coin=USDT&chainType=ETH&subMemberId=407767 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671174486288
+X-BAPI-RECV-WINDOW: 50000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "coin": "USDT",
+        "chains": {
+            "chainType": "ERC20",
+            "addressDeposit": "xxxxxxxxxxx",
+            "tagDeposit": "",
+            "chain": "ETH"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1671174486505
+}
+```
+</TabItem>
+</Tabs>

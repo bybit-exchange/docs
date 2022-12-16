@@ -1,4 +1,91 @@
 ---
 title: Query Subaccount Transfer List
 sidebar_label: Query Subaccount Transfer List
+sidebar_position: 4
 ---
+
+Query Subaccount Transfer List
+
+### HTTP Request
+GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId | false |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|false|string |Currency type |
+|status |false |string |Transfer status<li>SUCCESS</li><li>PENDING</li><li>FAILED</li>|
+|startTime |false |integer |Start timestamp point for result, in `milliseconds` |
+|endTime |false |integer |End timestamp point for result, in `milliseconds` |
+|limit |false |integer |Number of records|
+|cursor |false |string |cursor information: used for pagination. Default value: `""`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|string |Currency type |
+|amount |string |Exchange to amount |
+|memberId |integer | Master account userid|
+|subMemberId |integer|Subaccount userid |
+|timestamp |integer |timestamp|
+|status|string |status<li>SUCCESS</li><li>PENDING</li><li>FAILED</li> |
+|type |string |Determines the direction of transfer.<li>`IN` transfer from main account to subaccount</li><li>`OUT` transfer from subaccount to main account</li> |
+|nextPageCursor |string |cursor information: used for pagination. Default value: `""`|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/sub-member-transfer/list/query?coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670927635525
+X-BAPI-RECV-WINDOW: 50000
+```
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "transferId": "2811a2ca-b42c-4cda-a21f-3df0a1f2516f",
+                "coin": "USDT",
+                "amount": "5",
+                "memberId": xxxxxxx,
+                "subMemberId": xxxxxxx,
+                "timestamp": "1670925916000",
+                "status": "SUCCESS",
+                "type": "IN"
+            },
+            {
+                "transferId": "11ff9144-2d5d-4233-913d-4595c9ad2170",
+                "coin": "USDT",
+                "amount": "100",
+                "memberId": xxxxxxx,
+                "subMemberId": xxxxxxx,
+                "timestamp": "1658732947000",
+                "status": "SUCCESS",
+                "type": "OUT"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MzU2MTA0LCJtYXhJRCI6MTcyMDk2OH0="
+    },
+    "retExtInfo": {},
+    "time": 1670927635641
+}
+```
+</TabItem>
+</Tabs>

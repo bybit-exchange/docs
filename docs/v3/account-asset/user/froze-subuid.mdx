@@ -1,4 +1,60 @@
 ---
 title: Froze Sub UID
 sidebar_label: Froze Sub UID
+sidebar_position: 4
 ---
+Froze sub uid. Use `master user's api` key ONLY.
+
+### HTTP Request
+POST `/user/v3/private/frozen-sub-member`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|subuid |<b>true</b> |integer |Sub user Id |
+|frozen |<b>true</b> |integer |`0`：unfroze, `1`：froze |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /user/v3/private/frozen-sub-member HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671177689823
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 42
+
+{
+    "subuid": 111111111,
+    "frozen": 1
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": null,
+    "time": 1671177689999
+}
+```
+</TabItem>
+</Tabs>

@@ -1,4 +1,73 @@
 ---
 title: Get Sub UID List
 sidebar_label: Get Sub UID List
+sidebar_position: 3
 ---
+Get all sub uid of master account. Use `master user's api` key ONLY.
+
+### HTTP Request
+POST `/user/v3/private/query-sub-members`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|subMembers |array |Object |
+|uid |string |Sub user Id |
+|username |string |Username|
+|memberType |string |`1`: normal sub account, `6`: custodial sub account |
+|status |string |The status of the user account<li>`1`: normal</li><li>`2`: login banned</li><li>`4`: frozen </li>|
+|remark |string |The remark |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /user/v3/private/create-sub-member HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671174837503
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 109
+
+{
+    "username": "testsubaccount",
+    "memberType": 1,
+    "switch": 1,
+    "note": "testnet subaccount"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "uid": "111111111",
+        "username": "testsubaccount",
+        "memberType": 1,
+        "status": 1,
+        "remark": "testnet subaccount"
+    },
+    "retExtInfo": null,
+    "time": 1671174837668
+}
+```
+</TabItem>
+</Tabs>
