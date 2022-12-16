@@ -1,0 +1,161 @@
+---
+title: Tickers
+sidebar_label: Tickers
+sidebar_position: 3
+---
+> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option
+
+Get latest information of the symbol
+
+:::info important
+* Future has `snapshot` and `delta` types. If a key does not exist in the field, it means the value is not changed.
+* Option has `snapshot` data ONLY.
+:::
+
+Push frequency: **real-time**
+
+**Topic:**
+`tickers.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message id. _Unique field for option_ |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`,`delta`|
+|ts |number |The timestamp (ms) that system generates the data. |
+|cs |number |Please ignore |
+|data |Object | |
+|> symbol |string |Symbol name |
+|> [tickDirection](../enum#tickdirection) |string |Direction of price change. _Unique for future_ |
+|> lastPrice |string |Last price |
+|> bid1Price |string |Bid 1 price. _Unique for future_ |
+|> bid1Size |string |Bid 1 size. _Unique for future_ |
+|> ask1Price |string |Ask 1 price. _Unique for future_ |
+|> ask1Size |string |Ask 1 size. _Unique for future_ |
+|> price24hPcnt |string |Percentage change of market price relative to 24h. _Unique for future_ |
+|> prevPrice24h |string |Price of 24 hours ago. _Unique for future_ |
+|> highPrice24h |string |The highest price in the last 24 hours |
+|> lowPrice24h |string |The lowest price in the last 24 hours |
+|> prevPrice1h |string |Hourly market price an hour ago |
+|> change24h |string |24-hour change. _Unique for option_ |
+|> markPrice |string |Mark price |
+|> indexPrice |string |Index price |
+|> openInterest |string |Open interest |
+|> turnover24h |string |24h-turnover |
+|> volume24h |string |24h-volume |
+|> nextFundingTime |string |Next funding time. _Unique for future_ |
+|> fundingRate |string |Funding rate. _Unique for future_ |
+|> predictedFundingRate |string |Predicated funding rate. _Unique for future_ |
+|> bidPrice |string |Bid 1 price. _Unique for option_ |
+|> bidSize |string |Bid 1 size. _Unique for option_ |
+|> bidIv |string |Bid iv. _Unique for option_ |
+|> askPrice |string |Ask 1 price. _Unique for option_ |
+|> askSize |string |Ask 1 size. _Unique for option_ |
+|> askIv |string |Ask iv. _Unique for option_ |
+|> markPriceIv |string |Mark pruce iv. _Unique for option_ |
+|> underlyingPrice |string |Underlying price. _Unique for option_ |
+|> totalVolume |string |Total volume. _Unique for option_ |
+|> totalTurnover |string |Total turnover. _Unique for option_ |
+|> delta |string |delta value. _Unique for option_ |
+|> gamma |string |gamma value. _Unique for option_ |
+|> vega |string |vega value. _Unique for option_ |
+|> theta |string |theta value. _Unique for option_ |
+|> predictedDeliveryPrice |string |Predicted delivery price. _Unique for option_ |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "op": "subscribe",
+    "args": [
+    "tickers.BTCPERP"
+    ],
+    "req_id": "test" // optional
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="trade-linear" label="trade-linear">
+
+```json
+{
+    "topic": "tickers.BTCUSDT",
+    "type": "snapshot",
+    "data": {
+        "symbol": "BTCUSDT",
+        "tickDirection": "ZeroPlusTick",
+        "price24hPcnt": "-0.038339",
+        "lastPrice": "17006.00",
+        "prevPrice24h": "17684.00",
+        "highPrice24h": "17716.00",
+        "lowPrice24h": "16950.00",
+        "prevPrice1h": "17067.50",
+        "markPrice": "17010.12",
+        "indexPrice": "17017.82",
+        "openInterest": "64463.144",
+        "turnover24h": "2830817790.1754985",
+        "volume24h": "163114.486",
+        "nextFundingTime": "2022-12-16T16:00:00Z",
+        "fundingRate": "0.000058",
+        "predictedFundingRate": "",
+        "bid1Price": "17005.50",
+        "bid1Size": "57.024",
+        "ask1Price": "17006.00",
+        "ask1Size": "51.397"
+    },
+    "cs": 22528804782,
+    "ts": 1671185168730
+}
+```
+
+</TabItem>
+
+<TabItem value="trade-option" label="trade-option">
+
+```json
+{
+    "id": "tickers.BTC-17DEC22-17000-P-2214428527-1671185436919",
+    "topic": "tickers.BTC-17DEC22-17000-P",
+    "ts": 1671185436919,
+    "type": "snapshot"
+    "data": {,
+        "symbol": "BTC-17DEC22-17000-P",
+        "bidPrice": "135",
+        "bidSize": "2.04",
+        "bidIv": "0.4227",
+        "askPrice": "160",
+        "askSize": "1.13",
+        "askIv": "0.4966",
+        "lastPrice": "140",
+        "highPrice24h": "175",
+        "lowPrice24h": "10",
+        "markPrice": "159.94599871",
+        "indexPrice": "17020.97",
+        "markPriceIv": "0.4964",
+        "underlyingPrice": "17016.5542",
+        "openInterest": "64.82",
+        "turnover24h": "1703497.517736",
+        "volume24h": "98.88",
+        "totalVolume": "110",
+        "totalTurnover": "1888486",
+        "delta": "-0.47939401",
+        "gamma": "0.00085937",
+        "vega": "3.38384404",
+        "theta": "-83.97755295",
+        "predictedDeliveryPrice": "0",
+        "change24h": "6"
+    }
+}
+```
+
+</TabItem>
+</Tabs>

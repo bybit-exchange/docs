@@ -1,0 +1,106 @@
+---
+title: Public Trade
+sidebar_label: Public Trade
+sidebar_position: 2
+---
+> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option
+
+Get recent public trades data in Bybit.
+
+:::info
+After subscription, you will be pushed delta trade message in real-time once there is an order filled.
+:::
+
+Push frequency: **real-time**
+
+**Topic:**
+`publicTrade.{symbol}`
+
+> For option, it should use base coin, e.g., `publicTrade.BTC`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message id. _Unique field for option_ |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot` |
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |array |Object |
+|> T |number | The timestamp (ms) that the order is filled |
+|> s |string |Symbol name |
+|> S |string |Direction of taker. `Buy`,`Sell` |
+|> v |string |qty |
+|> p |string |Executed price |
+|> [L](../enum#tickdirection) |string |Direction of price change. _Unique field for future_ |
+|> i |string |Trade id |
+|> BT |boolean |Block trade or not |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "op": "subscribe",
+    "args": [
+    "publicTrade.BTCPERP"
+    ],
+    "req_id": "test" // optional
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="trade-linear" label="trade-linear">
+
+```json
+{
+    "topic": "publicTrade.BTCPERP",
+    "type": "snapshot",
+    "ts": 1671181689023,
+    "data": [
+        {
+            "T": 1671181689021,
+            "s": "BTCPERP",
+            "S": "Buy",
+            "v": "0.002",
+            "p": "17032.50",
+            "L": "MinusTick",
+            "i": "d9cd8295-40dc-5dce-8deb-42882580a7ab",
+            "BT": false
+        }
+    ]
+}
+```
+
+</TabItem>
+
+<TabItem value="trade-option" label="trade-option">
+
+```json
+{
+    "id": "publicTrade.BTC-2371599509-1671181656887",
+    "topic": "publicTrade.BTC",
+    "ts": 1671181656887,
+    "data": [
+        {
+            "p": "735",
+            "v": "1.16",
+            "i": "a719144c-5506-5bf4-97de-775dd5b83929",
+            "T": 1671181656884,
+            "BT": false,
+            "s": "BTC-23DEC22-16500-C",
+            "S": "Buy"
+        }
+    ],
+    "type": "snapshot"
+}
+```
+
+</TabItem>
+</Tabs>

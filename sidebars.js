@@ -98,6 +98,7 @@ const sidebars = {
           type: 'category',
           label: 'WebSocket Stream',
           items: [
+              'v3/derivatives/wss-authentication',
             {
               type: 'category',
               label: 'Public Channel',
