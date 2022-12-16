@@ -1,0 +1,53 @@
+---
+title: 保險基金
+sidebar_label: 保險基金
+sidebar_position: 4
+---
+獲取保險基金數據.
+
+:::tip
+註意`wallet_balance`的單位為`聰`, 1聰等於一百萬分之一個比特幣.
+:::
+
+推送頻率： **20:00 UTC / day**<br/>
+**Topic:**<br/>
+`insurance.{symbol}`
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency |string |幣種類型  |
+|timestamp |number |UTC 時間 |
+|wallet_balance|string |錢包余額 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op": "subscribe", "args": ["insurance.BTC"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic": "insurance.BTC",
+    "data": [
+        {
+            "currency": "BTC",
+            "timestamp": "2020-01-11T20:00:00Z",
+            "wallet_balance": 98786916569
+        }
+    ]
+}
+```
+</TabItem>
+</Tabs>

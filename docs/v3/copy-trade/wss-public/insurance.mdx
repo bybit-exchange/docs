@@ -1,0 +1,53 @@
+---
+title: insurance
+sidebar_label: insurance
+sidebar_position: 4
+---
+Get the daily insurance fund update.
+
+:::tip
+The `wallet_balance` is in Satoshis, with one Satoshi being 100 millionth (100000000) of one Bitcoin.
+:::
+
+Push frequency: **20:00 UTC / day**<br/>
+**Topic:**<br/>
+`insurance.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|currency |string |Currency type  |
+|timestamp |number |UTC time |
+|wallet_balance|string |Wallet balance |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+ws.send('{"op": "subscribe", "args": ["insurance.BTC"]}')
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "topic": "insurance.BTC",
+    "data": [
+        {
+            "currency": "BTC",
+            "timestamp": "2020-01-11T20:00:00Z",
+            "wallet_balance": 98786916569
+        }
+    ]
+}
+```
+</TabItem>
+</Tabs>

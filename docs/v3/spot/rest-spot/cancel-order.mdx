@@ -2,3 +2,77 @@
 title: Cancel Order
 sidebar_label: Cancel Order
 ---
+
+
+#### HTTP Request
+POST <code>/spot/v3/private/cancel-order</code>
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+| orderId              | false               | string          | Order ID. <b>Required</b> if not passing <code>orderLinkId</code> |
+| orderLinkId          | false               | string          | Unique user-set order ID. <b>Required</b> if not passing <code>orderId</code> |
+| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| orderId               | string          | Order ID             |
+| orderLinkId           | string          | User-generated order ID         |
+| symbol                | string          | Name of the trading pair              |
+| status                | string          | Order status              |
+| accountId             | string          | Account ID           |
+| orderPrice            | string          | Order price              |
+| createTime            | string          | Order Creation Time        |
+| orderQty              | string          | Order quantity              |
+| execQty               | string          | Executed quantity            |
+| timeInForce           | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+| orderType             | string          | Order type           |
+| side                  | string          | Side. <code>Buy</code>, <code>Sell</code>     |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cancel-order' \
+--header 'X-BAPI-SIGN: 2cdc75a6be90f2a3d70875595c289b6342ff55021a26d9fecf988a8f78266ccc' \
+--header 'X-BAPI-API-KEY: {api key}' \
+--header 'X-BAPI-TIMESTAMP: 1659078017415' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "orderId": "1210810256551063296",
+    "orderLinkId": null
+}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "1210810256551063296",
+        "orderLinkId": "spotA0010",
+        "symbol": "BTCUSDT",
+        "status": "NEW",
+        "accountId": "533287",
+        "createTime": "1659075830464",
+        "orderPrice": "23500",
+        "orderQty": "0.01",
+        "execQty": "0",
+        "timeInForce": "GTC",
+        "orderType": "LIMIT",
+        "side": "SELL"
+    },
+    "retExtMap": {},
+    "retExtInfo": {},
+    "time": 1659078151226
+}
+```

@@ -1,0 +1,83 @@
+---
+title: Get Universal Transfer Record
+sidebar_label: Get Universal Transfer Record
+sidebar_position: 6
+---
+
+Query universal transfer records
+
+### HTTP Request
+GET `v5/asset/transfer/universal-transfer-list-query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId |false |string |UUID. Use the one in [createTransfer](create-inter-transfer#response-parameters) |
+|coin |false |string |Coin |
+|[status](../enum#transferstatus) |false |string |Transfer status. `SUCCESS`,`FAILED`,`PENDING` |
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end timestamp (ms) |
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array|Object |
+|> transferId |string |Transfer id |
+|> coin |string |Transferred coin |
+|> amount |string |Transferred amount |
+|> fromMemberId |integer |From UID |
+|> toMemberId |integer |TO UID |
+|> fromAccountType |string |From account type |
+|> toAccountType |string |To account type |
+|> timestamp |string |Transfer created timestamp (ms) |
+|> [status](../enum#transferstatus) |string |Transfer status |
+|nextPageCursor |string|Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET v5/asset/transfer/inter-transfer-list-query?coin=USDT&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670988271299
+X-BAPI-RECV-WINDOW: 50000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "list": [
+        {
+            "transferId": "selfTransfer_a1091cc7-9364-4b74-8de1-18f02c6f2d5c",
+            "coin": "USDT",
+            "amount": "5000",
+            "fromAccountType": "SPOT",
+            "toAccountType": "UNIFIED",
+            "timestamp": "1667283263000",
+            "status": "SUCCESS"
+        }
+    ],
+    "nextPageCursor": "eyJtaW5JRCI6MTM1ODQ2OCwibWF4SUQiOjEzNTg0Njh9"
+},
+    "retExtInfo": {},
+    "time": 1670988271677
+}
+```
+</TabItem>
+</Tabs>

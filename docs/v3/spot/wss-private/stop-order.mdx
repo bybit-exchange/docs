@@ -1,0 +1,77 @@
+
+<p>This topic pushes conditional order, TP/SL order information placed by <b>web/app</b> channel, and TP/SL order information placed by <b>open api</b> channel. It'll be triggered as long as order status is changed</p>
+<p><b>Push frequency</b>: real-time</p>
+<p><b>Topic</b>: <code>stopOrder</code></p>
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| e | string | Event type |
+| E | string | Event time |
+| s | string | Trading pair |
+| c | string | User-generated order ID |
+| S | string | BUY indicates buy order, SELL indicates sell order |
+| <a href="#order-type-type-ordertypes">o</a> | string | Order type, LIMIT/MARKET_OF_QUOTE/MARKET_OF_BASE |
+| <a href="#timeinforce-timeinforce">f</a> | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+| q | string | Quantity |
+| p | string | Price |
+| <a href="#order-status-status">X</a> | string | TP/SL order status |
+| i | string | Order ID |
+| T | string | Order created time |
+| t | string | Order triggered time. The field is filled only when order status is <code>ORDER_FILLED</code> and <code>ORDER_FAILED</code> |
+| C | string | Order updated time. It is updated when order status is changed. |
+| qp | string | The market price when place the order |
+| eo | string | The new order id after the tp/sl order is triggered. |
+| ti | string | Please ignore |
+| si | string | Please ignore |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "stopOrder_1", //optional
+    "op": "subscribe",
+    "args": [
+        "stopOrder"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "type": "snapshot",
+    "topic": "stopOrder",
+    "ts": "1662107217667",
+    "data": [
+        {
+            "e": "stopOrder",
+            "E": "1662107217667",
+            "s": "BTCUSDT",
+            "c": "spot01",
+            "S": "BUY",
+            "o": "LIMIT",
+            "f": "GTC",
+            "q": "0.01",
+            "p": "20157.5",
+            "X": "ORDER_NEW",
+            "i": "1236239375040308480",
+            "T": "1662107217613",
+            "t": "0",
+            "C": "1662107217613",
+            "qp": "20157.86",
+            "eo": "1236239375040308481",
+            "ti": "0ef565e40fb3127b0b2951973d93d0d3",
+            "si": "f79e810f69822d81"
+        }
+    ]
+}
+```

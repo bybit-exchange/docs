@@ -12,199 +12,60 @@ Query unfilled or partially filled orders in **real-time**.
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
+### HTTP Request
 GET `/contract/v3/private/order/unfilled-orders`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|category |false |string |Product type. `linear`,`inverse`,`option`. default: `linear` |
 |symbol |false |string |Symbol name |
-|baseCoin |false |string |Base coin. default: **BTC**. Valid only when `category`=option |
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|baseCoin |false |string |Base coin. `option` ONLY. default: BTC records returned.|
+|settleCoin |false |string |Settle coin. One of `symbol`,`baseCoin` and `settleCoin` is **required**. Priority: symbol > baseCoin > settleCoin |
+|orderId |false |string |Order id |
+|orderLinkId |false |string |User customised order id |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
-|limit |false |string |Limit for data size per page. [1,50]. default: `20`|
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
-<Tabs>
-<TabItem value="linear" label="linear" default>
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Products category</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit` </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>User customised order id </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>Order id </td>
-        </tr>
-        <tr>
-            <td>> stopOrderType</td><td>string</td><td>Stop order type. `TakeProfit`,`StopLoss`,`TrailingStop`,`Stop` </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>Order status </td>
-        </tr>
-        <tr>
-            <td>> takeProfit</td><td>string</td><td>Take profit price </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>Cumulated executed value </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>Block trade id </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>Order price </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time </td>
-        </tr>
-        <tr>
-            <td>> tpTriggerBy</td><td>string</td><td>The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>Base price. `StopOrder` ONLY </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> triggerPrice</td><td>string</td><td>TriggerPrice. `StopOrder` ONLY </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>Cumulated executed trading fee </td>
-        </tr>
-        <tr>
-            <td>> slTriggerBy</td><td>string</td><td>The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice`  </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>Remaining qty pend to be filled </td>
-        </tr>
-        <tr>
-            <td>> closeOnTrigger</td><td>boolean</td><td>is a closeOnTrigger order or not </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>Cumulated executed qty </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>is a reduceOnly order or not  </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>Order quantity </td>
-        </tr>
-        <tr>
-            <td>> stopLoss</td><td>string</td><td>Stop loss price </td>
-        </tr>
-        <tr>
-            <td>> triggerBy</td><td>string</td><td>Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice` </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>Order initial margin </td>
-        </tr>
-    </table>
-</TabItem>
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|nextPageCursor |string |Cursor. Used to pagination |
+|list |array |string |
+|> symbol |string |Symbol name |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customised order id |
+|> side |string |Side. `Buy`,`Sell` |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> price |string |Order price |
+|> iv |string |Implied volatility|
+|> qty |string |Order qty |
+|> [timeInForce](../../enum#timeinforce) |string |Time in force |
+|> [orderStatus](../../enum#orderstatus) |string |Order status |
+|> lastPriceOnCreated |string |Last execution price |
+|> createdTime |string |Created timestamp (ms) |
+|> updatedTime |string |Updated timestamp (ms) |
+|> [cancelType](../../enum#canceltype) |string |Cancel type. Unique field for `linear` and `inverse` |
+|> [stopOrderType](../../enum#stopordertype) |string |Stop order type |
+|> triggerDirection |string |`1`: rise, `2`: fall |
+|> [triggerBy](../../enum#triggerby) |string |The trigger type of trigger price |
+|> triggerPrice |string |Trigger price |
+|> cumExecValue |string |Cumulative executed position value |
+|> cumExecFee |string |Cumulative trading fee |
+|> cumExecQty |string |Cumulative executed qty |
+|> leavesValue |string |The remaining value waiting to be traded |
+|> leavesQty |string |The remaining quantity waiting to be traded |
+|> takeProfit |string |Take profit price |
+|> stopLoss |string |Stop loss price |
+|> tpTriggerBy |string |Trigger type of take profit |
+|> slTriggerBy |string |Trigger type of stop loss |
+|> reduceOnly |boolean |Reduce only. `true` means reduce position size |
+|> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
+|> blockTradeId |string |Block trade id. Unique field for `option` |
+|> placeType |string |Place type. `price`,`iv`. Unique field for `option` |
 
-<TabItem value="option" label="option">
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Products category</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit`  </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time  </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell`  </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>User customised order id  </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>Cumulated executed trading fee  </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>Order id  </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>Remaining qty pend to be filled  </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>Order status  </td>
-        </tr>
-        <tr>
-            <td>> iv</td><td>string</td><td>Implied volatility </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>Cumulated executed value  </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>Block trade id  </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>Cumulated executed qty  </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>is a reduceOnly order or not   </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>Order price  </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>Order quantity </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time  </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a>  </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>Order initial margin  </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>Base price </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
 
 ### Request Example
 
@@ -234,37 +95,37 @@ X-BAPI-RECV-WINDOW: 5000
     "retMsg": "OK",
     "result": {
     "list": [
-{
-    "symbol": "SOLUSDT",
-    "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
-    "side": "Sell",
-    "orderType": "Limit",
-    "stopOrderType": "UNKNOWN",
-    "price": "14.500",
-    "qty": "50.0",
-    "timeInForce": "GoodTillCancel",
-    "orderStatus": "New",
-    "triggerPrice": "0.000",
-    "orderLinkId": "",
-    "createdTime": "1670554867548",
-    "updatedTime": "1670554904611",
-    "takeProfit": "0.000",
-    "stopLoss": "0.000",
-    "tpTriggerBy": "UNKNOWN",
-    "slTriggerBy": "UNKNOWN",
-    "triggerBy": "UNKNOWN",
-    "reduceOnly": false,
-    "leavesQty": "50.0",
-    "leavesValue": "725",
-    "cumExecQty": "0.0",
-    "cumExecValue": "0",
-    "cumExecFee": "0",
-    "triggerDirection": 0,
-    "cancelType": "UNKNOWN",
-    "lastPriceOnCreated": "",
-    "iv": "",
-    "closeOnTrigger": false
-}
+        {
+            "symbol": "SOLUSDT",
+            "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
+            "side": "Sell",
+            "orderType": "Limit",
+            "stopOrderType": "UNKNOWN",
+            "price": "14.500",
+            "qty": "50.0",
+            "timeInForce": "GoodTillCancel",
+            "orderStatus": "New",
+            "triggerPrice": "0.000",
+            "orderLinkId": "",
+            "createdTime": "1670554867548",
+            "updatedTime": "1670554904611",
+            "takeProfit": "0.000",
+            "stopLoss": "0.000",
+            "tpTriggerBy": "UNKNOWN",
+            "slTriggerBy": "UNKNOWN",
+            "triggerBy": "UNKNOWN",
+            "reduceOnly": false,
+            "leavesQty": "50.0",
+            "leavesValue": "725",
+            "cumExecQty": "0.0",
+            "cumExecValue": "0",
+            "cumExecFee": "0",
+            "triggerDirection": 0,
+            "cancelType": "UNKNOWN",
+            "lastPriceOnCreated": "",
+            "iv": "",
+            "closeOnTrigger": false
+        }
     ],
     "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",
     "category": "linear"

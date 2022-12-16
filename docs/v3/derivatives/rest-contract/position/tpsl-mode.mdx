@@ -1,0 +1,68 @@
+---
+title: Switch TP/SL Mode
+sidebar_label: Switch TP/SL Mode
+sidebar_position: 5
+---
+
+Adjust the take profit / stop loss mode. `Full` position or `Partial` position TP/SL.
+
+:::note
+Support USDT Perpetual, Inverse Perpetual and Inverse Future.
+:::
+
+### HTTP Request
+POST `/contract/v3/private/position/switch-tpsl-mode`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol name |
+|tpSlMode |**true** |string |`Full`: set TP/SL to full position. `Partial`: set TP/SL to partial mode |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Success/Error code |
+|retMsg |string |Success/Error message |
+|result |Object | |
+|retExtInfo |Object | |
+|time |integer |Timestamp |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /contract/v3/private/position/switch-tpsl-mode HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670849702461
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "symbol":"BTCUSDT",
+    "tpSlMode":"Full"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1670849702655
+}
+```
+</TabItem>
+</Tabs>

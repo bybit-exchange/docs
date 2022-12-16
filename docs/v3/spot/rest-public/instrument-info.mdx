@@ -6,7 +6,7 @@ sidebar_label: Get All Symbols
 Get the spec of symbol information
 
 #### HTTP Request
-POST <code>/spot/v3/public/symbols</code>
+GET <code>/spot/v3/public/symbols</code>
 
 #### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -29,3 +29,63 @@ POST <code>/spot/v3/public/symbols</code>
 |category |string |UUID, which is unique across the platform |
 |innovation |string |UUID, which is unique across the platform |
 |showStatus |string |UUID, which is unique across the platform |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/symbols'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "name": "BTCUSDT",
+                "alias": "BTCUSDT",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "basePrecision": "0.000001",
+                "quotePrecision": "0.00000001",
+                "minTradeQty": "0.000001",
+                "minTradeAmt": "10",
+                "maxTradeQty": "63.01197227",
+                "maxTradeAmt": "1000000",
+                "minPricePrecision": "0.01",
+                "category": "1",
+                "showStatus": "1",
+                "innovation": "0"
+            },
+            {
+                "name": "ETHUSDT",
+                "alias": "ETHUSDT",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "basePrecision": "0.00001",
+                "quotePrecision": "0.0000001",
+                "minTradeQty": "0.00224",
+                "minTradeAmt": "10",
+                "maxTradeQty": "100000000",
+                "maxTradeAmt": "100000000",
+                "minPricePrecision": "0.01",
+                "category": "1",
+                "showStatus": "1",
+                "innovation": "0"
+            }
+        ]
+    },
+    "retExtMap": {},
+    "retExtInfo": {},
+    "time": 1659067662931
+}
+```

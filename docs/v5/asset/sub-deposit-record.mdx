@@ -1,0 +1,65 @@
+---
+title: Get Sub Account Deposit Record
+sidebar_label: Get Sub Account Deposit Record
+sidebar_position: 13
+---
+
+Query sub account deposit records by **MAIN** uid api key.
+
+:::tip
+* Query deport records of `SPOT` ONLY
+* `endTime` - `startTime` should be less than 30 days. Query last 30 days records by default.
+:::
+
+### HTTP Request
+GET `v5/asset/deposit/qyert-record`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|subMemberId |**true** |string |Sub uid |
+|coin |false |string |Coin |
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end timestamp (ms) |
+|limit |false |integer |Limit for data size per page. [1,50]. default: `50`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> coin |string |Coin |
+|> chain |string|Chain |
+|> amount |string|Amount |
+|> txID |string|Transaction id |
+|> [status](../enum#depositstatus) |integer|Deposit status |
+|> toAddress |string|Minimum Deposit Amount |
+|> tag |string|Minimum Deposit Amount |
+|> depositFee |string|Minimum Deposit Amount |
+|> successAt |string|Minimum Deposit Amount |
+|> confirmations |string|Minimum Deposit Amount |
+|> txIndex |string|Minimum Deposit Amount |
+|> blockHash |string|Minimum Deposit Amount |
+|nextPageCursor |string |Cursor. Used to pagination|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>
