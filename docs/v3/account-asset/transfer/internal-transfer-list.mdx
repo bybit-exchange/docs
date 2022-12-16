@@ -1,4 +1,89 @@
 ---
 title: Query Internal Transfer List
 sidebar_label: Query Internal Transfer List
+sidebar_position: 3
 ---
+
+Query Internal Transfer List
+
+
+### HTTP Request
+GET `/asset/v3/private/transfer/inter-transfer/list/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|<b>true</b>|string |Currency type |
+|status |false |string |Transfer status<li>SUCCESS</li><li>PENDING</li><li>FAILED</li>|
+|startTime |false |integer |Start timestamp point for result, in `milliseconds` |
+|endTime |false |integer |End timestamp point for result, in `milliseconds` |
+|limit |false |integer |Number of records|
+|cursor |false |string |cursor information: used for pagination. Default value: ""|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|string |Currency type |
+|amount |string |Exchange to amount |
+|[fromAccountType](../enum#accounttype)|string |Account type |
+|[toAccountType](../enum#accounttype) |string |Account type |
+|timestamp |integer |timestamp|
+|status|string |status<li>SUCCESS</li><li>PENDING</li><li>FAILED</li> |
+|nextPageCursor |string |cursor information: used for pagination. Default value: ""|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/inter-transfer/list/query?coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670926842754
+X-BAPI-RECV-WINDOW: 50000
+X-BAPI-SIGN: xxxxxxxxxxxxxxx
+```
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "transferId": "22b168ef-1917-4bbe-a8bd-4ea729ec5887",
+                "coin": "USDT",
+                "amount": "1",
+                "fromAccountType": "SPOT",
+                "toAccountType": "UNIFIED",
+                "timestamp": "1668749670000",
+                "status": "SUCCESS"
+            },
+            {
+                "transferId": "selfTransfer_4420a136-5610-44d3-97bb-a3d0551869a9",
+                "coin": "USDT",
+                "amount": "1",
+                "fromAccountType": "UNIFIED",
+                "toAccountType": "SPOT",
+                "timestamp": "1668570868000",
+                "status": "SUCCESS"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6NTYxMzUxLCJtYXhJRCI6MTU2Mzg4OX0="
+    },
+    "retExtInfo": {},
+    "time": 1670926842908
+}
+```
+</TabItem>
+</Tabs>

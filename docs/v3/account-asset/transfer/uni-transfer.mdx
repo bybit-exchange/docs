@@ -1,4 +1,73 @@
 ---
 title: Create Universal Transfer
 sidebar_label: Create Universal Transfer
+sidebar_position: 7
 ---
+Create Universal Transfer
+
+### HTTP Request
+POST `/asset/v3/private/transfer/universal-transfer`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID, which is unique across the platform |
+|[coin](../enum#coin)|<b>true</b> |string |Currency type |
+|amount |<b>true</b> |string |Exchange to amount |
+|fromMemberId |<b>true</b> |string |From UserID |
+|toMemberId |<b>true</b> |string |To UserID |
+|[fromAccountType](../enum#accounttype)|<b>true</b> |string |Account type |
+|[toAccountType](../enum#accounttype) |<b>true</b> |string |Account type |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|transferId |string |UUID, which is unique across the platform |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/transfer/universal-transfer HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671163372208
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 219
+
+{
+    "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb06",
+    "coin": "USDT",
+    "amount": "10",
+    "fromMemberId":"111111",
+    "toMemberId":"222222",
+    "fromAccountType": "UNIFIED",
+    "toAccountType": "SPOT"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb06"
+    },
+    "retExtInfo": {},
+    "time": 1671163373537
+}
+```
+</TabItem>
+</Tabs>

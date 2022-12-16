@@ -1,4 +1,75 @@
 ---
 title: Create Sub UID
 sidebar_label: Create Sub UID
+sidebar_position: 1
 ---
+Create a new sub user id. Use `master user's api key` ONLY.
+
+### HTTP Request
+POST `/user/v3/private/create-sub-api`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|username |<b>true</b> |string |Give a username of the new sub user id. <li>6-16 characters, must include both numbers and letters.</li><li>cannot be the same as the exist or deleted one.</li> |
+|memberType |<b>true</b> |int |`1`: normal sub account, `6`: custodial sub account|
+|switch |false |int |<li> `0`: turn off quick login (default)</li><li>  `1`: turn on quick login.</li>|
+|note |false |string |Set a remark |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|uid |int |Sub user Id |
+|username |string |Give a username of the new sub user id. <li>6-16 characters, must include both numbers and letters.</li><li>cannot be the same as the exist or deleted one.</li> | |
+|memberType |<b>true</b> |int |`1`: normal sub account, `6`: custodial sub account|
+|switch |false |int |<li> `0`: turn off quick login (default)</li><li>  `1`: turn on quick login.</li>|
+|note |false |string |Set a remark |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /user/v3/private/create-sub-member HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671174837503
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 109
+
+{
+    "username": "testsubaccount",
+    "memberType": 1,
+    "switch": 1,
+    "note": "testnet subaccount"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "uid": "111111111",
+        "username": "testsubaccount",
+        "memberType": 1,
+        "status": 1,
+        "remark": "testnet subaccount"
+    },
+    "retExtInfo": null,
+    "time": 1671174837668
+}
+```
+</TabItem>
+</Tabs>

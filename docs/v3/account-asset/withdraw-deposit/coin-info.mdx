@@ -1,4 +1,86 @@
 ---
 title: Query Coin Information
 sidebar_label: Query Coin Information
+sidebar_position: 5
 ---
+Query Coin Information
+
+### HTTP Request
+GET `/asset/v3/private/coin-info/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[coin](../enum#coin) |false |string |coin name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|name|string|Name|
+|[coin](../enum#coin)|string |Coin name |
+|remainAmount|string|Current maximum withdrawal amount|
+|chains|array|Object|
+|> chainType|string|chain type|
+|> confirmation|string|deposit confirmation number|
+|> withdrawFee|string|withdraw fee. if withdraw fee is empty, It means that this coin does not support withdrawal|
+|> depositMin|string|minimum deposit amount|
+|> withdrawMin|string|minimum withdrawal amount|
+|> chain|string|chain name|
+|> chainDeposit|string|The chain status of deposit. `0`：suspend; `1`：normal|
+|> chainWithdraw|string|The chain status of deposit. `0`：suspend; `1`：normal|
+|> minAccuracy|string|The precision of withdraw or deposit|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/coin-info/query?coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671172180432
+X-BAPI-RECV-WINDOW: 50000
+X-BAPI-SIGN: xxxxxxxxxxx
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rows": [
+            {
+                "name": "BTC",
+                "coin": "BTC",
+                "remainAmount": "150",
+                "chains": [
+                    {
+                        "chainType": "BTC",
+                        "confirmation": "10000",
+                        "withdrawFee": "0.0005",
+                        "depositMin": "0.0005",
+                        "withdrawMin": "0.001",
+                        "chain": "BTC",
+                        "chainDeposit": "1",
+                        "chainWithdraw": "1",
+                        "minAccuracy": "8"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1671172180550
+}
+```
+</TabItem>
+</Tabs>

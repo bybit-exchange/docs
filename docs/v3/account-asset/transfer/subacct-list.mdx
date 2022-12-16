@@ -1,4 +1,66 @@
 ---
 title: Query Subaccount UID List
 sidebar_label: Query Subaccount UID List
+sidebar_position: 5
 ---
+
+Query Subaccount List
+
+### HTTP Request
+GET `/asset/v3/private/transfer/sub-member/list/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|subMemberIds |`integer array` |List of all subaccounts|
+|transferableSubMemberIds|`string array`	|List of subaccounts that are universal transfer-enabled|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/sub-member/list/query HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670928351923
+X-BAPI-RECV-WINDOW: 50000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "subMemberIds": [
+            "111111",
+            "2222222",
+            "3333333"
+        ],
+        "transferableSubMemberIds": [
+            "111111",
+            "2222222",
+            "3333333"
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1670928352175
+}
+```
+</TabItem>
+</Tabs>

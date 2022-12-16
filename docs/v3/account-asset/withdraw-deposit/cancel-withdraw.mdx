@@ -1,4 +1,61 @@
 ---
 title: Cancel withdrawal
 sidebar_label: Cancel withdrawal
+sidebar_position: 7
 ---
+Cancel withdrawal
+
+### HTTP Request
+POST `/asset/v3/private/withdraw/cancel`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|id| <b>true</b> | int64 |withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint)|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|status|int|cancel application result: <li>`1` SUCCESS</li><li>`0` FAIL</li>|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/withdraw/cancel HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671173665186
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 24
+
+{
+    "id": 1234567890
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "status": 1
+  },
+  "retExtInfo": null,
+    "time": 1671173665252
+}
+```
+</TabItem>
+</Tabs>

@@ -1,4 +1,108 @@
 ---
 title: Query Sub Deposit Records
 sidebar_label: Query Sub Deposit Records
+sidebar_position: 2
 ---
+Query Deposit Records
+
+:::info Rules
+<li>Only query the deposit records of spot accounts order by id in reverse order.</li>
+<li>The maximum difference between the start time and the end time is 30 days.</li>
+<li>Support to get deposit records by Master or Sub Member Api Key</li>
+:::
+
+### HTTP Request
+GET `/asset/v3/private/deposit/record/query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|startTime |false |int |start time (In Millisecond). Default value: 30 days before the current time |
+|endTime |false |int |end time (In Millisecond). Default value: current time |
+|[coin](../enum#coin) |false |string |coin name: for example, BTC. Default value: all |
+|cursor |false |string |cursor infomation: used for pagination. Default value: "" |
+|limit |false |int |Number of items per page, 0< limit <=50. Default value: 50 |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|rows|Array|Object|
+|[coin](../enum#coin)|string |deposit coin |
+|[chain](../enum#chain)|string|chain name|
+|amount|string|deposit amount|
+|txID|string|transaction ID. It is `""` when deposit failed or deposit cancelled|
+|status|int|<li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li>|
+|toAddress|string|deposit target address|
+|tag|string|tag of deposit target address|
+|depositFee|string|deposit fee|
+|successAt|string|last updated time|
+|confirmations|string|number of confirmation blocks|
+|txIndex|string|transaction sequence number|
+|blockHash|string|hash number on the chain|
+|nextPageCursor|string|cursor information: used for pagination. Default value: `""`|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/deposit/record/query?coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671166430580
+X-BAPI-RECV-WINDOW: 50000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "amount": "10000",
+                "txID": "1234567890",
+                "status": 3,
+                "toAddress": "xxxxxxxxxxx",
+                "tag": "",
+                "depositFee": "",
+                "successAt": "1671018256000",
+                "confirmations": "10000",
+                "txIndex": "",
+                "blockHash": ""
+            },
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "amount": "10000",
+                "txID": "01234567890",
+                "status": 3,
+                "toAddress": "xxxxxxxxxxx",
+                "tag": "",
+                "depositFee": "",
+                "successAt": "1669197900000",
+                "confirmations": "10000",
+                "txIndex": "",
+                "blockHash": ""
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTAwNTYwNiwibWF4SUQiOjEwMzE1MjN9"
+    },
+    "retExtInfo": {},
+    "time": 1671166430718
+}
+```
+</TabItem>
+</Tabs>
