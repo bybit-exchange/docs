@@ -56,6 +56,14 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
+          dv_contract: {
+            specPath: "yml-folder/derivatives/contract.yaml",
+            outputDir: "docs/api-explorer/derivatives/trade/contract",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],

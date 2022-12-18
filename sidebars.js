@@ -497,11 +497,8 @@ const sidebars = {
       // @ts-ignore
       items: [
         require("./docs/api-explorer/derivatives/market/sidebar.js"),
-        {
-          type: "category",
-          label: "Unified",
-          items: require("./docs/api-explorer/derivatives/trade/unified/sidebar.js")
-        }
+        require("./docs/api-explorer/derivatives/trade/unified/sidebar.js"),
+        require("./docs/api-explorer/derivatives/trade/contract/sidebar.js"),
       ]
     }
   ],

@@ -10,7 +10,7 @@ info:
 tags:
   - name: market
     description: Market endpoints of derivatives
-    x-displayName: Market Data Endpoints
+    x-displayName: Market data
 x-tagGroups:
   - name: public
     tags:
@@ -33,9 +33,10 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
                 - option
-              default: future
+              default: linear
         - name: symbol
           in: query
           description: Symbol name
@@ -74,7 +75,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
         - name: symbol
           in: query
           description: Symbol name
@@ -133,7 +135,7 @@ paths:
     get:
       tags:
         - market
-      summary: Tikcer Info
+      summary: Ticker Info
       description: Get all latest information of symbols. All parameters are needed for OPTION
       operationId: ticker
       parameters:
@@ -146,7 +148,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
                 - option
         - name: symbol
           in: query
@@ -181,7 +184,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
                 - option
         - name: symbol
           in: query
@@ -236,7 +240,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
         - name: symbol
           in: query
           description: Symbol name
@@ -308,7 +313,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
         - name: symbol
           in: query
           description: Symbol name
@@ -380,7 +386,8 @@ paths:
             items:
               type: string
               enum:
-                - future
+                - linear
+                - inverse
         - name: symbol
           in: query
           description: Symbol name
@@ -435,6 +442,249 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/markKlineResp"
+  /derivatives/v3/public/recent-trade:
+    get:
+      tags:
+        - market
+      summary: Public trade
+      description: Get public trade
+      operationId: public-trade
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+        - name: symbol
+          in: query
+          description: Symbol name. linear or inverse, required
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin. Valid for option.
+          required: false
+          schema:
+            type: string
+        - name: optionType
+          in: query
+          description: Option type. Valid for option.
+          required: false
+          schema:
+            type: string
+            enum:
+              - Call
+              - Put
+        - name: limit
+          in: query
+          description: Maximum 1000
+          required: false
+          schema:
+            type: integer
+            default: 500
+      responses:
+        "200":
+          description: successful operation
+  /derivatives/v3/public/risk-limit/list:
+    get:
+      tags:
+        - market
+      summary: Risk limit
+      description: Get risk limit
+      operationId: risk-limit
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /derivatives/v3/public/funding/history-funding-rate:
+    get:
+      tags:
+        - market
+      summary: Funding Rate History
+      description: Get historical funding rate
+      operationId: his-fund-rate
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: start
+          in: query
+          description: The start timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: end
+          in: query
+          description: The end timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 200
+      responses:
+        "200":
+          description: successful operation
+  /derivatives/v3/public/open-interest:
+    get:
+      tags:
+        - market
+      summary: Open Interest
+      description: Get open interest
+      operationId: open-interest
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: interval
+          in: query
+          description: interval
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 5min
+                - 15min
+                - 30min
+                - 1h
+                - 4h
+                - 1d
+        - name: startTime
+          in: query
+          description: The start timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          description: The end timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 50
+      responses:
+        "200":
+          description: successful operation
+  /derivatives/v3/public/delivery-price:
+    get:
+      tags:
+        - market
+      summary: Delivery price
+      description: Get delivery price of option
+      operationId: delivery-price
+      parameters:
+        - name: category
+          in: query
+          description: Products category. option only
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin
+          required: false
+          schema:
+            type: string
+        - name: direction
+          in: query
+          description: The direction to pagination
+          required: false
+          schema:
+            type: string
+            enum:
+              - prev
+              - next
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 50
+        - name: cursor
+          in: query
+          description: The cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
 components:
   schemas:
     orderbookResp:
@@ -489,7 +739,7 @@ components:
               example: ETHUSDT
             category:
               type: string
-              example: future
+              example: linear
             list:
               type: array
               items:
@@ -516,7 +766,7 @@ components:
           properties:
             category:
               type: string
-              example: future
+              example: linear
             list:
               type: array
               items:
@@ -703,7 +953,7 @@ components:
           properties:
             category:
               type: string
-              example: future
+              example: linear
             list:
               type: array
               items:
@@ -881,7 +1131,7 @@ components:
               example: ETHUSDT
             category:
               type: string
-              example: future
+              example: linear
             list:
               type: array
               items:
