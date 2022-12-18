@@ -1,0 +1,72 @@
+---
+title: Execution
+sidebar_label: Execution
+sidebar_position: 2
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Execution stream is triggered when there is an open order filled or partially filled.
+
+> cover: USDT Perpetual, Inverse Perpetual, Inverse Future
+
+Push frequency: **real-time**
+
+**Topic:**
+`user.execution.contractAccount`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|data |array |Object |
+|> symbol |string |Symbol name |
+|> side |string |Side. `Buy`,`Sell` |
+|> execId |string |transaction id |
+|> feeRate |string |Trading fee rate |
+|> execFee |string |Executed fee |
+|> execPrice |string |Executed price |
+|> execQty |string |Executed qty |
+|> leavesQty |string |Remaining order qty waiting to be executed |
+|> [execType](../enum#exectype) |string |Executed type |
+|> execValue |string |Executed value |
+|> lastLiquidityInd |string |`AddLiquidity`,`RemovedLiquidity` |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customised order id |
+|> orderPrice |string |Order price |
+|> orderQty |string |Order qty |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |Stop order type |
+|> execTime |string |Transaction timestamp (ms) |
+|> closedSize |string |Position size to be closed |
+
+### Response Example
+
+```json
+{
+    "topic": "user.execution.contractAccount",
+    "data": [
+        {
+            "symbol": "ETHUSDT",
+            "execFee": "0.0355725",
+            "execId": "e59b7d0d-7713-5abf-a73c-6ea6e413a614",
+            "execPrice": "1185.75",
+            "execQty": "0.05",
+            "execType": "Trade",
+            "execValue": "59.2875",
+            "feeRate": "0.0006",
+            "lastLiquidityInd": "RemovedLiquidity",
+            "leavesQty": "0",
+            "orderId": "00534a29-fd72-453c-81a9-35788a0c3c02",
+            "orderLinkId": "",
+            "orderPrice": "1244.85",
+            "orderQty": "0.05",
+            "orderType": "Market",
+            "stopOrderType": "UNKNOWN",
+            "side": "Buy",
+            "execTime": "1671347790032",
+            "closedSize": "0.05"
+        }
+    ]
+}
+```
