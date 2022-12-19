@@ -3,12 +3,15 @@ title: Batch Cancel Order
 sidebar_label: Batch Cancel Order
 sidebar_position: 9
 ---
-
-:::tip
 This endpoint provides the batch order mode to cancel a bunch of open orders.
-- Order cancellation of future and option cannot be cancelled in one request.
-- If both future and option orders are in one request, then by given the category type, only the orders whose
-symbol _matches the category_ will be operated.
+> **Cover: Option (Unified Account)**
+
+
+:::info important
+- You must specify `orderId` or `orderLinkId` when batch cancel.
+- If `orderId` and `orderLinkId` is not matched, system will process `orderId` first.
+- You can cancel unfilled, partially filled orders.
+- A maximum of 10 orders can be amended in per request.
 :::
 
 ### HTTP Request
@@ -53,7 +56,7 @@ POST `/unified/v3/private/order/cancel-batch`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>
