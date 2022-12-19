@@ -5,6 +5,7 @@ sidebar_position: 9
 ---
 
 Get open interest of each symbol in Bybit
+> **Cover: USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future**
 
 :::info
 TODO: 支持查詢多久的未平仓合约數據？
@@ -16,9 +17,9 @@ GET `/v5/market/open-interest`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear`,`inverse` |
-|symbol |<b>true</b> |string |Symbol name|
-|interval |<b>true</b> |string |Interval. `5min` `15min` `30min` `1h` `4h` `1d` |
+|[category](../enum#category) |**true** |string |Product type. `linear`,`inverse` |
+|symbol |**true**|string |Symbol name|
+|intervalTime |**true** |string |Interval. `5min` `15min` `30min` `1h` `4h` `1d` |
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false |integer |The end timestamp (ms) |
 |limit |false |integer |Limit for data size per page. [1,200]. default: `50` |
@@ -27,11 +28,10 @@ GET `/v5/market/open-interest`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|symbol |string |Symbol name |
 |category |string |Product type |
+|symbol |string |Symbol name |
 |list |array |Object |
 |> openInterest |string |Open interest |
-|> openInterestValue |string |Open interest value |
 |> timestamp |string |The timestamp (ms) |
 |nextPageCursor |string |Used to paginate |
 
@@ -51,7 +51,7 @@ GET `/v5/market/open-interest`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>
