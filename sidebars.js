@@ -492,16 +492,27 @@ const sidebars = {
       link: {
         type: "generated-index",
         title: "Derivatives API",
-        slug: "/api-explorer/category/"
+        slug: "/api-explorer/derivatives/category/"
       },
       // @ts-ignore
       items: [
         require("./docs/api-explorer/derivatives/market/sidebar.js"),
-        {
-          type: "category",
-          label: "Unified",
-          items: require("./docs/api-explorer/derivatives/trade/unified/sidebar.js")
-        }
+        require("./docs/api-explorer/derivatives/trade/unified/sidebar.js"),
+        require("./docs/api-explorer/derivatives/trade/contract/sidebar.js"),
+      ]
+    },
+    {
+      type: "category",
+      label: "Spot",
+      link: {
+        type: "generated-index",
+        title: "Spot API",
+        slug: "/api-explorer/spot/category/"
+      },
+      // @ts-ignore
+      items: [
+        require("./docs/api-explorer/spot/market/sidebar.js"),
+        require("./docs/api-explorer/spot/trade/sidebar.js"),
       ]
     }
   ],

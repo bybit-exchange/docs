@@ -1,0 +1,35 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of Spot Restul API
+  version: 3.0.0
+  title: Bybit spot explorer
+tags:
+  - name: market
+    description: Market endpoints of spot
+    x-displayName: Market data
+x-tagGroups:
+  - name: public
+    tags:
+      - market
+paths:
+  /spot/v3/public/symbols:
+    get:
+      tags:
+        - market
+      summary: Instrument Info
+      description: Get the spec of spot symbols
+      operationId: instrument-info
+      parameters:
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
