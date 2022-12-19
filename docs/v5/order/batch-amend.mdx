@@ -10,6 +10,7 @@ This endpoint provides the batch order mode to replace a bunch of open orders.
 - You could modify those **unfilled** or **partially filled** orders. Conditional order is not supported.
 - If both future and option orders are in one request, then by given the category type, only the orders whose
 symbol _matches the category_ will be operated.
+- A maximum of 10 orders can be amended in per request.
 :::
 
 ### HTTP Request
@@ -32,7 +33,7 @@ POST `/v5/order/amend-batch`
 |:----- |:-----|----- |
 |result |Object | |
 |> list |array |Object |
-|>> category |string |Products category |
+|>> category |string |Product type |
 |>> symbol |string |Symbol name |
 |>> orderId |string |Order id |
 |>> orderLinkId |string |User customised order id |

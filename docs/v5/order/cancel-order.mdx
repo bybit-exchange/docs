@@ -3,8 +3,12 @@ title: Cancel Order
 sidebar_label: Cancel Order
 sidebar_position: 3
 ---
-:::caution
-You could cancel those **unfilled** or **partially filled** orders.
+> **Cover: Spot (Unified Account) / Linear Perpetual (Unified Account) / Option (Unified Account)**
+
+:::info important
+- You must specify `orderId` or `orderLinkId` when cancel the order.
+- If `orderId` and `orderLinkId` is not matched, system will process `orderId` first.
+- You can cancel unfilled, partially filled orders.
 :::
 
 ### HTTP Request
@@ -13,7 +17,7 @@ POST `v5/order/cancel`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
+|category |**true** |string |Product type. `spot`,`linear`,`option` |
 |symbol |**true** |string |Symbol name|
 |orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
