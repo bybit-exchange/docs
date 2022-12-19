@@ -64,6 +64,22 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
+          spot_market: {
+            specPath: "yml-folder/spot/market.yaml",
+            outputDir: "docs/api-explorer/spot/market",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          spot_trade: {
+            specPath: "yml-folder/spot/trade.yaml",
+            outputDir: "docs/api-explorer/spot/trade",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],
@@ -126,7 +142,7 @@ const config = {
             label: 'v3 API',
           },
           {
-            to: '/api-explorer/category',
+            to: '/api-explorer/derivatives/category',
             position: 'left',
             label: 'API explorer',
           },
