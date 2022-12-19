@@ -4,7 +4,10 @@ sidebar_label: Public Trades History
 sidebar_position: 8
 ---
 
-Query recent public trading data in Bybit. You could download archived historical trades here:
+Query recent public trading data in Bybit.
+> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+
+You could download archived historical trades here:
 * <a href="https://public.bybit.com/trading/">USDT Perpetual, Inverse Perpetual & Inverse Future</a>
 * <a href="https://public.bybit.com/spot/">Spot</a>
 
@@ -14,9 +17,9 @@ GET `/v5/market/recent-trade`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
+|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |**true** |string |Symbol name|
-|baseCoin |false |string |Base coin. for `option` ONLY. default: return BTC data|
+|baseCoin |false |string |Base coin. for `option` ONLY. If not passed, return **BTC** data by default|
 |optionType |false |string |Option type. `Call` or `Put`. for `option` ONLY|
 |limit |false |integer |Limit for data size per page.<li>`spot`: [1,60], default: `60`.</li><li>others: [1,1000], default: `500`</li>|
 

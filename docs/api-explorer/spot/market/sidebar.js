@@ -1,0 +1,1 @@
+module.exports = [{"type":"doc","id":"api-explorer/spot/market/bybit-spot-explorer"},{"type":"category","label":"Market data","link":{"type":"doc","id":"api-explorer/spot/market/market"},"items":[{"type":"doc","id":"api-explorer/spot/market/instrument-info","label":"Instrument Info","className":"api-method get"}]}];

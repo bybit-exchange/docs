@@ -1,0 +1,1 @@
+module.exports = [{"type":"doc","id":"api-explorer/spot/trade/bybit-spot-trade-explorer"},{"type":"category","label":"Trade","link":{"type":"doc","id":"api-explorer/spot/trade/spot-trade"},"items":[{"type":"doc","id":"api-explorer/spot/trade/place-order","label":"Place Order","className":"api-method post"}]}];
