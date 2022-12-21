@@ -483,7 +483,8 @@ const sidebars = {
         }
       ]
     },
-    'v5/enum'
+    'v5/enum',
+    'v5/error',
   ],
   apiExplorerSideBar: [
     {
