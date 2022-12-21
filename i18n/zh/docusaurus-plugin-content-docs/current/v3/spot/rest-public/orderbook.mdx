@@ -1,4 +1,60 @@
 ---
-title: Order Book
-sidebar_label: Order Book
+title: 訂單簿
+sidebar_label: 訂單簿
+sidebar_position: 2
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/public/quote/depth</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol	| **true** | string | 幣對名稱 |
+|limit | false | integer | 默認100. 最大200 |
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| time | long | 當前時間 |
+| bids | array | bid的價格和數量信息，最優bid價格由上到下排列 |
+| asks | array | ask的價格和數量信息，最優ask價格由上到下排列 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/depth?symbol=BTCUSDT&limit=1'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "time": 1659429083820,
+    "bids": [
+      [
+        "21170.14",
+        "0.050096"
+      ]
+    ],
+    "asks": [
+      [
+        "21250",
+        "0.00211"
+      ]
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1659429083979
+}
+```

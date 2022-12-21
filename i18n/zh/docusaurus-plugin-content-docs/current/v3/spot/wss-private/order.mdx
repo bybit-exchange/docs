@@ -1,0 +1,94 @@
+
+<p>This topic pushes order information，avg.filledPrice = Z / z</p>
+<p><b>Push frequency</b>: real-time</p>
+<p><b>Topic</b>: <code>order</code></p>
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| e | string | Event type |
+| E | string | Event time |
+| s | string | Trading pair |
+| c | string | User-generated order ID |
+| S | string | BUY indicates buy order, SELL indicates sell order |
+| <a href="#order-type-type-ordertypes">o</a> | string | Order type, LIMIT/MARKET_OF_QUOTE/MARKET_OF_BASE |
+| <a href="#timeinforce-timeinforce">f</a> | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+| q | string | Quantity |
+| p | string | Price |
+| <a href="#order-status-status">X</a> | string | Order status |
+| i | string | Order ID |
+| M | string | Order ID of the opponent trader |
+| l | string | Last filled quantity |
+| z | string | Total filled quantity |
+| L | string | Last traded price |
+| n | string | Trading fee (for a single fill) |
+| N | string | Asset type in which fee is paid |
+| u | boolean | Is normal trade. False if self-trade. |
+| w | boolean | Is working. <code>false</code>：inValid; <code>true</code>：valid |
+| m | boolean | Is LIMIT_MAKER |
+| O | string | Order creation time |
+| Z | string | Total filled value |
+| A | string | Account ID of the opponent trader |
+| C | boolean | Is close |
+| v | string | leverage |
+| d | string | NO_LIQ indicates that it is not a liquidation order. IOC indicates that it is a liquidation order. |
+| t | string | Trade ID |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "order_1", //optional
+    "op": "subscribe",
+    "args": [
+        "order"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "type": "snapshot",
+    "topic": "order",
+    "ts": "1662348310441",
+    "data": [
+        {
+            "e": "order",
+            "E": "1662348310441",
+            "s": "BTCUSDT",
+            "c": "spotx008",
+            "S": "BUY",
+            "o": "MARKET_OF_QUOTE",
+            "f": "GTC",
+            "q": "20",
+            "p": "0",
+            "X": "CANCELED",
+            "i": "1238261807653647872",
+            "M": "1238225004531834368",
+            "l": "0.001007",
+            "z": "0.001007",
+            "L": "19842.02",
+            "n": "0",
+            "N": "BTC",
+            "u": true,
+            "w": true,
+            "m": false,
+            "O": "1662348310368",
+            "Z": "19.98091414",
+            "A": "0",
+            "C": false,
+            "v": "0",
+            "d": "NO_LIQ",
+            "t": "2100000000002220938"
+        }
+    ]
+```

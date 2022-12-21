@@ -1,31 +1,92 @@
 ---
-title: Get All Symbols
-sidebar_label: Get All Symbols
+title: 獲取所有交易對
+sidebar_label: 獲取所有交易對
+sidebar_position: 1
 ---
+獲取所有交易對
 
-Get the spec of symbol information
 
-#### HTTP Request
-POST <code>/spot/v3/public/symbols</code>
+#### HTTP 請求
+GET <code>/spot/v3/public/symbols</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|name |string |Name of the trading pair |
-|alias |string |Alias |
-|baseCoin |string |Base currency |
-|quoteCoin |string |Quote currency |
-|basePrecision |string |Decimal precision (base currency) |
-|quotePrecision |string |Decimal precision (quote currency) |
-|minTradeQty |string |Min. order qty (Not valid for <b>market buy</b> orders) |
-|minTradeAmt |string |Min. order value (Only valid for <b>market buy</b> orders) |
-|minPricePrecision |string |Min. number of decimal places |
-|maxTradeQty |string |Max. order qty (It is ignored when you place an order with order type <b>LIMIT_MAKER</b>) |
-|maxTradeAmt |string |UUID, which is unique across the platform |
-|category |string |UUID, which is unique across the platform |
-|innovation |string |UUID, which is unique across the platform |
-|showStatus |string |UUID, which is unique across the platform |
+|name |string |幣對名稱 |
+|alias |string |幣對別名 |
+|baseCoin |string |base幣種 |
+|quoteCoin |string |quote幣種 |
+|basePrecision |string |base幣種精度 |
+|quotePrecision |string |quote幣種精度 |
+|minTradeQty |string |最小訂單數量 (對<b>市價買單</b>無效) |
+|minTradeAmt |string |最小訂單額 (只對<b>市價買單</b>有效)|
+|minPricePrecision |string |最小價格精度 |
+|maxTradeQty |string |最大成交量（當您下訂單類型為 <b>LIMIT_MAKER</b> 時將被忽略） |
+|maxTradeAmt |string |最大成交額（當您下訂單類型為 <b>LIMIT_MAKER</b> 時將被忽略） |
+|category |string |symbol 所在分區:1主類別 |
+|innovation |string |`1` 表示創新區：這個幣種價格波動比較大 |
+|showStatus |string |`1` 表示該現貨開放交易 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/symbols'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "name": "BTCUSDT",
+                "alias": "BTCUSDT",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "basePrecision": "0.000001",
+                "quotePrecision": "0.00000001",
+                "minTradeQty": "0.000001",
+                "minTradeAmt": "10",
+                "maxTradeQty": "63.01197227",
+                "maxTradeAmt": "1000000",
+                "minPricePrecision": "0.01",
+                "category": "1",
+                "showStatus": "1",
+                "innovation": "0"
+            },
+            {
+                "name": "ETHUSDT",
+                "alias": "ETHUSDT",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "basePrecision": "0.00001",
+                "quotePrecision": "0.0000001",
+                "minTradeQty": "0.00224",
+                "minTradeAmt": "10",
+                "maxTradeQty": "100000000",
+                "maxTradeAmt": "100000000",
+                "minPricePrecision": "0.01",
+                "category": "1",
+                "showStatus": "1",
+                "innovation": "0"
+            }
+        ]
+    },
+    "retExtMap": {},
+    "retExtInfo": {},
+    "time": 1659067662931
+}
+```

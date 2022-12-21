@@ -1,4 +1,61 @@
 ---
-title: Merged Order Book
-sidebar_label: Merged Order Book
+title: 合並訂單簿
+sidebar_label: 合並訂單簿
+sidebar_position: 2.5
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/public/quote/depth/merged</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|<a href="#symbol-symbol">symbol</a> |<b>true</b>|string|幣對名稱|
+|scale | false | integer | 合並深度的精度，1代表1位小數|
+|limit | false | integer | 默認100. 最大200 |
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| time | long | 當前時間 |
+| bids | array | bid的價格和數量信息，最優bid價格由上到下排列 |
+| asks | array | ask的價格和數量信息，最優ask價格由上到下排列 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/depth/merged?symbol=BTCUSDT&scale=1&limit=1'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "time": 1659429646349,
+    "bids": [
+      [
+        "21170.1",
+        "0.049096"
+      ]
+    ],
+    "asks": [
+      [
+        "21250",
+        "0.00211"
+      ]
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1659429646652
+}
+```

@@ -1,0 +1,54 @@
+
+<p>The topic name is <code>kline</code>. To subscribe to different intervals, pass your desired interval with the <code>klineType</code> parameter. Available intervals are listed <a href="#kline-interval-interval">here</a>.</p>
+<p><b>Push frequency</b>: real-time</p>
+<p><b>Topic</b>: <code>kline.1m.BTCUSDT</code></p>
+
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|t | long | Start timestamp point for result, in milliseconds |
+|s | string | Trading pair |
+|c | string | Close price |
+|h | string | High price |
+|l | string | Low price |
+|o | string | Open price |
+|v | string | Trading volume |
+| ts | long | The time that message is sent out |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "kline00001", //optional
+    "op": "subscribe",
+    "args": [
+        "kline.1h.BTCUSDT"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "data": {
+        "t": 1661742000000,
+        "s": "BTCUSDT",
+        "c": "19685.55",
+        "h": "19756.95",
+        "l": "19674.61",
+        "o": "19705.38",
+        "v": "0.232154"
+    },
+    "type": "delta",
+    "topic": "kline.1h.BTCUSDT",
+    "ts": 1661745259605
+}
+```

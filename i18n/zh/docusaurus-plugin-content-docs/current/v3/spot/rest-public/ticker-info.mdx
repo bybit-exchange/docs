@@ -1,4 +1,67 @@
 ---
-title: Latest Information Of Symbol
-sidebar_label: Latest Information Of Symbol
+title: 最新信息
+sidebar_label: 最新信息
+sidebar_position: 8
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/public/quote/ticker/24hr</code>
+
+:::info
+如果symbol沒有被發送，所有symbol的數據都會被返回
+:::
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|<a href="#symbol-symbol">symbol</a> |false|string|幣對名稱|
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|t| long | 當前Unix時間戳，毫秒(ms) |
+|s| string | 幣對名稱 |
+|lp| string | 最新成交價 |
+|h| string | 最高價 |
+|l| string | 最低價 |
+|o| string | 開盤價 |
+|bp| string | 最佳買價 |
+|ap| string | 最佳賣價 |
+|v| string | 成交量 |
+|qv| string | 成交金額 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/ticker/24hr?symbol=BTCUSDT'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "t": 1659430933736,
+    "s": "BTCUSDT",
+    "lp": "21127.86",
+    "h": "22000",
+    "l": "19779.14",
+    "o": "19935.19",
+    "bp": "21170.14",
+    "ap": "21250",
+    "v": "211.378621",
+    "qv": "4460854.96730398"
+  },
+  "retExtInfo": {},
+  "time": 1659430975794
+}
+```

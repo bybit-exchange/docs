@@ -1,4 +1,67 @@
 ---
 title: Best Bid/Ask Price
 sidebar_label: Best Bid/Ask Price
+sidebar_position: 6
 ---
+
+:::info
+If symbol is not specified, the best order price from all symbols will be returned
+:::
+
+#### HTTP Request
+GET <code>/spot/v3/public/symbols</code>
+
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|name |string |Name of the trading pair |
+| name                 | string          | Name of the trading pair            |
+| alias                | string          | Alias            |
+| baseCoin             | string          | Base currency      |
+| quoteCoin            | string          | Quote currency     |
+| basePrecision        | string          | Decimal precision (base currency)     |
+| quotePrecision       | string          | Decimal precision (quote currency)    |
+| minTradeQty          | string          | Min. order qty (Not valid for market buy orders)  |
+| minTradeAmt          | string          | Min. order value (Only valid for market buy orders)    |
+| minPricePrecision    | string          | Min. number of decimal places |
+| maxTradeQty          | string          | Max. order qty (It is ignored when you place an order with order type LIMIT_MAKER)  |
+| maxTradeAmt          | string          | Max. order value (It is ignored when you place an order with order type LIMIT_MAKER)    |
+| category             | string          |  Category          |
+| innovation           | string          | <code>1</code> indicates that the price of this currency is relatively volatile     |
+| showStatus           | string          | <code>1</code> indicates that the symbol open for trading     |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/ticker/bookTicker?symbol=BTCUSDT'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "symbol": "BTCUSDT",
+    "bidPrice": "21170.14",
+    "bidQty": "0.908276",
+    "askPrice": "21250",
+    "askQty": "0.009264",
+    "time": 1659431461695
+  },
+  "retExtInfo": {},
+  "time": 1659431462103
+}
+```
