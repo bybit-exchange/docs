@@ -80,6 +80,30 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
+          spot_lt_trade: {
+            specPath: "yml-folder/spot/lttrade.yaml",
+            outputDir: "docs/api-explorer/spot/lttrade",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          spot_cross_margin: {
+            specPath: "yml-folder/spot/crossmargin.yaml",
+            outputDir: "docs/api-explorer/spot/crossmargin",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          spot_institution: {
+            specPath: "yml-folder/spot/institution.yaml",
+            outputDir: "docs/api-explorer/spot/institution",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          }
         }
       }
     ],

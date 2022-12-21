@@ -1,0 +1,256 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of Spot-trade rest api.
+  version: 3.0.0
+  title: Bybit spot-trade explorer
+tags:
+  - name: spotTrade
+    description: All spot trade REST API
+    x-displayName: Trade
+paths:
+  /spot/v3/private/cross-margin-loan:
+    post:
+      tags:
+        - crossmargin
+      summary: Borrow Margin Loan
+      description: Borrow Margin Loan
+      operationId: borrow-margin-loan
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coin:
+                  type: string
+                  description: currency
+                qty:
+                  type: string
+                  description: Amount To Borrow
+              required:
+                - coin
+                - qty
+
+  /spot/v3/private/cross-margin-repay:
+    post:
+      tags:
+        - crossmargin
+      summary: Redeem
+      description: Redeem
+      operationId: redeem
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coin:
+                  type: string
+                  description: currency
+                qty:
+                  type: string
+                  description: Repayment Amount
+              required:
+                - coin
+                - qty
+
+  /spot/v3/private/cross-margin-orders:
+    get:
+      tags:
+        - crossmargin
+      summary: Query Borrowing Info
+      description: Query Borrowing Info
+      operationId: query-borrowing-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: coin
+          in: query
+          description: currency
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status. 0 by default. 0：get all kinds of status; 1：uncleared; 2：cleared
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 0
+                - 1
+                - 2
+              default: 0
+        - name: limit
+          in: query
+          description: Default value is 500, max 500
+          required: false
+          schema:
+            type: string
+            default: 500
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/cross-margin-account:
+    get:
+      tags:
+        - crossmargin
+      summary: Query Account Info
+      description: Query Account Info
+      operationId: query-account-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/cross-margin-loan-info:
+    get:
+      tags:
+        - crossmargin
+      summary: Query Interest and Quota
+      description: Query Interest and Quota
+      operationId: query-interest-quota
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: currency
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/cross-margin-repay-history:
+    get:
+      tags:
+        - crossmargin
+      summary: Query Repayment History
+      description: Query Repayment History
+      operationId: query-repayment-history
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: coin
+          in: query
+          description: currency
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default value is 500, max 500
+          required: false
+          schema:
+            type: string
+            default: 500
+      responses:
+        "200":
+          description: successful operation

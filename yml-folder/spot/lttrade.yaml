@@ -1,0 +1,209 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of Spot-trade rest api.
+  version: 3.0.0
+  title: Bybit spot-trade explorer
+tags:
+  - name: spotTrade
+    description: All spot trade REST API
+    x-displayName: Trade
+paths:
+  /spot/v3/public/infos:
+    get:
+      tags:
+        - lttrade
+      summary: All Asset Infos
+      description: Get All Asset Infos
+      operationId: all-asset-info
+      parameters:
+        - name: ltCode
+          in: query
+          description: Abbreviation of the LT.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/reference:
+    get:
+      tags:
+        - lttrade
+      summary: Market Info
+      description: Get Market Info
+      operationId: market-info
+      parameters:
+        - name: ltCode
+          in: query
+          description: Abbreviation of the LT.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/purchase:
+    post:
+      tags:
+        - lttrade
+      summary: Purchase
+      description: Purchase
+      operationId: purchase
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ltCode:
+                  type: string
+                  description: Abbreviation of the LT.
+                  example: BTC3LUSDT
+                ltAmount:
+                  type: string
+                  description: Market Buy order, it is amount to pay.
+                  example: "100"
+                serialNo:
+                  type: string
+                  description: Serial number
+              required:
+                - ltCode
+                - ltAmount
+
+  /spot/v3/private/redeem:
+    post:
+      tags:
+        - lttrade
+      summary: Redeem
+      description: Redeem
+      operationId: redeem
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ltCode:
+                  type: string
+                  description: Abbreviation of the LT.
+                  example: BTC3LUSDT
+                ltQuantity:
+                  type: string
+                  description: Market Buy order, it is amount to pay.
+                  example: "50"
+                serialNo:
+                  type: string
+                  description: Serial number
+              required:
+                - ltCode
+                - ltQuantity
+
+  /spot/v3/private/record:
+    get:
+      tags:
+        - lttrade
+      summary: Get Purchase or Redemption History
+      description: Get Purchase or Redemption History
+      operationId: purchase-redemption-history
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: ltCode
+          in: query
+          description: Abbreviation of the LT.
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          description: Order ID
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Default value is 100, max 500
+          required: false
+          schema:
+            type: string
+            default: 100
+        - name: orderType
+          in: query
+          description: Order type; 1. Purchase; 2. Redemption
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 1
+                - 2
+        - name: serialNo
+          in: query
+          description: Serial number
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation

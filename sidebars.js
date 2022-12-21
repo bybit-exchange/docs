@@ -514,6 +514,9 @@ const sidebars = {
       items: [
         require("./docs/api-explorer/spot/market/sidebar.js"),
         require("./docs/api-explorer/spot/trade/sidebar.js"),
+        require("./docs/api-explorer/spot/lttrade/sidebar.js"),
+        require("./docs/api-explorer/spot/crossmargin/sidebar.js"),
+        require("./docs/api-explorer/spot/institution/sidebar.js"),
       ]
     }
   ],

@@ -95,3 +95,349 @@ paths:
                 - orderQty
                 - side
                 - orderType
+
+  /spot/v3/private/cancel-order:
+    post:
+      tags:
+        - spotTrade
+      summary: Cancel Active Order
+      description: Cancel Active Order
+      operationId: cancel-active-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: string
+                  description: Order ID. Required if not passing orderLinkId
+                orderLinkId:
+                  type: string
+                  description: Unique user-set order ID. Required if not passing orderId
+                orderCategory:
+                  type: string
+                  description: Order category. 0：normal order by default; 1：TP/SL order, Required for TP/SL order.
+                  enum:
+                    - 0
+                    - 1
+              required:
+
+  /spot/v3/private/cancel-orders:
+    post:
+      tags:
+        - spotTrade
+      summary: Batch Cancel Active Order
+      description: Batch Cancel Active Order
+      operationId: batch-cancel-active-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                symbol:
+                  type: string
+                  description: Name of the trading pair
+                  example: BTCUSDT
+                side:
+                  type: string
+                  description: Side
+                  enum:
+                    - Buy
+                    - Sell
+                orderType:
+                  type: string
+                  description: Order type. LIMIT in default. It allows multiple types, separated by comma, e.a LIMIT,LIMIT_MAKER
+                orderCategory:
+                  type: string
+                  description: Order category. 0：normal order by default; 1：TP/SL order, Required for TP/SL order.
+                  enum:
+                    - 0
+                    - 1
+              required:
+                - symbol
+
+  /spot/v3/private/cancel-orders-by-ids:
+    post:
+      tags:
+        - spotTrade
+      summary: Batch Cancel Active Order By IDs
+      description: Batch Cancel Active Order By IDs
+      operationId: batch-cancel-active-order-by-ids
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderIds:
+                  type: string
+                  description: Order ID, use commas to indicate multiple orderIds. Maximum of 100 ids.
+                orderCategory:
+                  type: string
+                  description: Order category. 0：normal order by default; 1：TP/SL order, Required for TP/SL order.
+                  enum:
+                    - 0
+                    - 1
+              required:
+                - orderIds
+
+  /spot/v3/private/open-orders:
+    get:
+      tags:
+        - spotTrade
+      summary: Get Open Orders
+      description: Get Open Orders.
+      operationId: open-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: Name of the trading pair
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          description: Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default value is 500, max 500
+          required: false
+          schema:
+            type: string
+            default: 500
+        - name: orderCategory
+          in: query
+          description: Order category. 0：normal order by default; 1：TP/SL order, Required for TP/SL order.
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 0
+                - 1
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/history-orders:
+    get:
+      tags:
+        - spotTrade
+      summary: Get Order History
+      description: Get Order History
+      operationId: order-history
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: Name of the trading pair
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          description: Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default value is 100, max 500
+          required: false
+          schema:
+            type: string
+            default: 100
+        - name: startTime
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: orderCategory
+          in: query
+          description: Order category. 0：normal order by default; 1：TP/SL order, Required for TP/SL order.
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 0
+                - 1
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/my-trades:
+    get:
+      tags:
+        - spotTrade
+      summary: Get Trade History
+      description: Get Trade History
+      operationId: trade-history
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: Name of the trading pair
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          description: Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default value is 100, max 500
+          required: false
+          schema:
+            type: string
+            default: 100
+        - name: startTime
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
+        - name: fromTradeId
+          in: query
+          description: Query greater than the trade ID. (fromTicketId < trade ID)
+          required: false
+          schema:
+            type: string
+        - name: toTradeId
+          in: query
+          description: Query smaller than the trade ID. (trade ID < toTicketId)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /spot/v3/private/account:
+    get:
+      tags:
+        - spotTrade
+      summary: Get Wallet Balance
+      description: Get Wallet Balance
+      operationId: wallet-balance
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
