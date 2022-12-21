@@ -95,6 +95,14 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
+          },
+          spot_institution: {
+            specPath: "yml-folder/spot/institution.yaml",
+            outputDir: "docs/api-explorer/spot/institution",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
           }
         }
       }

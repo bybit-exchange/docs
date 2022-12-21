@@ -140,8 +140,8 @@ paths:
     get:
       tags:
         - lttrade
-      summary: Get Purchase/Redemption History
-      description: Get Purchase/Redemption History
+      summary: Get Purchase or Redemption History
+      description: Get Purchase or Redemption History
       operationId: purchase-redemption-history
       parameters:
         - name: apiKey
@@ -169,17 +169,17 @@ paths:
           schema:
             type: string
         - name: startTime
-            in: query
-            description: Start time, unit in millisecond
-            required: false
-            schema:
-              type: integer
+          in: query
+          description: Start time, unit in millisecond
+          required: false
+          schema:
+            type: integer
         - name: endTime
-            in: query
-            description: End time, unit in millisecond
-            required: false
-            schema:
-              type: integer
+          in: query
+          description: End time, unit in millisecond
+          required: false
+          schema:
+            type: integer
         - name: limit
           in: query
           description: Default value is 100, max 500
@@ -193,14 +193,17 @@ paths:
           required: false
           schema:
             type: array
-              items:
-                type: integer
-                enum:
-                  - 1
-                  - 2
-        - serialNo:
+            items:
+              type: integer
+              enum:
+                - 1
+                - 2
+        - name: serialNo
+          in: query
+          description: Serial number
+          required: false
+          schema:
             type: string
-            description: Serial number
       responses:
         "200":
           description: successful operation
