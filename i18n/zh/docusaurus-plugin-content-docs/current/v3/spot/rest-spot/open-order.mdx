@@ -1,45 +1,43 @@
 ---
-title: Open Orders
-sidebar_label: Open Orders
+title: 訂單列表
+sidebar_label: 訂單列表
 sidebar_position: 4
 ---
 
-
-
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/open-orders</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| symbol               | false               | string          | Name of the trading pair               |
-| orderId              | false               | string          | Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose   |
-| limit                | false               | string          | Default value is 500, max 500    |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| symbol               | false               | string          | 幣對名稱 |
+| orderId              | false               | string          | 通過指定訂單ID返回比這個orderId小的訂單,可以用來分頁 |
+| limit                | false               | string          | 默認500，最大500 |
+| orderCategory        | false               | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| accountId            | string          | Account ID           |
-| symbol               | string          | Name of the trading pair              |
-| orderLinkId          | string          | User-generated order ID         |
-| orderId              | string          | Order ID             |
-| orderPrice           | string          | Order price              |
-| orderQty             | string          | Order quantity              |
-| execQty              | string          | Executed quantity            |
-| cummulativeQuoteQty  | string          | Total order quantity. For some historical data, it might less than 0, and that means it is not applicable |
-| avgPrice             | string          | Average filled price            |
-| status               | string          | Order status              |
-| timeInForce          | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| orderType            | string          | Order type           |
-| side                 | string          | Side. <code>Buy</code>, <code>Sell</code>
-| stopPrice            | string          | Stop price           |
-| icebergQty           | string          | Please ignore          |
-| createTime           | string          | Order created time in the match engine                |
-| updateTime           | string          | Last time order was updated          |
-| isWorking            | string          | Is working. <code>0</code>：valid, <code>1</code>：invalid|
+| accountId            | string          | 賬戶ID |
+| symbol               | string          | 幣對名稱 |
+| orderLinkId          | string          | 特殊訂單ID，用戶自己生成 |
+| orderId              | string          | 訂單ID |
+| orderPrice           | string          | 訂單價格 |
+| orderQty             | string          | 訂單數量 |
+| execQty              | string          | 成交數量 |
+| cummulativeQuoteQty  | string          | 鎖定數量（如果為0，則說明該筆訂單的資金已完成結算） |
+| avgPrice             | string          | 訂單已成交的平均價格 |
+| status               | string          | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕）. |
+| timeInForce          | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| orderType            | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| side                 | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出 ｜
+| stopPrice            | string          | 停止價 |
+| icebergQty           | string          | 請忽略 |
+| createTime           | string          | 撮合引擎中的創建時間 |
+| updateTime           | string          | 訂單上次更新的時間戳 |
+| isWorking            | string          | 是否生效.  <code>0</code>：未生效, <code>1</code>：已生效 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -55,7 +53,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ope
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="normal" label="Normal order">

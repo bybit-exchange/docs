@@ -1,47 +1,47 @@
 ---
-title: Place Order
-sidebar_label: Place Order
+title: 創建活動委托單
+sidebar_label: 創建活動委托單
 sidebar_position: 1
 ---
 
 :::info
-Do not use the duplicate **orderLinkId** in normal order & TP/SL order
+普通單和止盈止損單的**orderLinkId**不能重複
 :::
-#### HTTP Request
+#### HTTP 請求
 POST <code>/spot/v3/private/order</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| symbol               | <b>true</b>         | string          | Name of the trading pair              |
-| orderQty             | <b>true</b>         | string          | |       |
-| side                 | <b>true</b>         | string          | Side. <code>Buy</code>, <code>Sell</code>     |
-| orderType            | <b>true</b>         | string          | Order type           |
-| <a href="#time-in-force-time_in_force">timeInForce</a>| false               | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| orderPrice           | false               | string          | Order price. When the type field is MARKET, the price field is optional. When the type field is LIMIT or LIMIT_MAKER, the price field is required      |
-| orderLinkId          | false               | string          | User-generated order ID         |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
-| triggerPrice         | false               | string          | Trigger price     |
+| symbol               | <b>true</b>         | string          | 幣對名稱 |
+| orderQty             | <b>true</b>         | string          | 交易數量(市價買單即type=Market且side=Buy時qty指的是quote currency；比如BTCUSDT的qty指的是USDT的qty, 而非市價買單時qty指向都是BTC) |
+| side                 | <b>true</b>         | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出 |
+| orderType            | <b>true</b>         | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| timeInForce          | false               | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| orderPrice           | false               | string          | 訂單價格。type字段為MARKET時，price字段為非必須。type字段為LIMIT或LIMIT_MAKER時，price字段為必須 |
+| orderLinkId          | false               | string          | 特殊訂單ID，用戶自己生成 |
+| orderCategory        | false               | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
+| triggerPrice         | false               | string          | 觸發價格 |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| orderId              | string          | Order ID             |
-| orderLinkId          | string          | User-generated order ID         |
-| symbol               | string          | Name of the trading pair              |
-| createTime           | string          | Order Creation Time        |
-| orderPrice           | string          |  Last traded price               |
-| orderQty             | string          | Order quantity              |
-| orderType            | string          | Order type           |
-| side                 | string          | Side. <code>Buy</code>, <code>Sell</code>     |
-| status               | string          | Order status              |
-| timeInForce          | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| accountId            | string          | Account ID           |
-| execQty              | string          | Please ignore             |
-| orderCategory        | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
-| triggerPrice         | string          | Trigger price     |
+| orderId              | string          | 訂單ID |
+| orderLinkId          | string          | 特殊訂單ID，用戶自己生成 |
+| symbol               | string          | 幣對名稱 |
+| createTime           | string          | 訂單創建時間 |
+| orderPrice           | string          | 訂單價格，對於LIMIT 訂單必需發送 |
+| orderQty             | string          | 訂單數量 |
+| orderType            | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| side                 | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出 |
+| status               | string          | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕）. |
+| timeInForce          | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| accountId            | string          | 賬戶ID |
+| execQty              | string          | 請忽略 |
+| orderCategory        | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
+| triggerPrice         | string          | 觸發價格 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -70,7 +70,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/or
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

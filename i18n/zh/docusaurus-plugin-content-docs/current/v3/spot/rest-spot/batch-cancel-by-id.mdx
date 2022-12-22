@@ -1,26 +1,25 @@
 ---
-title: Batch Cancel Order By Id
-sidebar_label: Batch Cancel Order By Id
+title: 根據訂單號批量撤銷訂單
+sidebar_label: 根據訂單號批量撤銷訂單
 sidebar_position: 6
 ---
 
-
-#### HTTP Request
+#### HTTP 請求
 POST <code>/spot/v3/private/cancel-orders-by-ids</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| orderIds              | <b>true</b>         | string          | Order ID, use commas to indicate multiple orderIds. Maximum of 100 ids.      |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| orderIds | **true** | string | 訂單號, 可用英文逗號拼接表示多個訂單, 不超過100個。 |
+| orderCategory | false | int | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| list> orderId        | string          | Order ID     |
-| list> code           | string          | Errors          |
+| list> orderId | string | 訂單ID |
+| list> code | string | 錯誤碼 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -40,7 +39,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 

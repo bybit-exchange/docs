@@ -1,37 +1,36 @@
 ---
-title: Cancel Order
-sidebar_label: Cancel Order
+title: 撤銷活動委托單
+sidebar_label: 撤銷活動委托單
 sidebar_position: 3
 ---
 
-
-#### HTTP Request
+#### HTTP 請求
 POST <code>/spot/v3/private/cancel-order</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| orderId              | false               | string          | Order ID. <b>Required</b> if not passing <code>orderLinkId</code> |
-| orderLinkId          | false               | string          | Unique user-set order ID. <b>Required</b> if not passing <code>orderId</code> |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| orderId              | false               | string          | 訂單ID. 當<code>orderLinkId</code>為空時, 則<b>必傳</b> |
+| orderLinkId          | false               | string          | 用戶自定義ID. 當<code>orderId</code>為空時, 則<b>必傳</b> |
+| orderCategory        | false               | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| orderId               | string          | Order ID             |
-| orderLinkId           | string          | User-generated order ID         |
-| symbol                | string          | Name of the trading pair              |
-| status                | string          | Order status              |
-| accountId             | string          | Account ID           |
-| orderPrice            | string          | Order price              |
-| createTime            | string          | Order Creation Time        |
-| orderQty              | string          | Order quantity              |
-| execQty               | string          | Executed quantity            |
-| timeInForce           | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| orderType             | string          | Order type           |
-| side                  | string          | Side. <code>Buy</code>, <code>Sell</code>     |
+| orderId               | string          | 訂單ID |
+| orderLinkId           | string          | 特殊訂單ID，用戶自己生成 |
+| symbol                | string          | 幣對名稱 |
+| status                | string          | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕） |
+| accountId             | string          | 賬戶ID |
+| orderPrice            | string          | 訂單價格 |
+| createTime            | string          | 訂單創建時間 |
+| orderQty              | string          | 訂單數量 |
+| execQty               | string          | 成交數量 |
+| timeInForce           | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| orderType             | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| side                  | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出. |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -52,7 +51,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

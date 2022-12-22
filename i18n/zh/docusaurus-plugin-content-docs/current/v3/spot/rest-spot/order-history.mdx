@@ -1,50 +1,50 @@
 ---
-title: Order History
-sidebar_label: Order History
+title: 歷史訂單
+sidebar_label: 歷史訂單
 sidebar_position: 7
 ---
 
 :::info
-If startTime and endTime are both not specified, it returns last 7 days records by default. 3 days records for institutional clients.
-Supports fetching 3 months worth of data per request. Returns data up to 6 months old.
+如果startTime和endTime都不傳，則默認查詢近7天的數據。市商為3天。
+單次查詢最長3個月，最長支持查詢最近6個月的歷史數據。
 :::
 
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/history-orders</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| symbol               | false               | string          | Name of the trading pair             |
-| orderId              | false               | string          | Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose |
-| limit                | false               | integer          | Default value is 100, max 500  |
-| startTime            | false               | long             | Start time, unit in millisecond        |
-| endTime              | false               | long             | End time, unit in millisecond          |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| symbol               | false               | string          | 幣對名稱 |
+| orderId              | false               | string          | 通過指定訂單ID返回比這個orderId小的訂單,可以用來分頁 |
+| limit                | false               | integer         | 默認100，最大500 |
+| startTime            | false               | long            | 起始時間戳（單位毫秒） |
+| endTime              | false               | long            | 結束時間（單位毫秒） |
+| orderCategory        | false               | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| accountId            | string          | Account ID            |
-| symbol               | string          | Name of the trading pair               |
-| orderLinkId          | string          | User-generated order ID          |
-| orderId              | string          | Order ID              |
-| orderPrice           | string          |  Last traded price                |
-| orderQty             | string          | Order quantity               |
-| execQty              | string          | Executed quantity             |
-| cummulativeQuoteQty  | string          | Total order quantity  |
-| avgPrice             | string          | Average filled price             |
-| status               | string          | Order status               |
-| timeInForce          | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>  |
-| orderType            | string          | Order type            |
-| side                 | string          | Side. <code>Buy</code>, <code>Sell</code>      |
-| stopPrice            | string          | Stop price            |
-| icebergQty           | string          | Please ignore           |
-| createTime           | string          | Order created time in the match engine                 |
-| updateTime           | string          | Last time order was updated           |
-| isWorking            | string          | Is working. <code>0</code>：valid, <code>1</code>：invalid |
+| accountId            | string          | 賬戶ID |
+| symbol               | string          | 幣對名稱 |
+| orderLinkId          | string          | 特殊訂單ID，用戶自己生成 |
+| orderId              | string          | 訂單ID |
+| orderPrice           | string          | 訂單價格，對於LIMIT 訂單必需發送 |
+| orderQty             | string          | 訂單數量 |
+| execQty              | string          | 成交數量 |
+| cummulativeQuoteQty  | string          | 對於某些歷史數據 `cummulativeQuoteQty` 可能會 < 0, 這說明數據當前不可用。|
+| avgPrice             | string          | 訂單已成交的平均價格 |
+| status               | string          | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕. |
+| timeInForce          | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| orderType            | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| side                 | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出 |
+| stopPrice            | string          | 停止價 |
+| icebergQty           | string          | 請忽略 |
+| createTime           | string          | 撮合引擎中的創建時間 |
+| updateTime           | string          | 訂單上次更新的時間戳 |
+| isWorking            | string          | 是否生效. <code>0</code>：未生效, <code>1</code>：已生效 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -60,7 +60,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/his
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="normal" label="Normal order">

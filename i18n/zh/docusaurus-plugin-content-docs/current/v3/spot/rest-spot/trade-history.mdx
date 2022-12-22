@@ -1,50 +1,50 @@
 ---
-title: Trade History
-sidebar_label: Trade History
+title: 交易記錄
+sidebar_label: 交易記錄
 sidebar_position: 8
 ---
 
 :::info
-If `startTime` is not specified, you can only query for records in the last 7 days. If you want to query for records older than 7 days, `startTime` is required.
+如果不傳`startTime`，只能查詢最近7天的交易數據。如果要查詢一周之前的歷史交易數據，需要傳`startTime`
 :::
 
 :::info
-If the <code>orderId</code> is null, <code>fromTicketId</code> is passed, and <code>toTicketId</code> is null, then the result is sorted by <code>ticketId</code> in ascend. Otherwise, the result is sorted by <code>ticketId</code> in descend.
+僅當不傳入<code>orderId</code>, 不傳入<code>toTicketId</code>，但傳入<code>fromTicketId</code>時，返回的結果是以<code>ticketId</code>從小到大排序；否則，返回的結果以<code>ticketId</code>從大到小排序
 :::
 
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/my-trades</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| symbol               | false               | string          | Name of the trading pair                |
-| orderId              | false               | string          | Order ID               |
-| limit                | false               | string          | Default value is 50, max 50 |
-| startTime            | false               | int             | Start time, unit in millisecond           |
-| endTime              | false               | int             | End time, unit in millisecond             |
-| fromTradeId          | false               | string          |  Query greater than the trade ID. (fromTicketId < trade ID)              |
-| toTradeId            | false               | string          | Query smaller than the trade ID. (trade ID < toTicketId)                |
+| symbol               | false               | string          | 幣對名稱 |
+| orderId              | false               | string          | 訂單ID |
+| limit                | false               | string          | 默認50， 最大50 |
+| startTime            | false               | int             | 起始時間戳（單位毫秒） |
+| endTime              | false               | int             | 結束時間（單位毫秒） |
+| fromTradeId          | false               | string          | 從大於此trade ID 開始查詢 (fromTicketId < trade ID) |
+| toTradeId            | false               | string          | 以小於此trade ID 為終點 (trade ID < toTicketId) |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| symbol                | string          | Name of the trading pair        |
-| id                    | string          | Irrelevant for API usage. This field reflects the "Transaction ID" from the <a href="https://www.bybit.com/user/assets/order/spot-history/active">Trade History</a> section of the website            |
-| orderId               | string          | Order ID      |
-| tradeId               | string          | The ID for the trade       |
-| orderPrice            | string          |  Last traded price         |
-| orderQty              | string          | Order quantity           |
-| execFee               | string          | Trading fee (for a single fill)          |
-| feeTokenId            | string          | Fee Token ID    |
-| creatTime             | string          | Order created time in the match engine          |
-| isBuyer               | string          | <code>0</code>：Buyer, <code>1</code>：Seller|
-| isMaker               | string          | <code>0</code>：Maker, <code>1</code>：Taker|
-| matchOrderId          | string          | Order ID of the opponent trader |
-| makerRebate           | string          | Maker rebate   |
-| executionTime         | string          | Order execution time |
+| symbol                | string          | 幣對名稱 |
+| id                    | string          | 與 API 使用無關。 該字段反映了網站交易歷史中“交易ID”的一部分 |
+| orderId               | string          | 訂單ID |
+| tradeId               | string          | 交易ID |
+| orderPrice            | string          | 訂單價格，對於LIMIT 訂單必需發送 |
+| orderQty              | string          | 交易數量 |
+| execFee               | string          | 手續費 |
+| feeTokenId            | string          | 手續費 Token ID |
+| creatTime             | string          | 撮合引擎中的創建時間 |
+| isBuyer               | string          | <code>0</code>：買方, <code>1</code>：賣方 |
+| isMaker               | string          | <code>0</code>：掛單, <code>1</code>：吃單 |
+| matchOrderId          | string          | 對手交易者的order_id |
+| makerRebate           | string          | Maker折扣 |
+| executionTime         | string          | 訂單完成時間 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -60,7 +60,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/my-
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

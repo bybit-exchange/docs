@@ -1,28 +1,26 @@
 ---
-title: Batch Cancel Order
-sidebar_label: Batch Cancel Order
+title: 批量撤銷訂單
+sidebar_label: 批量撤銷訂單
 sidebar_position: 5
 ---
 
-Get the spec of symbol information
-
-#### HTTP Request
+#### HTTP 請求
 POST <code>/spot/v3/private/cancel-orders</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-| symbol                | <b>true</b>         | string          | Name of the trading pair      |
-| side                  | false               | string          | Side. <code>Buy</code>, <code>Sell</code> |
-| orderTypes            | false               | string          | Order type. <code>LIMIT</code> in default. It allows multiple types, separated by comma, e.a LIMIT,LIMIT_MAKER |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| symbol | **true** | string | 幣對名稱 |
+| side | false | string | 買賣方向. <code>Buy</code>, <code>Sell</code> |
+| orderTypes | false | string | 訂單類型. 默認為<code>LIMIT</code>. 支持多個訂單類型取消, 用英文逗號分開, 例如：<code>LIMIT,LIMIT_MAKER</code>. |
+| orderCategory | false | int | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-| success              | string          | Batch cancel successfully or not. <code>0</code>：fail, <code>1</code>：success     |
+| success | string | 是否成功. <code>0</code>：失敗, <code>1</code>：成功 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -44,7 +42,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {
