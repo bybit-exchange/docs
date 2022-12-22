@@ -1,26 +1,30 @@
 ---
-title: Last Traded Price
-sidebar_label: Last Traded Price
+title: Symbol最新價
+sidebar_label: Symbol最新價
 sidebar_position: 7
 ---
 
-#### HTTP Request
+:::info
+如果symbol沒有被發送，所有symbol的價格都會被返回
+:::
+
+#### HTTP 請求
 GET <code>/spot/v3/public/quote/ticker/price</code>
 
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|<a href="#symbol-symbol">symbol</a> |false|string|Name of the trading pair|
+|symbol | false | string | 幣對名稱 |
 
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| <a href="#symbol-symbol">symbol</a> | string | Name of the trading pair |
-| <a href="#price-price">price</a> | string |  Last traded price |
+| symbol | string | 幣對名稱 |
+| price | string | 訂單價格，對於LIMIT 訂單必需發送 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -32,7 +36,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quot
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

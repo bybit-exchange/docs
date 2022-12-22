@@ -1,41 +1,32 @@
 ---
-title: Best Bid/Ask Price
-sidebar_label: Best Bid/Ask Price
+title: 最佳買賣價
+sidebar_label: 最佳買賣價
 sidebar_position: 6
 ---
 
 :::info
-If symbol is not specified, the best order price from all symbols will be returned
+如果symbol沒有被發送，所有symbol的最佳訂單簿價格都會被返回。
 :::
 
-#### HTTP Request
-GET <code>/spot/v3/public/symbols</code>
+#### HTTP 請求
+GET <code>/spot/v3/public/quote/ticker/bookTicker</code>
 
-
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|symbol | **true** | string | 幣對名稱 |
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|name |string |Name of the trading pair |
-| name                 | string          | Name of the trading pair            |
-| alias                | string          | Alias            |
-| baseCoin             | string          | Base currency      |
-| quoteCoin            | string          | Quote currency     |
-| basePrecision        | string          | Decimal precision (base currency)     |
-| quotePrecision       | string          | Decimal precision (quote currency)    |
-| minTradeQty          | string          | Min. order qty (Not valid for market buy orders)  |
-| minTradeAmt          | string          | Min. order value (Only valid for market buy orders)    |
-| minPricePrecision    | string          | Min. number of decimal places |
-| maxTradeQty          | string          | Max. order qty (It is ignored when you place an order with order type LIMIT_MAKER)  |
-| maxTradeAmt          | string          | Max. order value (It is ignored when you place an order with order type LIMIT_MAKER)    |
-| category             | string          |  Category          |
-| innovation           | string          | <code>1</code> indicates that the price of this currency is relatively volatile     |
-| showStatus           | string          | <code>1</code> indicates that the symbol open for trading     |
+| symbol | string | 幣對名稱 |
+| bidPrice | string | 最佳買價 |
+| bidQty | string | 最佳買價數量 |
+| askPrice | string | 最佳賣價 |
+| askQty | string | 最佳賣價數量 |
+| time | long | 毫秒時間戳 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -47,7 +38,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quot
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {
