@@ -1,0 +1,57 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Query real-time position data, such as position size, cumulative realizedPNL.
+> **Cover: Linear Perpetual(Unified Account) / Option(Unified Account)**
+
+### HTTP Request
+POST `/v5/position/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](enum#category) |**true** |string |Product type. `linear`,`option` |
+|symbol |false |string |Symbol name<li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li><li>If category and symbol are not matched, it returns null</li>|
+|baseCoin |false |string |Base coin. `option` ONLY. Return all option positions if not passed|
+|settleCoin |false |string |Settle coin. For contract, either `symbol` or `settleCon` is required, `symbol` has a higher priority |
+|limit |false |integer |Limit for data size per page. [1,200]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string  |Product type |
+|list|array |Object |
+|> [positionIdx](../enum#positionIdx) | integer | Position index, 用于在不同仓位模式下标识仓位：0：单向持仓；1：双向持仓做多倉位； 2：双向持仓做空倉位 |
+|> riskId               | integer | 风险限额ID，參見風險限額接口                                          |
+|> riskLimitValue        | string  | 當前風險限額ID對應的持倉限制量                                 |
+|> symbol               | string  | 交易產品名称                                               |
+|> side                 | string  | 持倉方向，Buy：多头；Sell：空头. 注意： 單向模式下，未持倉時，返回`None`  |
+|> size                 | string  | 當前倉位的數量，按照合約張數計算                                  |
+|> avgPrice           | string  | 當前倉位的平均入場價格                                   |
+|> positionValue        | string  | 当前仓位的價值 |
+|> tradeMode            | number | 交易模式。`0`:全倉，`1`：逐倉                                |
+|> positionStatus | String | 倉位状态 |
+|> leverage             | string  | 當前倉位的槓桿，**仅适用于合约**                                |
+|> markPrice            | string  | symbol 的最新標記價格                                         |
+|> liqPrice             | string  | 仓位强平价格，在统一保证金模式下返回的数值为预估强平价格，因统一保证金模式是按照账户来控制风险率，因此单个仓位上的破产价格僅为预估计算。 |
+|> bustPrice            | string  | 倉位破產價格. 統一保證金模式返回`""`, 無倉位破產價格               |
+|> sessionAvgPrice      | string  | 結算價格, 僅對 USDC 永續有效。**@derek，lark文檔上沒有該字段，但響應示例有，確認是否需要** |
+|> positionIM           | string  | 倉位起始保證金                                              |
+|> positionMM           | string  | 倉位維持保證金                                         |
+|> tpslMode             | string  | 止盈止损模式，Full ：全部止盈止損；Partial：部分止盈止損。僅對期貨業務有效     |
+|> takeProfit           | string  | 止盈價格                                                     |
+|> stopLoss             | string  | 止損價格                                                   |
+|> trailingStop         | string  | 追蹤止損（與當前價格的距離）                                      |
+|> activePrice          | string  | 追蹤止損觸發價格. 追蹤止損會在市場價格到達該價格後觸發               |
+|> unrealisedPnl        | string  | 未结盈亏                                                     |
+|> cumRealisedPnl       | string  | 累计已结盈亏                                                 |
+|> createdTime          | string  | 倉位創建時間                                    |
+|> updatedTime          | string  | 倉位數據更新時間                                               |
+|nextPageCursor              | string  | 游標，用於翻頁                                            |

@@ -1,277 +1,79 @@
 ---
-title: Get Instruments Info
-sidebar_label: Get Instruments Info
-sidebar_position: 12
+title: 查詢可交易產品的規格信息
+sidebar_label: 查詢可交易產品的規格信息
+sidebar_position: 4.5
 ---
 
-Query a list of instruments of online trading pair.
+查詢全站可交易產品的基礎配置規則信息
+> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/instruments-info`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`,`option`|
-|symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin. for `option` ONLY.|
-|limit |false |integer |Limit for data size per page. [1,1000]. default: `500`|
-|cursor |false |integer |Cursor. Used to pagination|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `spot`,`linear`,`inverse`,`option`|
+|symbol |false |string |合約名稱|
+|baseCoin |false |string |交易貨幣. 僅對期貨/期權有效|
+|limit |false |integer |每頁數量限制. [1,1000]. 默認: `500`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-<Tabs>
-<TabItem value="future" label="future" default>
-    <table border="0.8">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Derivatives products category. Keeps empty string `""` when `category` is not passed</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> contractType</td><td>string</td><td>Contract type. `LinearPerpetual`, `InversePerpetual`, `InverseFutures`</td>
-        </tr>
-        <tr>
-            <td>> status</td><td>string</td><td>Symbol status </td>
-        </tr>
-        <tr>
-            <td>> baseCoin</td><td>string</td><td>Base coin. e.g BTCUSDT, BTC is base coin</td>
-        </tr>
-        <tr>
-            <td>> quoteCoin</td><td>string</td><td>Quote coin. e.g BTCUSD, USD is quote coin</td>
-        </tr>
-        <tr>
-            <td>> launchTime</td><td>string</td><td>The launch timestamp (ms) </td>
-        </tr>
-        <tr>
-            <td>> deliveryTime</td><td>string</td><td>The delivery timestamp (ms). "0" for perpetual </td>
-        </tr>
-        <tr>
-            <td>> deliveryFeeRate</td><td>string</td><td>The delivery fee rate </td>
-        </tr>
-        <tr>
-            <td>> priceScale</td><td>string</td><td>Price scale</td>
-        </tr>
-        <tr>
-            <td>> leverageFilter</td><td>Object</td><td> </td>
-        </tr>
-        <tr>
-            <td>>> minLeverage</td><td>string</td><td>Min. leverage </td>
-        </tr>
-        <tr>
-            <td>>> maxLeverage</td><td>string</td><td>Max. leverage </td>
-        </tr>
-        <tr>
-            <td>>> leverageStep</td><td>string</td><td>The min step to modify leverage </td>
-        </tr>
-        <tr>
-            <td>> priceFilter</td><td>Object</td><td> </td>
-        </tr>
-        <tr>
-            <td>>> minPrice</td><td>string</td><td>Min. order price</td>
-        </tr>
-        <tr>
-            <td>>> maxPrice</td><td>string</td><td>Max. order price</td>
-        </tr>
-        <tr>
-            <td>>> tickSize</td><td>string</td><td>Tick size</td>
-        </tr>
-        <tr>
-            <td>> lotSizeFilter</td><td>Object</td><td> </td>
-        </tr>
-        <tr>
-            <td>>> maxOrderQty</td><td>string</td><td>Max. trade quantity per order </td>
-        </tr>
-        <tr>
-            <td>>> minOrderQty</td><td>string</td><td>Min. trade quantity per order </td>
-        </tr>
-        <tr>
-            <td>>> qtyStep</td><td>string</td><td>Min. order quantity increment </td>
-        </tr>
-        <tr>
-            <td>> unifiedMarginTrade</td><td>boolean</td><td>Support unified margin trade or not </td>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>The cursor used to pagination</td>
-        </tr>
-    </table>
-</TabItem>
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|category |string |產品類型 |
+|list |array |Object |
+|> symbol |string |合約名稱 |
+|> [contractType](../enum#contracttype) |string |合約類型. 僅期貨有效|
+|> [status](../enum#status) |string |交易品種的可交易狀態 |
+|> baseCoin |string |交易貨幣幣種 e.g., BTCUSDT中的BTC |
+|> quoteCoin |string |報價貨幣幣種 e.g., BTCUSDT中的USDT |
+|> settleCoin |string |結算貨幣幣種 e.g., BTCPERP中的USDC |
+|> optionsType |string |期權類型. `Call`,`Put` |
+|> launchTime |string |交易產品的上線時間 (毫秒) |
+|> deliveryTime |string |到期日/交割/行權時間戳 (毫秒) |
+|> deliveryFeeRate |string |交割合約的交割費率 |
+|> fundingInterval |string |資金費率的間隔時間 (分鐘) |
+|> leverageFilter |string |Object |
+|>> minLeverage |string |最小槓桿數 |
+|>> maxLeverage |string |最大槓桿數 |
+|>> leverageStep |string |槓桿最小增加或減少的步長 |
+|> priceFilter |string |Object |
+|>> minPrice |string |最小訂單價格 |
+|>> maxPrice |string |最大訂單價格 |
+|>> tickSize |string |價格最小增加或減少的步長 |
+|> lotSizeFilter |string |Object |
+|>> minOrderQty |string |單筆訂單最小下單數量 |
+|>> maxOrderQty |string |單筆訂單最大下單數量 |
+|>> postOnlyMaxOrderQty |string |`PostOnly`訂單可單筆下單的最大數量 |
+|>> qtyStep |string |下單數量最小增加或減少的步長 |
+|> unifiedMarginTrade |boolean |是否是統一保證金模式/統一帳戶可交易的產品 |
+|nextPageCursor |string |游標，用於翻頁 |
 
-<TabItem value="option" label="option">
-    <table border="0.8">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>resultTotalSize </td><td>number </td><td>The number of records in dataList </td>
-        </tr>
-        <tr>
-            <td>cursor </td><td>string </td><td>The cursor used to pagination </td>
-        </tr>
-        <tr>
-            <td>dataList </td><td>array </td><td>Object </td>
-        </tr>
-        <tr>
-            <td>> category</td><td>string</td><td>Derivatives products category </td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> status</td><td>string</td><td>Symbol status </td>
-        </tr>
-        <tr>
-            <td>> baseCoin</td><td>string</td><td>Base coin. e.g BTC-17NOV22-16750-C, BTC is base coin </td>
-        </tr>
-        <tr>
-            <td>> quoteCoin</td><td>string</td><td>Quote coin </td>
-        </tr>
-        <tr>
-            <td>> settleCoin</td><td>string</td><td>Settle coin </td>
-        </tr>
-        <tr>
-            <td>> optionsType</td><td>string</td><td>Option type. `Call` or `Put` </td>
-        </tr>
-        <tr>
-            <td>> launchTime</td><td>string</td><td>The launch timestamp (ms) </td>
-        </tr>
-        <tr>
-            <td>> deliveryTime</td><td>string</td><td>The delivery timestamp (ms) </td>
-        </tr>
-        <tr>
-            <td>> deliveryFeeRate</td><td>string</td><td>The delivery fee rate </td>
-        </tr>
-        <tr>
-            <td>> priceFilter</td><td>Object</td><td> </td>
-        </tr>
-        <tr>
-            <td>>> minPrice</td><td>string</td><td>Min. order price</td>
-        </tr>
-        <tr>
-            <td>>> maxPrice</td><td>string</td><td>Max. order price</td>
-        </tr>
-        <tr>
-            <td>>> tickSize</td><td>string</td><td>Tick size</td>
-        </tr>
-        <tr>
-            <td>> lotSizeFilter</td><td>Object</td><td> </td>
-        </tr>
-        <tr>
-            <td>>> maxOrderQty</td><td>string</td><td>Max. trade quantity per order </td>
-        </tr>
-        <tr>
-            <td>>> minOrderQty</td><td>string</td><td>Min. trade quantity per order </td>
-        </tr>
-        <tr>
-            <td>>> qtyStep</td><td>string</td><td>Min. order quantity increment </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
-
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
 
 ```http
-curl GET 'https://api-testnet.bybit.com/derivatives/v3/public/instruments-info?symbol=BTCUSDT'
+
 ```
 
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
-<TabItem value="js linear" label="JavaScript linear">
+<TabItem value="js linear" label="linear">
 
-```javascript
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-    "category": "",
-    "list": [
-{
-    "symbol": "BTCUSDT",
-    "contractType": "LinearPerpetual",
-    "status": "Trading",
-    "baseCoin": "BTC",
-    "quoteCoin": "USDT",
-    "launchTime": "1585526400000",
-    "deliveryTime": "0",
-    "deliveryFeeRate": "",
-    "priceScale": "2",
-    "leverageFilter": {
-    "minLeverage": "1",
-    "maxLeverage": "100",
-    "leverageStep": "0.01"
-},
-    "priceFilter": {
-    "minPrice": "0.50",
-    "maxPrice": "999999.00",
-    "tickSize": "0.50"
-},
-    "lotSizeFilter": {
-    "maxTradingQty": "420.000",
-    "minTradingQty": "0.001",
-    "qtyStep": "0.001"
-},
-    "unifiedMarginTrade": true
-}
-    ],
-    "nextPageCursor": ""
-},
-    "retExtInfo": {},
-    "time": 1669001364275
-}
+```json
+
 ```
 
-</TabItem>
-<TabItem value="js option" label="JavaScript option">
-
-```javascript
-{
-    "retCode": 0,
-    "retMsg": "success",
-    "result": {
-    "resultTotalSize": 1,
-    "cursor": "",
-    "dataList": [
-{
-    "category": "option",
-    "symbol": "BTC-22NOV22-16750-C",
-    "status": "ONLINE",
-    "baseCoin": "BTC",
-    "quoteCoin": "USD",
-    "settleCoin": "USDC",
-    "optionsType": "Call",
-    "launchTime": "1668931200000",
-    "deliveryTime": "1669104000000",
-    "deliveryFeeRate": "0.00015",
-    "priceFilter": {
-    "minPrice": "5",
-    "maxPrice": "10000000",
-    "tickSize": "5"
-},
-    "lotSizeFilter": {
-    "maxOrderQty": "10000",
-    "minOrderQty": "0.01",
-    "qtyStep": "0.01"
-}
-}
-    ]
-},
-    "retExtInfo": {},
-    "time": 1669001502506
-}
-```
 </TabItem>
 </Tabs>

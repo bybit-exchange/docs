@@ -1,0 +1,130 @@
+---
+title: My Position
+sidebar_label: My Position
+sidebar_position: 1
+---
+
+Get real-time position data
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP Request
+GET `/contract/v3/private/position/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Product type. `linear`,`inverse`,`option` |
+|symbol |false |string |Symbol name |
+|settleCoin |false |string |Settle coin. Query future, either `symbol` or `settleCoin` is required. `symbol` has a higher priority |
+|baseCoin |false |string |Base coin. `option` ONLY |
+|limit |false |string |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|------ |
+|category |string |Product type |
+|nextPageCursor |string |Cursor. Used to pagination |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> side |string |Side. `Buy`,`Sell` |
+|> size |string |Position size |
+|> entryPrice |string |Entry price |
+|> leverage |string |leverage |
+|> positionValue |string |Entry position value |
+|> [positionIdx](../../enum#positionidx) |integer |Position index|
+|> riskId |integer |Risk limit id |
+|> riskLimitValue |string |Position limit value corresponding to the risk id |
+|> tradeMode |integer |`0`: cross margin mode. `1`: isolated margin mode |
+|> autoAddMargin |integer |`0`: false. `1`: true |
+|> positionBalance |string |Position margin |
+|> liqPrice |string |Estimated liquidation price |
+|> bustPrice |string |Estimated bankruptcy price |
+|> tpSlMode |string |TP/SL mode. `Full`,`Partial` |
+|> takeProfit |string |Take profit price |
+|> stopLoss |string |Stop loss price |
+|> createdTime |string |Position created timestamp (ms) |
+|> updatedTime |string |Position data updated timestamp (ms) |
+|> trailingStop |string |Trailing stop |
+|> activePrice |string |Activate price of trailing stop |
+|> markPrice |string |Real-time mark price |
+|> unrealisedPnl |string |unrealised PNL |
+|> cumRealisedPnl |string |cumulative realised PNL |
+|> positionMM |string |Position maintenance margin |
+|> positionIM |string |Position initial margin |
+|> positionStatus |string |Position status |
+|> sessionAvgPrice |string |Settlement price |
+|> occClosingFee |string |Pre-occupancy closing fee. Unique field for `linear`&`inverse`|
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /contract/v3/private/position/list?symbol=SOLPERP&category=linear HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670823840100
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "list": [
+{
+    "positionIdx": 0,
+    "riskId": 1,
+    "symbol": "SOLPERP",
+    "side": "Buy",
+    "size": "10",
+    "positionValue": "130.1",
+    "entryPrice": "13.01",
+    "tradeMode": 0,
+    "autoAddMargin": 0,
+    "leverage": "10.00",
+    "positionBalance": "",
+    "liqPrice": "0.005",
+    "bustPrice": "",
+    "takeProfit": "0",
+    "stopLoss": "0",
+    "trailingStop": "",
+    "unrealisedPnl": "-0.01",
+    "createdTime": "1669888302986",
+    "updatedTime": "1670823807496",
+    "tpSlMode": "UNKNOWN",
+    "riskLimitValue": "150000",
+    "activePrice": "",
+    "markPrice": "13.009",
+    "cumRealisedPnl": "-0.07806",
+    "positionMM": "1.371254",
+    "positionIM": "13.080254",
+    "positionStatus": "Normal",
+    "sessionAvgPrice": "13.01",
+    "occClosingFee": ""
+}
+    ],
+    "category": "linear",
+    "nextPageCursor": ""
+},
+    "retExtInfo": {},
+    "time": 1670823840914
+}
+```
+</TabItem>
+</Tabs>

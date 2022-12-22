@@ -1,34 +1,35 @@
 ---
-title: Option Delivery Price
-sidebar_label: Option Delivery Price
+title: 查詢期權交割價格
+sidebar_label: 查詢期權交割價格
 sidebar_position: 14
 ---
 
-Get the delivery price for option
+查詢平台交割產品的交割價格，目前僅支持期權
+> **覆蓋範圍: 期權**
 
-### HTTP Request
-GET `/v5/public/delivery-price`
+### HTTP請求
+GET `/v5/market/delivery-price`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `option`|
-|symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin. default: **BTC** data returned|
-|limit |false |number |Limit for data size per page. [1,200]. default: `50`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `option`|
+|symbol |false |string |合約名稱|
+|baseCoin |false |string |交易貨幣|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `50`|
+|cursor |false |string |游標，用於分頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|nextPageCursor |string |Cursor. Used to pagination |
-|category |string |Product type |
+|category |string |產品類型 |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> deliveryPrice |string |Delivery price |
-|> deliveryTime |string |Delivery timestamp(ms) |
+|> symbol |string |合約名稱 |
+|> deliveryPrice |string |交割價格 |
+|> deliveryTime |string |交割時間戳 (毫秒) |
+|nextPageCursor |string |游標，用於分頁 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -39,12 +40,12 @@ GET `/v5/public/delivery-price`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="option" label="option">
 
-```javascript
+```json
 
 ```
 </TabItem>

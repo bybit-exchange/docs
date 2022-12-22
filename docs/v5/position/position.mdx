@@ -8,153 +8,52 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 Query real-time position data, such as position size, cumulative realizedPNL.
-> **Cover: Linear Perpetual / Inverse Perpetual / Inverse Future / Option**
+> **Cover: Linear Perpetual(Unified Account) / Option(Unified Account)**
 
 ### HTTP Request
-POST `v5/position/list`
+POST `/v5/position/list`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](enum#category) |**true** |string |Product type. `linear`,`inverse`,`option` |
+|[category](enum#category) |**true** |string |Product type. `linear`,`option` |
 |symbol |false |string |Symbol name<li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li><li>If category and symbol are not matched, it returns null</li>|
 |baseCoin |false |string |Base coin. `option` ONLY. Return all option positions if not passed|
 |settleCoin |false |string |Settle coin. For contract, either `symbol` or `settleCon` is required, `symbol` has a higher priority |
-|limit |false |number |Limit for data size per page. [1,200]. default: `20`|
+|limit |false |integer |Limit for data size per page. [1,200]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
 ### Response Parameters
-<Tabs>
-<TabItem value="linear" label="linear" default>
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Products category</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> leverage</td><td>string</td><td>Leverage value </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>integer</td><td>Update time of position </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> positionValue</td><td>string</td><td>Total value of position </td>
-        </tr>
-        <tr>
-            <td>> takeProfit</td><td>string</td><td>Take profit price </td>
-        </tr>
-        <tr>
-            <td>> tpslMode</td><td>string</td><td>Tp/SL mode. `Partial`, `Full` </td>
-        </tr>
-        <tr>
-            <td>> riskId</td><td>integer</td><td>Risk limit id </td>
-        </tr>
-        <tr>
-            <td>> trailingStop</td><td>string</td><td>Trailing stop (the distance from the current price) </td>
-        </tr>
-        <tr>
-            <td>> entryPrice</td><td>string</td><td>Average entry price </td>
-        </tr>
-        <tr>
-            <td>> unrealisedPnl</td><td>string</td><td>Unrealised pnl </td>
-        </tr>
-        <tr>
-            <td>> markPrice</td><td>string</td><td>Mark price </td>
-        </tr>
-        <tr>
-            <td>> size</td><td>string</td><td>Position size </td>
-        </tr>
-        <tr>
-            <td>> stopLoss</td><td>string</td><td>Stop loss price </td>
-        </tr>
-        <tr>
-            <td>> cumRealisedPnl</td><td>string</td><td>Cumulative realised profit and loss </td>
-        </tr>
-        <tr>
-            <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
-        </tr>
-        <tr>
-            <td>> positionIdx</td><td>integer</td><td>Position idx, used to identify positions in different position modes<li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li> </td>
-        </tr>
-        <tr>
-            <td>> positionIM</td><td>string</td><td>Position initial margin </td>
-        </tr>
-    </table>
-</TabItem>
-
-<TabItem value="option" label="option">
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Products category</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>integer</td><td>Update time of position </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> positionValue</td><td>string</td><td>Total value of position </td>
-        </tr>
-        <tr>
-            <td>> entryPrice</td><td>string</td><td>Average entry price </td>
-        </tr>
-        <tr>
-            <td>> unrealisedPnl</td><td>string</td><td>Unrealised pnl </td>
-        </tr>
-        <tr>
-            <td>> markPrice</td><td>string</td><td>Mark price </td>
-        </tr>
-        <tr>
-            <td>> size</td><td>string</td><td>Position size </td>
-        </tr>
-        <tr>
-            <td>> cumRealisedPnl</td><td>string</td><td>Cumulative realised profit and loss </td>
-        </tr>
-        <tr>
-            <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
-        </tr>
-        <tr>
-            <td>> positionIdx</td><td>integer</td><td>Not Applicable </td>
-        </tr>
-        <tr>
-            <td>> positionIM</td><td>string</td><td>Position initial margin </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string  |Product type |
+|list|array |Object |
+|> [positionIdx](../enum#positionIdx) | integer |Position idx, used to identify positions in different position modes.<li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li>|
+|> riskId |integer |Risk limit id |
+|> riskLimitValue |string  | Risk limit value |
+|> symbol |string  |Symbol name |
+|> side |string  |Position side. `Buy`: long, `Sell`: short. _Note: under one-way mode，it returns `None` if empty position_ |
+|> size |string  |Position size |
+|> avgPrice |string  |Average entry price |
+|> positionValue | string  |Position value|
+|> tradeMode | integer |Trade mode. `0`:cross-margin，`1`: isolated margin |
+|> positionStatus | String |Position status |
+|> leverage | string  |Position leverage. Valid for contract|
+|> markPrice | string  |Last mark price |
+|> liqPrice | string  |Position liquidation price. _Note: the value returned in the unified margin mode is the estimated liquidation price, because the unified margin mode controls the risk rate according to the account, so the liquidation price on a single position is only estimated_|
+|> bustPrice | string  |Bankruptcy price. _Note: Unified margin mode returns `""`, no position bankruptcy price_|
+|> positionIM | string  |Initial margin |
+|> positionMM | string  |Maintenance margin |
+|> tpslMode | string  |Take profit/stop loss mode. `Full`,`Partial`|
+|> takeProfit | string  |Take profit price|
+|> stopLoss | string  |Stop loss price|
+|> trailingStop | string  |Trailing stop (The distance from market price)|
+|> activePrice | string  |Trailing stop activate price. Trailing stop is activated when price reaches `activePrice`. If not set, trailing stop is activated at once by default|
+|> unrealisedPnl | string  |Unrealised PnL|
+|> cumRealisedPnl | string  |Cumulative realised pnl|
+|> createdTime | string  |Position created timestamp (ms)|
+|> updatedTime | string  |Position updated timestamp (ms)|
+|nextPageCursor | string  |Cursor. Used to pagination |
 
 ### Request Example
 
@@ -172,7 +71,7 @@ POST `v5/position/list`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>

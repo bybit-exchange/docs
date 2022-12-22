@@ -1,21 +1,25 @@
 ---
-title: Get Execution List
-sidebar_label: Get Execution List
+title: Get Execution (half year)
+sidebar_label: Get Execution (half year)
 sidebar_position: 5
 ---
 
-Query users' execution list, sort by `execTime` in descending order
+Query users' execution records, sort by `execTime` in descending order
+> **Cover: Spot (Unified Account) / Linear Perpetual (Unified Account) / Option (Unified Account)**
+
 :::tip
-You may have multiple executions in a single order.
+* You may have multiple executions in a single order.
+* It supports to query up to last half year data
+* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
 ### HTTP Request
-POST `v5/position/execution-list`
+POST `/v5/position/execution-list`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
+|category |**true** |string |Product type. `spot`,`linear`,`option` |
 |symbol |false |string |Symbol name |
 |orderId |false |string |Order id. Return all records if not passed |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
@@ -28,7 +32,33 @@ POST `v5/position/execution-list`
 
 ### Response Parameters
 | Parameter | Type | Comments|
-|:----- |:-----|----- |
+| category | string  | Product type. `spot`,`linear`,`option`|
+| list | array | Object |
+|> symbol |string   |Symbol name |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customized order id |
+|> side |string |Side. `Buy`,`Sell` |
+|> orderPrice |string |Order price |
+|> orderQty |string |Order qty |
+|> leavesQty |string |The remaining qty not executed |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
+|> execFee |string   |Executed trading fee |
+|> execId |string |Execution id |
+|> execPrice |string |Execution price |
+|> execQty |string |Execution qty |
+|> [execType](../enum#exectype) |string |Executed type|
+|> execValue |string |Executed order value |
+|> execTime |string |Executed timestamp（ms） |
+|> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
+|> feeRate |string |Trading fee rate |
+|> iv |string |Implied volatility. Valid for `option` |
+|> markIv |string |Implied volatility of mark price. Valid for `option`|
+|> markPrice |string |The mark price of the symbol when executing |
+|> indexPrice |string |The index price of the symbol when executing |
+|> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
+|> blockTradeId |string |Paradigm block trade id|
+|nextPageCursor |string |Cursor. Used to pagination|
 
 ### Request Example
 
@@ -46,7 +76,7 @@ POST `v5/position/execution-list`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>
