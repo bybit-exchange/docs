@@ -1,0 +1,138 @@
+---
+title: Get Open Orders
+sidebar_label: Get Open Orders
+sidebar_position: 1.5
+---
+:::tip
+Query unfilled or partially filled orders in **real-time**.
+- At most 500 unfilled or partially filled orders will be returned if neither `orderId` nor `orderLinkId` is passed.
+- The records are sort by the `createdTime` from newest to oldest.
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP Request
+GET `/contract/v3/private/order/unfilled-orders`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |false |string |Product type. `linear`,`inverse`,`option`. default: `linear` |
+|symbol |false |string |Symbol name |
+|baseCoin |false |string |Base coin. `option` ONLY. default: BTC records returned.|
+|settleCoin |false |string |Settle coin. One of `symbol`,`baseCoin` and `settleCoin` is **required**. Priority: symbol > baseCoin > settleCoin |
+|orderId |false |string |Order id |
+|orderLinkId |false |string |User customised order id |
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|nextPageCursor |string |Cursor. Used to pagination |
+|list |array |string |
+|> symbol |string |Symbol name |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customised order id |
+|> side |string |Side. `Buy`,`Sell` |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> price |string |Order price |
+|> iv |string |Implied volatility|
+|> qty |string |Order qty |
+|> [timeInForce](../../enum#timeinforce) |string |Time in force |
+|> [orderStatus](../../enum#orderstatus) |string |Order status |
+|> lastPriceOnCreated |string |Last execution price |
+|> createdTime |string |Created timestamp (ms) |
+|> updatedTime |string |Updated timestamp (ms) |
+|> [cancelType](../../enum#canceltype) |string |Cancel type. Unique field for `linear` and `inverse` |
+|> [stopOrderType](../../enum#stopordertype) |string |Stop order type |
+|> triggerDirection |string |`1`: rise, `2`: fall |
+|> [triggerBy](../../enum#triggerby) |string |The trigger type of trigger price |
+|> triggerPrice |string |Trigger price |
+|> cumExecValue |string |Cumulative executed position value |
+|> cumExecFee |string |Cumulative trading fee |
+|> cumExecQty |string |Cumulative executed qty |
+|> leavesValue |string |The remaining value waiting to be traded |
+|> leavesQty |string |The remaining quantity waiting to be traded |
+|> takeProfit |string |Take profit price |
+|> stopLoss |string |Stop loss price |
+|> tpTriggerBy |string |Trigger type of take profit |
+|> slTriggerBy |string |Trigger type of stop loss |
+|> reduceOnly |boolean |Reduce only. `true` means reduce position size |
+|> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
+|> blockTradeId |string |Block trade id. Unique field for `option` |
+|> placeType |string |Place type. `price`,`iv`. Unique field for `option` |
+
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /contract/v3/private/order/unfilled-orders?symbol=SOLUSDT&category=linear HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670564324211
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "list": [
+        {
+            "symbol": "SOLUSDT",
+            "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
+            "side": "Sell",
+            "orderType": "Limit",
+            "stopOrderType": "UNKNOWN",
+            "price": "14.500",
+            "qty": "50.0",
+            "timeInForce": "GoodTillCancel",
+            "orderStatus": "New",
+            "triggerPrice": "0.000",
+            "orderLinkId": "",
+            "createdTime": "1670554867548",
+            "updatedTime": "1670554904611",
+            "takeProfit": "0.000",
+            "stopLoss": "0.000",
+            "tpTriggerBy": "UNKNOWN",
+            "slTriggerBy": "UNKNOWN",
+            "triggerBy": "UNKNOWN",
+            "reduceOnly": false,
+            "leavesQty": "50.0",
+            "leavesValue": "725",
+            "cumExecQty": "0.0",
+            "cumExecValue": "0",
+            "cumExecFee": "0",
+            "triggerDirection": 0,
+            "cancelType": "UNKNOWN",
+            "lastPriceOnCreated": "",
+            "iv": "",
+            "closeOnTrigger": false
+        }
+    ],
+    "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",
+    "category": "linear"
+},
+    "retExtInfo": {},
+    "time": 1670564327905
+}
+```
+</TabItem>
+</Tabs>

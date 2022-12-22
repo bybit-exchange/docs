@@ -1,7 +1,7 @@
 ---
 title: Switch Position Mode
 sidebar_label: Switch Position Mode
-sidebar_position: 9
+sidebar_position: 4
 ---
 It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
 
@@ -72,19 +72,23 @@ It supports to switch the position mode for **USDT perpetual** and **Inverse fut
 </table>
 
 ### HTTP Request
-POST `v5/position/switch-mode`
+POST `/contract/v3/private/position/switch-mode`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear`,`inverse`. **note**: unified margin account is not applicable |
 |symbol |false |string |Symbol name. Either `symbol` or `coin` is **required**. `symbol` has a higher priority |
 |coin |false |string |Coin |
-|mode |**true** |string |Position mode. `0`: Merged Single. `1`: Both Side|
+|[mode](../../enum#positionmode) |**true** |string |Position mode. `0`: Merged Single. `3`: Both Side|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
+|retCode |integer |Success/Error code |
+|retMsg |string |Success/Error message |
+|result |Object | |
+|retExtInfo |Object | |
+|time |integer |Timestamp |
 
 ### Request Example
 
@@ -92,6 +96,18 @@ POST `v5/position/switch-mode`
 <TabItem value="console" label="Console">
 
 ```http
+POST /contract/v3/private/position/switch-mode HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670848915553
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "symbol":"CHZUSDT",
+    "coin": null,
+    "mode": 0
+}
 ```
 
 </TabItem>
@@ -102,8 +118,14 @@ POST `v5/position/switch-mode`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
-
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1670848915768
+}
 ```
 </TabItem>
 </Tabs>

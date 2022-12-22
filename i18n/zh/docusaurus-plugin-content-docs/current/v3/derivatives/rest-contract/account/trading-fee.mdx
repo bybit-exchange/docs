@@ -1,0 +1,68 @@
+---
+title: Get Trading Fee Rate
+sidebar_label: Get Trading Fee Rate
+sidebar_position: 2
+---
+
+Get user trading fee rate.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP Request
+GET `/contract/v3/private/account/fee-rate`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Symbol name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|------ |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> takerFeeRate |string |Taker fee rate |
+|> makerFeeRate |string |Maker fee rate |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="console">
+
+```http
+GET /contract/v3/private/account/fee-rate?symbol=SOLPERP HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670924049902
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "list": [
+        {
+            "symbol": "SOLPERP",
+            "takerFeeRate": "0.0006",
+            "makerFeeRate": "0.0001"
+        }
+    ]
+},
+    "retExtInfo": {},
+    "time": 1670924050413
+}
+```
+</TabItem>
+</Tabs>

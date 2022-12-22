@@ -5,6 +5,7 @@ sidebar_position: 6
 ---
 
 Query the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours.
+> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -15,280 +16,43 @@ GET `/v5/market/tickers`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
-|baseCoin |false |string |Base coin. `option` valid ONLY, either pass `baseCoin` or `symbol`|
+|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |false |string |Symbol name |
+|baseCoin |false |string |Base coin. `option` valid ONLY, either pass `baseCoin` or `symbol`|
+|expDate |false |string |Expiry date. e.g., 25DEC22. for `option` ONLY|
 
 ### Response Parameters
-<Tabs>
-<TabItem value="spot" label="spot">
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>category </td><td>string </td><td>Derivatives products category </td>
-        </tr>
-        <tr>
-            <td>symbol </td><td>string </td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>bidPrice </td><td>string </td><td>Best bid price </td>
-        </tr>
-        <tr>
-            <td>bidSize </td><td>string </td><td>Best ask price </td>
-        </tr>
-        <tr>
-            <td>bidIv </td><td>string </td><td>Implied volatility for best bid </td>
-        </tr>
-        <tr>
-            <td>askPrice </td><td>string </td><td>Best ask price </td>
-        </tr>
-        <tr>
-            <td>askSize </td><td>string </td><td>Ask quantity </td>
-        </tr>
-        <tr>
-            <td>askIv </td><td>string </td><td>Implied volatility for best ask </td>
-        </tr>
-        <tr>
-            <td>lastPrice </td><td>string </td><td>Last transaction price </td>
-        </tr>
-        <tr>
-            <td>highPrice24h </td><td>string </td><td>The highest price in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>lowPrice24h </td><td>string </td><td>Lowest price in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>markPrice </td><td>string </td><td>Mark price </td>
-        </tr>
-        <tr>
-            <td>indexPrice </td><td>string </td><td>Index price </td>
-        </tr>
-        <tr>
-            <td>markPriceIv </td><td>string </td><td>Implied volatility for mark price </td>
-        </tr>
-        <tr>
-            <td>underlyingPrice </td><td>string </td><td>Underlying price </td>
-        </tr>
-        <tr>
-            <td>openInterest </td><td>string </td><td>Open interest </td>
-        </tr>
-        <tr>
-            <td>turnover24h </td><td>string </td><td>Turnover in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>volume24h </td><td>string </td><td>Trading volume in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>totalVolume </td><td>string </td><td>Total volume </td>
-        </tr>
-        <tr>
-            <td>totalTurnover </td><td>string </td><td>Total turnover </td>
-        </tr>
-        <tr>
-            <td>delta </td><td>string </td><td>delta </td>
-        </tr>
-        <tr>
-            <td>gamma </td><td>string </td><td>gamma </td>
-        </tr>
-        <tr>
-            <td>vega </td><td>string </td><td>vega </td>
-        </tr>
-        <tr>
-            <td>theta </td><td>string </td><td>theta </td>
-        </tr>
-        <tr>
-            <td>predictedDeliveryPrice </td><td>string </td><td>Predicted delivery price. It has value when 30 min before delivery </td>
-        </tr>
-        <tr>
-            <td>change24h </td><td>string </td><td>The change in the last 24 hours </td>
-        </tr>
-    </table>
-</TabItem>
-<TabItem value="linear" label="linear" default>
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>Derivatives products category. Keeps empty string `""` when `category` is not passed</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name</td>
-        </tr>
-        <tr>
-            <td>> bidPrice</td><td>string</td><td>Best bid price</td>
-        </tr>
-        <tr>
-            <td>> askPrice</td><td>string</td><td>Best ask price</td>
-        </tr>
-        <tr>
-            <td>> lastPrice</td><td>string</td><td>Last transaction price</td>
-        </tr>
-        <tr>
-            <td>> lastTickDirection</td><td>string</td><td>Direction of price change</td>
-        </tr>
-        <tr>
-            <td>> prevPrice24h</td><td>string</td><td>Price of 24 hours ago</td>
-        </tr>
-        <tr>
-            <td>> price24hPcnt</td><td>string</td><td>Percentage change of market price relative to 24h</td>
-        </tr>
-        <tr>
-            <td>> highPrice24h</td><td>string</td><td>The highest price in the last 24 hours</td>
-        </tr>
-        <tr>
-            <td>> lowPrice24h</td><td>string</td><td>Lowest price in the last 24 hours</td>
-        </tr>
-        <tr>
-            <td>> prevPrice1h</td><td>string</td><td>Hourly market price an hour ago </td>
-        </tr>
-        <tr>
-            <td>> markPrice</td><td>string</td><td>Mark price</td>
-        </tr>
-        <tr>
-            <td>> indexPrice</td><td>string</td><td>Index price</td>
-        </tr>
-        <tr>
-            <td>> openInterest</td><td>string</td><td>Open interest</td>
-        </tr>
-        <tr>
-            <td>> turnover24h</td><td>string</td><td>Turnover in the last 24 hours</td>
-        </tr>
-        <tr>
-            <td>> volume24h</td><td>string</td><td>Trading volume in the last 24 hours</td>
-        </tr>
-        <tr>
-            <td>> fundingRate</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001123">Funding rate</a></td>
-        </tr>
-        <tr>
-            <td>> nextFundingTime</td><td>string</td><td>Next timestamp for funding to settle</td>
-        </tr>
-        <tr>
-            <td>> predictedDeliveryPrice</td><td>string</td><td>Predicted delivery price. It has value when 30 min before delivery</td>
-        </tr>
-        <tr>
-            <td>> basisRate</td><td>string</td><td>Basis rate for futures</td>
-        </tr>
-        <tr>
-            <td>> deliveryFeeRate</td><td>string</td><td>Delivery fee rate</td>
-        </tr>
-        <tr>
-            <td>> deliveryTime</td><td>string</td><td>Delivery timestamp (ms)</td>
-        </tr>
-    </table>
-</TabItem>
-
-<TabItem value="option" label="option">
-    <table border="0.5">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>category </td><td>string </td><td>Derivatives products category </td>
-        </tr>
-        <tr>
-            <td>symbol </td><td>string </td><td>Symbol name </td>
-        </tr>
-        <tr>
-            <td>bidPrice </td><td>string </td><td>Best bid price </td>
-        </tr>
-        <tr>
-            <td>bidSize </td><td>string </td><td>Best ask price </td>
-        </tr>
-        <tr>
-            <td>bidIv </td><td>string </td><td>Implied volatility for best bid </td>
-        </tr>
-        <tr>
-            <td>askPrice </td><td>string </td><td>Best ask price </td>
-        </tr>
-        <tr>
-            <td>askSize </td><td>string </td><td>Ask quantity </td>
-        </tr>
-        <tr>
-            <td>askIv </td><td>string </td><td>Implied volatility for best ask </td>
-        </tr>
-        <tr>
-            <td>lastPrice </td><td>string </td><td>Last transaction price </td>
-        </tr>
-        <tr>
-            <td>highPrice24h </td><td>string </td><td>The highest price in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>lowPrice24h </td><td>string </td><td>Lowest price in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>markPrice </td><td>string </td><td>Mark price </td>
-        </tr>
-        <tr>
-            <td>indexPrice </td><td>string </td><td>Index price </td>
-        </tr>
-        <tr>
-            <td>markPriceIv </td><td>string </td><td>Implied volatility for mark price </td>
-        </tr>
-        <tr>
-            <td>underlyingPrice </td><td>string </td><td>Underlying price </td>
-        </tr>
-        <tr>
-            <td>openInterest </td><td>string </td><td>Open interest </td>
-        </tr>
-        <tr>
-            <td>turnover24h </td><td>string </td><td>Turnover in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>volume24h </td><td>string </td><td>Trading volume in the last 24 hours </td>
-        </tr>
-        <tr>
-            <td>totalVolume </td><td>string </td><td>Total volume </td>
-        </tr>
-        <tr>
-            <td>totalTurnover </td><td>string </td><td>Total turnover </td>
-        </tr>
-        <tr>
-            <td>delta </td><td>string </td><td>delta </td>
-        </tr>
-        <tr>
-            <td>gamma </td><td>string </td><td>gamma </td>
-        </tr>
-        <tr>
-            <td>vega </td><td>string </td><td>vega </td>
-        </tr>
-        <tr>
-            <td>theta </td><td>string </td><td>theta </td>
-        </tr>
-        <tr>
-            <td>predictedDeliveryPrice </td><td>string </td><td>Predicted delivery price. It has value when 30 min before delivery </td>
-        </tr>
-        <tr>
-            <td>change24h </td><td>string </td><td>The change in the last 24 hours </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
-
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
-
-```http
-```
-
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
-
-```
-</TabItem>
-</Tabs>
-
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> lastPrice |string |Last price |
+|> indexPrice |string |Index price |
+|> markPrice |string |Mark price |
+|> underlyingPrice |string |Underlying price |
+|> bid1Price |string |Bid 1 price |
+|> ask1Price |string |Ask 1 price |
+|> bid1Size |string |Bid 1 size |
+|> ask1Size |string |Ask 1 size |
+|> openInterest |string |Open interest size |
+|> openInterestValue |string |Open interest value |
+|> nextFundingTime |string |Next funding timestamp (ms) |
+|> fundingRate |string |Funding rate |
+|> prevPrice1h |string |Market price an hour ago |
+|> lowPrice24h |string |The lowest price in the last 24 hours |
+|> highPrice24h |string |The highest price in the last 24 hours |
+|> prevPrice24h |string |Market price 24 hours ago |
+|> price24hPcnt |string |Percentage change of market price relative to 24h |
+|> turnover24h |string |Turnover for 24h |
+|> ask1Iv |string |Ask 1 iv |
+|> bid1Iv |string |Bid 1 iv |
+|> markPriceIv |string |Mark price iv |
+|> deliveryTime |string |Delivery timestamp (ms). Valid for `Option` and `Inverse Futures` |
+|> deliveryFeeRate |string |Delivery fee rate. Valid for `Option` and `Inverse Futures` |
+|> predictedDeliveryPrice |string |Predicated delivery price |
+|> vega |string |Vega value |
+|> delta |string |Delta value |
+|> theta |string |Theta value |
+|> gamma |string |Gamma value |
+|> basisRate |string |Basis rate |

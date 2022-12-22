@@ -1,55 +1,55 @@
 ---
-title: Get Funding Rate History
-sidebar_label: Get Funding Rate History
+title: 查詢歷史資金費率
+sidebar_label: 查詢歷史資金費率
 sidebar_position: 7
 ---
 
-Query historical funding rate.
-* Each symbol has a different funding interval. For example, if the interval is 8 hours,current time is UTC 12, then it returns the last funding rate, which settled at UTC 8.
+查詢資金費率，每個symbol的資金費率產生週期不同。假設資金費率為8小時，當前時間是UTC12點，則返回的是上一個結算即UTC8點產生的資金費率。如要查詢symbol的資金費率時間間隔，請查詢[可交易產品規格](instrument#)接口
+> **覆蓋範圍: USDT永續, USDC永續和反向永續**
 
 :::info
 TODO: 支持查詢多久的資金費率數據？
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/funding/history`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`|
-|symbol |<b>true</b> |string |Symbol name|
-|startTime |false |number |The start timestamp (ms)|
-|endTime |false |number |The end timestamp (ms)|
-|limit |false |number |Limit for data size per page. [1,200]. default: `200`|
+|[category](../enum#category) |**true** |string |產品類型. `linear`,`inverse`|
+|symbol |**true**|string |合約名稱|
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Products category|
+|category |string |產品類型|
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> fundingRate |string |Funding rate |
-|> fundingRateTimestamp |string |Funding rate timestamp(ms) |
+|> symbol |string |合約名稱 |
+|> fundingRate |string |資金費率 |
+|> fundingRateTimestamp |string |資金費率時間戳 (毫秒) |
 
-### Request Example
+### 請求示例
 
 <Tabs>
-<TabItem value="console" label="Console">
+    <TabItem value="console" label="Console">
 
-```http
-```
+        ```http
+        ```
 
-</TabItem>
+    </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+    <TabItem value="linear" label="linear">
 
-```javascript
+        ```json
 
-```
-</TabItem>
+        ```
+    </TabItem>
 </Tabs>

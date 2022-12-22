@@ -1,0 +1,92 @@
+---
+title: Set USDC Margin Mode
+sidebar_label: Set USDC Margin Mode
+sidebar_position: 6
+---
+
+Set USDC Margin Mode. The USDC account is `REGULAR_MARGIN` mode by default.
+
+:::tip
+This endpoint is asynchronous. Please subscribe topic (增加链接) to get real-time switch result.
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP Request
+GET `/contract/v3/private/account/setMarginMode`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|setMarginMode |**true** |string |Margin mode. `REGULAR_MAEGIN`,`PORTFOLIO_MARGIN`  |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|------ |
+|retCode |integer |Success/Error code|
+|retMsg |string |Success/Error message |
+|result |Object | |
+|> reasons |array |Object. If no error, it is empty array |
+|>> reasonCode |string |The reason code of failure |
+|>> reasonMsg |string |The reason message of failure |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="console">
+
+```http
+POST /contract/v3/private/account/setMarginMode?setMarginMode=REGULAR_MARGIN HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1670941511855
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "setMarginMode": "PORTFOLIO_MARGIN"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js response1" label="response fail">
+
+```json
+{
+    "retCode": 3400045,
+    "retMsg": "Set margin mode failed",
+    "result": {
+    "reasons": [
+        {
+            "reasonCode": "3400002",
+            "reasonMsg": "Please ensure that there are no active orders in your USDC account, including Limit, Market and Conditional orders"
+        },
+        {
+            "reasonCode": "3400001",
+            "reasonMsg": "Please ensure that there are no positions in your USDC account, including USDC perpetual and options"
+        }
+    ]
+}
+}
+```
+</TabItem>
+
+<TabItem value="js response2" label="response accept">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Request accepted",
+    "result": {
+        "reasons": []
+    }
+}
+```
+</TabItem>
+</Tabs>
