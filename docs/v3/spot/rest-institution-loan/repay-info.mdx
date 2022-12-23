@@ -1,0 +1,69 @@
+---
+title: Get Repay Info
+sidebar_label: Get Repay Info
+sidebar_position: 4
+---
+Get repaid order information. Authentication needed.
+
+#### HTTP Request
+GET <code>/spot/v3/private/margin-repaid-infos</code>
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|startTime | false | long | Start time, unit in millisecond |
+|endTime | false | long	| End time, unit in millisecond |
+|limit | false | int | Limit for data size per page. 10 by default, the max is 100 |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|repayInfo | array | Object |
+|> repayOrderId	| string | Repaid order Id |
+|> repaidTime | string | Repaid timetstamp, in milliesconds |
+|> token | string | Repaid coin |
+|> quantity	| string | Repaid principle |
+|> interest	| string | Repaid interest |
+|> businessType	| string | Repaid type. 1：normal repayment; 2：repaid by liquidation |
+|> status | string | 1：outstanding; 2：paid off |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/margin-repaid-infos?startTime=1663126392000&endTime=1663126394000' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-API-KEY: XXXXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1669366647851' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: 4a2d54488d29cde341e51ce9eae0dcb685ac485953b659ba8852bd28077529c4'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "repayInfo": [
+            {
+                "repayOrderId": "8189",
+                "repaidTime": "1663126393000",
+                "token": "USDT",
+                "quantity": "30000",
+                "interest": "0",
+                "businessType": "1",
+                "status": "1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1669366648366
+}
+```
