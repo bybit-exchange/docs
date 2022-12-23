@@ -1,21 +1,22 @@
 
-<p>This topic pushes raw trade information; each trade has a unique buyer and seller.</p>
-<p>Variable "v" acts as a tradeId. This variable is shared across different symbols; however, each ID is unique. For example, suppose in the last 5 seconds 3 trades happened in ETHUSDT, BTCUSDT, and BHTBTC. Their tradeId (which is "v") will be consecutive: 112, 113, 114.</p>
-<p><b>Push frequency</b>: real-time</p>
+<p>逐筆交易推送每一筆成交的信息。成交，或者說交易的定義是僅有一個吃單者與一個掛單者相互交易。</p>
+<p>變量「v」可以理解成一個交易ID。這個變量是全局遞增的並且獨特的。例如：假設過去5秒有3筆交易發生，分別是ETHUSDT、BTCUSDT、BHTBTC。它們的「v」會為連續的值（112，113，114）。</p>
+<p><b>推送頻率</b>: 實時</p>
 <p><b>Topic</b>: <code>trade.BTCUSDT</code></p>
 
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|v | string | TradeId |
-|t | long | Timestamp (trading time in the match box) |
-|p | string | Price |
-|q | string | Quantity |
-|m | boolean | True indicates buy side is taker, false indicates sell side is taker |
-| ts | long | The time that message is sent out |
+|v | string | 成交id |
+|t | long | 時間（撮合引擎撮合时间） |
+|p | string | 價格 |
+|q | string | 數量 |
+|m | boolean | true 表示買方是 taker，false 表示賣方是 taker |
+|type | string | 交易類型標識. <code>0</code>：幣幣成交. <code>1</code>：Paradigm 大宗交易 |
+|ts | long | 消息被推送出來的時間戳 |
 
-### Request Example
+### 請求訂閱
 
 <Tabs>
 <TabItem value="console" label="JSON subscription message">
@@ -33,7 +34,7 @@
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

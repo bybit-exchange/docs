@@ -1,41 +1,41 @@
 
-<p>This topic pushes order information，avg.filledPrice = Z / z</p>
-<p><b>Push frequency</b>: real-time</p>
+<p>該訂閱用於推送訂單信息，其中 成交均價 = Z / z</p>
+<p><b>推送頻率</b>: 實時</p>
 <p><b>Topic</b>: <code>order</code></p>
 
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| e | string | Event type |
-| E | string | Event time |
-| s | string | Trading pair |
-| c | string | User-generated order ID |
-| S | string | BUY indicates buy order, SELL indicates sell order |
-| <a href="#order-type-type-ordertypes">o</a> | string | Order type, LIMIT/MARKET_OF_QUOTE/MARKET_OF_BASE |
-| <a href="#timeinforce-timeinforce">f</a> | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| q | string | Quantity |
-| p | string | Price |
-| <a href="#order-status-status">X</a> | string | Order status |
-| i | string | Order ID |
-| M | string | Order ID of the opponent trader |
-| l | string | Last filled quantity |
-| z | string | Total filled quantity |
-| L | string | Last traded price |
-| n | string | Trading fee (for a single fill) |
-| N | string | Asset type in which fee is paid |
-| u | boolean | Is normal trade. False if self-trade. |
-| w | boolean | Is working. <code>false</code>：inValid; <code>true</code>：valid |
-| m | boolean | Is LIMIT_MAKER |
-| O | string | Order creation time |
-| Z | string | Total filled value |
-| A | string | Account ID of the opponent trader |
-| C | boolean | Is close |
-| v | string | leverage |
-| d | string | NO_LIQ indicates that it is not a liquidation order. IOC indicates that it is a liquidation order. |
-| t | string | Trade ID |
+| e | string | 事件類型 |
+| E | string | 事件時間 |
+| s | string | 幣對 |
+| c | string | 用戶創建orderid |
+| S | string | BUY買，SELL賣 |
+| o | string | 訂單類型。可能出現的值只能為:LIMIT(限價)、MARKET_OF_QUOTE（市價買）、MARKET_OF_BASE（市價賣） |
+| f | string | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| q | string | 數量 |
+| p | string | 價格 |
+| X | string | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕）. |
+| i | string | 訂單id |
+| M | string | 對手交易者的order_id |
+| l | string | 最近成交數量 |
+| z | string | 累計成交數量 |
+| L | string | 最近成交價格 |
+| n | string | 手續費 |
+| N | string | 手續費幣種 |
+| u | boolean | True是普通單 False是自成交 |
+| w | boolean | 是否生效. <code>false</code>：未生效, <code>true</code>：已生效 |
+| m | boolean | 是否是LIMIT_MAKER單 |
+| O | string | 訂單創建時間 |
+| Z | string | 累計成交數額 |
+| A | string | 撮合賬戶id |
+| C | boolean | 是否關閉 |
+| v | string | 杠桿 |
+| d | string | NO_LIQ 表示這筆訂單不是強平單. IOC 表示這筆訂單是強平單 |
+| t | string | 成交ID |
 
-### Request Example
+### 請求訂閱
 
 <Tabs>
 <TabItem value="console" label="JSON subscription message">
@@ -53,7 +53,7 @@
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {
