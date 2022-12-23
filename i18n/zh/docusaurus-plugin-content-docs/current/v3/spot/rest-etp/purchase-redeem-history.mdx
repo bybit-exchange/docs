@@ -1,39 +1,38 @@
 ---
-title: Purchase/Redemption History
-sidebar_label: Purchase/Redemption History
+title: 申贖記錄查詢
+sidebar_label: 申贖記錄查詢
 ---
 
-
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/record</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|ltCode|false|string|Abbreviation of the LT.|
-|orderId|false|string|Order ID|
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|limit|false|int|Limit for data size per page, max size is 500. Default as showing 100 pieces of data per page|
-|<a href="#lt-order-type-ordertype">orderType</a>|false|int|Order type; 1. Purchase; 2. Redemption|
-|serialNo|false|string|Serial number|
+|ltCode|false|string|想要查詢的LT資產名稱，從資產列表中獲取.|
+|orderId|false|string|訂單ID|
+|startTime|false|long|起始時間戳（單位毫秒）|
+|endTime|false|long|結束時間（單位毫秒）|
+|limit|false|int|返回數據最大500條. 默認返回100條|
+|orderType|false|int|訂單類型 1. 申購 2. 贖回|
+|serialNo|false|string|序列號|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|amount|string|Actual purchase quantity of the ETP|
-|excTime|long|Last update time of the order status|
-|fee|string|Trading fees|
-|ltCode|string|Abbreviation of the LT|
-|orderId|string|Order ID|
-|<a href="#lt-order-status-orderstatus">orderStatus</a>|string|Order status; 1. Completed; 2. In progress; 3. Failed|
-|orderTime|long|Order time|
-|<a href="#lt-order-type-ordertype">orderType</a>|int|Order type; 1. Purchase; 2. Redemption|
-|serialNo|string|Serial number|
-|value|string|Filled value|
-|valueCoin|string|Quote asset|
+|amount|string|實際成交的LT資產數量|
+|excTime|long|訂單狀態最後一次更新時間|
+|fee|string|交易手續費|
+|ltCode|string|LT資產簡稱|
+|orderId|string|訂單ID|
+|orderStatus|string|申購單狀態：1. 已完成 2. 等待中 3. 失敗|
+|orderTime|long|下單時間|
+|orderType|int|訂單類型 1. 申購 2. 贖回|
+|serialNo|string|序列號|
+|value|string|成交價值|
+|valueCoin|string|計價幣種|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -50,7 +49,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/rec
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

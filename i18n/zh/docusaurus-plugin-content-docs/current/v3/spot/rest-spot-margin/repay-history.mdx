@@ -1,37 +1,36 @@
 ---
-title: Query Repayment History
-sidebar_label: Query Repayment History
+title: 查詢還款記錄
+sidebar_label: 查詢還款記錄
 ---
 
-
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/cross-margin-repay-history</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|coin|false|string|currency|
-|limit|false|int|Default is 500; Maximum is 500|
+|startTime|false|long|第一條返回的時間戳(毫秒)|
+|endTime|false|long|最後一條返回的時間戳(毫秒)|
+|coin|false|string|幣種|
+|limit|false|int|默認500，最大500|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|accountId|string|Account ID|
-|coin|string|currency|
-|repaidAmount|string|Total Amount Repaid|
-|repayId|string|Repay Id|
-|repayMarginOrderId|string|Repay Margin Order Id|
-|repayTime|string|Timestamp, unit in millisecond|
+|accountId|string|賬戶ID|
+|coin|string|幣種|
+|repaidAmount|string|已還幣金額|
+|repayId|string|還幣交易ID|
+|repayMarginOrderId|string|還幣單號|
+|repayTime|string|還幣交易時間，精確到毫秒|
 |transactIds|array|Object|
-|> repaidAmount|string|Total Amount Repaid|
-|> repaidInterest|string|Total Interest Repaid|
-|> repaidPrincipal|string|Total Principal Repaid|
-|> repaidSerialNumber|string|Repayment No. (Borrowing Order)|
-|> transactId|string|Transaction ID (Borrowing)|
+|> repaidAmount|string|已還幣金額|
+|> repaidInterest|string|該筆還幣交易已還利息|
+|> repaidPrincipal|string|該筆還幣交易已還本金|
+|> repaidSerialNumber|string|借款訂單的還款單號|
+|> transactId|string|原始借幣交易ID|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -48,7 +47,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

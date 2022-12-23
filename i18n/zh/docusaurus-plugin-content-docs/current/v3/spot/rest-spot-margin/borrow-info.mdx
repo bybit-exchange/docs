@@ -1,37 +1,37 @@
 ---
-title: Query Borrowing Info
-sidebar_label: Query Borrowing Info
+title: 查詢借幣訂單
+sidebar_label: 查詢借幣訂單
 ---
 
 
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/cross-margin-orders</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|<a href="#currency-currency-coin">coin</a>|false|string|currency|
-|status|false|int|Status. <code>0</code> by default<li><code>0</code>：get all kinds of status</li><li><code>1</code>：uncleared</li><li><code>2</code>：cleared</li>|
-|limit|false|int|Default is 500; Maximum is 500|
+|startTime|false|long|第一條返回的時間戳(毫秒)|
+|endTime|false|long|最後一條返回的時間戳(毫秒)|
+|coin|false|string|幣種|
+|status|false|int|狀態. 默认为<code>0</code>. <li><code>0</code>：查詢所有狀態</li><li><code>1</code>：查詢未還清</li><li><code>2</code>：查詢已還清</li>|
+|limit|false|int|默認500，最大500|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array|Object|
-|accountId|string|Account ID|
-|coin|string|currency|
-|createdTime|long|Timestamp (Borrowing), unit in millisecond|
-|id|long|Borrowing Id|
-|interestAmount|string|Total Interest|
-|interestBalance|string|Outstanding Interest|
-|loanAmount|string|Principal Amount|
-|loanBalance|string|Outstanding Principal|
-|status|int|Status. <code>1</code>：uncleared, <code>2</code>：cleared|
-|type|int|Order Type (1. Manual 2. Auto)|
+|accountId|string|賬戶ID|
+|coin|string|幣種|
+|createdTime|long|借幣發起時間，精確到毫秒|
+|id|long|借幣ID|
+|interestAmount|string|利息總額|
+|interestBalance|string|未還利息|
+|loanAmount|string|借幣本金總額|
+|loanBalance|string|未還本金|
+|status|int|狀態. <code>1</code>：未還清, <code>2</code>：已還清|
+|type|int|訂單類型（1，手動借貸 2，自動借貸）|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -48,7 +48,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

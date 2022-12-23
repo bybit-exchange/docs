@@ -1,40 +1,40 @@
 ---
-title: All Asset Info
-sidebar_label: All Asset Info
+title: LT 全量資產基礎信息查詢
+sidebar_label: LT 全量資產基礎信息查詢
 ---
 
 
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/public/infos</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|ltCode|false|string|Abbreviation of the LT.|
+|ltCode|false|string|想要查詢的LT資產名稱，從資產列表中獲取.|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|ltCode|string|Abbreviation of the LT|
-|ltName|string|Full name of the LT|
-|maxPurchase|string|Max. purchase amount per transaction|
-|minPurchase|string|Min. purchase amount per transaction|
-|maxPurchaseDaily|string|Max. purchase amount per day|
-|maxRedeem|string|Max. redemption amount per transaction|
-|minRedeem|string|Min. redemption amount per transaction|
-|maxRedeemDaily|string|Max. redemption amount per day|
-|purchaseFeeRate|string|Purchase fees|
-|redeemFeeRate|string|Redemption fees|
-|<a href="#lt-status-status">status</a>|string|Whether the LT can be purchased or redeemed; 1. LT can be purchased and redeemed; 2. LT can be purchased, but not redeemed; 3. LT can be redeemed, but not purchased; 4. LT cannot be purchased nor redeemed|
-|fundFee|string|Funding fees charged daily to users who hold LT|
-|fundFeeTime|long|Timestamps when funding fees are charged|
-|manageFeeRate|string|Management fees|
-|manageFeeTime|long|Timestamps when management fees are charged|
-|value|string|Internal used parameter, please ignore|
-|total|string|Application uplimit|
-|netValue|string|Net asset value|
+|ltCode|string|LT資產簡稱|
+|ltName|string|LT資產全稱|
+|maxPurchase|string|單次最大申購金額|
+|minPurchase|string|單次最小申購金額|
+|maxPurchaseDaily|string|單個自然日最大申購金額|
+|maxRedeem|string|單次最大贖回數量|
+|minRedeem|string|單次最小贖回數量|
+|maxRedeemDaily|string|單個自然日最大贖回數量|
+|purchaseFeeRate|string|申購費率|
+|redeemFeeRate|string|贖回費率|
+|status|string|目前LT資產是否可以進行申購贖回,1. 申贖均正常 2. 僅可申購，不可贖回 3. 僅可贖回，不可申購 4. 申贖均暫停|
+|fundFee|string|每天針對持有LT資產的用戶收取的資金費用|
+|fundFeeTime|long|收取資金費用的時間|
+|manageFeeRate|string|管理費率|
+|manageFeeTime|long|收取資金管理費的時間|
+|value|string|平臺內部使用字段, 暫無實際意義, 可忽略|
+|total|string|平臺申購總量上限|
+|netValue|string|當前淨值|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -46,7 +46,7 @@ https://api-testnet.bybit.com/spot/v3/public/infos?ltCode=BTC3S
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {

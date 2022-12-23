@@ -1,37 +1,33 @@
 ---
-title: Query Account Info
-sidebar_label: Query Account Info
+title: 查詢借幣賬戶詳情
+sidebar_label: 查詢借幣賬戶詳情
 ---
 
 
-#### HTTP Request
+#### HTTP 請求
 GET <code>/spot/v3/private/cross-margin-account</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|<a href="#currency-currency-coin">coin</a>|false|string|currency|
-|status|false|int|Status. <code>0</code> by default. <ul><li><code>0</code>：get all kinds of status</li><li><code>1</code>：uncleared</li><li><code>2</code>：cleared</li></ul>|
-|limit|false|int|Default is 500; Maximum is 500|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+#### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|list|array|Object|
-|accountId|string|Account ID|
-|coin|string|currency|
-|createdTime|long|Timestamp (Borrowing), unit in millisecond|
-|id|long|Borrowing Id|
-|interestAmount|string|Total Interest|
-|interestBalance|string|Outstanding Interest|
-|loanAmount|string|Principal Amount|
-|loanBalance|string|Outstanding Principal|
-|status|int|Status. <code>1</code>：uncleared, <code>2</code>：cleared|
-|type|int|Order Type (1. Manual 2. Auto)|
+|acctBalanceSum|string|總持有BTC折合|
+|debtBalanceSum|string|总负债BTC折合|
+|loanAccountList|array|Object|
+|> free|string|可用|
+|> interest|string|未還利息|
+|> loan|string|未還借幣|
+|> locked|string|鎖定|
+|> tokenId|string|Token Id|
+|> total|string|合計|
+|riskRate|string|風險率|
+|status|int|賬戶狀態（1:正常, 2:限制提幣/劃轉, 3:預警, 4:已爆倉, 5:已穿倉）|
 
-### Request Example
+
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -48,7 +44,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```javascript
 {
