@@ -1,0 +1,69 @@
+
+<p>該訂閱推送成交信息。</p>
+<p><b>推送頻率</b>: 實時</p>
+<p><b>Topic</b>: <code>ticketInfo</code></p>
+
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| e | string | 事件類型 |
+| E | string | 事件時間 |
+| s | string | 幣對 |
+| q | string | 數量 |
+| t | string | 時間戳 |
+| p | string | 價格 |
+| T | string | 成交ID |
+| o | string | 訂單id |
+| c | string | 用戶創建orderid |
+| O | string | 對手交易者的order_id |
+| a | string | 賬戶id |
+| A | string | 撮合賬戶id |
+| m | boolean | 是否為MAKER。true為maker, false為taker |
+| S | string | 買入 或者 賣出 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "ticketInfo_1", //optional
+    "op": "subscribe",
+    "args": [
+        "ticketInfo"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "type": "snapshot",
+    "topic": "ticketInfo",
+    "ts": "1662348310388",
+    "data": [
+        {
+            "e": "ticketInfo",
+            "E": "1662348310386",
+            "s": "BTCUSDT",
+            "q": "0.001007",
+            "t": "1662348310373",
+            "p": "19842.02",
+            "T": "2100000000002220938",
+            "o": "1238261807653647872",
+            "c": "spotx008",
+            "O": "1238225004531834368",
+            "a": "533287",
+            "A": "642908",
+            "m": false,
+            "S": "BUY"
+        }
+    ]
+}
+```

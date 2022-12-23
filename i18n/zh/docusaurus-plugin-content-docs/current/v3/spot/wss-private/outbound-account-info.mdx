@@ -1,0 +1,62 @@
+
+<p>該訂閱用於推送帳戶信息</p>
+<p><b>推送頻率</b>: 實時</p>
+<p><b>Topic</b>: <code>outboundAccountInfo</code></p>
+
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| e | string | 事件類型 |
+| E | string | 時間戳 |
+| T | boolean | 允許交易 |
+| W | boolean | 允許提現 |
+| D | boolean | 允許充值 |
+| B | list | Wallet balance change |
+| a | string | 幣名 |
+| f | string | 可用數量 |
+| l | string | 凍結余額 |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "acctInfo_1", //optional
+    "op": "subscribe",
+    "args": [
+        "outboundAccountInfo"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "type": "snapshot",
+    "topic": "outboundAccountInfo",
+    "ts": "1662107217641",
+    "data": [
+        {
+            "e": "outboundAccountInfo",
+            "E": "1662107217640",
+            "T": true,
+            "W": true,
+            "D": true,
+            "B": [
+                {
+                    "a": "USDT",
+                    "f": "176.81254174",
+                    "l": "201.575"
+                }
+            ]
+        }
+    ]
+}
+```

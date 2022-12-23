@@ -1,4 +1,88 @@
 ---
-title: Query Account Info
-sidebar_label: Query Account Info
+title: 查詢借幣賬戶詳情
+sidebar_label: 查詢借幣賬戶詳情
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/private/cross-margin-account</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|acctBalanceSum|string|總持有BTC折合|
+|debtBalanceSum|string|总负债BTC折合|
+|loanAccountList|array|Object|
+|> free|string|可用|
+|> interest|string|未還利息|
+|> loan|string|未還借幣|
+|> locked|string|鎖定|
+|> tokenId|string|Token Id|
+|> total|string|合計|
+|riskRate|string|風險率|
+|status|int|賬戶狀態（1:正常, 2:限制提幣/劃轉, 3:預警, 4:已爆倉, 5:已穿倉）|
+
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-account' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662619341689' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: a583c6f9bd6d2f272868ab4552cc8fb194faf7f9b2323b299411eef5d4cce4c8'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "acctBalanceSum": "0.062912223136001122",
+        "debtBalanceSum": "0.002588651523215288",
+        "loanAccountList": [
+            {
+                "free": "0.95449",
+                "interest": "0",
+                "loan": "0",
+                "locked": "0",
+                "tokenId": "ETH",
+                "total": "0.95449"
+            },
+            {
+                "free": "219.32838547",
+                "interest": "0",
+                "loan": "50.001668",
+                "locked": "0",
+                "tokenId": "USDT",
+                "total": "219.32838547"
+            },
+            {
+                "free": "86.186045",
+                "interest": "0",
+                "loan": "0",
+                "locked": "0",
+                "tokenId": "USDC",
+                "total": "86.186045"
+            }
+        ],
+        "riskRate": "0.0411",
+        "status": 1
+    },
+    "retExtInfo": null,
+    "time": 1662619341782
+}
+```

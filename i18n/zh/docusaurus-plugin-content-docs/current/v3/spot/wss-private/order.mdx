@@ -1,0 +1,94 @@
+
+<p>該訂閱用於推送訂單信息，其中 成交均價 = Z / z</p>
+<p><b>推送頻率</b>: 實時</p>
+<p><b>Topic</b>: <code>order</code></p>
+
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| e | string | 事件類型 |
+| E | string | 事件時間 |
+| s | string | 幣對 |
+| c | string | 用戶創建orderid |
+| S | string | BUY買，SELL賣 |
+| o | string | 訂單類型。可能出現的值只能為:LIMIT(限價)、MARKET_OF_QUOTE（市價買）、MARKET_OF_BASE（市價賣） |
+| f | string | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| q | string | 數量 |
+| p | string | 價格 |
+| X | string | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕）. |
+| i | string | 訂單id |
+| M | string | 對手交易者的order_id |
+| l | string | 最近成交數量 |
+| z | string | 累計成交數量 |
+| L | string | 最近成交價格 |
+| n | string | 手續費 |
+| N | string | 手續費幣種 |
+| u | boolean | True是普通單 False是自成交 |
+| w | boolean | 是否生效. <code>false</code>：未生效, <code>true</code>：已生效 |
+| m | boolean | 是否是LIMIT_MAKER單 |
+| O | string | 訂單創建時間 |
+| Z | string | 累計成交數額 |
+| A | string | 撮合賬戶id |
+| C | boolean | 是否關閉 |
+| v | string | 杠桿 |
+| d | string | NO_LIQ 表示這筆訂單不是強平單. IOC 表示這筆訂單是強平單 |
+| t | string | 成交ID |
+
+### 請求訂閱
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "req_id": "order_1", //optional
+    "op": "subscribe",
+    "args": [
+        "order"
+    ]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "type": "snapshot",
+    "topic": "order",
+    "ts": "1662348310441",
+    "data": [
+        {
+            "e": "order",
+            "E": "1662348310441",
+            "s": "BTCUSDT",
+            "c": "spotx008",
+            "S": "BUY",
+            "o": "MARKET_OF_QUOTE",
+            "f": "GTC",
+            "q": "20",
+            "p": "0",
+            "X": "CANCELED",
+            "i": "1238261807653647872",
+            "M": "1238225004531834368",
+            "l": "0.001007",
+            "z": "0.001007",
+            "L": "19842.02",
+            "n": "0",
+            "N": "BTC",
+            "u": true,
+            "w": true,
+            "m": false,
+            "O": "1662348310368",
+            "Z": "19.98091414",
+            "A": "0",
+            "C": false,
+            "v": "0",
+            "d": "NO_LIQ",
+            "t": "2100000000002220938"
+        }
+    ]
+```

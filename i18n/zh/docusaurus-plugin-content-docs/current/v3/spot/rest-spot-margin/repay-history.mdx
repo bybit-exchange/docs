@@ -1,4 +1,80 @@
 ---
-title: Query Repayment History
-sidebar_label: Query Repayment History
+title: 查詢還款記錄
+sidebar_label: 查詢還款記錄
 ---
+
+#### HTTP 請求
+GET <code>/spot/v3/private/cross-margin-repay-history</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|startTime|false|long|第一條返回的時間戳(毫秒)|
+|endTime|false|long|最後一條返回的時間戳(毫秒)|
+|coin|false|string|幣種|
+|limit|false|int|默認500，最大500|
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|accountId|string|賬戶ID|
+|coin|string|幣種|
+|repaidAmount|string|已還幣金額|
+|repayId|string|還幣交易ID|
+|repayMarginOrderId|string|還幣單號|
+|repayTime|string|還幣交易時間，精確到毫秒|
+|transactIds|array|Object|
+|> repaidAmount|string|已還幣金額|
+|> repaidInterest|string|該筆還幣交易已還利息|
+|> repaidPrincipal|string|該筆還幣交易已還本金|
+|> repaidSerialNumber|string|借款訂單的還款單號|
+|> transactId|string|原始借幣交易ID|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-repay-history?coin=USDT&startTime=1662480000000&endTime=1662552000000' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662622151668' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: 48db29501c9e20aff22ec80f2bf201022314fe97d6ea11b89025dd6f59b386da'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "accountId": "533287",
+                "coin": "USDT",
+                "repaidAmount": "150",
+                "repayId": "12128",
+                "repayMarginOrderId": "1240526631777624064",
+                "repayTime": "1662618298000",
+                "transactIds": [
+                    {
+                        "repaidAmount": "150",
+                        "repaidInterest": "0.001668",
+                        "repaidPrincipal": "149.998332",
+                        "repaidSerialNumber": "1240522860586622976",
+                        "transactId": "14143"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": null,
+    "time": 1662622151872
+}
+```

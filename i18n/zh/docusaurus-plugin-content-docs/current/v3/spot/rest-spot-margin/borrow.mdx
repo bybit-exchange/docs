@@ -1,4 +1,53 @@
 ---
-title: Borrow Margin Loan
-sidebar_label: Borrow Margin Loan
+title: 申請借幣
+sidebar_label: 申請借幣
 ---
+
+#### HTTP 請求
+POST <code>/spot/v3/private/cross-margin-loan</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin|<b>true</b>|string|幣種|
+|qty|<b>true</b>|string|借幣數量|
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|transactId|string|借款訂單id|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-loan' \
+--header 'Content-Type: application/json' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662617848755' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: 03529daeca45ccf5c491a8e6569ff3dff39d1e984171e7aedca0dc2624d0c416' \
+--data-raw '{
+    "coin": "USDT",
+    "qty": "200"
+}'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transactId": "14143"
+    },
+    "retExtInfo": null,
+    "time": 1662617848970
+}
+```

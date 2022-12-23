@@ -1,4 +1,76 @@
 ---
-title: Query Borrowing Info
-sidebar_label: Query Borrowing Info
+title: 查詢借幣訂單
+sidebar_label: 查詢借幣訂單
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/private/cross-margin-orders</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|startTime|false|long|第一條返回的時間戳(毫秒)|
+|endTime|false|long|最後一條返回的時間戳(毫秒)|
+|coin|false|string|幣種|
+|status|false|int|狀態. 默认为<code>0</code>. <li><code>0</code>：查詢所有狀態</li><li><code>1</code>：查詢未還清</li><li><code>2</code>：查詢已還清</li>|
+|limit|false|int|默認500，最大500|
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|accountId|string|賬戶ID|
+|coin|string|幣種|
+|createdTime|long|借幣發起時間，精確到毫秒|
+|id|long|借幣ID|
+|interestAmount|string|利息總額|
+|interestBalance|string|未還利息|
+|loanAmount|string|借幣本金總額|
+|loanBalance|string|未還本金|
+|status|int|狀態. <code>1</code>：未還清, <code>2</code>：已還清|
+|type|int|訂單類型（1，手動借貸 2，自動借貸）|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-orders?startTime=1662508800000&endTime=1662552000000&coin=USDT&status=1' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662619080929' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: 00f707bf08f8b91a8d6b7e6a1a4f3f551033482f29a78254debf63515415e637'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "accountId": "533287",
+                "coin": "USDT",
+                "createdTime": 1662617849000,
+                "id": "14143",
+                "interestAmount": "0.001668",
+                "interestBalance": "0",
+                "loanAmount": "200",
+                "loanBalance": "50.001668",
+                "status": 1,
+                "type": 2
+            }
+        ]
+    },
+    "retExtInfo": null,
+    "time": 1662618592344
+}
+```
