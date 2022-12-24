@@ -1,6 +1,6 @@
 ---
 title: 查詢市場價格K線數據
-sidebar_label: Get kline
+sidebar_label: 查詢市場價格K線數據
 sidebar_position: 1
 ---
 
@@ -16,66 +16,46 @@ GET `/v5/market/kline`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------|
-|[category](../enum#category) |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`|
-|symbol |<b>true</b> |string |Symbol name|
-|[interval](../enum#interval) |<b>true</b> |string |Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`|
-|start |false |integer |The start timestamp (ms)|
-|end |false |integer |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. default: `200`|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`,`inverse`|
+|symbol |<b>true</b> |string |合約名稱|
+|[interval](../enum#interval) |<b>true</b> |string |時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`|
+|start |false |integer |開始時間戳 (毫秒)|
+|end |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type |
-|symbol |string |Symbol name |
-|list |array |<li>An string array of individual candle</li><li>Sort in reverse by `startTime`</li>|
-|> list[0]: startTime |string |Start time of the candle (ms) |
-|> list[1]: openPrice |string |Open price |
-|> list[2]: highPrice |string |Highest price |
-|> list[3]: lowPrice |string |Lowest price |
-|> list[4]: closePrice |string |Close price. _To be last trade price when the candle is not closed_|
-|> list[5]: volume |string |Trade volume. _Unit of contract: pieces of contract. Unit of spot: quantity of coins_ |
-|> list[6]: turnover |string |Turnover. _Unit of figure: quantity of quota coin_ |
+|category |string |產品類型 |
+|symbol |string |合約名稱 |
+|list |array |<li>一個字符串數組構成單個蠟燭</li><li>按照`startTime`降序排列</li>|
+|> list[0]: startTime |string |蠟燭的開始時間戳 (毫秒) |
+|> list[1]: openPrice |string |開始價格 |
+|> list[2]: highPrice |string |最高價格 |
+|> list[3]: lowPrice |string |最低價格 |
+|> list[4]: closePrice |string |結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_|
+|> list[5]: volume |string |交易量. _合約單位: 合約的張數. 現貨單位: 幣種的數量_ |
+|> list[6]: turnover |string |交易額. _單位: 報價貨幣的數量_ |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
 
 ```http
-curl GET 'https://api-testnet.bybit.com/v5/market/kline?category=linear&symbol=BITUSDT&interval=60'
+
 ```
 
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-    "category": "linear",
-    "symbol": "BITUSDT",
-    "list": [
-        [
-            "1659256500000",
-            "0.693",
-            "0.694",
-            "0.692",
-            "0.693",
-            "10642.8",
-            "7373.7586"
-        ]
-    ]
-},
-    "retExtInfo": {},
-    "time": 1669346770906
-}
+```json
+
 ```
 </TabItem>
 </Tabs>

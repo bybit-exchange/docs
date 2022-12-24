@@ -1,44 +1,44 @@
 ---
-title: Order Book
-sidebar_label: Order Book
+title: Order Book (深度)
+sidebar_label: Order Book (深度)
 sidebar_position: 5
 ---
 
-Query order book data
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+獲取深度數據
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
 
-* future: A maximum of 200-level of orderbook data can be returned.
-* spot: A maximum of 50-level of orderbook data can be returned.
-* option: 25-level of orderbook data can be returned ONLY.
+* 期貨: 最多返回200檔的數據.
+* 現貨: 最多返回50檔的數據.
+* 期權: 僅返回25檔的數據.
 
 :::tip
-The response is in the snapshot format.
+響應是當前時間的切片數據
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/orderbook`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
-|symbol |**true** |string |Symbol name|
-|limit |false |integer |Limit for data size per page.<li>`spot`: [1,50], default: `50`.</li><li>`linear`&`inverse`: [1,500],default: `25`.</li><li>`option` has 25 ONLY.</li>|
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
+|symbol |**true** |string |合約名稱|
+|limit |false |integer |每頁數量限制.<li>`spot`: [1,50], 默認: `50`.</li><li>`linear`&`inverse`: [1,500],默認: `25`.</li><li>`option` 僅25可用.</li>|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|s |string |Symbol name |
-|b |array |Bid, buyer. Sort by price desc |
-|> b[0] |string |Bid price |
-|> b[1] |string |Bid size |
-|a |array |Ask, seller. Order by price asc |
-|> a[0] |string |Ask price |
-|> a[1] |string |Ask size |
-|ts |integer |The timestamp(ms) that system generates the data |
-|u |integer |Update id, is always in sequence |
+|s |string |合約名稱 |
+|b |array |Bid, 買方. 按照價格從大到小 |
+|> b[0] |string |買方報價 |
+|> b[1] |string |買方數量 |
+|a |array |Ask, 賣方. 按照價格從小到大 |
+|> a[0] |string |賣方報價 |
+|> a[1] |string |賣方數量 |
+|ts |integer |行情服務生成數據時間戳（毫秒） |
+|u |integer |表示數據連續性的id |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -50,7 +50,7 @@ GET `/v5/market/orderbook`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">

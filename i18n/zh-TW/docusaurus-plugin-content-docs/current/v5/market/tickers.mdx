@@ -1,58 +1,82 @@
 ---
-title: Get Tickers
-sidebar_label: Get Tickers
+title: 查詢最新行情信息
+sidebar_label: 查詢最新行情信息
 sidebar_position: 6
 ---
 
-Query the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours.
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/tickers`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
-|symbol |false |string |Symbol name |
-|baseCoin |false |string |Base coin. `option` valid ONLY, either pass `baseCoin` or `symbol`|
-|expDate |false |string |Expiry date. e.g., 25DEC22. for `option` ONLY|
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
+|symbol |false |string |合約名稱 |
+|baseCoin |false |string |交易幣種. 僅`option`有效, `baseCoin`和`symbol`必傳其中一個 |
+|expDate |false |string |到期日. 舉例, 25DEC22. 僅`option`有效|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type |
+|category |string |產品類型 |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> lastPrice |string |Last price |
-|> indexPrice |string |Index price |
-|> markPrice |string |Mark price |
-|> underlyingPrice |string |Underlying price |
-|> bid1Price |string |Bid 1 price |
-|> ask1Price |string |Ask 1 price |
-|> bid1Size |string |Bid 1 size |
-|> ask1Size |string |Ask 1 size |
-|> openInterest |string |Open interest size |
-|> openInterestValue |string |Open interest value |
-|> nextFundingTime |string |Next funding timestamp (ms) |
-|> fundingRate |string |Funding rate |
-|> prevPrice1h |string |Market price an hour ago |
-|> lowPrice24h |string |The lowest price in the last 24 hours |
-|> highPrice24h |string |The highest price in the last 24 hours |
-|> prevPrice24h |string |Market price 24 hours ago |
-|> price24hPcnt |string |Percentage change of market price relative to 24h |
-|> turnover24h |string |Turnover for 24h |
-|> ask1Iv |string |Ask 1 iv |
-|> bid1Iv |string |Bid 1 iv |
-|> markPriceIv |string |Mark price iv |
-|> deliveryTime |string |Delivery timestamp (ms). Valid for `Option` and `Inverse Futures` |
-|> deliveryFeeRate |string |Delivery fee rate. Valid for `Option` and `Inverse Futures` |
+|> symbol |string |合約名稱 |
+|> lastPrice |string |最新市場成交價 |
+|> indexPrice |string |指數價格 |
+|> markPrice |string |標記價格 |
+|> underlyingPrice |string |底層資產對應的價格 |
+|> bid1Price |string |買 1 價 |
+|> ask1Price |string |賣 1 價 |
+|> bid1Size |string |買1價的數量  |
+|> ask1Size |string |賣1價的數量 |
+|> openInterest |string |未平倉合約的數量 |
+|> openInterestValue |string |未平倉合約的價值 |
+|> nextFundingTime |string |下次結算資金費用的時間（UTC毫秒時間戳） |
+|> fundingRate |string |資金費率，僅永續合約 |
+|> prevPrice1h |string |1小時前的整點市價 |
+|> lowPrice24h |string |最近24小時的最低價 |
+|> highPrice24h |string |最近24小時的最高價 |
+|> prevPrice24h |string |24小時前的整點市價 |
+|> price24hPcnt |string |市場價格相對24h前變化的百分比 |
+|> volume24h |string |最近24小時成交量 |
+|> turnover24h |string |最近24小時成交額 |
+|> ask1Iv |string |買1價格對應的iv |
+|> bid1Iv |string |賣1價格對應的iv |
+|> markPriceIv |string |標記價格的iv |
+|> deliveryTime |string |交割時間. 僅反向交割和期權有效 |
+|> deliveryFeeRate |string |交割費率. 僅反向交割和期權有效|
 |> predictedDeliveryPrice |string |Predicated delivery price |
-|> vega |string |Vega value |
-|> delta |string |Delta value |
-|> theta |string |Theta value |
-|> gamma |string |Gamma value |
-|> basisRate |string |Basis rate |
+|> vega |string |Vega值 |
+|> delta |string |Delta值 |
+|> theta |string |Theta值 |
+|> gamma |string |Gamma值 |
+|> basisRate |string |交割合約基差率 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

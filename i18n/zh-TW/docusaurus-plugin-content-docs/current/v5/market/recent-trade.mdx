@@ -1,42 +1,42 @@
 ---
-title: Public Trades History
-sidebar_label: Public Trades History
+title: 查詢平台成交歷史
+sidebar_label: 查詢平台成交歷史
 sidebar_position: 8
 ---
 
-Query recent public trading data in Bybit.
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+獲取平台最近成交數據
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
 
-You could download archived historical trades here:
-* <a href="https://public.bybit.com/trading/">USDT Perpetual, Inverse Perpetual & Inverse Future</a>
-* <a href="https://public.bybit.com/spot/">Spot</a>
+您可以從這裡下載到歸檔的更多的歷史成交數據:
+* <a href="https://public.bybit.com/trading/">USDT永續和反向合約</a>
+* <a href="https://public.bybit.com/spot/">現貨</a>
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/recent-trade`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
-|symbol |**true** |string |Symbol name|
-|baseCoin |false |string |Base coin. for `option` ONLY. If not passed, return **BTC** data by default|
-|optionType |false |string |Option type. `Call` or `Put`. for `option` ONLY|
-|limit |false |integer |Limit for data size per page.<li>`spot`: [1,60], default: `60`.</li><li>others: [1,1000], default: `500`</li>|
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
+|symbol |**true** |string |合約名稱|
+|baseCoin |false |string |交易幣種. 僅`option`, 若不傳, 則默認返回BTC數據|
+|optionType |false |string |期權類型. `Call` 或 `Put`. 僅`option`|
+|limit |false |integer |每頁數量限制.<li>`spot`: [1,60], 默认: `60`.</li><li>others: [1,1000], 默認: `500`</li>|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Products category |
+|category |string |產品類型 |
 |list |array |Object |
-|> execId |string |Execution id |
-|> symbol |string |Symbol name |
-|> price |string |Trade price |
-|> size |string |Trade size |
-|> side |string |`Buy`, `Sell` |
-|> time |string |Trade time (ms) |
-|> isBlockTrade |boolean |Whether the trade is block trade |
+|> execId |string |成交id |
+|> symbol |string |合約名稱 |
+|> price |string |成交價格 |
+|> size |string |成交數量 |
+|> side |string |方向. `Buy`, `Sell` |
+|> time |string |成交時間戳 (毫秒) |
+|> isBlockTrade |boolean |成交類型是否為大宗交易 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -47,7 +47,7 @@ GET `/v5/market/recent-trade`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">

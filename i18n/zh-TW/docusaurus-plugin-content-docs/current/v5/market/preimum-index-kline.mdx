@@ -1,74 +1,56 @@
 ---
-title: Get Premium Index Price Kline
-sidebar_label: Get Premium Index Price Kline
+title: 查詢溢價指數價格K線數據
+sidebar_label: 查詢溢價指數價格K線數據
 sidebar_position: 4
 ---
 
-Retrieve the premium index price kline data. This endpoint can retrieve the latest ? candles. Charts are returned in groups based on the requested interval.
-> **Cover:USDT Perpetual / USDC Perpetual**
+查詢溢價指數價格K線數據
+> **覆蓋範圍: USDT永續 / USDC永續**
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/premium-index-price-kline`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------|
-|[category](../enum#category) |<b>true</b> |string |Product type. `linear`|
-|symbol |<b>true</b> |string |Symbol name|
-|[interval](../enum#interval) |<b>true</b> |string |Kline interval |
-|start |false |integer |The start timestamp (ms)|
-|end |false |integer |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. default: `200`|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`|
+|symbol |<b>true</b> |string |合約名稱|
+|[interval](../enum#interval) |<b>true</b> |string |時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W` |
+|start |false |integer |開始時間戳 (毫秒)|
+|end |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|[category](../enum#category) |string |Product type |
-|symbol |string |Symbol name |
-|list |array |<li>An string array of individual candle</li><li>Sort in reverse by `start`</li>|
-|> list[0] |string |Start time of the candle (ms) |
-|> list[1] |string |Open price |
-|> list[2] |string |Highest price |
-|> list[3] |string |Lowest price |
-|> list[4] |string |Close price. _To be last trade price when the candle is not closed_|
+|[category](../enum#category) |string |產品類型 |
+|symbol |string |合約名稱 |
+|list |array |<li>一個字符串數組構成單個蠟燭</li><li>按照`startTime`降序排列</li>|
+|> list[0] |string |蠟燭的開始時間戳 (毫秒) |
+|> list[1] |string |開始價格 |
+|> list[2] |string |最高價格 |
+|> list[3] |string |最低價格 |
+|> list[4] |string |結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
 
 ```http
-curl GET 'https://api-testnet.bybit.com/v5/market/premium-index-price-kline?category=linear&symbol=BITUSDT&interval=D&start=1652112000000&end=1652544000000'
+
 ```
 
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-    "category": "linear",
-    "symbol": "BITUSDT",
-    "list": [
-        [
-            "1659256500000",
-            "0.693",
-            "0.694",
-            "0.692",
-            "0.693"
-        ]
-    ]
-},
-    "retExtInfo": {},
-    "time": 1669346770906
-}
+```json
+
 ```
 </TabItem>
 </Tabs>

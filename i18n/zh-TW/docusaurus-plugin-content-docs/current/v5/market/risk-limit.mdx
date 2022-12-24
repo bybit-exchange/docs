@@ -1,40 +1,40 @@
 ---
-title: Get Risk Limit
-sidebar_label: Get Risk Limit
+title: 查詢合約風險限額
+sidebar_label: 查詢合約風險限額
 sidebar_position: 13
 ---
 
-Query risk limit of futures
-> **Cover: USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future**
+查詢期貨合約的風險限額表
+> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割**
 
 :::tip
-What is risk limit? <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">Risk Limit (USDT Contract)</a>
+什麼是風險限額？<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">風險限額(USDT合約)</a>
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/v5/market/risk-limit`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse` |
-|symbol |false |string |Symbol name|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse` |
+|symbol |false |string |合約名稱|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type |
+|category |string |產品類型 |
 |list |array |Object |
-|> id |integer |Risk id |
-|> symbol |string |Symbol name |
-|> limit |string |Position limit |
-|> maintainMargin |number |Maintain margin rate |
-|> initialMargin |number |Initial margin rate |
-|> section |array |section array |
-|> isLowestRisk |integer |`1`: true, `0`: false |
-|> maxLeverage |string |Allowed max leverage |
+|> id |integer |風險限額id |
+|> symbol |string |合約名稱 |
+|> limit |string |風險限制額度 |
+|> maintainMargin |number |維持保證金率 |
+|> initialMargin |number |初始保證金率 |
+|> section |array |section數組 |
+|> isLowestRisk |integer |是否是最低風險限額. `1`: true, `0`: false |
+|> maxLeverage |string |該風險限額允許的最大槓桿 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -45,7 +45,7 @@ GET `/v5/market/risk-limit`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
