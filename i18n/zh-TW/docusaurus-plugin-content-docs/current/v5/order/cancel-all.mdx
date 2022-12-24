@@ -1,0 +1,55 @@
+---
+title: 撤銷所有訂單
+sidebar_label: 撤銷所有訂單
+sidebar_position: 5
+---
+撤銷全部委託單
+> **覆蓋範圍: 現貨 (統一帳戶) / 正向合約 (統一帳戶) / 期權 (統一帳戶)**
+
+:::info
+- 支持按照`symbol`/`baseCoin`/`settleCoin`撤銷訂單，若您傳入了多個參數組合, 系統僅會處理其中一個參數，其中優先級為`symbol` > `baseCoin` > `settleCoin`.
+- **注意**: 當`category`=_option_, 您可以不傳人三個參數中的任何一個，就能取消所有期權的委託單。但是, 對於其他產品, 您必需指定三個參數的其中一個。
+:::
+
+### HTTP請求
+POST `/v5/order/cancel-all`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`option` |
+|symbol |false|string |合約名稱 |
+|baseCoin |false|string |交易幣種. 僅for `option`有效|
+|settleCoin |false|string |結算幣種. 僅`linear`有效, `symbol`或`settleCoin`必傳其中一個|
+|orderFilter |false |string |僅`spot`有效. `Order`: 普通單,`tpslOrder`: 止盈止損單. 若不傳, 默認是`Order`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |Object | |
+|> list |array |Object |
+|>> category |string |產品類型 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義訂單Id |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

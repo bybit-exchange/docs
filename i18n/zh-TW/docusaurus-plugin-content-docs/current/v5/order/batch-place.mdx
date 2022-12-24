@@ -1,0 +1,68 @@
+---
+title: 批量創建委託單
+sidebar_label: 批量創建委託單
+sidebar_position: 7
+---
+> **覆蓋範圍: 期權 (統一帳戶)**
+
+:::tip
+該接口支持批量創建委託單
+- 下單時需確保帳戶內有足夠的資金。一旦下單，根據訂單所需資金，您的帳戶資金將在訂單生命週期內凍結相應額度，被凍結的資金額度取決於訂單屬性。
+- 每個請求包含的訂單數最大是20筆，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
+:::
+
+### HTTP請求
+POST `/v5/order/create-batch`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型. `option` |
+|request |**true** |array |Object |
+|> symbol |**true** |string |合約名稱|
+|> side |**true** |string |方向. `Buy`, `Sell`|
+|> orderType |**true** |string |訂單類型. `Market`, `Limit`|
+|> qty |**true** |string |訂單數量|
+|> price |false |string |訂單價格. 當`orderType`=_Market_, 設置的price無效|
+|> iv |false |string |隱含波動率. 僅`option`. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `iv`比`price`有更高的優先級. |
+|> timeInForce |**true** |string |訂單執行策略. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
+|> orderLinkId |false |string |用戶自定義訂單Id. 最長支持36位字符，可由數字，字母，橫線，下劃線組成。<br/>_`option`規則_:<br/><li>**必傳**</li><li>總是唯一</li>|
+|> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉訂單?</a> `true` 將這筆訂單設為只減倉，_只減倉單的止盈止損不生效_ |
+|> mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |Object | |
+|> list |array |Object |
+|>> category |string |產品類型 |
+|>> symbol |string |合約名稱 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義訂單Id |
+|>> createAt |string |訂單創建時間 (毫秒) |
+|retExtInfo |Object | |
+|> list |array |Object |
+|>> code |number |成功/錯誤碼 |
+|>> msg |string |成功/錯誤消息 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

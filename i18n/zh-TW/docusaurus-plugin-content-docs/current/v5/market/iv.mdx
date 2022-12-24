@@ -1,0 +1,59 @@
+---
+title: 查詢期權波動率
+sidebar_label: 查詢期權波動率
+sidebar_position: 10
+---
+
+獲取期權的歷史波動率數據
+> **覆蓋範圍: 期權**
+
+:::info
+* 數據為每小時數據.
+* 若沒有入参時間，則默認返回最近1小時的數據，即最近的一條數據.
+* `starTime` 和 `endTime` 要麼都傳，要麼都不傳
+* 接口支持查詢過去2年的數據, 但確保[`endTime` - `startTime`] 小於等於30天.
+:::
+
+### HTTP請求
+GET `/v5/market/historical-volatility`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |產品類型. `option` |
+|baseCoin |false |string |交易幣種. 不傳則默認返回BTC數據|
+|[period](../enum#period) |false |string |週期. 不傳則默認返回7天加權的數據|
+|startTime |false |integer |開始時間戳 (毫秒) |
+|endTime |false |integer |結束時間戳 (毫秒) |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|category |string |產品類型 |
+|list |array |Object |
+|> period |string |週期 |
+|> value |string |波動率 |
+|> time |string |數據生成時間戳 (毫秒) |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

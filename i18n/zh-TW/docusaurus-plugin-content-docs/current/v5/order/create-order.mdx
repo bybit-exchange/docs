@@ -1,0 +1,95 @@
+---
+title: 創建委託單
+sidebar_label: 創建委託單
+sidebar_position: 1
+---
+本接口提供幣幣交易，現貨槓桿交易，正向合約（統一帳戶）以及期權（統一帳戶）的訂單創建。
+> **覆蓋範圍: 現貨 (統一帳戶) / 正向合約 (統一帳戶) / 期權 (統一帳戶)**
+
+:::info
+- **支持的訂單類型 (`orderType`):**<br/>
+限價單: `orderType`=_Limit_, 需要指定訂單數量和價格.<br/>
+<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001135">市價單</a>: `orderType`=_Market_, 以Bybit市場內最優的價格一直執行到成交. 選擇市價單時，price 參數為空。在期貨交易系統，為了保護市價單產生嚴重的滑點，Bybit 交易系統會將市價單轉為限價單進行撮合，如果市場價格轉限價時，超過滑點設置的閾值，該筆市場價格訂單將會被取消。滑點閾值是指訂單價格偏離最新成交價格的百分比，目前閾值設置為：BTC 合約3%，其他合約5%。
+
+- **支持的timeInForce策略:**<br/>
+`GoodTillCancel` 一直有效至取消<br/>
+`ImmediateOrCancel` 立即成交或取消<br/>
+`FillOrKill` 完全成交或取消<br/>
+`PostOnly`: 被動委托類型，如果該訂單在提交時會被立即執行成交，它將被**取消**. 這樣做的目的是為了保護您的訂單在提交的過程中，如果因為場內的價格變化，而撮合系統無法委託該筆訂單到訂單簿，因此會被取消。針對 PostOnly 訂單類型，單筆訂單可提交的數量比其他類型的訂單更多，請參考該[接口](../market/instrument#)中的`lotSizeFilter > postOnlyMaxOrderQty`參數.
+
+- **如何創建條件單:**<br/>
+在提交訂單時，如果設置了**triggerPrice**，則該訂單會自動轉為條件單。另外條件單不佔用保證金，如果條件單觸發後，保證金不足，則該筆訂單會被取消。
+
+- **<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001138">止盈 / 止損</a>**: 您只能在初次開倉下單時設置TP/SL。如果您已經持有倉位，則新的訂單設置的TP/SL將不會生效。但，您可以修改倉位的TP/SL。
+
+- **訂單數量**: 訂單數量，只支持正數。
+
+- **訂單價格**: 下限價單，價格字段**必傳**。若您有倉位, 下單價格需要高於強平價. 對於設置價格的步長，請參閱該[接口](../market/instrument#)中的`priceFilter` > `tickSize`.
+
+- **用戶自定義訂單Id**: 最大長度不超過36個字符且唯一。您可以自定義設置的订单ID(`orderLinkId`)，我们会为您关联到Bybit系统的唯一订单ID，并把唯一订单ID在活动委托创建成功后一并返回给您（包括Websocket），您可以使用 Bybit 的订单ID 和 orderLinkId 去獲取和取消訂單，如果在參數輸入中同時輸入 orderId 和 orderLinkId，Bybit 會優先以 orderId 為准來處理對應訂單.
+
+- **訂單持有上限:**<br/>
+**期貨:** 單個账户针对合约可持有每个 symbol 最多可同时持有500个普通活动订单。这是针对合约的，因此可以允许出现例如：账户同时持有300个BTCUSD的活动单、280个ETHUSD合约的活动单。針對條件單，單個帳戶針對合約可持有每個 symbol 最多同時持有 10 個條件單<br/>
+**Spot:**<br/>
+**Option:**
+
+- **Rate limit:**<br/>
+默認每個交易產品類型為 10/s，如需要提高請求頻率，請聯繫您對應的客戶經理或通過點擊<a href="https://www.bybit.com/future-activity/zh-TW/institutional-services">這裡</a>提交
+:::
+
+### HTTP請求
+POST `/v5/order/create`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |產品類型. `spot`,`linear`,`option` |
+|symbol |**true** |string |合約名稱|
+|isLeverage |false |integer |是否借貸. 僅現貨有效. `0`(default): 否, `1`: 是|
+|side |**true** |string |`Buy`, `Sell`|
+|orderType |**true** |string |訂單類型. `Market`, `Limit`|
+|qty |**true** |string |訂單數量|
+|price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
+|triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li> |
+|orderFilter |false |string |僅對現貨有效. `Order`: 普通單,`tpslOrder`: 止盈止損單. 若不傳, 默認`Order`|
+|triggerPrice |false |string |<li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li><li>對於現貨, 這是下止盈止損單的觸發價格參數</li>|
+|[triggerBy](../enum#triggerby) |false |string |條件單參數. 觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`|
+|iv |false |string |隱含波動率. 僅`option`. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `iv`比`price`有更高的優先級 |
+|[timeInForce](../enum#timeinforce) |**true** |string |訂單執行策略。<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
+|[positionIdx](../enum#positionidx) |**true** |string |倉位標識。用戶不同倉位模式，僅正向合約有效|
+|orderLinkId |false |string |用戶自定義訂單Id|
+|takeProfit |false |string |止盈價格，僅開倉時的設置有效 |
+|stopLoss |false |string |止損價格，僅開倉時的設置有效 |
+|[tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice` |
+|[slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice` |
+|reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉，_只減倉單的止盈止損不生效_ |
+|closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行. |
+|mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderId |string |訂單Id |
+|orderLinkId |string |用戶自定義訂單Id |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

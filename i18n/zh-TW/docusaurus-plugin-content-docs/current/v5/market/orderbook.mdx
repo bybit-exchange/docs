@@ -1,0 +1,62 @@
+---
+title: Order Book (深度)
+sidebar_label: Order Book (深度)
+sidebar_position: 5
+---
+
+獲取深度數據
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
+
+* 期貨: 最多返回200檔的數據.
+* 現貨: 最多返回50檔的數據.
+* 期權: 僅返回25檔的數據.
+
+:::tip
+響應是當前時間的切片數據
+:::
+
+### HTTP請求
+GET `/v5/market/orderbook`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
+|symbol |**true** |string |合約名稱|
+|limit |false |integer |每頁數量限制.<li>`spot`: [1,50], 默認: `50`.</li><li>`linear`&`inverse`: [1,500],默認: `25`.</li><li>`option` 僅25可用.</li>|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|s |string |合約名稱 |
+|b |array |Bid, 買方. 按照價格從大到小 |
+|> b[0] |string |買方報價 |
+|> b[1] |string |買方數量 |
+|a |array |Ask, 賣方. 按照價格從小到大 |
+|> a[0] |string |賣方報價 |
+|> a[1] |string |賣方數量 |
+|ts |integer |行情服務生成數據時間戳（毫秒） |
+|u |integer |表示數據連續性的id |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

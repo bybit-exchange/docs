@@ -1,0 +1,56 @@
+---
+title: 查詢標記價格K線數據
+sidebar_label: 查詢標記價格K線數據
+sidebar_position: 2
+---
+
+查詢標記價格K線
+> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割**
+
+### HTTP請求
+GET `/v5/market/mark-price-kline`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`,`inverse`|
+|symbol |<b>true</b> |string |合約名稱|
+|[interval](../enum#interval) |<b>true</b> |string |時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`|
+|start |false |integer |開始時間戳 (毫秒)|
+|end |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|category |string |產品類型 |
+|symbol |string |合約名稱 |
+|list |array |<li>一個字符串數組構成單個蠟燭</li><li>按照`startTime`降序排列</li>|
+|> list[0]: startTime |string |蠟燭的開始時間戳 (毫秒) |
+|> list[1]: openPrice |string |開始價格 |
+|> list[2]: highPrice |string |最高價格 |
+|> list[3]: lowPrice |string |最低價格 |
+|> list[4]: closePrice |string |結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>

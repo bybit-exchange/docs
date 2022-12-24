@@ -1,0 +1,63 @@
+---
+title: 批量修改委託單
+sidebar_label: 批量修改委託單
+sidebar_position: 8
+---
+> **覆蓋範圍: 期權 (統一帳戶)**
+
+:::tip
+該接口支持批量修改委託單
+- 您只能修改那些**未成交**或**部分成交**的訂單. 條件單不支持批量修改.
+- 最多支持單個請求中修改20個訂單.
+:::
+
+### HTTP請求
+POST `/v5/order/amend-batch`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型. `option` |
+|request |**true** |array |Object |
+|> symbol |**true** |string |合約名稱 |
+|> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|> orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|> qty |**true** |string |修改後的訂單數量. 若不修改，請不要傳該字段 |
+|> price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段 |
+|> iv |false |string |隱含波動率. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |Object | |
+|> list |array |Object |
+|>> category |string |產品類型 |
+|>> symbol |string |合約名稱 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義訂單Id |
+|retExtInfo |Object | |
+|> list |array |Object |
+|>> code |number |成功/錯誤碼 |
+|>> msg |string |成功/錯誤信息 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+
+```
+</TabItem>
+</Tabs>
