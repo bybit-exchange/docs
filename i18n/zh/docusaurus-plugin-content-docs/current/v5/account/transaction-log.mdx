@@ -3,45 +3,67 @@ title: 交易日誌
 sidebar_label: 交易日誌
 sidebar_position: 9
 ---
-整個賬戶的交易日誌，目前支持  USDC 賬戶，統一保證金賬戶，以及合約賬戶。
+整個賬戶的交易日誌。
 
-#### HTTP Request
+### HTTP 請求
 GET `/v5/account/transaction-log`
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求示例
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-
-|accountType |false	|string	|錢包類型的枚舉值，目前僅支持期貨賬戶，統一保證金賬戶，USDC 賬戶|
-|category |**true** |string	|交易產品類型：spot：現貨；linear：正向合約；option：期權|
+|[accountType](../enum#accounttype) |false	|string	|錢包類型. 目前僅支持`UNIFIED`|
+|category |**true** |string	|交易產品類型. `spot`：現貨；`linear`：正向合約；`option`：期權|
 |currency |**true** |string	|USDC、USDT、BTC、ETH|
 |baseCoin |false |string |例如： USDC就是BTC；USDT就是現在現有的交易幣種枚舉，例如： BTCUSDT 的 baseCoin 是 BTC 不匹配時已確認返回空|
-|type |false |string |默認返回該 category下所有交易日誌（除劃轉/兌幣/體驗金外）TRANSFER_IN 轉入 TRANSFER_OUT 轉出 TRADE 交易 SETTLEMENT 結算 DELIVERY 交割 LIQUIDATION 強平 BONUS 體驗金領取 FEE_REFUND 手續費返還 INTEREST 利息 CURRENCY_BUY 統保幣幣兌換買入 CURRENCY_SELL 統保幣幣兌換賣出|注意：查詢轉入轉出日誌，必須要傳type=TRANSFER_IN，type=TRANSFER_OUT，否則查不到劃轉日誌|
-|startTime |false |int |開始時間, 毫秒時間戳|
-|endTime |false	|int |結束時間, 毫秒時間戳|
+|[type](../enum#type) |false |string |默認返回該 category下所有交易日誌（除劃轉/兌幣/體驗金外）TRANSFER_IN 轉入 TRANSFER_OUT 轉出 TRADE 交易 SETTLEMENT 結算 DELIVERY 交割 LIQUIDATION 強平 BONUS 體驗金領取 FEE_REFUND 手續費返還 INTEREST 利息 CURRENCY_BUY 統保幣幣兌換買入 CURRENCY_SELL 統保幣幣兌換賣出|注意：查詢轉入轉出日誌，必須要傳type=TRANSFER_IN，type=TRANSFER_OUT，否則查不到劃轉日誌|
+|startTime |false |integer |開始時間, 毫秒時間戳|
+|endTime |false	|integer |結束時間, 毫秒時間戳|
 |direction |false |string |搜索方向：prev:上一頁,next:下一頁,默認為 next|
 |limit |false |integer |每頁數量, 最大50. 默認每頁20條|
-|cursor	|false |string |翻頁標記,請使用返回的cursor,簽名時使用返回的原始數據，發送request時請進行urlencode|
+|cursor	|false |string |游標，用於翻頁|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |衍生品產品類型：linear：正向合約；option：期權|
+|category |string |產品類型|
 |currency |string |USDC、USDT、BTC、ETH|
-|list > transactionTime	|string	|時間戳（毫秒）|
-|list > type |string |類型（新增 Interest 枚舉值）|
-|list > symbol |string |symbol名稱 |
-|list > side |string |方向|
-|list > qty	|string	|數量|
-|list > size |string |倉位|
-|list > tradePrice |string |交易價格|
-|list > funding	|string	|資金費用|
-|list > fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示賺取|
-|list > cashFlow |string |現金流|
-|list > change |string |變更|
-|list > cashBalance	|string	|餘額（當前幣種）|
-|list > feeRate	|string	|手續費率|
-|list > tradeId	|string |交易id|
-|list > orderId	|string	|訂單id|
-|list > orderLinkId	|string	|機構訂單號|
-|nextPageCursor	|string	|翻頁標記|
+|list |array |Object |
+|> transactionTime	|string	|時間戳（毫秒）|
+|> type |string |類型 |
+|> symbol |string |合約名稱 |
+|> side |string |方向. `Buy`,`Sell`|
+|> qty	|string	|數量|
+|> size |integer |倉位|
+|> tradePrice |string |交易價格|
+|> funding	|string	|資金費用|
+|> fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示賺取|
+|> cashFlow |string |現金流|
+|> change |string |變更|
+|> cashBalance	|string	|餘額（當前幣種）|
+|> feeRate	|string	|手續費率|
+|> tradeId	|string |交易id|
+|> orderId	|string	|訂單id|
+|> orderLinkId	|string	|用戶自定義訂單id|
+|nextPageCursor	|string	|游標，用於翻頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="response" label="Response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

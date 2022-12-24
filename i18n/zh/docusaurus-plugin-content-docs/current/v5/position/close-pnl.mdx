@@ -1,0 +1,67 @@
+---
+title: Get Closed PnL
+sidebar_label: Get Closed PnL
+sidebar_position: 11
+---
+
+Query user's closed profit and loss records. The results are sort by `createdTime` in descending order.
+> **Cover: Linear Perpetual(Unified Account)**
+
+### HTTP Request
+POST `/v5/position/closed-pnl`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `linear` |
+|symbol |false |true |Symbol name |
+|startTime |false |integer |The start timestamp (ms)|
+|endTime |false |integer |The end timestamp (ms)|
+|limit |false |integer |Limit for data size per page. [1,200]. default: `50`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> orderId |string |Order Id |
+|> side |string |`Buy`, `Side` |
+|> qty |string |Order qty |
+|> orderPrice |string |Order price |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> [execType](../enum#execType) |string |Exec type |
+|> closedSize |string |Closed size |
+|> cumEntryValue |string |Cumulated entry position value |
+|> avgEntryPrice |string |Average entry price |
+|> cumExitValue |string |Cumulated exit position value |
+|> avgExitPrice |string |Average exit price |
+|> closedPnl |string |Closed PnL |
+|> fillCount |string |The number of fills in a single order |
+|> leverage |string |leverage |
+|> createdTime |string |The created time (ms) |
+|> updatedTime |string |The updated time (ms) |
+|nextPageCursor |string |Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+
+```
+</TabItem>
+</Tabs>

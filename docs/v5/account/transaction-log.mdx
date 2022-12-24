@@ -3,44 +3,67 @@ title: Transaction Log
 sidebar_label: Transaction Log
 sidebar_position: 9
 ---
-Transaction Log，Currently USDC account, Unified Margin account, and Contract account are supported.
+Query transaction logs in Unified account.
 
-#### HTTP Request
+### HTTP Request
 GET `/v5/account/transaction-log`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|accountType |false |string |Account Type. Currently USDC account, Unified Margin account, and Contract account are supported. |
-|category |**true** |string	|category.  spot, linear, option |
+|[accountType](../enum#accounttype) |false |string |Account Type. `UNIFIED`|
+|category |**true** |string	|Product type. `spot`,`linear`,`option`|
 |currency |**true** |string	|USDC、USDT、BTC、ETH |
 |baseCoin |false |string |baseCoin|
-|type |false |string |All transaction logs under this category are returned (except transfer/exchange/given cash). Enum: TRANSFER_IN,TRANSFER_OUT,TRADE,SETTLEMENT,DELIVERY,LIQUIDATION,BONUS,FEE_REFUND,INTEREST,CURRENCY_BUY,CURRENCY_SELL. Note: To query transfer-in and transfer-out logs, type=TRANSFER_IN, type=TRANSFER_OUT must be passed, otherwise the transfer log cannot be found. |
-|startTime |false |int |Start time, timestamp in milliseconds |
-|endTime |false	|int |End time, timestamp in milliseconds |
+|[type](../enum#type) |false |string |All transaction logs under this category are returned (except transfer/exchange/given cash). _Note: To query transfer-in and transfer-out logs, type=TRANSFER_IN, type=TRANSFER_OUT must be passed, otherwise the transfer log cannot be found._|
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false	|integer |The end timestamp (ms) |
 |direction |false |string |Direction: prev: previous page, next: next page, default is next |
-|limit |false |integer |Size per page. Maximum 50. Default is 20 per page |
-|cursor	|false |string |cursor for pagination, please use the returned cursor, use the returned cursor when generating signature. Please use urlencode when sending the request|
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |category：linear, option |
+|category |string |Product type |
 |currency |string |USDC、USDT、BTC、ETH |
-|list > transactionTime	|string	|timestamp（in milliseconds）|
-|list > type |string |type |
-|list > symbol |string |symbol |
-|list > side |string |side |
-|list > qty	|string	|quantity |
-|list > size |string |size |
-|list > tradePrice |string |trade Price |
-|list > funding	|string	|funding fee|
-|list > fee	|string	|trading fee，fees are positive and rebates are negative |
-|list > cashFlow |string |cash flow |
-|list > change |string |change |
-|list > cashBalance	|string	|cash balance|
-|list > feeRate	|string	|fee rate |
-|list > tradeId	|string |trade id |
-|list > orderId	|string	|order id |
-|list > orderLinkId	|string	|orderLinkId |
-|nextPageCursor	|string	|cursor for pagination |
+|list |array |Object |
+|> transactionTime	|string	|Transaction timestamp (ms)|
+|> type |string |Type |
+|> symbol |string |Symbol name |
+|> side |string |Side. `Buy`,`Sell` |
+|> qty	|string	|Quantity |
+|> size |integer |Size |
+|> tradePrice |string |Trade price |
+|> funding	|string	|Funding fee|
+|> fee	|string	|Trading fee，fees are positive and rebates are negative |
+|> cashFlow |string |Cash flow |
+|> change |string |Change |
+|> cashBalance	|string	|Cash balance|
+|> feeRate	|string	|Trading fee rate |
+|> tradeId	|string |Trade id |
+|> orderId	|string	|Order id |
+|> orderLinkId	|string	|User customised order id |
+|nextPageCursor	|string	|Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

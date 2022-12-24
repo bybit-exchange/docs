@@ -50,12 +50,14 @@ POST `/v5/order/create`
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `spot`,`linear`,`option`,`option` |
 |symbol |**true** |string |Symbol name|
+|isLeverage |false |integer |Whether to borrow. Valid for `spot` ONLY. `0`(default): false, `1`: true|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
 |price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> |
-|triggerPrice |false |string |Conditional order param. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
+|orderFilter |false |string |Valid for `spot` ONLY. `Order`,`tpslOrder`. If not passed, `Order` by default|
+|triggerPrice |false |string |<li>For future, it is a conditional order param. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is a tp/sl order trigger price</li>|
 |[triggerBy](../enum#triggerby) |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
 |[timeInForce](../enum#timeinforce) |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |

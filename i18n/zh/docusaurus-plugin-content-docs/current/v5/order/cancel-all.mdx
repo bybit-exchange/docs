@@ -1,12 +1,14 @@
 ---
-title: Cancel All Order
-sidebar_label: Cancel All Order
+title: Cancel All Orders
+sidebar_label: Cancel All Orders
 sidebar_position: 5
 ---
+Cancel all open orders
+> **Cover: Spot (Unified Account) / Linear Perpetual (Unified Account) / Option (Unified Account)**
 
-:::tip
-This endpoint enables to cancel all open orders.
-- If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
+:::info
+- Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
+- **NOTE**: `category`=_option_, you can cancel all option open orders even not passing any of those three params. However, for other products, you must specify one of those three params.
 :::
 
 ### HTTP Request
@@ -15,10 +17,11 @@ POST `/v5/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `spot`,`linear`,`inverse`,`option` |
+|[category](../enum#category) |**true** |string |Products category. `spot`,`linear`,`option` |
 |symbol |false|string |Symbol name |
-|baseCoin |false|string |Base coin<li>null: cancel all open orders</li><li>`baseCoin` passed, `symbol`=null, then cancel all open orders by base coin</li><li>`symbol` passed, `baseCoin` will be ignored</li> |
-|settleCoin |false|string |Cancel all open orders by settle coin. `future` ONLY|
+|baseCoin |false|string |Base coin. for `option` ONLY|
+|settleCoin |false|string |Settle coin. for `linear` ONLY, either `symbol` or `settleCoin` is required|
+|orderFilter |false |string |Valid for `spot` ONLY. `Order`,`tpslOrder`. If not passed, `Order` by default|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -26,13 +29,8 @@ POST `/v5/order/cancel-all`
 |result |Object | |
 |> list |array |Object |
 |>> category |string |Products category |
-|>> symbol |string |Symbol name |
 |>> orderId |string |Order id |
 |>> orderLinkId |string |User customised order id |
-|retExtInfo |Object | |
-|> list |array |Object |
-|>> code |number |Success/error code |
-|>> msg |string |Success/error message |
 
 ### Request Example
 
@@ -50,7 +48,7 @@ POST `/v5/order/cancel-all`
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>

@@ -5,44 +5,60 @@ sidebar_position: 1
 ---
 獲取錢包餘額
 
-#### HTTP Request
+### HTTP 請求
 GET `/v5/account/wallet-balance`
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|accountType |**true** |string |Account type. `CONTRACT`,`SPOT`,`INVESTMENT` - ByFi Account, `OPTION` - USDC Account, `UNIFIED`|
+|[accountType](../enum#accounttype) |**true** |string |Account type |
 |coin |false |string |Coin name|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|accountType |string |Account type. |
-|list > accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式下，改字段返回為空。|
-|list > accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalEquity |string |賬戶維度換算成usd的資產淨值：Account Margin Balance Base Coin + Account Option Value Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalWalletBalance |string |賬戶維度換算成usd的產錢包餘額：∑ Asset Wallet Balance Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalMarginBalance |string |賬戶維度換算成usd的保證金餘額：Account Wallet Balance Base Coin + Account Perp UPL Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalAvailableBalance |string |賬戶維度換算成usd的可用餘額：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalPerpUPL |string |賬戶維度換算成usd的永續浮動盈虧：∑ Asset Perp UPL Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalInitialMargin |string |賬戶維度換算成usd的總初始保證金：∑ Asset Total Initial Margin Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑ Asset Total Maintenance Margin Base Coin。非統一保證金模式下，改字段返回為空。|
-|list > coin |arrays |幣種列表|
-|coin > coin |string |錢包幣種的名稱，例如 BTC，ETH，USDT，USDC|
-|coin > equity |string |用戶資產|
-|coin > usdValue |string |折算成 usd 的價值|
-|coin > walletBalance |string |錢包餘額|
-|coin > marginBalance |string |其餘資產貢獻的MB+當前資產真實剩餘的MB|
-|coin > availableBalance |string |其餘資產貢獻的AB+當前資產真實剩餘的AB（不能為負）|
-|coin > marginBalanceWithoutConvert	|string	|保證金餘額|
-|coin > availableBalanceWithoutConvert |string |可用餘額, Margin Balance - Total Initial Margin|
-|coin > borrowAmount |string |已用借貸額度。只有 USDC，USDT 有。 BTC 和 ETH 則返回為 0；|
-|coin > availableToBorrow |string |可用借貸額度。只有 USDC，USDT 有。 BTC 和 ETH 則返回為 0；|
-|coin > accruedInterest	|string	|某資產應計利息|
-|coin > totalOrderIM |string |訂單委託預佔用保證金
-|coin > totalPositionIM	|string	|所有倉位起始保證金求和 + 預佔用平倉手續費
-|coin > totalPositionMM	|string |所有倉位維持保證金求和
-|coin > unrealisedPnl |string |未結盈虧
-|coin > cumRealisedPnl |string |累計已結盈虧
-|coin > givenCash |string |體驗金
-|coin > serviceCash	|string |抵扣金
+|> accountType |string |Account type. |
+|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式下，該字段返回為空。|
+|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalEquity |string |賬戶維度換算成usd的資產淨值：Account Margin Balance Base Coin + Account Option Value Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalWalletBalance |string |賬戶維度換算成usd的產錢包餘額：∑ Asset Wallet Balance Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額：Account Wallet Balance Base Coin + Account Perp UPL Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalPerpUPL |string |賬戶維度換算成usd的永續浮動盈虧：∑ Asset Perp UPL Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金：∑ Asset Total Initial Margin Base Coin。非統一保證金模式下，該字段返回為空。|
+|> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑ Asset Total Maintenance Margin Base Coin。非統一保證金模式下，該字段返回為空。|
+|> coin |arrays |幣種列表|
+|>> coin |string |錢包幣種的名稱，例如 BTC，ETH，USDT，USDC|
+|>> equity |string |用戶資產|
+|>> usdValue |string |折算成 usd 的價值|
+|>> walletBalance |string |錢包餘額|
+|>> borrowAmount |string |已用借貸額度。只有 USDC，USDT 有。 BTC 和 ETH 則返回為 0；|
+|>> availableToBorrow |string |可用借貸額度。只有 USDC，USDT 有。 BTC 和 ETH 則返回為 0；|
+|>> accruedInterest	|string	|某資產應計利息|
+|>> totalOrderIM |string |訂單委託預佔用保證金
+|>> totalPositionIM	|string	|所有倉位起始保證金求和 + 預佔用平倉手續費
+|>> totalPositionMM	|string |所有倉位維持保證金求和
+|>> unrealisedPnl |string |未結盈虧
+|>> cumRealisedPnl |string |累計已結盈虧
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>
