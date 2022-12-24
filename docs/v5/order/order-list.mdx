@@ -10,7 +10,7 @@ real-time order information, you could query this [endpoint](open-order#) or rel
 
 :::info
 * The orders in 7 days: support to query all status orders
-* The orders out of 7 days: support to query those filled orders ONLY
+* The orders out of 7 days: support to query those uncancelled, cancelled by system and filled orders
 * You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
@@ -28,9 +28,9 @@ GET `/v5/order/history`
 |baseCoin |false |string |Base coin. `option` ONLY. All option open orders are returned if not passed |
 |orderId |false |string |Order id |
 |orderLinkId |false |string |User customised order id |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot tp/sl order. default: all kinds of orders|
 |[orderStatus](../enum#orderstatus) |false |string |Return all status orders if not passed |
-|limit |false |number |Limit for data size per page. [1,50]. default: `20`|
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
 ### Response Parameters
@@ -45,7 +45,7 @@ GET `/v5/order/history`
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
-|> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes.) |
+|> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> rejectReason |string |Reject reason |

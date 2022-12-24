@@ -1,42 +1,41 @@
 ---
-title: Amend Order
-sidebar_label: Amend Order
+title: 修改委託單
+sidebar_label: 修改委託單
 sidebar_position: 2
 ---
-> **Cover: Linear Perpetual (Unified Account) / Option (Unified Account)**
+> **覆蓋範圍: 正向合約（統一帳戶模式） / 期權（統一帳戶模式）**
 
 :::info important
-You could modify those **unfilled** or **partially filled** orders.
+您只能修改那些**未成交**或者**部分成交**的訂單。
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/v5/order/amend`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`,`option` |
-|symbol |**true** |string |Symbol name|
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
-|triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > max(market price, basePrice)_ Else,<br/>_triggerPrice < min(market price, basePrice)_|
-|qty |false |string |Order quantity after modification. Do not pass it if not modify the qty|
-|price |false |string |Order price after modification. Do not pass it if not modify the price|
-|takeProfit |false |string |Take profit price after modification. Do not pass it if not modify the take profit |
-|stopLoss |false |string |Stop loss price after modification. Do not pass it if not modify the Stop loss |
-|[tpTriggerBy](../enum#triggertype) |false |string |The price type to trigger take profit. `LastPrice`,`MarkPrice`|
-|[slTriggerBy](../enum#triggertype) |false |string |The price type to trigger stop loss. `LastPrice`,`MarkPrice`|
-|[triggerBy](../enum#triggertype) |false |string |Trigger price type. `LastPrice`,`IndexPrice`|
+|[category](../enum#category) |**true** |string |產品類型. `linear`,`option` |
+|symbol |**true** |string |合約名稱|
+|orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
+|orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|iv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
+|triggerPrice |false |string |觸發價格. 若希望市場趨勢是上漲至觸發條件單, 則確保:<br/> _觸發價格 > 市場價格_<br/>否則,_觸發價格 < 市場價格_|
+|qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
+|price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
+|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段 |
+|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段 |
+|[tpTriggerBy](../enum#triggertype) |false |string |止盈價格觸發類型. `LastPrice`,`MarkPrice`|
+|[slTriggerBy](../enum#triggertype) |false |string |止損價格觸發類型. `LastPrice`,`MarkPrice`|
+|[triggerBy](../enum#triggertype) |false |string |觸發價格的觸發類型. `LastPrice`,`IndexPrice`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|orderId |string |Order ID |
-|orderLinkId |string |User customised order id |
+|orderId |string |訂單Id |
+|orderLinkId |string |用戶自定義訂單Id |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -47,12 +46,12 @@ GET `/v5/order/amend`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>

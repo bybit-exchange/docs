@@ -1,46 +1,45 @@
 ---
-title: Batch Cancel Order
-sidebar_label: Batch Cancel Order
+title: 批量撤銷委託單
+sidebar_label: 批量撤銷委託單
 sidebar_position: 9
 ---
-This endpoint provides the batch order mode to cancel a bunch of open orders.
-> **Cover: Option (Unified Account)**
+該接口可以批量撤銷多筆訂單
+> **覆蓋範圍: 期權 (統一帳戶)**
 
-
-:::info important
-- You must specify `orderId` or `orderLinkId` when batch cancel.
-- If `orderId` and `orderLinkId` is not matched, system will process `orderId` first.
-- You can cancel unfilled, partially filled orders.
-- A maximum of 10 orders can be amended in per request.
+:::info 重要
+- 您必須指定`orderId`或者`orderLinkId`.
+- 若`orderId`和`orderLinkId`之間不匹配, 系統將會優先處理`orderId`.
+- 您只能撤銷未成交和部分成交的訂單.
+- 單個請求最多支持撤銷20筆訂單.
 :::
 
-### HTTP Request
+### HTTP請求
 POST `/v5/order/cancel-batch`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
 |request |**true** |array |Object |
-|> symbol |**true** |string |Symbol name |
-|> orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|> orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|> symbol |**true** |string |合約名稱 |
+|> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|> orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result |Object | |
 |> list |array |Object |
-|>> category |string |Products category |
-|>> symbol |string |Symbol name |
-|>> orderId |string |Order id |
-|>> orderLinkId |string |User customised order id |
+|>> category |string |產品類型 |
+|>> symbol |string |合約名稱 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義訂單Id |
 |retExtInfo |Object | |
 |> list |array |Object |
-|>> code |number |Success/error code |
-|>> msg |string |Success/error message |
+|>> code |number |成功/錯誤碼 |
+|>> msg |string |成功/錯誤信息 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -51,7 +50,7 @@ POST `/v5/order/cancel-batch`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">

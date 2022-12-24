@@ -27,9 +27,9 @@ GET `/v5/order/realtime`
 |settleCoin |false |string |Settle coin. for `linear` ONLY|
 |orderId |false |string |Order id |
 |orderLinkId |false |string |User customised order id |
-|openOnly |false |integer |<li>`0`(default): query open orders ONLY</li><li>`1`: return all status orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li>|
-|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order|
-|limit |false |number |Limit for data size per page. [1,50]. default: `20`|
+|openOnly |false |integer |<li>`0`(default): query open orders ONLY</li><li>`1`: return cancelled, rejected or totally filled orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li>|
+|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot tp/sl order. default: all kinds of orders|
+|limit |false |integere |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
 ### Response Parameters
@@ -43,7 +43,7 @@ GET `/v5/order/realtime`
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
-|> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes.) |
+|> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes.|
 |> [orderStatus](../enum#orderstatus) |string |Order status |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> rejectReason |string |Reject reason |

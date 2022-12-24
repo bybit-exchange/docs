@@ -1,65 +1,51 @@
 ---
-title: Batch Place Order
-sidebar_label: Batch Place Order
+title: 批量創建委託單
+sidebar_label: 批量創建委託單
 sidebar_position: 7
 ---
-> **Cover: Option (Unified Account)**
+> **覆蓋範圍: 期權 (統一帳戶)**
 
 :::tip
-This endpoint provides the batch order mode to place a bunch of orders.
-- Make sure you have sufficient funds in your account when place an order. Once an order is placed, according to the
-funds required by the order, the funds in your account will be frozen by the corresponding amount during the life cycle
-of the order.
-- The same request can only contain orders of the same contract type, i.e., options and futures cannot be placed at the same
-time. Only `Limit` / `Market` active order is supported, the conditional order is not supported.
-- If both future and option orders are in one request, then by given the category type, only the orders whose
-symbol _matches the category_ will be operated.
-- The maximum number of orders included in each request is **10** orders. The returned data list is divided into two lists.
-The list created by the order and the created information are returned. The structure of the two lists are completely consistent.
+該接口支持批量創建委託單
+- 下單時需確保帳戶內有足夠的資金。一旦下單，根據訂單所需資金，您的帳戶資金將在訂單生命週期內凍結相應額度，被凍結的資金額度取決於訂單屬性。
+- 每個請求包含的訂單數最大是20筆，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
 :::
 
-### HTTP Request
+### HTTP請求
 POST `/v5/order/create-batch`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `option` |
+|[category](../enum#category) |**true** |string |產品類型. `option` |
 |request |**true** |array |Object |
-|> symbol |**true** |string |Symbol name|
-|> side |**true** |string |`Buy`, `Sell`|
-|> orderType |**true** |string |`Market`, `Limit`|
-|> qty |**true** |string |Order quantity|
-|> price |false |string |Order price. Invalid if `orderType`=_Market_|
-|> iv |false |string |Implied volatility. `option` ONLY. `iv` has a higher priority than `price`. Pass the real value, e.g for 10%, 0.1 should be passed |
-|> timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
-|> orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
-|> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. |
-|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
-|> mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |
+|> symbol |**true** |string |合約名稱|
+|> side |**true** |string |方向. `Buy`, `Sell`|
+|> orderType |**true** |string |訂單類型. `Market`, `Limit`|
+|> qty |**true** |string |訂單數量|
+|> price |false |string |訂單價格. 當`orderType`=_Market_, 設置的price無效|
+|> iv |false |string |隱含波動率. 僅`option`. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `iv`比`price`有更高的優先級. |
+|> timeInForce |**true** |string |訂單執行策略. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
+|> orderLinkId |false |string |用戶自定義訂單Id. 最長支持36位字符，可由數字，字母，橫線，下劃線組成。<br/>_`option`規則_:<br/><li>**必傳**</li><li>總是唯一</li>|
+|> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉訂單?</a> `true` 將這筆訂單設為只減倉，_只減倉單的止盈止損不生效_ |
+|> mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result |Object | |
 |> list |array |Object |
-|>> category |string |Products category |
-|>> symbol |string |Symbol name |
-|>> orderId |string |Order id |
-|>> orderLinkId |string |User customised order id |
-|>> createAt |string |Order created time (ms) |
+|>> category |string |產品類型 |
+|>> symbol |string |合約名稱 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義訂單Id |
+|>> createAt |string |訂單創建時間 (毫秒) |
 |retExtInfo |Object | |
 |> list |array |Object |
-|>> code |number |Success/error code |
-|>> msg |string |Success/error message |
+|>> code |number |成功/錯誤碼 |
+|>> msg |string |成功/錯誤消息 |
 
-### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|orderId |string |Order ID |
-|orderLinkId |string |User customised order id |
-
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -70,12 +56,12 @@ POST `/v5/order/create-batch`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>
