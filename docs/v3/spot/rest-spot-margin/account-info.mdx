@@ -10,26 +10,22 @@ GET <code>/spot/v3/private/cross-margin-account</code>
 #### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|<a href="#currency-currency-coin">coin</a>|false|string|currency|
-|status|false|int|Status. <code>0</code> by default. <ul><li><code>0</code>：get all kinds of status</li><li><code>1</code>：uncleared</li><li><code>2</code>：cleared</li></ul>|
-|limit|false|int|Default is 500; Maximum is 500|
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|list|array|Object|
-|accountId|string|Account ID|
-|coin|string|currency|
-|createdTime|long|Timestamp (Borrowing), unit in millisecond|
-|id|long|Borrowing Id|
-|interestAmount|string|Total Interest|
-|interestBalance|string|Outstanding Interest|
-|loanAmount|string|Principal Amount|
-|loanBalance|string|Outstanding Principal|
-|status|int|Status. <code>1</code>：uncleared, <code>2</code>：cleared|
-|type|int|Order Type (1. Manual 2. Auto)|
+|acctBalanceSum|string|Total Equity (BTC)|
+|debtBalanceSum|string|Total Liability (BTC)|
+|loanAccountList|array|Object|
+|> free|string|Available|
+|> interest|string|Interest Left|
+|> loan|string|Total Liability|
+|> locked|string|Locked|
+|> tokenId|string|Token Id|
+|> total|string|Total|
+|riskRate|string|Risk Rate|
+|status|int|Status (1. Normal 2. Withdrawal/Transfer Restricted 3. Liquidation Alert Triggered 4. Liquidated 5. Negative Equity)|
+
 
 ### Request Example
 

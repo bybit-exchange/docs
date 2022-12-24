@@ -9,31 +9,23 @@ If symbol is not specified, the best order price from all symbols will be return
 :::
 
 #### HTTP Request
-GET <code>/spot/v3/public/symbols</code>
+GET <code>/spot/v3/public/quote/ticker/bookTicker</code>
 
 
 #### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|symbol |**true**|string|Name of the trading pair|
 
 #### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|name |string |Name of the trading pair |
-| name                 | string          | Name of the trading pair            |
-| alias                | string          | Alias            |
-| baseCoin             | string          | Base currency      |
-| quoteCoin            | string          | Quote currency     |
-| basePrecision        | string          | Decimal precision (base currency)     |
-| quotePrecision       | string          | Decimal precision (quote currency)    |
-| minTradeQty          | string          | Min. order qty (Not valid for market buy orders)  |
-| minTradeAmt          | string          | Min. order value (Only valid for market buy orders)    |
-| minPricePrecision    | string          | Min. number of decimal places |
-| maxTradeQty          | string          | Max. order qty (It is ignored when you place an order with order type LIMIT_MAKER)  |
-| maxTradeAmt          | string          | Max. order value (It is ignored when you place an order with order type LIMIT_MAKER)    |
-| category             | string          |  Category          |
-| innovation           | string          | <code>1</code> indicates that the price of this currency is relatively volatile     |
-| showStatus           | string          | <code>1</code> indicates that the symbol open for trading     |
+| symbol | string | Name of the trading pair |
+| bidPrice | string | Best bid price |
+| bidQty | string | Bid quantity |
+| askPrice | string | Best ask price |
+| askQty | string | Ask quantity |
+| time | long | Millisecond timestamp |
 
 ### Request Example
 

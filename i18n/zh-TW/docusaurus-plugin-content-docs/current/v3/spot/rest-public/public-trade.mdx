@@ -1,4 +1,56 @@
 ---
-title: Public Trading Records
-sidebar_label: Public Trading Records
+title: 平臺交易歷史數據
+sidebar_label: 平臺交易歷史數據
+sidebar_position: 5
 ---
+
+
+#### HTTP 請求
+GET <code>/spot/v3/public/quote/trades</code>
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+| symbol | **true** | string | 幣對名稱 |
+| limit | false | integer | 默認60，最大60 |
+
+#### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| price | string | 價格 |
+| time | long | 當前Unix時間戳，毫秒(ms) |
+| qty | string | 交易數量 |
+| isBuyerMaker | integer | `0`：買單, `1`：賣單 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/trades?symbol=BTCUSDT&limit=1'
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```javascript
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [
+      {
+        "price": "21170.14",
+        "time": 1659429793926,
+        "qty": "0.907276",
+        "isBuyerMaker": 0
+      }
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1659429835311
+}
+```
