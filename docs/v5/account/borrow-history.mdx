@@ -5,25 +5,48 @@ sidebar_position: 4
 ---
 Get interest records, sorted in reverse order of creation time.
 
-#### HTTP Request
+### HTTP Request
 GET `/v5/account/borrow-history`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |currency |false |string |USDC、USDT、BTC、ETH|
-|startTime |false |int |Start time. timestamp in milliseconds|
-|endTime |false |int |End time. timestamp in milliseconds|
-|limit |false |integer |size per page, Maximum 50. The default is 20 items per page|
-|cursor	|false |string |cursor for pagination, please use the returned cursor, use the returned cursor when generating signature. Please use urlencode when sending the request|
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end time. timestamp (ms) |
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|list > currency |string |USDC、USDT、BTC、ETH|
-|list > createdTime |int64 |created time, timestamp in milliseconds|
-|list > borrowCost |string |Interest|
-|list > hourlyBorrowRate |string |Hourly Borrow Rate
-|list > InterestBearingBorrowSize |string |Interest Bearing Borrow Size
-|list > borrowSize |string |borrowe size
-|list > costExemption |string |cost exemption
+|list |array |Object|
+|> currency |string |USDC、USDT、BTC、ETH|
+|> createdTime |integer |Created timestamp (ms)|
+|> borrowCost |string |Interest|
+|> hourlyBorrowRate |string |Hourly Borrow Rate |
+|> InterestBearingBorrowSize |string |Interest Bearing Borrow Size |
+|> costExemption |string |Cost exemption |
+|nextPageCursor |string |Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

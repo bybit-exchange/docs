@@ -5,44 +5,60 @@ sidebar_position: 1
 ---
 Get wallet balance
 
-#### HTTP Request
+### HTTP Request
 GET `/v5/account/wallet-balance`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|accountType |**true** |string |Account type. `CONTRACT`,`SPOT`,`INVESTMENT` - ByFi Account, `OPTION` - USDC Account, `UNIFIED`|
+|[accountType](../enum#accounttype) |**true** |string |Account type |
 |coin |false |string |Coin name|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|accountType |string |Account type. |
-|list > accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
-|list > accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
-|list > totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
-|list > totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.
-|list > totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|list > totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|list > totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|list > totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|list > totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|list > coin |arrays |Coin list
-|coin > coin |string |Coin name, such as BTC, ETH, USDT, USDC
-|coin > equity |string |Equity
-|coin > usdValue |string |usd value
-|coin > walletBalance |string |Wallet balance
-|coin > marginBalance |string |Margin Balance contributed by other assets + remaining Margin Balance of current assets
-|coin > availableBalance |string |Available Balance contributed by other assets + remaining Available Balance of current assets（can not be negative）
-|coin > marginBalanceWithoutConvert	|string	|Margin Balance
-|coin > availableBalanceWithoutConvert |string |Available Balance, Margin Balance - Total Initial Margin
-|coin > borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0;
-|coin > availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0;
-|coin > accruedInterest	|string	|Accrued interest
-|coin > totalOrderIM |string |Pre-occupied margin for order
-|coin > totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee
-|coin > totalPositionMM	|string |Sum of maintenance margin for all positions
-|coin > unrealisedPnl |string |Unrealised P&L
-|coin > cumRealisedPnl |string |Cumulative Realised P&L
-|coin > givenCash |string |Given cash
-|coin > serviceCash	|string |Service cash
+|> accountType |string |Account type. |
+|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.
+|> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> coin |array |Object |
+|>> coin |string |Coin name, such as BTC, ETH, USDT, USDC
+|>> equity |string |Equity
+|>> usdValue |string |usd value
+|>> walletBalance |string |Wallet balance
+|>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0;
+|>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0;
+|>> accruedInterest	|string	|Accrued interest
+|>> totalOrderIM |string |Pre-occupied margin for order
+|>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee
+|>> totalPositionMM	|string |Sum of maintenance margin for all positions
+|>> unrealisedPnl |string |Unrealised P&L
+|>> cumRealisedPnl |string |Cumulative Realised P&L
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

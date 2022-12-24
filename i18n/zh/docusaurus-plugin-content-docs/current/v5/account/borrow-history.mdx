@@ -5,25 +5,49 @@ sidebar_position: 4
 ---
 獲取利息記錄，按照創建時間倒敘排列。
 
-#### HTTP Request
+### HTTP 請求
 GET `/v5/account/borrow-history`
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |currency |false |string |USDC、USDT、BTC、ETH|
-|startTime |false |int |開始時間|
-|endTime |false |int |結束時間|
+|startTime |false |integer |開始時間 (毫秒)|
+|endTime |false |integer |結束時間 (毫秒)|
 |limit |false |integer |每頁數量, 最大50. 默認每頁20條|
-|cursor |false |string |翻頁標記,請使用返回的cursor,簽名時使用返回的原始數據，發送request時請進行urlencode|
+|cursor |false |string |游標，用於翻頁|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|list > currency |string |USDC、USDT、BTC、ETH|
-|list > createdTime |int64 |時間戳（毫秒）|
-|list > borrowCost |string |利息|
-|list > hourlyBorrowRate |string |利率|
-|list > InterestBearingBorrowSize |string |豁免利息額度|
-|list > borrowSize |string |計息借款|
-|list > costExemption |string |豁免計息成本|
+|list |array |Object|
+|> currency |string |USDC、USDT、BTC、ETH|
+|> createdTime |integer |時間戳（毫秒）|
+|> borrowCost |string |利息|
+|> hourlyBorrowRate |string |利率|
+|> InterestBearingBorrowSize |string |豁免利息額度|
+|> borrowSize |string |計息借款|
+|> costExemption |string |豁免計息成本|
+|nextPageCursor |string |游標，用於翻頁 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="response" label="Response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

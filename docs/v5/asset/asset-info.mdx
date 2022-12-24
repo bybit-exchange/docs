@@ -11,19 +11,19 @@ For now, it can query `SPOT` ONLY.
 :::
 
 ### HTTP Request
-GET `/v5/asset/transfer/asset-info-query`
+GET `/v5/asset/transfer/query-asset-info`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |false |string |Account type. `Spot` ONLY |
-|[coin](../enum#accounttype) |false |string |To account type |
+|[accountType](../enum#accounttype) |**true** |string |Account type. `Spot` ONLY |
+|[coin](../enum#accounttype) |false |string |Coin name |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |spot |Object| |
-|> status |string |account status. `ACCOUNT_STATUS_NORMAL`,`ACCOUNT_STATUS_UNSPECIFIED` |
+|> status |integer |account status. `1`: normal, `0`: banned |
 |> assets |array|Object |
 |>> coin |string|Coin |
 |>> frozen |string|Freeze amount |
