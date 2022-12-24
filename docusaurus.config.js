@@ -27,10 +27,9 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh'],
+    locales: ['en', 'zh-TW'],
     localeConfigs: {
       en: { label: 'English' },
-      zh: { label: '繁體中文' },
     },
   },
   plugins: [
