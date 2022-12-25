@@ -1,0 +1,53 @@
+---
+title: 提現
+sidebar_label: 提現
+sidebar_position: 16
+---
+
+提現僅從現貨帳戶中完成. 若目標地址是Bybit平台內部地址，您可以實現內部平台轉帳
+
+:::caution
+確保您已經將提現地址加入到<a href="https://www.bybit.com/user/assets/money-address">這裡</a>
+:::
+
+### HTTP 請求
+POST `/v5/asset/withdraw/create`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |**true** |string |幣種 |
+|chain |**true** |string |鏈名 |
+|address |**true** |string |錢包地址 |
+|tag |false |string |標籤. 若添加地址時有填寫tag，則該字段**必傳** |
+|amount |**true** |string |提現金額 |
+|timestamp |**true** |integer |當前時間戳 (毫秒). 用於防止請求重放 |
+|forceChain |false |integer |是否強制走鏈<li>`0`(默認): 若提現地址解析後發現是平台內部地址，則自動轉為走內部平台轉帳</li><li>`1`: 強制走鏈</li> |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|id |string|提現Id |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

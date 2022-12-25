@@ -1,0 +1,65 @@
+---
+title: 查詢子帳號的充值紀錄
+sidebar_label: 查詢子帳號的充值紀錄
+sidebar_position: 13
+---
+
+僅能通過**主帳號**的API KEY來查詢子帳號的充值紀錄
+
+:::tip
+* 現貨帳戶下的充值紀錄
+* `endTime` - `startTime` 需要小於等於30天. 默認查詢最近30天的紀錄
+:::
+
+### HTTP 請求
+GET `/v5/asset/deposit/qyert-record`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|subMemberId |**true** |string |子帳號 |
+|coin |false |string |幣種 |
+|startTime |false |integer |開始時間戳 (毫秒) |
+|endTime |false |integer |結束時間戳 (毫秒) |
+|limit |false |integer |每頁數量限制. [1,50]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> coin |string |幣種 |
+|> chain |string|鏈名 |
+|> amount |string|充值金額 |
+|> txID |string|交易Id. 充值失敗或取消充值時為空 |
+|> [status](../enum#depositstatus) |integer|充值狀態 |
+|> toAddress |string|充值的目標地址 |
+|> tag |string|充值目標地址的tag |
+|> depositFee |string|充值手續費 |
+|> successAt |string|最後更新時間 |
+|> confirmations |string|确认区块的数量 |
+|> txIndex |string|交易序列号 |
+|> blockHash |string|鏈上的哈希數 |
+|nextPageCursor |string |游標，用於翻頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

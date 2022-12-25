@@ -1,0 +1,52 @@
+---
+title: 查詢支持的充值幣種信息
+sidebar_label: 查詢支持的充值幣種信息
+sidebar_position: 11
+---
+
+通過[幣種信息](coin-info#)接口，獲取幣鏈組合
+
+### HTTP 請求
+GET `/v5/asset/deposit/query-allowed-list`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |充值幣種. `coin`和`chain`必須配對傳遞，否則是無效查詢 |
+|chain |false |string |充值鏈名. `coin` 和 `chain`必須配對傳遞，否則是無效查詢|
+|limit |false |integer |每頁數量限制. [1,100]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|configList |array|Object |
+|> coin |string |幣種 |
+|> chain |string|鏈名 |
+|> coinShowName |string|幣種名稱 |
+|> chainType |string|鏈的類型 |
+|> blockConfirmNumber |integer|充值上賬確認數 |
+|> minDepositAmount |string|最低充值金額 |
+|nextPageCursor |string |游標，用於翻頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>
