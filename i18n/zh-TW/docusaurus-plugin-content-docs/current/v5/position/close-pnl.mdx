@@ -1,49 +1,49 @@
 ---
-title: Get Closed PnL
-sidebar_label: Get Closed PnL
+title: 查詢平倉盈虧
+sidebar_label: 查詢平倉盈虧
 sidebar_position: 11
 ---
 
-Query user's closed profit and loss records. The results are sort by `createdTime` in descending order.
-> **Cover: Linear Perpetual(Unified Account)**
+獲取當前用戶的所有平倉盈虧數據，返回結果按照`createdTime`降序排列.
+> **覆蓋範圍: 正向合約(統保帳戶)**
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/position/closed-pnl`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear` |
-|symbol |false |true |Symbol name |
-|startTime |false |integer |The start timestamp (ms)|
-|endTime |false |integer |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. default: `50`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `linear` |
+|symbol |false |string |合約名稱 |
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> orderId |string |Order Id |
-|> side |string |`Buy`, `Side` |
-|> qty |string |Order qty |
-|> orderPrice |string |Order price |
-|> orderType |string |Order type. `Market`,`Limit` |
-|> [execType](../enum#execType) |string |Exec type |
-|> closedSize |string |Closed size |
-|> cumEntryValue |string |Cumulated entry position value |
-|> avgEntryPrice |string |Average entry price |
-|> cumExitValue |string |Cumulated exit position value |
-|> avgExitPrice |string |Average exit price |
-|> closedPnl |string |Closed PnL |
-|> fillCount |string |The number of fills in a single order |
-|> leverage |string |leverage |
-|> createdTime |string |The created time (ms) |
-|> updatedTime |string |The updated time (ms) |
-|nextPageCursor |string |Cursor. Used to pagination |
+|> symbol |string |合約名稱 |
+|> orderId |string |訂單Id |
+|> side |string |買賣方向 `Buy`, `Side` |
+|> qty |string |訂單數量 |
+|> orderPrice |string |訂單價格 |
+|> orderType |string |訂單類型. `Market`,`Limit` |
+|> [execType](../enum#exectype) |string |執行類型 |
+|> closedSize |string |平倉數量 |
+|> cumEntryValue |string |被平倉位的累計入場價值 |
+|> avgEntryPrice |string |被平倉位的平均入場價格 |
+|> cumExitValue |string |被平倉位的累計出場價值 |
+|> avgExitPrice |string |被平倉位的累計出場價格 |
+|> closedPnl |string |被平倉位的盈虧 |
+|> fillCount |string |成交筆數 |
+|> leverage |string |持倉槓桿 |
+|> createdTime |string |倉位創建時間 (毫秒) |
+|> updatedTime |string |倉位更新時間 (毫秒) |
+|nextPageCursor |string |游標，用於翻頁 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -55,12 +55,12 @@ POST `/v5/position/closed-pnl`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>

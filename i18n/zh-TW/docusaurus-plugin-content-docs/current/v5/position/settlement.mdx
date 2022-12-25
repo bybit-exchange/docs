@@ -1,38 +1,38 @@
 ---
-title: Get USDC Perpetual Settlement
-sidebar_label: Get USDC Perpetual Settlement
+title: 查詢結算紀錄 (USDC永續)
+sidebar_label: 查詢結算紀錄 (USDC永續)
 sidebar_position: 13
 ---
 
-Query session settlement records of USDC perpetual
-> **Cover: Linear Perpetual (USDC Perpetual ONLY)**
+查詢USDC永續的結算紀錄
+> **覆蓋範圍: 正向合約 (僅USDC永續，統一帳戶)**
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/asset/settlement-record`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear` |
-|symbol |false |string |Symbol name |
-|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `linear` |
+|symbol |false |string |合約名稱 |
+|limit |false |integer |每頁數量限制. [1,50]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type|
+|category |string |產品類型|
 |list |array |Object |
-|> symbol |string |Symbol name |
+|> symbol |string |合約名稱 |
 |> side |string |`Buy`,`Sell` |
-|> size |integer |Position size |
-|> sessionAvgPrice |string |Settlement price |
-|> markPrice |string |Mark price |
-|> realisedPnl |string |Realised PnL |
-|> createdTime |string |Created time (ms) |
-|nextPageCursor |string |Cursor. Used to pagination |
+|> size |integer |倉位大小 |
+|> sessionAvgPrice |string |結算價格 |
+|> markPrice |string |標記價格 |
+|> realisedPnl |string |已實現盈虧 |
+|> createdTime |string |結算時間 (毫秒) |
+|nextPageCursor |string |游標，用於翻頁 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -43,7 +43,7 @@ POST `/v5/asset/settlement-record`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
