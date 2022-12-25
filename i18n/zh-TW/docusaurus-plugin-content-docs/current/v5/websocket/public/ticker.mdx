@@ -1,0 +1,68 @@
+---
+title: 行情
+sidebar_label: 行情
+sidebar_position: 3
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+訂閱行情數據推送.<br/>
+:::caution
+注意，該topic推送delta數據和snapshot数据。如果delta數據為空，表明信息沒有發生變化。
+:::
+推送頻率: **100ms**
+
+**Topic:**<br/>
+`tickers.{symbol}`
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`,`delta` |
+|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|data |array |Object |
+|> category |string |產品類型 |
+|> symbol |string |合約名稱 |
+|> lastPrice |string |最新市場成交價 |
+|> indexPrice |string |指數價格 |
+|> markPrice |string |標記價格 |
+|> underlyingPrice |string |底層資產對應的價格 |
+|> bid1Price |string |買 1 價 |
+|> ask1Price |string |賣 1 價 |
+|> bid1Size |string |買1價的數量  |
+|> ask1Size |string |賣1價的數量 |
+|> openInterest |string |未平倉合約的數量 |
+|> openInterestValue |string |未平倉合約的價值 |
+|> nextFundingTime |string |下次結算資金費用的時間（UTC毫秒時間戳） |
+|> fundingRate |string |資金費率，僅永續合約 |
+|> prevPrice1h |string |1小時前的整點市價 |
+|> lowPrice24h |string |最近24小時的最低價 |
+|> highPrice24h |string |最近24小時的最高價 |
+|> prevPrice24h |string |24小時前的整點市價 |
+|> price24hPcnt |string |市場價格相對24h前變化的百分比 |
+|> volume24h |string |最近24小時成交量 |
+|> turnover24h |string |最近24小時成交額 |
+|> ask1Iv |string |買1價格對應的iv |
+|> bid1Iv |string |賣1價格對應的iv |
+|> markPriceIv |string |標記價格的iv |
+|> deliveryTime |string |交割時間. 僅反向交割和期權有效 |
+|> deliveryFeeRate |string |交割費率. 僅反向交割和期權有效|
+|> predictedDeliveryPrice |string |Predicated delivery price |
+|> vega |string |Vega值 |
+|> delta |string |Delta值 |
+|> theta |string |Theta值 |
+|> gamma |string |Gamma值 |
+|> basisRate |string |交割合約基差率 |
+
+### Response Example
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

@@ -1,0 +1,51 @@
+---
+title: ETP淨值K線
+sidebar_label: ETP淨值K線
+sidebar_position: 6
+---
+
+訂閱槓桿代幣的淨值K線行情推送服務
+
+:::tip
+若`confirm`=true, 則表示這根蠟燭是最後一根K線, 否則，這是切片數據
+:::
+
+**可用的時間粒度:**<br/>
+* `1` `3` `5` `15` `30` (分鐘)
+* `60` `120` `240` `360` `720` (分鐘)
+* `D` (天)
+* `W` (週)
+* `M` (月)
+
+**推送頻率:** 1-60秒
+
+**Topic:**<br/>
+`kline_lt.{interval}.{symbol}` e.g., kline_lt.30.BTC3SUSDT [确认symbol的写法，是BTC3S还是BTC3SUSDT]
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot` |
+|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|data |array |Object |
+|> start |integer |開始時間戳 (毫秒) |
+|> end |integer |結束時間戳 (毫秒). 若時間還未到時間跨度的最後時間，則表示當前時間 |
+|> [interval](../../enum#interval) |string |K線粒度 |
+|> open |string |開盤價 |
+|> close |array |收盤價  |
+|> high |string |最高價 |
+|> low |string |最低價 |
+|> confirm |boolean |是否確認 |
+|> timestamp |integer |蠟燭中最後一筆淨值時間戳 (毫秒) |
+
+### 響應示例
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

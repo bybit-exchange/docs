@@ -1,0 +1,55 @@
+---
+title: 查詢幣種信息
+sidebar_label: 查詢幣種信息
+sidebar_position: 13.5
+---
+
+獲取幣種信息，包括鏈信息，是否可充可提
+
+### HTTP 請求
+GET `/v5/asset/coin/query-record`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |幣種 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> name |integer |幣種名稱 |
+|> coin |string |幣種 |
+|> remainAmount |string |當前最大可提現數量|
+|> chains |array |Object |
+|>> chain |string |鏈名 |
+|>> chainType |string |鏈類型 |
+|>> confirmation |string |充值上賬確認數 |
+|>> withdrawFee |string |提現手續費. _如果提現費為空，則表示該幣不支持提現_ |
+|>> depositMin |string |最小充值數量 |
+|>> withdrawMin |string |最小提現數量 |
+|>> minAccuracy |string |充提幣的最小精度 |
+|>> chainDeposit |string |幣鏈是否可充值. `0`: 暫停. `1`: 正常 |
+|>> chainWithdraw |string |幣鏈是否可提幣. `0`: 暫停. `1`: 正常 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

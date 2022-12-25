@@ -1,67 +1,67 @@
 ---
-title: Get Execution (half year)
-sidebar_label: Get Execution (half year)
+title: 查詢成交紀錄 (半年)
+sidebar_label: 查詢成交紀錄 (半年)
 sidebar_position: 5
 ---
 
-Query users' execution records, sort by `execTime` in descending order
-> **Cover: Spot (Unified Account) / Linear Perpetual (Unified Account) / Option (Unified Account)**
+獲取用戶成交紀錄，返回結果按`execTime`降序排列
+> **覆蓋範圍: 現貨 (統一帳戶) / 正向合約 (統一帳戶) / 期權 (統一帳戶)**
 
 :::tip
-* You may have multiple executions in a single order.
-* It supports to query up to last half year data
-* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+* 單筆訂單可能會有多次成交.
+* 該接口支持查詢半年內數據.
+* 您可以通過指定symbol, baseCoin, orderId and orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/position/execution-list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`,`linear`,`option` |
-|symbol |false |string |Symbol name |
-|orderId |false |string |Order id. Return all records if not passed |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|baseCoin |false |string |Base coin. for `option` ONLY. Return **BTC** data if not passed|
-|startTime |false |integer |The start timestamp (ms)|
-|endTime |false |integer |The end timestamp (ms)|
-|[execType](../enum#exectype) |false |string |Execution type|
-|limit |false |integer |Limit for data size per page. [1,100]. default: `50`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`option` |
+|symbol |false |string |合約名稱 |
+|orderId |false |string |訂單Id |
+|orderLinkId |false |string |用戶自定義訂單id |
+|baseCoin |false |string |交易幣種. 僅期權有效. 不傳則默認返回所有期權支持的交易幣種|
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|[execType](../enum#exectype) |false |string |執行類型|
+|limit |false |integer |每頁數量限制. [1,100]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| category | string  | 交易产品类型，现货：spot，正向合约：linear；期权：option ； |
-| list | Arrays | 返回数据为数组 |
-|> symbol |string   |交易產品名稱                                                        |
-|> orderId |string |Bybit 交易系統返回的36位唯一的訂單序號 |
-|> orderLinkId |string |您自定義設置的訂單 ID，與 orderId 一一對應，最大长度36位，且同一账户下自定义ID不可重复支持数字、字母（大小写）、中划线、下划线这些字符的组合。期权业务必填。 |
+| [category](../enum#category) | string  | 產品類型 |
+| list | array | Object |
+|> symbol |string   |合約名稱|
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義訂單id|
 |> side |string |訂單方向.買： `Buy`,賣：`Sell` |
 |> orderPrice |string |訂單價格 |
 |> orderQty |string |訂單數量 |
 |> leavesQty |string |剩餘委託未成交數量，如果訂單被取消了，則 leavesQty 會返回為 0 |
 |> orderType |string |訂單類型. 市價單：`Market`,限價單：`Limit` |
-|> stopOrderType |string |条件单的订单类型： 止盈：`TakeProfit`；止损： `StopLoss`；追踪出场： `TrailingStop` ；普通条件单：`Stop`，如果该订单不是条件单，则不会返回任何类型 |
-|> execFee |string   |交易手續費                                                    |
+|> stopOrderType |string |条件单的订单类型。如果该订单不是条件单，则不会返回任何类型 |
+|> execFee |string   |交易手續費|
 |> execId |string |成交Id |
 |> execPrice |string |成交價格 |
 |> execQty |string |成交數量 |
-|> execType |string |交易類型 Exec type (exec_type) Trade AdlTrade Funding BustTrade 。（仅 USDT Perps ，Inverse Perps，Inverse Futures）有效 |
+|> [execType](../enum#exectype) |string |交易類型|
 |> execValue |string |成交價值 |
 |> execTime |string |成交時間（毫秒） |
-|> isMaker |Bool |是否是 Maker 訂單,true 為 maker 訂單，false 為 taker 訂單 |
+|> isMaker |Bool |是否是 Maker 訂單,`true` 為 maker 訂單，`false` 為 taker 訂單 |
 |> feeRate |string |手續費率 |
 |> iv |string |隱含波動率，僅期權有效 |
 |> markIv |string |標記價格的隱含波動率，僅期權有效 |
-|&gt; markPrice |string |成交執行時，該 symbol 當時的標記價格 |
+|> markPrice |string |成交執行時，該 symbol 當時的標記價格 |
 |> indexPrice |string |成交執行時，該 symbol 當時的指數價格，目前僅對期權業務有效 |
 |> underlyingPrice |string |成交執行時，該 symbol 當時的底層資產價格，僅期權有效|
 |> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID |
-|nextPageCursor |string |游標，用於分頁|
+|nextPageCursor |string |游標，用於翻頁|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -72,12 +72,12 @@ POST `/v5/position/execution-list`
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 
 ```
 </TabItem>

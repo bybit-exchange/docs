@@ -1,0 +1,62 @@
+---
+title: 查詢提現紀錄
+sidebar_label: 查詢提現紀錄
+sidebar_position: 14
+---
+
+:::tip
+* `endTime` - `startTime`需要小於等於30天. 默認查詢最近30天的紀錄。
+:::
+
+### HTTP 請求
+GET `/v5/asset/withdraw/query-record`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|withdrawID |**true** |integer |提現Id |
+|coin |false |string |幣種 |
+|withdrawType |false |integer |提現類型. `0`(默認): 鏈上提幣. `1`: 平台內部轉帳. `2`: 所有方式|
+|startTime |false |integer |開始時間戳 (毫秒) |
+|endTime |false |integer |結束時間戳 (毫秒) |
+|limit |false |integer |每頁數量限制. [1,50]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> withdrawId |integer |提現Id |
+|> txID |string |交易Id，提現失敗/提現撤銷/內部轉帳：為空 |
+|> withdrawType |string |提現類型. `0`(默認): 鏈上提幣. `1`: 內部轉帳. `2`: 所有方式|
+|> coin |string |幣種 |
+|> chain |string |鏈名 |
+|> amount |string |提幣金額 |
+|> withdrawFee |string |提幣手續費 |
+|> [status](../enum#withdrawstatus) |string |提幣狀態 |
+|> toAddress |string |提現目標地址. 內部轉帳：顯示郵箱或手機號 |
+|> tag |string |標籤 |
+|> createTime |string |提現創建時間戳 (毫秒) |
+|> updateTime |string |提現更新時間戳 (毫秒) |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>

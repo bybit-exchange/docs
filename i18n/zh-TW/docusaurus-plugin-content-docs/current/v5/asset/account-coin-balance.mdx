@@ -1,0 +1,57 @@
+---
+title: 查詢帳戶幣種餘額查詢
+sidebar_label: 查詢帳戶幣種餘額查詢
+sidebar_position: 0.3
+---
+
+獲取某[帳戶類型](../enum#accounttype)下某指定幣種的餘額。
+
+:::caution
+僅支持母帳號API KEY
+:::
+
+### HTTP 請求
+GET `/v5/asset/transfer/query-account-coin-balance`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|memberId |false |integer |用戶Id. 當查詢子帳號的餘額時，該字段**必傳**|
+|[accountType](../enum#accounttype) |**true** |string |帳戶類型 |
+|coin |**true** |string |幣種 |
+|withBonus |false |integer |是否查詢體驗金. `0`: 否,`1`: 是. 默認不查詢  |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|accountType |string |賬戶類型 |
+|bizType |integer |帳戶業務子類型 |
+|accountId |integer |賬戶ID |
+|memberId |integer |用戶ID |
+|balance |Object | |
+|> coin |string |幣種類型 |
+|> walletBalance |string |錢包余額 |
+|> transferBalance |string |可划余額 |
+|> bonus |string |可用金額中包含的体验金 |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js response" label="response">
+
+```json
+
+```
+</TabItem>
+</Tabs>
