@@ -2,26 +2,27 @@
 title: Public Trading History
 sidebar_label: Public Trading History
 sidebar_position: 8
+slug: /derivatives/public/trade
 ---
 
 Get recent public trading records in Bybit. You could download archived USDT contract trade records <a href="https://public.bybit.com/trading/">here</a>.
 
-#### HTTP Request
+### HTTP Request
 GET `/derivatives/v3/public/recent-trade`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Products category. <li>`category`=null or future, then `symbol` is **required**</li><li>`category`=option, then `symbol` is **optional**</li> |
+|[category](../../v3/derivatives/enum#category) |false |string |Product type.`linear`,`inverse`,`option` <li>`category` not passed or =`linerar`,`inverse`, then `symbol` is **required**</li><li>`category`=option, then `symbol` is **optional**</li> |
 |symbol |false |string |Symbol name|
 |baseCoin |false |string |Base coin. default: **BTC**. Valid only when `category`=option |
 |optionType |false |string |Option type. `Call` or `Put`. Valid only when `category`=option|
 |limit |false |string |Limit for data size per page. [1,1000]. default: `500`|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |Products category |
+|category |string |Product type |
 |list |array |Object |
 |> execId |string |Execution id |
 |> symbol |string |Symbol name |
@@ -30,3 +31,46 @@ GET `/derivatives/v3/public/recent-trade`
 |> side |string |`Buy`, `Sell` |
 |> time |string |Trade time |
 |> isBlockTrade |boolean |Is block trade |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /derivatives/v3/public/recent-trade?category=linear&symbol=BTCUSDT&limit=1 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+            "execId": "5706445b-8543-59bc-8988-93e0f4a3f0f9",
+            "symbol": "BTCUSDT",
+            "price": "16814.50",
+            "size": "0.001",
+            "side": "Buy",
+            "time": "1671970297430",
+            "isBlockTrade": false
+        }
+    ]
+},
+    "retExtInfo": {},
+    "time": 1671970297723
+}
+```
+</TabItem>
+</Tabs>

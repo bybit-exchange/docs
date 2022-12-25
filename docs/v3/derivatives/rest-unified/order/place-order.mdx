@@ -31,13 +31,13 @@ situation is allowed: _The same account can hold 300 BTCUSD active orders and 28
 When the upper limit of orders is reached, you can still place orders with parameters of **reduceOnly** or **closeOnTrigger**.
 :::
 
-#### HTTP Request
+### HTTP Request
 POST `/unified/v3/private/order/create`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|[category](../../v3/derivatives/enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |**true** |string |Symbol name|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
@@ -58,7 +58,7 @@ POST `/unified/v3/private/order/create`
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 |mmp |false |boolean |Market maker protection. `true` means this order is a market maker protection order |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |orderId |string |Order ID |
