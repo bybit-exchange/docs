@@ -1,0 +1,79 @@
+---
+title: Set Trading Stop
+sidebar_label: Set Trading Stop
+sidebar_position: 5
+slug: /derivatives/unified/trading-stop
+---
+:::tip
+
+:::
+
+### HTTP Request
+POST `/unified/v3/private/position/trading-stop`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../../v3/derivatives/enum#category) |**true** |string |Product type. `linear` |
+|symbol |**true** |string |Symbol name|
+|takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
+|stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
+|trailingStop |false |string |Cannot be less than 0, 0 means cancel TS. _note: valid for USDT Perpetual ONLY_ |
+|[tpTriggerBy](../../v3/derivatives/enum#triggerby) |false |string |Take profit trigger price type. default: `LastPrice` |
+|[slTriggerBy](../../v3/derivatives/enum#triggerby) |false |string |Stop loss trigger price type. default: `LastPrice` |
+|activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached ONLY |
+|tpSize |false |string |Take profit size. Valid in tp-sl partial mode |
+|slSize |false |string |Stop loss size. Valid in tp-sl partial mode |
+|[positionIdx](../../v3/derivatives/enum#positionidx) |**true** |string |Used to identify positions in different position modes. `0`: one-way mode for unified margin only |
+
+### Response Parameters
+None
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-console" label="Console">
+
+```http
+POST /unified/v3/private/position/trading-stop HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXX
+X-BAPI-API-KEY: XXXX
+X-BAPI-TIMESTAMP: 1672017116301
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "linear",
+    "symbol":"BTCUSDT",
+    "takeProfit":"18000",
+    "stopLoss":"15500",
+    "tpTriggerBy":"MarkPrice",
+    "slTriggerBy":"MarkPrice",
+    "trailingStop": null,
+    "activePrice": null,
+    "slSize": "0.05",
+    "tpSize": "0.1",
+    "positionIdx": 0
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="json-response" label="Response">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1672017116958
+}
+```
+</TabItem>
+</Tabs>

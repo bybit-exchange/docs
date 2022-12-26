@@ -13,23 +13,23 @@ As order creation/cancellation is **asynchronous**, the data returned from this 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
+### HTTP Request
 GET `/unified/v3/private/order/list`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|[category](../../v3/derivatives/enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |false |string |Symbol name|
 |orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|orderStatus |false |string |Return all status orders if not passed. You could pass multiple status, separated by comma |
+|[orderStatus](../../v3/derivatives/enum#orderstatus) |false |string |Return all status orders if not passed. You could pass multiple status, separated by comma |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
 |direction |false |string |Page direction. `prev`, `next`. default: `next`|
 |limit |false |string |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
 <TabItem value="linear" label="linear" default>
     <table border="0.5">

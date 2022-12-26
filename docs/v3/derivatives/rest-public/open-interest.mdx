@@ -2,6 +2,7 @@
 title: Open Interest
 sidebar_label: Open Interest
 sidebar_position: 11
+slug: /derivatives/public/open-interest
 ---
 
 Get open interest of each symbol in Bybit
@@ -10,24 +11,67 @@ Get open interest of each symbol in Bybit
 TODO: 支持查詢多久的未平仓合约數據？
 :::
 
-#### HTTP Request
+### HTTP Request
 GET `/derivatives/v3/public/open-interest`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Products category. `future` ONLY |
+|[category](../../v3/derivatives/enum#category) |false |string |Product type. `linear`,`inverse`. default: `linear`, but in the response category shows `""`|
 |symbol |<b>true</b> |string |Symbol name|
 |interval |<b>true</b> |string |Interval. `5min` `15min` `30min` `1h` `4h` `1d` |
 |startTime |false |string |The start timestamp (ms)|
 |endTime |false |string |The end timestamp (ms)|
 |limit |false |string |Limit for data size per page. [1,200]. default: `50`|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |symbol |string |Symbol name |
-|category |string |Products category. Keeps empty string `""` when `category` is not passed |
+|category |string |Product type. Keeps empty string `""` when `category` is not passed |
 |list |array |Object |
 |> openInterest |string |Open interest |
 |> timestamp |string |The timestamp (ms) |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /derivatives/v3/public/open-interest?category=linear&symbol=ETHUSDT&interval=5min&limit=2 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "symbol": "ETHUSDT",
+        "category": "linear",
+        "list": [
+            {
+                "openInterest": "558472.29000000",
+                "timestamp": "1671970800000"
+            },
+            {
+                "openInterest": "559352.46000000",
+                "timestamp": "1671970500000"
+            }
+        ]
+},
+    "retExtInfo": {},
+    "time": 1671971027117
+}
+```
+</TabItem>
+</Tabs>

@@ -1,0 +1,69 @@
+---
+title: Transaction Log
+sidebar_label: Transaction Log
+sidebar_position: 3
+slug: /derivatives/unified/transaction-log
+---
+Query transaction logs in Unified account.
+
+### HTTP Request
+GET `/unified/v3/private/account/transaction-log`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string	|Product type. `linear`,`option`|
+|currency |**true** |string	|USDC、USDT、BTC、ETH |
+|baseCoin |false |string |baseCoin|
+|[type](../../v3/derivatives/enum#type) |false |string |All transaction logs under this category are returned (except transfer/exchange/given cash). _Note: To query transfer-in and transfer-out logs, type=TRANSFER_IN, type=TRANSFER_OUT must be passed, otherwise the transfer log cannot be found._|
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false	|integer |The end timestamp (ms) |
+|direction |false |string |Direction: prev: previous page, next: next page, default is next |
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category |string |Product type |
+|currency |string |USDC、USDT、BTC、ETH |
+|list |array |Object |
+|> transactionTime	|string	|Transaction timestamp (ms)|
+|> type |string |Type |
+|> symbol |string |Symbol name |
+|> side |string |Side. `Buy`,`Sell` |
+|> qty	|string	|Quantity |
+|> size |integer |Size |
+|> tradePrice |string |Trade price |
+|> funding	|string	|Funding fee|
+|> fee	|string	|Trading fee，fees are positive and rebates are negative |
+|> cashFlow |string |Cash flow |
+|> change |string |Change |
+|> cashBalance	|string	|Cash balance|
+|> feeRate	|string	|Trading fee rate |
+|> tradeId	|string |Trade id |
+|> orderId	|string	|Order id |
+|> orderLinkId	|string	|User customised order id |
+|nextPageCursor	|string	|Cursor. Used to pagination |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="option" label="option">
+
+```json
+
+```
+</TabItem>
+</Tabs>

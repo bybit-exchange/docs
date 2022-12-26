@@ -2,6 +2,7 @@
 title: Order Book
 sidebar_label: Order Book
 sidebar_position: 5
+slug: /derivatives/public/orderbook
 ---
 
 Get order book data.
@@ -16,7 +17,7 @@ GET `/derivatives/v3/public/order-book/L2`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Products category. `future`, `option` |
+|[category](../../v3/derivatives/enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear`, but in the response category shows `""`|
 |symbol |<b>true</b> |string |Symbol name. `category` is **required** when query an option symbol |
 |limit |false |string |[1,500]. default: `25`. `option` has 25 ONLY |
 
@@ -28,3 +29,115 @@ GET `/derivatives/v3/public/order-book/L2`
 |a |string |Ask. Order by price asc |
 |ts |integer |The timestamp(ms) that system generates the data |
 |u |integer |Update id, is always in sequence |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /derivatives/v3/public/order-book/L2?category=linear&symbol=BTCPERP&limit=2 HTTP/1.1
+Host: api.bybit.com​
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="option">
+
+```http
+GET /derivatives/v3/public/order-book/L2?category=option&symbol=BTC-30DEC22-19000-C&limit=25 HTTP/1.1
+Host: api.bybit.com​
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "s": "BTCPERP",
+    "b": [
+        [
+            "16818",
+            "0.156"
+        ],
+        [
+            "16818.5",
+            "0.183"
+        ]
+        ],
+    "a": [
+        [
+            "16819",
+            "0.454"
+        ],
+        [
+            "16819.5",
+            "0.054"
+        ]
+    ],
+    "ts": 1671969122791,
+    "u": 6404345
+},
+    "retExtInfo": {},
+    "time": 1671969122869
+}
+```
+</TabItem>
+
+<TabItem value="js option" label="option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+    "s": "BTC-30DEC22-19000-C",
+    "b": [
+        [
+            "5",
+            "0.49"
+        ],
+        [
+            "10",
+            "0.01"
+        ]
+    ],
+    "a": [
+        [
+            "20",
+            "12.7"
+        ],
+        [
+            "25",
+            "9.11"
+        ],
+        [
+            "60",
+            "14"
+        ],
+        [
+            "100",
+            "15.5"
+        ],
+        [
+            "120",
+            "15.5"
+        ]
+    ],
+    "u": 2424603561,
+    "ts": 1671969202988
+},
+    "retExtInfo": {},
+    "time": 1671969281606
+}
+```
+</TabItem>
+</Tabs>
