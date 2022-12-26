@@ -5,7 +5,7 @@ sidebar_position: 5
 slug: /derivatives/unified/trading-stop
 ---
 :::tip
-
+Pass the following parameters, then the system will create conditional orders. If the position is closed, the system will cancel these orders, and adjust the position size.
 :::
 
 ### HTTP Request
@@ -14,17 +14,17 @@ POST `/unified/v3/private/position/trading-stop`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../../v3/derivatives/enum#category) |**true** |string |Product type. `linear` |
+|[category](../enum#category) |**true** |string |Product type. `linear` |
 |symbol |**true** |string |Symbol name|
 |takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
 |stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
 |trailingStop |false |string |Cannot be less than 0, 0 means cancel TS. _note: valid for USDT Perpetual ONLY_ |
-|[tpTriggerBy](../../v3/derivatives/enum#triggerby) |false |string |Take profit trigger price type. default: `LastPrice` |
-|[slTriggerBy](../../v3/derivatives/enum#triggerby) |false |string |Stop loss trigger price type. default: `LastPrice` |
+|[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type. default: `LastPrice` |
+|[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type. default: `LastPrice` |
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached ONLY |
 |tpSize |false |string |Take profit size. Valid in tp-sl partial mode |
 |slSize |false |string |Stop loss size. Valid in tp-sl partial mode |
-|[positionIdx](../../v3/derivatives/enum#positionidx) |**true** |string |Used to identify positions in different position modes. `0`: one-way mode for unified margin only |
+|[positionIdx](../enum#positionidx) |**true** |string |Used to identify positions in different position modes. `0`: one-way mode for unified margin only |
 
 ### Response Parameters
 None

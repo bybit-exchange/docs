@@ -4,3 +4,82 @@ sidebar_label: Get Option Delivery Record
 sidebar_position: 8
 slug: /derivatives/unified/delivery
 ---
+
+Query option delivery records, sort by `deliveryTime` in descending order
+
+### HTTP Request
+POST `/unified/v3/private/delivery-record`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |Product type. `option` |
+|symbol |false |string |Symbol name |
+|expDate |false |string |Expiry date. `25MAR22`. default: return all |
+|direction |false |string |`prev`: previous page, `next`: next page. default: `next`|
+|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
+|cursor |false |string |Cursor. Used to pagination|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextPageCursor |string |Cursor. Used to pagination |
+|category |string |Product type|
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> side |string |`Buy`,`Sell` |
+|> strike |string |Exercise price |
+|> fee |string |Trading fee |
+|> position |string |Executed size |
+|> deliveryTime |integer |Delivery time (ms) |
+|> deliveryPrice |string |Delivery price |
+|> deliveryRpl |string |Realized PnL of the delivery |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /unified/v3/private/delivery-record?category=option&limit=5 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672020598623
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js option" label="option">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "nextPageCursor": "45%3A0%2C45%3A0",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-29JUL22-27000-C",
+                "side": "Sell",
+                "deliveryTime": 1659081601928,
+                "strike": "27000",
+                "fee": "0.00000000",
+                "position": "0.0300",
+                "deliveryPrice": "23927.85304688",
+                "deliveryRpl": "0.00000000"
+            }
+    ]
+},
+    "retExtInfo": {},
+    "time": 1672020600013
+}
+```
+</TabItem>
+</Tabs>

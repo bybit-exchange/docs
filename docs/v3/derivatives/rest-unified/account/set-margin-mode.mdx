@@ -18,6 +18,8 @@ POST `/unified/v3/private/account/setMarginMode`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |reasons |array|Empty array if the request is submitted successfully. Otherwise, there are failure Object |
+|> reasonCode |string |Fail reason code |
+|> reasonMsg |string |Fail reason msg |
 
 ### Request Example
 
@@ -25,6 +27,17 @@ POST `/unified/v3/private/account/setMarginMode`
 <TabItem value="console" label="Console">
 
 ```http
+POST /unified/v3/private/account/setMarginMode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672023475526
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "setMarginMode": "REGULAR_MARGIN"
+}
 ```
 
 </TabItem>
@@ -33,10 +46,25 @@ POST `/unified/v3/private/account/setMarginMode`
 ### Response Example
 
 <Tabs>
-<TabItem value="option" label="option">
+<TabItem value="json" label="Response">
 
 ```json
-
+{
+    "retCode": 3400045,
+    "retMsg": "Set margin mode failed",
+    "result": {
+        "reasons": [
+            {
+                "reasonCode": "3400102",
+                "reasonMsg": "Please ensure that there are no active orders in your USDC account, including Limit, Market and Conditional orders"
+            },
+            {
+                "reasonCode": "3400101",
+                "reasonMsg": "Please ensure that there are no positions in your USDC account, including USDC perpetual and options"
+            }
+        ]
+    }
+}
 ```
 </TabItem>
 </Tabs>
