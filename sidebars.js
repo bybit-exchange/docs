@@ -604,6 +604,19 @@ const sidebars = {
         require("./docs/api-explorer/spot/crossmargin/sidebar.js"),
         require("./docs/api-explorer/spot/institution/sidebar.js"),
       ]
+    },
+    {
+      type: "category",
+      label: "v5",
+      link: {
+        type: "generated-index",
+        title: "V5 API",
+        slug: "/api-explorer/v5/category/"
+      },
+      // @ts-ignore
+      items: [
+        require("./docs/api-explorer/v5/market/sidebar.js"),
+      ]
     }
   ],
 };

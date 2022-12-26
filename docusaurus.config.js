@@ -102,6 +102,14 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
+          },
+          v5_market: {
+            specPath: "yml-folder/v5/market.yaml",
+            outputDir: "docs/api-explorer/v5/market",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
           }
         }
       }

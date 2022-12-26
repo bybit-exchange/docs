@@ -1,11 +1,11 @@
-openapi: 5.0.0
+openapi: 3.0.0
 servers:
   - url: https://api-testnet.bybit.com
     description: Testnet server
 info:
   description: |
     Collection of v5 Restul API
-  version: 5.0.0
+  version: 3.0.0
   title: Bybit Open API v5 explorer
 tags:
   - name: market
@@ -27,7 +27,7 @@ paths:
         - name: category
           in: query
           description: Products category
-          required: false
+          required: true
           schema:
             type: array
             items:
@@ -35,6 +35,7 @@ paths:
               enum:
                 - linear
                 - inverse
+                - spot
         - name: symbol
           in: query
           description: Symbol name
@@ -66,13 +67,13 @@ paths:
         - name: start
           in: query
           description: start timestamp (ms). e.g., 1669852800000 (1 DEC 2022 UTC 0:00)
-          required: true
+          required: false
           schema:
             type: integer
         - name: end
           in: query
           description: end timestamp (ms). e.g., 1671062400000 (15 DEC 2022 UTC 0:00)
-          required: true
+          required: false
           schema:
             type: integer
         - name: limit
@@ -82,6 +83,671 @@ paths:
           schema:
             type: integer
             default: 200
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/mark-price-kline:
+    get:
+      tags:
+        - market
+      summary: Get Mark Price Kline
+      description: Get Mark Price Kline data
+      operationId: mark-price-kline
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - spot
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: interval
+          in: query
+          description: kline interval
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 1
+                - 3
+                - 5
+                - 15
+                - 30
+                - 60
+                - 120
+                - 240
+                - 360
+                - 720
+                - D
+                - M
+                - W
+        - name: start
+          in: query
+          description: start timestamp (ms). e.g., 1669852800000 (1 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: end
+          in: query
+          description: end timestamp (ms). e.g., 1671062400000 (15 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: integer
+            default: 200
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/index-price-kline:
+    get:
+      tags:
+        - market
+      summary: Get Index Price Kline
+      description: Get Index Price Kline data
+      operationId: index-price-kline
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - spot
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: interval
+          in: query
+          description: kline interval
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 1
+                - 3
+                - 5
+                - 15
+                - 30
+                - 60
+                - 120
+                - 240
+                - 360
+                - 720
+                - D
+                - M
+                - W
+        - name: start
+          in: query
+          description: start timestamp (ms). e.g., 1669852800000 (1 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: end
+          in: query
+          description: end timestamp (ms). e.g., 1671062400000 (15 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: integer
+            default: 200
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/premium-index-price-kline:
+    get:
+      tags:
+        - market
+      summary: Get Premium Index Price Kline
+      description: Get Premium Index Price Kline data
+      operationId: premium-index-price-kline
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - spot
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: interval
+          in: query
+          description: kline interval
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 1
+                - 3
+                - 5
+                - 15
+                - 30
+                - 60
+                - 120
+                - 240
+                - 360
+                - 720
+                - D
+                - M
+                - W
+        - name: start
+          in: query
+          description: start timestamp (ms). e.g., 1669852800000 (1 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: end
+          in: query
+          description: end timestamp (ms). e.g., 1671062400000 (15 DEC 2022 UTC 0:00)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: integer
+            default: 200
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/orderbook:
+    get:
+      tags:
+        - market
+      summary: Order Book
+      description: Get order book data
+      operationId: orderbook
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+                - spot
+              default: linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Default 1; optional values:[1, 200]. maximum 50 for spot, maximum 25 for spot. If the input value exceeds the allowable range, the current maximum range data will be returned.
+          required: false
+          schema:
+            type: int
+            default: 1
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/instruments-info:
+    get:
+      tags:
+        - market
+      summary: Instrument Info
+      description: Get launched instruments information.
+      operationId: instrument-info
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+                - spot
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: for futures and option ONLY
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 1000
+          required: false
+          schema:
+            type: string
+            default: 500
+        - name: cusor
+          in: query
+          description: pass cursor from the response param "nagePageCursor" to paginate
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/tickers:
+    get:
+      tags:
+        - market
+      summary: Ticker Info
+      description: Get all latest information of symbols. All parameters are needed for OPTION
+      operationId: ticker
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+                - spot
+        - name: baseCoin
+          in: query
+          description: for futures and option ONLY. symbol and baseCoin must pass one
+          required: false
+          schema:
+            type: string
+        - name: expDate
+          in: query
+          description: Expiry date, year month day. For option only, The default is all, and the parameter format is 25MAR22.
+          required: false
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/funding/history:
+    get:
+      tags:
+        - market
+      summary: Funding Rate History
+      description: Get historical funding rate
+      operationId: funding-history
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          description: The end timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 200
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/risk-limit:
+    get:
+      tags:
+        - market
+      summary: Risk limit
+      description: Get risk limit
+      operationId: risk-limit
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/open-interest:
+    get:
+      tags:
+        - market
+      summary: Open Interest
+      description: Get open interest
+      operationId: open-interest
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: intervalTime
+          in: query
+          description: interval time
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 5min
+                - 15min
+                - 30min
+                - 1h
+                - 4h
+                - 1d
+        - name: startTime
+          in: query
+          description: The start timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          description: The end timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 50
+        - name: cusor
+          in: query
+          description: pass cursor from the response param "nagePageCursor" to paginate
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/insurance:
+    get:
+      tags:
+        - market
+      summary: Get Insurance Fund
+      description: Get Insurance Fund
+      operationId: insurance-fund
+      parameters:
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/recent-trade:
+    get:
+      tags:
+        - market
+      summary: Public trade
+      description: Get public trade
+      operationId: public-trade
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+                - option
+                - spot
+        - name: symbol
+          in: query
+          description: Symbol name.
+          required: true
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin. Valid for option. Default is BTC when category=option
+          required: false
+          schema:
+            type: string
+            default: BTC
+        - name: optionType
+          in: query
+          description: Option type. Valid for option.
+          required: false
+          schema:
+            type: string
+            enum:
+              - Call
+              - Put
+        - name: limit
+          in: query
+          description: Maximum 60 for spot. Maximum 1000 for others
+          required: false
+          schema:
+            type: integer
+            default: 500
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/delivery-price:
+    get:
+      tags:
+        - market
+      summary: Delivery price
+      description: Get delivery price of option
+      operationId: delivery-price
+      parameters:
+        - name: category
+          in: query
+          description: Products category. option only
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum 200
+          required: false
+          schema:
+            type: string
+            default: 50
+        - name: cursor
+          in: query
+          description: The cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/historical-volatility:
+    get:
+      tags:
+        - market
+      summary: Get Historical Volatility
+      description: Get historical volatility
+      operationId: his-volatility
+      parameters:
+        - name: category
+          in: query
+          description: Products category
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - option
+        - name: baseCoin
+          in: query
+          description: Base coin. If not passed, BTC returned by default
+          required: true
+          schema:
+            type: string
+            default: BTC
+        - name: period
+          in: query
+          description: Period. If not passed, it returns 7 days by default
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 7
+                - 14
+                - 30
+                - 60
+                - 90
+        - name: startTime
+          in: query
+          description: The start timstamp (ms)
+          required: false
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          description: The end timstamp (ms)
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: successful operation
