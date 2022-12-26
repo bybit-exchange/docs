@@ -5,7 +5,7 @@ sidebar_position: 8
 ---
 
 Query recent public trading data in Bybit.
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+> **Cover: Spot / Linear contract / Inverse contract / Option**
 
 You could download archived historical trades here:
 * <a href="https://public.bybit.com/trading/">USDT Perpetual, Inverse Perpetual & Inverse Future</a>
@@ -42,6 +42,8 @@ GET `/v5/market/recent-trade`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/market/recent-trade?category=spot&symbol=BTCUSDT&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -50,10 +52,29 @@ GET `/v5/market/recent-trade`
 ### Response Example
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js spot" label="spot">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "execId": "2100000000007764263",
+                "symbol": "BTCUSDT",
+                "price": "16618.49",
+                "size": "0.00012",
+                "side": "Buy",
+                "time": "1672052955758",
+                "isBlockTrade": false
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672053054358
+}
 ```
 </TabItem>
 </Tabs>

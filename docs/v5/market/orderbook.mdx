@@ -5,7 +5,7 @@ sidebar_position: 5
 ---
 
 Query order book data
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+> **Cover: Spot / Linear contract / Inverse contract / Option**
 
 * future: A maximum of 200-level of orderbook data can be returned.
 * spot: A maximum of 50-level of orderbook data can be returned.
@@ -23,7 +23,7 @@ GET `/v5/market/orderbook`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |**true** |string |Symbol name|
-|limit |false |integer |Limit for data size per page.<li>`spot`: [1,50], default: `50`.</li><li>`linear`&`inverse`: [1,500],default: `25`.</li><li>`option` has 25 ONLY.</li>|
+|limit |false |integer |Limit for data size per page.<li>`spot`: [1,50], default: `1`.</li><li>`linear`&`inverse`: [1,200],default: `1`.</li><li>`option`: [1,25],default: `1`.</li>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -44,7 +44,8 @@ GET `/v5/market/orderbook`
 <TabItem value="console" label="Console">
 
 ```http
-
+GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -53,10 +54,32 @@ GET `/v5/market/orderbook`
 ### Response Example
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js option" label="option">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "s": "BTC-30DEC22-18000-C",
+        "b": [
+            [
+                "5",
+                "3.12"
+            ]
+        ],
+        "a": [
+            [
+                "175",
+                "4.88"
+            ]
+        ],
+        "u": 1203433656,
+        "ts": 1672043188375
+    },
+    "retExtInfo": {},
+    "time": 1672043199230
+}
 ```
 </TabItem>
 </Tabs>

@@ -5,7 +5,7 @@ sidebar_position: 3
 ---
 
 Query the index price kline data. This endpoint can retrieve the latest ? candles. Charts are returned in groups based on the requested interval.
-> **Cover: USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future**
+> **Cover: Linear contract / Inverse contract**
 
 ### HTTP Request
 GET `/v5/market/index-price-kline`
@@ -38,6 +38,8 @@ GET `/v5/market/index-price-kline`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/market/index-price-kline?category=inverse&symbol=BTCUSDZ22&interval=1&start=1670601600000&end=1670608800000&limit=2 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -46,10 +48,35 @@ GET `/v5/market/index-price-kline`
 ### Response Example
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js inverse" label="inverse">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "symbol": "BTCUSDZ22",
+        "category": "inverse",
+        "list": [
+            [
+                "1670608800000",
+                "17167.00",
+                "17167.00",
+                "17161.90",
+                "17163.07"
+            ],
+            [
+                "1670608740000",
+                "17166.54",
+                "17167.69",
+                "17165.42",
+                "17167.00"
+            ]
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672026471128
+}
 ```
 </TabItem>
 </Tabs>

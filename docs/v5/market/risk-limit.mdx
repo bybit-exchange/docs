@@ -27,8 +27,8 @@ GET `/v5/market/risk-limit`
 |list |array |Object |
 |> id |integer |Risk id |
 |> symbol |string |Symbol name |
-|> limit |string |Position limit |
-|> maintainMargin |number |Maintain margin rate |
+|> riskLimitValue |string |Position limit |
+|> maintenanceMargin |number |Maintain margin rate |
 |> initialMargin |number |Initial margin rate |
 |> section |array |section array |
 |> isLowestRisk |integer |`1`: true, `0`: false |
@@ -40,6 +40,8 @@ GET `/v5/market/risk-limit`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -48,10 +50,30 @@ GET `/v5/market/risk-limit`
 ### Response Example
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js inverse" label="inverse">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "inverse",
+        "list": [
+            {
+                "id": 1,
+                "symbol": "BTCUSD",
+                "initialMargin": "1",
+                "isLowestRisk": 1,
+                "maxLeverage": "100.00",
+                "maintenanceMargin": "0.5",
+                "riskLimitValue": "150"
+            },
+        ....
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672054488010
+}
 ```
 </TabItem>
 </Tabs>

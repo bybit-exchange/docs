@@ -17,7 +17,7 @@ GET `/v5/market/insurance`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|updateTime |string |Data updated time (ms) |
+|updatedTime |string |Data updated time (ms) |
 |list |array |Object |
 |> coin |string |Coin |
 |> balance |string |Balance |
@@ -29,6 +29,8 @@ GET `/v5/market/insurance`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/market/insurance?coin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -37,10 +39,25 @@ GET `/v5/market/insurance`
 ### Response Example
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js resp" label="Response">
 
-```javascript
-
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "updatedTime": "1672012800000",
+        "list": [
+            {
+                "coin": "ETH",
+                "balance": "0.00187332",
+                "value": "0"
+            }
+        ]
+},
+    "retExtInfo": {},
+    "time": 1672053931991
+}
 ```
 </TabItem>
 </Tabs>

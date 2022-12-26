@@ -5,7 +5,7 @@ sidebar_position: 6
 ---
 
 Query the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours.
-> **Cover: Spot / USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future / Option**
+> **Cover: Spot / Linear contract / Inverse contract / Option**
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -28,32 +28,195 @@ GET `/v5/market/tickers`
 |list |array |Object |
 |> symbol |string |Symbol name |
 |> lastPrice |string |Last price |
-|> indexPrice |string |Index price |
-|> markPrice |string |Mark price |
-|> underlyingPrice |string |Underlying price |
-|> bid1Price |string |Bid 1 price |
-|> ask1Price |string |Ask 1 price |
-|> bid1Size |string |Bid 1 size |
-|> ask1Size |string |Ask 1 size |
-|> openInterest |string |Open interest size |
-|> openInterestValue |string |Open interest value |
-|> nextFundingTime |string |Next funding timestamp (ms) |
-|> fundingRate |string |Funding rate |
-|> prevPrice1h |string |Market price an hour ago |
+|> markPrice |string |Mark price. _`spot` N/A_ |
+|> indexPrice |string |Index price. _`spot` N/A_ |
+|> underlyingPrice |string |Underlying price. _`option` ONLY_ |
+|> bid1Price |string |Bid 1 price. _`option` N/A_ |
+|> ask1Price |string |Ask 1 price. _`option` N/A_ |
+|> bid1Size |string |Bid 1 size. _`option` N/A_ |
+|> ask1Size |string |Ask 1 size. _`option` N/A_ |
+|> openInterest |string |Open interest size. _`spot` N/A_ |
+|> openInterestValue |string |Open interest value. _`linear`,`inverse` ONLY_ |
+|> [lastTickDirection](../enum#lasttickdirection) |string |Direction of price change. _`linear`,`inverse` ONLY_ |
+|> askIv |string |Ask 1 iv. _`option` ONLY_ |
+|> askPrice |string |Ask 1 price. _`option` ONLY_ |
+|> askSize |string |Ask 1 size. _`option` ONLY_ |
+|> bidIv |string |Bid 1 iv. _`option` ONLY_ |
+|> bidPrice |string |Bid 1 price. _`option` ONLY_ |
+|> bidSize |string |Bid 1 size. _`option` ONLY_ |
+|> markIv |string |Mark price iv. _`option` ONLY_ |
+|> prevPrice1h |string |Market price an hour ago. _`linear`,`inverse` ONLY_ |
 |> lowPrice24h |string |The lowest price in the last 24 hours |
 |> highPrice24h |string |The highest price in the last 24 hours |
-|> prevPrice24h |string |Market price 24 hours ago |
-|> price24hPcnt |string |Percentage change of market price relative to 24h |
+|> prevPrice24h |string |Market price 24 hours ago. _`option` N/A_ |
+|> price24hPcnt |string |Percentage change of market price relative to 24h. _`option` N/A_ |
 |> volume24h |string |Volume for 24h |
 |> turnover24h |string |Turnover for 24h |
-|> ask1Iv |string |Ask 1 iv |
-|> bid1Iv |string |Bid 1 iv |
-|> markPriceIv |string |Mark price iv |
-|> deliveryTime |string |Delivery timestamp (ms). Valid for `Option` and `Inverse Futures` |
-|> deliveryFeeRate |string |Delivery fee rate. Valid for `Option` and `Inverse Futures` |
-|> predictedDeliveryPrice |string |Predicated delivery price |
-|> vega |string |Vega value |
-|> delta |string |Delta value |
-|> theta |string |Theta value |
-|> gamma |string |Gamma value |
-|> basisRate |string |Basis rate |
+|> change24h |string |Change for 24h. _`option` ONLY_ |
+|> totalTurnover |string |Total turnover. _`option` ONLY_ |
+|> totalVolume |string |Total volume. _`option` ONLY_ |
+|> basisRate |string |Basis rate. _`linear`,`inverse` ONLY_ |
+|> nextFundingTime |string |Next funding timestamp (ms). _`linear`,`inverse` ONLY_ |
+|> fundingRate |string |Funding rate. _`linear`,`inverse` ONLY_ |
+|> deliveryTime |string |Delivery timestamp (ms). _`linear`,`inverse` ONLY_ |
+|> deliveryFeeRate |string |Delivery fee rate. _`linear`,`inverse` ONLY_ |
+|> predictedDeliveryPrice |string |Predicated delivery price. _`spot` N/A_ |
+|> delta |string |Delta value. _`option` ONLY_ |
+|> gamma |string |Gamma value. _`option` ONLY_ |
+|> theta |string |Theta value. _`option` ONLY_ |
+|> vega |string |Vega value. _`option` ONLY_ |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-spot" label="Spot">
+
+```http
+GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-inverse" label="Inverse">
+
+```http
+GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="Option">
+
+```http
+GET /v5/market/tickers?category=option&baseCoin=BTC&expDate=30DEC22 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js spot" label="Spot">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+        {
+            "symbol": "BTCUSDT",
+            "bid1Price": "16250.32",
+            "bid1Size": "0.00193",
+            "ask1Price": "16273.11",
+            "ask1Size": "0.005312",
+            "lastPrice": "16258.75",
+            "prevPrice24h": "16593.61",
+            "price24hPcnt": "-0.0202",
+            "highPrice24h": "16666.65",
+            "lowPrice24h": "12720",
+            "turnover24h": "36131144.90813012",
+            "volume24h": "2185.278433"
+        }
+    ]
+},
+    "retExtInfo": {},
+    "time": 1672046714063
+}
+```
+</TabItem>
+
+<TabItem value="js inverse" label="Inverse">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "inverse",
+        "list": [
+            {
+                "symbol": "BTCUSD",
+                "bidPrice": "16750.50",
+                "askPrice": "16751.00",
+                "lastPrice": "16751.50",
+                "lastTickDirection": "PlusTick",
+                "prevPrice24h": "16737.50",
+                "price24hPcnt": "0.000836",
+                "highPrice24h": "21589.50",
+                "lowPrice24h": "16631.50",
+                "prevPrice1h": "16746.00",
+                "markPrice": "16751.93",
+                "indexPrice": "16844.56",
+                "openInterest": "421154773",
+                "turnover24h": "1039.14356272",
+                "volume24h": "18226440",
+                "fundingRate": "0.0001",
+                "nextFundingTime": "1672070400000",
+                "predictedDeliveryPrice": "",
+                "basisRate": "",
+                "deliveryFeeRate": "",
+                "deliveryTime": "0",
+                "openInterestValue": "25140.67",
+                "ask1Size": "1",
+                "bid1Price": "16750.50",
+                "ask1Price": "16751.00",
+                "bid1Size": "1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672046851785
+}
+```
+</TabItem>
+
+<TabItem value="js option" label="Option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-30DEC22-29000-C",
+                "bidPrice": "0",
+                "bidSize": "0",
+                "bidIv": "0",
+                "askPrice": "0",
+                "askSize": "0",
+                "askIv": "0",
+                "lastPrice": "70",
+                "highPrice24h": "0",
+                "lowPrice24h": "0",
+                "markPrice": "0.6233716",
+                "indexPrice": "16838.7",
+                "markIv": "1.6217",
+                "underlyingPrice": "16821.52",
+                "openInterest": "148.6",
+                "turnover24h": "0",
+                "volume24h": "0",
+                "totalVolume": "240",
+                "totalTurnover": "4792615",
+                "delta": "0.00083816",
+                "gamma": "0.00000101",
+                "vega": "0.05012393",
+                "theta": "-1.02785803",
+                "predictedDeliveryPrice": "0",
+                "change24h": "0"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672045562303
+}
+```
+</TabItem>
+</Tabs>
