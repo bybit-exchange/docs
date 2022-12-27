@@ -616,6 +616,7 @@ const sidebars = {
       // @ts-ignore
       items: [
         require("./docs/api-explorer/v5/market/sidebar.js"),
+        require("./docs/api-explorer/v5/account/sidebar.js"),
       ]
     }
   ],

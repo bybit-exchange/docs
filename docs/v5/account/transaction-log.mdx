@@ -12,31 +12,30 @@ GET `/v5/account/transaction-log`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[accountType](../enum#accounttype) |false |string |Account Type. `UNIFIED`|
-|category |**true** |string	|Product type. `spot`,`linear`,`option`|
+|[category](../enum#category) |**true** |string	|Product type. `spot`,`linear`,`option`|
 |currency |**true** |string	|USDC、USDT、BTC、ETH |
 |baseCoin |false |string |baseCoin|
-|[type](../enum#type) |false |string |All transaction logs under this category are returned (except transfer/exchange/given cash). _Note: To query transfer-in and transfer-out logs, type=TRANSFER_IN, type=TRANSFER_OUT must be passed, otherwise the transfer log cannot be found._|
+|[type](../enum#type) |false |string |Types of transaction logs|
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false	|integer |The end timestamp (ms) |
-|direction |false |string |Direction: prev: previous page, next: next page, default is next |
 |limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |Product type |
-|currency |string |USDC、USDT、BTC、ETH |
 |list |array |Object |
-|> transactionTime	|string	|Transaction timestamp (ms)|
-|> type |string |Type |
 |> symbol |string |Symbol name |
-|> side |string |Side. `Buy`,`Sell` |
+|> category |string |Product type |
+|> side |string |Side. `Buy`,`Sell`,`None` |
+|> transactionTime |number |Transaction timestamp (ms)|
+|> [type](../enum#type) |string |Type |
 |> qty	|string	|Quantity |
-|> size |integer |Size |
+|> size |string |Size |
+|> currency |string |USDC、USDT、BTC、ETH |
 |> tradePrice |string |Trade price |
 |> funding	|string	|Funding fee|
-|> fee	|string	|Trading fee，fees are positive and rebates are negative |
+|> fee	|string	|Trading fee. fees are positive and rebates are negative |
 |> cashFlow |string |Cash flow |
 |> change |string |Change |
 |> cashBalance	|string	|Cash balance|
@@ -52,6 +51,13 @@ GET `/v5/account/transaction-log`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/account/transaction-log?accountType=UNIFIED&category=linear&currency=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: de1c01745a26573731b5f0fb6ee890e07b9bf8716e2f244227a80a191c552c73
+X-BAPI-API-KEY: JNLEWNAQHLQKIEBBYT
+X-BAPI-TIMESTAMP: 1672132480085
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -63,7 +69,77 @@ GET `/v5/account/transaction-log`
 <TabItem value="option" label="option">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "21963%3A1%2C14954%3A1",
+        "list": [
+            {
+                "symbol": "XRPUSDT",
+                "side": "Buy",
+                "funding": "-0.003676",
+                "orderLinkId": "",
+                "orderId": "1672128000-8-592324-1-2",
+                "fee": "0.00000000",
+                "change": "-0.003676",
+                "cashFlow": "0",
+                "transactionTime": 1672128000000,
+                "type": "SETTLEMENT",
+                "feeRate": "0.0001",
+                "size": "100",
+                "qty": "100",
+                "cashBalance": "5086.55825002",
+                "currency": "USDT",
+                "category": "linear",
+                "tradePrice": "0.3676",
+                "tradeId": "534c0003-4bf7-486f-aa02-78cee36825e4"
+            },
+            {
+                "symbol": "XRPUSDT",
+                "side": "Buy",
+                "funding": "",
+                "orderLinkId": "linear-order",
+                "orderId": "592b7e41-78fd-42e2-9aa3-91e1835ef3e1",
+                "fee": "0.01908720",
+                "change": "-0.0190872",
+                "cashFlow": "0",
+                "transactionTime": 1672121182224,
+                "type": "TRADE",
+                "feeRate": "0.0006",
+                "size": "100",
+                "qty": "88",
+                "cashBalance": "5086.56192602",
+                "currency": "USDT",
+                "category": "linear",
+                "tradePrice": "0.3615",
+                "tradeId": "5184f079-88ec-54c7-8774-5173cafd2b4e"
+            },
+            {
+                "symbol": "XRPUSDT",
+                "side": "Buy",
+                "funding": "",
+                "orderLinkId": "linear-order",
+                "orderId": "592b7e41-78fd-42e2-9aa3-91e1835ef3e1",
+                "fee": "0.00260280",
+                "change": "-0.0026028",
+                "cashFlow": "0",
+                "transactionTime": 1672121182224,
+                "type": "TRADE",
+                "feeRate": "0.0006",
+                "size": "12",
+                "qty": "12",
+                "cashBalance": "5086.58101322",
+                "currency": "USDT",
+                "category": "linear",
+                "tradePrice": "0.3615",
+                "tradeId": "8569c10f-5061-5891-81c4-a54929847eb3"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672132481405
+}
 ```
 </TabItem>
 </Tabs>

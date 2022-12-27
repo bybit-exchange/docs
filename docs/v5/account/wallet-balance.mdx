@@ -11,35 +11,37 @@ GET `/v5/account/wallet-balance`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |Account type |
+|[accountType](../enum#accounttype) |**true** |string |Account type. `UNIFED` ONLY |
 |coin |false |string |Coin name|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
+|list |array |Object |
 |> accountType |string |Account type. |
 |> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
 |> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
 |> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
-|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.
-|> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
-|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.
+|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.|
+|> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string. |
+|> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
 |> coin |array |Object |
-|>> coin |string |Coin name, such as BTC, ETH, USDT, USDC
-|>> equity |string |Equity
-|>> usdValue |string |usd value
-|>> walletBalance |string |Wallet balance
-|>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0;
-|>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0;
-|>> accruedInterest	|string	|Accrued interest
-|>> totalOrderIM |string |Pre-occupied margin for order
-|>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee
-|>> totalPositionMM	|string |Sum of maintenance margin for all positions
-|>> unrealisedPnl |string |Unrealised P&L
-|>> cumRealisedPnl |string |Cumulative Realised P&L
+|>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
+|>> equity |string |Equity |
+|>> usdValue |string |usd value |
+|>> walletBalance |string |Wallet balance |
+|>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0 |
+|>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0 |
+|>> availableToWithdraw |string |Available amount to withdraw |
+|>> accruedInterest	|string	|Accrued interest |
+|>> totalOrderIM |string |Pre-occupied margin for order |
+|>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee |
+|>> totalPositionMM	|string |Sum of maintenance margin for all positions |
+|>> unrealisedPnl |string |Unrealised P&L |
+|>> cumRealisedPnl |string |Cumulative Realised P&L |
 
 ### Request Example
 
@@ -47,6 +49,12 @@ GET `/v5/account/wallet-balance`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/account/wallet-balance?accountType=UNIFIED&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672125440406
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -55,10 +63,48 @@ GET `/v5/account/wallet-balance`
 ### Response Example
 
 <Tabs>
-<TabItem value="option" label="option">
+<TabItem value="resp" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "totalEquity": "18070.32797922",
+                "accountIMRate": "0.0101",
+                "totalMarginBalance": "18070.32797922",
+                "totalInitialMargin": "182.60183684",
+                "accountType": "UNIFIED",
+                "totalAvailableBalance": "17887.72614237",
+                "accountMMRate": "0",
+                "totalPerpUPL": "-0.11001349",
+                "totalWalletBalance": "18070.43799271",
+                "totalMaintenanceMargin": "0.38106773",
+                "coin": [
+                    {
+                        "availableToBorrow": "2.5",
+                        "accruedInterest": "0",
+                        "availableToWithdraw": "0.805994",
+                        "totalOrderIM": "0",
+                        "equity": "0.805994",
+                        "totalPositionMM": "0",
+                        "usdValue": "12920.95352538",
+                        "unrealisedPnl": "0",
+                        "borrowAmount": "0",
+                        "totalPositionIM": "0",
+                        "walletBalance": "0.805994",
+                        "cumRealisedPnl": "0",
+                        "coin": "BTC"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672125441042
+}
 ```
 </TabItem>
 </Tabs>

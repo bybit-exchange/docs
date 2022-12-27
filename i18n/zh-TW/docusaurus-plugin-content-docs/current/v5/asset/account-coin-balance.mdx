@@ -4,7 +4,7 @@ sidebar_label: 查詢帳戶幣種餘額查詢
 sidebar_position: 0.3
 ---
 
-獲取某[帳戶類型](../enum#accounttype)下某指定幣種的餘額。
+獲取某[帳戶類型](../enum#accounttype)下某指定幣種的餘額。支持通過輸入子帳戶id來查詢子帳戶的某個帳戶類型下的某個幣種餘額
 
 :::caution
 僅支持母帳號API KEY
@@ -26,8 +26,8 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |:----- |:-----|----- |
 |accountType |string |賬戶類型 |
 |bizType |integer |帳戶業務子類型 |
-|accountId |integer |賬戶ID |
-|memberId |integer |用戶ID |
+|accountId |string |賬戶ID |
+|memberId |string |用戶ID |
 |balance |Object | |
 |> coin |string |幣種類型 |
 |> walletBalance |string |錢包余額 |
@@ -40,6 +40,12 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=BTC&memberId=592324 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672138188999
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -48,10 +54,27 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 ### 響應示例
 
 <Tabs>
-<TabItem value="js response" label="response">
+<TabItem value="js response" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "accountType": "UNIFIED",
+        "bizType": 1,
+        "accountId": "1016175",
+        "memberId": "592324",
+        "balance": {
+            "coin": "BTC",
+            "walletBalance": "0.805994",
+            "transferBalance": "0.805994",
+            "bonus": "0"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1672138189328
+}
 ```
 </TabItem>
 </Tabs>

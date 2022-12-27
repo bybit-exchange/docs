@@ -16,14 +16,14 @@ GET `/v5/asset/transfer/query-asset-info`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |Account type. `Spot` ONLY |
+|[accountType](../enum#accounttype) |**true** |string |Account type. `SPOT`|
 |coin |false |string |Coin name |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |spot |Object| |
-|> status |integer |account status. `1`: normal, `0`: banned |
+|> status |string |account status. `ACCOUNT_STATUS_NORMAL`: normal, `ACCOUNT_STATUS_UNSPECIFIED`: banned |
 |> assets |array|Object |
 |>> coin |string|Coin |
 |>> frozen |string|Freeze amount |
@@ -36,6 +36,12 @@ GET `/v5/asset/transfer/query-asset-info`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/transfer/query-asset-info?accountType=SPOT&coin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672136538042
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -47,7 +53,25 @@ GET `/v5/asset/transfer/query-asset-info`
 <TabItem value="js response" label="response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "spot": {
+            "status": "ACCOUNT_STATUS_NORMAL",
+            "assets": [
+                {
+                    "coin": "ETH",
+                    "frozen": "0",
+                    "free": "11.53485",
+                    "withdraw": ""
+                }
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1672136539127
+}
 ```
 </TabItem>
 </Tabs>
