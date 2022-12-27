@@ -1,0 +1,181 @@
+---
+title: Wallet
+sidebar_label: Wallet
+sidebar_position: 4
+slug: /derivatives/ws-unified/wallet
+---
+
+Subscribe wallet stream.
+
+**Topic:**<br/>
+`user.wallet.unifiedAccount`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message id |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`|
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |Object | |
+|> version |integer |Version|
+|> result |Object | |
+|>> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|>> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|>> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|>> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as empty string.|
+|>> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string. |
+|>> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string. |
+|>> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
+|>> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string. |
+|>> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as empty string. |
+|>> coin |array |Object |
+|>>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
+|>>> equity |string |Equity |
+|>>> usdValue |string |usd value |
+|>>> walletBalance |string |Wallet balance |
+|>>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0 |
+|>>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0 |
+|>>> accruedInterest |string |Accrued interest |
+|>>> totalOrderIM |string |Pre-occupied margin for order |
+|>>> totalPositionIM |string |Sum of initial margin of all positions + Pre-occupied liquidation fee |
+|>>> totalPositionMM |string |Sum of maintenance margin for all positions |
+|>>> unrealisedPnl |string |Unrealised P&L |
+|>>> cumRealisedPnl |string |Cumulative Realised P&L |
+
+### Response Example
+
+<Tabs>
+<TabItem value="msg-wallet" label="Wallet">
+
+```json
+{
+    "id": "533285c1b8bbb6-f69b-45d5-abbe-9a0f63d2b594",
+    "topic": "user.wallet.unifiedAccount",
+    "ts": 1672063477732,
+    "data": {
+        "result": {
+            "accountIMRate": "0.1033",
+            "accountMMRate": "0.0363",
+            "totalEquity": "5963.51241486",
+            "totalWalletBalance": "6711.80469384",
+            "totalMarginBalance": "6014.56088783",
+            "totalAvailableBalance": "5392.74224789",
+            "totalPerpUPL": "-697.24380601",
+            "totalInitialMargin": "621.81863994",
+            "totalMaintenanceMargin": "218.817493",
+            "coin": [
+                {
+                    "coin": "USDC",
+                    "equity": "1521.85776861",
+                    "usdValue": "1521.85776861",
+                    "walletBalance": "1572.90624158",
+                    "availableToWithdraw": "1482.92943199",
+                    "availableToBorrow": "1500000",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "20.228",
+                    "totalPositionIM": "69.74880958",
+                    "totalPositionMM": "55.4132803",
+                    "unrealisedPnl": "-51.04847296",
+                    "cumRealisedPnl": "234592.14245082"
+                },
+                {
+                    "coin": "BTC",
+                    "equity": "0.1",
+                    "usdValue": "1599.33925153",
+                    "walletBalance": "0.1",
+                    "availableToWithdraw": "0.1",
+                    "availableToBorrow": "2.5",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "ETH",
+                    "equity": "0",
+                    "usdValue": "0",
+                    "walletBalance": "0",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "26",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "USDT",
+                    "equity": "2877.98643778",
+                    "usdValue": "2842.31539471",
+                    "walletBalance": "3575.21035897",
+                    "availableToWithdraw": "2346.15977511",
+                    "availableToBorrow": "2500000",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "8.2849104",
+                    "totalPositionIM": "523.54175226",
+                    "totalPositionMM": "160.61852469",
+                    "unrealisedPnl": "-697.22392118",
+                    "cumRealisedPnl": "-39934863.68119712"
+                },
+                {
+                    "coin": "SOL",
+                    "equity": "0",
+                    "usdValue": "0",
+                    "walletBalance": "0",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "0",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "BIT",
+                    "equity": "0",
+                    "usdValue": "0",
+                    "walletBalance": "0",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "0",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "XRP",
+                    "equity": "0",
+                    "usdValue": "0",
+                    "walletBalance": "0",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "0",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                }
+            ]
+        },
+        "version": 17965
+    },
+    "type": "snapshot"
+}
+```
+</TabItem>
+</Tabs>

@@ -1,0 +1,123 @@
+---
+title: Position
+sidebar_label: Position
+sidebar_position: 1
+slug: /derivatives/ws-unified/position
+---
+
+Subscribe position stream to get position data change in real-time.
+
+**Topic:**<br/>
+`user.position.unifiedAccount`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message id |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`|
+|version |integer |Version|
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |Object | |
+|> version |integer |Version|
+|> result |array |Object|
+|>> symbol |string |Symbol name |
+|>> side |string |Position side. `Buy`,`Sell`. If there is no net position, it is `None` |
+|>> size |string |Position size |
+|>> [positionIdx](../enum#positionidx) |integer |Used to identify positions in different position modes |
+|>> riskId |integer |Risk limit id. _`linear` ONLY_ |
+|>> leverage |string |Leverage |
+|>> entryPrice |string |Average entry price |
+|>> markPrice |string |Current mark price |
+|>> positionValue |string |Position value |
+|>> positionIM |string |Position initial margin. _`option` ONLY_ |
+|>> positionMM |string |Position maintenance margin. _`option` ONLY_ |
+|>> tpslMode |string |Tp/Sl mode. `Full`,`Partial` |
+|>> takeProfit |string |Take profit price |
+|>> stopLoss |string |Stop loss price |
+|>> trailingStop |string |Trailing stop |
+|>> unrealisedPnl |string |Unrealised PnL |
+|>> cumRealisedPnl |string |Cumulative realised PnL |
+|>> createdTime |string |Created timestamp (ms) |
+|>> updatedTime |string |Updated timestamp (ms) |
+
+### Response Example
+
+<Tabs>
+<TabItem value="msg-linear-position" label="Linear position">
+
+```json
+{
+    "id": "533285d3534ad0-0cab-477b-95fa-d8efa92e3a00",
+    "topic": "user.position.unifiedAccount",
+    "ts": 1672103585576,
+    "data": {
+        "result": [
+            {
+                "positionIdx": 0,
+                "riskId": 11,
+                "symbol": "ETHUSDT",
+                "side": "Buy",
+                "size": "0.15",
+                "entryPrice": "1072.54285714",
+                "leverage": "11",
+                "markPrice": "1215.38",
+                "positionIM": "14.71334027",
+                "positionMM": "0.89216153",
+                "takeProfit": "0",
+                "stopLoss": "0",
+                "trailingStop": "0",
+                "positionValue": "160.88142858",
+                "unrealisedPnl": "21.42557142",
+                "cumRealisedPnl": "80.35333206",
+                "createdTime": 0,
+                "updatedTime": 1672103585565,
+                "tpslMode": "Partial"
+            }
+        ],
+        "version": 58085
+    },
+    "type": "snapshot"
+}
+```
+</TabItem>
+
+<TabItem value="msg-option-position" label="Option position">
+
+```json
+{
+    "id": "533285d3534ad0-0cab-477b-95fa-d8efa92e3a00",
+    "topic": "user.position.unifiedAccount",
+    "ts": 1672103585576,
+    "data": {
+        "result": [
+            {
+                "positionIdx": 0,
+                "riskId": 11,
+                "symbol": "ETHUSDT",
+                "side": "Buy",
+                "size": "0.15",
+                "entryPrice": "1072.54285714",
+                "leverage": "11",
+                "markPrice": "1215.38",
+                "positionIM": "14.71334027",
+                "positionMM": "0.89216153",
+                "takeProfit": "0",
+                "stopLoss": "0",
+                "trailingStop": "0",
+                "positionValue": "160.88142858",
+                "unrealisedPnl": "21.42557142",
+                "cumRealisedPnl": "80.35333206",
+                "createdTime": 0,
+                "updatedTime": 1672103585565,
+                "tpslMode": "Partial"
+            }
+        ],
+        "version": 58085
+    },
+    "type": "snapshot"
+}
+```
+</TabItem>
+</Tabs>
+

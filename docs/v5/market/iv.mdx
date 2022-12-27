@@ -22,7 +22,7 @@ GET `/v5/market/historical-volatility`
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `option` |
 |baseCoin |false |string |Base coin. default: return BTC data|
-|[period](../enum#period) |false |string |Period|
+|[period](../enum#period) |false |integer |Period|
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false |integer |The end timestamp (ms) |
 
@@ -31,7 +31,7 @@ GET `/v5/market/historical-volatility`
 |:----- |:-----|----- |
 |category |string |Product type |
 |list |array |Object |
-|> period |string |Period |
+|> period |integer |Period |
 |> value |string |Volatility |
 |> time |string |Timestamp (ms) |
 
@@ -41,7 +41,8 @@ GET `/v5/market/historical-volatility`
 <TabItem value="console" label="Console">
 
 ```http
-
+GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -53,7 +54,18 @@ GET `/v5/market/historical-volatility`
 <TabItem value="js option" label="option">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "category": "option",
+    "result": [
+        {
+            "period": 30,
+            "value": "0.45024716",
+            "time": "1672052400000"
+        }
+    ]
+}
 ```
 </TabItem>
 </Tabs>

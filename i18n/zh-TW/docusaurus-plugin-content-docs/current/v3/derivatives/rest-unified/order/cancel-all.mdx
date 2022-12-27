@@ -1,6 +1,8 @@
 ---
-title: Cancel All Order
-sidebar_label: Cancel All Order
+title: Cancel All Orders
+sidebar_label: Cancel All Orders
+sidebar_position: 5
+slug: /derivatives/unified/cancel-all
 ---
 
 :::tip
@@ -8,21 +10,19 @@ This endpoint enables to cancel all open orders.
 - If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
 :::
 
-#### HTTP Request
+### HTTP Request
 POST `/unified/v3/private/order/cancel-all`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |false|string |Symbol name |
 |baseCoin |false|string |Cancel all open orders by base coin |
-|settleCoin |false|string |Cancel all open orders by settle coin. `future` ONLY|
-|symbol |false|string |Symbol name |
+|settleCoin |false|string |Cancel all open orders by settle coin. `linear` ONLY|
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
 
-
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object | |

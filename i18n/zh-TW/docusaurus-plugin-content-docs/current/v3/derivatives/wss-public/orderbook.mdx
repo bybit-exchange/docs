@@ -1,0 +1,156 @@
+---
+title: Orderbook
+sidebar_label: Orderbook
+sidebar_position: 1
+slug: /derivatives/ws-public/orderbook
+---
+> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option
+
+Get different depth
+
+:::info
+* Once subscribe successfully, you will receive a `snapshot` first.
+* The data is sort by order price, which bids is from highest to lowest and asks is from lowest to highest
+* Websocket will keep pushing `delta` message when orderbook is changed.
+* If you receive a new snapshot data, it is necessary to reset your local orderbook.
+* If there is a problem in bybit end, it will re-send a snapshot, which is promised the latest and accurate.
+:::
+
+**Linear & Inverse:**<br/>
+* 1 level data, push frequency: **10ms**
+* 50 level data, push frequency: **20ms**
+* 200 level data, push frequency: **100ms**
+
+**Option:**<br/>
+* 25 level data
+* 100 level data
+
+**Topic:** (note: option has 25 & 100 level only)<br/>
+`orderbook.1.{symbol}`<br/>
+`orderbook.25.{symbol}`<br/>
+`orderbook.50.{symbol}`<br/>
+`orderbook.100.{symbol}`<br/>
+`orderbook.200.{symbol}`
+
+需确认option的结构
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`,`delta` |
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |Object | |
+|> s |String |Symbol name |
+|> b |array&ltarray&gt |Bid array |
+|>> b[0][0] |string |Bid price |
+|>> b[0][1] |string |Bid size |
+|> s |array&ltarray&gt |Ask array |
+|>> s[0][0] |string |Ask price |
+|>> s[0][1] |string |Ask size |
+|> u |number |Update id, is always in sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite the locally saved orderbook |
+|> seq |number |Cross sequence (internal value) |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console" label="JSON subscription message">
+
+```javascript
+{
+    "op": "subscribe",
+    "args": [
+    "orderbook.50.BTCUSDT"
+    ],
+    "req_id": "test" // optional
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="orderbook-snapshot" label="orderbook-snapshot">
+
+```json
+{
+    "topic": "orderbook.50.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1671179923028,
+    "data": {
+        "s": "BTCUSDT",
+        "b": [
+            [
+                "17440.00",
+                "40.833"
+            ],
+            [
+                "17439.50",
+                "0.513"
+            ],
+            ...
+            [
+                "17416.00",
+                "6.156"
+            ],
+            [
+                "17415.50",
+                "32.268"
+            ]
+    ],
+    "a": [
+        [
+            "17440.50",
+            "78.815"
+        ],
+        [
+            "17441.00",
+            "8.858"
+        ],
+        ...
+        [
+            "17464.50",
+            "4.901"
+        ],
+        [
+            "17465.00",
+            "5.744"
+        ]
+    ],
+    "u": 13079592,
+    "seq": 22520573250
+    }
+}
+```
+
+</TabItem>
+
+<TabItem value="orderbook-delta" label="orderbook-delta">
+
+```json
+{
+    "topic": "orderbook.50.BTCUSDT",
+    "type": "delta",
+    "ts": 1671179923046,
+    "data": {
+    "s": "BTCUSDT",
+    "b": [],
+    "a": [
+        [
+            "17440.50",
+            "78.857"
+        ],
+        [
+            "17442.00",
+            "1.510"
+        ]
+    ],
+    "u": 13079593,
+    "seq": 22520573262
+}
+}
+```
+
+</TabItem>
+</Tabs>

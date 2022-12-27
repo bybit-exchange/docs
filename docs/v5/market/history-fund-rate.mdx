@@ -5,11 +5,7 @@ sidebar_position: 7
 ---
 
 Query historical funding rate. Each symbol has a different funding interval. For example, if the interval is 8 hours,current time is UTC 12, then it returns the last funding rate, which settled at UTC 8. To query the funding rate interval, please refer to [instruments-info](instrument#)
-> **Cover: USDT Perpetual, USDC Perpetual and Inverse Perpetual**
-
-:::info
-TODO: 支持查詢多久的資金費率數據？
-:::
+> **Cover: Linear contract / Inverse contract**
 
 ### HTTP Request
 GET `/v5/market/funding/history`
@@ -38,6 +34,8 @@ GET `/v5/market/funding/history`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -49,7 +47,22 @@ GET `/v5/market/funding/history`
 <TabItem value="linear" label="linear">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "fundingRate": "0.0001",
+                "fundingRateTimestamp": "1672041600000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672051897447
+}
 ```
 </TabItem>
 </Tabs>
