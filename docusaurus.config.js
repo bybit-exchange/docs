@@ -110,6 +110,22 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
+          },
+          v5_account: {
+            specPath: "yml-folder/v5/account.yaml",
+            outputDir: "docs/api-explorer/v5/account",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          v5_asset: {
+            specPath: "yml-folder/v5/asset.yaml",
+            outputDir: "docs/api-explorer/v5/asset",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
           }
         }
       }

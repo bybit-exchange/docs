@@ -12,9 +12,9 @@ sidebar_position: 1
 <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001135">市價單</a>: `orderType`=_Market_, 以Bybit市場內最優的價格一直執行到成交. 選擇市價單時，price 參數為空。在期貨交易系統，為了保護市價單產生嚴重的滑點，Bybit 交易系統會將市價單轉為限價單進行撮合，如果市場價格轉限價時，超過滑點設置的閾值，該筆市場價格訂單將會被取消。滑點閾值是指訂單價格偏離最新成交價格的百分比，目前閾值設置為：BTC 合約3%，其他合約5%。
 
 - **支持的timeInForce策略:**<br/>
-`GoodTillCancel` 一直有效至取消<br/>
-`ImmediateOrCancel` 立即成交或取消<br/>
-`FillOrKill` 完全成交或取消<br/>
+`GTC` 一直有效至取消<br/>
+`IOC` 立即成交或取消<br/>
+`FOK` 完全成交或取消<br/>
 `PostOnly`: 被動委托類型，如果該訂單在提交時會被立即執行成交，它將被**取消**. 這樣做的目的是為了保護您的訂單在提交的過程中，如果因為場內的價格變化，而撮合系統無法委託該筆訂單到訂單簿，因此會被取消。針對 PostOnly 訂單類型，單筆訂單可提交的數量比其他類型的訂單更多，請參考該[接口](../market/instrument#)中的`lotSizeFilter > postOnlyMaxOrderQty`參數.
 
 - **如何創建條件單:**<br/>
@@ -55,7 +55,7 @@ POST `/v5/order/create`
 |triggerPrice |false |string |<li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li><li>對於現貨, 這是下止盈止損單的觸發價格參數</li>|
 |[triggerBy](../enum#triggerby) |false |string |條件單參數. 觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`. 僅正向合約有效|
 |orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `orderIv`比`price`有更高的優先級 |
-|[timeInForce](../enum#timeinforce) |**true** |string |訂單執行策略。<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
+|[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li> |
 |[positionIdx](../enum#positionidx) |false |string |倉位標識. 用戶不同倉位模式，僅正向合約有效. 統一帳戶下只有單向持倉模式|
 |orderLinkId |false |string |用戶自定義訂單Id|
 |takeProfit |false |string |止盈價格，僅開倉時的設置有效. 僅正向合約有效 |

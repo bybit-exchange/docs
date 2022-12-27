@@ -18,9 +18,9 @@ None
 ### 響應參數
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|unifiedUpdateStatus |string |用戶賬戶的升級狀態。 `1`: 處理中, `2`: 升級成功, `3`: 升級失敗, `4`: 拒絕 |
-|unifiedUpdateMsg |array |Object |
-|msg |string |返回的錯誤信息 |
+|unifiedUpdateStatus |string |用戶賬戶的升級狀態. `PROCESS`: 處理中, `FAIL`: 失敗, `SUCCESS`: 成功 |
+|unifiedUpdateMsg |Object |若是`PROCESS`,`SUCCESS`，則返回`null` |
+|msg |array |錯誤原因列表. 只有`FAIL`時，才會有`msg`這個字段 |
 
 ### 請求示例
 
@@ -28,6 +28,15 @@ None
 <TabItem value="console" label="Console">
 
 ```http
+POST /v5/account/upgrade-to-uta HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672125123533
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
 ```
 
 </TabItem>
@@ -39,7 +48,23 @@ None
 <TabItem value="option" label="option">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "unifiedUpdateStatus": "FAIL",
+        "unifiedUpdateMsg": {
+            "msg": [
+                "Update account failed. You have outstanding liabilities in your Spot account.",
+                "Update account failed. Please close the usdc perpetual positions in USDC Account.",
+                "unable to upgrade, please cancel the usdt perpetual open orders in USDT account.",
+                "unable to upgrade, please close the usdt perpetual positions in USDT account."
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1672125124195
+}
 ```
 </TabItem>
 </Tabs>
