@@ -1,24 +1,65 @@
 ---
 title: Set Risk Limit
 sidebar_label: Set Risk Limit
+sidebar_position: 4
+slug: /derivatives/unified/risk-limit
 ---
 :::tip
-Set the risk limit of the position. You could get risk limit information of each symbol here[加跳转链接].
+Set the risk limit of the position. You could get risk limit information of each symbol [here](../public/risk-limit#).
 :::
 
-#### HTTP Request
-POST `/unified/v3/private/position/set-leverage`
+### HTTP Request
+POST `/unified/v3/private/position/set-risk-limit`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear` ONLY |
+|[category](../enum#category) |**true** |string |Product type. `linear` ONLY |
 |symbol |**true** |string |Symbol name|
+|riskId |**true** |string |Risk id|
+|positionIdx |false |string |Position index. `0`: one-way mode|
 
-#### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|retCode |integer |Success/Error code |
-|retMsg |string |Success/Error message |
-|result |Object | |
-|time |integer |Timestamp |
+### Response Parameters
+None
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-console" label="Console">
+
+```http
+POST /unified/v3/private/position/set-risk-limit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672016123862
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: 2
+
+{
+    "category": "linear",
+    "symbol": "BTCUSDT",
+    "riskId": 2,
+    "positionIdx": 0
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="json-response" label="Response">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1672016125676
+}
+```
+</TabItem>
+</Tabs>

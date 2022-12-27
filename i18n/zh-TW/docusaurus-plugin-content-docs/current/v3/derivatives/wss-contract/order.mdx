@@ -1,0 +1,87 @@
+---
+title: Order
+sidebar_label: Order
+sidebar_position: 3
+slug: /derivatives/ws-contract/order
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Order stream is triggered when there is a new order placed or order status changed.
+
+> cover: USDT Perpetual, Inverse Perpetual, Inverse Future
+
+Push frequency: **real-time**
+
+**Topic:**
+`user.order.contractAccount`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|data |array |Object |
+|> symbol |string |Symbol name |
+|> orderId |string |Order id |
+|> orderLinkId |string |User customised order id |
+|> side |string |Side. `Buy`,`Sell` |
+|> orderType |string |Order type. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |Stop order type |
+|> price |string |Order price |
+|> qty |string |Order qty |
+|> [timeInForce](../enum#timeinforce) |string |Time in force |
+|> [orderStatus](../enum#orderstatus) |string |Order status |
+|> takeProfit |string |Take profit price |
+|> stopLoss |string |Stop loss price |
+|> tpTriggerBy |string |Take profit price trigger by |
+|> slTriggerBy |string |Stop loss price trigger by |
+|> triggerPrice |string |Trigger price |
+|> triggerDirection |integer |`0`: rise, `1`: fall |
+|> [triggerBy](../enum#triggerby) |string |Trigger by |
+|> reduceOnly |boolean |Reduce only |
+|> closeOnTrigger |boolean |Close on trigger |
+|> leavesQty |string |Remaining order qty waiting to be executed |
+|> lastExecQty |string |Last executed qty |
+|> lastExecPrice |string |Last executed price |
+|> cumExecQty |string |Cumulative executed qty |
+|> cumExecValue |string |Cumulative executed value |
+|> createdTime |string |Order created timestamp (ms) |
+|> updatedTime |string |Order updated timestamp (ms) |
+
+### Response Example
+
+```json
+{
+    "topic": "user.order.contractAccount",
+    "data": [
+        {
+            "symbol": "ETHUSDT",
+            "orderId": "60da3459-1726-40e9-b4d2-37f6bcd044ca",
+            "side": "Buy",
+            "orderType": "Limit",
+            "stopOrderType": "UNKNOWN",
+            "price": "1000.00",
+            "qty": "0.1",
+            "timeInForce": "GoodTillCancel",
+            "orderStatus": "New",
+            "triggerPrice": "0.00",
+            "orderLinkId": "",
+            "createdTime": "1671347745898",
+            "updatedTime": "1671347745901",
+            "takeProfit": "0.00",
+            "stopLoss": "0.00",
+            "tpTriggerBy": "UNKNOWN",
+            "slTriggerBy": "UNKNOWN",
+            "triggerBy": "UNKNOWN",
+            "reduceOnly": false,
+            "closeOnTrigger": false,
+            "triggerDirection": 0,
+            "leavesQty": "0.1",
+            "lastExecQty": "0",
+            "lastExecPrice": "0.00",
+            "cumExecQty": "0",
+            "cumExecValue": "0"
+        }
+    ]
+}
+```

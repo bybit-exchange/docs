@@ -2,6 +2,7 @@
 title: Place Order
 sidebar_label: Place Order
 sidebar_position: 1
+slug: /derivatives/contract/place-order
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -22,7 +23,7 @@ positions, the TP/SL linked when you submit active orders will not take effect. 
 
 - **Order price**: Place a limit order, this parameter is **required**. If you don't have position, the long order price
 should be higher than _10%_ of the market price and lower than 1 million. If you have position, the price should be higher than the _liquidation price_.
-For the minimum unit of the price change, please refer to the `priceFilter` field in the [_instrumentInfo_](../../rest-public/instrument-info#).
+For the minimum unit of the price change, please refer to the `priceFilter` field in the [_instrumentInfo_](../public/instrument-info#).
 
 - **orderLinkId**: You can customize the active order ID. We can link this ID to the order ID in the system. Once the
 active order is successfully created, we will send the unique order ID in the system to you. Then, you can use this order
@@ -41,24 +42,24 @@ POST `/contract/v3/private/order/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../../enum#category) |false |string |Product type. `linear`(default),`inverse`,`option`(temporary unavailable) |
+|[category](../enum#category) |false |string |Product type. `linear`(default),`inverse` |
 |symbol |**true** |string |Symbol name|
 |side |**true** |string |`Buy`,`Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
-|[timeInForce](../../enum#timeinforce) |**true** |string |Read more about <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. |
+|[timeInForce](../enum#timeinforce) |**true** |string |Read more about <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. |
 |price |false |string |Order price. Invalid if `orderType`=_Market_|
 |iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g., for 10%, 0.1 should be passed. It has a higher priority than `price` |
 |mmp |false |boolean |Market maker protection. `option` ONLY. `true` means this order is a market maker protection order |
 |triggerDirection |false |integer |_Conditional order param_. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li>|
 |triggerPrice |false |string |_Conditional order param_. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
-|[triggerBy](../../enum#triggerby) |false |string |Trigger price type. default:`LastPrice`.|
-|[positionIdx](../../enum#positionidx) |false |string |Position index. It is **required** for hedge position mode |
+|[triggerBy](../enum#triggerby) |false |string |Trigger price type. default:`LastPrice`.|
+|[positionIdx](../enum#positionidx) |false |string |Position index. It is **required** for hedge position mode |
 |orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>This param is **required**</li><li>always unique</li>|
 |takeProfit |false |string |Take profit price. only take effect upon opening the position |
 |stopLoss |false |string |Stop loss price. only take effect upon opening the position |
-|[tpTriggerBy](../../enum#triggerby) |false |string |The price type to trigger take profit. default:`LastPrice` |
-|[slTriggerBy](../../enum#triggerby) |false |string |The price type to trigger stop loss. default:`LastPrice` |
+|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. default:`LastPrice` |
+|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. default:`LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 

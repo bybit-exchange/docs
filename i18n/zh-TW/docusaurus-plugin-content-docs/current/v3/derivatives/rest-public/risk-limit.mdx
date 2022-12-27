@@ -1,6 +1,8 @@
 ---
 title: Risk Limit
 sidebar_label: Risk Limit
+sidebar_position: 9
+slug: /derivatives/public/risk-limit
 ---
 
 Get risk limit
@@ -9,19 +11,19 @@ Get risk limit
 What is risk limit? <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">Risk Limit (USDT Contract)</a>
 :::
 
-#### HTTP Request
+### HTTP Request
 GET `/derivatives/v3/public/risk-limit/list`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Products category. `future` ONLY |
+|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. default: `linear`, but in the response category shows `""`|
 |symbol |false |string |Symbol name|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |Products category. Keeps empty string `""` when `category` is not passed |
+|category |string |Product type. Keeps empty string `""` when `category` is not passed |
 |list |array |Object |
 |> id |string |Risk id |
 |> symbol |string |Symbol name |
@@ -31,3 +33,57 @@ GET `/derivatives/v3/public/risk-limit/list`
 |> section |array |section array |
 |> isLowerRisk |integer |`1`: true, `0`: false |
 |> maxLeverage |string |Allowed max leverage |
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+GET /derivatives/v3/public/risk-limit/list?symbol=ETHPERP HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```json
+    {
+        "retCode": 0,
+        "retMsg": "OK",
+        "result": {
+        "category": "",
+        "list": [
+    {
+        "id": 1,
+        "symbol": "ETHPERP",
+        "limit": "500000",
+        "maintainMargin": "0.01",
+        "initialMargin": "0.015",
+        "section": [
+        "1",
+        "2",
+        "3",
+        "5",
+        "10",
+        "25",
+        "50"
+        ],
+        "isLowestRisk": 1,
+        "maxLeverage": "66.67"
+    },
+        ...,
+
+        ]
+    },
+        "retExtInfo": {},
+        "time": 1671970615467
+    }
+```
+</TabItem>
+</Tabs>

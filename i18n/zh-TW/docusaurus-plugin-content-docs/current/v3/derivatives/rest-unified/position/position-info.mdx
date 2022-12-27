@@ -1,6 +1,8 @@
 ---
 title: My Position
 sidebar_label: My Position
+sidebar_position: 1
+slug: /derivatives/unified/position-info
 ---
 
 Get real-time position data
@@ -8,20 +10,20 @@ Get real-time position data
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
+### HTTP Request
 GET `/unified/v3/private/position/list`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |false |string |Symbol name |
 |baseCoin |false |string |Base coin. <li>`category`=option, then **BTC** records returned by default</li> |
 |direction |false |string |Page direction. `prev`, `next`. default: `next`|
 |limit |false |string |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination |
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
 <TabItem value="linear" label="linear" default>
     <table border="0.5">
@@ -86,10 +88,10 @@ GET `/unified/v3/private/position/list`
             <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
+            <td>> createdTime</td><td>integer</td><td>Created time </td>
         </tr>
         <tr>
-            <td>> positionIdx</td><td>integer</td><td>Position idx, used to identify positions in different position modes<li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li> </td>
+            <td>> positionIdx</td><td>integer</td><td>Position idx, used to identify positions in different position modes<li>`0`: One-Way Mode</li></td>
         </tr>
         <tr>
             <td>> positionIM</td><td>string</td><td>Position initial margin </td>
@@ -142,7 +144,7 @@ GET `/unified/v3/private/position/list`
             <td>> positionMM</td><td>string</td><td>Position maintenance margin </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>integer</td><td>Create time of position </td>
+            <td>> createdTime</td><td>integer</td><td>Created time</td>
         </tr>
         <tr>
             <td>> positionIdx</td><td>integer</td><td>Not Applicable </td>
@@ -151,5 +153,111 @@ GET `/unified/v3/private/position/list`
             <td>> positionIM</td><td>string</td><td>Position initial margin </td>
         </tr>
     </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="Console-linear">
+
+```http
+GET /unified/v3/private/position/list?category=linear&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672018057230
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="Console-option">
+
+```http
+GET /unified/v3/private/position/list?category=option&baseCoin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672018474913
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="json-linear" label="linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "nextPageCursor": "BTCUSDT%3A1672017116959%2CBTCUSDT%3A1672017116959",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "leverage": "13",
+                "updatedTime": 1672017116959,
+                "side": "Buy",
+                "positionValue": "2225.00000000",
+                "takeProfit": "",
+                "tpslMode": "Partial",
+                "riskId": 2,
+                "trailingStop": "",
+                "entryPrice": "14833.33333333",
+                "unrealisedPnl": "299.95450000",
+                "markPrice": "16833.24000000",
+                "size": "0.1500",
+                "stopLoss": "",
+                "cumRealisedPnl": "-219.54555520",
+                "positionMM": "23.48231625",
+                "createdTime": 0,
+                "positionIdx": 0,
+                "positionIM": "172.38616925"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672018057694
+}
+```
+</TabItem>
+
+<TabItem value="json-option" label="option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "nextPageCursor": "ETH-30DEC22-700-C%3A1672018465372%2CETH-30DEC22-700-C%3A1672018465372",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "ETH-30DEC22-700-C",
+                "updatedTime": 1672018465372,
+                "side": "Sell",
+                "positionValue": "49.80000000",
+                "entryPrice": "498.00000000",
+                "unrealisedPnl": "-2.02774092",
+                "markPrice": "518.27740924",
+                "size": "-0.1000",
+                "cumRealisedPnl": "0.00000000",
+                "positionMM": "55.72735692",
+                "createdTime": 1672018465365,
+                "positionIdx": 0,
+                "positionIM": "70.10719092"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672018475719
+}
+```
 </TabItem>
 </Tabs>

@@ -1,24 +1,26 @@
 ---
 title: Ticker Info
 sidebar_label: Ticker Info
+sidebar_position: 6
+slug: /derivatives/public/ticker
 ---
 Get all latest information of symbols.
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-#### HTTP Request
+### HTTP Request
 GET `/derivatives/v3/public/tickers`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Products category. `future`, `option`. future data returned by default if both `category` and `symbol` are not passed |
+|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear`, but in the response category shows `""`|
 |symbol |false |string |Symbol name. <li>`category`=option, `symbol` is **required**</li><li>an option symbol, `category` is **required**</li>|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
-<TabItem value="future" label="future" default>
+<TabItem value="future" label="linear&inverse" default>
     <table border="0.5">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -179,5 +181,111 @@ GET `/derivatives/v3/public/tickers`
             <td>change24h </td><td>string </td><td>The change in the last 24 hours </td>
         </tr>
     </table>
+</TabItem>
+</Tabs>
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-inverse" label="inverse">
+
+```http
+GET /derivatives/v3/public/tickers?category=linear&symbol=BTCUSDZ22 HTTP/1.1
+Host: api.bybit.com​
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="option">
+
+```http
+GET /derivatives/v3/public/tickers?category=option&symbol=BTC-30DEC22-19000-C HTTP/1.1
+Host: api.bybit.com​
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js inverse" label="inverse">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "category": "inverse",
+    "list": [
+        {
+            "symbol": "BTCUSDZ22",
+            "bidPrice": "16825",
+            "askPrice": "16825.5",
+            "lastPrice": "16825.00",
+            "lastTickDirection": "ZeroPlusTick",
+            "prevPrice24h": "16830.50",
+            "price24hPcnt": "-0.000326",
+            "highPrice24h": "16859.50",
+            "lowPrice24h": "16798.50",
+            "prevPrice1h": "16824.50",
+            "markPrice": "16824.02",
+            "indexPrice": "16825.28",
+            "openInterest": "7653441",
+            "turnover24h": "30.80109312",
+            "volume24h": "518542",
+            "fundingRate": "",
+            "nextFundingTime": "0",
+            "predictedDeliveryPrice": "0.00",
+            "basisRate": "-0.00009093",
+            "deliveryFeeRate": "0.0005",
+            "deliveryTime": "1672387200000"
+        }
+    ]
+},
+    "retExtInfo": {},
+    "time": 1671969377669
+}
+```
+</TabItem>
+
+<TabItem value="js option" label="option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "category": "option",
+        "symbol": "BTC-30DEC22-19000-C",
+        "bidPrice": "5",
+        "bidSize": "0.49",
+        "bidIv": "0.4875",
+        "askPrice": "20",
+        "askSize": "12.69",
+        "askIv": "0.6091",
+        "lastPrice": "20",
+        "highPrice24h": "20",
+        "lowPrice24h": "5",
+        "markPrice": "7.60392245",
+        "indexPrice": "16825.77",
+        "markPriceIv": "0.5179",
+        "underlyingPrice": "16800.92",
+        "openInterest": "347.52",
+        "turnover24h": "336.1553",
+        "volume24h": "0.02",
+        "totalVolume": "2148",
+        "totalTurnover": "29041290",
+        "delta": "0.02097273",
+        "gamma": "0.00005034",
+        "vega": "0.97458031",
+        "theta": "-5.22080293",
+        "predictedDeliveryPrice": "0",
+        "change24h": "1"
+},
+    "retExtInfo": {},
+    "time": 1671969555910
+}
+```
 </TabItem>
 </Tabs>

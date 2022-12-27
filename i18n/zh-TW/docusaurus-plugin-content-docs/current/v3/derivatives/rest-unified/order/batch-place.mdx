@@ -1,6 +1,8 @@
 ---
 title: Batch Place Order
 sidebar_label: Batch Place Order
+sidebar_position: 6
+slug: /derivatives/unified/batch-place
 ---
 :::tip
 This endpoint provides the batch order mode to place a bunch of orders.
@@ -15,13 +17,13 @@ symbol _matches the category_ will be operated.
 The list created by the order and the created information are returned. The structure of the two lists are completely consistent.
 :::
 
-#### HTTP Request
+### HTTP Request
 POST `/unified/v3/private/order/create-batch`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Products category. `linear`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name|
 |> side |**true** |string |`Buy`, `Sell`|
@@ -30,14 +32,13 @@ POST `/unified/v3/private/order/create-batch`
 |> price |false |string |Order price. Invalid if `orderType`=_Market_|
 |> iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
 |> timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
-|> positionIdx |false |string |Position index. `0`: one-way mode |
-|> orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
+|> positionIdx |false |string |Position index. `0`: one-way mode. Unified margin supports one-way mode ONLY |
+|> orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `linear`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
 |> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 |> mmp |false |boolean |Market maker protection. `true` means this order is a market maker protection order |
 
-
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object | |
