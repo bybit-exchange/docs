@@ -110,7 +110,23 @@ const config = {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"
             }
-          }
+          },
+          v5_trade: {
+            specPath: "yml-folder/v5/trade.yaml",
+            outputDir: "docs/api-explorer/v5/trade",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          v5_position: {
+            specPath: "yml-folder/v5/position.yaml",
+            outputDir: "docs/api-explorer/v5/position",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],
