@@ -37,13 +37,12 @@ GET `/v5/market/tickers`
 |> ask1Size |string |Ask 1 size. _`option` N/A_ |
 |> openInterest |string |Open interest size. _`spot` N/A_ |
 |> openInterestValue |string |Open interest value. _`linear`,`inverse` ONLY_ |
-|> [lastTickDirection](../enum#lasttickdirection) |string |Direction of price change. _`linear`,`inverse` ONLY_ |
-|> askIv |string |Ask 1 iv. _`option` ONLY_ |
-|> askPrice |string |Ask 1 price. _`option` ONLY_ |
-|> askSize |string |Ask 1 size. _`option` ONLY_ |
 |> bidIv |string |Bid 1 iv. _`option` ONLY_ |
+|> askIv |string |Ask 1 iv. _`option` ONLY_ |
 |> bidPrice |string |Bid 1 price. _`option` ONLY_ |
+|> askPrice |string |Ask 1 price. _`option` ONLY_ |
 |> bidSize |string |Bid 1 size. _`option` ONLY_ |
+|> askSize |string |Ask 1 size. _`option` ONLY_ |
 |> markIv |string |Mark price iv. _`option` ONLY_ |
 |> prevPrice1h |string |Market price an hour ago. _`linear`,`inverse` ONLY_ |
 |> lowPrice24h |string |The lowest price in the last 24 hours |
@@ -72,7 +71,7 @@ GET `/v5/market/tickers`
 <TabItem value="console-spot" label="Spot">
 
 ```http
-GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+GET /v5/market/tickers?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -81,7 +80,7 @@ Host: api-testnet.bybit.com
 <TabItem value="console-inverse" label="Inverse">
 
 ```http
-GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+GET /v5/market/tickers?category=inverse&symbol=BTCUSD HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -142,10 +141,7 @@ Host: api-testnet.bybit.com
         "list": [
             {
                 "symbol": "BTCUSD",
-                "bidPrice": "16750.50",
-                "askPrice": "16751.00",
                 "lastPrice": "16751.50",
-                "lastTickDirection": "PlusTick",
                 "prevPrice24h": "16737.50",
                 "price24hPcnt": "0.000836",
                 "highPrice24h": "21589.50",

@@ -5,7 +5,7 @@ sidebar_position: 13
 ---
 
 查詢期貨合約的風險限額表
-> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割**
+> **覆蓋範圍: 正向永續 / 反向永續**
 
 :::tip
 什麼是風險限額？<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">風險限額(USDT合約)</a>
@@ -27,8 +27,8 @@ GET `/v5/market/risk-limit`
 |list |array |Object |
 |> id |integer |風險限額id |
 |> symbol |string |合約名稱 |
-|> limit |string |風險限制額度 |
-|> maintainMargin |number |維持保證金率 |
+|> riskLimitValue |string |風險限制額度 |
+|> maintenanceMargin |number |維持保證金率 |
 |> initialMargin |number |初始保證金率 |
 |> section |array |section數組 |
 |> isLowestRisk |integer |是否是最低風險限額. `1`: true, `0`: false |
@@ -36,22 +36,33 @@ GET `/v5/market/risk-limit`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "inverse",
+        "list": [
+            {
+                "id": 1,
+                "symbol": "BTCUSD",
+                "riskLimitValue": "150",
+                "maintenanceMargin": "0.5",
+                "initialMargin": "1",
+                "isLowestRisk": 1,
+                "maxLeverage": "100.00"
+            },
+        ....
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672054488010
+}
 ```
-</TabItem>
-</Tabs>

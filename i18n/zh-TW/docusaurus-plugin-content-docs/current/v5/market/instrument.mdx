@@ -7,6 +7,11 @@ sidebar_position: 4.5
 查詢全站可交易產品的基礎配置規則信息
 > **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
 
+:::caution
+* 現貨不支持翻頁，因此`limit`, `cusor`無效.
+* 當通過`baseCoin`查詢時, 不管category=`linear`或`inverse`, 返回結果中都會包含正向合約和反向合約的交易對.
+:::
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -28,39 +33,64 @@ GET `/v5/market/instruments-info`
 |category |string |產品類型 |
 |list |array |Object |
 |> symbol |string |合約名稱 |
-|> [contractType](../enum#contracttype) |string |合約類型. 僅期貨有效|
+|> [contractType](../enum#contracttype) |string |合約類型. _僅`linear`,`inverse`_|
 |> [status](../enum#status) |string |交易品種的可交易狀態 |
 |> baseCoin |string |交易貨幣幣種 e.g., BTCUSDT中的BTC |
 |> quoteCoin |string |報價貨幣幣種 e.g., BTCUSDT中的USDT |
-|> settleCoin |string |結算貨幣幣種 e.g., BTCPERP中的USDC |
-|> optionsType |string |期權類型. `Call`,`Put` |
-|> launchTime |string |交易產品的上線時間 (毫秒) |
-|> deliveryTime |string |到期日/交割/行權時間戳 (毫秒) |
-|> deliveryFeeRate |string |交割合約的交割費率 |
-|> fundingInterval |string |資金費率的間隔時間 (分鐘) |
-|> leverageFilter |string |Object |
+|> innovation |string |是否為創新區交易對，僅`spot`有效<li>`0`: 非創新區</li> <li>`1`: 創新區幣種, 該類幣種相對波動大</li> |
+|> settleCoin |string |結算貨幣幣種 e.g., BTCPERP中的USDC. `spot` N/A |
+|> optionsType |string |期權類型. `Call`,`Put`. _`option` ONLY_ |
+|> launchTime |string |交易產品的上線時間 (毫秒). `spot` N/A |
+|> deliveryTime |string |到期日/交割/行權時間戳 (毫秒). `spot` N/A |
+|> deliveryFeeRate |string |交割合約的交割費率. `spot` N/A |
+|> priceScale |string |價格精度. _僅`linear`,`inverse`有效_|
+|> fundingInterval |string |資金費率的間隔時間 (分鐘). _`linear`,`inverse` ONLY_|
+|> leverageFilter |string |Object. _僅`linear`,`inverse`有效_ |
 |>> minLeverage |string |最小槓桿數 |
 |>> maxLeverage |string |最大槓桿數 |
 |>> leverageStep |string |槓桿最小增加或減少的步長 |
 |> priceFilter |string |Object |
-|>> minPrice |string |最小訂單價格 |
-|>> maxPrice |string |最大訂單價格 |
+|>> minPrice |string |最小訂單價格. `spot` N/A |
+|>> maxPrice |string |最大訂單價格. `spot` N/A |
 |>> tickSize |string |價格最小增加或減少的步長 |
 |> lotSizeFilter |string |Object |
+|>> basePrecision |string |交易幣種精度. _僅`spot`_ |
+|>> quotePrecision |string |報價幣種精度. _僅`spot`_ |
 |>> minOrderQty |string |單筆訂單最小下單數量 |
 |>> maxOrderQty |string |單筆訂單最大下單數量 |
-|>> postOnlyMaxOrderQty |string |`PostOnly`訂單可單筆下單的最大數量 |
+|>> minOrderAmt |string |最小訂單金額. _僅`spot`_ |
+|>> maxOrderAmt |string |最大訂單金額. _僅`spot`_ |
+|>> postOnlyMaxOrderQty |string |`PostOnly`訂單可單筆下單的最大數量. _僅`linear`,`inverse`_ |
 |>> qtyStep |string |下單數量最小增加或減少的步長 |
-|> unifiedMarginTrade |boolean |是否是統一保證金模式/統一帳戶可交易的產品 |
+|> unifiedMarginTrade |boolean |是否是統一保證金模式/統一帳戶可交易的產品. _僅`linear`,`inverse`_ |
 |nextPageCursor |string |游標，用於翻頁 |
 
 ### 請求示例
 
 <Tabs>
-<TabItem value="console" label="Console">
+<TabItem value="console-spot" label="Spot">
 
 ```http
+GET /v5/market/instruments-info?category=spot&symbol=ETHUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
 
+</TabItem>
+
+<TabItem value="console-linear" label="Linear">
+
+```http
+GET /v5/market/instruments-info?category=linear&symbol=ETHUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="Option">
+
+```http
+GET /v5/market/instruments-info?category=option&symbol=ETH-31MAR23-30000-C HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -69,10 +99,130 @@ GET `/v5/market/instruments-info`
 ### 響應示例
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js spot" label="spot">
 
 ```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "symbol": "ETHUSDT",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "innovation": "0",
+                "status": "1",
+                "lotSizeFilter": {
+                    "basePrecision": "0.00001",
+                    "quotePrecision": "0.0000001",
+                    "minOrderQty": "0.0005",
+                    "maxOrderQty": "100000000",
+                    "minOrderAmt": "1",
+                    "maxOrderAmt": "100000000"
+                },
+                "priceFilter": {
+                    "tickSize": "0.01"
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672027811156
+}
+```
 
+</TabItem>
+
+<TabItem value="js linear" label="Linear">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHUSDT",
+                "contractType": "LinearPerpetual",
+                "status": "Trading",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "launchTime": "1583193600000",
+                "deliveryTime": "0",
+                "deliveryFeeRate": "",
+                "priceScale": "2",
+                "leverageFilter": {
+                    "minLeverage": "1",
+                    "maxLeverage": "100.00",
+                    "leverageStep": "0.01"
+                },
+                "priceFilter": {
+                    "minPrice": "0.05",
+                    "maxPrice": "99999.90",
+                    "tickSize": "0.05"
+                },
+                "lotSizeFilter": {
+                    "maxTradingQty": "1500.00",
+                    "minTradingQty": "0.01",
+                    "qtyStep": "0.01",
+                    "postOnlyMaxOrderQty": "15000.00",
+                    "maxOrderQty": "1500.00",
+                    "minOrderQty": "0.01"
+                },
+                "unifiedMarginTrade": true,
+                "fundingInterval": 480,
+                "settleCoin": "USDT"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1672039120937
+}
+```
+
+</TabItem>
+
+<TabItem value="js option" label="Option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "category": "option",
+        "nextPageCursor": "0%2C1",
+        "list": [
+            {
+                "category": "option",
+                "symbol": "ETH-31MAR23-30000-C",
+                "status": "ONLINE",
+                "baseCoin": "ETH",
+                "quoteCoin": "USD",
+                "settleCoin": "USDC",
+                "optionsType": "Call",
+                "launchTime": "1665043200000",
+                "deliveryTime": "1680249600000",
+                "deliveryFeeRate": "0.00015",
+                "priceFilter": {
+                    "minPrice": "0.1",
+                    "maxPrice": "10000000",
+                    "tickSize": "0.1"
+                },
+                "lotSizeFilter": {
+                    "maxOrderQty": "1500",
+                    "minOrderQty": "0.1",
+                    "qtyStep": "0.1"
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672039242761
+}
 ```
 
 </TabItem>

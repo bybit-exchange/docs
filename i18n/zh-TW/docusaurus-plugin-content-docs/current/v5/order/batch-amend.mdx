@@ -22,7 +22,7 @@ POST `/v5/order/amend-batch`
 |> symbol |**true** |string |合約名稱 |
 |> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
 |> orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
-|> qty |**true** |string |修改後的訂單數量. 若不修改，請不要傳該字段 |
+|> qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段 |
 |> price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段 |
 |> orderIv |false |string |隱含波動率. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
 
@@ -42,22 +42,75 @@ POST `/v5/order/amend-batch`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/amend-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672222935987
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "option",
+    "request": [
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderType": "Limit",
+            "qty": null,
+            "price": null,
+            "orderIv": "6.8",
+            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderType": "Limit",
+            "side": "Sell",
+            "qty": null,
+            "price": "650",
+            "iv": null,
+            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+        }
+    ]
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-500-C",
+                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
+                "orderLinkId": ""
+            },
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-700-C",
+                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
+                "orderLinkId": ""
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1672222808060
+}
 ```
-</TabItem>
-</Tabs>
