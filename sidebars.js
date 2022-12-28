@@ -618,6 +618,8 @@ const sidebars = {
         require("./docs/api-explorer/v5/market/sidebar.js"),
         require("./docs/api-explorer/v5/trade/sidebar.js"),
         require("./docs/api-explorer/v5/position/sidebar.js"),
+        require("./docs/api-explorer/v5/account/sidebar.js"),
+        require("./docs/api-explorer/v5/asset/sidebar.js"),
       ]
     }
   ],

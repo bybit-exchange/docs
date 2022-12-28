@@ -4,7 +4,7 @@ sidebar_label: Coin Balance Of Specific Account Type
 sidebar_position: 0.3
 ---
 
-Query the balance of a specific coin in a specific [account type](../enum#accounttype)
+Query the balance of a specific coin in a specific [account type](../enum#accounttype). Support query sub uid's balance.
 
 :::caution
 Can query by main uid api key ONLY
@@ -26,8 +26,8 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |:----- |:-----|----- |
 |accountType |string |Account type |
 |bizType |integer |Biz type |
-|accountId |integer |Account id |
-|memberId |integer |Uid |
+|accountId |string |Account id |
+|memberId |string |Uid |
 |balance |Object | |
 |> coin |string |Coin |
 |> walletBalance |string |Wallet balance |
@@ -40,6 +40,12 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=BTC&memberId=592324 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672138188999
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -51,7 +57,24 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 <TabItem value="js response" label="response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "accountType": "UNIFIED",
+        "bizType": 1,
+        "accountId": "1016175",
+        "memberId": "592324",
+        "balance": {
+            "coin": "BTC",
+            "walletBalance": "0.805994",
+            "transferBalance": "0.805994",
+            "bonus": "0"
+        }
+},
+    "retExtInfo": {},
+    "time": 1672138189328
+}
 ```
 </TabItem>
 </Tabs>
