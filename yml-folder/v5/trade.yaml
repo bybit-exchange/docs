@@ -1,0 +1,855 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of Trade - v5 Restul API, which covers USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Spot and Option.
+  version: 3.0.0
+  title: Bybit v5 trade api explorer
+tags:
+  - name: trade
+    description: All trade v5 REST API.
+    x-displayName: Trade
+paths:
+  /v5/order/create:
+    post:
+      tags:
+        - trade
+      summary: Place Order
+      description: Place an order.
+      operationId: create-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                    - inverse
+                    - option
+                    - spot
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: ETHUSDT
+                isLeverage:
+                  type: int
+                  enum:
+                    - 0
+                    - 1
+                  description: Whether there is a loan, only for spot. 0:No;1:Yes.
+                side:
+                  type: string
+                  enum:
+                    - Buy
+                    - Sell
+                  example: Buy
+                orderType:
+                  type: string
+                  enum:
+                    - Market
+                    - Limit
+                  description: Order type
+                  example: Limit
+                qty:
+                  type: string
+                  description: Order qty
+                  example: "1"
+                price:
+                  type: string
+                  description: ignore it if Market order
+                  example: "1000"
+                triggerPrice:
+                  type: string
+                  description: param for StopOrder
+                  example:
+                triggerDirection:
+                  type: integer
+                  description: param for StopOrder. 1=rise, 2=fall
+                  example:
+                triggerBy:
+                  type: string
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  description: param for StopOrder
+                  example:
+                orderFilter:
+                  type: string
+                  enum:
+                    - Order
+                    - tpslOrder
+                  description: Take profit stop loss or ordinary order. Only valid for spot.
+                  default: Order
+                orderIv:
+                  type: string
+                  description: Implied volatility. param for option order
+                  example:
+                timeInForce:
+                  type: string
+                  description: Time in force.
+                  enum:
+                    - GTC
+                    - IOC
+                    - FOK
+                    - PostOnly
+                  example: GTC
+                positionIdx:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  description: 0=one-way mode, 1=buy-hedge-mode, 2=sell-hedge-mode
+                  example: 0
+                orderLinkId:
+                  type: string
+                  description: required param for option order
+                  example: test-xx1
+                takeProfit:
+                  type: string
+                  description: Take profit price
+                  example:
+                stopLoss:
+                  type: string
+                  description: Stop loss price
+                  example:
+                tpTriggerBy:
+                  type: string
+                  description: Trigger take profit price price type
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  example:
+                slTriggerBy:
+                  type: string
+                  description: Trigger stop loss price price type
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  example:
+                reduceOnly:
+                  type: boolean
+                  description: specify true if a close position order
+                  enum:
+                    - true
+                    - false
+                  example: false
+                closeOnTrigger:
+                  type: string
+                  description: close on trigger
+                  enum:
+                    - true
+                    - false
+                  example: false
+                mmp:
+                  type: boolean
+                  description: market marker protection. for option order
+                  enum:
+                    - true
+                    - false
+                  example:
+              required:
+                - category
+                - symbol
+                - side
+                - qty
+                - orderType
+
+  /v5/order/amend:
+    post:
+      tags:
+        - trade
+      summary: Replace Order
+      description: Replace an order.
+      operationId: replace-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum:
+                    - linear
+                    - inverse
+                    - option
+                  description: Product type. Currently spot is not supported.
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                orderId:
+                  type: string
+                  description: Either orderId or orderLinkId is required
+                orderLinkId:
+                  type: string
+                  description: Either orderId or orderLinkId is required
+                qty:
+                  type: string
+                  description: Modify the order qty
+                price:
+                  type: string
+                  description: Modify the order price
+                  example:
+                orderIv:
+                  type: string
+                  description: Modify option order iv
+                  example:
+                triggerPrice:
+                  type: string
+                  description: Modify StopOrder trigger price
+                  example:
+                takeProfit:
+                  type: string
+                  description: Modify take profit price
+                  example:
+                stopLoss:
+                  type: string
+                  description: Modify stop loss price
+                  example:
+                triggerBy:
+                  type: string
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  description: Modify the type of trigger price
+                  example:
+                tpTriggerBy:
+                  type: string
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  description: Modify trigger take profit price price type
+                  example:
+                slTriggerBy:
+                  type: string
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  description: Modify trigger stop loss price price type
+                  example:
+              required:
+                - category
+                - symbol
+  /v5/order/cancel:
+    post:
+      tags:
+        - trade
+      summary: Cancel Order
+      description: Cancel a order.
+      operationId: cancel-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum:
+                    - linear
+                    - inverse
+                    - option
+                    - spot
+                  description: Product type
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                orderId:
+                  type: string
+                  description: Either orderId or orderLinkId is required
+                orderLinkId:
+                  type: string
+                  description: Either orderId or orderLinkId is required
+                orderFilter:
+                  type: string
+                  enum:
+                    - Order
+                    - StopOrder
+                    - tpslOrder
+                  description: Take profit stop loss or ordinary order. Only valid for spot.
+                  default: Order
+              required:
+                - category
+                - symbol
+
+  /v5/order/realtime:
+    get:
+      tags:
+        - contract
+      summary: Get Open Orders
+      description: Get unfilled orders. Please read [API-DOC](../../../../derivatives/contract/open-order#) first.
+      operationId: open-order
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+              - inverse
+              - option
+              - spot
+            default: linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin
+          required: false
+          schema:
+            type: string
+        - name: settleCoin
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderLinkId
+          in: query
+          description: User customised order id
+          required: false
+          schema:
+            type: string
+        - name: orderFilter
+          in: query
+          description: Order filter
+          required: false
+          schema:
+            type: string
+            enum:
+              - Order
+              - StopOrder
+              - tpslOrder
+        - name: openOnly
+          in: query
+          description: Whether to only query active orders, if openOnly = 0, only get active orders. If it is 1, return only the order data of the final status (cancelled/rejected/completely filled, etc.) in the last 10 minutes
+          required: false
+          schema:
+            type: int
+            enum:
+              - 0
+              - 1
+            default: 0
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/order/cancel-all:
+    post:
+      tags:
+        - trade
+      summary: Cancel All Order
+      description: Cancel all orders.
+      operationId: cancel-all
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum:
+                    - linear
+                    - inverse
+                    - option
+                  description: Product type. Currently spot is not supported.
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                baseCoin:
+                  type: string
+                  description: Cancel by base coin. option ONLY
+                settleCoin:
+                  type: string
+                  description: Cancel by settle coin. linear ONLY
+              required:
+                - category
+
+  /v5/order/history:
+    get:
+      tags:
+        - contract
+      summary: Get Order List
+      description: Get order history.
+      operationId: order-list
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+              - inverse
+              - option
+              - spot
+            default: linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin. option ONLY
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderLinkId
+          in: query
+          description: User customised order id
+          required: false
+          schema:
+            type: string
+        - name: orderStatus
+          in: query
+          description: Order status
+          required: false
+          schema:
+            type: string
+        - name: orderFilter
+          in: query
+          description: Order filter
+          required: false
+          schema:
+            type: string
+            enum:
+              - Order
+              - StopOrder
+              - tpslOrder
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/order/create-batch:
+    post:
+      tags:
+        - trade
+      summary: Batch Place Order
+      description: Batch place orders
+      operationId: batch-place
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please pass unified account api key
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please pass unified account api secret
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  required: true
+                  enum:
+                    - option
+                  description: Product type. option ONLY
+                request:
+                  type: array
+                  maxItems: 10
+                  items:
+                    type: object
+                    properties:
+                      symbol:
+                        type: string
+                        description: Symbol name
+                      side:
+                        type: string
+                        enum:
+                          - Buy
+                          - Sell
+                        example: Buy
+                      orderType:
+                        type: string
+                        description: Order type
+                        enum:
+                          - Market
+                          - Limit
+                        example: Limit
+                      qty:
+                        type: string
+                        decription: Order qty
+                      price:
+                        type: string
+                        decription: Order price
+                      orderIv:
+                        type: string
+                        decription: Order iv. For option order
+                      timeInForce:
+                        type: string
+                        enum:
+                          - GTC
+                          - IOC
+                          - FOK
+                          - PostOnly
+                        description: Time in force
+                        example: GTC
+                      positionIdx:
+                        type: integer
+                        enum:
+                          - 0
+                        description: Position mode. one-way mode only for unified.
+                        example: 0
+                      orderLinkId:
+                        type: string
+                        description: REQUIRED param when place an option order
+                        example: test-xx1
+                      reduceOnly:
+                        type: boolean
+                        enum:
+                          - true
+                          - false
+                        description: specify true if a close position order
+                        example: false
+                      closeOnTrigger:
+                        type: string
+                        enum:
+                          - true
+                          - false
+                        description: close on trigger
+                        example: false
+                      mmp:
+                        type: boolean
+                        enum:
+                          - true
+                          - false
+                        description: market marker protection. for option order
+                        example:
+                    required:
+                      - symbol
+                      - side
+                      - orderType
+                      - qty
+                      - orderLinkId
+              required:
+                - category
+                - request
+
+  /v5/order/amend-batch:
+    post:
+      tags:
+        - trade
+      summary: Batch Replace Order
+      description: Batch replace orders
+      operationId: batch-replace-place
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please pass unified account api key
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please pass unified account api secret
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  required: true
+                  enum:
+                    - option
+                  description: Product type. option ONLY.
+                request:
+                  type: array
+                  maxItems: 10
+                  items:
+                    type: object
+                    properties:
+                      symbol:
+                        type: string
+                        description: Symbol name
+                      orderId:
+                        type: string
+                        description: Either orderId or orderLinkId is required
+                      orderLinkId:
+                        type: string
+                        description: Either orderId or orderLinkId is required
+                      qty:
+                        type: string
+                        description: Modify the order qty
+                      price:
+                        type: string
+                        description: Modify the order price
+                        example:
+                      orderIv:
+                        type: string
+                        description: Modify option order iv
+                        example:
+                    required:
+                      - symbol
+              required:
+                - category
+                - request
+  /v5/order/cancel-batch:
+    post:
+      tags:
+        - trade
+      summary: Batch Cancel Order
+      description: Batch cancel orders
+      operationId: batch-cancel
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please pass unified account api key
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please pass unified account api secret
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  required: true
+                  enum:
+                    - option
+                  description: Product type
+                request:
+                  type: array
+                  maxItems: 10
+                  items:
+                    type: object
+                    properties:
+                      symbol:
+                        type: string
+                        description: Symbol name
+                      orderId:
+                        type: string
+                        description: Either orderId or orderLinkId is required
+                      orderLinkId:
+                        type: string
+                        description: Either orderId or orderLinkId is required
+              required:
+                - category
+                - request
+
+  /v5/order/spot-borrow-check:
+    get:
+      tags:
+        - trade
+      summary: My Position
+      description: Query the user's spot available quota
+      operationId: query-spot-quota
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - spot
+            default: spot
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: side
+          in: query
+          description: Buy or Sell
+          required: true
+          schema:
+            type: string
+            enum:
+              - Buy
+              - Sell
+      responses:
+        "200":
+          description: successful operation

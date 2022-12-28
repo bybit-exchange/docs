@@ -1,0 +1,764 @@
+openapi: 3.0.0
+servers:
+  - url: https://api-testnet.bybit.com
+    description: Testnet server
+info:
+  description: |
+    Collection of Position - v5 Restul API, which covers USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future and Option.
+  version: 3.0.0
+  title: Bybit v5 position api explorer
+tags:
+  - name: position
+    description: All trade v5 REST API.
+    x-displayName: Position
+paths:
+  /v5/position/list:
+    get:
+      tags:
+        - position
+      summary: My Position.
+      operationId: position-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+              - option
+            default: linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: for option only
+          required: false
+          schema:
+            type: string
+        - name: settleCoin
+          in: query
+          description: symbol or settleCoin is required
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1-200. max 200
+          required: false
+          schema:
+            type: string
+            default: 200
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/position/set-leverage:
+    post:
+      tags:
+        - trade
+      summary: Set Leverage
+      description: Set levearage.
+      operationId: leverage
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                buyLeverage:
+                  type: string
+                  description: Buy side leverage
+                  example: "10"
+                sellLeverage:
+                  type: string
+                  description: Sell side leverage
+                  example: "10"
+              required:
+                - category
+                - symbol
+                - buyLevarge
+                - sellLevarge
+
+  /v5/position/set-tpsl-mode:
+    post:
+      tags:
+        - position
+      summary: Switch TP/SL Mode
+      description: Switch tp/sl mode.
+      operationId: tpsl-mode
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                tpSlMode:
+                  type: string
+                  description: Full=full position TP/SL, Partial=partial mode tp/sl
+                  enum:
+                    - Full
+                    - Partial
+                  example: Full
+              required:
+                - category
+                - symbol
+                - tpSlMode
+
+  /v5/position/set-risk-limit:
+    post:
+      tags:
+        - position
+      summary: Set Risk Limit
+      description: Set risk limit.
+      operationId: set-risk-limit
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: BTCUSDT
+                riskId:
+                  type: integer
+                  description: Risk limit id
+                  example: 2
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - riskId
+                - positionIdx
+
+  /v5/position/trading-stop:
+    post:
+      tags:
+        - position
+      summary: Set Trading Stop
+      description: Set trade stop.
+      operationId: trading-stop
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                takeProfit:
+                  type: string
+                  description: Take profit price
+                  example:
+                stopLoss:
+                  type: string
+                  description: Stop loss price
+                  example:
+                tpSize:
+                  type: string
+                  description: Take profit size
+                  example:
+                slSize:
+                  type: string
+                  description: Stop loss size
+                  example:
+                tpTriggerBy:
+                  type: string
+                  description: Take profit trigger price type
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  example: "MarkPrice"
+                slTriggerBy:
+                  type: string
+                  description: Stop loss trigger price type
+                  enum:
+                    - LastPrice
+                    - MarkPrice
+                    - IndexPrice
+                  example: "MarkPrice"
+                trailingStop:
+                  type: string
+                  description: Trailing stop
+                  example:
+                activePrice:
+                  type: string
+                  description: Trailing stop trigger price
+                  example:
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - positionIdx
+
+  /v5/execution/list:
+    get:
+      tags:
+        - position
+      summary: Get Execution List
+      description: Get execution list.
+      operationId: execution
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+              - spot
+              - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: baseCoin
+          in: query
+          description: Base coin. option ONLY
+          required: false
+          schema:
+            type: string
+          example:
+        - name: orderId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderLinkId
+          in: query
+          description: User customised order id
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: execType
+          in: query
+          description: Execution type
+          enum:
+            - Trade
+            - AdlTrade
+            - Funding
+            - BustTrade
+            - Settle
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1-100. max 100
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/delivery-record:
+    get:
+      tags:
+        - position
+      summary: Get Delivery Record
+      description: Get Delivery Record.
+      operationId: delivery-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: expDate
+          in: query
+          description: expired date
+          required: false
+          schema:
+            type: string
+          example:
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/settlement-record:
+    get:
+      tags:
+        - position
+      summary: Get Settlement Record
+      description: Get Settlement Record.
+      operationId: settlement-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type. USDC Perpetuals ONLY
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/position/switch-isolated:
+    post:
+      tags:
+        - position
+      summary: Switch Cross/Isolated Margin
+      description: Switch cross/isolated margin mode.
+      operationId: cross-isolated-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                tradeMode:
+                  type: integer
+                  description: Trade mode. 0=crossMargin, 1=isolatedMargin
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                buyLeverage:
+                  type: string
+                  description: Buy side leverage. Make sure buyLeverage equals to sellLeverage
+                  example: "10"
+                sellLeverage:
+                  type: string
+                  description: Sell side leverage. Make sure buyLeverage equals to sellLeverage
+                  example: "10"
+              required:
+                - category
+                - symbol
+                - tradeMode
+                - buyLeverage
+                - sellLeverage
+
+  /v5/position/switch-mode:
+    post:
+      tags:
+        - position
+      summary: Switch Position Mode
+      description: Switch position mode.
+      operationId: position-mode
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name. Either symbol or coin is required
+                coin:
+                  type: string
+                  description: Coin. Either symbol or coin is required
+                  example: "USDT"
+                mode:
+                  type: string
+                  description: Position mode. 0=mergedSingle, 3=bothSide
+                  enum:
+                    - 0
+                    - 3
+                  example: "0"
+              required:
+                - category
+                - mode
+
+  /v5/position/set-auto-add-margin:
+    post:
+      tags:
+        - contract
+      summary: Set Auto Add Margin
+      description: Turn on/off auto add position margin. Please read [API-DOC](../../../../derivatives/contract/auto-margin#) first.
+      operationId: auto-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                autoAddMargin:
+                  type: integer
+                  description: Turn on / off. 0=off, 1=on
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - autoAddMargin
+
+  /v5/position/closed-pnl:
+    get:
+      tags:
+        - position
+      summary: Get Closed PnL
+      description: Get closed pnl.
+      operationId: close-pnl
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type.
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: 1-200. max 200
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: cursor to pagnition
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
