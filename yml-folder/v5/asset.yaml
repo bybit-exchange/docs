@@ -78,7 +78,7 @@ paths:
           description: If query sub user balance, please input sub uid
           required: false
           schema:
-            type: integer
+            type: string
         - name: accountType
           in: query
           description: Account type
@@ -354,3 +354,638 @@ paths:
                     example: "1234,3213,4321"
               required:
                 - subMemberIds
+  /v5/asset/transfer/universal-transfer:
+    post:
+      tags:
+        - asset
+      summary: Universal Transfer
+      description: Universal transfer. Please read [API-DOC](../../../v5/asset/unitransfer#) first.
+      operationId: unitransfer
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transferId:
+                  type: sting
+                  description: Transfer id. UUID
+                  example: be7a2462-1138-4e27-80b1-62653f24925e
+                coin:
+                  type: sting
+                  description: Coin name
+                  example: USDT
+                amount:
+                  type: sting
+                  description: Amount
+                  example: "100"
+                fromMemberId:
+                  type: intger
+                  description: From UID
+                  example: 12345
+                toMemberId:
+                  type: integer
+                  description: To UID
+                  example: 54321
+                fromAccountType:
+                  type: string
+                  description: From account type
+                  enum:
+                    - UNIFIED
+                    - CONTRACT
+                    - SPOT
+                    - INVESTMENT
+                    - OPTION
+                  example: UNIFIED
+                toAccountType:
+                  type: string
+                  description: To account type
+                  enum:
+                    - UNIFIED
+                    - CONTRACT
+                    - SPOT
+                    - INVESTMENT
+                    - OPTION
+                  example: CONTRACT
+              required:
+                - transferId
+                - coin
+                - amount
+                - fromMemberId
+                - toMemberId
+                - fromAccountType
+                - toAccountType
+  /v5/asset/transfer/query-universal-transfer-list:
+    get:
+      tags:
+        - asset
+      summary: Get Universal Transfer Record
+      description: Get universal transfer record. Please read [API-DOC](../../../v5/asset/unitransfer-list#) first.
+      operationId: unitransfer-list
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: transferId
+          in: query
+          description: Transfer id
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status
+          required: false
+          schema:
+            type: string
+            enum:
+              - SUCCESS
+              - FAILED
+              - PENDING
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/deposit/query-allowed-list:
+    get:
+      tags:
+        - asset
+      summary: Get Allowed Deposit Coin Info
+      description: Get allowed deposit coin info. Please read [API-DOC](../../../v5/asset/deposit-coin-spec#) first.
+      operationId: deposit-coin-spec
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: chain
+          in: query
+          description: Chain name
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit size. 1-35
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/deposit/query-record:
+    get:
+      tags:
+        - asset
+      summary: Get Deposit Record
+      description: Get deposit record. Please read [API-DOC](../../../v5/asset/deposit-record#) first.
+      operationId: deposit-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/deposit/query-sub-member-record:
+    get:
+      tags:
+        - asset
+      summary: Get Sub Account Deposit Record
+      description: Get sub account deposit record. Please read [API-DOC](../../../v5/asset/sub-deposit-record#) first.
+      operationId: sub-deposit-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: subMemberId
+          in: query
+          description: Sub uid
+          required: true
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/deposit/query-address:
+    get:
+      tags:
+        - asset
+      summary: Get Master Deposit Address
+      description: Get master deposit address. Please read [API-DOC](../../../v5/asset/master-deposit-addr#) first.
+      operationId: master-deposit-addr
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: true
+          schema:
+            type: string
+        - name: chainType
+          in: query
+          description: Chain name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/deposit/query-sub-member-address:
+    get:
+      tags:
+        - asset
+      summary: Get Sub Deposit Address
+      description: Get sub deposit address. Please read [API-DOC](../../../v5/asset/sub-deposit-addr#) first.
+      operationId: sub-deposit-addr
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: true
+          schema:
+            type: string
+        - name: chainType
+          in: query
+          description: Chain name
+          required: true
+          schema:
+            type: string
+        - name: subMemberId
+          in: query
+          description: Sub user id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/coin/query-info:
+    get:
+      tags:
+        - asset
+      summary: Get Coin Info
+      description: Get coin info. Please read [API-DOC](../../../v5/asset/coin-info#) first.
+      operationId: coin-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/withdraw/query-record:
+    get:
+      tags:
+        - asset
+      summary: Get Withdraw Record
+      description: Get withdraw record. Please read [API-DOC](../../../v5/asset/withdraw-record#) first.
+      operationId: withdraw-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: withdrawID
+          in: query
+          description: Withdraw id
+          required: false
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: withdrawType
+          in: query
+          description: Withdraw type. 0=on chain, 1=off chain, 2=all
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+              - 2
+            default: 0
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/asset/withdraw/create:
+    post:
+      tags:
+        - asset
+      summary: Withdraw
+      description: Create withdraw. Please read [API-DOC](../../../v5/asset/withdraw#) first.
+      operationId: withdraw
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coin:
+                  type: string
+                  description: array of sub UIDs
+                  example: USDT
+                chain:
+                  type: string
+                  description: Chain name
+                  example: ETH
+                address:
+                  type: string
+                  description: Wallet address
+                  example:
+                tag:
+                  type: string
+                  description: Tag
+                  example:
+                amount:
+                  type: string
+                  description: Amount
+                  example: "20"
+                timestamp:
+                  type: integer
+                  description: Current timestamp (ms)
+                  example:
+                forceChain:
+                  type: integer
+                  description: 0=If the address is internal address, then internal transfer, 1=Force withdraw on chain
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                  default: 0
+              required:
+                - coin
+                - chain
+                - address
+                - amount
+                - timestamp
+  /v5/asset/withdraw/cancel:
+    post:
+      tags:
+        - asset
+      summary: Cancel Withdraw
+      description: Cancel withdraw. Please read [API-DOC](../../../v5/asset/cancel-withdraw#) first.
+      operationId: cancel-withdraw
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Withdraw id
+                  example:
+              required:
+                - id
+  /v5/asset/exchange/order-record:
+    get:
+      tags:
+        - asset
+      summary: Get Exchange Records
+      description: Get exchange records. Please read [API-DOC](../../../v5/asset/exchange#) first.
+      operationId: exchange
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: fromCoin
+          in: query
+          description: From coin
+          required: false
+          schema:
+            type: string
+        - name: toCoin
+          in: query
+          description: To coin
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: Cursor, used to pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
