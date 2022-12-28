@@ -14,7 +14,7 @@ GET `/v5/asset/deposit/query-allowed-list`
 |:----- |:-------|:-----|------ |
 |coin |false |string |Coin. `coin` and `chain` must be paired if passed |
 |chain |false |string |Chain. `coin` and `chain` must be paired if passed|
-|limit |false |integer |Limit for data size per page. [1,100]. default: `20`|
+|limit |false |integer |Limit for data size per page. [1,35]. default: `10`|
 |cursor |false |string |Cursor. Used to pagination|
 
 ### Response Parameters
@@ -35,6 +35,12 @@ GET `/v5/asset/deposit/query-allowed-list`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/deposit/query-allowed-list?coin=ETH&chain=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672191495968
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -43,10 +49,28 @@ GET `/v5/asset/deposit/query-allowed-list`
 ### Response Example
 
 <Tabs>
-<TabItem value="js response" label="response">
+<TabItem value="js response" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "configList": [
+            {
+                "coin": "ETH",
+                "chain": "ETH",
+                "coinShowName": "ETH",
+                "chainType": "ETH",
+                "blockConfirmNumber": 10000,
+                "minDepositAmount": "0.01"
+            }
+        ],
+    "nextPageCursor": "eyJwYWdlIjoyLCJsaW1pdCI6MTB9"
+},
+    "retExtInfo": {},
+    "time": 1672191496219
+}
 ```
 </TabItem>
 </Tabs>

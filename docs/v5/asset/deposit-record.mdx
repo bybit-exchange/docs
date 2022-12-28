@@ -13,7 +13,7 @@ Query deposit records.
 :::
 
 ### HTTP Request
-GET `/v5/asset/deposit/qyert-record`
+GET `/v5/asset/deposit/query-record`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -48,6 +48,12 @@ GET `/v5/asset/deposit/qyert-record`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/deposit/query-record?coin=USDT&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672191991544
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -56,10 +62,34 @@ GET `/v5/asset/deposit/qyert-record`
 ### Response Example
 
 <Tabs>
-<TabItem value="js response" label="response">
+<TabItem value="js response" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "amount": "10000",
+                "txID": "skip-notification-scene-test-amount-202212270944-533285-USDT",
+                "status": 3,
+                "toAddress": "test-amount-address",
+                "tag": "",
+                "depositFee": "",
+                "successAt": "1672134274000",
+                "confirmations": "10000",
+                "txIndex": "",
+                "blockHash": ""
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTA0NjA0MywibWF4SUQiOjEwNDYwNDN9"
+    },
+    "retExtInfo": {},
+    "time": 1672191992512
+}
 ```
 </TabItem>
 </Tabs>

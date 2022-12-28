@@ -7,7 +7,7 @@ sidebar_position: 13.5
 Query coin information, including chain information, withdraw and deposit status.
 
 ### HTTP Request
-GET `/v5/asset/coin/query-record`
+GET `/v5/asset/coin/query-info`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -38,6 +38,12 @@ GET `/v5/asset/coin/query-record`
 <TabItem value="console" label="Console">
 
 ```http
+GET /v5/asset/coin/query-info?coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672194580887
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
@@ -46,10 +52,37 @@ GET `/v5/asset/coin/query-record`
 ### Response Example
 
 <Tabs>
-<TabItem value="js response" label="response">
+<TabItem value="js response" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "rows": [
+            {
+                "name": "BTC",
+                "coin": "BTC",
+                "remainAmount": "150",
+                "chains": [
+                    {
+                        "chainType": "BTC",
+                        "confirmation": "10000",
+                        "withdrawFee": "0.0005",
+                        "depositMin": "0.0005",
+                        "withdrawMin": "0.001",
+                        "chain": "BTC",
+                        "chainDeposit": "1",
+                        "chainWithdraw": "1",
+                        "minAccuracy": "8"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672194582264
+}
 ```
 </TabItem>
 </Tabs>

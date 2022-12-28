@@ -35,7 +35,23 @@ POST `/v5/asset/withdraw/create`
 <TabItem value="console" label="Console">
 
 ```http
+POST /v5/asset/withdraw/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672196570254
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
 
+{
+    "coin": "USDT",
+    "chain": "ETH",
+    "address": "0x99ced129603abc771c0dabe935c326ff6c86645d",
+    "tag": null,
+    "amount": "24",
+    "timestamp": 1672196561407,
+    "forceChain": 0
+}
 ```
 
 </TabItem>
@@ -44,10 +60,18 @@ POST `/v5/asset/withdraw/create`
 ### 響應示例
 
 <Tabs>
-<TabItem value="js response" label="response">
+<TabItem value="js response" label="Response">
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "id": "10195"
+    },
+    "retExtInfo": {},
+    "time": 1672196571239
+}
 ```
 </TabItem>
 </Tabs>
