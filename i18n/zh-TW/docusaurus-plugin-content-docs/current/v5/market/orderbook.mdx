@@ -5,7 +5,7 @@ sidebar_position: 5
 ---
 
 獲取深度數據
-> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
+> **覆蓋範圍: 現貨 / 正向合約 / 反向合約 / 期權**
 
 * 期貨: 最多返回200檔的數據.
 * 現貨: 最多返回50檔的數據.
@@ -23,7 +23,7 @@ GET `/v5/market/orderbook`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
 |symbol |**true** |string |合約名稱|
-|limit |false |integer |每頁數量限制.<li>`spot`: [1,50], 默認: `50`.</li><li>`linear`&`inverse`: [1,500],默認: `25`.</li><li>`option` 僅25可用.</li>|
+|limit |false |integer |每頁數量限制.<li>`spot`: [1,50], 默認: `1`.</li><li>`linear`&`inverse`: [1,200],默認: `1`.</li><li>`option`: [1,25],默認: `1`.</li>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -40,23 +40,35 @@ GET `/v5/market/orderbook`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/market/orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "s": "BTC-30DEC22-18000-C",
+        "b": [
+            [
+                "5",
+                "3.12"
+            ]
+        ],
+        "a": [
+            [
+                "175",
+                "4.88"
+            ]
+        ],
+        "u": 1203433656,
+        "ts": 1672043188375
+    },
+    "retExtInfo": {},
+    "time": 1672043199230
+}
 ```
-</TabItem>
-</Tabs>

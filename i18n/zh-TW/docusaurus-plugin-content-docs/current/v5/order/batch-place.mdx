@@ -39,7 +39,7 @@ POST `/v5/order/create-batch`
 |>> symbol |string |合約名稱 |
 |>> orderId |string |訂單Id |
 |>> orderLinkId |string |用戶自定義訂單Id |
-|>> createAt |string |訂單創建時間 (毫秒) |
+|>> createdTime |string |訂單創建時間 (毫秒) |
 |retExtInfo |Object | |
 |> list |array |Object |
 |>> code |number |成功/錯誤碼 |
@@ -47,22 +47,84 @@ POST `/v5/order/create-batch`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/create-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672222064519
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "option",
+    "request": [
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "1",
+            "price": null,
+            "orderIv": "6",
+            "timeInForce": "GTC",
+            "orderLinkId": "option-test-001",
+            "mmp": false,
+            "reduceOnly": false
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderType": "Limit",
+            "side": "Sell",
+            "qty": "2",
+            "price": "700",
+            "iv": null,
+            "timeInForce": "GTC",
+            "orderLinkId": "option-test-001",
+            "mmp": false,
+            "reduceOnly": false
+        }
+    ]
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-500-C",
+                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
+                "orderLinkId": "option-test-001",
+                "createdTime": "1672222047683"
+            },
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-500-C",
+                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
+                "orderLinkId": "option-test-001",
+                "createdTime": "1672222047683"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1672222047684
+}
 ```
-</TabItem>
-</Tabs>

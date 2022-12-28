@@ -5,7 +5,7 @@ sidebar_position: 9
 ---
 
 查詢各個合約市場內所有未平倉的數量
-> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割**
+> **覆蓋範圍: 正向合約 / 反向合約**
 
 :::info
 * 返回單邊數據
@@ -38,22 +38,33 @@ GET `/v5/market/open-interest`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/market/open-interest?category=inverse&symbol=BTCUSD&intervalTime=5min&startTime=1669571100000&endTime=1669571400000 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "symbol": "BTCUSD",
+        "category": "inverse",
+        "list": [
+            {
+                "openInterest": "461134384.00000000",
+                "timestamp": "1669571400000"
+            },
+            {
+                "openInterest": "461134292.00000000",
+                "timestamp": "1669571100000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1672053548579
+}
 ```
-</TabItem>
-</Tabs>

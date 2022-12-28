@@ -45,6 +45,7 @@ GET `/v5/order/history`
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
+|> isLeverage |string |Whether to borrow. _`spot` ONLY_. `0`: false, `1`: true|
 |> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
@@ -64,7 +65,7 @@ GET `/v5/order/history`
 |> stopLoss |string |Stop loss price |
 |> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit |
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
-|> triggerDirection |string |Trigger direction. `1`: rise, `2`: fall |
+|> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
 |> [triggerBy](../enum#triggerby) |string |The price type of trigger price |
 |> lastPriceOnCreated |string |Last price when place the order. for `linear` ONLY |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
@@ -75,22 +76,64 @@ GET `/v5/order/history`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/order/history?category=linear&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672221263407
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387%2C03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "orderType": "Limit",
+                "orderLinkId": "test-001",
+                "orderId": "03234de9-1332-41eb-b805-4a9f42c136a3",
+                "cancelType": "CancelByUser",
+                "avgPrice": "0",
+                "stopOrderType": "UNKNOWN",
+                "lastPriceOnCreated": "16656.5",
+                "orderStatus": "Cancelled",
+                "takeProfit": "",
+                "cumExecValue": "0",
+                "triggerDirection": 0,
+                "blockTradeId": "",
+                "rejectReason": "EC_PerCancelRequest",
+                "isLeverage": "",
+                "price": "18000",
+                "orderIv": "",
+                "createdTime": "1672220109387",
+                "tpTriggerBy": "UNKNOWN",
+                "positionIdx": 0,
+                "timeInForce": "GoodTillCancel",
+                "leavesValue": "0",
+                "updatedTime": "1672220114123",
+                "side": "Sell",
+                "triggerPrice": "",
+                "cumExecFee": "0",
+                "slTriggerBy": "UNKNOWN",
+                "leavesQty": "0",
+                "closeOnTrigger": false,
+                "cumExecQty": "0",
+                "reduceOnly": false,
+                "qty": "0.1",
+                "stopLoss": "",
+                "triggerBy": "UNKNOWN"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672221263862
+}
 ```
-</TabItem>
-</Tabs>

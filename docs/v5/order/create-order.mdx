@@ -79,22 +79,40 @@ POST `/v5/order/create`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "spot",
+    "symbol": "BTCUSDT",
+    "side": "Buy",
+    "orderType": "Limit",
+    "qty": "0.1",
+    "price": "15600",
+    "timeInForce": "PostOnly",
+    "orderLinkId": "spot-test-postonly",
+    "isLeverage": 0,
+    "orderFilter": "Order"
+}
+```
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "1321003749386327552",
+        "orderLinkId": "spot-test-postonly"
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
 ```
-</TabItem>
-</Tabs>

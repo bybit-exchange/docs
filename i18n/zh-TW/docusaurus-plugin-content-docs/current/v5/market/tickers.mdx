@@ -5,7 +5,7 @@ sidebar_position: 6
 ---
 
 可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
-> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向永續 / 反向交割 / 期權**
+> **覆蓋範圍: 現貨 / 正向合約 / 反向合約 / 期權**
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -28,43 +28,69 @@ GET `/v5/market/tickers`
 |list |array |Object |
 |> symbol |string |合約名稱 |
 |> lastPrice |string |最新市場成交價 |
-|> indexPrice |string |指數價格 |
-|> markPrice |string |標記價格 |
-|> underlyingPrice |string |底層資產對應的價格 |
-|> bid1Price |string |買 1 價 |
-|> ask1Price |string |賣 1 價 |
-|> bid1Size |string |買1價的數量  |
-|> ask1Size |string |賣1價的數量 |
-|> openInterest |string |未平倉合約的數量 |
-|> openInterestValue |string |未平倉合約的價值 |
-|> nextFundingTime |string |下次結算資金費用的時間（UTC毫秒時間戳） |
-|> fundingRate |string |資金費率，僅永續合約 |
-|> prevPrice1h |string |1小時前的整點市價 |
+|> markPrice |string |標記價格. _`spot` N/A_ |
+|> indexPrice |string |指數價格. _`spot` N/A_ |
+|> underlyingPrice |string |底層資產對應的價格。 _僅`option`_ |
+|> bid1Price |string |買 1 價. _`option` N/A_ |
+|> ask1Price |string |賣 1 價. _`option` N/A_ |
+|> bid1Size |string |買1價的數量. _`option` N/A_  |
+|> ask1Size |string |賣1價的數量. _`option` N/A_ |
+|> openInterest |string |未平倉合約的數量. _`spot` N/A_ |
+|> openInterestValue |string |未平倉合約的價值. _僅`linear`,`inverse`_ |
+|> bidIv |string |買1價格對應的iv |
+|> askIv |string |賣1價格對應的iv |
+|> bidPrice |string |買 1 價. _僅`option`_ |
+|> askPrice |string |賣 1 價. _僅`option`_ |
+|> bidSize |string |買1價的數量. _僅`option`_ |
+|> askSize |string |賣1價的數量. _僅`option`_ |
+|> markIv |string |標記價格的iv. _僅`option`_ |
+|> prevPrice1h |string |1小時前的整點市價. _僅`linear`,`inverse`_ |
 |> lowPrice24h |string |最近24小時的最低價 |
 |> highPrice24h |string |最近24小時的最高價 |
-|> prevPrice24h |string |24小時前的整點市價 |
-|> price24hPcnt |string |市場價格相對24h前變化的百分比 |
+|> prevPrice24h |string |24小時前的整點市價. _`option` N/A_ |
+|> price24hPcnt |string |市場價格相對24h前變化的百分比. _`option` N/A_ |
 |> volume24h |string |最近24小時成交量 |
 |> turnover24h |string |最近24小時成交額 |
-|> ask1Iv |string |買1價格對應的iv |
-|> bid1Iv |string |賣1價格對應的iv |
-|> markPriceIv |string |標記價格的iv |
-|> deliveryTime |string |交割時間. 僅反向交割和期權有效 |
-|> deliveryFeeRate |string |交割費率. 僅反向交割和期權有效|
-|> predictedDeliveryPrice |string |Predicated delivery price |
-|> vega |string |Vega值 |
-|> delta |string |Delta值 |
-|> theta |string |Theta值 |
-|> gamma |string |Gamma值 |
-|> basisRate |string |交割合約基差率 |
+|> change24h |string |Change for 24h. _`option` ONLY_ |
+|> totalTurnover |string |Total turnover. _`option` ONLY_ |
+|> totalVolume |string |Total volume. _`option` ONLY_ |
+|> basisRate |string |交割合約基差率. _僅`linear`,`inverse`_ |
+|> nextFundingTime |string |下次結算資金費用的時間（UTC毫秒時間戳）. _僅`linear`,`inverse`_ |
+|> fundingRate |string |資金費率. _僅`linear`,`inverse`_ |
+|> deliveryTime |string |交割時間. _僅`linear`,`inverse`_|
+|> deliveryFeeRate |string |交割費率. _僅`linear`,`inverse`_|
+|> predictedDeliveryPrice |string |Predicated delivery price. _`spot` N/A_ |
+|> delta |string |Delta值. _僅`option`_ |
+|> gamma |string |Gamma值. _僅`option`_ |
+|> theta |string |Theta值. _僅`option`_ |
+|> vega |string |Vega值. _僅`option`_ |
 
 ### 請求示例
 
 <Tabs>
-<TabItem value="console" label="Console">
+<TabItem value="console-spot" label="Spot">
 
 ```http
+GET /v5/market/tickers?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
 
+</TabItem>
+
+<TabItem value="console-inverse" label="Inverse">
+
+```http
+GET /v5/market/tickers?category=inverse&symbol=BTCUSD HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-option" label="Option">
+
+```http
+GET /v5/market/tickers?category=option&baseCoin=BTC&expDate=30DEC22 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
 </TabItem>
@@ -73,10 +99,120 @@ GET `/v5/market/tickers`
 ### 響應示例
 
 <Tabs>
-<TabItem value="js linear" label="linear">
+<TabItem value="js spot" label="Spot">
 
 ```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "bid1Price": "16250.32",
+                "bid1Size": "0.00193",
+                "ask1Price": "16273.11",
+                "ask1Size": "0.005312",
+                "lastPrice": "16258.75",
+                "prevPrice24h": "16593.61",
+                "price24hPcnt": "-0.0202",
+                "highPrice24h": "16666.65",
+                "lowPrice24h": "12720",
+                "turnover24h": "36131144.90813012",
+                "volume24h": "2185.278433"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672046714063
+}
+```
+</TabItem>
 
+<TabItem value="js inverse" label="Inverse">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "inverse",
+        "list": [
+            {
+                "symbol": "BTCUSD",
+                "lastPrice": "16751.50",
+                "prevPrice24h": "16737.50",
+                "price24hPcnt": "0.000836",
+                "highPrice24h": "21589.50",
+                "lowPrice24h": "16631.50",
+                "prevPrice1h": "16746.00",
+                "markPrice": "16751.93",
+                "indexPrice": "16844.56",
+                "openInterest": "421154773",
+                "turnover24h": "1039.14356272",
+                "volume24h": "18226440",
+                "fundingRate": "0.0001",
+                "nextFundingTime": "1672070400000",
+                "predictedDeliveryPrice": "",
+                "basisRate": "",
+                "deliveryFeeRate": "",
+                "deliveryTime": "0",
+                "openInterestValue": "25140.67",
+                "ask1Size": "1",
+                "bid1Price": "16750.50",
+                "ask1Price": "16751.00",
+                "bid1Size": "1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672046851785
+}
+```
+</TabItem>
+
+<TabItem value="js option" label="Option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-30DEC22-29000-C",
+                "bidPrice": "0",
+                "bidSize": "0",
+                "bidIv": "0",
+                "askPrice": "0",
+                "askSize": "0",
+                "askIv": "0",
+                "lastPrice": "70",
+                "highPrice24h": "0",
+                "lowPrice24h": "0",
+                "markPrice": "0.6233716",
+                "indexPrice": "16838.7",
+                "markIv": "1.6217",
+                "underlyingPrice": "16821.52",
+                "openInterest": "148.6",
+                "turnover24h": "0",
+                "volume24h": "0",
+                "totalVolume": "240",
+                "totalTurnover": "4792615",
+                "delta": "0.00083816",
+                "gamma": "0.00000101",
+                "vega": "0.05012393",
+                "theta": "-1.02785803",
+                "predictedDeliveryPrice": "0",
+                "change24h": "0"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672045562303
+}
 ```
 </TabItem>
 </Tabs>

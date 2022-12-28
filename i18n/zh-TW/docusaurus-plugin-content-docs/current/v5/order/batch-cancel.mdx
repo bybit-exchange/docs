@@ -41,22 +41,66 @@ POST `/v5/order/cancel-batch`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/cancel-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672223356634
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "option",
+    "request": [
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+        }
+    ]
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-500-C",
+                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
+                "orderLinkId": "option-test-001"
+            },
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-700-C",
+                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
+                "orderLinkId": "option-test-001"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1672223357252
+}
 ```
-</TabItem>
-</Tabs>

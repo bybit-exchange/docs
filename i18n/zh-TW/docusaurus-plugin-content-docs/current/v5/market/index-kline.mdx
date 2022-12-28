@@ -5,7 +5,7 @@ sidebar_position: 3
 ---
 
 查詢指數價格K線
-> **覆蓋範圍: USDT永續 / USDC永續 / 反向永續 / 反向交割**
+> **覆蓋範圍: 正向合約 / 反向合約**
 
 ### HTTP請求
 GET `/v5/market/index-price-kline`
@@ -34,22 +34,38 @@ GET `/v5/market/index-price-kline`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/market/index-price-kline?category=inverse&symbol=BTCUSDZ22&interval=1&start=1670601600000&end=1670608800000&limit=2 HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "symbol": "BTCUSDZ22",
+        "category": "inverse",
+        "list": [
+            [
+                "1670608800000",
+                "17167.00",
+                "17167.00",
+                "17161.90",
+                "17163.07"
+            ],
+            [
+                "1670608740000",
+                "17166.54",
+                "17167.69",
+                "17165.42",
+                "17167.00"
+            ]
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672026471128
+}
 ```
-</TabItem>
-</Tabs>

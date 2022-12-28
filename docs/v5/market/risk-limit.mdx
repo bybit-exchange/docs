@@ -5,7 +5,7 @@ sidebar_position: 13
 ---
 
 Query risk limit of futures
-> **Cover: USDT Perpetual / USDC Perpetual / Inverse Perpetual / Inverse Future**
+> **Cover: Linear contract / Inverse contract**
 
 :::tip
 What is risk limit? <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">Risk Limit (USDT Contract)</a>
@@ -36,21 +36,12 @@ GET `/v5/market/risk-limit`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="js inverse" label="inverse">
 
 ```json
 {
@@ -62,11 +53,11 @@ Host: api-testnet.bybit.com
             {
                 "id": 1,
                 "symbol": "BTCUSD",
+                "riskLimitValue": "150",
+                "maintenanceMargin": "0.5",
                 "initialMargin": "1",
                 "isLowestRisk": 1,
-                "maxLeverage": "100.00",
-                "maintenanceMargin": "0.5",
-                "riskLimitValue": "150"
+                "maxLeverage": "100.00"
             },
         ....
         ]
@@ -75,5 +66,3 @@ Host: api-testnet.bybit.com
     "time": 1672054488010
 }
 ```
-</TabItem>
-</Tabs>

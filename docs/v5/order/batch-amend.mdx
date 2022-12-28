@@ -22,7 +22,7 @@ POST `/v5/order/amend-batch`
 |> symbol |**true** |string |Symbol name |
 |> orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |> orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|> qty |**true** |string |Order quantity after modification. Don't pass it if not modify the qty |
+|> qty |false |string |Order quantity after modification. Don't pass it if not modify the qty |
 |> price |false |string |Order price after modification. Don't pass it if not modify the price |
 |> orderIv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
 
@@ -42,22 +42,75 @@ POST `/v5/order/amend-batch`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/amend-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672222935987
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "option",
+    "request": [
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderType": "Limit",
+            "qty": null,
+            "price": null,
+            "orderIv": "6.8",
+            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderType": "Limit",
+            "side": "Sell",
+            "qty": null,
+            "price": "650",
+            "iv": null,
+            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+        }
+    ]
+}
+```
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
-
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-500-C",
+                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
+                "orderLinkId": ""
+            },
+            {
+                "category": "option",
+                "symbol": "ETH-30DEC22-700-C",
+                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
+                "orderLinkId": ""
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1672222808060
+}
 ```
-</TabItem>
-</Tabs>

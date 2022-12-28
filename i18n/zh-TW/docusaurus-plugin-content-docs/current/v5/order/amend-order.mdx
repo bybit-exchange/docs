@@ -23,11 +23,11 @@ GET `/v5/order/amend`
 |triggerPrice |false |string |觸發價格. 若希望市場趨勢是上漲至觸發條件單, 則確保:<br/> _觸發價格 > 市場價格_<br/>否則,_觸發價格 < 市場價格_|
 |qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
 |price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
-|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段 |
-|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段 |
-|[tpTriggerBy](../enum#triggertype) |false |string |止盈價格觸發類型. `LastPrice`,`MarkPrice`|
-|[slTriggerBy](../enum#triggertype) |false |string |止損價格觸發類型. `LastPrice`,`MarkPrice`|
-|[triggerBy](../enum#triggertype) |false |string |觸發價格的觸發類型. `LastPrice`,`IndexPrice`|
+|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段. 傳0，則表示取消止盈 |
+|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段. 傳0，則表示取消止損 |
+|[tpTriggerBy](../enum#triggertype) |false |string |止盈價格觸發類型|
+|[slTriggerBy](../enum#triggertype) |false |string |止損價格觸發類型|
+|[triggerBy](../enum#triggertype) |false |string |觸發價格的觸發類型|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -37,22 +37,38 @@ GET `/v5/order/amend`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/order/amend HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672217108106
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category":"linear",
+    "symbol":"ETHPERP",
+    "orderLinkId":"linear-004",
+    "triggerPrice": "1145",
+    "qty": "0.15",
+    "price": "1050",
+    "takeProfit": "0",
+    "stopLoss": "0"
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "c6f055d9-7f21-4079-913d-e6523a9cfffa",
+        "orderLinkId": "linear-004"
+    },
+    "retExtInfo": {},
+    "time": 1672217093461
+}
 ```
-</TabItem>
-</Tabs>

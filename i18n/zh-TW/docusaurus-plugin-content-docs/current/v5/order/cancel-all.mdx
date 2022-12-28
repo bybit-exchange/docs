@@ -26,30 +26,44 @@ POST `/v5/order/cancel-all`
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|result |Object | |
-|> list |array |Object |
-|>> category |string |產品類型 |
-|>> orderId |string |訂單Id |
-|>> orderLinkId |string |用戶自定義訂單Id |
+|list |array |Object |
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義訂單Id |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
-```
+POST /v5/order/cancel-all HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672219779140
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+  "category": "linear",
+  "symbol": null,
+  "settleCoin": "USDT"
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "orderId": "f6a73e1f-39b5-4dee-af21-1460b2e3b27c",
+                "orderLinkId": "a001"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672219780463
+}
 ```
-</TabItem>
-</Tabs>
