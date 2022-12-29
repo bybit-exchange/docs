@@ -9,18 +9,36 @@ Subscribe leverage token ticker stream
 **Push frequency:** 300ms
 
 **Topic:**<br/>
-`tickers_lt.{symbol}` e.g.,tickers_lt.BTC3SUSDT [确认symbol的写法，是BTC3S还是BTC3SUSDT]
+`tickers_lt.{symbol}` e.g.,tickers_lt.BTC3SUSDT
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |topic |string |Topic name |
 |type |string |Data type. `snapshot` |
-|ts |integer |The timestamp (ms) that system generates the data |
+|ts |number |The timestamp (ms) that system generates the data |
 |data |array |Object |
 |> symbol |string |Symbol name |
 |> price24hPcnt |string |Market price change percentage in the past 24 hours |
 |> lastPrice |string |The last price |
 |> prevPrice24h |string |Market price 24 hours ago |
-|> highPrice24h |array |Highest price in the past 24 hours  |
+|> highPrice24h |string |Highest price in the past 24 hours  |
 |> lowPrice24h |string |Lowest price in the past 24 hours |
+
+### 響應示例
+
+```json
+{
+    "topic": "tickers_lt.EOS3LUSDT",
+    "ts": 1672325446847,
+    "type": "snapshot",
+    "data": {
+        "symbol": "EOS3LUSDT",
+        "lastPrice": "0.41477848043290448",
+        "highPrice24h": "0.435285472510871305",
+        "lowPrice24h": "0.394601507960931382",
+        "prevPrice24h": "0.431502290172376349",
+        "price24hPcnt": "-0.0388"
+    }
+}
+```
