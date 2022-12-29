@@ -5,10 +5,10 @@ sidebar_position: 11
 ---
 
 獲取當前用戶的所有平倉盈虧數據，返回結果按照`createdTime`降序排列.
-> **覆蓋範圍: 正向合約(統保帳戶)**
+> **覆蓋範圍: 正向合約(統一帳戶)**
 
 ### HTTP 請求
-POST `/v5/position/closed-pnl`
+GET `/v5/position/closed-pnl`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
@@ -33,9 +33,9 @@ POST `/v5/position/closed-pnl`
 |> [execType](../enum#exectype) |string |執行類型 |
 |> closedSize |string |平倉數量 |
 |> cumEntryValue |string |被平倉位的累計入場價值 |
-|> avgEntryPrice |string |被平倉位的平均入場價格 |
+|> avgEntryPrice |string |平均入場價格 |
 |> cumExitValue |string |被平倉位的累計出場價值 |
-|> avgExitPrice |string |被平倉位的累計出場價格 |
+|> avgExitPrice |string |平均出場價格 |
 |> closedPnl |string |被平倉位的盈虧 |
 |> fillCount |string |成交筆數 |
 |> leverage |string |持倉槓桿 |
@@ -45,23 +45,47 @@ POST `/v5/position/closed-pnl`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/position/closed-pnl?category=linear&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672284128523
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "orderType": "Market",
+                "leverage": "3",
+                "updatedTime": "1672214887236",
+                "side": "Sell",
+                "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",
+                "closedPnl": "-47.4065323",
+                "avgEntryPrice": "1194.97516667",
+                "qty": "3",
+                "cumEntryValue": "3584.9255",
+                "createdTime": "1672214887231423699",
+                "orderPrice": "1122.95",
+                "closedSize": "3",
+                "avgExitPrice": "1180.59833333",
+                "execType": "Trade",
+                "fillCount": "4",
+                "cumExitValue": "3541.795"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672284129153
+}
 ```
-</TabItem>
-</Tabs>

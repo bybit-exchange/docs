@@ -6,7 +6,7 @@ sidebar_position: 3
 Purchase levearge token
 
 :::caution
-API permissions: Authentication required
+API permissions: authentication needed
 :::
 
 ### HTTP Request
@@ -26,29 +26,46 @@ POST `/v5/spot-lever-token/purchase`
 |ltOrderStatus |string |Order status. `1`: completed, `2`: in progress, `3`: failed |
 |execQty |string |Executed qty of LT |
 |execAmt |string |Executed amount of LT |
-|amount	|string	|Purchase amount of LT |
-|purchaseId	|string	|Purchase id |
-|serialNo |string |Serial number |
+|amount	|string	|Purchase amount |
+|purchaseId	|string	|Order id |
+|serialNo |string |Serial number, customised order id |
+|valueCoin |string |Quote coin |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+POST /v5/spot-lever-token/purchase HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672294730346
+X-BAPI-SIGN: XXXXX
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
+{
+    "ltCoin":"EOS3L",
+    "amount":"200",
+    "serialNo": "pruchase-001"
+}
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "amount": "200",
+        "execAmt": "",
+        "execQty": "",
+        "ltCoin": "EOS3L",
+        "ltOrderStatus": "2",
+        "purchaseId": "2611",
+        "serialNo": "pruchase-001",
+        "valueCoin": "USDT"
+    },
+    "retExtInfo": {},
+    "time": 1672293867729
+}
 ```
-</TabItem>
-</Tabs>

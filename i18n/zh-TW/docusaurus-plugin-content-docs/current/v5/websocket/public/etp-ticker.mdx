@@ -9,18 +9,36 @@ sidebar_position: 7
 **推送頻率:** 300ms
 
 **Topic:**<br/>
-`tickers_lt.{symbol}` e.g.,tickers_lt.BTC3SUSDT [确认symbol的写法，是BTC3S还是BTC3SUSDT]
+`tickers_lt.{symbol}` e.g.,tickers_lt.BTC3SUSDT
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |topic |string |Topic名 |
 |type |string |數據類型. `snapshot` |
-|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |array |Object |
 |> symbol |string |合約名稱 |
 |> price24hPcnt |string |市價相對24h變化百分比 |
 |> lastPrice |string |最新淨值 |
 |> prevPrice24h |string |24小時前的整點市價 |
-|> highPrice24h |array |最近24小時的最高價 |
+|> highPrice24h |string |最近24小時的最高價 |
 |> lowPrice24h |string |最近24小時的最低價 |
+
+### Response Example
+
+```json
+{
+    "topic": "tickers_lt.EOS3LUSDT",
+    "ts": 1672325446847,
+    "type": "snapshot",
+    "data": {
+        "symbol": "EOS3LUSDT",
+        "lastPrice": "0.41477848043290448",
+        "highPrice24h": "0.435285472510871305",
+        "lowPrice24h": "0.394601507960931382",
+        "prevPrice24h": "0.431502290172376349",
+        "price24hPcnt": "-0.0388"
+    }
+}
+```

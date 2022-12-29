@@ -1,0 +1,59 @@
+---
+title: 設置止盈止損模式
+sidebar_label: 設置止盈止損模式
+sidebar_position: 2.5
+---
+
+可以將止盈止損模式設置為部分止盈止損或者全部止盈止損
+> **覆蓋範圍: 正向合約(統一帳戶)**
+
+:::info
+在部分止盈止損下，您可以設置小於倉位大小的止盈止損數量
+:::
+
+### HTTP 請求
+POST `/v5/position/set-tpsl-mode`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型. `linear`, 僅限USDT永續|
+|symbol |**true** |string |合約名稱|
+|tpSlMode |**true** |string |tp/sl模式. `Full`,`Partial` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|tpSlMode |string  |`Full`,`Partial` |
+
+### 請求示例
+
+```http
+POST /v5/position/set-tpsl-mode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672279325035
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "XRPUSDT",
+    "category": "linear",
+    "tpSlMode": "Full"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tpSlMode": "Full"
+    },
+    "retExtInfo": {},
+    "time": 1672279322666
+}
+```

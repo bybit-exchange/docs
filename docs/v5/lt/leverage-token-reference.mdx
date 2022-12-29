@@ -6,7 +6,7 @@ sidebar_position: 2
 Get leverage token market information
 
 :::caution
-API permissions: no authentication required
+API permissions: no authentication needed
 :::
 
 ### HTTP Request
@@ -15,37 +15,40 @@ GET `/v5/spot-lever-token/reference`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|ltCoin |false |string |Abbreviation of the LT，such as BTC3L|
+|ltCoin |**true** |string |Abbreviation of the LT，such as BTC3L|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |ltCoin |string |Abbreviation of the LT，such as BTC3L |
 |nav |string |net value |
-|navTime |string |Update time for net asset value (in milliseconds and UTC time zone) |
+|navTime |number |Update time for net asset value (in milliseconds and UTC time zone) |
 |circulation |string |Circulating supply in the secondary market |
 |basket	|string	|basket |
 |leverage |string |Real leverage calculated by last traded price |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/spot-lever-token/reference?ltCoin=BTC3S HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "basket": "8.030999999605924324",
+        "circulation": "55283.938540773853098069",
+        "leverage": "-2.239897380979465182",
+        "ltCoin": "BTC3S",
+        "nav": "0",
+        "navTime": 1672293520248
+    },
+    "retExtInfo": {},
+    "time": 1672293520294
+}
 ```
-</TabItem>
-</Tabs>

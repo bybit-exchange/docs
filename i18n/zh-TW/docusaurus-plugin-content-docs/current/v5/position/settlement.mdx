@@ -8,7 +8,7 @@ sidebar_position: 13
 > **覆蓋範圍: 正向合約 (僅USDC永續，統一帳戶)**
 
 ### HTTP 請求
-POST `/v5/asset/settlement-record`
+GET `/v5/asset/settlement-record`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
@@ -34,22 +34,37 @@ POST `/v5/asset/settlement-record`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/asset/settlement-record?category=linear HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672284883483
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "116952%3A1%2C116952%3A1",
+        "category": "linear",
+        "list": [
+            {
+                "realisedPnl": "-71.28",
+                "symbol": "BTCPERP",
+                "side": "Buy",
+                "markPrice": "16620",
+                "size": "1.5",
+                "createdTime": "1672214400000",
+                "sessionAvgPrice": "16620"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672284884285
+}
 ```
-</TabItem>
-</Tabs>

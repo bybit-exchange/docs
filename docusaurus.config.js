@@ -143,6 +143,22 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
+          v5_lt: {
+            specPath: "yml-folder/v5/lt.yaml",
+            outputDir: "docs/api-explorer/v5/lt",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          v5_spot_margin: {
+            specPath: "yml-folder/v5/spot-margin.yaml",
+            outputDir: "docs/api-explorer/v5/spot-margin",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
         }
       }
     ],
@@ -205,7 +221,7 @@ const config = {
             label: 'v3 API',
           },
           {
-            to: '/api-explorer/derivatives/category',
+            to: '/api-explorer/v5/category',
             position: 'left',
             label: 'API explorer',
           },

@@ -17,39 +17,55 @@ POST `/v5/spot-lever-token/purchase`
 |:----- |:-------|:-----|------ |
 |ltCoin |**true** |string |LT資產名稱，例如BTC3L|
 |ltAmount |**ture** |string	|申購金額|
-|serialNo |false |string |序列號|
+|serialNo |false |string |序列號，即自定義訂單號|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |ltCoin	|string	|槓桿代幣資產簡稱 |
-|ltOrderStatus |string |申購單狀態：1. 已完成 2. 等待中 3. 失敗 |
+|ltOrderStatus |string |申購單狀態：`1`: 已完成,`2`: 處理中 `3`: 失敗 |
 |execQty |string |實際成交的槓桿代幣資產數量 |
 |execAmt |string |實際成交金額 |
-|amount	|string	|下單的槓桿代幣資產金額 |
-|purchaseId	|string	|交易單號 |
+|amount	|string	|下單的報價幣種金額 |
+|purchaseId	|string	|訂單id |
 |serialNo |string |序列號 |
-
+|valueCoin |string |報價幣種 |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+POST /v5/spot-lever-token/purchase HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672294730346
+X-BAPI-SIGN: XXXXX
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
+{
+    "ltCoin":"EOS3L",
+    "amount":"200",
+    "serialNo": "pruchase-001"
+}
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "amount": "200",
+        "execAmt": "",
+        "execQty": "",
+        "ltCoin": "EOS3L",
+        "ltOrderStatus": "2",
+        "purchaseId": "2611",
+        "serialNo": "pruchase-001",
+        "valueCoin": "USDT"
+    },
+    "retExtInfo": {},
+    "time": 1672293867729
+}
 ```
-</TabItem>
-</Tabs>

@@ -6,7 +6,7 @@ sidebar_position: 4
 Redeem leverage token
 
 :::caution
-API permissions: Authentication required
+API permissions: authentication needed
 :::
 
 ### HTTP Request
@@ -16,7 +16,7 @@ POST `/v5/spot-lever-token/redeem`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |ltCoin |**true** |string |Abbreviation of the LT，such as BTC3L |
-|quantity |**ture** |string |Redeem quantity |
+|quantity |**ture** |string |Redeem quantity of LT |
 |serialNo |false |string |Serial number |
 
 ### Response Parameters
@@ -24,31 +24,48 @@ POST `/v5/spot-lever-token/redeem`
 |:----- |:-----|----- |
 |ltCoin |string |Abbreviation of the LT |
 |ltOrderStatus |string |Order status. `1`: completed, `2`: in progress, `3`: failed |
-|quantity |string |Order quantity |
-|execQty |string |Executed qty of LT|
+|quantity |string |Quantity |
+|execQty |string |LT quantity|
 |execAmt |string |Executed amount of LT |
-|redeemId |string |Quote asset |
+|redeemId |string |Order id |
 |serialNo |string |Serial number |
+|valueCoin |string |Quote coin |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+POST /v5/spot-lever-token/redeem HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672296416024
+X-BAPI-SIGN: XXXXX
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
+{
+    "ltCoin":"EOS3L",
+    "quantity":"150",
+    "serialNo": "redeem-001"
+}
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "execAmt": "",
+        "execQty": "150",
+        "ltCoin": "EOS3L",
+        "ltOrderStatus": "2",
+        "quantity": "",
+        "redeemId": "2619",
+        "serialNo": "redeem-001",
+        "valueCoin": "EOS3L"
+    },
+    "retExtInfo": {},
+    "time": 1672296417363
+}
 ```
-</TabItem>
-</Tabs>

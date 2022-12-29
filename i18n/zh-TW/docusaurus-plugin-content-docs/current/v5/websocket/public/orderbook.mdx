@@ -14,12 +14,12 @@ sidebar_position: 1
 :::
 **正向合約 & 反向合約:**<br/>
   1 檔數據, 推送頻率: **10ms**<br/>
- 50 檔數據, 推送頻率: **100ms**<br/>
+ 50 檔數據, 推送頻率: **20ms**<br/>
 200 檔數據, 推送頻率: **100ms**<br/>
 
 **現貨:**<br/>
   1 檔數據, 推送頻率: **10ms**<br/>
- 50 檔數據, 推送頻率: **100ms**<br/>
+ 50 檔數據, 推送頻率: **20ms**<br/>
 
 **期權:**<br/>
  25 檔數據, 推送頻率: **20ms**<br/>
@@ -34,7 +34,7 @@ sidebar_position: 1
 |:----- |:-----|----- |
 |topic |string |Topic名 |
 |type |string |數據類型. `snapshot`,`delta` |
-|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |array |Object |
 |> s |string |合約名稱 |
 |> b |array |Bid, 買方. 按照價格從大到小 |
@@ -48,12 +48,38 @@ sidebar_position: 1
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "topic": "orderbook.50.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1672304484978,
+    "data": {
+        "s": "BTCUSDT",
+        "b": [
+            ...,
+            [
+                "16493.50",
+                "0.006"
+            ],
+            [
+                "16493.00",
+                "0.100"
+            ]
+        ],
+        "a": [
+            [
+                "16611.00",
+                "0.029"
+            ],
+            [
+                "16612.00",
+                "0.213"
+            ],
+            ...,
+        ],
+        "u": 18521288,
+        "seq": 7961638724
+    }
+}
 ```
-</TabItem>
-</Tabs>
 

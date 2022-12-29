@@ -15,30 +15,37 @@ GET `/v5/spot-margin-trade/set-leverage`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|leverage |**true**| integer |槓桿倍數（2-5）|
+|leverage |**true**| integer |槓桿倍數, 支持區間[2-5]|
 
 ### 響應參數
 None
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+POST /v5/spot-margin-trade/set-leverage HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672299806626
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
+{
+"leverage": 4
+}
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "status": "1"
+    },
+    "retExtInfo": {},
+    "time": 1672299807319
+}
 ```
-</TabItem>
-</Tabs>

@@ -9,7 +9,8 @@ import TabItem from '@theme/TabItem';
 
 Subscribe the ticker data.<br/>
 :::note
-This topic utilises the snapshot field and delta field. If response param is not found in the message, then its value has no change.
+* This topic utilises the snapshot field and delta field. If response param is not found in the message, then its value has no change.
+* Spot tickers message has **snapshot** ONLY
 :::
 Push frequency: **100ms**
 
@@ -18,100 +19,94 @@ Push frequency: **100ms**
 
 ### Response Parameters
 <Tabs>
-<TabItem value="future" label="linear|Inverse" default>
-    <table border="0.8">
-        <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
-        </tr>
-        <tr>
-            <td>type</td><td>string</td><td>Data type. `snapshot`,`delta`</td>
-        </tr>
-        <tr>
-            <td>data</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> lastPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> tickDirection</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> prevPrice1h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> price24hPcnt</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> prevPrice24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> highPrice24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> lowPrice24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> turnover24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> volume24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> markPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> indexPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> openInterest</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> bid1Price</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> bid1Size</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> ask1Price</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> ask1Size</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> nextFundingTime</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> fundingRate</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> predictedFundingRate</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> deliveryTime</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> basisRate</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> deliveryFeeRate</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> predictedDeliveryPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>cs</td><td>integer</td><td>Please ignore</td>
-        </tr>
-        <tr>
-            <td>ts</td><td>string</td><td>The timestamp (ms) that system generates the data</td>
-        </tr>
-    </table>
-</TabItem>
+    <TabItem value="future" label="Linear|Inverse" default>
+        <table border="0.8">
+            <tr>
+                <th>Parameter</th><th>Type</th><th>Comments</th>
+            </tr>
+            <tr>
+                <td>topic</td><td>string</td><td>Topic name</td>
+            </tr>
+            <tr>
+                <td>type</td><td>string</td><td>Data type. `snapshot`,`delta`</td>
+            </tr>
+            <tr>
+                <td>cs</td><td>integer</td><td>Please ignore</td>
+            </tr>
+            <tr>
+                <td>ts</td><td>number</td><td>The timestamp (ms) that system generates the data</td>
+            </tr>
+            <tr>
+                <td>data</td><td>array</td><td>Object</td>
+            </tr>
+            <tr>
+                <td>> symbol</td><td>string</td><td>Symbol name </td>
+            </tr>
+            <tr>
+                <td>> tickDirection</td><td>string</td><td>Tick direction </td>
+            </tr>
+            <tr>
+                <td>> price24hPcnt</td><td>string</td><td>Percentage change of market price relative to 24h </td>
+            </tr>
+            <tr>
+                <td>> lastPrice</td><td>string</td><td>Last price </td>
+            </tr>
+            <tr>
+                <td>> prevPrice24h</td><td>string</td><td>Market price 24 hours ago </td>
+            </tr>
+            <tr>
+                <td>> highPrice24h</td><td>string</td><td>The highest price in the last 24 hours </td>
+            </tr>
+            <tr>
+                <td>> lowPrice24h</td><td>string</td><td>The lowest price in the last 24 hours </td>
+            </tr>
+            <tr>
+                <td>> prevPrice1h</td><td>string</td><td>Market price an hour ago </td>
+            </tr>
+            <tr>
+                <td>> markPrice</td><td>string</td><td>Mark price </td>
+            </tr>
+            <tr>
+                <td>> indexPrice</td><td>string</td><td>Index price </td>
+            </tr>
+            <tr>
+                <td>> openInterest</td><td>string</td><td>Open interest size </td>
+            </tr>
+            <tr>
+                <td>> openInterestValue</td><td>string</td><td>Open interest value </td>
+            </tr>
+            <tr>
+                <td>> turnover24h</td><td>string</td><td>Turnover for 24h </td>
+            </tr>
+            <tr>
+                <td>> volume24h</td><td>string</td><td>Volume for 24h </td>
+            </tr>
+            <tr>
+                <td>> nextFundingTime</td><td>string</td><td>Next funding time (UTC) </td>
+            </tr>
+            <tr>
+                <td>> fundingRate</td><td>string</td><td>Funding rate </td>
+            </tr>
+            <tr>
+                <td>> predictedFundingRate</td><td>string</td><td>Predicated funding rate </td>
+            </tr>
+            <tr>
+                <td>> bid1Price</td><td>string</td><td>Bid 1 price </td>
+            </tr>
+            <tr>
+                <td>> bid1Size</td><td>string</td><td>Bid 1 size </td>
+            </tr>
+            <tr>
+                <td>> ask1Price</td><td>string</td><td>Ask 1 price </td>
+            </tr>
+            <tr>
+                <td>> ask1Size</td><td>string</td><td>Ask 1 size </td>
+            </tr>
+        </table>
+    </TabItem>
 
 
-<TabItem value="option" label="option">
+<TabItem value="option" label="Option">
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -128,124 +123,52 @@ Push frequency: **100ms**
         <tr>
             <td>data</td><td>array</td><td>Object</td>
         </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> bidPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> bidSize</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> bidIv</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> askPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> askSize</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> askIv</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> lastPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> highPrice24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> lowPrice24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> markPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> markPriceIv</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> indexPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> underlyingPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> openInterest</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> turnover24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> volume24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> totalVolume</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> totalTurnover</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> delta</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> gamma</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> vega</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> theta</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> predictedDeliveryPrice</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>> change24h</td><td>string</td><td> </td>
-        </tr>
     </table>
 </TabItem>
 
-<TabItem value="spot" label="spot" default>
+<TabItem value="spot" label="Spot">
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
         </tr>
         <tr>
-            <td>type</td><td>string</td><td>Data type. `snapshot`,`delta`</td>
+            <td>topic</td><td>string</td><td>Topic name</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>The timestamp (ms) that system generates the data</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>Data type. `snapshot`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>Cross sequence, internal used</td>
         </tr>
         <tr>
             <td>data</td><td>array</td><td>Object</td>
         </tr>
         <tr>
-            <td>> symbol</td><td>string</td><td> </td>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
         </tr>
         <tr>
-            <td>> lastPrice</td><td>string</td><td> </td>
+            <td>> lastPrice</td><td>string</td><td>Last price </td>
         </tr>
         <tr>
-            <td>> price24hPcnt</td><td>string</td><td> </td>
+            <td>> highPrice24h</td><td>string</td><td>The highest price in the last 24 hours </td>
         </tr>
         <tr>
-            <td>> prevPrice24h</td><td>string</td><td> </td>
+            <td>> lowPrice24h</td><td>string</td><td>The lowest price in the last 24 hours </td>
         </tr>
         <tr>
-            <td>> highPrice24h</td><td>string</td><td> </td>
+            <td>> prevPrice24h</td><td>string</td><td>Percentage change of market price relative to 24h </td>
         </tr>
         <tr>
-            <td>> lowPrice24h</td><td>string</td><td> </td>
+            <td>> volume24h</td><td>string</td><td>Volume for 24h </td>
         </tr>
         <tr>
-            <td>> turnover24h</td><td>string</td><td> </td>
+            <td>> turnover24h</td><td>string</td><td>Turnover for 24h </td>
         </tr>
         <tr>
-            <td>> volume24h</td><td>string</td><td> </td>
-        </tr>
-        <tr>
-            <td>cs</td><td>integer</td><td>Please ignore</td>
-        </tr>
-        <tr>
-            <td>ts</td><td>string</td><td>The timestamp (ms) that system generates the data</td>
+            <td>> price24hPcnt</td><td>string</td><td>Percentage change of market price relative to 24h </td>
         </tr>
     </table>
 </TabItem>
@@ -254,10 +177,62 @@ Push frequency: **100ms**
 ### Response Example
 
 <Tabs>
-<TabItem value="option" label="option">
+<TabItem value="ws-linear" label="Linear">
 
 ```json
-
+{
+    "topic": "tickers.BTCPERP",
+    "type": "snapshot",
+    "data": {
+        "symbol": "BTCPERP",
+        "tickDirection": "ZeroMinusTick",
+        "price24hPcnt": "-0.002196",
+        "lastPrice": "16580.00",
+        "prevPrice24h": "16616.50",
+        "highPrice24h": "16683.50",
+        "lowPrice24h": "16471.50",
+        "prevPrice1h": "16598.50",
+        "markPrice": "16590.02",
+        "indexPrice": "16616.96",
+        "openInterest": "23418.511",
+        "openInterestValue": "388513565.86",
+        "turnover24h": "17708456.749",
+        "volume24h": "1069.437",
+        "nextFundingTime": "2022-12-29T16:00:00Z",
+        "fundingRate": "0.000083",
+        "predictedFundingRate": "0.000083",
+        "bid1Price": "16580.50",
+        "bid1Size": "10.494",
+        "ask1Price": "16601.00",
+        "ask1Size": "0.039"
+    },
+    "cs": 654165870,
+    "ts": 1672323890101
+}
 ```
+
+</TabItem>
+
+<TabItem value="ws-spot" label="Spot">
+
+```json
+{
+    "topic": "tickers.BTCUSDT",
+    "ts": 1672305380595,
+    "type": "snapshot",
+    "cs": 496622841,
+    "data": {
+        "symbol": "BTCUSDT",
+        "lastPrice": "16363.78",
+        "highPrice24h": "16566.64",
+        "lowPrice24h": "16009.19",
+        "prevPrice24h": "16443.66",
+        "volume24h": "5865.470182",
+        "turnover24h": "95949815.680875",
+        "price24hPcnt": "-0.0049"
+    }
+}
+```
+
 </TabItem>
 </Tabs>

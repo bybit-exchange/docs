@@ -3,10 +3,10 @@ title: LT全量資產查詢
 sidebar_label: LT全量資產查詢
 sidebar_position: 1
 ---
-LT全量資產查詢
+查詢槓桿代幣信息
 
 :::caution
-API權限：不需要APIKEY
+API權限：不需要API KEY訪問
 :::
 
 ### HTTP 請求
@@ -32,31 +32,51 @@ GET `/v5/spot-lever-token/info`
 |redeemFeeRate |string |贖回費率 |
 |[ltStatus](../enum#ltstatus) |string |目前杠桿代幣資產是否可以進行申購贖回|
 |fundFee |string |每天針對持有槓桿代幣資產的用戶收取的資金費用 |
-|fundFeeTime |string |收取資金費用的時間 |
+|fundFeeTime |number |收取資金費用的時間 |
 |manageFeeRate |string |管理費率|
-|manageFeeTime |string |收取資金管理費的時間 |
+|manageFeeTime |number |收取資金管理費的時間 |
 |value |string |名義資產規模 |
 |netValue |string |當前淨值 |
+|total |string |平台申購總量上限 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
-
+GET /v5/spot-lever-token/info?ltCoin=BTC3L HTTP/1.1
+Host: api-testnet.bybit.com
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="resp" label="Json">
+### 響應示例
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "fundFee": "1084.90132001",
+                "fundFeeTime": 1672300800000,
+                "ltCoin": "BTC3L",
+                "ltName": "3X Long",
+                "ltStatus": "1",
+                "manageFeeRate": "0.00005",
+                "manageFeeTime": 1672304400000,
+                "maxPurchase": "10000000",
+                "maxPurchaseDaily": "1000000",
+                "maxRedeem": "10000000",
+                "maxRedeemDaily": "10000000",
+                "minPurchase": "100",
+                "minRedeem": "10",
+                "netValue": "-4.330315070710617153",
+                "purchaseFeeRate": "0.01",
+                "redeemFeeRate": "0.01",
+                "total": "5000000",
+                "value": "15735631366.7361710897086289"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672292846902
+}
 ```
-</TabItem>
-</Tabs>

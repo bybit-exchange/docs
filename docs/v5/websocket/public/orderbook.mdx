@@ -13,12 +13,12 @@ Subscribe the different depths orderbook stream.
 :::
 **linear & inverse:**<br/>
   1 level data, push frequency: **10ms**<br/>
- 50 level data, push frequency: **100ms**<br/>
+ 50 level data, push frequency: **20ms**<br/>
 200 level data, push frequency: **100ms**<br/>
 
 **Spot:**<br/>
   1 level data, push frequency: **10ms**<br/>
- 50 level data, push frequency: **100ms**<br/>
+ 50 level data, push frequency: **20ms**<br/>
 
 **Option:**<br/>
  25 level data, push frequency: **20ms**<br/>
@@ -33,7 +33,7 @@ Subscribe the different depths orderbook stream.
 |:----- |:-----|----- |
 |topic |string |Topic name |
 |type |string |Data type. `snapshot`,`delta` |
-|ts |integer |The timestamp (ms) that system generates the data |
+|ts |number |The timestamp (ms) that system generates the data |
 |data |array |Object |
 |> s |string |Symbol name |
 |> b |array |Bids. The element is sort by price in descending order  |
@@ -47,12 +47,38 @@ Subscribe the different depths orderbook stream.
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "topic": "orderbook.50.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1672304484978,
+    "data": {
+        "s": "BTCUSDT",
+        "b": [
+            ...,
+            [
+                "16493.50",
+                "0.006"
+            ],
+            [
+                "16493.00",
+                "0.100"
+            ]
+        ],
+        "a": [
+            [
+                "16611.00",
+                "0.029"
+            ],
+            [
+                "16612.00",
+                "0.213"
+            ],
+            ...,
+        ],
+        "u": 18521288,
+        "seq": 7961638724
+    }
+}
 ```
-</TabItem>
-</Tabs>
 

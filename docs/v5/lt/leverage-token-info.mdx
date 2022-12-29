@@ -3,10 +3,10 @@ title: Leverage Token Info
 sidebar_label: Leverage Token Info
 sidebar_position: 1
 ---
-LT Info Query
+Query leverage token information
 
 :::caution
-API permissions: no authentication required
+API permissions: no authentication needed
 :::
 
 ### HTTP Request
@@ -32,31 +32,51 @@ GET `/v5/spot-lever-token/info`
 |redeemFeeRate |string |Redeem fee rate |
 |[ltStatus](../enum#ltstatus) |string |Whether the leverage token can be purchased or redeemed |
 |fundFee |string |Funding fee charged daily for users holding leveraged token |
-|fundFeeTime |string |The time to charge funding fee |
+|fundFeeTime |number |The time to charge funding fee |
 |manageFeeRate |string |Management fee rate|
-|manageFeeTime |string |The time to charge management fee |
+|manageFeeTime |number |The time to charge management fee |
 |value |string |Nominal asset value |
 |netValue |string |Net value |
+|total |string |Total apply purchase upper limit |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/spot-lever-token/info?ltCoin=BTC3L HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="resp" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "fundFee": "1084.90132001",
+                "fundFeeTime": 1672300800000,
+                "ltCoin": "BTC3L",
+                "ltName": "3X Long",
+                "ltStatus": "1",
+                "manageFeeRate": "0.00005",
+                "manageFeeTime": 1672304400000,
+                "maxPurchase": "10000000",
+                "maxPurchaseDaily": "1000000",
+                "maxRedeem": "10000000",
+                "maxRedeemDaily": "10000000",
+                "minPurchase": "100",
+                "minRedeem": "10",
+                "netValue": "-4.330315070710617153",
+                "purchaseFeeRate": "0.01",
+                "redeemFeeRate": "0.01",
+                "total": "5000000",
+                "value": "15735631366.7361710897086289"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672292846902
+}
 ```
-</TabItem>
-</Tabs>

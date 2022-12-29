@@ -27,27 +27,41 @@ sidebar_position: 4
 |:----- |:-----|----- |
 |topic |string |Topic名 |
 |type |string |數據類型. `snapshot` |
-|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |array |Object |
-|> start |integer |開始時間戳 (毫秒) |
-|> end |integer |結束時間戳 (毫秒). 若時間還未到時間跨度的最後時間，則表示當前時間 |
+|> start |number |開始時間戳 (毫秒) |
+|> end |number |結束時間戳 (毫秒). 若時間還未到時間跨度的最後時間，則表示當前時間 |
 |> [interval](../../enum#interval) |string |K線粒度 |
 |> open |string |開盤價 |
-|> close |array |收盤價  |
+|> close |string |收盤價  |
 |> high |string |最高價 |
 |> low |string |最低價 |
 |> volume |string |交易量 |
 |> turnover |string |交易額 |
 |> confirm |boolean |是否確認 |
-|> timestamp |integer |蠟燭中最後一筆淨值時間戳 (毫秒) |
+|> timestamp |number |蠟燭中最後一筆淨值時間戳 (毫秒) |
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "topic": "kline.5.BTCUSDT",
+    "data": [
+        {
+            "start": 1672324800000,
+            "end": 1672325099999,
+            "interval": "5",
+            "open": "16649.5",
+            "close": "16677",
+            "high": "16677",
+            "low": "16608",
+            "volume": "2.081",
+            "turnover": "34666.4005",
+            "confirm": false,
+            "timestamp": 1672324988882
+        }
+    ],
+    "ts": 1672324988882,
+    "type": "snapshot"
+}
 ```
-</TabItem>
-</Tabs>

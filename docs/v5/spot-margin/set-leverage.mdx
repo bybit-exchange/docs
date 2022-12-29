@@ -16,30 +16,37 @@ GET `/v5/spot-margin-trade/set-leverage`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|leverage |**true**| integer |leverage|
+|leverage |**true**| integer |leverage, support range [2-5]|
 
 ### Response Parameters
 None
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+POST /v5/spot-margin-trade/set-leverage HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672299806626
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
+{
+"leverage": 4
+}
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "status": "1"
+    },
+    "retExtInfo": {},
+    "time": 1672299807319
+}
 ```
-</TabItem>
-</Tabs>

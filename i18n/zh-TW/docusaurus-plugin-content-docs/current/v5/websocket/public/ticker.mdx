@@ -9,7 +9,8 @@ import TabItem from '@theme/TabItem';
 
 訂閱行情數據推送.<br/>
 :::caution
-注意，該topic推送delta數據和snapshot数据。如果delta數據為空，表明信息沒有發生變化。
+* 注意，該topic推送delta數據和snapshot数据。如果delta數據為空，表明信息沒有發生變化。
+* 現貨只推送snapshot類型數據
 :::
 推送頻率: **100ms**
 
@@ -17,52 +18,224 @@ import TabItem from '@theme/TabItem';
 `tickers.{symbol}`
 
 ### 響應參數
-| 參數 | 類型 | 說明|
-|:----- |:-----|----- |
-|topic |string |Topic名 |
-|type |string |數據類型. `snapshot`,`delta` |
-|ts |integer |行情服務生成數據的時間戳 (毫秒) |
-|data |array |Object |
-|> category |string |產品類型 |
-|> symbol |string |合約名稱 |
-|> lastPrice |string |最新市場成交價 |
-|> indexPrice |string |指數價格 |
-|> markPrice |string |標記價格 |
-|> underlyingPrice |string |底層資產對應的價格 |
-|> bid1Price |string |買 1 價 |
-|> ask1Price |string |賣 1 價 |
-|> bid1Size |string |買1價的數量  |
-|> ask1Size |string |賣1價的數量 |
-|> openInterest |string |未平倉合約的數量 |
-|> openInterestValue |string |未平倉合約的價值 |
-|> nextFundingTime |string |下次結算資金費用的時間（UTC毫秒時間戳） |
-|> fundingRate |string |資金費率，僅永續合約 |
-|> prevPrice1h |string |1小時前的整點市價 |
-|> lowPrice24h |string |最近24小時的最低價 |
-|> highPrice24h |string |最近24小時的最高價 |
-|> prevPrice24h |string |24小時前的整點市價 |
-|> price24hPcnt |string |市場價格相對24h前變化的百分比 |
-|> volume24h |string |最近24小時成交量 |
-|> turnover24h |string |最近24小時成交額 |
-|> ask1Iv |string |買1價格對應的iv |
-|> bid1Iv |string |賣1價格對應的iv |
-|> markPriceIv |string |標記價格的iv |
-|> deliveryTime |string |交割時間. 僅反向交割和期權有效 |
-|> deliveryFeeRate |string |交割費率. 僅反向交割和期權有效|
-|> predictedDeliveryPrice |string |Predicated delivery price |
-|> vega |string |Vega值 |
-|> delta |string |Delta值 |
-|> theta |string |Theta值 |
-|> gamma |string |Gamma值 |
-|> basisRate |string |交割合約基差率 |
+<Tabs>
+<TabItem value="future" label="Linear|Inverse" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>topic</td><td>string</td><td>Topic名稱</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>數據類型. `snapshot`,`delta`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>內部使用，請忽略</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>行情服務生成數據的時間戳 (毫秒)</td>
+        </tr>
+        <tr>
+            <td>data</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> tickDirection</td><td>string</td><td>價格變化方向 </td>
+        </tr>
+        <tr>
+            <td>> price24hPcnt</td><td>string</td><td>市場價格相對24h前變化的百分比 </td>
+        </tr>
+        <tr>
+            <td>> lastPrice</td><td>string</td><td>最新市場成交價 </td>
+        </tr>
+        <tr>
+            <td>> prevPrice24h</td><td>string</td><td>24小時前的整點市價 </td>
+        </tr>
+        <tr>
+            <td>> highPrice24h</td><td>string</td><td>最近24小時的最高價 </td>
+        </tr>
+        <tr>
+            <td>> lowPrice24h</td><td>string</td><td>最近24小時的最低價 </td>
+        </tr>
+        <tr>
+            <td>> prevPrice1h</td><td>string</td><td>1小時前的整點市價 </td>
+        </tr>
+        <tr>
+            <td>> markPrice</td><td>string</td><td>標記價格 </td>
+        </tr>
+        <tr>
+            <td>> indexPrice</td><td>string</td><td>指數價格 </td>
+        </tr>
+        <tr>
+            <td>> openInterest</td><td>string</td><td>未平倉合約的數量 </td>
+        </tr>
+        <tr>
+            <td>> openInterestValue</td><td>string</td><td>未平倉合約的價值 </td>
+        </tr>
+        <tr>
+            <td>> turnover24h</td><td>string</td><td>最近24小時成交額 </td>
+        </tr>
+        <tr>
+            <td>> volume24h</td><td>string</td><td>最近24小時成交量 </td>
+        </tr>
+        <tr>
+            <td>> nextFundingTime</td><td>string</td><td>下次結算資金費用的時間(UTC) </td>
+        </tr>
+        <tr>
+            <td>> fundingRate</td><td>string</td><td>資金費率 </td>
+        </tr>
+        <tr>
+            <td>> predictedFundingRate</td><td>string</td><td>預估資金費率 </td>
+        </tr>
+        <tr>
+            <td>> bid1Price</td><td>string</td><td>買1價 </td>
+        </tr>
+        <tr>
+            <td>> bid1Size</td><td>string</td><td>買1價的數量 </td>
+        </tr>
+        <tr>
+            <td>> ask1Price</td><td>string</td><td>賣1價 </td>
+        </tr>
+        <tr>
+            <td>> ask1Size</td><td>string</td><td>賣1價的數量 </td>
+        </tr>
+    </table>
+</TabItem>
 
-### Response Example
+
+<TabItem value="option" label="Option">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>topic</td><td>string</td><td>Topic名稱</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>數據類型. `snapshot`,`delta`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>內部使用，請忽略</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>行情服務生成數據的時間戳 (毫秒)</td>
+        </tr>
+        <tr>
+            <td>data</td><td>array</td><td>Object</td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>topic</td><td>string</td><td>Topic名稱</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>數據類型. `snapshot`,`delta`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>內部使用，請忽略</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>行情服務生成數據的時間戳 (毫秒)</td>
+        </tr>
+        <tr>
+            <td>data</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> lastPrice</td><td>string</td><td>最新市場成交價 </td>
+        </tr>
+        <tr>
+            <td>> highPrice24h</td><td>string</td><td>最近24小時的最高價</td>
+        </tr>
+        <tr>
+            <td>> lowPrice24h</td><td>string</td><td>最近24小時的最低價 </td>
+        </tr>
+        <tr>
+            <td>> prevPrice24h</td><td>string</td><td>24小時前的整點市價 </td>
+        </tr>
+        <tr>
+            <td>> volume24h</td><td>string</td><td>最近24小時成交量 </td>
+        </tr>
+        <tr>
+            <td>> turnover24h</td><td>string</td><td>最近24小時成交額 </td>
+        </tr>
+        <tr>
+            <td>> price24hPcnt</td><td>string</td><td>市場價格相對24h前變化的百分比 </td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
+
+### 響應示例
 
 <Tabs>
-<TabItem value="option" label="option">
+<TabItem value="ws-linear" label="Linear">
 
 ```json
-
+{
+    "topic": "tickers.BTCPERP",
+    "type": "snapshot",
+    "data": {
+        "symbol": "BTCPERP",
+        "tickDirection": "ZeroMinusTick",
+        "price24hPcnt": "-0.002196",
+        "lastPrice": "16580.00",
+        "prevPrice24h": "16616.50",
+        "highPrice24h": "16683.50",
+        "lowPrice24h": "16471.50",
+        "prevPrice1h": "16598.50",
+        "markPrice": "16590.02",
+        "indexPrice": "16616.96",
+        "openInterest": "23418.511",
+        "openInterestValue": "388513565.86",
+        "turnover24h": "17708456.749",
+        "volume24h": "1069.437",
+        "nextFundingTime": "2022-12-29T16:00:00Z",
+        "fundingRate": "0.000083",
+        "predictedFundingRate": "0.000083",
+        "bid1Price": "16580.50",
+        "bid1Size": "10.494",
+        "ask1Price": "16601.00",
+        "ask1Size": "0.039"
+    },
+    "cs": 654165870,
+    "ts": 1672323890101
+}
 ```
+
+</TabItem>
+
+<TabItem value="ws-spot" label="Spot">
+
+```json
+{
+    "topic": "tickers.BTCUSDT",
+    "ts": 1672305380595,
+    "type": "snapshot",
+    "cs": 496622841,
+    "data": {
+        "symbol": "BTCUSDT",
+        "lastPrice": "16363.78",
+        "highPrice24h": "16566.64",
+        "lowPrice24h": "16009.19",
+        "prevPrice24h": "16443.66",
+        "volume24h": "5865.470182",
+        "turnover24h": "95949815.680875",
+        "price24hPcnt": "-0.0049"
+    }
+}
+```
+
 </TabItem>
 </Tabs>

@@ -4,8 +4,8 @@ sidebar_label: Set Risk Limit
 sidebar_position: 3
 ---
 
-Set risk limit. Click <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">here</a> to learn more about risk limit.
-> **Cover: Linear Perpetual / Inverse Perpetual / Inverse Futures**
+The risk limit will limit the maximum position value you can hold under different margin requirements. If you want to hold more position size, you need more margin requirements. This interface can set the risk limit of a single position. If the order exceeds the current risk limit when placing an order, it will be rejected. Click <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">here</a> to learn more about risk limit.
+> **Cover: Linear contract(Unified Account)**
 
 :::tip
 Set the risk limit of the position. You could get risk limit information of each symbol [here](../market/risk-limit#).
@@ -20,7 +20,7 @@ POST `v5/position/set-risk-limit`
 |[category](../enum#category) |**true** |string |Product type. `linear`,`inverse` |
 |symbol |**true** |string |Symbol name|
 |riskId |**true** |integer |Risk limit id|
-|[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes<li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li>|
+|[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes, under hedge-mode, this param is **required**<li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -31,22 +31,35 @@ POST `v5/position/set-risk-limit`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/position/set-risk-limit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672282269774
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
 
-</TabItem>
-</Tabs>
+{
+    "category": "linear",
+    "symbol": "BTCUSDT",
+    "riskId": 4,
+    "positionIdx": null
+}
+```
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
-
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "riskId": 4,
+        "riskLimitValue": "8000000",
+        "category": "linear"
+    },
+    "retExtInfo": {},
+    "time": 1672282270571
+}
 ```
-</TabItem>
-</Tabs>

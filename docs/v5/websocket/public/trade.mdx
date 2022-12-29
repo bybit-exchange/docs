@@ -17,9 +17,9 @@ Push frequency: **real-time**
 |:----- |:-----|----- |
 |topic |string |Topic name |
 |type |string |Data type. `snapshot` |
-|ts |integer |The timestamp (ms) that system generates the data |
+|ts |number |The timestamp (ms) that system generates the data |
 |data |array |Object |
-|> T |string |The timestamp (ms) that the order is filled |
+|> T |number |The timestamp (ms) that the order is filled |
 |> s |array |Symbol name  |
 |> S |string |Side. `Buy`,`Sell` |
 |> v |string |Trade size |
@@ -30,11 +30,22 @@ Push frequency: **real-time**
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "topic": "publicTrade.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1672304486868,
+    "data": [
+        {
+            "T": 1672304486865,
+            "s": "BTCUSDT",
+            "S": "Buy",
+            "v": "0.001",
+            "p": "16578.50",
+            "L": "PlusTick",
+            "i": "20f43950-d8dd-5b31-9112-a178eb6023af",
+            "BT": false
+        }
+    ]
+}
 ```
-</TabItem>
-</Tabs>

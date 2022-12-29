@@ -27,27 +27,41 @@ If `confirm`=true, it means this candle is the last tick, otherwise, it is a sna
 |:----- |:-----|----- |
 |topic |string |Topic name |
 |type |string |Data type. `snapshot` |
-|ts |integer |The timestamp (ms) that system generates the data |
+|ts |number |The timestamp (ms) that system generates the data |
 |data |array |Object |
-|> start |integer |The start timestamp (ms) |
-|> end |integer |The end timestamp (ms). It is current timestamp if it does not reach to the end time of candle |
+|> start |number |The start timestamp (ms) |
+|> end |number |The end timestamp (ms). It is current timestamp if it does not reach to the end time of candle |
 |> [interval](../../enum#interval) |string |Kline interval |
 |> open |string |Open price |
-|> close |array |Close price  |
+|> close |string |Close price  |
 |> high |string |Highest price |
 |> low |string |Lowest price |
 |> volume |string |Trade volume |
 |> turnover |string |Turnover |
 |> confirm |boolean |Weather the tick is ended or not |
-|> timestamp |integer |The timestamp (ms) of the last matched order in the candle |
+|> timestamp |number |The timestamp (ms) of the last matched order in the candle |
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "topic": "kline.5.BTCUSDT",
+    "data": [
+        {
+            "start": 1672324800000,
+            "end": 1672325099999,
+            "interval": "5",
+            "open": "16649.5",
+            "close": "16677",
+            "high": "16677",
+            "low": "16608",
+            "volume": "2.081",
+            "turnover": "34666.4005",
+            "confirm": false,
+            "timestamp": 1672324988882
+        }
+    ],
+    "ts": 1672324988882,
+    "type": "snapshot"
+}
 ```
-</TabItem>
-</Tabs>
