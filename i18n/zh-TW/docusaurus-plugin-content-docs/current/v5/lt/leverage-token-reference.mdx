@@ -6,7 +6,7 @@ sidebar_position: 2
 查詢LT行情
 
 :::caution
-API權限：不需要APIKEY
+API權限：不需要API KEY訪問
 :::
 
 ### HTTP 請求
@@ -15,37 +15,40 @@ GET `/v5/spot-lever-token/reference`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|ltCoin |false |string |LT資產名稱，例如BTC3L|
+|ltCoin |**true** |string |LT資產名稱，例如BTC3L|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |ltCoin |string |槓桿代幣資產簡稱 |
 |nav |string |淨值 |
-|navTime |string |淨值更新時間戳UTC毫秒 |
+|navTime |number |淨值更新時間戳UTC毫秒 |
 |circulation |string |在二級市場流通的代幣數量 |
 |basket	|string	|籃子 |
 |leverage |string |真實槓桿倍數 |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/spot-lever-token/reference?ltCoin=BTC3S HTTP/1.1
+Host: api-testnet.bybit.com
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "basket": "8.030999999605924324",
+        "circulation": "55283.938540773853098069",
+        "leverage": "-2.239897380979465182",
+        "ltCoin": "BTC3S",
+        "nav": "0",
+        "navTime": 1672293520248
+    },
+    "retExtInfo": {},
+    "time": 1672293520294
+}
 ```
-</TabItem>
-</Tabs>

@@ -5,7 +5,7 @@ sidebar_position: 5
 ---
 
 Query users' execution records, sort by `execTime` in descending order
-> **Cover: Spot (Unified Account) / Linear Perpetual (Unified Account) / Option (Unified Account)**
+> **Cover: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
 
 :::tip
 * You may have multiple executions in a single order.
@@ -14,7 +14,7 @@ Query users' execution records, sort by `execTime` in descending order
 :::
 
 ### HTTP Request
-POST `/v5/position/execution-list`
+GET `/v5/position/execution-list`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -32,6 +32,7 @@ POST `/v5/position/execution-list`
 
 ### Response Parameters
 | Parameter | Type | Comments|
+|:----- |:-----|----- |
 | category | string  | Product type. `spot`,`linear`,`option`|
 | list | array | Object |
 |> symbol |string   |Symbol name |
@@ -40,7 +41,7 @@ POST `/v5/position/execution-list`
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
-|> leavesQty |string |The remaining qty not executed |
+|> leavesQty |string |The remaining qty not executed. If the order is cancelled, then leavesQty=0 |
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
 |> execFee |string   |Executed trading fee |
@@ -62,22 +63,54 @@ POST `/v5/position/execution-list`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/execution/list?category=linear&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672283754132
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "132766%3A2%2C132766%3A2",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "orderType": "Market",
+                "underlyingPrice": "",
+                "orderLinkId": "",
+                "side": "Buy",
+                "indexPrice": "",
+                "orderId": "8c065341-7b52-4ca9-ac2c-37e31ac55c94",
+                "stopOrderType": "UNKNOWN",
+                "leavesQty": "0",
+                "execTime": "1672282722429",
+                "isMaker": false,
+                "execFee": "0.071409",
+                "feeRate": "0.0006",
+                "execId": "e0cbe81d-0f18-5866-9415-cf319b5dab3b",
+                "tradeIv": "",
+                "blockTradeId": "",
+                "markPrice": "1183.54",
+                "execPrice": "1190.15",
+                "markIv": "",
+                "orderQty": "0.1",
+                "orderPrice": "1236.9",
+                "execValue": "119.015",
+                "execType": "Trade",
+                "execQty": "0.1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672283754510
+}
 ```
-</TabItem>
-</Tabs>

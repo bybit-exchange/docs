@@ -575,38 +575,6 @@ const sidebars = {
   apiExplorerSideBar: [
     {
       type: "category",
-      label: "Derivatives",
-      link: {
-        type: "generated-index",
-        title: "Derivatives API",
-        slug: "/api-explorer/derivatives/category/"
-      },
-      // @ts-ignore
-      items: [
-        require("./docs/api-explorer/derivatives/market/sidebar.js"),
-        require("./docs/api-explorer/derivatives/trade/unified/sidebar.js"),
-        require("./docs/api-explorer/derivatives/trade/contract/sidebar.js"),
-      ]
-    },
-    {
-      type: "category",
-      label: "Spot",
-      link: {
-        type: "generated-index",
-        title: "Spot API",
-        slug: "/api-explorer/spot/category/"
-      },
-      // @ts-ignore
-      items: [
-        require("./docs/api-explorer/spot/market/sidebar.js"),
-        require("./docs/api-explorer/spot/trade/sidebar.js"),
-        require("./docs/api-explorer/spot/lttrade/sidebar.js"),
-        require("./docs/api-explorer/spot/crossmargin/sidebar.js"),
-        require("./docs/api-explorer/spot/institution/sidebar.js"),
-      ]
-    },
-    {
-      type: "category",
       label: "v5",
       link: {
         type: "generated-index",
@@ -620,8 +588,49 @@ const sidebars = {
         require("./docs/api-explorer/v5/position/sidebar.js"),
         require("./docs/api-explorer/v5/account/sidebar.js"),
         require("./docs/api-explorer/v5/asset/sidebar.js"),
+        require("./docs/api-explorer/v5/lt/sidebar.js"),
+        require("./docs/api-explorer/v5/spot-margin/sidebar.js"),
       ]
-    }
+    },
+    {
+      type: "category",
+      label: "v3",
+      items: [
+        {
+          type: "category",
+          label: "Derivatives",
+          link: {
+            type: "generated-index",
+            title: "Derivatives API",
+            slug: "/api-explorer/derivatives/category/"
+          },
+          // @ts-ignore
+          items: [
+            require("./docs/api-explorer/derivatives/market/sidebar.js"),
+            require("./docs/api-explorer/derivatives/trade/unified/sidebar.js"),
+            require("./docs/api-explorer/derivatives/trade/contract/sidebar.js"),
+          ]
+        },
+        {
+          type: "category",
+          label: "Spot",
+          link: {
+            type: "generated-index",
+            title: "Spot API",
+            slug: "/api-explorer/spot/category/"
+          },
+          // @ts-ignore
+          items: [
+            require("./docs/api-explorer/spot/market/sidebar.js"),
+            require("./docs/api-explorer/spot/trade/sidebar.js"),
+            require("./docs/api-explorer/spot/lttrade/sidebar.js"),
+            require("./docs/api-explorer/spot/crossmargin/sidebar.js"),
+            require("./docs/api-explorer/spot/institution/sidebar.js"),
+          ]
+        },
+      ]
+    },
+
   ],
 };
 

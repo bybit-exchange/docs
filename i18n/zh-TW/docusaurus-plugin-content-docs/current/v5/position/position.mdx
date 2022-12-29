@@ -8,10 +8,10 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 該接口可以獲取用戶的持倉信息，比如持倉數量，累計盈虧等
-> **覆蓋範圍: 正向合約(統保帳戶) / 期權(統保帳戶)**
+> **覆蓋範圍: 正向合約(統一帳戶) / 期權(統一帳戶)**
 
 ### HTTP 請求
-POST `/v5/position/list`
+GET `/v5/position/list`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
@@ -42,7 +42,6 @@ POST `/v5/position/list`
 |> markPrice| string  | symbol 的最新標記價格  |
 |> liqPrice| string  | 倉位強平價格，在統一保證金模式下返回的數值為預估強平價格，因統一保證金模式是按照賬戶來控制風險率，因此單個倉位上的破產價格僅為預估計算。 |
 |> bustPrice| string  | 倉位破產價格. 統一保證金模式返回`""`, 無倉位破產價格  |
-|> sessionAvgPrice | string  | 結算價格, 僅對 USDC 永續有效 |
 |> positionIM| string  | 倉位起始保證金 |
 |> positionMM| string  | 倉位維持保證金 |
 |> tpslMode| string  | 止盈止損模式，`Full` ：全部止盈止損；`Partial`：部分止盈止損。僅對期貨業務有效 |
@@ -58,22 +57,55 @@ POST `/v5/position/list`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /v5/position/list?category=linear&symbol=XRPUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "updateAt%3D1672279322668",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "XRPUSDT",
+                "leverage": "10",
+                "avgPrice": "0.3615",
+                "liqPrice": "0.0001",
+                "riskLimitValue": "200000",
+                "takeProfit": "",
+                "positionValue": "36.15",
+                "tpslMode": "Full",
+                "riskId": 41,
+                "trailingStop": "0",
+                "unrealisedPnl": "-1.83",
+                "markPrice": "0.3432",
+                "cumRealisedPnl": "0.48805876",
+                "positionMM": "0.381021",
+                "createdTime": "1672121182216",
+                "positionIdx": 0,
+                "positionIM": "3.634521",
+                "updatedTime": "1672279322668",
+                "side": "Buy",
+                "bustPrice": "",
+                "activePrice": "0",
+                "size": "100",
+                "positionStatus": "Normal",
+                "stopLoss": "",
+                "tradeMode": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672280219169
+}
 ```
-</TabItem>
-</Tabs>

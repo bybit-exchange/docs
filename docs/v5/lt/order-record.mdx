@@ -6,7 +6,7 @@ sidebar_position: 5.5
 Get purchase or redeem history
 
 :::caution
-API permissions: Authentication required
+API permissions: authentication needed
 :::
 
 ### HTTP Request
@@ -15,7 +15,7 @@ GET `/v5/spot-lever-token/order-record`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|ltCoin |**true** |string |Abbreviation of the LT，such as BTC3L |
+|ltCoin |false |string |Abbreviation of the LT，such as BTC3L |
 |orderId |false	|string	|Order id |
 |startTime |false |integer	|The start timestamp (ms) |
 |endTime |false	|integer |The end timestamp (ms) |
@@ -28,34 +28,52 @@ GET `/v5/spot-lever-token/order-record`
 |:----- |:-----|----- |
 |ltCoin |string |Abbreviation of the LT，such as BTC3L |
 |orderId |string |Order id |
-|ltOrderType |string |LT order type |
-|orderTime |string |Order time |
-|updateTime |string |Last update time of the order status |
+|OrderType |integer |LT order type. `1`: purchase, `2`: redeem |
+|orderTime |number |Order time |
+|updateTime |number |Last update time of the order status |
 |ltOrderStatus |string |Order status. `1`: completed, `2`: in progress, `3`: failed |
 |fee |string |Trading fees |
 |amount	|string	|Order quantity of the LT |
 |value |string |Filled value |
+|valueCoin |string |Quote coin |
 |serialNo |string |Serial number |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/spot-lever-token/order-record?ordeId=2611 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: JNLEWNAQHLQKIEBBYT
+X-BAPI-TIMESTAMP: 1672294422027
+X-BAPI-SIGN: 58eab1937e84681fc1f2de07bb5a1502ba4860bdfa84cf3c98db6070ed51f4a1
+Content-Type: application/json
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "amount": "465.00534275",
+                "fee": "0",
+                "ltCoin": "EOS3L",
+                "ltOrderStatus": "1",
+                "orderId": "2611",
+                "orderTime": 1672293868000,
+                "orderType": 1,
+                "serialNo": "pruchase-001",
+                "updateTime": 1672293888000,
+                "value": "191.47171657",
+                "valueCoin": "USDT"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672294446137
+}
 ```
-</TabItem>
-</Tabs>

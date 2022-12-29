@@ -15,7 +15,7 @@ GET `/v5/spot-lever-token/order-record`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|ltCoin |**true** |string |LT資產名稱，例如BTC3L |
+|ltCoin |false |string |LT資產名稱，例如BTC3L |
 |orderId |false	|string	|訂單ID |
 |startTime |false |long	|起始時間 |
 |endTime |false	|long |截止時間 |
@@ -28,34 +28,52 @@ GET `/v5/spot-lever-token/order-record`
 |:----- |:-----|----- |
 |ltCoin |string |槓桿代幣資產簡稱 |
 |orderId |string |訂單ID |
-|ltOrderType |string |訂單類型 1. 申購 2. 贖回 |
-|orderTime |string |下單時間 |
-|updateTime |string |訂單狀態最後一次更新時間 |
+|orderType |string |訂單類型 `1`: 申購, `2`: 贖回 |
+|orderTime |number |下單時間 |
+|updateTime |number |訂單狀態最後一次更新時間 |
 |ltOrderStatus |string |訂單狀態：`1`: 已成交, 2`: 等待中, `3`: 失敗 |
 |fee |string |交易手續費 |
 |amount	|string	|下單的槓桿代幣資產數量 |
 |value |string |成交價值 |
+|valueCoin |string |報價幣種 |
 |serialNo |string |序列號 |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-
+GET /v5/spot-lever-token/order-record?ordeId=2611 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: JNLEWNAQHLQKIEBBYT
+X-BAPI-TIMESTAMP: 1672294422027
+X-BAPI-SIGN: 58eab1937e84681fc1f2de07bb5a1502ba4860bdfa84cf3c98db6070ed51f4a1
+Content-Type: application/json
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="json" label="Json">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "amount": "465.00534275",
+                "fee": "0",
+                "ltCoin": "EOS3L",
+                "ltOrderStatus": "1",
+                "orderId": "2611",
+                "orderTime": 1672293868000,
+                "orderType": 1,
+                "serialNo": "pruchase-001",
+                "updateTime": 1672293888000,
+                "value": "191.47171657",
+                "valueCoin": "USDT"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672294446137
+}
 ```
-</TabItem>
-</Tabs>
