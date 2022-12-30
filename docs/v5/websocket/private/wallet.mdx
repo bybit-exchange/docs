@@ -6,13 +6,16 @@ sidebar_position: 4
 
 Subscribe wallet stream.
 
-**Topic:**<br/>
-`wallet.unifiedTradingAccount`
+**Topic:** `wallet`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|> accountType |string |Account type. |
+|id |string |Message id|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array |Object |
+|> accountType |string |Account type. For now, `UNIFIED` ONLY |
 |> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
 |> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
 |> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as empty string.|
@@ -38,11 +41,116 @@ Subscribe wallet stream.
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "id": "5923242c464be9-25ca-483d-a743-c60101fc656f",
+    "topic": "wallet",
+    "creationTime": 1672364262482,
+    "data": [
+        {
+            "accountIMRate": "0.016",
+            "accountMMRate": "0.003",
+            "totalEquity": "12837.78330098",
+            "totalWalletBalance": "12840.4045924",
+            "totalMarginBalance": "12837.78330188",
+            "totalAvailableBalance": "12632.05767702",
+            "totalPerpUPL": "-2.62129051",
+            "totalInitialMargin": "205.72562486",
+            "totalMaintenanceMargin": "39.42876721",
+            "coin": [
+                {
+                    "coin": "USDC",
+                    "equity": "200.62572554",
+                    "usdValue": "200.62572554",
+                    "walletBalance": "201.34882644",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "1500000",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "202.99874213",
+                    "totalPositionMM": "39.14289747",
+                    "unrealisedPnl": "74.2768991",
+                    "cumRealisedPnl": "-209.1544627"
+                },
+                {
+                    "coin": "BTC",
+                    "equity": "0.06488393",
+                    "usdValue": "1023.08402268",
+                    "walletBalance": "0.06488393",
+                    "availableToWithdraw": "0.06488393",
+                    "availableToBorrow": "2.5",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "ETH",
+                    "equity": "0",
+                    "usdValue": "0",
+                    "walletBalance": "0",
+                    "availableToWithdraw": "0",
+                    "availableToBorrow": "26",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "USDT",
+                    "equity": "11726.64664904",
+                    "usdValue": "11613.58597018",
+                    "walletBalance": "11728.54414904",
+                    "availableToWithdraw": "11723.92075829",
+                    "availableToBorrow": "2500000",
+                    "borrowAmount": "0",
+                    "accruedInterest": "0",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "2.72589075",
+                    "totalPositionMM": "0.28576575",
+                    "unrealisedPnl": "-1.8975",
+                    "cumRealisedPnl": "0.64782276"
+                },
+                {
+                    "coin": "EOS3L",
+                    "equity": "215.0570412",
+                    "usdValue": "0",
+                    "walletBalance": "215.0570412",
+                    "availableToWithdraw": "215.0570412",
+                    "availableToBorrow": "0",
+                    "borrowAmount": "0",
+                    "accruedInterest": "",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                },
+                {
+                    "coin": "BIT",
+                    "equity": "1.82",
+                    "usdValue": "0.48758257",
+                    "walletBalance": "1.82",
+                    "availableToWithdraw": "1.82",
+                    "availableToBorrow": "0",
+                    "borrowAmount": "0",
+                    "accruedInterest": "",
+                    "totalOrderIM": "0",
+                    "totalPositionIM": "0",
+                    "totalPositionMM": "0",
+                    "unrealisedPnl": "0",
+                    "cumRealisedPnl": "0"
+                }
+            ],
+            "accountType": "UNIFIED"
+        }
+    ]
+}
 ```
-</TabItem>
-</Tabs>

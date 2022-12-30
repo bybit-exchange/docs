@@ -7,19 +7,21 @@ sidebar_position: 2
 Subscribe execution stream.
 
 :::tip
-You may have multiple pushes for one order.
+You may have multiple executions for one order in one stream
 :::
 
-**Topic:**<br/>
-`execution.unifiedTradingAccount`
+**Topic:** `execution`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| category | string  | Product type. `spot`,`linear`,`option`|
-| list | array | Object |
+|id |string |Message id|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array |Object |
+|> [category](../../enum#category) | string  | Product type. `spot`,`linear`,`option`|
 |> symbol |string   |Symbol name |
-|> isLeverage |integer |Whether to borrow. Valid for `spot` ONLY. `0`(default): false, `1`: true|
+|> isLeverage |string |Whether to borrow. Valid for `spot` ONLY. `0`(default): false, `1`: true|
 |> orderId |string |Order id |
 |> orderLinkId |string |User customized order id |
 |> side |string |Side. `Buy`,`Sell` |
@@ -28,16 +30,16 @@ You may have multiple pushes for one order.
 |> leavesQty |string |The remaining qty not executed |
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
-|> execFee |string   |Executed trading fee |
+|> execFee |string |Executed trading fee |
 |> execId |string |Execution id |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
-|> [execType](../../enum#exectype) |string |Executed type|
+|> [execType](../../enum#exectype) |string |Executed type. valid for `linear`,`option`|
 |> execValue |string |Executed order value |
 |> execTime |string |Executed timestamp（ms） |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
 |> feeRate |string |Trading fee rate |
-|> iv |string |Implied volatility. Valid for `option` |
+|> tradeIv |string |Implied volatility. Valid for `option` |
 |> markIv |string |Implied volatility of mark price. Valid for `option`|
 |> markPrice |string |The mark price of the symbol when executing |
 |> indexPrice |string |The index price of the symbol when executing |
@@ -46,11 +48,40 @@ You may have multiple pushes for one order.
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "id": "592324803b2785-26fa-4214-9963-bdd4727f07be",
+    "topic": "execution",
+    "creationTime": 1672364174455,
+    "data": [
+        {
+            "category": "linear",
+            "symbol": "XRPUSDT",
+            "execFee": "0.005061",
+            "execId": "7e2ae69c-4edf-5800-a352-893d52b446aa",
+            "execPrice": "0.3374",
+            "execQty": "25",
+            "execType": "Trade",
+            "execValue": "8.435",
+            "isMaker": false,
+            "feeRate": "0.0006",
+            "tradeIv": "",
+            "markIv": "",
+            "blockTradeId": "",
+            "markPrice": "0.3391",
+            "indexPrice": "",
+            "underlyingPrice": "",
+            "leavesQty": "0",
+            "orderId": "f6e324ff-99c2-4e89-9739-3086e47f9381",
+            "orderLinkId": "",
+            "orderPrice": "0.3207",
+            "orderQty": "25",
+            "orderType": "Market",
+            "stopOrderType": "UNKNOWN",
+            "side": "Sell",
+            "execTime": "1672364174443",
+            "isLeverage": "0"
+        }
+    ]
+}
 ```
-</TabItem>
-</Tabs>

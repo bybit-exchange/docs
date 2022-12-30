@@ -6,16 +6,19 @@ sidebar_position: 3
 
 Subscribe order stream.
 
-**Topic:**<br/>
-`order.unifiedTradingAccount`
+**Topic:** `order`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |Product type |
-|list |array |Object |
+|id |string |Message id|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array |Object |
+|> category |string |Product type |
 |> orderId  |string |Order id |
 |> orderLinkId |string |User customised order id |
+|> isLeverage |string |Whether to borrow. `spot` returns this field ONLY. `0`(default): false, `1`: true|
 |> blockTradeId  |string |Block trade id |
 |> symbol |string |Symbol name |
 |> price |string |Order price |
@@ -40,7 +43,7 @@ Subscribe order stream.
 |> stopLoss |string |Stop loss price |
 |> [tpTriggerBy](../../enum#triggerby) |string |The price type to trigger take profit |
 |> [slTriggerBy](../../enum#triggerby) |string |The price type to trigger stop loss |
-|> triggerDirection |string |Trigger direction. `1`: rise, `2`: fall |
+|> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
 |> [triggerBy](../../enum#triggerby) |string |The price type of trigger price |
 |> lastPriceOnCreated |string |Last price when place the order. for `linear` ONLY |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
@@ -50,11 +53,48 @@ Subscribe order stream.
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "id": "5923240c6880ab-c59f-420b-9adb-3639adc9dd90",
+    "topic": "order",
+    "creationTime": 1672364262474,
+    "data": [
+        {
+            "symbol": "ETH-30DEC22-1400-C",
+            "orderId": "5cf98598-39a7-459e-97bf-76ca765ee020",
+            "side": "Sell",
+            "orderType": "Market",
+            "cancelType": "UNKNOWN",
+            "price": "72.5",
+            "qty": "1",
+            "orderIv": "",
+            "timeInForce": "IOC",
+            "orderStatus": "Filled",
+            "orderLinkId": "",
+            "lastPriceOnCreated": "",
+            "reduceOnly": false,
+            "leavesQty": "",
+            "leavesValue": "",
+            "cumExecQty": "1",
+            "cumExecValue": "75",
+            "avgPrice": "75",
+            "blockTradeId": "",
+            "positionIdx": 0,
+            "cumExecFee": "0.358635",
+            "createdTime": "1672364262444",
+            "updatedTime": "1672364262457",
+            "rejectReason": "EC_NoError",
+            "stopOrderType": "",
+            "triggerPrice": "",
+            "takeProfit": "",
+            "stopLoss": "",
+            "tpTriggerBy": "",
+            "slTriggerBy": "",
+            "triggerDirection": 0,
+            "triggerBy": "",
+            "closeOnTrigger": false,
+            "category": "option"
+        }
+    ]
+}
 ```
-</TabItem>
-</Tabs>

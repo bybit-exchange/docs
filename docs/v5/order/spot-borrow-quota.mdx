@@ -25,8 +25,8 @@ GET `/v5/order/spot-borrow-check`
 |:----- |:-----|------ |
 |symbol |string |Symbol name |
 |side |string |Side |
-|maxBorrowableQty |string |The maximum base coin qty of borrowable<li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li>  |
-|maxBorrowableAmount |string |The maximum quote coin amount of borrowable<li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li> |
+|maxTradeQty |string |The maximum base coin qty can be traded<li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li>  |
+|maxTradeAmount |string |The maximum quote coin amount can be traded<li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li> |
 |borrowCoin |string |Borrow coin |
 
 ### Request Example
@@ -48,12 +48,12 @@ X-BAPI-RECV-WINDOW: 5000
     "retMsg": "OK",
     "result": {
         "symbol": "BTCUSDT",
+        "maxTradeQty": "2.7646",
         "side": "Buy",
-        "maxBorrowableQty": "2.8263",
-        "maxBorrowableAmount": "46573.15694175",
+        "maxTradeAmount": "45321.76354622",
         "borrowCoin": "USDT"
     },
     "retExtInfo": {},
-    "time": 1672228522663
+    "time": 1672375804415
 }
 ```
