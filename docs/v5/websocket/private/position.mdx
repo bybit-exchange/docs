@@ -6,50 +6,79 @@ sidebar_position: 1
 
 Subscribe position stream to get position data change in real-time.
 
-**Topic:**<br/>
-`position.unifiedTradingAccount`
+**Topic:** `position`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
+|id |string |Message id|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array |Object |
+|> category |string |Product type. `linear`,`option` |
 |> symbol |string |Symbol name |
 |> side |string |Position side. `Buy`,`Sell` |
 |> size |string |Position size |
-|> [positionIdx](../../enum#positionidx) |string |Used to identify positions in different position modes.|
-|> tradeMode |string |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` under unified margin account |
+|> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
+|> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` under unified margin account |
 |> positionValue |string |Entry position value |
 |> riskId |integer |Risk limit id |
 |> riskLimitValue |string |Risk limit value corresponding to riskId|
 |> entryPrice |string |Entry price |
 |> markPrice |string |Mark price |
-|> autoAddMargin |string |lark没有该字段 |
 |> leverage |string |Leverage |
-|> effectiveLeverage |string |Effective leverage |
-|> positionBalance |string |Position margin or balance 含義一樣？ |
+|> positionBalance |string |Please ignore |
 |> positionMM |string |Position maintenance margin |
 |> positionIM |string |Position initial margin |
 |> liqPrice |string |Est.liquidation price. `""` for unified margin account |
 |> bustPrice |string |Est.bankruptcy price. `""` for unified margin account |
-|> tpSlMode |string |Tp/Sl mode. `Full`,`Partial`. 確認v5裡是數字還是字符串 |
+|> tpSlMode |string |Tp/Sl mode. `Full`,`Partial` |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
 |> trailingStop |string |Trailing stop |
-|> activePrice |string |Activated price for trailing stop. 確認v5是否還有 |
 |> unrealisedPnl |string |Unrealised profit and loss |
 |> cumRealisedPnl |string |Cumulative realised PnL |
 |> positionStatus |string |Position status |
-|> sessionAvgPrice |string |Settlement price. USDC perp ONLY |
 |> createdTime |string |Position created timestamp (ms) |
 |> updatedTime |string |Position data updated timestamp (ms) |
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "id": "59232430b58efe-5fc5-4470-9337-4ce293b68edd",
+    "topic": "position",
+    "creationTime": 1672364174455,
+    "data": [
+        {
+            "positionIdx": 0,
+            "tradeMode": 0,
+            "riskId": 41,
+            "riskLimitValue": "200000",
+            "symbol": "XRPUSDT",
+            "side": "Buy",
+            "size": "75",
+            "entryPrice": "0.3615",
+            "leverage": "10",
+            "positionValue": "27.1125",
+            "positionBalance": "0",
+            "markPrice": "0.3374",
+            "positionIM": "2.72589075",
+            "positionMM": "0.28576575",
+            "takeProfit": "0",
+            "stopLoss": "0",
+            "trailingStop": "0",
+            "unrealisedPnl": "-1.8075",
+            "cumRealisedPnl": "0.64782276",
+            "createdTime": "1672121182216",
+            "updatedTime": "1672364174449",
+            "tpslMode": "Partial",
+            "liqPrice": "",
+            "bustPrice": "",
+            "category": "linear",
+            "positionStatus": "Normal"
+        }
+    ]
+}
 ```
-</TabItem>
-</Tabs>
 

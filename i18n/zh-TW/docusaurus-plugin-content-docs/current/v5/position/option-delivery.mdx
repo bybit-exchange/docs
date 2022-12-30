@@ -24,7 +24,7 @@ GET `/v5/asset/delivery-record`
 |:----- |:-----|----- |
 |category |string |產品類型|
 |list |array |Object |
-|> deliveryTime |integer |交割時間戳 (毫秒) |
+|> deliveryTime |number |交割時間戳 (毫秒) |
 |> symbol |string |合約名稱 |
 |> side |string |`Buy`,`Sell` |
 |> position |string |交割數量 |
@@ -37,11 +37,37 @@ GET `/v5/asset/delivery-record`
 ### 請求示例
 
 ```http
-
+GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672362112944
+X-BAPI-RECV-WINDOW: 5000
 ```
 
 ### 響應示例
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "132791%3A0%2C132791%3A0",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-29DEC22-16000-P",
+                "side": "Buy",
+                "deliveryTime": 1672300800860,
+                "strike": "16000",
+                "fee": "0.00000000",
+                "position": "0.01",
+                "deliveryPrice": "16541.86369547",
+                "deliveryRpl": "3.5"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672362116184
+}
 ```
