@@ -260,6 +260,11 @@ const config = {
             ]
           },
           {
+            to: '/faq',
+            position: 'right',
+            label: 'FAQ',
+          },
+          {
             type: 'localeDropdown',
             position: 'right',
             dropdownItemsBefore: [],
