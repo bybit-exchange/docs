@@ -34,3 +34,46 @@ GET `/unified/v3/private/order/replace`
 |:----- |:-----|----- |
 |orderId |string |Order ID |
 |orderLinkId |string |User customised order id |
+
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private/order/replace' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 27ecc5cca2aec6a779c9f5ef828275a3e9ccaf392a030820911c52d6085c34db' \
+--header 'X-BAPI-API-KEY: {api key}' \
+--header 'X-BAPI-TIMESTAMP: 1657871228347' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "category": "linear",
+    "symbol":"BTCUSDT",
+    "orderId":"1a1ae001-2034-4a6b-8b25-45aa9100b1ec",
+    "price":"35000"
+}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    "orderId": "42c86d66331e41998d12c2440ce90c1a",
+    "orderLinkId": "e80d558e-ed"
+  }
+}
+```
+</TabItem>
+</Tabs>

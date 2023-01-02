@@ -63,3 +63,51 @@ POST `/unified/v3/private/order/create`
 |:----- |:-----|----- |
 |orderId |string |Order ID |
 |orderLinkId |string |User customised order id |
+
+
+### Request Example
+
+<Tabs>
+<TabItem value="console-linear" label="linear">
+
+```http
+curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private/order/create' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-SIGN: 27ecc5cca2aec6a779c9f5ef828275a3e9ccaf392a030820911c52d6085c34db' \
+--header 'X-BAPI-API-KEY: {api key}' \
+--header 'X-BAPI-TIMESTAMP: 1657871228347' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "symbol": "BTCUSDT",
+    "orderType": "Limit",
+    "side": "Buy",
+    "qty": "0.01",
+    "price": "20002",
+    "timeInForce": "GoodTillCancel",
+    "category": "linear"
+}'
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+<Tabs>
+<TabItem value="js linear" label="linear">
+
+```javascript
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "e10b0716-7c91-4091-b98a-1fa0f401c7d5",
+        "orderLinkId": "test0000003"
+    },
+    "retExtInfo": null,
+    "time": 1664441344238
+}
+```
+</TabItem>
+</Tabs>
