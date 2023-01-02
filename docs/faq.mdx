@@ -1,0 +1,57 @@
+---
+title: Frequently Asked Questions
+sidebar_label: Frequently Asked Questions
+slug: /faq
+---
+
+### Where are Bybit's servers located?
+AWS Singapore, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-availability-zones">Availability Zone</a> ID apse1-az3.
+
+### `reduceOnly` and `closeOnTrigger` - what's the difference?
+* To close your position, submit an order and specify `reduceOnly` to true. `closeOnTrigger` is not strictly applicable here, but you can also set it to true if it's required.
+* reduceOnly is the one that really matters for closing position, and we will improve the interface in the future.
+* Be careful when you specify closeOnTrigger to true as it could cause conflict when reduceOnly is false.
+
+### Why aren't all my orders showing on the website?
+* Users who have bots which place large numbers of laddered orders will be restricted by the frontend interface, which only shows a maximum of 50 orders on-screen.
+* Don't worry, your orders are still in the system and can be queried by the API, but the frontend cannot show more than 50.
+
+### Calculating order size based on available wallet balance
+* `price * availableBalance * leverage * perc * (1 - (0.0006 * 2))`
+* Unfortunately this is not a perfectly accurate formula; the real calculation is complex and may be published in the docs at a later date.
+    * `price` - last price (or your entry price) - can be found with the Latest Symbol Info endpoint.
+    * `availableBalance` - can be found with the My Position endpoint.
+    * `leverage` - up to the respective maximum leverage for the market and your risk limit (eg 2, 10, 50).
+    * `perc` - 0.1 for 10%, 0.25 for 25%, etc.
+    * `1 - (0.0006 * 2)` - used to calculate the maximum order cost (always assumes entry & exit orders use taker fee regardless actual fee).
+
+### Can I exchange assets with the API?
+* There is no endpoint to exchange assets. This can only be done on the <a href="https://www.bybit.com/app/assets/assets-exchange">website</a>.
+* However, it is possible to access your Asset Exchange Records with the API.
+
+### How do I get funds for testnet?
+To get testnet funds, just go to master account asset page to request.
+
+### Why are my Closed PNL prices inaccurate?
+* The `entryPrice` and `exitPrice` returned by Closed PNL endpoints are not the actual execution prices of the orders.
+* It is based on the total costs of the order
+(whether or not the position was only opened/closed by one order executed at one price - it is more complicated if multiple orders opened/closed a position.)
+* For instance, the entry_price and exit_price reported by this endpoint are influenced by the fee paid/received on the orders.
+
+### Why are values returned to too many decimal places? (float precision issue)
+* For example, you received 11.969999 but you expected 11.97.
+* Some values are returned to too many decimal places, or a fraction too high or low, due to a float precision problem.
+* For now, we recommend rounding the received value to the correct decimal place. This can be done with reference to the Query Symbol endpoint.
+* This issue will be has been fixed in the latest major version of the API: v3. You can see the documentation for the v3 websocket here.
+
+### How can I ensure I am using up-to-date data?
+* It is possible, although unlikely, that the REST API or (even less likely) the websocket could return/push old data.
+* For the greatest level of data resilience, we recommend clients to:
+    * firstly, rely on the websocket, which will not only ensure you get the latest data as fast as possible, but will also ensure you get complete data
+    * secondly, query the REST API to fill in any discrepencies in data - or between websocket disconnections.
+* The best practice is to save all of this data locally in your own database or cache.
+* This frees up your rate limits for other requests and also ensures a level of redundancy against the exchange in case of data delays.
+
+### What is the difference between turnover and volume?
+* `Turnover`: is in the opposite currency to the quantity's currency
+* `Volume`: is in the same currency as the quantity's currency
