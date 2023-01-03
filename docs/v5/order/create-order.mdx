@@ -15,7 +15,7 @@ Limit order: `orderType`=_Limit_, it is necessary to specify order qty and price
 `GTC`<br/>
 `IOC`<br/>
 `FOK`<br/>
-`PostOnly`: If the order would be filled immediately when submitted, it will be **cancelled**. The purpose of this is to protect your order during the submission process. If the matching system cannot entrust the order to the order book due to price changes on the market, it will be cancelled. For the PostOnly order type, the quantity that can be submitted in a single order is more than other types of orders, please refer to the parameter `lotSizeFilter > postOnlyMaxOrderQty` in the [instruments-info](../market/instrument#) interface.
+`PostOnly`: If the order would be filled immediately when submitted, it will be **cancelled**. The purpose of this is to protect your order during the submission process. If the matching system cannot entrust the order to the order book due to price changes on the market, it will be cancelled. For the PostOnly order type, the quantity that can be submitted in a single order is more than other types of orders, please refer to the parameter `lotSizeFilter > postOnlyMaxOrderQty` in the [instruments-info](../market/instrument#) endpoint.
 
 - **How to create conditional order:**<br/>
 When submitting an order, if `triggerPrice` is set, the order will be automatically converted into a conditional order. In addition, the conditional order does not occupy the margin. If the margin is insufficient after the conditional order is triggered, the order will be cancelled.
@@ -27,7 +27,7 @@ positions, the TP/SL linked when you submit active orders will not take effect. 
 
 - **Order price**: Place a limit order, this parameter is **required**. If you don't have position, the long order price
 should be higher than _10%_ of the market price and lower than 1 million. If you have position, the price should be higher than the _liquidation price_.
-For the minimum unit of the price change, please refer to the `priceFilter` > `tickSize` field in the [instrumentInfo](../market/instrument#).
+For the minimum unit of the price change, please refer to the `priceFilter` > `tickSize` field in the [instruments-info](../market/instrument#) endpoint.
 
 - **orderLinkId**: You can customize the active order ID. We can link this ID to the order ID in the system. Once the
 active order is successfully created, we will send the unique order ID in the system to you. Then, you can use this order
@@ -57,16 +57,16 @@ POST `/v5/order/create`
 |price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> |
 |orderFilter |false |string |Valid for `spot` ONLY. `Order`,`tpslOrder`. If not passed, `Order` by default|
-|triggerPrice |false |string |<li>For future, it is a conditional order param. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is a tp/sl order trigger price</li>|
+|triggerPrice |false |string |<li>For futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is the TP/SL order trigger price</li>|
 |[triggerBy](../enum#triggerby) |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |orderIv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> |
 |[positionIdx](../enum#positionidx) |**true** |string |Used to identify positions in different position modes. For `linear` ONLY. |
-|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
-|takeProfit |false |string |Take profit price. only take effect upon opening the position |
-|stopLoss |false |string |Stop loss price. only take effect upon opening the position |
-|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
+|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_`future` orderLinkId rules_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li>|
+|takeProfit |false |string |Take profit price. Only takes effect upon opening the position |
+|stopLoss |false |string |Stop loss price. Only takes effect upon opening the position |
+|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice` |
+|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 |mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |

@@ -5,13 +5,13 @@ sidebar_position: 6
 ---
 
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
-real-time order information, you could query this [endpoint](open-order#) or rely on websocket stream (recommended)
+real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
 > **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
 
 :::info
-* The orders in 7 days: support to query all status orders
-* The orders out of 7 days: support to query those uncancelled, cancelled by system and filled orders
-* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+* The orders in the last 7 days: supports querying all statuses
+* The orders beyond 7 days: supports querying those unfilled, cancelled by the system, and filled orders
+* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
 ### HTTP Request
@@ -64,7 +64,7 @@ GET `/v5/order/history`
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
 |> [triggerBy](../enum#triggerby) |string |The price type of trigger price |
-|> lastPriceOnCreated |string |Last price when place the order. for `linear` ONLY |
+|> lastPriceOnCreated |string |Last price when place the order. For `linear` ONLY |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
 |> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
 |> createdTime |string |Order created timestamp (ms) |
