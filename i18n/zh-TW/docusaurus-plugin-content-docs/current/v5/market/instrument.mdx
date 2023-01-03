@@ -30,57 +30,231 @@ GET `/v5/market/instruments-info`
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |產品類型 |
-|list |array |Object |
-|> symbol |string |合約名稱 |
-|> [contractType](../enum#contracttype) |string |合約類型. _僅`linear`,`inverse`_|
-|> [status](../enum#status) |string |交易品種的可交易狀態 |
-|> baseCoin |string |交易貨幣幣種 e.g., BTCUSDT中的BTC |
-|> quoteCoin |string |報價貨幣幣種 e.g., BTCUSDT中的USDT |
-|> innovation |string |是否為創新區交易對，僅`spot`有效<li>`0`: 非創新區</li> <li>`1`: 創新區幣種, 該類幣種相對波動大</li> |
-|> settleCoin |string |結算貨幣幣種 e.g., BTCPERP中的USDC. `spot` N/A |
-|> optionsType |string |期權類型. `Call`,`Put`. _`option` ONLY_ |
-|> launchTime |string |交易產品的上線時間 (毫秒). `spot` N/A |
-|> deliveryTime |string |到期日/交割/行權時間戳 (毫秒). `spot` N/A |
-|> deliveryFeeRate |string |交割合約的交割費率. `spot` N/A |
-|> priceScale |string |價格精度. _僅`linear`,`inverse`有效_|
-|> fundingInterval |string |資金費率的間隔時間 (分鐘). _`linear`,`inverse` ONLY_|
-|> leverageFilter |string |Object. _僅`linear`,`inverse`有效_ |
-|>> minLeverage |string |最小槓桿數 |
-|>> maxLeverage |string |最大槓桿數 |
-|>> leverageStep |string |槓桿最小增加或減少的步長 |
-|> priceFilter |string |Object |
-|>> minPrice |string |最小訂單價格. `spot` N/A |
-|>> maxPrice |string |最大訂單價格. `spot` N/A |
-|>> tickSize |string |價格最小增加或減少的步長 |
-|> lotSizeFilter |string |Object |
-|>> basePrecision |string |交易幣種精度. _僅`spot`_ |
-|>> quotePrecision |string |報價幣種精度. _僅`spot`_ |
-|>> minOrderQty |string |單筆訂單最小下單數量 |
-|>> maxOrderQty |string |單筆訂單最大下單數量 |
-|>> minOrderAmt |string |最小訂單金額. _僅`spot`_ |
-|>> maxOrderAmt |string |最大訂單金額. _僅`spot`_ |
-|>> postOnlyMaxOrderQty |string |`PostOnly`訂單可單筆下單的最大數量. _僅`linear`,`inverse`_ |
-|>> qtyStep |string |下單數量最小增加或減少的步長 |
-|> unifiedMarginTrade |boolean |是否是統一保證金模式/統一帳戶可交易的產品. _僅`linear`,`inverse`_ |
-|nextPageCursor |string |游標，用於翻頁 |
+<Tabs>
+<TabItem value="future" label="Linear|Inverse" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>產品類型</td>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> contractType</td><td>string</td><td>合約類型. `InversePerpetual`,`LinearPerpetual`,`InverseFutures`</td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>合約狀態 </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>交易幣種 </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>報價幣種 </td>
+        </tr>
+        <tr>
+            <td>> launchTime</td><td>string</td><td>發佈時間 (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryTime</td><td>string</td><td>交割時間 (ms). 僅對交割合約有效 </td>
+        </tr>
+        <tr>
+            <td>> deliveryFeeRate</td><td>string</td><td>交割費率. 僅對交割合約有效</td>
+        </tr>
+        <tr>
+            <td>> priceScale</td><td>string</td><td>價格精度 </td>
+        </tr>
+        <tr>
+            <td>> leverageFilter</td><td>Object</td><td>槓桿屬性 </td>
+        </tr>
+        <tr>
+            <td>>> minLeverage</td><td>string</td><td>最小槓桿 </td>
+        </tr>
+        <tr>
+            <td>>> maxLeverage</td><td>string</td><td>最大槓桿 </td>
+        </tr>
+        <tr>
+            <td>>> leverageStep</td><td>string</td><td>修改槓桿的步長 </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>價格屬性 </td>
+        </tr>
+        <tr>
+            <td>>> minPrice</td><td>string</td><td>訂單最小價格 </td>
+        </tr>
+        <tr>
+            <td>>> maxPrice</td><td>string</td><td>訂單最大價格 </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>修改價格的步長 </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>訂單數量屬性 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>單筆訂單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>單筆訂單最小下單量 </td>
+        </tr>
+        <tr>
+            <td>>> qtyStep</td><td>string</td><td>修改下單量的步長 </td>
+        </tr>
+        <tr>
+            <td>>> postOnlyMaxOrderQty</td><td>string</td><td>PostOnly單允許的最大下單量 </td>
+        </tr>
+        <tr>
+            <td>> unifiedMarginTrade</td><td>boolean</td><td>是否支持統一保證金交易 </td>
+        </tr>
+        <tr>
+            <td>> fundingInterval</td><td>integer</td><td>資金費率結算週期 (分鐘) </td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>string</td><td>結算幣種 </td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="option" label="Option">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>產品類型</td>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> optionsType</td><td>string</td><td>期權類型. `Call`,`Put` </td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>合約狀態 </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>交易幣種 </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>報價幣種 </td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>boolean</td><td>結算幣種 </td>
+        </tr>
+        <tr>
+            <td>> launchTime</td><td>string</td><td>發佈時間 (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryTime</td><td>string</td><td>交割時間 (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryFeeRate</td><td>string</td><td>交割費率 </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>價格屬性 </td>
+        </tr>
+        <tr>
+            <td>>> minPrice</td><td>string</td><td>最小訂單價格 </td>
+        </tr>
+        <tr>
+            <td>>> maxPrice</td><td>string</td><td>最大訂單價格 </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>修改訂單價格的步長 </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>訂單量屬性 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>單筆訂單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>單筆訂單最小下單量 </td>
+        </tr>
+        <tr>
+            <td>>> qtyStep</td><td>string</td><td>修改下單量的步長 </td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>產品類型</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>交易幣種 </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>報價幣種 </td>
+        </tr>
+        <tr>
+            <td>> innovation</td><td>string</td><td>是否屬於創新區交易對. `0`: 否, `1`: 是 </td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>合約狀態 </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>數量屬性 </td>
+        </tr>
+        <tr>
+            <td>>> basePrecision</td><td>string</td><td>交易幣種精度 </td>
+        </tr>
+        <tr>
+            <td>>> quotePrecision</td><td>string</td><td>報價幣種精度 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>單筆訂單最小下單量 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>單筆訂單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderAmt</td><td>string</td><td>單筆訂單最小訂單額 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderAmt</td><td>string</td><td>單筆訂單最大訂單額 </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>價格屬性 </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>修改訂單的步長 </td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
 
 ### 請求示例
 
 <Tabs>
-<TabItem value="console-spot" label="Spot">
-
-```http
-GET /v5/market/instruments-info?category=spot&symbol=ETHUSDT HTTP/1.1
-Host: api-testnet.bybit.com
-```
-
-</TabItem>
-
 <TabItem value="console-linear" label="Linear">
 
 ```http
-GET /v5/market/instruments-info?category=linear&symbol=ETHUSDT HTTP/1.1
+GET /v5/market/instruments-info?category=linear&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -89,7 +263,16 @@ Host: api-testnet.bybit.com
 <TabItem value="console-option" label="Option">
 
 ```http
-GET /v5/market/instruments-info?category=option&symbol=ETH-31MAR23-30000-C HTTP/1.1
+GET /v5/market/instruments-info?category=option&symbol=ETH-3JAN23-1250-P HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-spot" label="Spot">
+
+```http
+GET /v5/market/instruments-info?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -99,42 +282,6 @@ Host: api-testnet.bybit.com
 ### 響應示例
 
 <Tabs>
-<TabItem value="js spot" label="spot">
-
-```json
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-        "category": "spot",
-        "list": [
-            {
-                "symbol": "ETHUSDT",
-                "baseCoin": "ETH",
-                "quoteCoin": "USDT",
-                "innovation": "0",
-                "status": "1",
-                "lotSizeFilter": {
-                    "basePrecision": "0.00001",
-                    "quotePrecision": "0.0000001",
-                    "minOrderQty": "0.0005",
-                    "maxOrderQty": "100000000",
-                    "minOrderAmt": "1",
-                    "maxOrderAmt": "100000000"
-                },
-                "priceFilter": {
-                    "tickSize": "0.01"
-                }
-            }
-        ]
-    },
-    "retExtInfo": {},
-    "time": 1672027811156
-}
-```
-
-</TabItem>
-
 <TabItem value="js linear" label="Linear">
 
 ```json
@@ -145,12 +292,12 @@ Host: api-testnet.bybit.com
         "category": "linear",
         "list": [
             {
-                "symbol": "ETHUSDT",
+                "symbol": "BTCUSDT",
                 "contractType": "LinearPerpetual",
                 "status": "Trading",
-                "baseCoin": "ETH",
+                "baseCoin": "BTC",
                 "quoteCoin": "USDT",
-                "launchTime": "1583193600000",
+                "launchTime": "1585526400000",
                 "deliveryTime": "0",
                 "deliveryFeeRate": "",
                 "priceScale": "2",
@@ -160,17 +307,15 @@ Host: api-testnet.bybit.com
                     "leverageStep": "0.01"
                 },
                 "priceFilter": {
-                    "minPrice": "0.05",
-                    "maxPrice": "99999.90",
-                    "tickSize": "0.05"
+                    "minPrice": "0.50",
+                    "maxPrice": "999999.00",
+                    "tickSize": "0.50"
                 },
                 "lotSizeFilter": {
-                    "maxTradingQty": "1500.00",
-                    "minTradingQty": "0.01",
-                    "qtyStep": "0.01",
-                    "postOnlyMaxOrderQty": "15000.00",
-                    "maxOrderQty": "1500.00",
-                    "minOrderQty": "0.01"
+                    "maxOrderQty": "100.000",
+                    "minOrderQty": "0.001",
+                    "qtyStep": "0.001",
+                    "postOnlyMaxOrderQty": "1000.000"
                 },
                 "unifiedMarginTrade": true,
                 "fundingInterval": 480,
@@ -180,7 +325,7 @@ Host: api-testnet.bybit.com
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1672039120937
+    "time": 1672712495660
 }
 ```
 
@@ -191,21 +336,21 @@ Host: api-testnet.bybit.com
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
         "category": "option",
-        "nextPageCursor": "0%2C1",
+        "nextPageCursor": "",
         "list": [
             {
                 "category": "option",
-                "symbol": "ETH-31MAR23-30000-C",
+                "symbol": "ETH-3JAN23-1250-P",
                 "status": "ONLINE",
                 "baseCoin": "ETH",
                 "quoteCoin": "USD",
                 "settleCoin": "USDC",
-                "optionsType": "Call",
-                "launchTime": "1665043200000",
-                "deliveryTime": "1680249600000",
+                "optionsType": "Put",
+                "launchTime": "1672560000000",
+                "deliveryTime": "1672732800000",
                 "deliveryFeeRate": "0.00015",
                 "priceFilter": {
                     "minPrice": "0.1",
@@ -221,9 +366,46 @@ Host: api-testnet.bybit.com
         ]
     },
     "retExtInfo": {},
-    "time": 1672039242761
+    "time": 1672712537130
+}
+```
+
+</TabItem>
+
+<TabItem value="js spot" label="spot">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "innovation": "0",
+                "status": "1",
+                "lotSizeFilter": {
+                    "basePrecision": "0.000001",
+                    "quotePrecision": "0.00000001",
+                    "minOrderQty": "0.00004",
+                    "maxOrderQty": "63.01197227",
+                    "minOrderAmt": "1",
+                    "maxOrderAmt": "100000"
+                },
+                "priceFilter": {
+                    "tickSize": "0.01"
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672712468011
 }
 ```
 
 </TabItem>
 </Tabs>
+

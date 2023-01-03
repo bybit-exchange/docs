@@ -1,36 +1,36 @@
 ---
-title: Order Book
-sidebar_label: Order Book
+title: Order Book (深度)
+sidebar_label: Order Book (深度)
 sidebar_position: 5
 slug: /derivatives/public/orderbook
 ---
 
-Get order book data.
+獲取深度數據
 
 :::info
-The response is in the snapshot format.
+響應是當前時間的切片數據
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/derivatives/v3/public/order-book/L2`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear`, but in the response category shows `""`|
-|symbol |<b>true</b> |string |Symbol name. `category` is **required** when query an option symbol |
-|limit |false |string |[1,500]. default: `25`. `option` has 25 ONLY |
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear`, 當不傳時，響應返回 `""`|
+|symbol |<b>true</b> |string |合約名稱. 查詢期權時，`category`需**必傳** |
+|limit |false |string |每頁數量限制 [1,500]. 默認: `25`. `option`僅25可用 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|s |string |Symbol name |
-|b |string |Bid. Order by price asc |
-|a |string |Ask. Order by price asc |
-|ts |integer |The timestamp(ms) that system generates the data |
-|u |integer |Update id, is always in sequence |
+|s |string |合約名稱 |
+|b |string |Bid, 買方. 按照價格從小到大 |
+|a |string |Ask, 賣方. 按照價格從小到大 |
+|ts |integer |行情服務生成數據時間戳（毫秒） |
+|u |integer |表示數據連續性的id |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console-linear" label="linear">
@@ -52,7 +52,7 @@ Host: api.bybit.com​
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
@@ -65,8 +65,8 @@ Host: api.bybit.com​
     "s": "BTCPERP",
     "b": [
         [
-            "16818",
-            "0.156"
+            "16818", // 價格
+            "0.156" // 數量
         ],
         [
             "16818.5",

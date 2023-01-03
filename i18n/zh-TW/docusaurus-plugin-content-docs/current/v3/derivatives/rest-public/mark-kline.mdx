@@ -1,33 +1,33 @@
 ---
-title: Mark Price Kline
-sidebar_label: Mark Price Kline
+title: 查詢標記價格K線數據
+sidebar_label: 查詢標記價格K線數據
 sidebar_position: 2
 slug: /derivatives/public/mark-kline
 ---
 
-Get mark price kline data
+查詢標記價格K線
 
-### HTTP Request
+### HTTP請求
 GET `/derivatives/v3/public/mark-price-kline`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. default: `linear`, but in the response category shows `""`|
-|symbol |<b>true</b> |string |Symbol name|
-|interval |<b>true</b> |string |Kline interval. `1` `3` `5` `15` `30` `60` `120` `240` `360` `720` `D` `M` `W`  |
-|start |<b>true</b> |string |The start timestamp (ms)|
-|end |<b>true</b> |string |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. default: `200`|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`. 默認: `linear`, 當不傳時，響應返回 `""`|
+|[symbol](../enum#symbol) |<b>true</b> |string |合約名稱|
+|[interval](../enum#interval) |<b>true</b> |string |時間粒度. `1` `3` `5` `15` `30` `60` `120` `240` `360` `720` `D` `M` `W`  |
+|start |<b>true</b> |integer |開始時間戳 (毫秒)|
+|end |<b>true</b> |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200` |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|symbol |string |Symbol name |
-|category |string |Product type. Keeps empty string `""` when `category` is not passed |
-|list |array |<li>An string array of individual candle</li><li>Sort in reverse by `start`</li><li>The default collation within the array is `start`, `open`, `high`, `low`, `close`</li> |
+|symbol |string |合約名稱 |
+|category |string |產品類型|
+|list |array |<li>一個字符串數組構成單個蠟燭</li><li>按照`start`降序排列</li><li>蠟燭數組中的元素分別是`start`, `open`, `high`, `low`, `close`</li> |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console-inverse" label="inverse">
@@ -40,7 +40,7 @@ Host: api.bybit.com
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js inverse" label="inverse">
