@@ -28,7 +28,7 @@ GET `/v5/account/transaction-log`
 |> symbol |string |Symbol name |
 |> category |string |Product type |
 |> side |string |Side. `Buy`,`Sell`,`None` |
-|> transactionTime |number |Transaction timestamp (ms)|
+|> transactionTime |string |Transaction timestamp (ms)|
 |> [type](../enum#type) |string |Type |
 |> qty	|string	|Quantity |
 |> size |string |Size |
@@ -47,9 +47,6 @@ GET `/v5/account/transaction-log`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /v5/account/transaction-log?accountType=UNIFIED&category=linear&currency=USDT HTTP/1.1
 Host: api-testnet.bybit.com
@@ -60,13 +57,7 @@ X-BAPI-TIMESTAMP: 1672132480085
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="option" label="option">
 
 ```json
 {
@@ -84,7 +75,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "fee": "0.00000000",
                 "change": "-0.003676",
                 "cashFlow": "0",
-                "transactionTime": 1672128000000,
+                "transactionTime": "1672128000000",
                 "type": "SETTLEMENT",
                 "feeRate": "0.0001",
                 "size": "100",
@@ -104,7 +95,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "fee": "0.01908720",
                 "change": "-0.0190872",
                 "cashFlow": "0",
-                "transactionTime": 1672121182224,
+                "transactionTime": "1672121182224",
                 "type": "TRADE",
                 "feeRate": "0.0006",
                 "size": "100",
@@ -124,7 +115,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "fee": "0.00260280",
                 "change": "-0.0026028",
                 "cashFlow": "0",
-                "transactionTime": 1672121182224,
+                "transactionTime": "1672121182224",
                 "type": "TRADE",
                 "feeRate": "0.0006",
                 "size": "12",
@@ -141,5 +132,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1672132481405
 }
 ```
-</TabItem>
-</Tabs>
