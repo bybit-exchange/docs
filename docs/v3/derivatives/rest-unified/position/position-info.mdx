@@ -16,6 +16,7 @@ GET `/unified/v3/private/position/list`
 |[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |false |string |Symbol name |
 |baseCoin |false |string |Base coin. <li>`category`=option, then **BTC** records returned by default</li> |
+|settleCoin |false |string |Settle coin |
 |direction |false |string |Page direction. `prev`, `next`. default: `next`|
 |limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
 |cursor |false |string |Cursor. Used to pagination |
@@ -159,11 +160,11 @@ GET `/unified/v3/private/position/list`
 <TabItem value="console-linear" label="Console-linear">
 
 ```http
-GET /unified/v3/private/position/list?category=linear&limit=1 HTTP/1.1
+GET /unified/v3/private/position/list?category=linear&symbol=XRPUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1672018057230
+X-BAPI-TIMESTAMP: 1672820718517
 X-BAPI-RECV-WINDOW: 5000
 ```
 
@@ -191,36 +192,36 @@ X-BAPI-RECV-WINDOW: 5000
 ```json
 {
     "retCode": 0,
-    "retMsg": "Success",
+    "retMsg": "OK",
     "result": {
-        "nextPageCursor": "BTCUSDT%3A1672017116959%2CBTCUSDT%3A1672017116959",
+        "nextPageCursor": "updateAt%3D1672819200214",
         "category": "linear",
         "list": [
             {
-                "symbol": "BTCUSDT",
-                "leverage": "13",
-                "updatedTime": 1672017116959,
+                "symbol": "XRPUSDT",
+                "updatedTime": 1672819200214,
+                "leverage": "10",
                 "side": "Buy",
-                "positionValue": "2225.00000000",
+                "positionValue": "34.91000000",
                 "takeProfit": "",
                 "tpslMode": "Partial",
-                "riskId": 2,
-                "trailingStop": "",
-                "entryPrice": "14833.33333333",
-                "unrealisedPnl": "299.95450000",
-                "markPrice": "16833.24000000",
-                "size": "0.1500",
+                "riskId": 41,
+                "trailingStop": "0",
+                "entryPrice": "0.34910000",
+                "unrealisedPnl": "0.00000000",
+                "markPrice": "0.34910000",
+                "size": "100.0000",
+                "cumRealisedPnl": "-0.02444200",
                 "stopLoss": "",
-                "cumRealisedPnl": "-219.54555520",
-                "positionMM": "23.48231625",
-                "createdTime": 0,
+                "positionMM": "0.36795140",
+                "createdTime": 1672016298024,
                 "positionIdx": 0,
-                "positionIM": "172.38616925"
+                "positionIM": "3.50985140"
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1672018057694
+    "time": 1672820720159
 }
 ```
 </TabItem>

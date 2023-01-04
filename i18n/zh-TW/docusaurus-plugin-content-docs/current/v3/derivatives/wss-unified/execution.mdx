@@ -37,8 +37,8 @@ You may have multiple pushes for one order.
 |>> execValue |string |Executed order value |
 |>> feeRate |string |Trading fee rate |
 |>> execFee |string |Executed trading fee |
-|>> [execType](../enum#exectype) |string |Executed type|
-|>> [lastLiquidityInd](../enum#lastliquidityInd) |string |Liquidity index |
+|>> execType |string |成交類型. `TRADE`,`ADLTRADE`,`FUNDING`,`BUSTTRADE`,`SETTLE`|
+|>> [lastLiquidityInd](../enum#lastliquidityind) |string |流動性類型. `TAKER`: 吃流動性,`MAKER`: 增加流動性 |
 |>> leavesQty |string |The remaining qty not executed |
 |>> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
 
@@ -49,32 +49,34 @@ You may have multiple pushes for one order.
 
 ```json
 {
-    "id": "53328543ca0d4a-9b84-4ff0-9cf5-dbc6c6ecdbb7",
+    "id": "331355731ff43340-3504-4643-a953-87f275de985e",
     "topic": "user.execution.unifiedAccount",
-    "ts": 1672063477649,
-    "data": {
+    "ts": 1672833057231,
+        "data": {
         "result": [
             {
-                "symbol": "SCUSDT",
-                "execFee": "0.0001404",
-                "execId": "bd3a74bd-70c8-5777-b495-33b0819d6e82",
-                "execPrice": "0.00234",
-                "execQty": "100",
-                "execType": "Trade",
-                "execValue": "0.234",
+                "symbol": "ETHUSDT",
+                "execFee": "0.0075063",
+                "execId": "91704d47-4c11-5577-9be9-1beb35ae989d",
+                "execPrice": "1251.05",
+                "execQty": "0.01",
+                "execType": "TRADE",
+                "execValue": "12.5105",
                 "feeRate": "0.0006",
-                "lastLiquidityInd": "RemovedLiquidity",
+                "lastLiquidityInd": "TAKER",
                 "leavesQty": "0",
-                "orderId": "38554b22-e4fa-4327-9250-3fc81aa4e30a",
+                "orderId": "9bb96006-711a-4235-9bc5-080302b4285c",
                 "orderLinkId": "",
-                "orderPrice": "0.00224",
-                "orderQty": "100",
+                "orderPrice": "1188.45",
+                "orderQty": "0.01",
                 "orderType": "Market",
-                "stopOrderType": "UNKNOWN",
-                "side": "Sell"
+                "stopOrderType": "",
+                "side": "Sell",
+                "execTime": 1672833057221,
+                "blockTradeId": ""
             }
         ],
-        "version": 17965
+        "version": 3120492
     },
     "type": "snapshot"
 }

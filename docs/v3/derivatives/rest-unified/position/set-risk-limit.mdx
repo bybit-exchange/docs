@@ -16,16 +16,13 @@ POST `/unified/v3/private/position/set-risk-limit`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `linear` ONLY |
 |symbol |**true** |string |Symbol name|
-|riskId |**true** |string |Risk id|
-|positionIdx |false |string |Position index. `0`: one-way mode|
+|riskId |**true** |integer |Risk id|
+|positionIdx |false |integer |Position index. `0`: one-way mode|
 
 ### Response Parameters
 None
 
 ### Request Example
-
-<Tabs>
-<TabItem value="console-console" label="Console">
 
 ```http
 POST /unified/v3/private/position/set-risk-limit HTTP/1.1
@@ -34,7 +31,7 @@ X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1672016123862
 X-BAPI-RECV-WINDOW: 5000
-Content-Type: 2
+Content-Type: application/json
 
 {
     "category": "linear",
@@ -44,13 +41,7 @@ Content-Type: 2
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="json-response" label="Response">
 
 ```json
 {
@@ -61,5 +52,3 @@ Content-Type: 2
     "time": 1672016125676
 }
 ```
-</TabItem>
-</Tabs>
