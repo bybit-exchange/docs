@@ -5,13 +5,13 @@ slug: /derivatives/enum
 ---
 
 ### category
-_Contract_
-* `linear`&emsp;contains USDT Perpetual, USDC Perpetual
-* `inverse`&emsp;contains Inverse Perpetual, Inverse Future
+_合約_
+* `linear`&emsp;包含USDT永續l, USDC永續
+* `inverse`&emsp;包含反向永續, 反向交割
 * `option`
 
-_Unified Margin_
-* `linear`&emsp;contains USDT Perpetual, USDC Perpetual
+_統一保證金_
+* `linear`&emsp;包含USDT永續, USDC永續
 * `option`
 
 ### interval
@@ -39,14 +39,10 @@ _反向交割_:
 * `BTCUSDU23`&emsp;U: 第三季度; 23: 2023
 * `BTCUSDZ23`&emsp;Z: 第四季度; 23: 2023
 
-_現貨_:
-* `BTCUSDT`
-* `ETHUSDC`
-
 ### positionIdx
-* `0`&emsp;one-way mode
-* `1`&emsp;Buy side of hedge-mode
-* `2`&emsp;Sell side of hedge-mode
+* `0`&emsp;單向持倉
+* `1`&emsp;買側的雙向持倉
+* `2`&emsp;賣側的雙向持倉
 
 ### triggerBy
 * `LastPrice`
@@ -54,69 +50,75 @@ _現貨_:
 * `IndexPrice`
 
 ### timeInForce
-* `GoodTillCancel`
-* `ImmediateOrCancel`
-* `FillOrKlii`
-* <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">PostOnly</a>
+* `GoodTillCancel`&emsp;一直有效至取消
+* `ImmediateOrCancel`&emsp;立即成交或取消
+* `FillOrKlii`&emsp;完全成交或取消
+* <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">PostOnly</a>&emsp;被動委託
 
 ### orderFilter
-* `Order`&emsp;active order
-* `StopOrder`&emsp;conditional order
+* `Order`&emsp;普通單
+* `StopOrder`&emsp;條件單
 
 ### orderStatus
-* `Created`
-* `New`
+* `Created`&emsp;訂單已經被系統接收但還沒有推送到撮合引擎中
+* `New`&emsp;訂單成功下達
 * `Rejected`
 * `PartiallyFilled`
 * `Filled`
-* `PendingCancel`
+* `PendingCancel`&emsp;撮合引擎收到了取消申請但是還未成功取消
 * `Cancelled`
 * `Untriggered`
-* `Deactivated`
 * `Triggered`
-* `Active`
+* `Deactivated`
+* `Active`&emsp;條件單已經被觸發，並且活動單已經成功創建。該狀態是條件單成功觸發後的終態
 
 ### cancelType
+* `CancelByUser`
+* `CancelByReduceOnly`
+* `CancelByPrepareLiq` `CancelAllBeforeLiq`&emsp;由於強平而取消
+* `CancelByPrepareAdl` `CancelAllBeforeAdl`&emsp;由於自動減倉而取消
+* `CancelByAdmin`
+* `CancelByTpSlTsClear`
+* `CancelByPzSideCh`
 
 ### stopOrderType
-* `UNKNOWN`&emsp;Indicates that this order is either not stopOrder or does not support stopOrder
-* `TakeProfit`
-* `StopLoss`
-* `TrailingStop`
-* `Stop`
-* `PartialTakeProfit`
-* `PartialStopLoss`
+* `TakeProfit`&emsp;止盈單
+* `StopLoss`&emsp;止損單
+* `TrailingStop`&emsp;追蹤止損單
+* `Stop`&emsp;條件單
+* `PartialTakeProfit`&emsp;部分止盈單
+* `PartialStopLoss`&emsp;部分止損單
 
 ### positionMode
-* `0`&emsp;One-Way Mode
-* `3`&emsp;Hedge Mode
+* `0`&emsp;單向持倉模式
+* `3`&emsp;雙向持倉模式
 
 ### execType
 * `Trade`
-* `AdlTrade`&emsp;<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001124">Auto-Deleveraging</a>
-* `Funding`&emsp;<a href="https://www.bybit.com/en-US/help-center/HelpCenterKnowledge/bybitHC_Article?id=000001123&language=en_US">Funding fee</a>
-* `BustTrade`&emsp;Liquidation
+* `AdlTrade`&emsp;<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001124">自動減倉</a>
+* `Funding`&emsp;<a href="https://www.bybit.com/zh-TW/help-center/HelpCenterKnowledge/bybitHC_Article?id=000001123&language=zh_TW">資金費率</a>
+* `BustTrade`&emsp;強平
 * `Settle`
 
 ### lastLiquidityInd
-* `AddedLiquidity`&emsp;liquidity Maker
-* `RemovedLiquidity`&emsp;liquidity Taker
+* `AddedLiquidity`&emsp;增加流動性
+* `RemovedLiquidity`&emsp;吃流動性
 
 ### walletFundType
-* `Deposit`
-* `Withdraw`
-* `RealisedPNL`
-* `Commission`
-* `Refund`
-* `Prize`
-* `ExchangeOrderWithdraw`
-* `ExchangeOrderDeposit`
-* `ReturnServiceCash`&emsp;Refund of handling fee bonus
-* `Insurance`&emsp;Insurance account transfer
-* `SubMember`&emsp;Main-Sub account transfer
-* `Coupon`&emsp;Coupon interest
-* `AccountTransfer`&emsp;Account transfer
-* `CashBack`&emsp;Cash back
+* `Deposit`&emsp;入金
+* `Withdraw`&emsp;提幣
+* `RealisedPNL`&emsp;已結盈虧
+* `Commission`&emsp;佣金
+* `Refund`&emsp;系統返還
+* `Prize`&emsp;贈金
+* `ExchangeOrderWithdraw`&emsp;兌出
+* `ExchangeOrderDeposit`&emsp;兌入
+* `ReturnServiceCash`&emsp;返還手續費贈金
+* `Insurance`&emsp;保險金
+* `SubMember`&emsp;母子帳戶劃轉
+* `Coupon`&emsp;生息券
+* `AccountTransfer`&emsp;帳戶劃轉
+* `CashBack`&emsp;返現
 
 ### type
 * `TRANSFER_IN`
@@ -132,8 +134,7 @@ _現貨_:
 * `CURRENCY_SELL`
 
 ### tickDirection
-It indicates price fluctuation relative to the last trade.
-* `PlusTick`&emsp;price rise
-* `ZeroPlusTick`&emsp;trade occurs at the same price as the previous trade, which occurred at a price higher than that for the trade preceding it
-* `MinusTick`&emsp;price drop
-* `ZeroMinusTick`&emsp;trade occurs at the same price as the previous trade, which occurred at a price lower than that for the trade preceding it
+* `PlusTick`&emsp;價格上漲
+* `ZeroPlusTick`&emsp;交易的價格與前一筆交易的價格相同，前一筆交易的價格高於前一筆交易的價格
+* `MinusTick`&emsp;價格下跌
+* `ZeroMinusTick`&emsp;交易的價格與前一筆交易的價格相同，前一筆交易的價格低於前一筆交易的價格
