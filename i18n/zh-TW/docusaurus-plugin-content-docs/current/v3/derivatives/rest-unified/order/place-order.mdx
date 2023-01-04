@@ -44,7 +44,7 @@ POST `/unified/v3/private/order/create`
 |[triggerBy](../enum#triggerby) |false |string |觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |iv |false |string |隱含波動率. 僅適用於`option`. 按照實際值傳慘，如10%，則傳0.1 |
 |timeInForce |**true** |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a> `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
-|positionIdx |false |string |倉位標識. `0`: 單向持倉, `1`: 買側雙向持倉, `2`: 賣側雙向持倉. 統一保證金僅支持單向持倉 |
+|positionIdx |false |integer |倉位標識. `0`: 單向持倉, `1`: 買側雙向持倉, `2`: 賣側雙向持倉. 統一保證金僅支持單向持倉 |
 |orderLinkId |false |string |用戶自定義訂單ID, 最大長度36位，且同一機構下自定義ID支持數字、字母（大小寫）、中劃線、下劃線這些字符的組合<br/>_期貨規則_:<br/><li>該參數選填</li><li>USDC永續和USDT永續的orderLinkId互相獨立，即orderLinkId可相同</li><li>在訂單未完全成交或取消前，orderLinkId需保持不一致; 訂單完全成交或取消後，orderLinkId可使用之前使用過的</li>_期權規則_:<br/><li>該參數**必傳**</li><li>總是唯一</li>|
 |takeProfit |false |string |止盈價格, 僅開倉時生效 |
 |stopLoss |false |string |止損價格, 僅開倉時生效 |
