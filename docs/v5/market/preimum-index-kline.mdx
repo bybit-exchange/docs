@@ -4,8 +4,8 @@ sidebar_label: Get Premium Index Price Kline
 sidebar_position: 4
 ---
 
-Retrieve the premium index price kline data. This endpoint can retrieve the latest ? candles. Charts are returned in groups based on the requested interval.
-> **Cover: Linear contract**
+Retrieve the premium index price kline data. Charts are returned in groups based on the requested interval.
+> **Covers: Linear contract**
 
 ### HTTP Request
 GET `/v5/market/premium-index-price-kline`
@@ -18,7 +18,7 @@ GET `/v5/market/premium-index-price-kline`
 |[interval](../enum#interval) |<b>true</b> |string |Kline interval |
 |start |false |integer |The start timestamp (ms)|
 |end |false |integer |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. default: `200`|
+|limit |false |integer |Limit for data size per page. [1,200]. Default: `200`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -30,7 +30,7 @@ GET `/v5/market/premium-index-price-kline`
 |> list[1] |string |Open price |
 |> list[2] |string |Highest price |
 |> list[3] |string |Lowest price |
-|> list[4] |string |Close price. _To be last trade price when the candle is not closed_|
+|> list[4] |string |Close price. _Is the last traded price when the candle is not closed_|
 
 ### Request Example
 
@@ -46,26 +46,26 @@ Host: api-testnet.bybit.com
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "symbol": "BTCPERP",
+        "symbol": "BTCUSDT",
         "category": "linear",
         "list": [
             [
-                "1672026540000",
-                "0.000000",
-                "0.000000",
-                "0.000000",
-                "0.000000"
+                "1652486400000",
+                "-0.000587",
+                "-0.000344",
+                "-0.000480",
+                "-0.000344"
             ],
             [
-                "1672026480000",
-                "0.000000",
-                "0.000000",
-                "0.000000",
-                "0.000000"
+                "1652400000000",
+                "-0.000989",
+                "-0.000561",
+                "-0.000587",
+                "-0.000587"
             ]
-            ]
+        ]
     },
     "retExtInfo": {},
-    "time": 1672026605042
+    "time": 1672765216291
 }
 ```

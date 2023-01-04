@@ -2,14 +2,15 @@
 title: Introduction
 sidebar_label: Introduction
 ---
-Bybit v5 Open API allow users to implement trade by one collection API.
+Bybit's v5 Open API allows users to trade all of Bybit's products with a single API suite.
+Bybit's v5 Open API allows users to trade on all of Bybit products through a single API suite.
 
 ## Scope
 | Account Mode | v5 Open API | Comments|
 |:----- |:-------|------ |
-|Normal account |true |can trade spot,futures,option |
-|Unified margin account |true |can trade linear futures,option; cannot trade spot,inverse|
-|Unified trade account |true |can trade everything|
+|Normal account |true |Can trade spot, futures, options |
+|Unified margin account |true |Can trade linear contracts, options; cannot trade spot, inverse contracts|
+|Unified trade account |true |Can trade everything|
 
 ## Authentication
 :::info
@@ -19,7 +20,7 @@ Please visit Bybit's <a href="https://testnet.bybit.com/app/user/api-management"
 REST API Base Endpoint:
 - **Testnet:**<br/>
 https://api-testnet.bybit.com
-- **Mainnet**(both endpoints are available):<br/>
+- **Mainnet** (both endpoints are available):<br/>
 https://api.bybit.com<br/>
 https://api.bytick.com
 
@@ -48,15 +49,15 @@ server_time stands for Bybit server time, which can be queried via the [Server T
 To assist in diagnosing advanced network problems, you may consider adding `cdn-request-id` to your request headers. Its value should be unique for each request.
 :::
 
-:::info
-Example signature algorithms can be found <a href="https://github.com/bybit-exchange/api-usage-examples">here</a>
-:::
-
 **Basic steps:**
 1. timestamp + api-key + (recv_window) + (queryString | jsonBodyString)<br/>
 2. Use the HMAC_SHA256 algorithm to sign the string in step 1, and convert it to a hex string to obtain the sign parameter.<br/>
 3. Append the `sign` parameter to request header, and send the HTTP request.
 **Note:** the plain text for **GET** and **POST** requests is different. Please refer to blew examples.
+
+:::info
+<b>Example signature algorithms can be found <a href="https://github.com/bybit-exchange/api-usage-examples">here</a>.</b>
+:::
 
 > An example for how to generate plain text to encrypt
 
@@ -100,10 +101,10 @@ raw_request_body = {"category": "option"}
 </TabItem>
 </Tabs>
 
-> http request examples
+> HTTP request examples
 
 <Tabs>
-<TabItem value="http-get" label="http-get">
+<TabItem value="GET" label="GET">
 
 ```http
 GET /v5/order/realtime?category=option&symbol=BTC-29JUL22-25000-C HTTP/1.1
@@ -117,7 +118,7 @@ Host: api-testnet.bybit.com
 
 </TabItem>
 
-<TabItem value="http-post" label="http-post">
+<TabItem value="POST" label="POST">
 
 ```http
 POST /v5/order/create HTTP/1.1
@@ -140,9 +141,9 @@ Host: api-testnet.bybit.com
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |retCode |number |Success/Error code |
-|retMsg |string |Success/Error msg. Can be `OK`,`success`,`SUCCESS` for Success message|
+|retMsg |string |Success/Error msg. `OK`, `success`, `SUCCESS` indicate a successful response|
 |result |Object |Business data result|
-|retExtInfo |Object |Extend info. Most of time, it is `{}`|
+|retExtInfo |Object |Extend info. Most of the time, it is `{}`|
 |time |number |Current timestamp (ms)|
 
 ```json

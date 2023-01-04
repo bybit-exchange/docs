@@ -4,11 +4,11 @@ sidebar_label: Cancel All Orders
 sidebar_position: 5
 ---
 Cancel all open orders
-> **Cover: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
+> **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
 
 :::info
 - Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
-- **NOTE**: `category`=_option_, you can cancel all option open orders even not passing any of those three params. However, for other products, you must specify one of those three params.
+- **NOTE**: `category`=_option_, you can cancel all option open orders without passing any of those three params. However, for other products, you must specify one of those three params.
 :::
 
 ### HTTP Request
@@ -19,8 +19,8 @@ POST `/v5/order/cancel-all`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Products category. `spot`,`linear`,`option` |
 |symbol |false|string |Symbol name |
-|baseCoin |false|string |Base coin. for `option` ONLY|
-|settleCoin |false|string |Settle coin. for `linear` ONLY, either `symbol` or `settleCoin` is required|
+|baseCoin |false|string |Base coin. For `option` ONLY|
+|settleCoin |false|string |Settle coin. For `linear` ONLY, either `symbol` or `settleCoin` is required|
 |orderFilter |false |string |Valid for `spot` ONLY. `Order`,`tpslOrder`. If not passed, `Order` by default|
 
 ### Response Parameters
