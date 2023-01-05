@@ -221,6 +221,12 @@ const config = {
             label: 'V3 API',
           },
           {
+            type: 'doc',
+            docId: 'changelog/v5',
+            position: 'left',
+            label: 'Changelog',
+          },
+          {
             to: '/api-explorer/v5/category',
             position: 'left',
             label: 'API explorer',

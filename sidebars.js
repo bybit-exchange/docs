@@ -408,6 +408,7 @@ const sidebars = {
   ],
   v5SideBar: [
       'v5/intro',
+      'v5/upgrade-guide',
     {
       type: 'category',
       label: 'Market',
@@ -567,8 +568,10 @@ const sidebars = {
         },
       ]
     },
-
   ],
+  changelogSidebar: [
+    "changelog/v5"
+  ]
 };
 
 module.exports = sidebars;
