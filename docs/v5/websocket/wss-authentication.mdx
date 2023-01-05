@@ -112,18 +112,49 @@ How to Send
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-> Pong message example
+> Pong message example of WebSocket public channel
+
+<Tabs>
+<TabItem value="spot" label="Spot">
 
 ```json
 {
-    "req_id": "test",
-    "op": "pong",
-    "args": [
-    "1671163042443"
-    ],
-    "conn_id": "ce3e06kfnonvuu2e3j4g-2t5w"
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "0970e817-426e-429a-a679-ff7f55e0b16a",
+    "op": "ping"
 }
 ```
+
+</TabItem>
+
+<TabItem value="future" label="Linear|Inverse">
+
+```json
+{
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",
+    "req_id": "",
+    "op": "ping"
+}
+```
+
+</TabItem>
+
+<TabItem value="option" label="Option">
+
+```json
+{
+    "args": [
+        "1672916271846"
+    ],
+    "op": "pong"
+}
+```
+
+</TabItem>
+</Tabs>
 
 :::caution
 To avoid networks or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
@@ -176,11 +207,63 @@ You can dynamically subscribe and unsubscribe from topics without websocket disc
 ## Understanding Subscription Response
 > Topic subscription response message example
 
+<Tabs>
+<TabItem value="private" label="wss-private">
+
 ```json
 {
     "success": true,
     "ret_msg": "",
     "op": "subscribe",
-    "conn_id": "cejreaspqfh3sjdnldmg-s"
+    "conn_id": "cejreassvfrsfvb9v1a0-2m"
 }
 ```
+
+</TabItem>
+
+<TabItem value="public-spot" label="wss-public-Spot">
+
+```json
+{
+    "success": true,
+    "ret_msg": "subscribe",
+    "conn_id": "2324d924-aa4d-45b0-a858-7b8be29ab52b",
+    "req_id": "10001",
+    "op": "subscribe"
+}
+```
+
+</TabItem>
+
+<TabItem value="public-future" label="wss-public-Linear|Inverse">
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "3cd84cb1-4d06-4a05-930a-2efe5fc70f0f",
+    "req_id": "",
+    "op": "subscribe"
+}
+```
+
+</TabItem>
+
+<TabItem value="public-option" label="wss-public-Option">
+
+```json
+{
+    "success": true,
+    "conn_id": "aa01fbfffe80af37-00000001-000b37b9-7147f432704fd28c-00e1c172",
+    "data": {
+    "failTopics": [],
+    "successTopics": [
+        "orderbook.100.BTC-6JAN23-18000-C"
+    ]
+},
+    "type": "COMMAND_RESP"
+}
+```
+
+</TabItem>
+</Tabs>
