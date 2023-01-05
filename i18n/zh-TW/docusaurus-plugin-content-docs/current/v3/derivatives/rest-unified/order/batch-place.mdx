@@ -28,7 +28,7 @@ POST `/unified/v3/private/order/create-batch`
 |> iv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳慘，如10%，則傳0.1 |
 |> timeInForce |**true** |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
 |> positionIdx |false |integer |倉位標識. `0`: 單向持倉, `1`: 買側雙向持倉, `2`: 賣側雙向持倉. 統一保證金僅支持單向持倉 |
-|> orderLinkId |false |string |用戶自定義訂單Id, 最大長度36位，且同一機構下自定義ID支持數字、字母（大小寫）、中劃線、下劃線這些字符的組合<br/>_期貨規則_:<br/><li>該參數選填</li><li>USDC永續和USDT永續的orderLinkId互相獨立，即orderLinkId可相同</li><li>在訂單未完全成交或取消前，orderLinkId需保持不一致; 訂單完全成交或取消後，orderLinkId可使用之前使用過的</li>_期權規則_:<br/><li>該參數**必傳**</li><li>總是唯一</li>|
+|> orderLinkId |false |string |用戶自定義訂單Id, 最大長度36位，且同一機構下自定義ID支持數字、字母（大小寫）、中劃線、下劃線這些字符的組合<br/>_期貨規則_:<br/><ul><li>該參數選填</li><li>USDC永續和USDT永續的orderLinkId互相獨立，即orderLinkId可相同</li><li>在訂單未完全成交或取消前，orderLinkId需保持不一致; 訂單完全成交或取消後，orderLinkId可使用之前使用過的</li>_期權規則_:<br/><li>該參數**必傳**</li><li>總是唯一</li></ul>|
 |> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉. _只減倉單的止盈止損不生效_ |
 |> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> 此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行. |
 |> mmp |false |boolean |做市商保護. 僅對期權生效. `true`表示該訂單是做市商保護訂單 |

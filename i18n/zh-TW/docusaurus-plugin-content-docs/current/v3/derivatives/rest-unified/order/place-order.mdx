@@ -39,13 +39,13 @@ POST `/unified/v3/private/order/create`
 |orderType |**true** |string |訂單類型. `Market`, `Limit`|
 |qty |**true** |string |下單數量|
 |price |false |string |訂單價格. `orderType`=_Market_時，值將被忽略|
-|basePrice |false |string |當前市價<li>用於和`triggerPrice`值進行比較，確定當前條件委托是看空到triggerPrice時觸發還是看多到triggerPrice觸發</li><li>主要是用來標識當前條件單預期的方向</li>|
+|basePrice |false |string |當前市價<ul><li>用於和`triggerPrice`值進行比較，確定當前條件委托是看空到triggerPrice時觸發還是看多到triggerPrice觸發</li><li>主要是用來標識當前條件單預期的方向</li></ul>|
 |triggerPrice |false |string |觸發價格. 如果您期望價格上漲时觸發您的條件訂單, 請確保:<br/> _triggerPrice > max(market price, basePrice)_<br/>否則, _triggerPrice < min(market price, basePrice)_|
 |[triggerBy](../enum#triggerby) |false |string |觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |iv |false |string |隱含波動率. 僅適用於`option`. 按照實際值傳慘，如10%，則傳0.1 |
 |timeInForce |**true** |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a> `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> |
 |positionIdx |false |integer |倉位標識. `0`: 單向持倉, `1`: 買側雙向持倉, `2`: 賣側雙向持倉. 統一保證金僅支持單向持倉 |
-|orderLinkId |false |string |用戶自定義訂單ID, 最大長度36位，且同一機構下自定義ID支持數字、字母（大小寫）、中劃線、下劃線這些字符的組合<br/>_期貨規則_:<br/><li>該參數選填</li><li>USDC永續和USDT永續的orderLinkId互相獨立，即orderLinkId可相同</li><li>在訂單未完全成交或取消前，orderLinkId需保持不一致; 訂單完全成交或取消後，orderLinkId可使用之前使用過的</li>_期權規則_:<br/><li>該參數**必傳**</li><li>總是唯一</li>|
+|orderLinkId |false |string |用戶自定義訂單ID, 最大長度36位，且同一機構下自定義ID支持數字、字母（大小寫）、中劃線、下劃線這些字符的組合<br/>_期貨規則_:<br/><ul><li>該參數選填</li><li>USDC永續和USDT永續的orderLinkId互相獨立，即orderLinkId可相同</li><li>在訂單未完全成交或取消前，orderLinkId需保持不一致; 訂單完全成交或取消後，orderLinkId可使用之前使用過的</li>_期權規則_:<br/><li>該參數**必傳**</li><li>總是唯一</li></ul>|
 |takeProfit |false |string |止盈價格, 僅開倉時生效 |
 |stopLoss |false |string |止損價格, 僅開倉時生效 |
 |[tpTriggerBy](../enum#triggerby) |false |string |止盈激活價格類型，`MarkPrice`, `IndexPrice`, 默認:`LastPrice` |
