@@ -570,7 +570,8 @@ const sidebars = {
     },
   ],
   changelogSidebar: [
-    "changelog/v5"
+    "changelog/v5",
+      "changelog/derivatives-v3"
   ]
 };
 
