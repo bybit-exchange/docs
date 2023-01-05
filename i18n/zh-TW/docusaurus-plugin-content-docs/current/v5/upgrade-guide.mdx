@@ -1,0 +1,430 @@
+---
+title: V5 升級指南
+sidebar_label: V5 升級指南
+---
+
+## 簡介
+Open API V5 將 Bybit 所有業務線，包括現貨/期貨/期權的業務能力整合為一套 Open API，在 Open API V3 的基礎上進一步統一規範和標準。
+V5 版本當前只支持統一賬戶模式，並且即將開放支持非統保業務模式。
+
+## 當前各版本的 API 當前覆蓋業務範圍：
+|  | Spot V3 | Futures V2 | Unified V3| Contract V3| All-In-One V5|
+|:----- |:-------:|:-----:|:------:|:------:|:------:|
+|**現貨** |✓<br/>(非統一帳戶模式)|𐄂 |𐄂 |𐄂 | ✓<br/>(統一帳戶模式) |
+|**USDT期貨** |𐄂|✓<br/>(非統一帳戶模式) |✓<br/>(統一帳戶模式) |✓<br/>(非統一帳戶模式) | ✓<br/>(統一帳戶模式)<br/>(即將支持非統一帳戶模式) |
+|**USDC期貨** |𐄂|𐄂 |✓<br/>(統一帳戶模式) |𐄂 |✓<br/>(統一帳戶模式)<br/>(即將支持非統一帳戶模式) |
+|**反向期貨** |𐄂|✓<br/>(非統一帳戶模式)|𐄂 |✓<br/>(非統一帳戶模式) |𐄂<br/>(即將支持非統一帳戶模式) |
+|**期權** |𐄂|𐄂 |✓<br/>(統一帳戶模式) |𐄂 | ✓<br/>(統一帳戶模式)<br/>(即將支持非統一帳戶模式) |
+
+## 主要提升能力：
+### 業務線整合
+之前存在 Spot V1/V3 ，Futures V2 正向永續/反向永續/反向交割產品各自一套 API，USDC 期權 API V1，每套 API 僅覆蓋部分業務場景。 V5 版本將
+交易產品的 API 合併成一套 API，實現一套 API 可以交易現貨/期貨/期權的業務能力，通過不同的下單參數進行交易區分，無論訂單管理，查詢錢包數據等，
+採用同一個 API 都是相同格式的請求和返回結果。不需要切換多套接口來構建不同業務模型。
+
+並且在 V5 中對全局字典做了唯一的定義，避免不同業務線對統一業務場景採用不同命名，或者同一命名有不同含義的問題。減少客戶對接時的困擾。
+
+_舉例說明_：下單時統一使用 `POST V5/order/create` ，在 body 中輸入具體的請求業務類型（通過 `category=spot/linear/option` 來區分），即可進行多個業務線的下單操作。
+
+### 升級成本低
+API V5 在之前 V3 的標準基礎上升級，如果您已經接入 Contract V3 或者 Unified V3，升級到 V5 之後，僅需要調整至 V5 的 URL，並且少量接口字段做調整即可。
+具體接口的對比，可以參照下方的[接口映射列表](upgrade-guide#v5-and-v3-interface-mapping-list)。
+
+### 提升資金利用率
+原有的 API 不同版本對應不同的賬號，每個業務線都有一個賬號，不同賬號直接要通過劃轉調撥資金來管理。 V5 中，提供了賬戶升級成統一賬戶能力，使得賬戶內
+的資金可以共享，交易者可以獲得更高的資金利用率。對應現貨/ USDT 永續/ USDC永續/期權共用一個賬戶資金，同時不同業務線的盈虧可以互相抵消，進一步提高
+資金的利用效率。
+
+### 支持統一賬戶借貸：
+API V5 對統一賬戶模式的支持，新增借貸能力。客戶可以使用多個資產作為抵押品作為保證金來交易全業務線。
+_舉例_：只存入 BTC 資產，進行以 USDT 結算的BTCUSDT 合約交易，如果產生浮動盈虧會通過借貸方式記錄負債，產生的負債會每個小時收取利息。
+
+### Paradigm大宗交易
+統一賬戶現在支持通過 Paradigm 進行大宗交易。用戶可以跨不同產品使用資金
+
+### 支持組合保證金
+統一賬戶下支持 USDC 永續和期權的組合保證金模式，並且即將開放 USDT 正向合約的組合保證金模式。
+
+### 接口命名規範
+V5 版本的 API 接口路徑定義更明確，從實際場景出發，分為市場數據，訂單管理，持倉管理，賬戶管理，資產管理等模塊，通過更清晰的路徑定義來減少業務歧義。
+
+> {host}/{version}/{product}/{module}<br/>
+舉例：api.bybit.com/v5/market/recent-trade
+
+|地址分段  | 說明 |
+|:----- |-------|
+|v5/market/|交易產品的K線， orderbook，ticker，平台成交等數據，以及基礎金融規則，風控規則|
+|v5/order/|交易產品的訂單管理|
+|v5/position/|衍生品的持倉管理|
+|v5/account/|單一賬戶的錢包，費率等，僅用於單個賬戶的業務|
+|v5/asset/|資產管理，資金流水，主要是跨不同賬戶的業務場景|
+|v5/spot-lever-token/|現貨槓桿代幣的行情，申購贖回業務|
+|v5/spot-margin-trade/|現貨全倉槓桿模式管理|
+
+### API Rate Limit 規則調整
+API V5 的限頻規則調整為按照業務線分配 User ID 每秒限頻額度，限頻規則調整:
+* **V2 限頻規則**：“User ID + Symbol + API End Point” 通過固定的每分鐘計數限制 API 請求頻率
+* **V3 限频规则**：“User ID + API End Point” 通过固定的每秒钟计数限制 API 请求频率
+* **V5 限频规则**：“User ID + API End Point” 通过固定的每秒钟计数限制 API 请求频率
+<br/>
+
+_举例说明:_
+* **V2 期貨限頻模式,**
+    * 用戶設置的下單頻率為 BTCUSDT 400/m，ETHUSDT 200/m，其他 symbol 100/m
+    * 下單 BTCUSDT 200個訂單請求，則在該 1 分鐘內剩餘額度為 200次 BTCUSDT 的訂單請求。 ETHUSDT 在該 1 分鐘內剩餘額度為 200/m，
+  其他 symbol 為 100/m
+    * 同時又發送 100 個 ETHUSDT 訂單請求，則在該 1 分鐘內剩餘額度為 200次 BTCUSDT 的訂單請求。 ETHUSDT 在該 1 分鐘內剩餘額度為 100次，
+  其他 symbol 為 100/m
+* **V3/V5 限頻模式,**
+    * 默認所有客戶的基礎限頻規則是 10/s
+    * 舉例：下單頻率提高到 100/s （代表對於單個 UID 來說所有的下單類型的接口峰值就是 100 次請求）
+    * 下單 BTCUSDT 在該 1s 內使用了 50 次，則其他所有的 symbol 所有的訂單類型的接口在該 1s 內還可以操作訂單 50次
+    * 下一秒的限頻會重置到 100/s
+
+:::note
+默認私有接口限頻規則為 10/s，查詢類的接口**不可**提頻，均為 10/s 的查詢（推薦使用 WS 接收數據）。
+:::
+
+### 交易延遲不變
+Open API V5 1月1號目前僅支持統一賬戶交易，交易延遲與原統一保證金交易保持一致。即將開放非統一賬戶交易能力，延遲與 V3 持平。
+
+### 普通訂單和條件訂單下單合併
+合約 V2 版本中，提交活動單和條件單是不同的 API。 V3/V5 合併為一個下單接口，支持不同的提交參數，客戶不需要下不同的訂單請求不同的接口。
+
+### 增加實時訂單非活動單查詢
+原 API V3中只提供了 unfilled order 的實時查詢，V5 中增加了最近 500 條訂單的實時查詢。對於最近剛剛成交的訂單數據，可以實時的查詢到訂單的狀態，
+相比通過 order/history 接口查詢降低延遲。
+
+### 增加按照結算貨幣取消所有訂單
+取消訂單時，支持通過 `settleCoin` 取消所有期貨合約的訂單數據，不需要按照每個 symbol 來逐次取消。
+
+### 增加資金費率歷史記錄查詢
+原有 V2 的 API 僅支持查詢上個週期的資金費率，V3/V5 升級為可查詢歷史資金費率變化情況，客戶可進行歷史 Funding 回測。
+
+### 增加保險基金接口
+V5 中增加保險池的變更接口查詢，可以查詢 Bybit 平台所有保險基金幣種的變更信息。
+
+### 增加更多 Websocket 數據
+通過提供不同頻率不同檔位的 Orderbook 數據來滿足您不同的業務場景，近盤口提供更快的頻率推送，原有的 25 檔推送頻率不變，提升至 50 檔。具體請
+參考 websocket 接口文檔的描述。同時 orderbook 中增加可用於校驗數據連續性的 updateId 來判斷 orderbook 的數據是否丟失，用於您維護本地
+正確的 orderbook。以及增加 seq（Sequence）字段用於您判斷不同檔位推送的數據先後對比，以更快的響應行情變化。
+
+|業務線 | 1檔 | 25檔 | 50檔 | 100檔 | 200檔 |
+|:----- |:----:|:----:|:----:|:----:|:----:|
+|**現貨** | 10ms | - | 20ms | - | - |
+|**期貨** | 10ms | - | 20ms | - | 100ms |
+|**期權** | - | 20ms | - | 100ms | - |
+
+### 提升 PostOnly 單筆下單數量
+針對期貨業務，提交 Post Only 類型的訂單，可以獲得單筆下單更多的數量，通常是普通訂單數量的 5倍。可以通過[衍生品交易規格](../v5/market/instrument)接口獲取
+單個 symbol 可以交易的最大下單數量。
+
+### 數據精度統一規範
+在之前的 API 中，會返回 E2 ，E8 類型的數據。在 V3 和 V5 版本，返回的所有數值都是實際數值，您不需要做轉換調整。
+
+### Open API 文檔可讀性提升
+Open API 文檔梳理和校對，將大部分之前文檔描述不清晰的部分進行了改善，減少客戶對接的困惑。
+
+## V5 和 V3 接口映射列表：
+
+<table border="0.8">
+    <tr>
+        <th>模塊</th><th>V5接口</th><th>V3接口</th>
+    </tr>
+    <tr>
+        <td rowSpan="22">公有行情</td><td rowSpan="2">/v5/market/kline</td><td>/derivatives/v3/public/kline</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/kline</td>
+    </tr>
+    <tr>
+        <td>/v5/market/mark-price-kline</td><td>/derivatives/v3/public/mark-price-kline</td>
+    </tr>
+    <tr>
+        <td>/v5/market/index-price-kline</td><td>/derivatives/v3/public/index-price-kline</td>
+    </tr>
+    <tr>
+        <td>/v5/market/premium-index-price-kline</td><td>/derivatives/v3/public/premium-index-price-kline</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/market/orderbook</td><td>/derivatives/v3/public/order-book/L2</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/depth</td>
+    </tr>
+    <tr>
+        <td rowSpan="4">/v5/market/tickers</td><td>/derivatives/v3/public/tickers</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/ticker/24hr</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/ticker/price</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/ticker/bookTicker</td>
+    </tr>
+    <tr>
+        <td>/v5/market/funding/history</td><td>/derivatives/v3/public/funding/history-funding-rate</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/market/recent-trade</td><td>/derivatives/v3/public/recent-trade</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/quote/trades</td>
+    </tr>
+    <tr>
+        <td>/v5/market/open-interest</td><td>/derivatives/v3/public/open-interest</td>
+    </tr>
+    <tr>
+        <td>/v5/market/historical-volatility</td><td>/derivatives/v3/public/historical-volatility</td>
+    </tr>
+    <tr>
+        <td>/v5/market/insurance</td><td>/derivatives/v3/public/insurance</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">/v5/market/instruments-info</td><td>/derivatives/v3/public/instruments-info</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/infos</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/public/symbols</td>
+    </tr>
+    <tr>
+        <td>/v5/market/risk-limit</td><td>/derivatives/v3/public/risk-limit/list</td>
+    </tr>
+    <tr>
+        <td>/v5/market/delivery-price</td><td>/derivatives/v3/public/delivery-price</td>
+    </tr>
+    <tr>
+        <td rowSpan="16">交易</td><td rowSpan="2">/v5/order/create</td><td>/unified/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/order/amend</td><td>/unified/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/order/cancel</td><td>/unified/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/order/realtime</td><td>/unified/v3/private/order/unfilled-orders</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/unfilled-orders</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/order/cancel-all</td><td>/unified/v3/private/order/cancel-all</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/cancel-all</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/order/history</td><td>/unified/v3/private/order/list</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/list</td>
+    </tr>
+    <tr>
+        <td>/v5/order/create-batch</td><td>/unified/v3/private/order/create-batch</td>
+    </tr>
+    <tr>
+        <td>/v5/order/amend-batch</td><td>/unified/v3/private/order/replace-batch</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel-batch</td><td>/unified/v3/private/order/cancel-batch</td>
+    </tr>
+    <tr>
+        <td>/v5/order/spot-borrow-check</td><td>None</td>
+    </tr>
+    <tr>
+        <td rowSpan="12">持倉</td><td rowSpan="2">/v5/position/list</td><td>/unified/v3/private/position/list</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/position/list</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/position/set-leverage</td><td>/unified/v3/private/position/set-leverage</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/position/set-leverage</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/position/set-risk-limit</td><td>/unified/v3/private/position/set-risk-limit</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/position/set-risk-limit</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">/v5/position/trading-stop</td><td>/unified/v3/private/position/trading-stop</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/position/trading-stop</td>
+    </tr>
+    <tr>
+        <td>/v5/position/switch-isolated</td><td>/contract/v3/private/position/switch-isolated</td>
+    </tr>
+    <tr>
+        <td>/v5/position/switch-mode</td><td>/contract/v3/private/position/switch-mode</td>
+    </tr>
+    <tr>
+        <td>/v5/position/set-auto-add-margin</td><td>/contract/v3/private/position/set-auto-add-margin</td>
+    </tr>
+    <tr>
+        <td>/v5/position/closed-pnl</td><td>/contract/v3/position/closed-pnl</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">成交</td><td rowSpan="2">/v5/execution/list</td><td>/unified/v3/private/execution/list</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/execution/list</td>
+    </tr>
+    <tr>
+        <td rowSpan="9">帳戶</td><td rowSpan="2">/v5/account/wallet-balance</td><td>/unified/v3/private/account/wallet/balance</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/account/wallet/balance</td>
+    </tr>
+    <tr>
+        <td>/v5/account/upgrade-to-uta</td><td>/unified/v3/private/account/upgrade-unified-account</td>
+    </tr>
+    <tr>
+        <td>/v5/account/borrow-history</td><td>/unified/v3/private/account/borrow-history</td>
+    </tr>
+    <tr>
+        <td>/v5/account/collateral-info</td><td>/unified/v3/private/account/borrow-rate</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/coin-greeks</td><td>None</td>
+    </tr>
+    <tr>
+        <td>/v5/account/info</td><td>None</td>
+    </tr>
+    <tr>
+        <td>/v5/account/transaction-log</td><td>/unified/v3/private/account/transaction-log</td>
+    </tr>
+    <tr>
+        <td>/v5/account/set-margin-mode</td><td>/contract/v3/private/account/setMarginMode</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">槓桿代幣</td><td>/v5/spot-lever-token/info</td><td>/spot/v3/public/infos</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-lever-token/reference</td><td>/spot/v3/private/order/reference</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-lever-token/purchase</td><td>/spot/v3/private/order/purchase</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-lever-token/redeem</td><td>/spot/v3/private/order/redeem</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-lever-token/order-record</td><td>/spot/v3/private/order/record</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">全倉槓桿</td><td>/v5/spot-margin-trade/switch-mode</td><td>/spot/v3/private/cross-margin-switch</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-margin-trade/set-leverage</td><td>None</td>
+    </tr>
+    <tr>
+        <td>/v5/spot-margin-trade/set-pledge-token</td><td>None</td>
+    </tr>
+    <tr>
+        <td rowSpan="21">資產</td><td>/v5/asset/delivery-record</td><td>/unified/v3/private/delivery-record</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/settlement-record</td><td>/unified/v3/private/settlement-record</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/inter-transfer</td><td>/asset/v3/private/transfer/inter-transfer</td>
+    </tr>
+    <tr>
+        <td>v5/asset/transfer/query-inter-transfer-list</td><td>/asset/v3/private/transfer/inter-transfer/list/query</td>
+    </tr>
+    <tr>
+        <td>v5/asset/transfer/save-transfer-sub-member</td><td>/asset/v3/private/transfer/transfer-sub-member-save</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/universal-transfer</td><td>/asset/v3/private/transfer/universal-transfer</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-universal-transfer-list</td><td>/asset/v3/private/transfer/universal-transfer/list/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-transfer-coin-list</td><td>/asset/v3/private/transfer/transfer-coin/list/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-sub-member-list</td><td>/asset/v3/private/transfer/sub-member/list/quer</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-account-coin-balance</td><td>/asset/v3/private/transfer/account-coin/balance/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-asset-info</td><td>/asset/v3/private/transfer/asset-info/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-allowed-list</td><td>/asset/v3/public/deposit/allowed-deposit-list/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-record</td><td>/asset/v3/private/deposit/record/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-sub-member-record</td><td>/asset/v3/private/deposit/sub-member-record/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/query-record</td><td>/asset/v3/private/withdraw/record/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/coin/query-info</td><td>/asset/v3/private/coin-info/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/create</td><td>/asset/v3/private/withdraw/create</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/cancel</td><td>/asset/v3/private/withdraw/cancel</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-address</td><td>/asset/v3/private/deposit/address/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-sub-member-address</td><td>/asset/v3/private/deposit/sub-member-address/query</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/exchange/order-record</td><td>/asset/v2/private/exchange/query-exchange-order</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">WebSocket公共頻道</td><td>wss://stream.bybit.com/v5/public/spot</td><td>wss://stream.bybit.com/spot/public/v3</td>
+    </tr>
+    <tr>
+        <td rowSpan="2">wss://stream.bybit.com/v5/public/linear</td><td>wss://stream.bybit.com/contract/usdt/public/v3</td>
+    </tr>
+    <tr>
+        <td>wss://stream.bybit.com/contract/usdc/public/v3</td>
+    </tr>
+    <tr>
+        <td>wss://stream.bybit.com/v5/public/inverse</td><td>wss://stream.bybit.com/contract/inverse/public/v3</td>
+    </tr>
+    <tr>
+        <td>wss://stream.bybit.com/v5/public/option</td><td>wss://stream.bybit.com/option/usdc/public/v3</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">WebSocket私有頻道</td><td rowSpan="3">wss://stream.bybit.com/v5/private</td><td>wss://stream.bybit.com/spot/private/v3</td>
+    </tr>
+    <tr>
+        <td>wss://stream.bybit.com/unified/private/v3</td>
+    </tr>
+    <tr>
+        <td>wss://stream.bybit.com/contract/private/v3</td>
+    </tr>
+</table>
+
+
