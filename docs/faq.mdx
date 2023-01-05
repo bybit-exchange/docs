@@ -1,6 +1,5 @@
 ---
 title: Frequently Asked Questions
-sidebar_label: Frequently Asked Questions
 slug: /faq
 ---
 
@@ -19,15 +18,15 @@ AWS Singapore, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/usin
 ### Calculating order size based on available wallet balance
 * `price * availableBalance * leverage * perc * (1 - (0.0006 * 2))`
 * Unfortunately this is not a perfectly accurate formula; the real calculation is complex and may be published in the docs at a later date.
-    * `price` - last price (or your entry price) - can be found with the Latest Symbol Info endpoint.
-    * `availableBalance` - can be found with the My Position endpoint.
+    * `price` - last price (or your entry price) - can be found with the [Tickers](/v5/market/tickers#).
+    * `availableBalance` - can be found with the [Position Info](/v5/position#) endpoint.
     * `leverage` - up to the respective maximum leverage for the market and your risk limit (eg 2, 10, 50).
     * `perc` - 0.1 for 10%, 0.25 for 25%, etc.
     * `1 - (0.0006 * 2)` - used to calculate the maximum order cost (always assumes entry & exit orders use taker fee regardless actual fee).
 
 ### Can I exchange assets with the API?
 * There is no endpoint to exchange assets. This can only be done on the <a href="https://www.bybit.com/app/assets/assets-exchange">website</a>.
-* However, it is possible to access your Asset Exchange Records with the API.
+* However, it is possible to access your [Asset Exchange Records](/v5/asset/exchange#).
 
 ### How do I get funds for testnet?
 To get testnet funds, just go to master account asset page to request.
@@ -41,8 +40,8 @@ To get testnet funds, just go to master account asset page to request.
 ### Why are values returned to too many decimal places? (float precision issue)
 * For example, you received 11.969999 but you expected 11.97.
 * Some values are returned to too many decimal places, or a fraction too high or low, due to a float precision problem.
-* For now, we recommend rounding the received value to the correct decimal place. This can be done with reference to the Query Symbol endpoint.
-* This issue will be has been fixed in the latest major version of the API: v3. You can see the documentation for the v3 websocket here.
+* For now, we recommend rounding the received value to the correct decimal place. This can be done with reference to the [instrument-info](/v5/market/instrument#).
+* This issue will be has been fixed in the latest major version of the API: V3/V5.
 
 ### How can I ensure I am using up-to-date data?
 * It is possible, although unlikely, that the REST API or (even less likely) the websocket could return/push old data.
