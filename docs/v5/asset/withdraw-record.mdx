@@ -1,10 +1,10 @@
 ---
-title: Get Withdraw Record
-sidebar_label: Get Withdraw Record
+title: Get Withdrawal Records
+sidebar_label: Get Withdrawal Records
 sidebar_position: 14
 ---
 
-Query withdraw records.
+Query withdrawal records.
 
 :::tip
 * `endTime` - `startTime` should be less than 30 days. Query last 30 days records by default.
@@ -16,7 +16,7 @@ GET `/v5/asset/withdraw/query-record`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|withdrawID |false |string |Withdraw Id |
+|withdrawID |false |string |Withdraw ID |
 |coin |false |string |Coin |
 |withdrawType |false |integer |Withdraw type. `0`(default): on chain. `1`: off chain. `2`: all.|
 |startTime |false |integer |The start timestamp (ms) |
@@ -28,7 +28,7 @@ GET `/v5/asset/withdraw/query-record`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows |array|Object |
-|> withdrawId |string |Withdraw Id |
+|> withdrawId |string |Withdraw ID |
 |> txID |string |Transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled or internal transfer |
 |> withdrawType |string |Withdraw type. `0`(default): on chain. `1`: off chain. `2`: all. |
 |> coin |string |Coin |
@@ -36,7 +36,7 @@ GET `/v5/asset/withdraw/query-record`
 |> amount |string |Amount |
 |> withdrawFee |string |Withdraw fee |
 |> [status](../enum#withdrawstatus) |string |Withdraw status |
-|> toAddress |string |To withdraw address. It shows email or mobile number for internal transfer |
+|> toAddress |string |To withdrawal address. Shows an email or mobile number for internal transfers |
 |> tag |string |Tag |
 |> createTime |string |Withdraw created timestamp (ms) |
 |> updateTime |string |Withdraw updated timestamp (ms) |

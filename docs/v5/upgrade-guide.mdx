@@ -22,8 +22,8 @@ account modes.
 Previously, Spot V1/V3, Futures V2 and USDC Options V1 each had their own set of APIs which only covered a portion of
 Bybit’s products. V5 unifies the APIs of various trading products into one, providing users the capability to trade Spot,
 Derivatives and Options contracts with a single API by distinguishing transactions through different order parameters.
-Consequently, there is no need to switch between multiple interfaces when building different products — regardless of
-tasks such as order management or querying wallet data — as the same API can be used to request and return results.
+Consequently, there is no need to switch between multiple interfaces when building different products – regardless of
+tasks such as order management or querying wallet data – as the same API can be used to request and return results.
 
 The global dictionary in V5 is uniquely defined to avoid scenarios where different terms are used for the same purposes,
 or where a single term has multiple references. This simplifies the  troubleshooting process for users.
@@ -56,28 +56,28 @@ Unified Accounts now support combined margin between USDC Perpetual and Options 
 include USDT Perpetual contracts.
 
 ### API Interface Naming Standard
-API V5 offers clearer path definitions for improved clarity and reduced ambiguities. The new version divides the API
+API V5 offers clearer path definitions for improved clarity and reduced ambiguity. The new version divides the API
 path into market data, order management, position management, account management, asset management, and more modules.
 
 > {host}/{version}/{product}/{module}<br/>
-Example：api.bybit.com/v5/market/recent-trade
+Example: api.bybit.com/v5/market/recent-trade
 
 |Address Segment  | Description |
 |:----- |-------|
-|v5/market/|Candlestick, order book, ticker, platform transaction data, underlying financial rules, risk control rules|
+|v5/market/|Candlestick, orderbook, ticker, platform transaction data, underlying financial rules, risk control rules|
 |v5/order/|Order management|
 |v5/position/|Position management|
-|v5/account/|Single account operations only — unified funding account, rates, etc.|
-|v5/asset/|Operations across multiple accounts — asset management, fund management, etc.|
+|v5/account/|Single account operations only – unified funding account, rates, etc.|
+|v5/asset/|Operations across multiple accounts – asset management, fund management, etc.|
 |v5/spot-lever-token/|Obtain quotes from Leveraged Tokens on Spot, and to exercise purchase and redeem functions|
 |v5/spot-margin-trade/|Manage Margin Trading on Spot|
 
 ### API Rate Limit Adjustment
 The rate limit has been adjusted in V5 to allocate a per-second rate limit quota for each User ID across products, to
 ensure smooth transactions and improve user experience.
-* **V2 Rate Limit:** “User ID + Symbol + API End Point” limits the frequency of API requests by a fixed number of counts per minute
-* **V3 Rate Limit:** “User ID + API End Point” limits the frequency of API requests by a fixed number of counts per second
-* **V5 Rate Limit:** “User ID + API End Point” limits the frequency of API requests by a fixed number of counts per second
+* **V2 Rate Limit:** “User ID + Symbol + API Endpoint” limits the frequency of API requests by a fixed number of counts per minute
+* **V3 Rate Limit:** “User ID + API Endpoint” limits the frequency of API requests by a fixed number of counts per second
+* **V5 Rate Limit:** “User ID + API Endpoint” limits the frequency of API requests by a fixed number of counts per second
 <br/>
 
 _For example:_
@@ -126,11 +126,11 @@ rate changes, which allows users to conduct historical funding backtests.
 This interface addition allows for queries of the insurance pool, which users can use to check for any insurance fund
 updates on the Bybit platform.
 
-### Additional Websocket Data
-More WebSocket data has been added to provide a range of order book data at different frequencies and **depths**. Push
+### Additional WebSocket Data
+More WebSocket data has been added to provide a range of orderbook data at different frequencies and **depths**. Push
 frequency has been increased from 25 to 50. Please refer to the WebSocket interface description for more details.
 
-The updated order book now checks for data continuity to ensure that local order book data is correct. A `Seq (sequence)`
+The updated orderbook now checks for data continuity to ensure that local orderbook data is correct. A `Seq (sequence)`
 field has also been added to help determine the sequence of pulled data, so users can respond efficiently to market changes.
 
 |Product | Depth 1 | Depth 25 | Depth 50 | Depth 100 | Depth 200 |
@@ -140,13 +140,13 @@ field has also been added to help determine the sequence of pulled data, so user
 |**Option** | - | 20ms | - | 100ms | - |
 
 ### Increase in Post Only Orders
-Under Derivatives, the submission of Post Only orders allows users to place more orders for each symbol — typically up
-to five times the usual number. Users can use the [instrument-info](../v5/market/instrument) interface to obtain the maximum number of
+Under Derivatives, the submission of Post Only orders allows users to place more orders for each symbol – typically up
+to five times the usual number. Users can use the [instrument-info](../v5/market/instrument) endpoint to obtain the maximum number of
 orders that can be traded for each symbol.
 
 ### Uniform and Precise Data
-Previous APIs returned data of type E2 and E8. API V3 and V5 return data in actual values, eliminating the need for
-users to make conversion adjustments.
+Previous APIs returned data as E2 and E8. API V3 and V5 return data as actual values, eliminating the need for
+users to implement conversion logic.
 
 ### Readability Improvements to Open API Documentation
 The Open API documentation has been revised and proofread to improve clarity and reduce confusion. Any parts of the
@@ -453,5 +453,4 @@ previous documentation that were not clear have been revised to provide better e
         <td>wss://stream.bybit.com/contract/private/v3</td>
     </tr>
 </table>
-
 
