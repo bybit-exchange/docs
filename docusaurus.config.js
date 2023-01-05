@@ -226,11 +226,11 @@ const config = {
             position: 'left',
             label: 'Changelog',
           },
-          {
-            to: '/api-explorer/v5/category',
-            position: 'left',
-            label: 'API explorer',
-          },
+          // {
+          //   to: '/api-explorer/v5/category',
+          //   position: 'left',
+          //   label: 'API explorer',
+          // },
           {
             label: 'Previous Version',
             position: 'right',
