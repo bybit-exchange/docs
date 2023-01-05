@@ -18,13 +18,13 @@ GET `/unified/v3/private/order/unfilled-orders`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category)|**true** |string |Product type. `linear`, `option` |
 |symbol |false |string |Symbol name |
-|baseCoin |false |string |Base coin. default: **BTC**. Valid only when `category`=option |
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|baseCoin |false |string |Base coin. Default: **BTC**. Valid only when `category`=option |
+|orderId |false |string |Order id |
+|orderLinkId |false |string |User customised order id |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
-|limit |false |string |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|direction |false |string |Page direction. `prev`, `next`. Default: `next`|
+|limit |false |integer |Limit for data size per page. [1,50]. Default: `20`|
+|cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
 <Tabs>
@@ -73,7 +73,7 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> price</td><td>string</td><td>Order price </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time </td>
+            <td>> createdTime</td><td>number</td><td>Order created time </td>
         </tr>
         <tr>
             <td>> tpTriggerBy</td><td>string</td><td>The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` </td>
@@ -85,7 +85,7 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> basePrice</td><td>string</td><td>Base price. `StopOrder` ONLY </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time </td>
+            <td>> updatedTime</td><td>number</td><td>Order updated time </td>
         </tr>
         <tr>
             <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
@@ -147,7 +147,7 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit`  </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time  </td>
+            <td>> updatedTime</td><td>number</td><td>Order updated time  </td>
         </tr>
         <tr>
             <td>> side</td><td>string</td><td>`Buy`, `Sell`  </td>
@@ -189,7 +189,7 @@ GET `/unified/v3/private/order/unfilled-orders`
             <td>> qty</td><td>string</td><td>Order quantity </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time  </td>
+            <td>> createdTime</td><td>number</td><td>Order created time  </td>
         </tr>
         <tr>
             <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a>  </td>
@@ -203,7 +203,6 @@ GET `/unified/v3/private/order/unfilled-orders`
     </table>
 </TabItem>
 </Tabs>
-
 
 ### Request Example
 

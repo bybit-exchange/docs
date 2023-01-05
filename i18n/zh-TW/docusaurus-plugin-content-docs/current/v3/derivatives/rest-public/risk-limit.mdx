@@ -1,40 +1,40 @@
 ---
-title: Risk Limit
-sidebar_label: Risk Limit
+title: 查詢合約風險限額
+sidebar_label: 查詢合約風險限額
 sidebar_position: 9
 slug: /derivatives/public/risk-limit
 ---
 
-Get risk limit
+查詢期貨合約的風險限額表
 
 :::tip
-What is risk limit? <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">Risk Limit (USDT Contract)</a>
+什麼是風險限額? <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001164">風險限額(USDT合約)</a>
 :::
 
-### HTTP Request
+### HTTP請求
 GET `/derivatives/v3/public/risk-limit/list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. default: `linear`, but in the response category shows `""`|
-|symbol |false |string |Symbol name|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`. 默認: `linear`, 當不傳時，響應返回 `""`|
+|symbol |false |string |合約名稱|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type. Keeps empty string `""` when `category` is not passed |
+|category |string |合約類型 |
 |list |array |Object |
-|> id |string |Risk id |
-|> symbol |string |Symbol name |
-|> limit |string |Position limit |
-|> maintainMargin |string |Maintain margin rate |
-|> initialMargin |string |Initial margin rate |
-|> section |array |section array |
-|> isLowerRisk |integer |`1`: true, `0`: false |
-|> maxLeverage |string |Allowed max leverage |
+|> id |string |風險限額id |
+|> symbol |string |合約名稱 |
+|> limit |string |風險限制額度 |
+|> maintainMargin |string |維持保證金率 |
+|> initialMargin |string |初始保證金率 |
+|> section |array |section數組 |
+|> isLowerRisk |integer |是否是最低風險限額. `1`: true, `0`: false |
+|> maxLeverage |string |該風險限額允許的最大槓桿 |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console-linear" label="linear">
@@ -47,43 +47,43 @@ Host: api.bybit.com
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
 ```json
-    {
-        "retCode": 0,
-        "retMsg": "OK",
-        "result": {
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
         "category": "",
         "list": [
-    {
-        "id": 1,
-        "symbol": "ETHPERP",
-        "limit": "500000",
-        "maintainMargin": "0.01",
-        "initialMargin": "0.015",
-        "section": [
-        "1",
-        "2",
-        "3",
-        "5",
-        "10",
-        "25",
-        "50"
-        ],
-        "isLowestRisk": 1,
-        "maxLeverage": "66.67"
-    },
-        ...,
+                {
+                    "id": 1,
+                    "symbol": "ETHPERP",
+                    "limit": "500000",
+                    "maintainMargin": "0.01",
+                    "initialMargin": "0.015",
+                    "section": [
+                        "1",
+                        "2",
+                        "3",
+                        "5",
+                        "10",
+                        "25",
+                        "50"
+                    ],
+                    "isLowestRisk": 1,
+                    "maxLeverage": "66.67"
+                },
+            ...,
 
-        ]
-    },
-        "retExtInfo": {},
-        "time": 1671970615467
-    }
+            ]
+        },
+    "retExtInfo": {},
+    "time": 1671970615467
+}
 ```
 </TabItem>
 </Tabs>

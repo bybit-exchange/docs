@@ -1,136 +1,135 @@
 ---
-title: Get Order List
-sidebar_label: Get Order List
+title: 查詢歷史訂單
+sidebar_label: 查詢歷史訂單
 sidebar_position: 9
 slug: /derivatives/unified/order-list
 ---
 
 :::tip
-Query order list.<br/>
-As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay.
+獲取歷史訂單紀錄. 由於訂單創建/撤銷是異步的, 該接口返回數據可能會有延遲. 若您想實時獲取訂單信息, 您可以查詢該[接口](open-order#)或者通過websocket推送(推薦)
 :::
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-### HTTP Request
+### HTTP請求
 GET `/unified/v3/private/order/list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
-|symbol |false |string |Symbol name|
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|[orderStatus](../enum#orderstatus) |false |string |Return all status orders if not passed. You could pass multiple status, separated by comma |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
-|limit |false |string |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
+|symbol |false |string |合約名稱|
+|orderId |false |string |訂單Id |
+|orderLinkId |false |string |用戶自定義訂單Id |
+|[orderStatus](../enum#orderstatus) |false |string |訂單狀態。不傳則默認查詢所有狀態 |
+|orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單|
+|direction |false |string |翻頁方向. `prev`: 向前, `next`: 向後. 默認: `next`|
+|limit |false |integer |每頁數量限制. [1,50]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
+### 響應參數
 <Tabs>
 <TabItem value="linear" label="linear" default>
     <table border="0.5">
         <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
+            <th>參數</th><th>類型</th><th>說明</th>
         </tr>
         <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
         </tr>
         <tr>
-            <td>category</td><td>string</td><td>Products category</td>
+            <td>category</td><td>string</td><td>產品類型</td>
         </tr>
         <tr>
             <td>list</td><td>array</td><td>Object</td>
         </tr>
         <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
         </tr>
         <tr>
-            <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit` </td>
+            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
         </tr>
         <tr>
-            <td>> orderLinkId</td><td>string</td><td>User customised order id </td>
+            <td>> orderLinkId</td><td>string</td><td>用戶自定義Id </td>
         </tr>
         <tr>
-            <td>> orderId</td><td>string</td><td>Order id </td>
+            <td>> orderId</td><td>string</td><td>訂單Id </td>
         </tr>
         <tr>
-            <td>> stopOrderType</td><td>string</td><td>Stop order type. `TakeProfit`,`StopLoss`,`TrailingStop`,`Stop` </td>
+            <td>> stopOrderType</td><td>string</td><td>條件單類型. `TakeProfit`,`StopLoss`,`TrailingStop`,`Stop` </td>
         </tr>
         <tr>
-            <td>> orderStatus</td><td>string</td><td>Order status </td>
+            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
         </tr>
         <tr>
-            <td>> takeProfit</td><td>string</td><td>Take profit price </td>
+            <td>> takeProfit</td><td>string</td><td>止盈價格 </td>
         </tr>
         <tr>
-            <td>> cumExecValue</td><td>string</td><td>Cumulated executed value </td>
+            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
         </tr>
         <tr>
-            <td>> blockTradeId</td><td>string</td><td>Block trade id </td>
+            <td>> blockTradeId</td><td>string</td><td>大宗交易訂單Id </td>
         </tr>
         <tr>
-            <td>> rejectReason</td><td>string</td><td>Reject reason </td>
+            <td>> rejectReason</td><td>string</td><td>拒絕原因 </td>
         </tr>
         <tr>
-            <td>> price</td><td>string</td><td>Order price </td>
+            <td>> price</td><td>string</td><td>訂單價格 </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time </td>
+            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
         </tr>
         <tr>
-            <td>> tpTriggerBy</td><td>string</td><td>The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` </td>
+            <td>> tpTriggerBy</td><td>string</td><td>觸發止盈的價格類型 `MarkPrice`, `IndexPrice`,`LastPrice` </td>
         </tr>
         <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> </td>
+            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> </td>
         </tr>
         <tr>
-            <td>> basePrice</td><td>string</td><td>Base price. `StopOrder` ONLY </td>
+            <td>> basePrice</td><td>string</td><td>當前市價 </td>
         </tr>
         <tr>
-            <td>> leavesValue</td><td>string</td><td>The value of unfilled </td>
+            <td>> leavesValue</td><td>string</td><td>訂單剩餘未成交的價值 </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time </td>
+            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
         </tr>
         <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
+            <td>> side</td><td>string</td><td>訂單方向. `Buy`, `Sell` </td>
         </tr>
         <tr>
-            <td>> triggerPrice</td><td>string</td><td>TriggerPrice. `StopOrder` ONLY </td>
+            <td>> triggerPrice</td><td>string</td><td>觸發價格. 僅條件單有效 </td>
         </tr>
         <tr>
-            <td>> cumExecFee</td><td>string</td><td>Cumulated executed trading fee </td>
+            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
         </tr>
         <tr>
-            <td>> slTriggerBy</td><td>string</td><td>The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice`  </td>
+            <td>> slTriggerBy</td><td>string</td><td>觸發止損的價格類型. `MarkPrice`, `IndexPrice`,`LastPrice`  </td>
         </tr>
         <tr>
-            <td>> leavesQty</td><td>string</td><td>Remaining qty pend to be filled </td>
+            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
         </tr>
         <tr>
-            <td>> closeOnTrigger</td><td>boolean</td><td>is a closeOnTrigger order or not </td>
+            <td>> closeOnTrigger</td><td>boolean</td><td>觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> </td>
         </tr>
         <tr>
-            <td>> cumExecQty</td><td>string</td><td>Cumulated executed qty </td>
+            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
         </tr>
         <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>is a reduceOnly order or not  </td>
+            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
         </tr>
         <tr>
-            <td>> qty</td><td>string</td><td>Order quantity </td>
+            <td>> qty</td><td>string</td><td>訂單數量 </td>
         </tr>
         <tr>
-            <td>> stopLoss</td><td>string</td><td>Stop loss price </td>
+            <td>> stopLoss</td><td>string</td><td>止損價格 </td>
         </tr>
         <tr>
-            <td>> triggerBy</td><td>string</td><td>Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice` </td>
+            <td>> triggerBy</td><td>string</td><td>觸發價格的觸發類型. `LastPrice`, `IndexPrice`, `MarkPrice` </td>
         </tr>
         <tr>
-            <td>> orderIM</td><td>string</td><td>Order initial margin </td>
+            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
         </tr>
     </table>
 </TabItem>
@@ -138,80 +137,140 @@ GET `/unified/v3/private/order/list`
 <TabItem value="option" label="option">
     <table border="0.5">
         <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
+            <th>參數</th><th>類型</th><th>說明</th>
         </tr>
         <tr>
-            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
         </tr>
         <tr>
-            <td>category</td><td>string</td><td>Products category</td>
+            <td>category</td><td>string</td><td>產品類型</td>
         </tr>
         <tr>
             <td>list</td><td>array</td><td>Object</td>
         </tr>
         <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name </td>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
         </tr>
         <tr>
-            <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit`  </td>
+            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time  </td>
+            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
         </tr>
         <tr>
-            <td>> side</td><td>string</td><td>`Buy`, `Sell`  </td>
+            <td>> side</td><td>string</td><td>訂單方向. `Buy`, `Sell` </td>
         </tr>
         <tr>
-            <td>> orderLinkId</td><td>string</td><td>User customised order id  </td>
+            <td>> orderLinkId</td><td>string</td><td>用戶自定義Id  </td>
         </tr>
         <tr>
-            <td>> cumExecFee</td><td>string</td><td>Cumulated executed trading fee  </td>
+            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
         </tr>
         <tr>
-            <td>> orderId</td><td>string</td><td>Order id  </td>
+            <td>> orderId</td><td>string</td><td>訂單Id </td>
         </tr>
         <tr>
-            <td>> leavesQty</td><td>string</td><td>Remaining qty pend to be filled  </td>
+            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
         </tr>
         <tr>
-            <td>> orderStatus</td><td>string</td><td>Order status  </td>
+            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
         </tr>
         <tr>
-            <td>> iv</td><td>string</td><td>Implied volatility </td>
+            <td>> iv</td><td>string</td><td>隱含波動率 </td>
         </tr>
         <tr>
-            <td>> cumExecValue</td><td>string</td><td>Cumulated executed value  </td>
+            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
         </tr>
         <tr>
-            <td>> blockTradeId</td><td>string</td><td>Block trade id  </td>
+            <td>> blockTradeId</td><td>string</td><td>大宗交易訂單Id </td>
         </tr>
         <tr>
-            <td>> rejectReason</td><td>string</td><td>Reject reason  </td>
+            <td>> rejectReason</td><td>string</td><td>拒絕原因 </td>
         </tr>
         <tr>
-            <td>> cumExecQty</td><td>string</td><td>Cumulated executed qty  </td>
+            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
         </tr>
         <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>is a reduceOnly order or not   </td>
+            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
         </tr>
         <tr>
-            <td>> price</td><td>string</td><td>Order price  </td>
+            <td>> price</td><td>string</td><td>訂單價格 </td>
         </tr>
         <tr>
-            <td>> qty</td><td>string</td><td>Order quantity </td>
+            <td>> qty</td><td>string</td><td>訂單數量 </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time  </td>
+            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
         </tr>
         <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a>  </td>
+            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a>  </td>
         </tr>
         <tr>
-            <td>> orderIM</td><td>string</td><td>Order initial margin  </td>
+            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
         </tr>
         <tr>
-            <td>> basePrice</td><td>string</td><td>Base price </td>
+            <td>> basePrice</td><td>string</td><td>當前市價 </td>
         </tr>
     </table>
 </TabItem>
 </Tabs>
+
+### 請求示例
+
+```http
+GET /unified/v3/private/order/list?category=linear&orderFilter=StopOrder&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672811957817
+X-BAPI-RECV-WINDOW: 5000
+cdn-request-id: test-002
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "c6f055d9-7f21-4079-913d-e6523a9cfffa%3A1672216686849%2Cc6f055d9-7f21-4079-913d-e6523a9cfffa%3A1672216686849",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "orderType": "Limit",
+                "orderLinkId": "linear-004",
+                "orderId": "c6f055d9-7f21-4079-913d-e6523a9cfffa",
+                "stopOrderType": "Stop",
+                "orderStatus": "Deactivated",
+                "takeProfit": "",
+                "cumExecValue": "0",
+                "blockTradeId": "",
+                "rejectReason": "EC_NoError",
+                "price": "1050",
+                "createdTime": 1672216686849,
+                "tpTriggerBy": "UNKNOWN",
+                "timeInForce": "GoodTillCancel",
+                "basePrice": "1188",
+                "leavesValue": "0",
+                "updatedTime": 1672217377166,
+                "side": "Sell",
+                "triggerPrice": "1145.00000000",
+                "cumExecFee": "0",
+                "slTriggerBy": "UNKNOWN",
+                "leavesQty": "0",
+                "closeOnTrigger": false,
+                "cumExecQty": "0",
+                "reduceOnly": false,
+                "qty": "0.15",
+                "stopLoss": "",
+                "triggerBy": "MarkPrice",
+                "orderIM": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672811958171
+}
+```

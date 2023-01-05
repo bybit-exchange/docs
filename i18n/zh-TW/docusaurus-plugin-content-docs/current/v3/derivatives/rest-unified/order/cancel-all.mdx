@@ -1,37 +1,82 @@
 ---
-title: Cancel All Orders
-sidebar_label: Cancel All Orders
+title: 撤銷所有訂單
+sidebar_label: 撤銷所有訂單
 sidebar_position: 5
 slug: /derivatives/unified/cancel-all
 ---
 
+撤銷全部委託單
+
 :::tip
-This endpoint enables to cancel all open orders.
-- If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
+- 若`category`=_linear_, 則`baseCoin`, `settleCoin`, `symbol`三個參數必傳其中一個
 :::
 
-### HTTP Request
+### HTTP請求
 POST `/unified/v3/private/order/cancel-all`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
-|symbol |false|string |Symbol name |
-|baseCoin |false|string |Cancel all open orders by base coin |
-|settleCoin |false|string |Cancel all open orders by settle coin. `linear` ONLY|
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
+|symbol |false|string |合約名稱 |
+|baseCoin |false|string |交易幣種 |
+|settleCoin |false|string |結算幣種. 僅期貨有效|
+|orderFilter |false |string |`Order`: 活動單, `StopOrder`: 條件單|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result |Object | |
 |> list |array |Object |
-|>> category |string |Products category |
-|>> symbol |string |Symbol name |
-|>> orderId |string |Order id |
-|>> orderLinkId |string |User customised order id |
+|>> category |string |產品類型 |
+|>> symbol |string |合約名稱 |
+|>> orderId |string |訂單Id |
+|>> orderLinkId |string |用戶自定義Id |
 |retExtInfo |Object | |
 |> list |array |Object |
-|>> code |integer |Success/error code |
-|>> msg |string |Success/error message |
+|>> code |integer |成功/錯誤碼 |
+|>> msg |string |成功/錯誤信息 |
+
+### 请求示例
+```http
+POST /unified/v3/private/order/cancel-all HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672810386137
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+  "category": "linear",
+  "baseCoin": "ETH",
+  "settleCoin": null
+}
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "6cba55ea-6996-44f5-bd0f-ac09ffda4ab1",
+                "orderLinkId": "liang-001"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "success"
+            }
+        ]
+    },
+    "time": 1672810388787
+}
+```

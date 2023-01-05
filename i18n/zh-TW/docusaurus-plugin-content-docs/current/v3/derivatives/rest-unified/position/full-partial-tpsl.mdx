@@ -1,29 +1,26 @@
 ---
-title: Switch TP/SL Mode
-sidebar_label: Switch TP/SL Mode
+title: 切換止盈止損模式
+sidebar_label: 切換止盈止損模式
 sidebar_position: 3
 slug: /derivatives/unified/tp-sl-mode
 ---
 
-Set take profit / stop loss mode of the position, such as FULL tp/sl mode or PARTIAL tp/sl mode
+可以將止盈止損模式設置為部分止盈止損或者全部止盈止損
 
-### HTTP Request
+### HTTP 請求
 POST `/unified/v3/private/position/tpsl/switch-mode`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear` ONLY |
-|symbol |**true** |string |Symbol name|
-|tpSlMode |**true** |string |`Full`, `Partial` |
+|[category](../enum#category) |**true** |string |產品類型. `linear` |
+|symbol |**true** |string |合約名稱|
+|tpSlMode |**true** |string |止盈止損模式. `Full`, `Partial` |
 
-### Response Parameters
-None
+### 響應參數
+無
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-console" label="Console">
+### 請求示例
 
 ```http
 POST /unified/v3/private/position/tpsl/switch-mode HTTP/1.1
@@ -36,18 +33,12 @@ Content-Type: application/json
 
 {
     "category": "linear",
-    "symbol":"XRPUSDT",
-    "tpSlMode":"Partial"
+    "symbol": "XRPUSDT",
+    "tpSlMode": "Partial"
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="json response" label="Response">
+### 響應示例
 
 ```json
 {
@@ -58,5 +49,3 @@ Content-Type: application/json
     "time": 1672016303452
 }
 ```
-</TabItem>
-</Tabs>

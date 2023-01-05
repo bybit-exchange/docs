@@ -8,17 +8,17 @@ slug: /derivatives/unified/delivery
 Query option delivery records, sort by `deliveryTime` in descending order
 
 ### HTTP Request
-POST `/unified/v3/private/delivery-record`
+GET `/unified/v3/private/delivery-record`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `option` |
 |symbol |false |string |Symbol name |
-|expDate |false |string |Expiry date. `25MAR22`. default: return all |
-|direction |false |string |`prev`: previous page, `next`: next page. default: `next`|
-|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|expDate |false |string |Expiry date. `25MAR22`. Default: return all |
+|direction |false |string |`prev`: previous page, `next`: next page. Default: `next`|
+|limit |false |integer |Limit for data size per page. [1,50]. Default: `20`|
+|cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -31,7 +31,7 @@ POST `/unified/v3/private/delivery-record`
 |> strike |string |Exercise price |
 |> fee |string |Trading fee |
 |> position |string |Executed size |
-|> deliveryTime |integer |Delivery time (ms) |
+|> deliveryTime |number |Delivery time (ms) |
 |> deliveryPrice |string |Delivery price |
 |> deliveryRpl |string |Realized PnL of the delivery |
 

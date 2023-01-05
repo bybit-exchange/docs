@@ -25,59 +25,231 @@ GET `/v5/market/instruments-info`
 |cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|category |string |Product type |
-|list |array |Object |
-|> symbol |string |Symbol name |
-|> [contractType](../enum#contracttype) |string |Contract type. _`linear`,`inverse` ONLY_|
-|> [status](../enum#status) |string |Symbol's trading status |
-|> baseCoin |string |Base coin e.g., BTC in BTCUSDT |
-|> quoteCoin |string |Quote coin e.g., USDT in BTCUSDT |
-|> innovation |string |Whether innovation. _`spot` ONLY_. <li>`0`: non innovation</li> <li>`1`: innovative coin, which price is relatively volatile</li> |
-|> settleCoin |string |Settle coin e.g., USDC in BTCPERP. `spot` N/A |
-|> optionsType |string |Option type. `Call`,`Put`. _`option` ONLY_ |
-|> launchTime |string |Symbol launch timestamp (ms). `spot` N/A |
-|> deliveryTime |string |Delivery timestamp (ms). `spot` N/A |
-|> deliveryFeeRate |string |Delivery fee rate. `spot` N/A |
-|> priceScale |string |Price scale. _`linear`,`inverse` ONLY_|
-|> fundingInterval |integer |Funding rate interval (minute). _`linear`,`inverse` ONLY_ |
-|> leverageFilter |string |Object. _`linear`,`inverse` ONLY_ |
-|>> minLeverage |string |Minimum leverage |
-|>> maxLeverage |string |Maximum leverage |
-|>> leverageStep |string |The minimal step to increase/reduce leverage |
-|> priceFilter |string |Object. |
-|>> minPrice |string |Minimum order price. `spot` N/A |
-|>> maxPrice |string |Maximum order price. `spot` N/A |
-|>> tickSize |string |The minimal step to increase/reduce order price |
-|> lotSizeFilter |string |Object. |
-|>> basePrecision |string |Base coin precision. _`spot` ONLY_ |
-|>> quotePrecision |string |Quote coin precision. _`spot` ONLY_ |
-|>> minOrderQty |string |Minimum order qty |
-|>> maxOrderQty |string |Maximum order qty |
-|>> minOrderAmt |string |Minimum order amount. _`spot` ONLY_ |
-|>> maxOrderAmt |string |Maximum order amount. _`spot` ONLY_ |
-|>> postOnlyMaxOrderQty |string |Maximum order qty for a single `PostOnly` order. _`linear`,`inverse` ONLY_ |
-|>> qtyStep |string |The minimal step to increase/reduce order qty |
-|> unifiedMarginTrade |boolean |Whether supports to trade under UMA/UTA. _`linear`,`inverse` ONLY_ |
-|nextPageCursor |string |Cursor. Used for pagination |
+<Tabs>
+<TabItem value="future" label="Linear|Inverse" default>
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>Product type</td>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
+        </tr>
+        <tr>
+            <td>> contractType</td><td>string</td><td>Contract type. `InversePerpetual`,`LinearPerpetual`,`InverseFutures`</td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>Instrument status </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>Base coin </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>Quote coin </td>
+        </tr>
+        <tr>
+            <td>> launchTime</td><td>string</td><td>Launch timestamp (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryTime</td><td>string</td><td>Delivery timestamp (ms). Valid for Inverse Futures </td>
+        </tr>
+        <tr>
+            <td>> deliveryFeeRate</td><td>string</td><td>Delivery fee rate. Valid for Inverse Futures</td>
+        </tr>
+        <tr>
+            <td>> priceScale</td><td>string</td><td>Price scale </td>
+        </tr>
+        <tr>
+            <td>> leverageFilter</td><td>Object</td><td>Leverage attributes </td>
+        </tr>
+        <tr>
+            <td>>> minLeverage</td><td>string</td><td>Minimum leverage </td>
+        </tr>
+        <tr>
+            <td>>> maxLeverage</td><td>string</td><td>Maximum leverage </td>
+        </tr>
+        <tr>
+            <td>>> leverageStep</td><td>string</td><td>The step to increase/reduce leverage </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>Price attributes </td>
+        </tr>
+        <tr>
+            <td>>> minPrice</td><td>string</td><td>Minimum order price </td>
+        </tr>
+        <tr>
+            <td>>> maxPrice</td><td>string</td><td>Maximum order price </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>The step to increase/reduce order price </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>Size attributes </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>Maximum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>Minimum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> qtyStep</td><td>string</td><td>The step to increase/reduce order quantity </td>
+        </tr>
+        <tr>
+            <td>>> postOnlyMaxOrderQty</td><td>string</td><td>Maximum order qty for PostOnly order </td>
+        </tr>
+        <tr>
+            <td>> unifiedMarginTrade</td><td>boolean</td><td>Whether to support unified margin trade </td>
+        </tr>
+        <tr>
+            <td>> fundingInterval</td><td>integer</td><td>Funding interval (minute) </td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>string</td><td>Settle coin </td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="option" label="Option">
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>Product type</td>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>Cursor. Used to pagination</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
+        </tr>
+        <tr>
+            <td>> optionsType</td><td>string</td><td>Option type. `Call`,`Put` </td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>Instrument status </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>Base coin </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>Quote coin </td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>boolean</td><td>Settle coin </td>
+        </tr>
+        <tr>
+            <td>> launchTime</td><td>string</td><td>Launch timestamp (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryTime</td><td>string</td><td>Delivery timestamp (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryFeeRate</td><td>string</td><td>Delivery fee rate </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>Price attributes </td>
+        </tr>
+        <tr>
+            <td>>> minPrice</td><td>string</td><td>Minimum order price </td>
+        </tr>
+        <tr>
+            <td>>> maxPrice</td><td>string</td><td>Maximum order price </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>The step to increase/reduce order price </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>Size attributes </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>Maximum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>Minimum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> qtyStep</td><td>string</td><td>The step to increase/reduce order quantity </td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>Product type</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>Symbol name </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>Base coin </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>Quote coin </td>
+        </tr>
+        <tr>
+            <td>> innovation</td><td>string</td><td>Whether to belong to innovation. `0`: false, `1`: true </td>
+        </tr>
+        <tr>
+            <td>> status</td><td>string</td><td>Instrument status </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>Size attributes </td>
+        </tr>
+        <tr>
+            <td>>> basePrecision</td><td>string</td><td>The precision of base coin </td>
+        </tr>
+        <tr>
+            <td>>> quotePrecision</td><td>string</td><td>The precision of quote coin </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>Minimum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>Maximum order quantity </td>
+        </tr>
+        <tr>
+            <td>>> minOrderAmt</td><td>string</td><td>Minimum order amount </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderAmt</td><td>string</td><td>Maximum order amount </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>Price attributes </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>The step to increase/reduce order price </td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
 
 ### Request Example
 
 <Tabs>
-<TabItem value="console-spot" label="Spot">
-
-```http
-GET /v5/market/instruments-info?category=spot&symbol=ETHUSDT HTTP/1.1
-Host: api-testnet.bybit.com
-```
-
-</TabItem>
-
 <TabItem value="console-linear" label="Linear">
 
 ```http
-GET /v5/market/instruments-info?category=linear&symbol=ETHUSDT HTTP/1.1
+GET /v5/market/instruments-info?category=linear&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -86,7 +258,16 @@ Host: api-testnet.bybit.com
 <TabItem value="console-option" label="Option">
 
 ```http
-GET /v5/market/instruments-info?category=option&symbol=ETH-31MAR23-30000-C HTTP/1.1
+GET /v5/market/instruments-info?category=option&symbol=ETH-3JAN23-1250-P HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="console-spot" label="Spot">
+
+```http
+GET /v5/market/instruments-info?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -96,42 +277,6 @@ Host: api-testnet.bybit.com
 ### Response Example
 
 <Tabs>
-<TabItem value="js spot" label="spot">
-
-```json
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-        "category": "spot",
-        "list": [
-            {
-                "symbol": "ETHUSDT",
-                "baseCoin": "ETH",
-                "quoteCoin": "USDT",
-                "innovation": "0",
-                "status": "1",
-                "lotSizeFilter": {
-                    "basePrecision": "0.00001",
-                    "quotePrecision": "0.0000001",
-                    "minOrderQty": "0.0005",
-                    "maxOrderQty": "100000000",
-                    "minOrderAmt": "1",
-                    "maxOrderAmt": "100000000"
-                },
-                "priceFilter": {
-                    "tickSize": "0.01"
-                }
-            }
-        ]
-    },
-    "retExtInfo": {},
-    "time": 1672027811156
-}
-```
-
-</TabItem>
-
 <TabItem value="js linear" label="Linear">
 
 ```json
@@ -142,12 +287,12 @@ Host: api-testnet.bybit.com
         "category": "linear",
         "list": [
             {
-                "symbol": "ETHUSDT",
+                "symbol": "BTCUSDT",
                 "contractType": "LinearPerpetual",
                 "status": "Trading",
-                "baseCoin": "ETH",
+                "baseCoin": "BTC",
                 "quoteCoin": "USDT",
-                "launchTime": "1583193600000",
+                "launchTime": "1585526400000",
                 "deliveryTime": "0",
                 "deliveryFeeRate": "",
                 "priceScale": "2",
@@ -157,17 +302,15 @@ Host: api-testnet.bybit.com
                     "leverageStep": "0.01"
                 },
                 "priceFilter": {
-                    "minPrice": "0.05",
-                    "maxPrice": "99999.90",
-                    "tickSize": "0.05"
+                    "minPrice": "0.50",
+                    "maxPrice": "999999.00",
+                    "tickSize": "0.50"
                 },
                 "lotSizeFilter": {
-                    "maxTradingQty": "1500.00",
-                    "minTradingQty": "0.01",
-                    "qtyStep": "0.01",
-                    "postOnlyMaxOrderQty": "15000.00",
-                    "maxOrderQty": "1500.00",
-                    "minOrderQty": "0.01"
+                    "maxOrderQty": "100.000",
+                    "minOrderQty": "0.001",
+                    "qtyStep": "0.001",
+                    "postOnlyMaxOrderQty": "1000.000"
                 },
                 "unifiedMarginTrade": true,
                 "fundingInterval": 480,
@@ -177,7 +320,7 @@ Host: api-testnet.bybit.com
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1672039120937
+    "time": 1672712495660
 }
 ```
 
@@ -188,21 +331,21 @@ Host: api-testnet.bybit.com
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
         "category": "option",
-        "nextPageCursor": "0%2C1",
+        "nextPageCursor": "",
         "list": [
             {
                 "category": "option",
-                "symbol": "ETH-31MAR23-30000-C",
+                "symbol": "ETH-3JAN23-1250-P",
                 "status": "ONLINE",
                 "baseCoin": "ETH",
                 "quoteCoin": "USD",
                 "settleCoin": "USDC",
-                "optionsType": "Call",
-                "launchTime": "1665043200000",
-                "deliveryTime": "1680249600000",
+                "optionsType": "Put",
+                "launchTime": "1672560000000",
+                "deliveryTime": "1672732800000",
                 "deliveryFeeRate": "0.00015",
                 "priceFilter": {
                     "minPrice": "0.1",
@@ -218,7 +361,43 @@ Host: api-testnet.bybit.com
         ]
     },
     "retExtInfo": {},
-    "time": 1672039242761
+    "time": 1672712537130
+}
+```
+
+</TabItem>
+
+<TabItem value="js spot" label="spot">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "innovation": "0",
+                "status": "1",
+                "lotSizeFilter": {
+                    "basePrecision": "0.000001",
+                    "quotePrecision": "0.00000001",
+                    "minOrderQty": "0.00004",
+                    "maxOrderQty": "63.01197227",
+                    "minOrderAmt": "1",
+                    "maxOrderAmt": "100000"
+                },
+                "priceFilter": {
+                    "tickSize": "0.01"
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672712468011
 }
 ```
 

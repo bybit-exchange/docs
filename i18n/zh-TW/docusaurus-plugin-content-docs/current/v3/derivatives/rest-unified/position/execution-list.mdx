@@ -1,60 +1,61 @@
 ---
-title: Get Execution Record
-sidebar_label: Get Execution Record
+title: 查詢成交紀錄 (半年)
+sidebar_label: 查詢成交紀錄 (半年)
 sidebar_position: 6
 slug: /derivatives/unified/execution-list
 ---
 
-Query users' execution records, sort by `execTime` in descending order
+獲取用戶成交紀錄，返回結果按`execTime`降序排列
 
 :::tip
-You may have multiple executions in a single order.
+* 單筆訂單可能會有多次成交
+* 該接口支持查詢半年內數據
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/unified/v3/private/execution/list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`,`option` |
-|symbol |false |string |Symbol name |
-|orderId |false |string |Order id |
-|orderLinkId |false |string |User customised order id |
-|baseCoin |false |string |Base coin. for `option` ONLY. Return all base coin data if not passed|
-|startTime |false |integer |The start timestamp (ms)|
-|endTime |false |integer |The end timestamp (ms)|
-|[execType](../enum#exectype) |false |string |Execution type|
-|direction |false |string |`prev`: previous page, `next`: next page. default: `next`|
-|limit |false |integer |Limit for data size per page. [1,100]. default: `50`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `linear`,`option` |
+|symbol |false |string |合約名稱 |
+|orderId |false |string |訂單Id |
+|orderLinkId |false |string |用戶自定義訂單id |
+|baseCoin |false |string |交易幣種. 僅對`option`有效. 若不傳，則返回所有類型的交易幣種數據|
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|[execType](../enum#exectype) |false |string |成交類型|
+|direction |false |string |`prev`: 前一頁, `next`: 後一頁. 默認: `next`|
+|limit |false |integer |每頁數量限制. [1, 100]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
-| category | string  | Product type. `linear`,`option`|
+| category | string  | 產品類型. `linear`,`option`|
 | list | array | Object |
-|> symbol |string   |Symbol name |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customized order id |
-|> side |string |Side. `Buy`,`Sell` |
-|> orderPrice |string |Order price |
-|> orderQty |string |Order qty |
-|> leavesQty |string |The remaining qty not executed |
-|> orderType |string |Order type. `Market`,`Limit` |
-|> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
-|> execFee |string   |Executed trading fee |
-|> execId |string |Execution id |
-|> execPrice |string |Execution price |
-|> execQty |string |Execution qty |
-|> [execType](../enum#exectype) |string |Executed type|
-|> execValue |string |Executed order value |
-|> execTime |string |Executed timestamp（ms） |
-|> feeRate |string |Trading fee rate |
-|> blockTradeId |string |Paradigm block trade id|
-|nextPageCursor |string |Cursor. Used to pagination|
+|> symbol |string   |合約名稱 |
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義訂單id |
+|> side |string |訂單方向. `Buy`,`Sell` |
+|> orderPrice |string |訂單價格 |
+|> orderQty |string |訂單數量 |
+|> leavesQty |string |剩餘委託未成交數量，如果訂單被取消了，則 leavesQty 會返回為 0 |
+|> orderType |string |訂單類型. 市價單: `Market`,限價單: `Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |条件单的订单类型。如果该订单不是条件单，则不会返回任何类型 |
+|> execFee |string   |交易手續費 |
+|> execId |string |成交Id |
+|> execPrice |string |成交價格 |
+|> execQty |string |成交數量 |
+|> [execType](../enum#exectype) |string |交易類型|
+|> execValue |string |成交價值 |
+|> execTime |number |成交時間（毫秒） |
+|> feeRate |string |手續費率 |
+|> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID|
+|nextPageCursor |string |游標，用於翻頁|
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console" label="Console">
@@ -71,7 +72,7 @@ X-BAPI-RECV-WINDOW: 5000
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 

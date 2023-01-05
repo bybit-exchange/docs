@@ -32,7 +32,7 @@ POST `/unified/v3/private/order/create-batch`
 |> price |false |string |Order price. Invalid if `orderType`=_Market_|
 |> iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
 |> timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
-|> positionIdx |false |string |Position index. `0`: one-way mode. Unified margin supports one-way mode ONLY |
+|> positionIdx |false |integer |Position index. `0`: one-way mode. Unified margin supports one-way mode ONLY |
 |> orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `linear`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
 |> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
@@ -50,5 +50,85 @@ POST `/unified/v3/private/order/create-batch`
 |>> createAt |string |Order created time (ms) |
 |retExtInfo |Object | |
 |> list |array |Object |
-|>> code |string |Success/error code |
+|>> code |integer |Success/error code |
 |>> msg |string |Success/error message |
+
+### Request Example
+
+```http
+POST /unified/v3/private/order/create-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672817108675
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "linear",
+    "request": [
+        {
+            "symbol": "ETHUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "0.05",
+            "price": "1000",
+            "timeInForce": "GoodTillCancel",
+            "orderLinkId": "test-002",
+            "reduceOnly": false,
+            "closeOntrigger": false
+        },
+        {
+            "symbol": "XRPUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "100",
+            "price": "0.3",
+            "timeInForce": "GoodTillCancel",
+            "orderLinkId": "test-003",
+            "reduceOnly": false,
+            "closeOntrigger": false
+        }
+    ]
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "ce295fcb-8c8a-4f12-89f4-4ab23d38ccd8",
+                "orderLinkId": "test-002",
+                "createAt": "1672817109797"
+            },
+            {
+                "category": "linear",
+                "symbol": "XRPUSDT",
+                "orderId": "e97f0355-6586-49a4-965f-feb7253cef14",
+                "orderLinkId": "test-003",
+                "createAt": "1672817109796"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "success"
+            },
+            {
+                "code": 0,
+                "msg": "success"
+            }
+        ]
+    },
+    "time": 1672817109804
+}
+```

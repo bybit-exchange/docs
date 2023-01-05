@@ -18,13 +18,13 @@ GET `/unified/v3/private/order/list`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |symbol |false |string |Symbol name|
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|orderId |false |string |Order id |
+|orderLinkId |false |string |User customised order id |
 |[orderStatus](../enum#orderstatus) |false |string |Return all status orders if not passed. You could pass multiple status, separated by comma |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
-|direction |false |string |Page direction. `prev`, `next`. default: `next`|
-|limit |false |string |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|direction |false |string |Page direction. `prev`, `next`. Default: `next`|
+|limit |false |integer |Limit for data size per page. [1,50]. Default: `20`|
+|cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
 <Tabs>
@@ -76,7 +76,7 @@ GET `/unified/v3/private/order/list`
             <td>> price</td><td>string</td><td>Order price </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time </td>
+            <td>> createdTime</td><td>number</td><td>Order created time </td>
         </tr>
         <tr>
             <td>> tpTriggerBy</td><td>string</td><td>The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` </td>
@@ -91,7 +91,7 @@ GET `/unified/v3/private/order/list`
             <td>> leavesValue</td><td>string</td><td>The value of unfilled </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time </td>
+            <td>> updatedTime</td><td>number</td><td>Order updated time </td>
         </tr>
         <tr>
             <td>> side</td><td>string</td><td>`Buy`, `Sell` </td>
@@ -153,7 +153,7 @@ GET `/unified/v3/private/order/list`
             <td>> orderType</td><td>string</td><td>Order type. `Market`,`Limit`  </td>
         </tr>
         <tr>
-            <td>> updatedTime</td><td>string</td><td>Order updated time  </td>
+            <td>> updatedTime</td><td>number</td><td>Order updated time  </td>
         </tr>
         <tr>
             <td>> side</td><td>string</td><td>`Buy`, `Sell`  </td>
@@ -198,7 +198,7 @@ GET `/unified/v3/private/order/list`
             <td>> qty</td><td>string</td><td>Order quantity </td>
         </tr>
         <tr>
-            <td>> createdTime</td><td>string</td><td>Order created time  </td>
+            <td>> createdTime</td><td>number</td><td>Order created time  </td>
         </tr>
         <tr>
             <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a>  </td>
@@ -212,3 +212,63 @@ GET `/unified/v3/private/order/list`
     </table>
 </TabItem>
 </Tabs>
+
+### Request Example
+
+```http
+GET /unified/v3/private/order/list?category=linear&orderFilter=StopOrder&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1672811957817
+X-BAPI-RECV-WINDOW: 5000
+cdn-request-id: test-002
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "c6f055d9-7f21-4079-913d-e6523a9cfffa%3A1672216686849%2Cc6f055d9-7f21-4079-913d-e6523a9cfffa%3A1672216686849",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "orderType": "Limit",
+                "orderLinkId": "linear-004",
+                "orderId": "c6f055d9-7f21-4079-913d-e6523a9cfffa",
+                "stopOrderType": "Stop",
+                "orderStatus": "Deactivated",
+                "takeProfit": "",
+                "cumExecValue": "0",
+                "blockTradeId": "",
+                "rejectReason": "EC_NoError",
+                "price": "1050",
+                "createdTime": 1672216686849,
+                "tpTriggerBy": "UNKNOWN",
+                "timeInForce": "GoodTillCancel",
+                "basePrice": "1188",
+                "leavesValue": "0",
+                "updatedTime": 1672217377166,
+                "side": "Sell",
+                "triggerPrice": "1145.00000000",
+                "cumExecFee": "0",
+                "slTriggerBy": "UNKNOWN",
+                "leavesQty": "0",
+                "closeOnTrigger": false,
+                "cumExecQty": "0",
+                "reduceOnly": false,
+                "qty": "0.15",
+                "stopLoss": "",
+                "triggerBy": "MarkPrice",
+                "orderIM": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672811958171
+}
+```

@@ -1,38 +1,35 @@
 ---
-title: Funding Rate History
-sidebar_label: Funding Rate History
+title: 查詢歷史資金費率
+sidebar_label: 查詢歷史資金費率
 sidebar_position: 10
 slug: /derivatives/public/funding-rate
 ---
 
-Get historical funding rate
+查詢資金費率，每個symbol的資金費率產生週期不同。假設資金費率為8小時，當前時間是UTC12點，則返回的是上一個結算即UTC8點產生的資金費率。
+如要查詢symbol的資金費率時間間隔，請查詢[可交易產品規格](instrument-info#)接口
 
-:::info
-TODO: 支持查詢多久的資金費率數據？
-:::
-
-### HTTP Request
+### HTTP請求
 GET `/derivatives/v3/public/funding/history-funding-rate`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. default: `linear`, but in the response category shows `""`|
-|symbol |<b>true</b> |string |Symbol name|
-|start |false |string |The start timestamp (ms)|
-|end |false |string |The end timestamp (ms)|
-|limit |false |string |Limit for data size per page. [1,200]. default: `200`|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`. 默認: `linear`, 當不傳時，響應返回`""`|
+|symbol |<b>true</b> |string |合約名稱|
+|start |false |integer |開始時間戳 (毫秒)|
+|end |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [1,200]. 默認: `200`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|[category](../enum#category) |string |Product type. Keeps empty string `""` when `category` is not passed |
+|[category](../enum#category) |string |產品類型 |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> fundingRate |string |Funding rate |
-|> fundingRateTimestamp |string |Funding rate timestamp(ms) |
+|> symbol |string |合約名稱 |
+|> fundingRate |string |資金費率 |
+|> fundingRateTimestamp |string |資金費率時間戳(毫秒) |
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console-linear" label="linear">
@@ -45,7 +42,7 @@ Host: api.bybit.com​​
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">

@@ -7,21 +7,24 @@ slug: /derivatives/public/instrument-info
 
 Get launched instruments information.
 
-#### HTTP Request
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP Request
 GET `/derivatives/v3/public/instruments-info`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear`, but in the response category shows `""`|
+|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. Default: `linear`, but in the response category shows `""`|
 |symbol |false |string |Symbol name. <li>query an option symbol, `category` is **required**</li>|
 |baseCoin |false |string |Base coin. <li>Valid when `category`=option</li><li>BTC by default if not passed</li>|
-|limit |false |string |Limit for data size per page. [1,1000]. default: 500|
-|cursor |false |string |Cursor. Used to pagination|
+|limit |false |integer |Limit for data size per page. [1,1000]. Default: 500|
+|cursor |false |string |Cursor. Used for pagination|
 
-#### Response Parameters
+### Response Parameters
 <Tabs>
-<TabItem value="future" label="future" default>
+<TabItem value="future" label="Linear|Inverse" default>
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -45,7 +48,7 @@ GET `/derivatives/v3/public/instruments-info`
             <td>> baseCoin</td><td>string</td><td>Base coin. e.g BTCUSDT, BTC is base coin</td>
         </tr>
         <tr>
-            <td>> quoteCoin</td><td>string</td><td>Quote coin. e.g BTCUSD, USD is quote coin</td>
+            <td>> quoteCoin</td><td>string</td><td>Quote coin. e.g BTCPERP, USDC is quote coin</td>
         </tr>
         <tr>
             <td>> launchTime</td><td>string</td><td>The launch timestamp (ms) </td>

@@ -1,39 +1,39 @@
 ---
-title: Get Option Delivery Record
-sidebar_label: Get Option Delivery Record
+title: 查詢交割紀錄 (期權)
+sidebar_label: 查詢交割紀錄 (期權)
 sidebar_position: 8
 slug: /derivatives/unified/delivery
 ---
 
-Query option delivery records, sort by `deliveryTime` in descending order
+查詢期權交割紀錄, 返回結果按照`deliveryTime`降序排列
 
-### HTTP Request
-POST `/unified/v3/private/delivery-record`
+### HTTP 請求
+GET `/unified/v3/private/delivery-record`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `option` |
-|symbol |false |string |Symbol name |
-|expDate |false |string |Expiry date. `25MAR22`. default: return all |
-|direction |false |string |`prev`: previous page, `next`: next page. default: `next`|
-|limit |false |integer |Limit for data size per page. [1,50]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|[category](../enum#category) |**true** |string |產品類型. `option` |
+|symbol |false |string |合約名稱 |
+|expDate |false |string |到期日. 格式: `25MAR22`. 默認: 返回所有 |
+|direction |false |string |`prev`: 前一頁, `next`: 後一頁. 默認: `next`|
+|limit |false |integer |每頁數量限制. [1, 50]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|nextPageCursor |string |Cursor. Used to pagination |
-|category |string |Product type|
+|nextPageCursor |string |游標，用於翻頁 |
+|category |string |產品類型|
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> side |string |`Buy`,`Sell` |
-|> strike |string |Exercise price |
-|> fee |string |Trading fee |
-|> position |string |Executed size |
-|> deliveryTime |integer |Delivery time (ms) |
-|> deliveryPrice |string |Delivery price |
-|> deliveryRpl |string |Realized PnL of the delivery |
+|> symbol |string |合約名稱 |
+|> side |string |方向. `Buy`,`Sell` |
+|> strike |string |行權價 |
+|> fee |string |手續費，正數表支出，負數表收取 |
+|> position |string |交割數量 |
+|> deliveryTime |number |交割時間戳 (毫秒) |
+|> deliveryPrice |string |交割價格 |
+|> deliveryRpl |string |交割已實現盈虧 |
 
 ### Request Example
 

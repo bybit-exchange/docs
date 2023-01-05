@@ -2,15 +2,6 @@
 title: Introduction
 sidebar_label: Introduction
 ---
-Bybit's v5 Open API allows users to trade all of Bybit's products with a single API suite.
-Bybit's v5 Open API allows users to trade on all of Bybit products through a single API suite.
-
-## Scope
-| Account Mode | v5 Open API | Comments|
-|:----- |:-------|------ |
-|Normal account |true |Can trade spot, futures, options |
-|Unified margin account |true |Can trade linear contracts, options; cannot trade spot, inverse contracts|
-|Unified trade account |true |Can trade everything|
 
 ## Authentication
 :::info
@@ -25,22 +16,20 @@ https://api.bybit.com<br/>
 https://api.bytick.com
 
 ### Parameters for Authenticated Endpoints
-The following parameters must be used for authentication:
+The following http header keys must be used for authentication:
 
-* `api_key`
-* `timestamp` - UTC timestamp in milliseconds
-* `sign` - a signature derived from the request's parameters<br/>
+* `X-BAPI-API-KEY` - api key
+* `X-BAPI-TIMESTAMP` - UTC timestamp in milliseconds
+* `X-BAPI-SIGN` - a signature derived from the request's parameters<br/>
 
-We also provide `recv_window` (unit in millisecond and default value is 5,000) to specify how long an HTTP request is valid. It is also used to prevent replay attacks.
+We also provide `X-BAPI-RECV-WINDOW` (unit in millisecond and default value is 5,000) to specify how long an HTTP request is valid. It is also used to prevent replay attacks.
 
-A smaller `recv_window` is more secure, but your request may fail if the transmission time is greater than your `recv_window`.
-
-Please make sure that your timestamp is in sync with our server time. You can use the [Server Time endpoint](../v3/spot/rest-public/server-time#) to check your own machine time.
+A smaller `X-BAPI-RECV-WINDOW` is more secure, but your request may fail if the transmission time is greater than your `X-BAPI-RECV-WINDOW`.
 
 :::caution
 Please make sure that the timestamp parameter adheres to the **following rule**:<br/>
 _server_time - recv_window <= timestamp < server_time + 1000_<br/>
-server_time stands for Bybit server time, which can be queried via the [Server Time endpoint](../v3/spot/rest-public/server-time#).
+server_time stands for Bybit server time, which can be queried via the [Server Time endpoint](../spot/public/server-time#).
 :::
 
 ### Create A Request

@@ -1,98 +1,99 @@
 ---
-title: Ticker Info
-sidebar_label: Ticker Info
+title: 查詢最新行情信息
+sidebar_label: 查詢最新行情信息
 sidebar_position: 6
 slug: /derivatives/public/ticker
 ---
-Get all latest information of symbols.
+
+可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-### HTTP Request
+### HTTP請求
 GET `/derivatives/v3/public/tickers`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. default: `linear`, but in the response category shows `""`|
-|symbol |false |string |Symbol name. <li>`category`=option, `symbol` is **required**</li><li>an option symbol, `category` is **required**</li>|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear`, 當不傳時，響應返回`""`|
+|symbol |false |string |合約名稱. <li>查詢期權相關合約時，symbol 和 category都是**必傳**</li>|
 
-### Response Parameters
+### 響應參數
 <Tabs>
 <TabItem value="future" label="linear&inverse" default>
     <table border="0.5">
         <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
+            <th>參數</th><th>類型</th><th>說明</th>
         </tr>
         <tr>
-            <td>category</td><td>string</td><td>Derivatives products category. Keeps empty string `""` when `category` is not passed</td>
+            <td>category</td><td>string</td><td>產品類型</td>
         </tr>
         <tr>
             <td>list</td><td>array</td><td>Object</td>
         </tr>
         <tr>
-            <td>> symbol</td><td>string</td><td>Symbol name</td>
+            <td>> symbol</td><td>string</td><td>合約名稱</td>
         </tr>
         <tr>
-            <td>> bidPrice</td><td>string</td><td>Best bid price</td>
+            <td>> bidPrice</td><td>string</td><td>買1價</td>
         </tr>
         <tr>
-            <td>> askPrice</td><td>string</td><td>Best ask price</td>
+            <td>> askPrice</td><td>string</td><td>賣1價</td>
         </tr>
         <tr>
-            <td>> lastPrice</td><td>string</td><td>Last transaction price</td>
+            <td>> lastPrice</td><td>string</td><td>最新市場成交價</td>
         </tr>
         <tr>
-            <td>> lastTickDirection</td><td>string</td><td>Direction of price change</td>
+            <td>> lastTickDirection</td><td>string</td><td>價格變化方向</td>
         </tr>
         <tr>
-            <td>> prevPrice24h</td><td>string</td><td>Price of 24 hours ago</td>
+            <td>> prevPrice24h</td><td>string</td><td>24小時前的整點市價</td>
         </tr>
         <tr>
-            <td>> price24hPcnt</td><td>string</td><td>Percentage change of market price relative to 24h</td>
+            <td>> price24hPcnt</td><td>string</td><td>市場價格相對24h前變化的百分比</td>
         </tr>
         <tr>
-            <td>> highPrice24h</td><td>string</td><td>The highest price in the last 24 hours</td>
+            <td>> highPrice24h</td><td>string</td><td>最近24小時的最高價</td>
         </tr>
         <tr>
-            <td>> lowPrice24h</td><td>string</td><td>Lowest price in the last 24 hours</td>
+            <td>> lowPrice24h</td><td>string</td><td>最近24小時的最低價</td>
         </tr>
         <tr>
-            <td>> prevPrice1h</td><td>string</td><td>Hourly market price an hour ago </td>
+            <td>> prevPrice1h</td><td>string</td><td>1小時前的整點市價 </td>
         </tr>
         <tr>
-            <td>> markPrice</td><td>string</td><td>Mark price</td>
+            <td>> markPrice</td><td>string</td><td>標記價格</td>
         </tr>
         <tr>
-            <td>> indexPrice</td><td>string</td><td>Index price</td>
+            <td>> indexPrice</td><td>string</td><td>指數價格</td>
         </tr>
         <tr>
-            <td>> openInterest</td><td>string</td><td>Open interest</td>
+            <td>> openInterest</td><td>string</td><td>未平倉合約的數量</td>
         </tr>
         <tr>
-            <td>> turnover24h</td><td>string</td><td>Turnover in the last 24 hours</td>
+            <td>> turnover24h</td><td>string</td><td>最近24小時成交額</td>
         </tr>
         <tr>
-            <td>> volume24h</td><td>string</td><td>Trading volume in the last 24 hours</td>
+            <td>> volume24h</td><td>string</td><td>最近24小時成交量</td>
         </tr>
         <tr>
-            <td>> fundingRate</td><td>string</td><td><a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001123">Funding rate</a></td>
+            <td>> fundingRate</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001123">資金費率</a></td>
         </tr>
         <tr>
-            <td>> nextFundingTime</td><td>string</td><td>Next timestamp for funding to settle</td>
+            <td>> nextFundingTime</td><td>string</td><td>下次結算資金費用的時間 (毫秒)</td>
         </tr>
         <tr>
-            <td>> predictedDeliveryPrice</td><td>string</td><td>Predicted delivery price. It has value when 30 min before delivery</td>
+            <td>> predictedDeliveryPrice</td><td>string</td><td>預計交割價格. 交割前30分鐘有值</td>
         </tr>
         <tr>
-            <td>> basisRate</td><td>string</td><td>Basis rate for futures</td>
+            <td>> basisRate</td><td>string</td><td>交割合約基差率</td>
         </tr>
         <tr>
-            <td>> deliveryFeeRate</td><td>string</td><td>Delivery fee rate</td>
+            <td>> deliveryFeeRate</td><td>string</td><td>交割費率</td>
         </tr>
         <tr>
-            <td>> deliveryTime</td><td>string</td><td>Delivery timestamp (ms)</td>
+            <td>> deliveryTime</td><td>string</td><td>交割時間戳 (毫秒)</td>
         </tr>
     </table>
 </TabItem>
@@ -100,67 +101,67 @@ GET `/derivatives/v3/public/tickers`
 <TabItem value="option" label="option">
     <table border="0.5">
         <tr>
-            <th>Parameter</th><th>Type</th><th>Comments</th>
+            <th>參數</th><th>類型</th><th>說明</th>
         </tr>
         <tr>
-            <td>category </td><td>string </td><td>Derivatives products category </td>
+            <td>category</td><td>string</td><td>產品類型</td>
         </tr>
         <tr>
-            <td>symbol </td><td>string </td><td>Symbol name </td>
+            <td>symbol </td><td>string </td><td>合約名稱 </td>
         </tr>
         <tr>
-            <td>bidPrice </td><td>string </td><td>Best bid price </td>
+            <td>bidPrice </td><td>string </td><td>買1價 </td>
         </tr>
         <tr>
-            <td>bidSize </td><td>string </td><td>Best ask price </td>
+            <td>bidSize </td><td>string </td><td>買1價的數量 </td>
         </tr>
         <tr>
-            <td>bidIv </td><td>string </td><td>Implied volatility for best bid </td>
+            <td>bidIv </td><td>string </td><td>買1價對應的iv </td>
         </tr>
         <tr>
-            <td>askPrice </td><td>string </td><td>Best ask price </td>
+            <td>askPrice </td><td>string </td><td>賣1價 </td>
         </tr>
         <tr>
-            <td>askSize </td><td>string </td><td>Ask quantity </td>
+            <td>askSize </td><td>string </td><td>賣1價的數量 </td>
         </tr>
         <tr>
-            <td>askIv </td><td>string </td><td>Implied volatility for best ask </td>
+            <td>askIv </td><td>string </td><td>賣1價對應的iv </td>
         </tr>
         <tr>
-            <td>lastPrice </td><td>string </td><td>Last transaction price </td>
+            <td>lastPrice </td><td>string </td><td>最新市場成交價 </td>
         </tr>
         <tr>
-            <td>highPrice24h </td><td>string </td><td>The highest price in the last 24 hours </td>
+            <td>highPrice24h </td><td>string </td><td>最近24小時的最高價 </td>
         </tr>
         <tr>
-            <td>lowPrice24h </td><td>string </td><td>Lowest price in the last 24 hours </td>
+            <td>lowPrice24h </td><td>string </td><td>最近24小時的最低價 </td>
         </tr>
         <tr>
-            <td>markPrice </td><td>string </td><td>Mark price </td>
+            <td>markPrice </td><td>string </td><td>標記價格 </td>
         </tr>
         <tr>
-            <td>indexPrice </td><td>string </td><td>Index price </td>
+            <td>indexPrice </td><td>string </td><td>指數價格 </td>
         </tr>
         <tr>
-            <td>markPriceIv </td><td>string </td><td>Implied volatility for mark price </td>
+            <td>markPriceIv </td><td>string </td><td>標記價格對應的iv </td>
         </tr>
         <tr>
-            <td>underlyingPrice </td><td>string </td><td>Underlying price </td>
+            <td>underlyingPrice </td><td>string </td><td>底層資產的價格 </td>
         </tr>
         <tr>
-            <td>openInterest </td><td>string </td><td>Open interest </td>
+            <td>openInterest </td><td>string </td><td>O未平倉合約的數量 </td>
         </tr>
         <tr>
-            <td>turnover24h </td><td>string </td><td>Turnover in the last 24 hours </td>
+            <td>turnover24h </td><td>string </td><td>最近24小時成交額 </td>
         </tr>
         <tr>
-            <td>volume24h </td><td>string </td><td>Trading volume in the last 24 hours </td>
+            <td>volume24h </td><td>string </td><td>最近24小時成交量 </td>
         </tr>
         <tr>
-            <td>totalVolume </td><td>string </td><td>Total volume </td>
+            <td>totalVolume </td><td>string </td><td>總成交量 </td>
         </tr>
         <tr>
-            <td>totalTurnover </td><td>string </td><td>Total turnover </td>
+            <td>totalTurnover </td><td>string </td><td>總成交額 </td>
         </tr>
         <tr>
             <td>delta </td><td>string </td><td>delta </td>
@@ -175,16 +176,16 @@ GET `/derivatives/v3/public/tickers`
             <td>theta </td><td>string </td><td>theta </td>
         </tr>
         <tr>
-            <td>predictedDeliveryPrice </td><td>string </td><td>Predicted delivery price. It has value when 30 min before delivery </td>
+            <td>predictedDeliveryPrice </td><td>string </td><td>預估交割價. 交割前30分鐘前有值 </td>
         </tr>
         <tr>
-            <td>change24h </td><td>string </td><td>The change in the last 24 hours </td>
+            <td>change24h </td><td>string </td><td>過去24小時的變化 </td>
         </tr>
     </table>
 </TabItem>
 </Tabs>
 
-### Request Example
+### 請求示例
 
 <Tabs>
 <TabItem value="console-inverse" label="inverse">
@@ -206,7 +207,7 @@ Host: api.bybit.com​
 </TabItem>
 </Tabs>
 
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js inverse" label="inverse">
