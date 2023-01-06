@@ -1,4 +1,81 @@
 ---
-title: Coin balance in account
-sidebar_label: Coin balance in account
+title: 賬戶幣種余額查詢
+sidebar_label: 賬戶幣種余額查詢
+sidebar_position: 10
 ---
+支持查詢母帳戶的幣種餘額，以及母帳戶下各子帳戶的幣種餘額。
+
+注：不支持使用子帳戶apikey查詢母帳戶的幣種餘額
+
+
+:::caution Important
+注意: 不允許通過子賬戶api key獲取主賬戶coin餘額。
+:::
+
+### HTTP 請求
+GET `/asset/v3/private/transfer/account-coin/balance/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|memberId|<b>true</b> |string |用戶ID. 當使用母帳號api key查詢子帳戶的幣種餘額時，該字段<b>必傳</b> |
+|[fromAccountType](../enum#accounttype)|<b>true</b> |string |賬戶類型 |
+|[coin](../enum#coin) |<b>true</b> |string |幣種類型 |
+|withBonus|<b>true</b> |string |是否查詢體驗金. `0`：不查詢; `1`：查詢. 默認不查詢 |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|[accountType](../enum#accounttype) |string |賬戶類型|
+|bizType |int |帳戶業務子類型|
+|accountId |string |賬戶ID|
+|memberId |string |用戶ID|
+|balance |Array |Object|
+|> coin |string |幣種類型|
+|> walletBalance |string |錢包余額|
+|> transferBalance |string |可划余額|
+|> bonus |string |可用金額中包含的体验金|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/transfer/account-coin/balance/query?memberId=123&accountType=CONTRACT&coin=BTC&withBonus=0' \
+--header 'X-BAPI-TIMESTAMP: 1660794864052' \
+--header 'X-BAPI-API-KEY: XXXXXXXXXXXX' \
+--header 'X-BAPI-RECV-WINDOW: 999999999' \
+--header 'X-BAPI-SIGN: c4f6cbc0581a8afa81cade431c9389a62ff7817e3e6c4aee456fd3f86796f619' \
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "accountType": "UNIFIED",
+        "bizType": 1,
+        "accountId": "618463",
+        "memberId": "533285",
+        "balance": {
+            "coin": "USDT",
+            "walletBalance": "1847.9874",
+            "transferBalance": "1847.9874",
+            "bonus": "0"
+        }
+    },
+    "retExtInfo": null,
+    "time": 1661139455294
+}
+```
+</TabItem>
+</Tabs>

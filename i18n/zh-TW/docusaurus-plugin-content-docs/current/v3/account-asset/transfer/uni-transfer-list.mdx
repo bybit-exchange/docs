@@ -1,4 +1,99 @@
 ---
-title: Query Universal Transfer List
-sidebar_label: Query Universal Transfer List
+title: 查詢萬能劃轉記錄
+sidebar_label: 查詢萬能劃轉記錄
+sidebar_position: 8
 ---
+
+import styles from '/src/css/clean_table.module.css';
+
+查詢萬能劃轉記錄
+
+該接口僅返回通過萬能劃轉接口劃轉的紀錄，通過其他劃轉接口的轉帳的紀錄將不會返回。
+
+### HTTP 請求
+GET `/asset/v3/private/transfer/universal-transfer/list/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID,全局唯一 |
+|[coin](../enum#coin)|<b>true</b> |string |幣種類型 |
+|status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
+|startTime |false |integer |開始時間戳（毫秒) |
+|endTime |false |integer |結束時間戳（毫秒) |
+|limit |false |integer |每頁數量, 最大50. 默認每頁20條|
+|cursor |false |string |游標信息：用來分頁|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|transferId |string |UUID,全局唯一 |
+|[coin](../enum#coin)|string |幣種類型 |
+|amount |string |兌入數量 |
+|timestamp |integer |時間戳|
+|status|string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
+|[fromAccountType](../enum#accounttype)|string |賬戶類型 |
+|[toAccountType](../enum#accounttype) |string |賬戶類型 |
+|fromMemberId |string |劃出的賬號uid |
+|toMemberId |string |劃入的賬號uid |
+|nextPageCursor |string |游標信息：用來分頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/universal-transfer/list/query?coin=USDT&status=SUCCESS HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671163509262
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb06",
+                "coin": "USDT",
+                "amount": "10",
+                "timestamp": "1671163374000",
+                "status": "SUCCESS",
+                "fromAccountType": "UNIFIED",
+                "toAccountType": "SPOT",
+                "fromMemberId": "11111111",
+                "toMemberId": "22222222"
+            },
+            {
+                "transferId": "2811a2ca-b42c-4cda-a21f-3df0a1f2516f",
+                "coin": "USDT",
+                "amount": "5",
+                "timestamp": "1670925916000",
+                "status": "SUCCESS",
+                "fromAccountType": "SPOT",
+                "toAccountType": "SPOT",
+                "fromMemberId": "111111111",
+                "toMemberId": "33333333"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MzU2MTA0LCJtYXhJRCI6MTczNDQ5Mn0="
+    },
+    "retExtInfo": {},
+    "time": 1671163509474
+}
+```
+</TabItem>
+</Tabs>

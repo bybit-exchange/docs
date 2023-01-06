@@ -1,4 +1,91 @@
 ---
-title: Query Internal Transfer List
-sidebar_label: Query Internal Transfer List
+title: 查詢劃轉記錄列表
+sidebar_label: 查詢劃轉記錄列表
+sidebar_position: 3
 ---
+
+import styles from '/src/css/clean_table.module.css';
+
+查詢劃轉記錄列表
+
+
+### HTTP 請求
+GET `/asset/v3/private/transfer/inter-transfer/list/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|transferId |<b>true</b> |string |UUID,全局唯一 |
+|[coin](../enum#coin)|<b>true</b>|string |幣種類型 |
+|status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
+|startTime |false |integer |開始時間戳（毫秒) |
+|endTime |false |integer |結束時間戳（毫秒) |
+|limit |false |integer |記錄條數|
+|cursor |false |string |游標信息：用來分頁|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|transferId |string |UUID,全局唯一 |
+|[coin](../enum#coin)|string |幣種類型 |
+|amount |string |兌入數量 |
+|[fromAccountType](../enum#accounttype)|string |賬戶類型 |
+|[toAccountType](../enum#accounttype) |string |賬戶類型 |
+|timestamp |integer |時間戳|
+|status|string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
+|nextPageCursor |string |游標信息：用來分頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/inter-transfer/list/query?coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670926842754
+X-BAPI-RECV-WINDOW: 50000
+X-BAPI-SIGN: xxxxxxxxxxxxxxx
+```
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "transferId": "22b168ef-1917-4bbe-a8bd-4ea729ec5887",
+                "coin": "USDT",
+                "amount": "1",
+                "fromAccountType": "SPOT",
+                "toAccountType": "UNIFIED",
+                "timestamp": "1668749670000",
+                "status": "SUCCESS"
+            },
+            {
+                "transferId": "selfTransfer_4420a136-5610-44d3-97bb-a3d0551869a9",
+                "coin": "USDT",
+                "amount": "1",
+                "fromAccountType": "UNIFIED",
+                "toAccountType": "SPOT",
+                "timestamp": "1668570868000",
+                "status": "SUCCESS"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6NTYxMzUxLCJtYXhJRCI6MTU2Mzg4OX0="
+    },
+    "retExtInfo": {},
+    "time": 1670926842908
+}
+```
+</TabItem>
+</Tabs>

@@ -1,4 +1,93 @@
 ---
-title: Query Subaccount Transfer List
-sidebar_label: Query Subaccount Transfer List
+title: 查詢子母劃轉記錄列表
+sidebar_label: 查詢子母劃轉記錄列表
+sidebar_position: 4
 ---
+
+import styles from '/src/css/clean_table.module.css';
+
+查詢子母劃轉記錄列表
+
+### HTTP 請求
+GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|transferId | false |string |UUID,全局唯一 |
+|[coin](../enum#coin)|false|string |幣種類型 |
+|status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
+|startTime |false |integer |開始時間戳（毫秒) |
+|endTime |false |integer |結束時間戳（毫秒) |
+|limit |false |integer |記錄條數|
+|cursor |false |string |游標信息：用來分頁|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|transferId |string |UUID,全局唯一 |
+|[coin](../enum#coin)|string |幣種類型 |
+|amount |string |兌入數量 |
+|memberId |integer | 賬戶 |
+|subMemberId |integer|子賬戶 |
+|timestamp |integer |時間戳|
+|status|string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
+|type |string |轉入轉出類型.<ul><li>`IN` 從主賬戶轉賬到子賬戶</li><li>`OUT` 從子賬戶轉賬到主賬戶</li> </ul>|
+|nextPageCursor |string |游標信息：用來分頁|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/sub-member-transfer/list/query?coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670927635525
+X-BAPI-RECV-WINDOW: 50000
+```
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "transferId": "2811a2ca-b42c-4cda-a21f-3df0a1f2516f",
+                "coin": "USDT",
+                "amount": "5",
+                "memberId": xxxxxxx,
+                "subMemberId": xxxxxxx,
+                "timestamp": "1670925916000",
+                "status": "SUCCESS",
+                "type": "IN"
+            },
+            {
+                "transferId": "11ff9144-2d5d-4233-913d-4595c9ad2170",
+                "coin": "USDT",
+                "amount": "100",
+                "memberId": xxxxxxx,
+                "subMemberId": xxxxxxx,
+                "timestamp": "1658732947000",
+                "status": "SUCCESS",
+                "type": "OUT"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MzU2MTA0LCJtYXhJRCI6MTcyMDk2OH0="
+    },
+    "retExtInfo": {},
+    "time": 1670927635641
+}
+```
+</TabItem>
+</Tabs>
