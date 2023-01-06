@@ -1,4 +1,86 @@
 ---
-title: Query Coin Information
-sidebar_label: Query Coin Information
+title: 幣種信息查詢
+sidebar_label: 幣種信息查詢
+sidebar_position: 5
 ---
+幣種信息查詢
+
+### HTTP 請求
+GET `/asset/v3/private/coin-info/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[coin](../enum#coin) |false |string |幣種|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|name|string|幣種名稱|
+|[coin](../enum#coin)|string |幣種 |
+|remainAmount|string|該幣種當前最大可提現數量|
+|chains|array|Object|
+|> chainType|string|鏈類型|
+|> confirmation|string|充值上賬確認數|
+|> withdrawFee|string|提現手續費。如果提現費為空，則表示該幣不支持提現|
+|> depositMin|string|最小充值數量|
+|> withdrawMin|string|最小提現數量|
+|> chain|string|鏈名|
+|> chainDeposit|string|幣鏈是否可充值. `0`：暫停; `1`：正常|
+|> chainWithdraw|string|幣鏈是否可提幣. `0`：暫停; `1`：正常|
+|> minAccuracy|string|充提幣的最小精度|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/coin-info/query?coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671172180432
+X-BAPI-RECV-WINDOW: 50000
+X-BAPI-SIGN: xxxxxxxxxxx
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rows": [
+            {
+                "name": "BTC",
+                "coin": "BTC",
+                "remainAmount": "150",
+                "chains": [
+                    {
+                        "chainType": "BTC",
+                        "confirmation": "10000",
+                        "withdrawFee": "0.0005",
+                        "depositMin": "0.0005",
+                        "withdrawMin": "0.001",
+                        "chain": "BTC",
+                        "chainDeposit": "1",
+                        "chainWithdraw": "1",
+                        "minAccuracy": "8"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1671172180550
+}
+```
+</TabItem>
+</Tabs>
