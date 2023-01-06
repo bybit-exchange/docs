@@ -4,6 +4,8 @@ sidebar_label: Get Orderbook
 sidebar_position: 5
 ---
 
+import styles from '/src/css/clean_table.module.css';
+
 Query orderbook data
 > **Covers: Spot / Linear contract / Inverse contract / Option**
 
@@ -23,7 +25,7 @@ GET `/v5/market/orderbook`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
 |symbol |**true** |string |Symbol name|
-|limit |false |integer |Limit for data size per page.<li>`spot`: [1,50], default: `1`.</li><li>`linear`&`inverse`: [1,200],default: `1`.</li><li>`option`: [1,25],default: `1`.</li>|
+|limit |false |integer |Limit for data size per page.<ul><li>`spot`: [1,50], default: `1`.</li><li>`linear`&`inverse`: [1,200],default: `1`.</li><li>`option`: [1,25],default: `1`.</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -35,8 +37,8 @@ GET `/v5/market/orderbook`
 |a |array |Ask, seller. Order by price asc |
 |> a[0] |string |Ask price |
 |> a[1] |string |Ask size |
-|ts |integer |The timestamp (ms) that system generates the data |
-|u |integer |Update id, is always in sequence |
+|ts |integer |The timestamp (ms) that the system generates the data |
+|u |integer |Update ID, is always in sequence |
 
 ### Request Example
 

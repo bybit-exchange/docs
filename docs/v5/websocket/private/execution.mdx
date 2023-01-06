@@ -4,10 +4,12 @@ sidebar_label: Execution
 sidebar_position: 2
 ---
 
-Subscribe execution stream.
+import styles from '/src/css/clean_table.module.css';
+
+Subscribe to the execution stream to see your executions in **real-time**.
 
 :::tip
-You may have multiple executions for one order in one stream
+You may have multiple executions for one order in a single message.
 :::
 
 **Topic:** `execution`
@@ -15,15 +17,15 @@ You may have multiple executions for one order in one stream
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|id |string |Message id|
+|id |string |Message ID|
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
 |> [category](../../enum#category) | string  | Product type. `spot`,`linear`,`option`|
 |> symbol |string   |Symbol name |
 |> isLeverage |string |Whether to borrow. Valid for `spot` ONLY. `0`(default): false, `1`: true|
-|> orderId |string |Order id |
-|> orderLinkId |string |User customized order id |
+|> orderId |string |Order ID |
+|> orderLinkId |string |User customized order ID |
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
@@ -31,7 +33,7 @@ You may have multiple executions for one order in one stream
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
 |> execFee |string |Executed trading fee |
-|> execId |string |Execution id |
+|> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
 |> [execType](../../enum#exectype) |string |Executed type. valid for `linear`,`option`|
@@ -44,7 +46,7 @@ You may have multiple executions for one order in one stream
 |> markPrice |string |The mark price of the symbol when executing |
 |> indexPrice |string |The index price of the symbol when executing |
 |> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
-|> blockTradeId |string |Paradigm block trade id|
+|> blockTradeId |string |Paradigm block trade ID|
 
 ### Response Example
 

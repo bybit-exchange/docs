@@ -4,12 +4,14 @@ sidebar_label: Get Deposit Record
 sidebar_position: 12
 ---
 
+import styles from '/src/css/clean_table.module.css';
+
 Query deposit records.
 
 :::tip
 * Query deposit records of `SPOT` ONLY
 * `endTime` - `startTime` should be less than 30 days. Query last 30 days records by default.
-* Can use main or sub uid api key to query deposit records respectively.
+* Can use main or sub UID api key to query deposit records respectively.
 :::
 
 ### HTTP Request
@@ -21,7 +23,7 @@ GET `/v5/asset/deposit/query-record`
 |coin |false |string |Coin |
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false |integer |The end timestamp (ms) |
-|limit |false |integer |Limit for data size per page. [1,50]. Default: `50`|
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `50`|
 |cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
@@ -31,7 +33,7 @@ GET `/v5/asset/deposit/query-record`
 |> coin |string |Coin |
 |> chain |string|Chain |
 |> amount |string|Amount |
-|> txID |string|Transaction id |
+|> txID |string|Transaction ID |
 |> [status](../enum#depositstatus) |integer|Deposit status |
 |> toAddress |string|Deposit target address |
 |> tag |string|Tag of deposit target address |

@@ -4,6 +4,8 @@ sidebar_label: Get Order History (2 years)
 sidebar_position: 6
 ---
 
+import styles from '/src/css/clean_table.module.css';
+
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
 > **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
@@ -23,11 +25,11 @@ GET `/v5/order/history`
 |[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`option` |
 |symbol |false |string |Symbol name|
 |baseCoin |false |string |Base coin. `option` ONLY. All option open orders are returned if not passed |
-|orderId |false |string |Order id |
-|orderLinkId |false |string |User customised order id |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot tp/sl order. Default: all kinds of orders|
+|orderId |false |string |Order ID |
+|orderLinkId |false |string |User customised order ID |
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order. Default: all kinds of orders|
 |[orderStatus](../enum#orderstatus) |false |string |Return all status orders if not passed |
-|limit |false |integer |Limit for data size per page. [1,50]. Default: `20`|
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
@@ -35,9 +37,9 @@ GET `/v5/order/history`
 |:----- |:-----|------ |
 |category |string |Product type |
 |list |array |Object |
-|> orderId  |string |Order id |
-|> orderLinkId |string |User customised order id |
-|> blockTradeId  |string |Block trade id |
+|> orderId  |string |Order ID |
+|> orderLinkId |string |User customised order ID |
+|> blockTradeId  |string |Block trade ID |
 |> symbol |string |Symbol name |
 |> price |string |Order price |
 |> qty |string |Order qty |

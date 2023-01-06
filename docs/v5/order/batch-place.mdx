@@ -28,8 +28,8 @@ POST `/v5/order/create-batch`
 |> qty |**true** |string |Order quantity|
 |> price |false |string |Order price. Invalid if `orderType`=_Market_|
 |> orderIv |false |string |Implied volatility. `option` ONLY. `orderIv` has a higher priority than `price`. Pass the real value, e.g for 10%, 0.1 should be passed |
-|> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> |
-|> orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li>|
+|> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
+|> orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `option`_:<br/><ul><li>**required** param</li><li>always unique</li></ul>|
 |> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. |
 |> mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |
 
@@ -40,8 +40,8 @@ POST `/v5/order/create-batch`
 |> list |array |Object |
 |>> category |string |Product type |
 |>> symbol |string |Symbol name |
-|>> orderId |string |Order id |
-|>> orderLinkId |string |User customised order id |
+|>> orderId |string |Order ID |
+|>> orderLinkId |string |User customised order ID |
 |>> createdTime |string |Order created time (ms) |
 |retExtInfo |Object | |
 |> list |array |Object |

@@ -4,6 +4,8 @@ sidebar_label: Get Premium Index Price Kline
 sidebar_position: 4
 ---
 
+import styles from '/src/css/clean_table.module.css';
+
 Retrieve the premium index price kline data. Charts are returned in groups based on the requested interval.
 > **Covers: Linear contract**
 
@@ -18,14 +20,14 @@ GET `/v5/market/premium-index-price-kline`
 |[interval](../enum#interval) |<b>true</b> |string |Kline interval |
 |start |false |integer |The start timestamp (ms)|
 |end |false |integer |The end timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [1,200]. Default: `200`|
+|limit |false |integer |Limit for data size per page. [`1`, `200`]. Default: `200`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |[category](../enum#category) |string |Product type |
 |symbol |string |Symbol name |
-|list |array |<li>An string array of individual candle</li><li>Sort in reverse by `start`</li>|
+|list |array |<ul><li>An string array of individual candle</li><li>Sort in reverse by `start`</li></ul>|
 |> list[0] |string |Start time of the candle (ms) |
 |> list[1] |string |Open price |
 |> list[2] |string |Highest price |

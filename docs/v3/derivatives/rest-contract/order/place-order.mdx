@@ -48,11 +48,11 @@ POST `/contract/v3/private/order/create`
 |price |false |string |Order price. Invalid if `orderType`=_Market_|
 |iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g., for 10%, 0.1 should be passed. It has a higher priority than `price` |
 |mmp |false |boolean |Market maker protection. `option` ONLY. `true` means this order is a market maker protection order |
-|triggerDirection |false |integer |_Conditional order param_. Used to identify the expected direction of the conditional order. <li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li>|
+|triggerDirection |false |integer |_Conditional order param_. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li></ul>|
 |triggerPrice |false |string |_Conditional order param_. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type. default:`LastPrice`.|
 |[positionIdx](../enum#positionidx) |false |integer |Position index. It is **required** for hedge position mode |
-|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>This param is **required**</li><li>always unique</li>|
+|orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>This param is **required**</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price. only take effect upon opening the position |
 |stopLoss |false |string |Stop loss price. only take effect upon opening the position |
 |[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. default:`LastPrice` |

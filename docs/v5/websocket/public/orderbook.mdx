@@ -4,30 +4,31 @@ sidebar_label: Orderbook
 sidebar_position: 1
 ---
 
-Subscribe the different depths orderbook stream.
+import styles from '/src/css/clean_table.module.css';
+
+Subscribe to the orderbook stream. Supports different depths.
 :::tip
-* Once subscribe successfully, you will receive a snapshot.
-* Websocket will keep pushing delta message when orderbook is changed. If you receive a new snapshot data, it's necessary to reset your local orderbook.
-* `snapshot`=snapshot orderbook, `delta`=delta orderbook
-* If there is a problem in bybit end, it will re-send a snapshot, which is promised the latest and accurate.
+* Once you have subscribed successfully, you will receive a `snapshot`.
+* The WebSocket will keep pushing `delta` messages every time the orderbook changes. If you receive a new `snapshot` message, you will have to reset your local orderbook.
+* If there is a problem on Bybit's end, a `snapshot` will be re-sent, which is guaranteed to contain the latest data.
 :::
 
 :::info
-linear & inverse 1 level data: if there is no change in 3 seconds, the **snapshot** stream will be pushed again.
+Linear & inverse level 1 data: if 3 seconds have elapsed without a change in the orderbook, a `snapshot` message will be pushed again.
 :::
 
-**linear & inverse:**<br/>
-  1 level data, push frequency: **10ms**<br/>
- 50 level data, push frequency: **20ms**<br/>
-200 level data, push frequency: **100ms**<br/>
+**Linear & inverse:**<br/>
+Level 1 data push frequency: **10ms**<br/>
+Level 50 data push frequency: **20ms**<br/>
+Level 200 data push frequency: **100ms**<br/>
 
 **Spot:**<br/>
-  1 level data, push frequency: **10ms**<br/>
- 50 level data, push frequency: **20ms**<br/>
+Level 1 data push frequency: **10ms**<br/>
+Level 50 data push frequency: **20ms**<br/>
 
 **Option:**<br/>
- 25 level data, push frequency: **20ms**<br/>
-100 level data, push frequency: **100ms**<br/>
+Level 25 data push frequency: **20ms**<br/>
+Level 100 data push frequency: **100ms**<br/>
 
 
 **Topic:**<br/>
@@ -38,16 +39,16 @@ linear & inverse 1 level data: if there is no change in 3 seconds, the **snapsho
 |:----- |:-----|----- |
 |topic |string |Topic name |
 |type |string |Data type. `snapshot`,`delta` |
-|ts |number |The timestamp (ms) that system generates the data |
+|ts |number |The timestamp (ms) that the system generates the data |
 |data |array |Object |
 |> s |string |Symbol name |
-|> b |array |Bids. The element is sort by price in descending order  |
+|> b |array |Bids. The element is sorted by price in descending order  |
 |>> b[0] |string |Bid price |
 |>> b[1] |string |Bid size |
-|> a |array |Asks. The element is sort by price in ascending order  |
+|> a |array |Asks. The element is sorted by price in ascending order  |
 |>> a[0] |string |Ask price |
 |>> a[1] |string |Ask size |
-|u |integer |Update id, is always in sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite the locally saved orderbook  |
+|u |integer |Update ID. Is a sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook  |
 |seq |integer |Cross sequence |
 
 ### Response Example

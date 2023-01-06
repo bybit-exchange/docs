@@ -31,7 +31,7 @@ wss://stream-testnet.bybit.com/v5/private
 :::
 
 <p>Apply for authentication when establishing a connection.</p>
-<p>Note: if you're using <a href="https://github.com/bybit-exchange/pybit">pybit</a> or another high-level library, you can ignore this code - as authentication is handled for you.</p>
+<p>Note: if you're using <a href="https://github.com/bybit-exchange/pybit">pybit</a>, <a href="https://www.npmjs.com/package/bybit-api">bybit-api</a>, or another high-level library, you can ignore this code - as authentication is handled for you.</p>
 
 ```json
 {
@@ -39,8 +39,8 @@ wss://stream-testnet.bybit.com/v5/private
     "op": "auth",
     "args": [
         "api_key",
-        1662350400000, //expires greater than currentTimeStamp
-        "singature"
+        1662350400000, // expires; is greater than your current timestamp
+        "signature"
     ]
 }
 ```
@@ -79,7 +79,7 @@ ws.send(
 )
 ```
 
-> Authentication success sample response
+> Successful authentication sample response
 
 ```json
 {
@@ -96,7 +96,7 @@ Example signature algorithms can be found <a href="https://github.com/bybit-exch
 
 :::caution
 Due to network complexity, your may get disconnected at any time. Please follow the instructions below to ensure that you receive WebSocket messages on time:
-1. Keep connection alive by [sending heartbeat packet](connect#how-to-send-heartbeat-packet)
+1. Keep connection alive by [sending the heartbeat packet](connect#how-to-send-the-heartbeat-packet)
 2. Reconnect as soon as possible if disconnected
 :::
 
@@ -104,15 +104,15 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 * Do not frequently connect and disconnect the connection.
 * Do not build over 500 connections in 5 minutes.
 
-## How to Send Heartbeat Packet
+## How to Send the Heartbeat Packet
 How to Send
 
 ```javascript
-// req_id is a customised id, which is optional
+// req_id is a customised ID, which is optional
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-> Pong message example of WebSocket public channel
+> Pong message example
 
 <Tabs>
 <TabItem value="spot" label="Spot">
@@ -128,7 +128,7 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 
 </TabItem>
 
-<TabItem value="future" label="Linear|Inverse">
+<TabItem value="future" label="Linear/Inverse">
 
 ```json
 {
@@ -157,11 +157,11 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 </Tabs>
 
 :::caution
-To avoid networks or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
+To avoid network or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
 :::
 
 ## How to Subscribe to Topics
-### Understanding Websocket Filters
+### Understanding WebSocket Filters
 
 How to subscribe with a filter
 
@@ -176,7 +176,7 @@ How to subscribe with a filter
 }
 ```
 
-Support subscribe multiple symbols and topics, separate with ','.
+Subscribing with multiple symbols and topics is supported.
 
 ```json
 {
@@ -190,9 +190,9 @@ Support subscribe multiple symbols and topics, separate with ','.
 }
 ```
 
-### Understanding Websocket Filters unsubscription
+### Understanding WebSocket Filters: Unsubscription
 
-You can dynamically subscribe and unsubscribe from topics without websocket disconnection as follows:
+You can dynamically subscribe and unsubscribe from topics without unsubscribing from the WebSocket like so:
 
 ```json
 {
@@ -204,11 +204,11 @@ You can dynamically subscribe and unsubscribe from topics without websocket disc
 }
 ```
 
-## Understanding Subscription Response
+## Understanding the Subscription Response
 > Topic subscription response message example
 
 <Tabs>
-<TabItem value="private" label="wss-private">
+<TabItem value="private" label="Private">
 
 ```json
 {
@@ -221,7 +221,7 @@ You can dynamically subscribe and unsubscribe from topics without websocket disc
 
 </TabItem>
 
-<TabItem value="public-spot" label="wss-public-Spot">
+<TabItem value="public-spot" label="Public Spot">
 
 ```json
 {
@@ -235,7 +235,7 @@ You can dynamically subscribe and unsubscribe from topics without websocket disc
 
 </TabItem>
 
-<TabItem value="public-future" label="wss-public-Linear|Inverse">
+<TabItem value="public-future" label="Linear/Inverse">
 
 ```json
 {
@@ -249,7 +249,7 @@ You can dynamically subscribe and unsubscribe from topics without websocket disc
 
 </TabItem>
 
-<TabItem value="public-option" label="wss-public-Option">
+<TabItem value="public-option" label="Option">
 
 ```json
 {

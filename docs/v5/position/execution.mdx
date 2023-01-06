@@ -4,13 +4,15 @@ sidebar_label: Get Execution (half year)
 sidebar_position: 5
 ---
 
-Query users' execution records, sort by `execTime` in descending order
+import styles from '/src/css/clean_table.module.css';
+
+Query users' execution records, sorted by `execTime` in descending order
 > **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
 
 :::tip
 * You may have multiple executions in a single order.
-* It supports to query up to last half year data
-* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+* This endpoint can query the last half years worth of data.
+* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
 ### HTTP Request
@@ -21,13 +23,13 @@ GET `/v5/execution/list`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`option` |
 |symbol |false |string |Symbol name |
-|orderId |false |string |Order id |
-|orderLinkId |false |string |User customised order id |
+|orderId |false |string |Order ID |
+|orderLinkId |false |string |User customised order ID |
 |baseCoin |false |string |Base coin. For `option` ONLY. Return all base coin data if not passed|
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type|
-|limit |false |integer |Limit for data size per page. [1,100]. Default: `50`|
+|limit |false |integer |Limit for data size per page. [`1`, `100`]. Default: `50`|
 |cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
@@ -36,8 +38,8 @@ GET `/v5/execution/list`
 | category | string  | Product type. `spot`,`linear`,`option`|
 | list | array | Object |
 |> symbol |string   |Symbol name |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customized order id |
+|> orderId |string |Order ID |
+|> orderLinkId |string |User customized order ID |
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
@@ -45,7 +47,7 @@ GET `/v5/execution/list`
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
 |> execFee |string   |Executed trading fee |
-|> execId |string |Execution id |
+|> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
 |> [execType](../enum#exectype) |string |Executed type|
@@ -58,7 +60,7 @@ GET `/v5/execution/list`
 |> markPrice |string |The mark price of the symbol when executing |
 |> indexPrice |string |The index price of the symbol when executing |
 |> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
-|> blockTradeId |string |Paradigm block trade id|
+|> blockTradeId |string |Paradigm block trade ID|
 |nextPageCursor |string |Cursor. Used for pagination|
 
 ### Request Example
