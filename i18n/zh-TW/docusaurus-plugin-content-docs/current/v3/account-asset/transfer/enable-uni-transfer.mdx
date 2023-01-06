@@ -1,4 +1,64 @@
 ---
-title: Enable Universal Transfer
-sidebar_label: Enable Universal Transfer
+title: 配置可互相劃轉的子賬號列表
+sidebar_label: 配置可互相劃轉的子賬號列表
+sidebar_position: 6
 ---
+配置可互相劃轉的子賬號列表
+
+:::tip
+萬能轉賬使您可以在兩個子賬戶（而不是子 -> 主 -> 子）和任何[賬戶類型](../enum#accounttype) （CONTRACT、SPOT等）之間劃轉。
+:::
+
+你需要通過這個接口來設置可互相劃轉的子賬號。如果不設置，這些賬戶之間不能互相劃轉
+
+### HTTP 請求
+POST `/asset/v3/private/transfer/transfer-sub-member-save`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|subMemberIds |false|string |逗號隔開的id列表，例："123,45,14,26,46" |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/transfer/transfer-sub-member-save HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670928736473
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 43
+
+{
+    "subMemberIds": ["1111111","2222222"]
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1670928736727
+}
+```
+</TabItem>
+</Tabs>

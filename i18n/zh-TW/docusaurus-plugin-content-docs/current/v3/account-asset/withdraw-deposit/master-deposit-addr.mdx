@@ -1,4 +1,72 @@
 ---
-title: Query Master Acct Deposit Address Information
-sidebar_label: Query Master Acct Deposit Address Information
+title: 主帳戶充值地址信息查詢
+sidebar_label: 主帳戶充值地址信息查詢
+sidebar_position: 8
 ---
+主帳戶充值地址信息查詢
+
+### HTTP 請求
+GET `/asset/v3/private/deposit/address/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[coin](../enum#coin) |false |string |幣種|
+|chainType |false |string |鏈. 若為空，則返回全部.<ul><li>注意，此處應傳鏈名，例如ETH，而不是ERC20.</li></ul>|
+
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result|Object|result object|
+|[coin](../enum#coin)|string |幣種 |
+|chains|Array|Object|
+|chainType|string|鏈類型|
+|addressDeposit|string|充值地址|
+|tagDeposit|string|充值tag|
+|chain|string|鏈名|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/deposit/address/query?coin=USDT&chainType=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671174181320
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/x-www-form-urlencoded
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "coin": "USDT",
+        "chains": [
+            {
+                "chainType": "ERC20",
+                "addressDeposit": "xxxxxxxxxxx",
+                "tagDeposit": "",
+                "chain": "ETH"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1671174181514
+}
+```
+</TabItem>
+</Tabs>

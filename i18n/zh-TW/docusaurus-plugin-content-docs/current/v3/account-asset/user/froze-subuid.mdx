@@ -1,4 +1,60 @@
 ---
-title: Froze Sub UID
-sidebar_label: Froze Sub UID
+title: 凍結/解凍子帳戶
+sidebar_label: 凍結/解凍子帳戶
+sidebar_position: 4
 ---
+凍結或解凍子帳戶。需使用<b>母</b>帳戶的API key。
+
+### HTTP 請求
+POST `/user/v3/private/frozen-sub-member`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|subuid |<b>true</b> |integer |子帳戶userId |
+|frozen |<b>true</b> |integer |`0`：解凍, `1`：凍結 |
+
+### 返回參數
+| Parameter | 類型 | 說明|
+|:----- |:-----|----- |
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /user/v3/private/frozen-sub-member HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671177689823
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 42
+
+{
+    "subuid": 111111111,
+    "frozen": 1
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": null,
+    "time": 1671177689999
+}
+```
+</TabItem>
+</Tabs>

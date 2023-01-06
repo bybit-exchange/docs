@@ -1,4 +1,75 @@
 ---
-title: Supported Deposit List
-sidebar_label: Supported Deposit List
+title: 支持的充值列表查詢接口
+sidebar_label: 支持的充值列表查詢接口
+sidebar_position: 1
 ---
+支持的充值列表查詢接口
+
+:::info Information
+是一個公共接口。 coin和chain必須在輸入參數中配對出現。 否則，視為無條件查詢。
+:::
+
+### HTTP 請求
+GET `/asset/v3/public/deposit/allowed-deposit-list/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |充值幣種. coin和chain必須在輸入參數中配對出現。 否則，視為無條件查詢。|
+|chain |false |string |充值鏈名. coin和chain必須在輸入參數中配對出現。 否則，視為無條件查詢。 |
+|cursor |false |string |游標信息：用來分頁。 默認空 |
+|limit |false |int |每頁條數。0< limit <=50 默認為50 |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|configList|Array|Object|
+|[coin](../enum#coin)|string |充值的幣種 |
+|[chain](../enum#chain)|string|鏈名|
+|coinShowName|string|币展名|
+|chainType|string|鏈類型|
+|blockConfirmNumber|int|充值上賬確認數|
+|minDepositAmount|string|最低充值金額|
+|nextPageCursor|string|游標信息：用來分頁。 默認空|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/public/deposit/allowed-deposit-list/query?coin=BTC&chain=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "configList": [
+            {
+                "coin": "BTC",
+                "chain": "BTC",
+                "coinShowName": "BTC",
+                "chainType": "BTC",
+                "blockConfirmNumber": 10000,
+                "minDepositAmount": "0.0005"
+            }
+        ],
+        "nextPageCursor": "eyJwYWdlIjoyLCJsaW1pdCI6MTB9"
+    },
+    "retExtInfo": {},
+    "time": 1671165256048
+}
+```
+</TabItem>
+</Tabs>

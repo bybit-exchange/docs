@@ -1,4 +1,79 @@
 ---
-title: Withdraw
-sidebar_label: Withdraw
+title: 提現
+sidebar_label: 提現
+sidebar_position: 6
 ---
+
+
+:::info
+提現總是來自現貨錢包內的資產。
+:::
+
+### HTTP 請求
+POST `/asset/v3/private/withdraw/create`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[coin](../enum#coin) |<b>true</b> |string |幣種|
+|chain|<b>true</b>|string|鏈名|
+|address|<b>true</b>|string|Address|地址。地址校驗是否存在提現地址的白名單|
+|tag|false|string|存在tag的需要填寫|
+|amount|<b>true</b>|string|提幣數量。規則：大於等於最小提幣金額，最小提幣金額可從幣種信息接口獲取。|
+|timestamp|<b>true</b>|int|時間戳. 允許範圍是當前時間的前後5分鐘|
+|forceChain|false|int|是否強制走鏈提幣. <ul><li>`0`：解析到若為內部地址 (默認)，則內部轉帳</li><li>`1`：強制走鏈</li></ul>|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|name|string|Name|
+|result|Object|result object|
+|id|string|提現ID。 (提現API響應參數中的提現請求ID)|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/withdraw/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671172758674
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 193
+
+{
+    "coin": "USDT",
+    "chain": "ETH",
+    "address": "xxxxxxxxxxx",
+    "tag": null,
+    "amount": "10",
+    "timestamp": 1670919612851,
+    "forceChain": 1
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "id": "xxxxxxxxxxx"
+  },
+  "retExtInfo": null,
+    "time": 1671172180550
+}
+```
+</TabItem>
+</Tabs>

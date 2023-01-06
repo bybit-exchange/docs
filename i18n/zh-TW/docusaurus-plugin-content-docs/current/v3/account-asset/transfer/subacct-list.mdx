@@ -1,4 +1,68 @@
 ---
-title: Query Subaccount UID List
-sidebar_label: Query Subaccount UID List
+title: 查詢子賬號列表
+sidebar_label: 查詢子賬號列表
+sidebar_position: 5
 ---
+
+import styles from '/src/css/clean_table.module.css';
+
+查詢子賬號列表
+
+### HTTP 請求
+GET `/asset/v3/private/transfer/sub-member/list/query`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|subMemberIds |`integer array` |所有子賬號列表 |
+|transferableSubMemberIds|`string array`|所有可互相劃轉的子賬號列表|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+GET /asset/v3/private/transfer/sub-member/list/query HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1670928351923
+X-BAPI-RECV-WINDOW: 50000
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "subMemberIds": [
+            "111111",
+            "2222222",
+            "3333333"
+        ],
+        "transferableSubMemberIds": [
+            "111111",
+            "2222222",
+            "3333333"
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1670928352175
+}
+```
+</TabItem>
+</Tabs>

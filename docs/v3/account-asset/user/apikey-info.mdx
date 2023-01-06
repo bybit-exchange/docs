@@ -6,7 +6,7 @@ sidebar_position: 5
 Get the information of the api key. Use the api key pending to be checked to call the endpoint. Both `master` and `sub user's` api key are applicable.
 
 ### HTTP Request
-GET `/user/v3/private/frozen-sub-member`
+GET `/user/v3/private/query-api`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -36,6 +36,13 @@ GET `/user/v3/private/frozen-sub-member`
 |expiredAt |datetime |The expiry day of the api key. Only for those api key with no IP bound or the password has been changed|
 |createdAt |datetime |The create day of the api key |
 |unified |int |Whether the account to which the api key belongs is a unified account. `0`：regular account; `1`：unified account |
+|uta |int |Whether the account to which the account upgrade to unified trade account. `0`：regular account; `1`：unified trade account |
+|userID |int |User ID |
+|inviterID |int |Inviter ID (the UID of the account which invited this account to the platform) |
+|vipLevel |string |VIP Level |
+|mktMakerLevel |string |Market maker level |
+|affiliateID |int |Affiliate Id. `0` represents that there is no binding relationship. |
+
 
 ### Request Example
 
@@ -65,9 +72,9 @@ Content-Type: application/json
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "id": "111111111",
-        "note": "TESTING",
-        "apiKey": "xxxxxxxxxxxxx",
+        "id": "375764",
+        "note": "ordinary",
+        "apiKey": "CBIZAHQMLAPKMGUVGJ",
         "readOnly": 0,
         "secret": "",
         "permissions": {
@@ -79,8 +86,7 @@ Content-Type: application/json
                 "SpotTrade"
             ],
             "Wallet": [
-                "AccountTransfer",
-                "SubMemberTransfer"
+                "AccountTransfer"
             ],
             "Options": [
                 "OptionsTrade"
@@ -88,9 +94,7 @@ Content-Type: application/json
             "Derivatives": [
                 "DerivativesTrade"
             ],
-            "CopyTrading": [
-                "CopyTrading"
-            ],
+            "CopyTrading": [],
             "BlockTrade": [],
             "Exchange": [
                 "ExchangeHistory"
@@ -101,14 +105,19 @@ Content-Type: application/json
             "*"
         ],
         "type": 1,
-        "deadlineDay": 86,
-        "expiredAt": "2023-03-12T11:10:15Z",
-        "createdAt": "2022-09-12T09:42:20Z",
-        "unified": 1,
-        "uta": 0
+        "deadlineDay": 87,
+        "expiredAt": "2023-04-04T05:44:02Z",
+        "createdAt": "2023-01-04T05:44:02Z",
+        "unified": 0,
+        "uta": 0,
+        "userID": 1135134,
+        "inviterID": 0,
+        "vipLevel": "No VIP",
+        "mktMakerLevel": "0",
+        "affiliateID": 0
     },
     "retExtInfo": null,
-    "time": 1671177977660
+    "time": 1672986764656
 }
 ```
 </TabItem>

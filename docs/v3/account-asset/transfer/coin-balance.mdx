@@ -12,18 +12,28 @@ Notice: It's not allowed to get master account coin balance via sub account api 
 :::
 
 ### HTTP Request
-GET `/asset/v3/private/transfer/transfer-coin/list/query`
+GET `/asset/v3/private/transfer/account-coin/balance/query`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|memberId|<b>true</b> |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
 |[fromAccountType](../enum#accounttype)|<b>true</b> |string |Account type |
-|[toAccountType](../enum#accounttype) |<b>true</b> |string |Account type |
+|[coin](../enum#coin) |<b>true</b> |string |Currency type |
+|withBonus|<b>true</b> |string |Account type | Whether query bonus or not. `0`：false; `1`：true; Not query is in default |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|list |Array |The coins are enabled transfer between accounts|
+|[accountType](../enum#accounttype) |string |Account type|
+|bizType |int |Account business subtype|
+|accountId |string |AccountID|
+|memberId |string |UserID|
+|balance |Array |Object|
+|> coin |string |Currency type|
+|> walletBalance |string |Wallet balance|
+|> transferBalance |string |Transferable balance = available balance - bonus|
+|> bonus |string |The bonus|
 
 ### Request Example
 
@@ -31,12 +41,11 @@ GET `/asset/v3/private/transfer/transfer-coin/list/query`
 <TabItem value="console" label="Console">
 
 ```http
-GET /asset/v3/private/transfer/transfer-coin/list/query?fromAccountType=SPOT&toAccountType=CONTRACT HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671163888641
-X-BAPI-RECV-WINDOW: 5000
+curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/transfer/account-coin/balance/query?memberId=123&accountType=CONTRACT&coin=BTC&withBonus=0' \
+--header 'X-BAPI-TIMESTAMP: 1660794864052' \
+--header 'X-BAPI-API-KEY: XXXXXXXXXXXX' \
+--header 'X-BAPI-RECV-WINDOW: 999999999' \
+--header 'X-BAPI-SIGN: c4f6cbc0581a8afa81cade431c9389a62ff7817e3e6c4aee456fd3f86796f619' \
 ```
 
 </TabItem>
@@ -52,22 +61,19 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "list": [
-            "ETH",
-            "EOS",
-            "USDT",
-            "ADA",
-            "BIT",
-            "BTC",
-            "DAI",
-            "DOT",
-            "LTC",
-            "MANA",
-            "XRP"
-        ]
+        "accountType": "UNIFIED",
+        "bizType": 1,
+        "accountId": "618463",
+        "memberId": "533285",
+        "balance": {
+            "coin": "USDT",
+            "walletBalance": "1847.9874",
+            "transferBalance": "1847.9874",
+            "bonus": "0"
+        }
     },
-    "retExtInfo": {},
-    "time": 1671163888818
+    "retExtInfo": null,
+    "time": 1661139455294
 }
 ```
 </TabItem>

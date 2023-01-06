@@ -1,4 +1,61 @@
 ---
-title: Cancel withdrawal
-sidebar_label: Cancel withdrawal
+title: 撤銷提幣
+sidebar_label: 撤銷提幣
+sidebar_position: 7
 ---
+撤銷提幣
+
+### HTTP 請求
+POST `/asset/v3/private/withdraw/cancel`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|id| <b>true</b> | int64 |提現ID。 (提現API響應參數中的提現請求ID)|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|status|int|結果對象（撤單申請結果：1成功，0失敗）: <ul><li>`1` 成功</li><li>`0` 失敗</li></ul>|
+
+### 請求示例
+
+<Tabs>
+<TabItem value="console" label="Console">
+
+```http
+POST /asset/v3/private/withdraw/cancel HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: xxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671173665186
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+Content-Length: 24
+
+{
+    "id": 1234567890
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+<Tabs>
+<TabItem value="js linear" label="assets">
+
+```json
+{
+  "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    "status": 1
+  },
+  "retExtInfo": null,
+    "time": 1671173665252
+}
+```
+</TabItem>
+</Tabs>
