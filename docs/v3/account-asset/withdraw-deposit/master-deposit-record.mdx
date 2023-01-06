@@ -1,21 +1,22 @@
 ---
 title: Query Deposit Records
 sidebar_label: Query Deposit Records
-sidebar_position: 3
+sidebar_position: 2
 ---
-Query Sub Deposit Records By Master Key
+Query Deposit Records
 
 :::info Rules
-Rules: Query sub account deposit records by master account api key. If you want to use sub account api key to query, please use <a href="sub-deposit-record">Query Deposit Records</a> endpoint
+<li>Only query the deposit records of spot accounts order by id in reverse order.</li>
+<li>The maximum difference between the start time and the end time is 30 days.</li>
+<li>Support to get deposit records by Master or Sub Member Api Key</li>
 :::
 
 ### HTTP Request
-GET `/asset/v3/private/deposit/sub-member-record/query`
+GET `/asset/v3/private/deposit/record/query`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|subMemberId |<b>true</b> |int | Sub user Id
 |startTime |false |int |start time (In Millisecond). Default value: 30 days before the current time |
 |endTime |false |int |end time (In Millisecond). Default value: current time |
 |[coin](../enum#coin) |false |string |coin name: for example, BTC. Default value: all |
@@ -46,11 +47,11 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 <TabItem value="console" label="Console">
 
 ```http
-GET /asset/v3/private/deposit/sub-member-record/query?subMemberId=xxxxxxxxxxx HTTP/1.1
+GET /asset/v3/private/deposit/record/query?coin=USDT HTTP/1.1
 Host: api-testnet.bybit.com
-X-BAPI-API-KEY: xxxxxxxxxxx
 X-BAPI-SIGN: xxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671169682466
+X-BAPI-API-KEY: xxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671166430580
 X-BAPI-RECV-WINDOW: 50000
 ```
 
@@ -75,9 +76,23 @@ X-BAPI-RECV-WINDOW: 50000
                 "txID": "1234567890",
                 "status": 3,
                 "toAddress": "xxxxxxxxxxx",
-                "tag": "11234567890",
+                "tag": "",
                 "depositFee": "",
                 "successAt": "1671018256000",
+                "confirmations": "10000",
+                "txIndex": "",
+                "blockHash": ""
+            },
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "amount": "10000",
+                "txID": "01234567890",
+                "status": 3,
+                "toAddress": "xxxxxxxxxxx",
+                "tag": "",
+                "depositFee": "",
+                "successAt": "1669197900000",
                 "confirmations": "10000",
                 "txIndex": "",
                 "blockHash": ""
