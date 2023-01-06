@@ -105,7 +105,6 @@ ws.send(
 * 不要在5分鐘內構建超過500個連接。
 
 ## 如何發送心跳
-How to Send
 
 ```javascript
 // req_id is a customised id, which is optional
@@ -114,16 +113,47 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 
 > 接收到pong的響應示例
 
+<Tabs>
+<TabItem value="spot" label="現貨">
+
 ```json
 {
-    "req_id": "test",
-    "op": "pong",
-    "args": [
-    "1671163042443"
-    ],
-    "conn_id": "ce3e06kfnonvuu2e3j4g-2t5w"
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "0970e817-426e-429a-a679-ff7f55e0b16a",
+    "op": "ping"
 }
 ```
+
+</TabItem>
+
+<TabItem value="future" label="期貨">
+
+```json
+{
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",
+    "req_id": "",
+    "op": "ping"
+}
+```
+
+</TabItem>
+
+<TabItem value="option" label="期權">
+
+```json
+{
+    "args": [
+    "1672916271846"
+    ],
+    "op": "pong"
+}
+```
+
+</TabItem>
+</Tabs>
 
 :::caution
 為了維持連接，我們推薦您每<b>20</b>秒發送一次心跳。
@@ -153,7 +183,7 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
     "op": "subscribe",
     "args": [
         "orderbook.1.BTCUSDT",
-        "publicTrade.BTCUSDT"，
+        "publicTrade.BTCUSDT",
         "orderbook.1.ETHUSDT",
     ]
 }
@@ -176,11 +206,63 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ## 理解訂閱的響應
 > 訂閱成功後的響應示例
 
+<Tabs>
+<TabItem value="private" label="私有頻道">
+
 ```json
 {
     "success": true,
     "ret_msg": "",
     "op": "subscribe",
-    "conn_id": "cejreaspqfh3sjdnldmg-s"
+    "conn_id": "cejreassvfrsfvb9v1a0-2m"
 }
 ```
+
+</TabItem>
+
+<TabItem value="public-spot" label="公有現貨">
+
+```json
+{
+    "success": true,
+    "ret_msg": "subscribe",
+    "conn_id": "2324d924-aa4d-45b0-a858-7b8be29ab52b",
+    "req_id": "10001",
+    "op": "subscribe"
+}
+```
+
+</TabItem>
+
+<TabItem value="public-future" label="公有期貨">
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "3cd84cb1-4d06-4a05-930a-2efe5fc70f0f",
+    "req_id": "",
+    "op": "subscribe"
+}
+```
+
+</TabItem>
+
+<TabItem value="public-option" label="公有期權">
+
+```json
+{
+    "success": true,
+    "conn_id": "aa01fbfffe80af37-00000001-000b37b9-7147f432704fd28c-00e1c172",
+    "data": {
+    "failTopics": [],
+    "successTopics": [
+    "orderbook.100.BTC-6JAN23-18000-C"
+    ]
+},
+    "type": "COMMAND_RESP"
+}
+```
+
+</TabItem>
+</Tabs>
