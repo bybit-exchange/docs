@@ -3,7 +3,7 @@ title: Rate Limit
 sidebar_label: Rate Limit
 ---
 
-### IP Rate Limit
+## IP Rate Limit
 :::caution
 If you receive an **HTTP 403** (Access Denied) response, your IP has been either temporarily or permanently banned.
 **You should immediately review the below guidelines to ensure your application does not continue to violate the limit.**
@@ -23,7 +23,7 @@ at the very edge of these limits in case abnormal network activity results in an
 After violating the limit your IP will be banned for a set period of time (usually 30 minutes). Continually violating
 the limit will result in a permanent ban. We cannot undo permanent bans or shorten temporary bans.
 
-### API Rate Limit
+## API Rate Limit
 :::caution
 If you receive `"ret_msg": "Too many visits!"` in the JSON response, you have hit the API rate limit.
 :::
@@ -44,9 +44,140 @@ X-Bapi-Limit-Status: 99
 X-Bapi-Limit-Reset-Timestamp: 1672738134824
 ```
 
-#### Specific Rate Limit Of Endpoints
+### API Rate Limit Table
+#### Trade
+<table border="0.8">
+    <tr>
+        <th>Path</th><th>linear</th><th>option</th><th>spot</th>
+    </tr>
+    <tr>
+        <td>/v5/order/create</td><td>10 req/s</td><td>5 req/s</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/order/amend</td><td>10 req/s</td><td>5 req/s</td><td>-</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel-all</td><td>10 req/s</td><td>1 req/s</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/order/create-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+    </tr>
+    <tr>
+        <td>/v5/order/amend-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+    </tr>
+    <tr>
+        <td colSpan="4">For now, there is no limit for other endpoints</td>
+    </tr>
+</table>
 
-### How to increase API Limit
+#### Position
+<table border="0.8">
+    <tr>
+        <th>Path</th><th>linear</th>
+    </tr>
+    <tr>
+        <td>/v5/position/set-leverage</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/position/set-tpsl-mode</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/position/set-risk-limit</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/position/trading-stop</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td colSpan="2">For now, there is no limit for other endpoints</td>
+    </tr>
+</table>
+
+#### Account
+<table border="0.8">
+    <tr>
+        <td>For now, there is no limit for endpoints under this category</td>
+    </tr>
+</table>
+
+#### Asset
+<table border="0.8">
+    <tr>
+        <th>Method</th><th>Path</th><th>Limit</th>
+    </tr>
+    <tr>
+        <td rowSpan="13">GET</td><td>/v5/asset/transfer/query-asset-info</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-transfer-coin-list</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-transfer-coin-list</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-inter-transfer-list</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-sub-member-list</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-universal-transfer-list</td><td>60 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-record</td><td>300 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-sub-member-record</td><td>300 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-address</td><td>300 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-sub-member-address</td><td>300 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/query-record</td><td>300 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/coin/query-info</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/exchange/order-record</td><td>600 req/s</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">POST</td><td>/v5/asset/transfer/inter-transfer</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/save-transfer-sub-member</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/universal-transfer</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/create</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/cancel</td><td>60 req/s</td>
+    </tr>
+</table>
+
+#### Spot Leverage Token
+|Method |Path |Limit |
+|:----|:----|----|
+|Get |/v5/spot-lever-token/order-record | 50 req/s|
+|Post |/v5/spot-lever-token/purchase | 20 req/s|
+|Post |/v5/spot-lever-token/redeem | 20 req/s|
+
+#### Spot Margin Trade
+<table border="0.8">
+    <tr>
+        <td>For now, there is no limit for endpoints under this category</td>
+    </tr>
+</table>
+
+## How to increase API Limit
 Please email api@bybit.com with the following information. We will reply within 1-4 working days:
 1. Your name and your company details
 2. Your Bybit UID or registered email, and the assets you are trading
