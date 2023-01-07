@@ -91,14 +91,14 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 
 
 ## How to Send Heartbeat Packet
-How to Send
+> How to Send
 
 ```json
 // req_id is a customised id, which is optional
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-Response Example
+> The response sample of Pong
 
 ```json
 // with req_id
@@ -108,21 +108,19 @@ Response Example
 {"op":"pong","args":[1661741654529],"conn_id":"706b870c"}
 ```
 
-
 :::caution
 To avoid networks or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
 :::
 
-
 ## Rate Limits
-<b>Private channel ONLY</b>：Each API key may have a maximum of 100 private WebSocket connections. The 101st connection will be rejected.
-An IP can connect to a maximum of 50 private spot websocket connections simultaneously.
-
+**Private channel ONLY:**
+- Each API key may have a maximum of 100 private WebSocket connections. The 101st connection will be rejected.
+- An IP can connect to a maximum of 50 private spot websocket connections simultaneously.
 
 ## How to Subscribe to Topics
 ### Understanding Websocket Filters
 
-How to subscribe with a filter
+> How to subscribe with a filter
 
 ```json
 // Subscribing to the trade data for BTCUSDT
@@ -135,7 +133,7 @@ How to subscribe with a filter
 }
 ```
 
-support many symbol, separate with ','.
+> support many symbol, separate with ','.
 
 ```json
 // Example: Subscribing to the trade data for BTCUSDT and ETHUSDT
@@ -156,7 +154,7 @@ support many symbol, separate with ','.
 ws.send('{"req_id": "10001", "op": "subscribe", "args": ["trade.BTCUSDT", "trade.ETHUSDT", "tickers.BTCUSDT", "bookticker.BTCUSDT"]}')
 ```
 
-:::info
+:::caution
 You can pass a maximum of <b>10</b> args in <code>args</code>
 :::
 
