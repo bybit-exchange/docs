@@ -12,10 +12,10 @@ If startTime and endTime are both not specified, it returns last 7 days records 
 Supports fetching 3 months worth of data per request. Returns data up to 6 months old.
 :::
 
-#### HTTP Request
+### HTTP Request
 GET <code>/spot/v3/private/history-orders</code>
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | symbol               | false               | string          | Name of the trading pair             |
@@ -25,7 +25,7 @@ GET <code>/spot/v3/private/history-orders</code>
 | endTime              | false               | long             | End time, unit in millisecond          |
 | orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 | accountId            | string          | Account ID            |
@@ -49,26 +49,20 @@ GET <code>/spot/v3/private/history-orders</code>
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/history-orders?symbol=BTCUSDT&limit=2&startTime=1658246400000&endTime=1659110400000' \
---header 'X-BAPI-SIGN: 1e18efe3e2c96df191c84d86b8a4d695184ea5fe64aa21062fa15e8464caeca0' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659082629976' \
 --header 'X-BAPI-RECV-WINDOW: 5000'
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
 <Tabs>
 <TabItem value="normal" label="Normal order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -105,7 +99,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/his
 
 <TabItem value="stop" label="Stop order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -139,5 +133,4 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/his
 ```
 
 </TabItem>
-
 </Tabs>
