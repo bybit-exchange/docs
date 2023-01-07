@@ -16,21 +16,12 @@ POST `/contract/v3/private/position/set-risk-limit`
 |:----- |:-------|:-----|------ |
 |symbol |**true** |string |Symbol name|
 |riskId |**true** |integer |Risk limit id|
-|positionIdx |**true** |integer |Used to identify positions in different position modes<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+|positionIdx |false |integer |Used to identify positions in different position modes. For hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|retCode |integer |Success/Error code |
-|retMsg |string |Success/Error message |
-|result |Object | |
-|retExtInfo |Object | |
-|time |integer |Timestamp |
+None
 
 ### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /contract/v3/private/position/set-risk-limit HTTP/1.1
@@ -47,13 +38,7 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
 
 ```json
 {
@@ -64,5 +49,3 @@ Content-Type: application/json
     "time": 1670853143027
 }
 ```
-</TabItem>
-</Tabs>

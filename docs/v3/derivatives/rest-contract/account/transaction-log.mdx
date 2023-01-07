@@ -15,7 +15,7 @@ GET `/contract/v3/private/account/transaction-log`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`: USDC Perp,`option`.  |
+|category |false |string |Product type. `linear`: USDC Perp only, `option` |
 |baseCoin |false |string |Base coin<ul><li>If type=`TRANSFER_IN`,`TRANSFER_OUT`,`INTEREST`,`CURRENCY_BUY`,<br/>`CURRENCY_SELL`,`FEE_REFUND`,`BONUS`,`INTEREST`, this field could be ignored</li><li>If type=other enums, it returns all coin records when `baseCoin` is not passed</li> </ul>|
 |[type](../enum#type) |false |string |If not passed, all trading history are returned by default |
 |startTime |false |integer |Start timestamp (ms)|
@@ -37,9 +37,6 @@ GET `/contract/v3/private/account/transaction-log`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="console">
-
 ```http
 GET /contract/v3/private/account/wallet/fund-records?limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
@@ -49,15 +46,9 @@ X-BAPI-TIMESTAMP: 1670931970500
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -77,5 +68,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1670931971341
 }
 ```
-</TabItem>
-</Tabs>
