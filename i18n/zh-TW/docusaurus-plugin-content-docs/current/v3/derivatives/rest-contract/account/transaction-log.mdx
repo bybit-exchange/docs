@@ -1,82 +1,92 @@
 ---
-title: 獲取交易日誌
-sidebar_label: 獲取交易日誌
+title: 獲取帳戶交易日誌
+sidebar_label: 獲取帳戶交易日誌
 sidebar_position: 4
 slug: /derivatives/contract/transaction-log
 ---
 
-Get transaction logs of USDC account.
+當前僅能獲取到USDC帳戶的交易日誌
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/account/transaction-log`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`: USDC Perp,`option`.  |
-|baseCoin |false |string |Base coin<ul><li>If type=`TRANSFER_IN`,`TRANSFER_OUT`,`INTEREST`,`CURRENCY_BUY`,<br/>`CURRENCY_SELL`,`FEE_REFUND`,`BONUS`,`INTEREST`, this field could be ignored</li><li>If type=other enums, it returns all coin records when `baseCoin` is not passed</li> </ul>|
-|[type](../enum#type) |false |string |If not passed, all trading history are returned by default |
-|startTime |false |integer |Start timestamp (ms)|
-|endTime |false |integer |End timestamp (ms)|
-|direction |false |string |Direction of pagination. `prev`, `next`|
-|limit |false |integer |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|category |false |string |產品類型. `future`: USDC永續合約, `option` |
+|baseCoin |false |string |交易幣種<ul><li>若`type`=`TRANSFER_IN`,`TRANSFER_OUT`,`INTEREST`,`CURRENCY_BUY`,<br/>`CURRENCY_SELL`,`FEE_REFUND`,`BONUS`,`INTEREST`, 該字段將會被忽略</li><li>若`type`=其他枚舉值, 如果該字段未傳，將返回所有紀錄</li> </ul>|
+|[type](../enum#type) |false |string |交易類型. 若不傳, 則返回所有交易歷史 |
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|direction |false |string |翻頁方向. `prev`: 上一頁, `next`: 下一頁|
+|limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
 |list |array |Object |
-|> coin |string |Coin |
-|> [type](../enum#walletfundtype) |string |Type |
-|> amount |string |Amount |
-|> walletBalance |string |Wallet balance |
-|> execTime |string |Executed timestamp (ms) |
-|nextPageCursor |string |Cursor. Used to pagination|
+|> symbol |string |合約名稱 |
+|> category |string |產品類型|
+|> side |string |方向. `Buy`,`Sell`,`None`|
+|> transactionTime	|string |交易時間戳（毫秒）|
+|> [type](../enum#type) |string |類型 |
+|> qty	|string	|數量|
+|> size |string |倉位|
+|> tradePrice |string |交易價格|
+|> funding	|string	|資金費用|
+|> fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示賺取|
+|> cashFlow |string |現金流|
+|> change |string |變更|
+|> cashBalance	|string	|餘額（當前幣種）|
+|> feeRate	|string	|手續費率|
+|> tradeId	|string |交易id|
+|> orderId	|string	|訂單id|
+|> orderLinkId	|string	|用戶自定義訂單id|
+|> info	|string	|信息|
+|nextPageCursor	|string	|游標，用於翻頁|
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="console">
+### 請求示例
 
 ```http
-GET /contract/v3/private/account/wallet/fund-records?limit=1 HTTP/1.1
+GET /contract/v3/private/account/transaction-log?category=option&type=DELIVERY&limit=1&coin=ETH HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1670931970500
+X-BAPI-TIMESTAMP: 1673171427075
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
-    "retCode": 0,
-    "retMsg": "OK",
     "result": {
-    "list": [
-        {
-            "coin": "BTC",
-            "type": "RealisedPNL",
-            "amount": "-0.00003034",
-            "walletBalance": "0.68146653",
-            "execTime": "1665792000030"
-        }
-    ],
-    "nextPageCursor": "K2tqR0xUQ1B1Tyt1a0ZFeVZRa1I2R2ZOT2pVekNKeGZPOTEyWFNpeXd1ejRmRTFoUkhabnVKVlRBNnFtZGk0dlBhRThLdFNHTGxFdWJGQVFMdXBnZ29Bb3JmSDlkczZHV1p1V1JoZmc2dnlRc1VMZ1ZVYlRXeW51ZUVBT3QycjlYSml3alNZampKTHdrdDJzSzFWdnlWK0djRklqczB1M0JYN04wVXltV0ljPQ=="
-},
-    "retExtInfo": {},
-    "time": 1670931971341
+        "nextPageCursor": "204%3A0%2C204%3A0",
+        "list": [
+            {
+                "symbol": "BTC-12DEC22-17000-C",
+                "side": "Buy",
+                "funding": "",
+                "orderLinkId": "",
+                "orderId": "",
+                "fee": "0",
+                "change": "0",
+                "cashFlow": "0",
+                "transactionTime": "1670832001245",
+                "type": "DELIVERY",
+                "feeRate": "0",
+                "size": "0",
+                "qty": "0.01",
+                "cashBalance": "1259.89831235",
+                "category": "option",
+                "tradePrice": "16926.53617223",
+                "tradeId": "",
+                "info": ""
+            }
+        ]
+    },
+    "retCode": 0,
+    "retMsg": "Success."
 }
 ```
-</TabItem>
-</Tabs>
