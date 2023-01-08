@@ -4,9 +4,9 @@ sidebar_label: Orderbook
 sidebar_position: 1
 slug: /derivatives/ws-public/orderbook
 ---
-> **Cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option**
 
 Get different depth
+> **Cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option**
 
 :::info
 * Once subscribe successfully, you will receive a `snapshot` first.
@@ -26,11 +26,7 @@ Get different depth
 * Level 100 data, push frequency: **100ms**
 
 **Topic:** (note: option has 25 & 100 level only)<br/>
-`orderbook.1.{symbol}`<br/>
-`orderbook.25.{symbol}`<br/>
-`orderbook.50.{symbol}`<br/>
-`orderbook.100.{symbol}`<br/>
-`orderbook.200.{symbol}`
+`orderbook.{depth}.{symbol}` e.g., orderbook.1.BTCUSDT
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -49,7 +45,7 @@ Get different depth
 |> u |number |Update id, is always in sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite the locally saved orderbook |
 |> seq |number |Cross sequence (internal value) |
 
-### Request Example
+### Subscription Example
 
 <Tabs>
 <TabItem value="console" label="JSON subscription message">
@@ -67,7 +63,7 @@ Get different depth
 </TabItem>
 </Tabs>
 
-### Response Example
+### Stream Example
 
 <Tabs>
 <TabItem value="orderbook-snapshot" label="orderbook-snapshot">

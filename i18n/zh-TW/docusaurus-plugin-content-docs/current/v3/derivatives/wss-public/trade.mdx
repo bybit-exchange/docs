@@ -4,44 +4,35 @@ sidebar_label: 平台成交
 sidebar_position: 2
 slug: /derivatives/ws-public/trade
 ---
-> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option
 
-Get recent public trades data in Bybit.
+訂閱Bybit平台上最近成交的推送. 從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
+> **覆蓋範圍: 正向合約，反向合約，期權**
 
-:::info
-After subscription, you will be pushed delta trade message in real-time once there is an order filled.
-:::
-
-Push frequency: **real-time**
+推送頻率: **實時**
 
 **Topic:**
-`publicTrade.{symbol}`
+`publicTrade.{symbol}` **注意**: 期權使用baseCoin, e.g., publicTrade.BTC
 
-> For option, it should use base coin, e.g., `publicTrade.BTC`
-
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|id |string |Message id. _Unique field for option_ |
-|topic |string |Topic name |
-|type |string |Message type. `snaptshot` |
-|ts |number |The timestamp (ms) that system generates the data. |
+|id |string |消息 id. _期權沒有該字段_ |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`|
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |array |Object |
-|> T |number | The timestamp (ms) that the order is filled |
-|> s |string |Symbol name |
-|> S |string |Direction of taker. `Buy`,`Sell` |
-|> v |string |qty |
-|> p |string |Executed price |
-|> [L](../enum#tickdirection) |string |Direction of price change. _Unique field for future_ |
-|> i |string |Trade id |
-|> BT |boolean |Block trade or not |
+|> T |number |成交時間戳 (毫秒) |
+|> s |array |合約名稱  |
+|> S |string |方向. `Buy`,`Sell` |
+|> v |string |成交數量 |
+|> p |string |成交價格 |
+|> [L](../../enum#tickdirection) |string |價格變化的方向. _期權沒有該字段_ |
+|> i |string |成交Id |
+|> BT |boolean |成交類型是否為大宗交易|
 
-### Request Example
+### 訂閱示例
 
-<Tabs>
-<TabItem value="console" label="JSON subscription message">
-
-```javascript
+```json
 {
     "op": "subscribe",
     "args": [
@@ -51,10 +42,7 @@ Push frequency: **real-time**
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
+### 推送示例
 
 <Tabs>
 <TabItem value="trade-linear" label="trade-linear">
