@@ -12,10 +12,7 @@ slug: /derivatives/unified/open-order
 - 返回的結果將以`createdTime`從新到舊排序.
 :::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP請求
+### HTTP 請求
 GET `/unified/v3/private/order/unfilled-orders`
 
 ### 請求參數
@@ -23,7 +20,7 @@ GET `/unified/v3/private/order/unfilled-orders`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category)|**true** |string |產品類型. `linear`, `option` |
 |symbol |false |string |合約名稱 |
-|baseCoin |false |string |交易幣種. 默認: **BTC**. 僅對期權有效 |
+|baseCoin |false |string |交易幣種. 若`category`=option，不傳時，默認返回BTC相關數據 |
 |orderId |false |string |訂單id |
 |orderLinkId |false |string |用戶自定義訂單Id |
 |orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單|
@@ -31,248 +28,141 @@ GET `/unified/v3/private/order/unfilled-orders`
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-<Tabs>
-<TabItem value="linear" label="linear" default>
-    <table border="0.5">
-        <tr>
-            <th>參數</th><th>類型</th><th>說明</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>產品類型</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>合約名稱 </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>用戶自定義訂單Id </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>訂單Id </td>
-        </tr>
-        <tr>
-            <td>> stopOrderType</td><td>string</td><td>條件單類型. `TakeProfit`,`StopLoss`,`TrailingStop`,`Stop` </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
-        </tr>
-        <tr>
-            <td>> takeProfit</td><td>string</td><td>止盈價格 </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>Paradigm大宗交易Id </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>訂單價格 </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> tpTriggerBy</td><td>string</td><td>觸發止盈的價格類型. `MarkPrice`,`IndexPrice`,`LastPrice` </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>當前市價 </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>方向. `Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> triggerPrice</td><td>string</td><td>觸發價格. 僅條件單 </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
-        </tr>
-        <tr>
-            <td>> slTriggerBy</td><td>string</td><td>觸發止損的價格類型 `MarkPrice`, `IndexPrice`,`LastPrice`  </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
-        </tr>
-        <tr>
-            <td>> closeOnTrigger</td><td>boolean</td><td>觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>訂單數量 </td>
-        </tr>
-        <tr>
-            <td>> stopLoss</td><td>string</td><td>止損價格 </td>
-        </tr>
-        <tr>
-            <td>> triggerBy</td><td>string</td><td>觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice` </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
-        </tr>
-    </table>
-</TabItem>
+### 響應參數
+| 參數 | 類型 | 說明|
+|:-----|:-----|------ |
+|category |string |產品類型 |
+|nextPageCursor |string |游標，用於翻頁 |
+|list |array |Object |
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義ID |
+|> blockTradeId |string |Paradigm大宗交易ID |
+|> symbol |string |合約名稱 |
+|> iv |string |隱含波動率. _`linear`沒有該字段_|
+|> price |string |訂單價格 |
+|> qty |string |訂單數量 |
+|> side |string |方向. `Buy`,`Sell` |
+|> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
+|> orderType |string |訂單類型. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |條件單類型. _`option`沒有該字段_|
+|> cumExecValue |string |訂單累計成交價值 |
+|> cumExecFee |string |訂單累計成交的手續費 |
+|> cumExecQty |string |訂單累計成交數量 |
+|> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型. _`option`沒有該字段_|
+|> [slTriggerBy](../enum#triggerby) |string |觸發止損的價格類型. _`option`沒有該字段_|
+|> [timeInForce](../enum#timeinforce) |string |執行策略 |
+|> basePrice |string |基準價格，用於條件單 |
+|> [triggerBy](../enum#triggerby) |string |觸發價格的觸發類型. _`option`沒有該字段_|
+|> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格. _`option`沒有該字段_|
+|> leavesQty |string |訂單剩餘未成交的數量 |
+|> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
+|> closeOnTrigger |boolean |觸發後平倉委託. _`option`沒有該字段_|
+|> takeProfit |string |止盈價格. _`option`沒有該字段_|
+|> stopLoss |string |止損價格. _`option`沒有該字段_|
+|> orderIM |string |訂單初始保證金 |
+|> createdTime |number |創建訂單的時間戳 (毫秒) |
+|> updatedTime |number |訂單更新的時間戳 (毫秒) |
 
-<TabItem value="option" label="option">
-    <table border="0.5">
-        <tr>
-            <th>參數</th><th>類型</th><th>說明</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>產品類型</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>合約名稱 </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>方向. `Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>用戶自定義訂單Id </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>訂單Id </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
-        </tr>
-        <tr>
-            <td>> iv</td><td>string</td><td>隱含波動率 </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>Paradigm大宗交易Id </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>訂單價格 </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>訂單數量 </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a>  </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>條件單的基礎價格 </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
-
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 請求示例
 
 ```http
-curl --location --request GET 'https://api-testnet.bybit.com/unified/v3/private/order/unfilled-orders?category=linear' \
---header 'X-BAPI-SIGN: XXXXX' \
---header 'X-BAPI-API-KEY: {api key}' \
---header 'X-BAPI-TIMESTAMP: 1657871228347' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'Content-Type: application/json' \
+GET /unified/v3/private/order/unfilled-orders?category=option&baseCoin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673079658059
+X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
+### 響應示例
 
 <Tabs>
 <TabItem value="js linear" label="linear">
 
-```javascript
+```json
 {
     "retCode": 0,
-    "retMsg": "Success",
+    "retMsg": "OK",
     "result": {
-        "nextPageCursor": "135ccc0d-8136-4e1b-8af3-07b11ee158d1%3A1665565610526%2C135ccc0d-8136-4e1b-8af3-07b11ee158d1%3A1665565610526",
+        "nextPageCursor": "d00b5b7b-4e05-4a12-a81c-8afb6ddf76bc%3A1673079539417%2Cd00b5b7b-4e05-4a12-a81c-8afb6ddf76bc%3A1673079539417",
         "category": "linear",
         "list": [
             {
-                "symbol": "ETHUSDT",
+                "symbol": "MATICUSDT",
                 "orderType": "Limit",
-                "orderLinkId": "test0000005",
-                "orderId": "135ccc0d-8136-4e1b-8af3-07b11ee158d1",
+                "orderLinkId": "",
+                "orderId": "d00b5b7b-4e05-4a12-a81c-8afb6ddf76bc",
                 "stopOrderType": "UNKNOWN",
                 "orderStatus": "New",
                 "takeProfit": "",
                 "cumExecValue": "0.00000000",
                 "blockTradeId": "",
-                "price": "700.00000000",
-                "createdTime": 1665565610526,
+                "price": "1.00000000",
+                "createdTime": 1673079539417,
                 "tpTriggerBy": "UNKNOWN",
-                "timeInForce": "GoodTillCancel",
+                "timeInForce": "PostOnly",
                 "basePrice": "",
-                "updatedTime": 1665565610533,
-                "side": "Buy",
+                "updatedTime": 1673079539426,
+                "side": "Sell",
                 "triggerPrice": "",
                 "cumExecFee": "0.00000000",
                 "slTriggerBy": "UNKNOWN",
-                "leavesQty": "0.1000",
-                "closeOnTrigger": false,
+                "leavesQty": "500.0000",
+                "closeOnTrigger": true,
                 "cumExecQty": "0.00000000",
-                "reduceOnly": false,
-                "qty": "0.1000",
+                "reduceOnly": true,
+                "qty": "500.0000",
                 "stopLoss": "",
                 "triggerBy": "UNKNOWN",
-                "orderIM": "0.00000000"
+                "orderIM": ""
             }
         ]
     },
-    "retExtInfo": null,
-    "time": 1665565614320
+    "retExtInfo": {},
+    "time": 1673079551691
 }
 ```
+
+</TabItem>
+
+<TabItem value="js option" label="option">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "b8e9fd9c-c710-4c78-86a3-ab923e19c380%3A1673079645947%2Cb8e9fd9c-c710-4c78-86a3-ab923e19c380%3A1673079645947",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-27JAN23-12000-P",
+                "orderType": "Limit",
+                "updatedTime": 1673079645958,
+                "side": "Sell",
+                "orderLinkId": "",
+                "cumExecFee": "0.00000000",
+                "orderId": "b8e9fd9c-c710-4c78-86a3-ab923e19c380",
+                "leavesQty": "0.1000",
+                "orderStatus": "New",
+                "iv": "0.78295834",
+                "cumExecValue": "0.00000000",
+                "blockTradeId": "",
+                "cumExecQty": "0.00000000",
+                "reduceOnly": false,
+                "price": "30.00000000",
+                "qty": "0.1000",
+                "createdTime": 1673079645947,
+                "timeInForce": "GoodTillCancel",
+                "orderIM": "169.75360098",
+                "basePrice": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1673079658761
+}
+```
+
 </TabItem>
 </Tabs>

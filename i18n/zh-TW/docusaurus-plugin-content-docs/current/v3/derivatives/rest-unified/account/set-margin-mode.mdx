@@ -4,27 +4,24 @@ sidebar_label: 設置保證金模式
 sidebar_position: 6
 slug: /derivatives/unified/usc-margin-mode
 ---
-Default is the regular margin mode. This mode is only valid for USDC Perp and USDC Option. Portfolio Margin does not support USDT-settled contracts.
+用戶如果不設置，默認按常規保證金。該模式僅對 USDC Perp 和 USDC Option 有效，Portfolio Margin 暫不支持 USDT 結算的合約。
 
-### HTTP Request
+### HTTP 請求
 POST `/unified/v3/private/account/setMarginMode`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|setMarginMode |**true** |string |`REGULAR_MARGIN`, `PORTFOLIO_MARGIN`|
+|setMarginMode |**true** |string |`REGULAR_MARGIN`（常規保證金模式）`PORTFOLIO_MARGIN`（組合保證金模式）默認常規，傳常規則返回設置成功|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|reasons |array|Empty array if the request is submitted successfully. Otherwise, there are failure Object |
-|> reasonCode |string |Fail reason code |
-|> reasonMsg |string |Fail reason msg |
+|reasons |array|Object. 若請求提交成功, 則返回空數組 |
+|> reasonCode |string |失敗錯誤碼 |
+|> reasonMsg |string |失敗錯誤消息 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /unified/v3/private/account/setMarginMode HTTP/1.1
@@ -40,13 +37,7 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="json" label="Response">
+### 響應示例
 
 ```json
 {
@@ -66,5 +57,3 @@ Content-Type: application/json
     }
 }
 ```
-</TabItem>
-</Tabs>

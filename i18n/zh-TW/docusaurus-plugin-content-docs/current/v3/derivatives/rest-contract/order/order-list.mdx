@@ -6,73 +6,66 @@ slug: /derivatives/contract/order-list
 ---
 
 :::tip
-Query order list.<br/>
-As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay.
+獲取歷史訂單紀錄. 由於訂單創建/撤銷是異步的, 該接口返回數據可能會有延遲. 若您想實時獲取訂單信息, 您可以查詢該[接口](open-order#)或者通過websocket推送(推薦)
 :::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/order/list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`,`option`. default: `linear` |
-|symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin. `option` ONLY|
-|orderId |false |string |Order id |
-|orderLinkId |false |string |User customised order id |
-|[orderStatus](../enum#orderStatus) |false |string |Order status. Return all status orders if not passed|
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear` |
+|symbol |false |string |合約名稱|
+|baseCoin |false |string |交易幣種. 僅對`option`有效|
+orderId |false |string |訂單ID |
+|orderLinkId |false |string |用戶自定義訂單ID |
+|[orderStatus](../enum#orderStatus) |false |string |訂單狀態。不傳則默認查詢所有狀態|
 |[orderFilter](../enum#orderFilter) |false |string |`Order`,`StopOrder`|
-|limit |false |string |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|------ |
-|category |string |Product type |
-|nextPageCursor |string |Cursor. Used to pagination |
+### 響應參數
+| 參數 | 類型 | 說明|
+|:-----|:-----|------ |
+|category |string |產品類型 |
+|nextPageCursor |string |游標，用於翻頁 |
 |list |list |Object |
 |> symbol |string |Symbol name |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customised order id. |
-|> side |string |`Buy`,`Sell` |
-|> orderType |string |Order type. `Market`,`Limit`|
-|> price |string |Order price |
-|> iv |string |Implied volatility |
-|> qty |string |Order quantity |
-|> [timeInForce](../enum#timeinforce) |string |Time in force |
-|> [orderStatus](../enum#orderstatus) |string |Order status |
-|> [positionIdx](../enum#positionidx) |integer |Position index |
-|> lastPriceOnCreated |string |Last price when place the order |
-|> createdTime |string |Order created timestamp (ms) |
-|> updatedTime |string |Order updated timestamp (ms) |
-|> [cancelType](../enum#canceltype) |string |Cancel type |
-|> rejectReason |string |Reject reason |
-|> [stopOrderType](../enum#stopordertype) |string |Stop order type |
-|> triggerDirection |string |Trigger direction. `1`: rise, `2`: fall |
-|> [triggerBy](../enum#triggerby) |string |The trigger type of trigger price |
-|> triggerPrice |string |Trigger price |
-|> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |Cumulative executed trading fee |
-|> cumExecQty |string |Cumulative executed order qty |
-|> leavesValue |string |The estimated value not executed  |
-|> leavesQty |string |The remaining qty not executed |
-|> takeProfit |string |Take profit price |
-|> stopLoss |string |Stop loss price |
-|> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit|
-|> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss|
-|> reduceOnly |boolean |Reduce only. `true` means reduce position size |
-|> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
-|> blockTradeId |string |Block trade Id. Unique field for `option` |
-|> placeType |string |Place type. `price`,`iv`. Unique field for `option` |
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義Id |
+|> side |string |方向. `Buy`,`Sell` |
+|> orderType |string |訂單類型. `Market`,`Limit`|
+|> price |string |訂單價格 |
+|> iv |string |隱含波動率|
+|> qty |string |訂單數量 |
+|> [timeInForce](../enum#timeinforce) |string |執行策略 |
+|> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
+|> [positionIdx](../enum#positionidx) |integer |倉位標識 |
+|> lastPriceOnCreated |string |創建訂單時的市場價 |
+|> [cancelType](../enum#canceltype) |string |取消類型 |
+|> [rejectReason](../enum#rejectreason) |string |被拒絕原因 |
+|> [stopOrderType](../enum#stopordertype) |string |條件單類型 |
+|> triggerDirection |string |`1`: 上升時觸發, `2`: 下降時觸發 |
+|> [triggerBy](../enum#triggerby) |string |觸發價格的觸發類型|
+|> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格 |
+|> cumExecValue |string |訂單累計成交價值 |
+|> cumExecFee |string |訂單累計成交的手續費 |
+|> cumExecQty |string |訂單累計成交數量 |
+|> leavesValue |string |訂單剩餘未成交的價值 |
+|> leavesQty |string |訂單剩餘未成交的數量 |
+|> takeProfit |string |止盈價格 |
+|> stopLoss |string |止損價格 |
+|> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型|
+|> [slTriggerBy](../enum#triggerby) |string |觸發止損的價格類型|
+|> reduceOnly |boolean |只減倉. `true`表明這是只減倉單|
+|> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>. 該字段對期權無效，一直是`""` |
+|> blockTradeId |string |Paradigm大宗交易ID. `linear`和`inverse`沒有該字段 |
+|> placeType |string |下單方式. `price`,`iv`. `linear`和`inverse`沒有該字段 |
+|> createdTime |string |訂單創建時間戳 (毫秒) |
+|> updatedTime |string |訂單更新時間戳 (毫秒) |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-option" label="option">
+### 請求示例
 
 ```http
 GET /contract/v3/private/order/list?orderStatus=Filled&limit=1&category=option&baseCoin=ETH HTTP/1.1
@@ -83,60 +76,52 @@ X-BAPI-TIMESTAMP: 1670577969789
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
+#### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js option" label="option">
-
-```javascript
+```json
 {
     "result": {
-    "nextPageCursor": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279%2C41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279",
-    "category": "option",
-    "list": [
-{
-    "symbol": "ETH-29NOV22-1150-P",
-    "orderType": "Market",
-    "orderLinkId": "",
-    "orderId": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2",
-    "cancelType": "UNKNOWN",
-    "stopOrderType": "UNKNOWN",
-    "lastPriceOnCreated": "",
-    "orderStatus": "Filled",
-    "takeProfit": "",
-    "cumExecValue": "0.02",
-    "triggerDirection": "",
-    "blockTradeId": "",
-    "rejectReason": "",
-    "price": "0.2",
-    "createdTime": "1669614818279",
-    "tpTriggerBy": "",
-    "positionIdx": 0,
-    "timeInForce": "ImmediateOrCancel",
-    "leavesValue": "0",
-    "updatedTime": "1669614818300",
-    "side": "Sell",
-    "triggerPrice": "",
-    "cumExecFee": "0.0025",
-    "leavesQty": "0",
-    "slTriggerBy": "",
-    "iv": "",
-    "placeType": "price",
-    "closeOnTrigger": "",
-    "cumExecQty": "0.1",
-    "reduceOnly": false,
-    "qty": "0.1",
-    "stopLoss": "",
-    "triggerBy": ""
-}
-    ]
-},
+        "nextPageCursor": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279%2C41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "ETH-29NOV22-1150-P",
+                "orderType": "Market",
+                "orderLinkId": "",
+                "orderId": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2",
+                "cancelType": "UNKNOWN",
+                "stopOrderType": "UNKNOWN",
+                "lastPriceOnCreated": "",
+                "orderStatus": "Filled",
+                "takeProfit": "",
+                "cumExecValue": "0.02",
+                "triggerDirection": "",
+                "blockTradeId": "",
+                "rejectReason": "",
+                "price": "0.2",
+                "createdTime": "1669614818279",
+                "tpTriggerBy": "",
+                "positionIdx": 0,
+                "timeInForce": "ImmediateOrCancel",
+                "leavesValue": "0",
+                "updatedTime": "1669614818300",
+                "side": "Sell",
+                "triggerPrice": "",
+                "cumExecFee": "0.0025",
+                "leavesQty": "0",
+                "slTriggerBy": "",
+                "iv": "",
+                "placeType": "price",
+                "closeOnTrigger": "",
+                "cumExecQty": "0.1",
+                "reduceOnly": false,
+                "qty": "0.1",
+                "stopLoss": "",
+                "triggerBy": ""
+            }
+        ]
+    },
     "retCode": 0,
     "retMsg": "Success."
 }
 ```
-</TabItem>
-</Tabs>

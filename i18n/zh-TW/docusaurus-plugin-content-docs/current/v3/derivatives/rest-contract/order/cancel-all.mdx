@@ -5,34 +5,32 @@ sidebar_position: 5
 slug: /derivatives/contract/cancel-all
 ---
 
+撤銷全部委託單
+
 :::tip
-This endpoint enables to cancel all open orders.
-- If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
+- 若`category`=_linear_, 則`baseCoin`, `settleCoin`, `symbol`三個參數必傳其中一個
 :::
 
-#### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/order/cancel-all`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`. default: `linear` |
-|symbol |false|string |Symbol name |
-|baseCoin |false|string |Cancel all open orders by base coin. `option` ONLY |
-|settleCoin |false|string |Cancel all open orders by settle coin|
+|category |false |string |產品類型. `linear`,`inverse`. 默認: `linear`. _暫不支持期權的全部撤單_ |
+|symbol |false|string |合約名稱 |
+|baseCoin |false|string |交易幣種. 僅期權使用. |
+|settleCoin |false|string |結算幣種|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result |Object | |
 |> list |array |Object |
-|>> orderId |string |Order id |
-|>> orderLinkId |string |User customised order id |
+|>> orderId |string |訂單ID |
+|>> orderLinkId |string |用戶自定義ID |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 请求示例
 
 ```http
 POST /contract/v3/private/order/cancel-all HTTP/1.1
@@ -49,15 +47,9 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -77,5 +69,3 @@ Content-Type: application/json
     "time": 1670571961179
 }
 ```
-</TabItem>
-</Tabs>

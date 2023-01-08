@@ -17,7 +17,7 @@ POST `/contract/v3/private/order/replace`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`(default),`inverse` |
+|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. Default: `linear`. Cannot replace `option` order for now |
 |symbol |**true** |string |Symbol name|
 |orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
@@ -27,9 +27,9 @@ POST `/contract/v3/private/order/replace`
 |triggerPrice |false |string |Trigger price. Don't pass it if not modify the qty|
 |takeProfit |false |string |Take profit price after modification. Don't pass it if not modify the take profit |
 |stopLoss |false |string |Stop loss price after modification. Don't pass it if not modify the Stop loss |
-|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|[triggerBy](../enum#triggerby) |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`. default: `LastPrice`|
+|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, `LastPrice` |
+|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, `LastPrice` |
+|[triggerBy](../enum#triggerby) |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`, `LastPrice`|
 
 ### Response Parameters
 | Parameter | Type | Comments|

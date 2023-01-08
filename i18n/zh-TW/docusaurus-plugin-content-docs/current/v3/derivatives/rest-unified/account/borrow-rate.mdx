@@ -5,38 +5,35 @@ sidebar_position: 5
 slug: /derivatives/unified/borrow-rate
 ---
 
-### HTTP Request
+### HTTP 請求
 GET `/unified/v3/private/account/borrow-rate`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|currency |false |string |USDC, USDT Only|
+|currency |false |string |僅USDC, USDT (UMA)|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list |array |Object |
-|> currency |string |Currency of all current collateral|
-|> hourlyBorrowRate |string |Hourly borrow rate|
-|> maxBorrowAmount |string |Max borrow amount|
-|> freeBorrowAmount |string |The free interest of loan amount|
+|> currency |string |抵押品幣種|
+|> hourlyBorrowRate |string |每小時借款利率|
+|> maxBorrowAmount |string |最大可借貸額度|
+|> freeBorrowAmount |string |免息借貸額度|
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
+GET /unified/v3/private/account/borrow-rate HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673078229194
+X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="json-resp" label="Response">
+### 響應示例
 
 ```json
 {
@@ -62,5 +59,3 @@ GET `/unified/v3/private/account/borrow-rate`
     "time": 1672023307465
 }
 ```
-</TabItem>
-</Tabs>

@@ -4,97 +4,88 @@ sidebar_label: 切換倉位模式
 sidebar_position: 4
 slug: /derivatives/contract/position-mode
 ---
-It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
+該接口可以切換**USDT永續**和**反向交割**的倉位模式。單倉模式下，只能在單方向下持倉; 雙倉模式下，可以同時在兩個方向持倉。
 
 :::tip
-* Priority for configuration to take effect: symbol > coin > system default
-* System default: one-way mode
-* If the request is by coin (settleCoin), then all symbols based on this setteCoin that do not have position and open order will be batch switched, and new listed symbol based on this settleCoin will be the same mode you set.
+* 配置生效的優先級：symbol 配置 > coin 配置 > 系统默认配置
+* 目前系統默認配置：單向持倉模式
+* 如果請求參數中是按照coin的配置參數（此coin=settleCoin），則僅對該settleCoin下無持倉無委託單的symbol進行批量設置，並且未來新上線基於該settleCoin的結算的symol也是該模式。
 :::
 
-### Example
+### 舉例
 
 <table class="custom_table">
     <tr>
-        <th></th><th>System default</th><th>coin</th><th>symbol</th>
+        <th></th><th>系統默認</th><th>coin</th><th>symbol</th>
     </tr>
     <tr>
-        <td>Initial setting</td><td>one-way</td><td>never configured</td><td>never configured</td>
+        <td>初始配置</td><td>單向持倉</td><td>未設置過</td><td>未設置過</td>
     </tr>
     <tr>
-        <td>Result</td><td colspan="3">All USDT perpetual trading pairs are one-way molde</td>
+        <td>生效結果</td><td colspan="3">所有USDT正向交易對都是單向持倉</td>
     </tr>
     <tr>
-        <td><b>Change 1</b></td><td>-</td><td>-</td><td>Set BTCUSDT to hedge-mode</td>
+        <td><b>變更 1</b></td><td>-</td><td>-</td><td>BTCUSDT 設置為雙向持倉模式</td>
     </tr>
     <tr>
-        <td>Result</td><td colspan="3">BTCUSDT becomes hedge-mode, and all other symbols keep one-way mode</td>
+        <td>生效結果</td><td colspan="3">當前交易對BTCUSDT為雙向持倉，其他交易對都是單向持倉（繼承系統默認規則）</td>
     </tr>
     <tr>
-        <td>list new symbol ETHUSDT</td><td colspan="3">ETHUSDT is one-way mode （inherit default rules）</td>
+        <td>新上線交易對 ETHUSDT</td><td colspan="3">新上線的ETHUSDT為單向持倉 （繼承系統默認規則）</td>
     </tr>
     <tr>
-        <td><b>Change 2</b></td><td>-</td><td>Set USDT to hedge-mode</td><td>-</td>
+        <td><b>變更 2</b></td><td>-</td><td>USDT 設置為雙向持倉</td><td>-</td>
     </tr>
     <tr>
-        <td>Result</td><td colspan="3">All current trading pairs with no positions or orders are hedge-mode, and no adjustments will be made for trading pairs with positions and orders</td>
+        <td>生效結果</td><td colspan="3">當前所有未持倉未有訂單的交易對都是雙向持倉，有持倉和有委託單的交易對不做調整</td>
     </tr>
     <tr>
-        <td>list new symbol SOLUSDT</td><td colspan="3">SOLUSDT is hedge-mode (Inherit coin rule)</td>
+        <td>新上線交易對 SOLUSDT</td><td colspan="3">新上線的SOLUSDT為雙向持倉 (繼承coin規則)</td>
     </tr>
     <tr>
-        <td><b>Change 3</b></td><td>-</td><td>-</td><td>Set ASXUSDT to one-mode</td>
+        <td><b>變更 3</b></td><td>-</td><td>-</td><td>ASXUSDT 設置為單向持倉模式</td>
     </tr>
     <tr>
-        <td>Take effect result</td><td colspan="3">AXSUSDT is one-way mode, other trading pairs have no change</td>
+        <td>生效結果</td><td colspan="3">AXSUSDT為單向持倉模式，其餘交易對不做任何變更（繼承coin規則）</td>
     </tr>
     <tr>
-        <td>list new symbol BITUSDT</td><td colspan="3">BITUSDT is hedge-mode (Inherit coin rule)</td>
+        <td>新上線交易對 BITUSDT</td><td colspan="3">新上線的BITUSDT為雙向持倉 (繼承coin規則)</td>
     </tr>
 </table>
 
-### The position-switch ability for each contract
+### 當前合約單雙向持倉切換能力
 <table class="custom_table">
     <tr>
-        <th></th><th>Regular account</th><th>Unified margin account</th>
+        <th></th><th>非統一保證金模式</th><th>統一保證金模式</th>
     </tr>
     <tr>
-        <td>USDT perpetual</td><td><b>Support one-way & hedge-mode</b></td><td>Support one-way ONLY</td>
+        <td>USDT永續合約</td><td><b>支持單雙向持倉</b></td><td>僅支持單向持倉</td>
     </tr>
     <tr>
-        <td>USDC perpetual</td><td>Support one-way ONLY</td><td>Support one-way ONLY</td>
+        <td>USDC永續合約</td><td>僅支持單向持倉</td><td>僅支持單向持倉</td>
     </tr>
     <tr>
-        <td>Inverse perpetual</td><td>Support one-way ONLY</td><td>N/A</td>
+        <td>反向永續合約</td><td>僅支持單向持倉</td><td>不支持該模式下交易該合約</td>
     </tr>
     <tr>
-        <td>Inverse future	</td><td><b>Support one-way & hedge-mode</b></td><td>N/A</td>
+        <td>反向交割合約</td><td><b>支持單雙向持倉</b></td><td>不支持該模式下交易該合約</td>
     </tr>
 </table>
 
-### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/position/switch-mode`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |false |string |Symbol name. Either `symbol` or `coin` is **required**. `symbol` has a higher priority |
-|coin |false |string |Coin |
-|[mode](../enum#positionmode) |**true** |string |Position mode. `0`: Merged Single. `3`: Both Side|
+|symbol |false |string |合約名稱. `symbol` 和 `coin`二者必傳一個. `symbol`優先級更高 |
+|coin |false |string |幣種名稱 |
+|[mode](../enum#positionmode) |**true** |integer |倉位模式. `0`: 單向持倉. `3`: 雙向持倉|
 
-### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|retCode |integer |Success/Error code |
-|retMsg |string |Success/Error message |
-|result |Object | |
-|retExtInfo |Object | |
-|time |integer |Timestamp |
+### 響應參數
+無
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /contract/v3/private/position/switch-mode HTTP/1.1
@@ -111,13 +102,7 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
+### 響應示例
 
 ```json
 {
@@ -128,5 +113,3 @@ Content-Type: application/json
     "time": 1670848915768
 }
 ```
-</TabItem>
-</Tabs>

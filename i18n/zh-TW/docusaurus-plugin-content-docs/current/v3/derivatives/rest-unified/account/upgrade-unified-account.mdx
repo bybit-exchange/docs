@@ -5,29 +5,26 @@ sidebar_position: 2
 slug: /derivatives/unified/upgrade
 ---
 
-Upgrade to unified margin account (UMA)
+升級至統一保證金賬戶
 
-### HTTP Request
+### HTTP 請求
 POST `/unified/v3/private/account/upgrade-unified-account`
 
-### Request Parameters
-None
+### 請求參數
+無
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|status |string | Upgrade status |
-|> relieveLimitBizResponse |array |empty array if request success |
-|>> relieveLimitCode |string |Fail code |
-|>> relieveLimitMsg |string |Fail message |
+|status |string | 升級狀態. `FAIL`, `SUCCESS` |
+|> relieveLimitBizResponse |array |若請求成功，則返回空數組`[]` |
+|>> relieveLimitCode |string |失敗碼值 |
+|>> relieveLimitMsg |string |失敗的消息 |
 |>> relieveLimitMobileUrl |string |`""` |
 |>> relieveLimitWebUrl |string |`""` |
-|>> pass |boolean |whether to pass the requirement |
+|>> pass |boolean |是否滿足升級要求 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /unified/v3/private/account/upgrade-unified-account HTTP/1.1
@@ -41,13 +38,7 @@ Content-Type: application/json
 {}
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="resp" label="Response">
+### 響應示例
 
 ```json
 {
@@ -76,5 +67,3 @@ Content-Type: application/json
     "time": 1672022840011
 }
 ```
-</TabItem>
-</Tabs>

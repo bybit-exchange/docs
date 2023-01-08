@@ -4,33 +4,27 @@ sidebar_label: 設置風險限額
 sidebar_position: 7
 slug: /derivatives/contract/set-risk-limit
 ---
+風險限額會限制你在不同的保證金要求下的可持倉的最大倉位數量，如果要持有更多的倉位，需要更多的保證金要求。本接口可以設置單個倉位的風險限額，
+下單時如果超過當前的風險限額，則會被拒絕。點擊<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001164">這裡</a>了解更多關於風險限額.
+
 :::tip
-Set the risk limit of the position. You could get risk limit information of each symbol [here](../public/risk-limit#).
+您可以獲取通過該[接口](../public/risk-limit#)查詢到風險限額信息.
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/position/set-risk-limit`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |**true** |string |Symbol name|
-|riskId |**true** |integer |Risk limit id|
-|positionIdx |**true** |integer |Used to identify positions in different position modes<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+|symbol |**true** |string |合約名稱|
+|riskId |**true** |integer |風險限額Id|
+|positionIdx |**true** |integer |倉位標識，用於標識不同倉位<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向模式</li><li>`2`: 賣側雙向模式</li></ul>|
 
-### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|retCode |integer |Success/Error code |
-|retMsg |string |Success/Error message |
-|result |Object | |
-|retExtInfo |Object | |
-|time |integer |Timestamp |
+### 響應參數
+無
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /contract/v3/private/position/set-risk-limit HTTP/1.1
@@ -47,13 +41,7 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
+### 響應示例
 
 ```json
 {
@@ -64,5 +52,3 @@ Content-Type: application/json
     "time": 1670853143027
 }
 ```
-</TabItem>
-</Tabs>

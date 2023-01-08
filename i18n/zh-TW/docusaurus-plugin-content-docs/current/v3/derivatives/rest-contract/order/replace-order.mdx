@@ -5,43 +5,37 @@ sidebar_position: 2
 slug: /derivatives/contract/replace-order
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 :::note
-You could modify those **unfilled** or **partially filled** orders.
+您只能修改那些未成交或者部分成交的訂單。
 :::
 
-#### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/order/replace`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`(default),`inverse` |
-|symbol |**true** |string |Symbol name|
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
-|price |false |string |Order price after modification. Don't pass it if not modify the price|
-|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
-|qty |false |string |Order quantity after modification. Don't pass it if not modify the qty|
-|triggerPrice |false |string |Trigger price. Don't pass it if not modify the qty|
-|takeProfit |false |string |Take profit price after modification. Don't pass it if not modify the take profit |
-|stopLoss |false |string |Stop loss price after modification. Don't pass it if not modify the Stop loss |
-|[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default:`LastPrice` |
-|[triggerBy](../enum#triggerby) |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`. default: `LastPrice`|
+|[category](../enum#category) |false |string |產品類型. 產品類型. `linear`,`inverse`. 默認: `linear`. _暫不支持期權的改單_|
+|symbol |**true** |string |合約名稱|
+|orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
+|iv |false |string |隱含波動率. 僅對期權有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1|
+|qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
+|triggerPrice |false |string |觸發價格. 若不修改，請不要傳該字段|
+|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段|
+|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段|
+|[tpTriggerBy](../enum#triggerby) |false |string |止盈價格觸發類型. `LastPrice`, `IndexPrice`,`MarkPrice`|
+|[slTriggerBy](../enum#triggerby) |false |string |止損價格觸發類型. `MarkPrice`, `IndexPrice`, `LastPrice` |
+|[triggerBy](../enum#triggerby) |false |string |觸發價格的觸發類型. `LastPrice`, `IndexPrice`, `MarkPrice`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|orderId |string |Order ID |
-|orderLinkId |string |User customised order id |
+|orderId |string |訂單Id |
+|orderLinkId |string |用戶自定義訂單Id |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 請求示例
 
 ```http
 POST /contract/v3/private/order/replace HTTP/1.1
@@ -60,25 +54,17 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
-    "orderLinkId": ""
-},
+        "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
+        "orderLinkId": ""
+    },
     "retExtInfo": {},
     "time": 1670554904609
 }
 ```
-</TabItem>
-</Tabs>

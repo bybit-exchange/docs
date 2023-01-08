@@ -5,64 +5,58 @@ sidebar_position: 1
 slug: /derivatives/contract/position-list
 ---
 
-Get real-time position data
+該接口可以獲取用戶的持倉信息，比如持倉數量，累計盈虧等
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/position/list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`,`option` |
-|symbol |false |string |Symbol name |
-|settleCoin |false |string |Settle coin. Query future, either `symbol` or `settleCoin` is required. `symbol` has a higher priority |
-|baseCoin |false |string |Base coin. `option` ONLY |
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear` |
+|symbol |false |string |合約名稱 |
+|settleCoin |false |string |結算幣種. 查詢期貨時, `symbol` 和 `settleCoin`二者必傳一個. `symbol`優先級更高 |
+|baseCoin |false |string |交易幣種. 僅對期權有效 |
 |limit |false |string |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination |
+|cursor |false |string |游標，用於翻頁 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
-|category |string |Product type |
-|nextPageCursor |string |Cursor. Used to pagination |
+|category |string |產品類型 |
+|nextPageCursor |string |游標，用於翻頁 |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> side |string |Side. `Buy`,`Sell` |
-|> size |string |Position size |
-|> entryPrice |string |Entry price |
-|> leverage |string |leverage |
-|> positionValue |string |Entry position value |
-|> [positionIdx](../enum#positionidx) |integer |Position index|
-|> riskId |integer |Risk limit id |
-|> riskLimitValue |string |Position limit value corresponding to the risk id |
-|> tradeMode |integer |`0`: cross margin mode. `1`: isolated margin mode |
-|> autoAddMargin |integer |`0`: false. `1`: true |
-|> positionBalance |string |Position margin |
-|> liqPrice |string |Estimated liquidation price |
-|> bustPrice |string |Estimated bankruptcy price |
-|> tpSlMode |string |TP/SL mode. `Full`,`Partial` |
-|> takeProfit |string |Take profit price |
-|> stopLoss |string |Stop loss price |
-|> createdTime |string |Position created timestamp (ms) |
-|> updatedTime |string |Position data updated timestamp (ms) |
-|> trailingStop |string |Trailing stop |
-|> activePrice |string |Activate price of trailing stop |
-|> markPrice |string |Real-time mark price |
-|> unrealisedPnl |string |unrealised PNL |
-|> cumRealisedPnl |string |cumulative realised PNL |
-|> positionMM |string |Position maintenance margin |
-|> positionIM |string |Position initial margin |
-|> positionStatus |string |Position status |
-|> sessionAvgPrice |string |Settlement price |
-|> occClosingFee |string |Pre-occupancy closing fee. Unique field for `linear`&`inverse`|
+|> symbol |string |合約名称 |
+|> side |string |方向. `Buy`,`Sell` |
+|> size |string |當前倉位的數量，按照合約張數計算 |
+|> entryPrice |string |平均入場價 |
+|> leverage |string |槓桿倍數 |
+|> positionValue |string |仓位的價值 |
+|> [positionIdx](../enum#positionidx) |integer |倉位標識符, 用于在不同仓位模式下标识仓位|
+|> riskId |integer |风险限额ID. 參見[風險限額](../public/risk-limit#)接口 |
+|> riskLimitValue |string |當前風險限額ID對應的持倉限制量 |
+|> tradeMode |integer |`0`: 全倉模式. `1`: 逐倉模式 |
+|> autoAddMargin |integer |`0`: 否. `1`: 是. 僅適用於逐倉模式 |
+|> positionBalance |string |倉位保證金 |
+|> liqPrice |string |預估強平價 |
+|> bustPrice |string |預估破產價 |
+|> tpSlMode |string |止盈止損模式. `Full`,`Partial` |
+|> takeProfit |string |止盈價格 |
+|> stopLoss |string |止損價格 |
+|> trailingStop |string |追蹤止損（與當前價格的距離） |
+|> activePrice |string |追蹤止損的激活價格 |
+|> markPrice |string |實時標記價格 |
+|> unrealisedPnl |string |未结盈亏 |
+|> cumRealisedPnl |string |累计已结盈亏 |
+|> positionMM |string |倉位維持保證金 |
+|> positionIM |string |倉位起始保證金 |
+|> positionStatus |string |倉位狀態. `Normal`, `Abnormal` |
+|> sessionAvgPrice |string |結算價格 |
+|> occClosingFee |string |預佔用平倉手續費. `option`沒有該字段|
+|> createdTime |string |倉位創建時間戳 (毫秒)|
+|> updatedTime |string |倉位數據更新時間 (毫秒) |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 請求示例
 
 ```http
 GET /contract/v3/private/position/list?symbol=SOLPERP&category=linear HTTP/1.1
@@ -74,58 +68,50 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "list": [
-{
-    "positionIdx": 0,
-    "riskId": 1,
-    "symbol": "SOLPERP",
-    "side": "Buy",
-    "size": "10",
-    "positionValue": "130.1",
-    "entryPrice": "13.01",
-    "tradeMode": 0,
-    "autoAddMargin": 0,
-    "leverage": "10.00",
-    "positionBalance": "",
-    "liqPrice": "0.005",
-    "bustPrice": "",
-    "takeProfit": "0",
-    "stopLoss": "0",
-    "trailingStop": "",
-    "unrealisedPnl": "-0.01",
-    "createdTime": "1669888302986",
-    "updatedTime": "1670823807496",
-    "tpSlMode": "UNKNOWN",
-    "riskLimitValue": "150000",
-    "activePrice": "",
-    "markPrice": "13.009",
-    "cumRealisedPnl": "-0.07806",
-    "positionMM": "1.371254",
-    "positionIM": "13.080254",
-    "positionStatus": "Normal",
-    "sessionAvgPrice": "13.01",
-    "occClosingFee": ""
-}
-    ],
-    "category": "linear",
-    "nextPageCursor": ""
-},
+        "list": [
+            {
+                "positionIdx": 0,
+                "riskId": 1,
+                "symbol": "SOLPERP",
+                "side": "Buy",
+                "size": "10",
+                "positionValue": "130.1",
+                "entryPrice": "13.01",
+                "tradeMode": 0,
+                "autoAddMargin": 0,
+                "leverage": "10.00",
+                "positionBalance": "",
+                "liqPrice": "0.005",
+                "bustPrice": "",
+                "takeProfit": "0",
+                "stopLoss": "0",
+                "trailingStop": "",
+                "unrealisedPnl": "-0.01",
+                "createdTime": "1669888302986",
+                "updatedTime": "1670823807496",
+                "tpSlMode": "UNKNOWN",
+                "riskLimitValue": "150000",
+                "activePrice": "",
+                "markPrice": "13.009",
+                "cumRealisedPnl": "-0.07806",
+                "positionMM": "1.371254",
+                "positionIM": "13.080254",
+                "positionStatus": "Normal",
+                "sessionAvgPrice": "13.01",
+                "occClosingFee": ""
+            }
+        ],
+        "category": "linear",
+        "nextPageCursor": ""
+    },
     "retExtInfo": {},
     "time": 1670823840914
 }
 ```
-</TabItem>
-</Tabs>
