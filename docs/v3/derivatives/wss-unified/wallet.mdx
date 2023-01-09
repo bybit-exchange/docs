@@ -22,156 +22,91 @@ Subscribe wallet stream.
 |data |Object | |
 |> version |integer |Version|
 |> result |Object | |
-|>> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|>> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|>> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|>> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as an empty string.|
-|>> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|>> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|>> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|>> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|>> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
+|>> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. |
+|>> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. |
+|>> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. |
+|>> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin |
+|>> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. |
+|>> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. |
+|>> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. |
+|>> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. |
+|>> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. |
 |>> coin |array |Object |
-|>>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
+|>>> currencyCoin |string |Coin name, such as BTC, ETH, USDT, USDC |
 |>>> equity |string |Equity |
 |>>> usdValue |string |usd value |
 |>>> walletBalance |string |Wallet balance |
-|>>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0 |
+|>>> marginBalance |string |MB from other assets + the actual MB balance from the current assets |
+|>>> availableBalance |string |AB from other assets + the actual AB balance from the current assets (cannot be negative) |
+|>>> marginBalanceWithoutConvert |string |Margin balance |
+|>>> availableBalanceWithoutConvert	|string	|Available balance, Margin Balance - Total Initial Margin |
+|>>> borrowSize |string |Lending amount used. For USDC and USDT only. For BTC and ETH, return 0|
 |>>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0 |
-|>>> accruedInterest |string |Accrued interest |
-|>>> totalOrderIM |string |Pre-occupied margin for order |
+|>>> accruedInterest |string |Accrued interest of an asset |
+|>>> totalOrderIM |string |Order margin pre-occupied |
 |>>> totalPositionIM |string |Sum of initial margin of all positions + Pre-occupied liquidation fee |
 |>>> totalPositionMM |string |Sum of maintenance margin for all positions |
 |>>> unrealisedPnl |string |Unrealised P&L |
-|>>> cumRealisedPnl |string |Cumulative Realised P&L |
+|>>> cumRealisedPnl |string |Cumulative Realised P&L
 
-### Response Example
+### Stream Example
 
 ```json
 {
-    "id": "533285c1b8bbb6-f69b-45d5-abbe-9a0f63d2b594",
+    "id": "5332858071ac1a-adcf-4c22-9967-4bdb763d993d",
     "topic": "user.wallet.unifiedAccount",
-    "ts": 1672063477732,
+    "ts": 1673246212184,
     "data": {
         "result": {
-            "accountIMRate": "0.1033",
-            "accountMMRate": "0.0363",
-            "totalEquity": "5963.51241486",
-            "totalWalletBalance": "6711.80469384",
-            "totalMarginBalance": "6014.56088783",
-            "totalAvailableBalance": "5392.74224789",
-            "totalPerpUPL": "-697.24380601",
-            "totalInitialMargin": "621.81863994",
-            "totalMaintenanceMargin": "218.817493",
+            "accountIMRate": "0.1062",
+            "accountMMRate": "0.0126",
+            "totalEquity": "5306.99168766",
+            "totalWalletBalance": "5015.81303189",
+            "totalMarginBalance": "5315.50124767",
+            "totalAvailableBalance": "4750.87543737",
+            "totalPerpUPL": "299.68821577",
+            "totalInitialMargin": "564.62581029",
+            "totalMaintenanceMargin": "67.39562585",
             "coin": [
                 {
-                    "coin": "USDC",
-                    "equity": "1521.85776861",
-                    "usdValue": "1521.85776861",
-                    "walletBalance": "1572.90624158",
-                    "availableToWithdraw": "1482.92943199",
+                    "currencyCoin": "USDC",
+                    "equity": "696.90520008",
+                    "usdValue": "696.90520008",
+                    "walletBalance": "702.87476009",
+                    "marginBalance": "5315.50124767",
+                    "availableBalance": "4750.87543737",
+                    "marginBalanceWithoutConvert": "705.41476009",
+                    "availableBalanceWithoutConvert": "472.43375944",
+                    "borrowSize": "0",
                     "availableToBorrow": "1500000",
-                    "borrowAmount": "0",
                     "accruedInterest": "0",
-                    "totalOrderIM": "20.228",
-                    "totalPositionIM": "69.74880958",
-                    "totalPositionMM": "55.4132803",
-                    "unrealisedPnl": "-51.04847296",
-                    "cumRealisedPnl": "234592.14245082"
+                    "totalOrderIM": "172.47750096",
+                    "totalPositionIM": "60.50349967",
+                    "totalPositionMM": "16.09254346",
+                    "unrealisedPnl": "-2.07956",
+                    "cumRealisedPnl": "153.26214849"
                 },
                 {
-                    "coin": "BTC",
-                    "equity": "0.1",
-                    "usdValue": "1599.33925153",
-                    "walletBalance": "0.1",
-                    "availableToWithdraw": "0.1",
-                    "availableToBorrow": "2.5",
-                    "borrowAmount": "0",
-                    "accruedInterest": "0",
-                    "totalOrderIM": "0",
-                    "totalPositionIM": "0",
-                    "totalPositionMM": "0",
-                    "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
-                },
-                {
-                    "coin": "ETH",
-                    "equity": "0",
-                    "usdValue": "0",
-                    "walletBalance": "0",
-                    "availableToWithdraw": "0",
-                    "availableToBorrow": "26",
-                    "borrowAmount": "0",
-                    "accruedInterest": "0",
-                    "totalOrderIM": "0",
-                    "totalPositionIM": "0",
-                    "totalPositionMM": "0",
-                    "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
-                },
-                {
-                    "coin": "USDT",
-                    "equity": "2877.98643778",
-                    "usdValue": "2842.31539471",
-                    "walletBalance": "3575.21035897",
-                    "availableToWithdraw": "2346.15977511",
+                    "currencyCoin": "USDT",
+                    "equity": "2989.97442076",
+                    "usdValue": "2975.11272839",
+                    "walletBalance": "2691.34184935",
+                    "marginBalance": "5330.29357298",
+                    "availableBalance": "4750.7346256",
+                    "marginBalanceWithoutConvert": "2989.97442076",
+                    "availableBalanceWithoutConvert": "2658.33944077",
+                    "borrowSize": "0",
                     "availableToBorrow": "2500000",
-                    "borrowAmount": "0",
                     "accruedInterest": "0",
-                    "totalOrderIM": "8.2849104",
-                    "totalPositionIM": "523.54175226",
-                    "totalPositionMM": "160.61852469",
-                    "unrealisedPnl": "-697.22392118",
-                    "cumRealisedPnl": "-39934863.68119712"
-                },
-                {
-                    "coin": "SOL",
-                    "equity": "0",
-                    "usdValue": "0",
-                    "walletBalance": "0",
-                    "availableToWithdraw": "0",
-                    "availableToBorrow": "0",
-                    "borrowAmount": "0",
-                    "accruedInterest": "0",
-                    "totalOrderIM": "0",
-                    "totalPositionIM": "0",
-                    "totalPositionMM": "0",
-                    "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
-                },
-                {
-                    "coin": "BIT",
-                    "equity": "0",
-                    "usdValue": "0",
-                    "walletBalance": "0",
-                    "availableToWithdraw": "0",
-                    "availableToBorrow": "0",
-                    "borrowAmount": "0",
-                    "accruedInterest": "0",
-                    "totalOrderIM": "0",
-                    "totalPositionIM": "0",
-                    "totalPositionMM": "0",
-                    "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
-                },
-                {
-                    "coin": "XRP",
-                    "equity": "0",
-                    "usdValue": "0",
-                    "walletBalance": "0",
-                    "availableToWithdraw": "0",
-                    "availableToBorrow": "0",
-                    "borrowAmount": "0",
-                    "accruedInterest": "0",
-                    "totalOrderIM": "0",
-                    "totalPositionIM": "0",
-                    "totalPositionMM": "0",
-                    "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
+                    "totalOrderIM": "0.9205456",
+                    "totalPositionIM": "330.71443439",
+                    "totalPositionMM": "51.24010721",
+                    "unrealisedPnl": "298.63257142",
+                    "cumRealisedPnl": "-3418.29414098"
                 }
             ]
         },
-        "version": 17965
+        "version": 177440
     },
     "type": "snapshot"
 }
