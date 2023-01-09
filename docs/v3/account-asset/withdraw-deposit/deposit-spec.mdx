@@ -1,12 +1,13 @@
 ---
-title: Supported Deposit List
-sidebar_label: Supported Deposit List
+title: Get Deposit Spec
+sidebar_label: Get Deposit Spec
 sidebar_position: 1
+slug: /account-asset/deposit-spec
 ---
-Supported Deposit List Query Endpoints
+Query deposit spec.
 
 :::info Information
-It is a public endpoints. Coin and chain must be paired in the input parameter. Otherwise, it is regarded as an unconditional query.
+It is a public endpoints, no authentication needed. Coin and chain must be paired in the input parameter. Otherwise, it is regarded as an unconditional query.
 :::
 
 ### HTTP Request
@@ -17,18 +18,18 @@ GET `/asset/v3/public/deposit/allowed-deposit-list/query`
 |:----- |:-------|:-----|------ |
 |coin |false |string |Deposit Coin. Coin and chain must be paired. Otherwise, it is regarded as an unconditional query|
 |chain |false |string |Deposit Chain Name. Coin and chain must be paired. Otherwise, it is regarded as an unconditional query |
-|cursor |false |string |cursor information: used for pagination. Default value: `""` |
-|limit |false |int |Number of items per page, 0< limit <=50. Default value: 50 |
+|cursor |false |string |cursor information: used for pagination |
+|limit |false |integer |Number of items per page, [`1`, `50`]. Default value: 50 |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |configList|Array|Object|
-|[coin](../enum#coin)|string |deposit coin |
-|[chain](../enum#chain)|string|chain name|
+|[coin](enum#coin)|string |deposit coin |
+|[chain](enum#chain)|string|chain name|
 |coinShowName|string|Coin show name|
 |chainType|string|chain type|
-|blockConfirmNumber|int|deposit confirmation number|
+|blockConfirmNumber|integer|deposit confirmation number|
 |minDepositAmount|string|Minimum Deposit Amount|
 |nextPageCursor|string|cursor information: used for pagination. Default value: ""|
 

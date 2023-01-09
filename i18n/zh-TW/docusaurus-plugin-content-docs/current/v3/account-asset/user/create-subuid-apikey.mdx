@@ -2,6 +2,7 @@
 title: 新建子帳戶的API Key
 sidebar_label: 新建子帳戶的API Key
 sidebar_position: 2
+slug: /account-asset/create-subuid-apikey
 ---
 給新建好的子帳戶創建新的API key。需使用<b>母</b>帳戶的API key。
 
@@ -29,7 +30,7 @@ POST `/user/v3/private/create-sub-api`
 |id |string |唯一id. 內部使用 |
 |note |string |備註|
 |apiKey |string |Api key |
-|readOnly |string |`0`：可讀可寫. `1`：只讀 |
+|readOnly |integer |`0`：可讀可寫. `1`：只讀 |
 |secret |string |Api密鑰密碼.<ul><li>注意: Api密鑰密碼只會在這裡出現一次，除此之外沒有任何地方還可以獲取到密碼。請妥善保存。</li> </ul>|
 |permissions |Object |權限類型 |
 |> ContractTrade |array |合約交易的權限 |
@@ -43,9 +44,6 @@ POST `/user/v3/private/create-sub-api`
 |> NFT |array |NFT的權限. 子帳戶暫不支持, 總是[] |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /user/v3/private/create-sub-api HTTP/1.1
@@ -95,13 +93,7 @@ Content-Length: 796
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -148,5 +140,3 @@ Content-Length: 796
     "time": 1671176685954
 }
 ```
-</TabItem>
-</Tabs>

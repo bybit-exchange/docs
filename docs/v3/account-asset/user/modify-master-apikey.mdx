@@ -2,8 +2,9 @@
 title: Modify Master API Key
 sidebar_label: Modify Master API Key
 sidebar_position: 6
+slug: /account-asset/modify-master-apikey
 ---
-Modify the settings of master api key. Use the api key pending to be modified to call the endpoint. Use `master user's api key` ONLY.
+Modify the settings of master api key. Use the api key pending to be modified to call the endpoint. Use **master user's api key** ONLY.
 
 :::info
  Only the api key that calls this interface can be modified
@@ -15,7 +16,7 @@ POST `/user/v3/private/update-api`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|readOnly |<b>true</b> |int |`0`：Read and Write. `1`：Read only |
+|readOnly |<b>true</b> |integer |`0`：Read and Write. `1`：Read only |
 |ips |false |array |Set the IP bind. example: [`"192.168.0.1,192.168.0.2"`]<b>note:</b><ul><li>don't pass ips or pass with ["`*`"] means no bind</li><li>No ip bound api key will be `invalid after 90 days`</li><li>api key will be invalid after `7 days` once the account password is changed</li></ul>|
 |permissions |<b>true</b> |Object |Tick the types of permission.<ul><li> one of below types must be passed, otherwise the error is thrown</li></ul>|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
@@ -34,7 +35,7 @@ POST `/user/v3/private/update-api`
 |id |string |Unique id. Internal used|
 |note |string |The remark |
 |apiKey |string |Api key |
-|readOnly |string |`0`：Read and Write. `1`：Read only |
+|readOnly |integer |`0`：Read and Write. `1`：Read only |
 |secret |string |Always `""` |
 |permissions |Object |The types of permission |
 |> ContractTrade |array |Permisson of contract trade |
@@ -92,8 +93,6 @@ Content-Length: 741
         }
 }
 ```
-
-
 
 ### Response Example
 

@@ -2,6 +2,7 @@
 title: 新建子帳戶
 sidebar_label: 新建子帳戶
 sidebar_position: 1
+slug: /account-asset/create-subuid
 ---
 創建新的子帳戶。需使用<b>母</b>帳戶的API key。
 
@@ -12,7 +13,7 @@ POST `/user/v3/private/create-sub-member`
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |username |<b>true</b> |string |給新的子帳戶創建一個用戶名。<ul><li>6-16位字符，須同時含有數字和字母。</li><li>不能與已存在或已刪除的帳戶用戶名重複。</li></ul>|
-|memberType |<b>true</b> |int |`1`: 普通子帳戶, `6`: 託管子帳戶|
+|memberType |<b>true</b> |integer |`1`: 普通子帳戶, `6`: 託管子帳戶|
 |switch |false |int |<ul><li> `0`: 關閉快捷登陸 (默認關閉)</li><li>  `1`: 打開快捷登陸.</li></ul>|
 |note |false |string |設置備註 |
 
@@ -21,14 +22,11 @@ POST `/user/v3/private/create-sub-member`
 |:----- |:-----|----- |
 |uid |int |子帳戶userId |
 |username |string |給新的子帳戶創建一個用戶名 <ul><li>6-16位字符，須同時含有數字和字母。</li><li>不能與已存在或已刪除的帳戶用戶名重複。</li></ul>|
-|memberType |<b>true</b> |int |`1`: 普通子帳戶, `6`: 託管子帳戶|
-|switch |false |int |<ul><li> `0`: 關閉快捷登陸 (默認關閉)</li><li> `1`: 打開快捷登陸.</li></ul>|
-|note |false |string |設置備註 |
+|memberType |int |`1`: 普通子帳戶, `6`: 託管子帳戶|
+|switch |integer |<ul><li> `0`: 關閉快捷登陸 (默認關閉)</li><li> `1`: 打開快捷登陸.</li></ul>|
+|note |string |設置備註 |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /user/v3/private/create-sub-member HTTP/1.1
@@ -48,13 +46,7 @@ Content-Length: 109
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -71,5 +63,3 @@ Content-Length: 109
     "time": 1671174837668
 }
 ```
-</TabItem>
-</Tabs>

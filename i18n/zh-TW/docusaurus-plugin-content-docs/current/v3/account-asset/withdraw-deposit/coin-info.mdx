@@ -1,7 +1,8 @@
 ---
-title: 幣種信息查詢
-sidebar_label: 幣種信息查詢
+title: 查詢幣種信息
+sidebar_label: 查詢幣種信息
 sidebar_position: 5
+slug: /account-asset/coin-info
 ---
 幣種信息查詢
 
@@ -11,13 +12,13 @@ GET `/asset/v3/private/coin-info/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[coin](../enum#coin) |false |string |幣種|
+|[coin](enum#coin) |false |string |幣種|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |name|string|幣種名稱|
-|[coin](../enum#coin)|string |幣種 |
+|[coin](enum#coin)|string |幣種 |
 |remainAmount|string|該幣種當前最大可提現數量|
 |chains|array|Object|
 |> chainType|string|鏈類型|
@@ -32,9 +33,6 @@ GET `/asset/v3/private/coin-info/query`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /asset/v3/private/coin-info/query?coin=BTC HTTP/1.1
 Host: api-testnet.bybit.com
@@ -44,13 +42,7 @@ X-BAPI-RECV-WINDOW: 50000
 X-BAPI-SIGN: xxxxxxxxxxx
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -82,5 +74,3 @@ X-BAPI-SIGN: xxxxxxxxxxx
     "time": 1671172180550
 }
 ```
-</TabItem>
-</Tabs>

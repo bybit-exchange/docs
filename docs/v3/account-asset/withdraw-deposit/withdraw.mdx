@@ -2,6 +2,7 @@
 title: Withdraw
 sidebar_label: Withdraw
 sidebar_position: 6
+slug: /account-asset/withdraw
 ---
 Withdraw
 
@@ -15,19 +16,17 @@ POST `/asset/v3/private/withdraw/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[coin](../enum#coin) |<b>true</b> |string |coin name|
+|[coin](enum#coin) |<b>true</b> |string |coin name|
 |chain|<b>true</b>|string|chain name|
 |address|<b>true</b>|string|Address| Address verification whether there is a whitelist of withdrawal addresses|
 |tag|false|string|Need to fill in if there is a tag|
 |amount|<b>true</b>|string|withdraw amounts. Rules: Greater than or equal to the minimum withdrawal amount. The minimum withdrawal amount can be obtained from the Coin Info Query API|
-|timestamp|<b>true</b>|int|timestamp. Allowed timeframe is 5 mins before and after based on current timestamp|
-|forceChain|false|int|Force to withdraw on chain or not. <ul><li>`0`：If parsed as internal address, then internal transfer (by default)</li><li>`1`：Force withdraw on chain</li></ul>|
+|timestamp|<b>true</b>|integer|timestamp. Allowed timeframe is 5 mins before and after based on current timestamp|
+|forceChain|false|integer|Force to withdraw on chain or not. <ul><li>`0`：If parsed as internal address, then internal transfer (by default)</li><li>`1`：Force withdraw on chain</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|name|string|Name|
-|result|Object|result object|
 |id|string|withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint)|
 
 ### Request Example

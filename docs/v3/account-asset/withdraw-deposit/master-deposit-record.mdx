@@ -1,6 +1,6 @@
 ---
-title: Query Deposit Records
-sidebar_label: Query Deposit Records
+title: Get Deposit Records
+sidebar_label: Get Deposit Records
 sidebar_position: 2
 slug: /account-asset/deposit-record
 ---
@@ -20,16 +20,16 @@ GET `/asset/v3/private/deposit/record/query`
 |:----- |:-------|:-----|------ |
 |startTime |false |int |start time (In Millisecond). Default value: 30 days before the current time |
 |endTime |false |int |end time (In Millisecond). Default value: current time |
-|[coin](../enum#coin) |false |string |coin name: for example, BTC. Default value: all |
-|cursor |false |string |cursor infomation: used for pagination. Default value: "" |
-|limit |false |int |Number of items per page, 0< limit <=50. Default value: 50 |
+|[coin](enum#coin) |false |string |coin name: for example, BTC. Default value: all |
+|cursor |false |string |cursor infomation: used for pagination |
+|limit |false |int |Number of items per page, [`1`, `50`]. Default value: 50 |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows|Array|Object|
-|[coin](../enum#coin)|string |deposit coin |
-|[chain](../enum#chain)|string|chain name|
+|[coin](enum#coin)|string |deposit coin |
+|[chain](enum#chain)|string|chain name|
 |amount|string|deposit amount|
 |txID|string|transaction ID. It is `""` when deposit failed or deposit cancelled|
 |status|int|<ul><li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li></ul>|

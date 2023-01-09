@@ -1,12 +1,13 @@
 ---
-title: Query Sub Deposit Records
-sidebar_label: Query Sub Deposit Records
+title: Get Sub Deposit Records
+sidebar_label: Get Sub Deposit Records
 sidebar_position: 3
+slug: /account-asset/sub-deposit-record
 ---
-Query Sub Deposit Records By Master Key
+Query Sub Deposit Records By **Master** Key
 
 :::info Rules
-Rules: Query sub account deposit records by master account api key. If you want to use sub account api key to query, please use <a href="sub-deposit-record">Query Deposit Records</a> endpoint
+Rules: Query sub account deposit records by master account api key. If you want to use sub account api key to query, please use [Query Deposit Records](deposit-record#) endpoint
 :::
 
 ### HTTP Request
@@ -15,22 +16,22 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|subMemberId |<b>true</b> |int | Sub user Id
-|startTime |false |int |start time (In Millisecond). Default value: 30 days before the current time |
-|endTime |false |int |end time (In Millisecond). Default value: current time |
-|[coin](../enum#coin) |false |string |coin name: for example, BTC. Default value: all |
-|cursor |false |string |cursor infomation: used for pagination. Default value: "" |
-|limit |false |int |Number of items per page, 0< limit <=50. Default value: 50 |
+|subMemberId |<b>true</b> |integer | Sub user Id
+|startTime |false |integer |start time (In Millisecond). Default value: 30 days before the current time |
+|endTime |false |integer |end time (In Millisecond). Default value: current time |
+|[coin](enum#coin) |false |string |coin name: for example, BTC. Default value: all |
+|cursor |false |string |cursor infomation: used for pagination |
+|limit |false |integer |Number of items per page, [`1`, `50`]. Default value: 50 |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows|Array|Object|
-|[coin](../enum#coin)|string |deposit coin |
-|[chain](../enum#chain)|string|chain name|
+|[coin](enum#coin)|string |deposit coin |
+|[chain](enum#chain)|string|chain name|
 |amount|string|deposit amount|
 |txID|string|transaction ID. It is `""` when deposit failed or deposit cancelled|
-|status|int|<ul><li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li></ul>|
+|status|integer|<ul><li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li></ul>|
 |toAddress|string|deposit target address|
 |tag|string|tag of deposit target address|
 |depositFee|string|deposit fee|

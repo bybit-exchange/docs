@@ -2,6 +2,7 @@
 title: 修改母帳戶的API Key設置
 sidebar_label: 修改母帳戶的API Key設置
 sidebar_position: 6
+slug: /account-asset/modify-master-apikey
 ---
 修改母帳戶API key的設置。使用待修改的api key調用接口。需使用母帳戶的API key。
 
@@ -15,7 +16,7 @@ POST `/user/v3/private/update-api`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|readOnly |<b>true</b> |int |`0`：可讀可寫. `1`：只讀 |
+|readOnly |<b>true</b> |integer |`0`：可讀可寫. `1`：只讀 |
 |ips |false |array |綁定IP. 比如: ["192.168.0.1,192.168.0.2"]<b>注意:</b><ul><li>不傳參數ips 或者入参值為["*"]意味著不綁定</li><li>不綁定IP的api key將有90天的有效期限</li><li>一旦帳戶密碼做了修改，帳戶下的api key將在7天後失效</li></ul>|
 |permissions |<b>true</b> |Object |勾選api key權限.<ul><li> 注意: 必須傳入以下權限類型的任意一種, 否則報錯</li></ul>|
 |> ContractTrade |false |array |合約. ["Order","Position"] |
@@ -35,7 +36,7 @@ POST `/user/v3/private/update-api`
 |id |string |唯一id. 內部使用|
 |note |string |備註 |
 |apiKey |string |Api key |
-|readOnly |string |`0`：可讀可寫. `1`：只讀 |
+|readOnly |integer |`0`：可讀可寫. `1`：只讀 |
 |secret |string |總是 `""` |
 |permissions |Object |權限類型 |
 |> ContractTrade |array |合約交易的權限 |
@@ -50,9 +51,6 @@ POST `/user/v3/private/update-api`
 |ips |array |綁定的IP|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /user/v3/private/update-api HTTP/1.1
@@ -97,13 +95,7 @@ Content-Length: 741
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -154,5 +146,3 @@ Content-Length: 741
     "time": 1671179084363
 }
 ```
-</TabItem>
-</Tabs>
