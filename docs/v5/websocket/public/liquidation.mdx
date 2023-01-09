@@ -6,7 +6,7 @@ sidebar_position: 5
 
 import styles from '/src/css/clean_table.module.css';
 
-Subscribe to the liquidation stream..
+Subscribe to the liquidation stream
 
 **Push frequency:** real-time
 
@@ -23,13 +23,22 @@ Subscribe to the liquidation stream..
 |> updateTime |number |The updated timestamp (ms) |
 |> symbol |string |Symbol name |
 |> side |string |Order side. `Buy`,`Sell` |
-|> positionSide |string |Position side. `long`,`short`. If `positionSide`=long and `side`=Sell, then a long position has been liquidated |
 |> size |string |Executed size  |
 |> price |string |Executed price |
-|> id |string |Trade ID |
 
 ### Response Example
 
 ```json
-
+{
+    "data": {
+        "price": "0.03803",
+        "side": "Buy",
+        "size": "1637",
+        "symbol": "GALAUSDT",
+        "updatedTime": 1673251091822
+    },
+    "topic": "liquidation.GALAUSDT",
+    "ts": 1673251091822,
+    "type": "snapshot"
+}
 ```
