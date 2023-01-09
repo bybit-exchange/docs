@@ -1,6 +1,6 @@
 ---
-title: 提現記錄查詢
-sidebar_label: 提現記錄查詢
+title: 查詢提現記錄
+sidebar_label: 查詢提現記錄
 sidebar_position: 4
 slug: /account-asset/withdraw-record
 ---
@@ -16,23 +16,23 @@ GET `/asset/v3/private/withdraw/record/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|withdrawID |false |int64 |提現ID。 (提現API響應參數中的提現請求ID) |
-|startTime |false |int |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
-|endTime |false |int |結束時間 (精確到毫秒)。 默認為當前時間 |
-|[coin](../enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
+|withdrawID |false |integer |提現ID。 (提現API響應參數中的提現請求ID) |
+|startTime |false |integer |開始時間 (毫秒)。 默認為當前時間之前30天 |
+|endTime |false |integer |結束時間 (毫秒)。 默認為當前時間 |
+|[coin](enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
 |withdrawType |false |string |<ul><li>`0 (默認)`：鏈上提現.</li> <li>`1`：平台內部轉帳.</li><li> `2`：鏈上提現和內部轉帳</li></ul>|
 |cursor |false |string |游標信息：用來分頁。 默認空 |
-|limit |false |int |每頁條數。0< limit <=50 默認為50 |
+|limit |false |integer |每頁條數。[`1`, `50`], 默認為50 |
 
 ### 返回參數
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows|Array|Object|
-|[coin](../enum#coin)|string |提現的幣種 |
-|[chain](../enum#chain)|string|鏈名|
+|[coin](enum#coin)|string |提現的幣種 |
+|[chain](enum#chain)|string|鏈名|
 |amount|string|提現的數量|
 |txID|string|交易ID。提現失敗/提現撤銷/內部轉帳：為空|
-|status|int|[提現狀態](../enum#withdrawStatus)|
+|status|int|[提現狀態](enum#withdrawStatus)|
 |toAddress|string|提現目標地址. 內部轉帳：顯示郵箱或手機號|
 |tag|string|提現目標地址的tag|
 |withdrawFee|string|提現手續費|
@@ -44,9 +44,6 @@ GET `/asset/v3/private/withdraw/record/query`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /asset/v3/private/withdraw/record/query HTTP/1.1
 Host: api-testnet.bybit.com
@@ -56,13 +53,7 @@ X-BAPI-TIMESTAMP: 1671171632559
 X-BAPI-RECV-WINDOW: 50000
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -105,5 +96,3 @@ X-BAPI-RECV-WINDOW: 50000
     "time": 1671171632649
 }
 ```
-</TabItem>
-</Tabs>

@@ -1,6 +1,6 @@
 ---
-title: 充值記錄查詢
-sidebar_label: 充值記錄查詢
+title: 查詢充值記錄
+sidebar_label: 查詢充值記錄
 sidebar_position: 2
 slug: /account-asset/deposit-record
 ---
@@ -18,18 +18,18 @@ GET `/asset/v3/private/deposit/record/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime |false |int |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
-|endTime |false |int |結束時間 (精確到毫秒)。 默認為當前時間 |
-|[coin](../enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
+|startTime |false |integer |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
+|endTime |false |integer |結束時間 (精確到毫秒)。 默認為當前時間 |
+|[coin](enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
 |cursor |false |string |游標信息：用來分頁。 默認空|
-|limit |false |int |每頁條數。0< limit <=50 默認為50|
+|limit |false |integer |每頁條數, [`1`, `50`] 默認為50|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |rows|Array|Object|
-|[coin](../enum#coin)|string |充值的幣種 |
-|[chain](../enum#chain)|string|鏈名|
+|[coin](enum#coin)|string |充值的幣種 |
+|[chain](enum#chain)|string|鏈名|
 |amount|string|充值的數量|
 |txID|string|交易ID。充值失敗/取消充值：為空|
 |status|int|<ul><li>0=未知</li><li>1=待確認</li><li>2=上賬中</li><li>3=已完成</li><li>4=充值失敗</li></ul>|

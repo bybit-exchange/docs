@@ -2,6 +2,7 @@
 title: 查詢子母劃轉記錄列表
 sidebar_label: 查詢子母劃轉記錄列表
 sidebar_position: 4
+slug: /account-asset/sub-transfer-list
 ---
 
 import styles from '/src/css/clean_table.module.css';
@@ -15,7 +16,7 @@ GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |transferId | false |string |UUID,全局唯一 |
-|[coin](../enum#coin)|false|string |幣種類型 |
+|[coin](enum#coin)|false|string |幣種類型 |
 |status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
 |startTime |false |integer |開始時間戳（毫秒) |
 |endTime |false |integer |結束時間戳（毫秒) |
@@ -26,7 +27,7 @@ GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |transferId |string |UUID,全局唯一 |
-|[coin](../enum#coin)|string |幣種類型 |
+|[coin](enum#coin)|string |幣種類型 |
 |amount |string |兌入數量 |
 |memberId |integer | 賬戶 |
 |subMemberId |integer|子賬戶 |
@@ -37,9 +38,6 @@ GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /asset/v3/private/transfer/sub-member-transfer/list/query?coin=USDT HTTP/1.1
 Host: api-testnet.bybit.com
@@ -48,13 +46,8 @@ X-BAPI-API-KEY: xxxxxxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1670927635525
 X-BAPI-RECV-WINDOW: 50000
 ```
-</TabItem>
-</Tabs>
 
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -89,5 +82,3 @@ X-BAPI-RECV-WINDOW: 50000
     "time": 1670927635641
 }
 ```
-</TabItem>
-</Tabs>

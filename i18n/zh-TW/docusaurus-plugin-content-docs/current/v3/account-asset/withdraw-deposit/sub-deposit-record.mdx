@@ -1,12 +1,13 @@
 ---
-title: 子帳戶充值紀錄
-sidebar_label: 子帳戶充值紀錄
+title: 查詢子帳戶充值
+sidebar_label: 查詢子帳戶充值
 sidebar_position: 3
+slug: /account-asset/sub-deposit-record
 ---
 子帳戶充值紀錄
 
 :::info Rules
-規則: 獲取子帳戶的入金紀錄。需使用母帳戶的API Key。若要通過子帳戶API Key查詢入金紀錄，請使用<a href="sub-deposit-record">充值紀錄查詢</a>
+規則: 獲取子帳戶的入金紀錄。需使用**母**帳戶的API Key。若要通過子帳戶API Key查詢入金紀錄，請使用[充值紀錄查詢](deposit-record#)
 :::
 
 ### HTTP 請求
@@ -15,22 +16,22 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|subMemberId |<b>true</b> |int | 子帳戶userId
+|subMemberId |<b>true</b> |integer | 子帳戶userId
 |startTime |false |int |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
 |endTime |false |int |結束時間 (精確到毫秒)。 默認為當前時間 |
-|[coin](../enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
+|[coin](enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
 |cursor |false |string |游標信息：用來分頁。 默認空|
-|limit |false |int |每頁條數。0< limit <=50 默認為50 |
+|limit |false |int |每頁條數。[`1`, `50`], 默認為50 |
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |rows|Array|Object|
-|[coin](../enum#coin)|string |充值的幣種 |
-|[chain](../enum#chain)|string|鏈名|
+|[coin](enum#coin)|string |充值的幣種 |
+|[chain](enum#chain)|string|鏈名|
 |amount|string|充值的數量|
 |txID|string|交易ID。充值失敗/取消充值：為空|
-|status|int|<ul><li>0=未知</li><li>1=待確認</li><li>2=上賬中</li><li>3=已完成</li><li>4=充值失敗</li></ul>|
+|status|integer|<ul><li>0=未知</li><li>1=待確認</li><li>2=上賬中</li><li>3=已完成</li><li>4=充值失敗</li></ul>|
 |toAddress|string|充值的目標地址|
 |tag|string|充值目標地址的tag|
 |depositFee|string|充值手續費|
@@ -42,9 +43,6 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /asset/v3/private/deposit/sub-member-record/query?subMemberId=xxxxxxxxxxx HTTP/1.1
 Host: api-testnet.bybit.com
@@ -54,13 +52,7 @@ X-BAPI-TIMESTAMP: 1671169682466
 X-BAPI-RECV-WINDOW: 50000
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -89,5 +81,3 @@ X-BAPI-RECV-WINDOW: 50000
     "time": 1671166430718
 }
 ```
-</TabItem>
-</Tabs>

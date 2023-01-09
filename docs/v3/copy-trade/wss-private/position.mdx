@@ -16,9 +16,9 @@ import styles from '/src/css/clean_table.module.css';
 |symbol|string |Symbol |
 |positionIdx |string |Position idx, used to identify positions in different position modes: 1-Buy side of both side mode; 2-Sell side of both side mode |
 |positionValue |string |Position value |
-|riskId |string |Risk ID |
+|riskId |integer |Risk ID |
 |leverage |string |In Isolated Margin mode, the value is set by the user. |
-|isolated |bool |`true` means isolated margin mode; `false` means cross margin mode |
+|isolated |boolean |`true` means isolated margin mode; `false` means cross margin mode |
 |side |string |Side |
 |size |string |Position qty |
 |unrealisedPnl |string |unrealised pnl |
@@ -42,28 +42,28 @@ ws.send('{"op": "subscribe", "args": ["copyTradePosition"]}')
 
 ```json
 {
-  "topic":"copyTradePosition",
-    "data":[
-    {
-      "symbol":"ETHUSDT",
-      "positionIdx":"2",
-      "positionValue":"80.05065626",
-      "riskId":11,
-      "leverage":"10.000000",
-      "isIsolated":true,
-      "side":"Sell",
-      "size":"0.040000",
-      "unrealisedPnl":"1.62665626",
-      "liqPrice":"2191.350098",
-      "bustPrice":"2201.350098",
-      "entryPrice":"2001.26640650",
-      "positionMargin":"8.00506666",
-      "orderMargin":"0.00000000",
-      "occClosingFee":"0.05283240",
-      "cumRealisedPnl":"0.55284374",
-      "positionStatus":"Normal",
-      "positionSeq":0
-    }
-  ]
+    "topic": "copyTradePosition",
+    "data": [
+        {
+            "symbol": "ETHUSDT",
+            "positionIdx": "2",
+            "positionValue": "80.05065626",
+            "riskId": 11,
+            "leverage": "10.000000",
+            "isIsolated": true,
+            "side": "Sell",
+            "size": "0.040000",
+            "unrealisedPnl": "1.62665626",
+            "liqPrice": "2191.350098",
+            "bustPrice": "2201.350098",
+            "entryPrice": "2001.26640650",
+            "positionMargin": "8.00506666",
+            "orderMargin": "0.00000000",
+            "occClosingFee": "0.05283240",
+            "cumRealisedPnl": "0.55284374",
+            "positionStatus": "Normal",
+            "positionSeq": 0
+        }
+    ]
 }
 ```

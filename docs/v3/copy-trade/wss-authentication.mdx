@@ -31,7 +31,6 @@ Base endpoints:
 
 ```json
 {
-    "req_id": "10001", // optional
     "op": "auth",
     "args": [
         "api_key",
@@ -75,6 +74,24 @@ ws.send(
 )
 ```
 
+> The response sample of authentication success
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "16c79bf6-267d-4e06-a0c1-3ca4ed3a293d",
+    "request": {
+        "op": "auth",
+        "args": [
+            "OZUDHROKUZZNVZWHKN",
+            "1673261297304",
+            "63ae5f1064130d8e931b5d937500461b87c00b2a939284e455fe8ea1e27387f6"
+        ]
+    }
+}
+```
+
 :::info
 Example signature algorithms can be found <a href="https://github.com/bybit-exchange/api-usage-examples">here</a>.
 :::
@@ -97,9 +114,9 @@ ws.send('{"op":"ping"}');
 
 ```json
 {
-    "success": true, // Whether ping is successful
+    "success": true,
     "ret_msg": "pong",
-    "conn_id": "036e5d21-804c-4447-a92d-b65a44d00700",// current connection id
+    "conn_id": "16c79bf6-267d-4e06-a0c1-3ca4ed3a293d",
     "request": {
         "op": "ping",
         "args": null
@@ -189,13 +206,15 @@ ws.send('{"op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 
 ```json
 {
-    "success": true, // Whether subscription is successful
-    "ret_msg": "", // Successful subscription: "", otherwise it shows error message
-    "conn_id": "e0e10eee-4eff-4d21-881e-a0c55c25e2da", // current connection id
-    "request": { // Request to your subscription
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "16c79bf6-267d-4e06-a0c1-3ca4ed3a293d",
+    "request": {
         "op": "subscribe",
         "args": [
-            "kline.BTCUSDT.1m"
+            "position",
+            "order",
+            "execution"
         ]
     }
 }

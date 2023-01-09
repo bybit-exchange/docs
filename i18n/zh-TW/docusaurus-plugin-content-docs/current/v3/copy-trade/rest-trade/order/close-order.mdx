@@ -2,6 +2,7 @@
 title: 交易員發起平倉-訂單
 sidebar_label: 交易員發起平倉-訂單
 sidebar_position: 5
+slug: /copy-trade/trade/close-order
 ---
 
 交易員發起平倉-訂單
@@ -12,12 +13,10 @@ POST `/contract/v3/private/copytrading/order/close`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |**true** |string |合約類型 |
+|[symbol](../enum#symbol) |**true** |string |合約類型 |
 |orderLinkId |false |string |機構自定義訂單ID, 最大長度36位，且同一機構下自定義ID不可重復  |
 |parentOrderId |false |string |訂單ID。如果未填parent_order_link_id則為**必填**字段。 |
 |parentOrderLinkId |false |string |機構ID。如果未填parent_order_id則為**必填**字段。|
-
-
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -27,29 +26,20 @@ POST `/contract/v3/private/copytrading/order/close`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/order/close' \
 --header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-SIGN: 901734bbab6ff1ac16bd08c39e3ba71da4b156bb82669daef849e84fc199fc41' \
---header 'X-BAPI-API-KEY: IZXRDYUTQVVTRDHOKW' \
+--header 'X-BAPI-SIGN: XXXXX' \
+--header 'X-BAPI-API-KEY: XXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1670831398044' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
 --header 'Content-Type: application/json' \
 --data-raw '{"symbol":"BTCUSDT","parentOrderId":"cf252fd5-f25f-4623-9080-c60201b22575"}'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
   "retCode": 0,
     "retMsg": "success",
@@ -59,5 +49,3 @@ curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/privat
   }
 }
 ```
-</TabItem>
-</Tabs>

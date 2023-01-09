@@ -5,10 +5,7 @@ sidebar_position: 1
 slug: /derivatives/ws-contract/position
 ---
 Position stream is triggered when position size, position setting changes, etc.
-
 > **Cover: USDT Perpetual, Inverse Perpetual, Inverse Future**
-
-Push frequency: **real-time**
 
 **Topic:**
 `user.position.contractAccount`
@@ -29,7 +26,7 @@ Push frequency: **real-time**
 |> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin|
 |> autoAddMargin |integer |Auto add margin. `0`: false, `1`: true |
 |> leverage |string |Position leverage |
-|> positionBalance |string |Position balance |
+|> positionBalance |string |Position margin |
 |> markPrice |string |Mark price |
 |> liqPrice |string |Liquidation price |
 |> bustPrice |string |Bankruptcy price |
@@ -41,49 +38,49 @@ Push frequency: **real-time**
 |> unrealisedPnl |string |Unrealised PnL |
 |> cumRealisedPnl |string |Cumulative realized P&L |
 |> occClosingFee |string |Position closing fee occupied |
-|> sessionAvgPrice |string |Settlement price. For USDC Perp ONLY |
+|> sessionAvgPrice |string |Settlement price|
 |> positionStatus |string |Position status |
 |> positionMM |string |Position Initial margin |
 |> positionIM |string |Position Maintenance margin |
 |> createdTime |string |Position created timestamp (ms) |
 |> updatedTime |string |Position data updated timestamp (ms) |
 
-### Response Example
+### Stream Example
 
 ```json
 {
     "topic": "user.position.contractAccount",
     "data": [
         {
-            "positionIdx": 2,
-            "riskId": 11,
-            "symbol": "ETHUSDT",
-            "side": "Sell",
-            "size": "0.54",
-            "positionValue": "672.67942107",
-            "entryPrice": "1245.70263158",
+            "positionIdx": 0,
+            "riskId": 221,
+            "symbol": "MATICUSDT",
+            "side": "None",
+            "size": "0",
+            "positionValue": "0",
+            "entryPrice": "0",
             "tradeMode": 0,
             "autoAddMargin": 0,
-            "leverage": "11.5",
-            "positionBalance": "58.93257631",
-            "liqPrice": "16961.00",
-            "bustPrice": "16967.25",
-            "takeProfit": "0.00",
-            "stopLoss": "0.00",
-            "trailingStop": "0.00",
-            "unrealisedPnl": "32.57422107",
-            "createdTime": "1669020372789",
-            "updatedTime": "1671347745901",
-            "tpSlMode": "Partial",
-            "sessionAvgPrice": "0.00",
+            "leverage": "10",
+            "positionBalance": "0",
+            "liqPrice": "0.0000",
+            "bustPrice": "0.0000",
+            "takeProfit": "0.0000",
+            "stopLoss": "0.0000",
+            "trailingStop": "0.0000",
+            "unrealisedPnl": "0",
+            "createdTime": "1672986751927",
+            "updatedTime": "1673248306265",
+            "tpSlMode": "Full",
+            "sessionAvgPrice": "0.0000",
             "positionStatus": "Normal",
-            "occClosingFee": "5.497389",
-            "markPrice": "1185.38",
-            "cumRealisedPnl": "-23.9402743",
-            "activePrice": "0.00",
-            "riskLimitValue": "900000",
-            "positionMM": "45.811575",
-            "positionIM": "6.7267942107"
+            "occClosingFee": "0",
+            "markPrice": "0.8515",
+            "cumRealisedPnl": "2.421023",
+            "activePrice": "0.0000",
+            "riskLimitValue": "200000",
+            "positionMM": "0",
+            "positionIM": "0"
         }
     ]
 }

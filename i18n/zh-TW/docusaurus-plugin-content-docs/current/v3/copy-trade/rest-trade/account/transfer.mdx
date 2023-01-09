@@ -2,6 +2,7 @@
 title: 交易員劃轉資金
 sidebar_label: 交易員劃轉資金
 sidebar_position: 2
+slug: /copy-trade/account/transfer
 ---
 交易員劃轉資金
 
@@ -12,11 +13,10 @@ POST `/contract/v3/private/copytrading/wallet/transfer`
 | 參數 | 是否必須	 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |transferId |**true** |string |UUID,全局唯一 |
-|coin |**true** |string |幣種類型 |
+|coin |**true** |string |幣種類型. 僅`USDT` |
 |amount |**true** |string |兌入數量 |
-|fromAccountType|**true** |string |from賬戶類型 |
-|toAccountType |**true** |string |To賬戶類型 |
-
+|[fromAccountType](../enum#accounttype)|**true** |string |from賬戶類型 |
+|[toAccountType](../enum#accounttype) |**true** |string |To賬戶類型 |
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -25,37 +25,36 @@ POST `/contract/v3/private/copytrading/wallet/transfer`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/position/set-leverage' \
---header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-SIGN: 7cef1d820b3e5cb59f0b6c852c800c8f1636e28790dcc13201ea5552fa8197b9' \
---header 'X-BAPI-API-KEY: KAMz86BfHkKT5yWKWE' \
---header 'X-BAPI-TIMESTAMP: 1670841373442' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'Content-Type: application/json' \
---data-raw '{"symbol":"BTCUSDT","buyLeverage":"4","sellLeverage":"4"}'
-```
+POST /contract/v3/private/copytrading/wallet/transfer HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673257786588
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 173
 
-</TabItem>
-</Tabs>
+{
+    "transfer_id": "5f95de08-b10f-43be-9746-7b95c4a37d307",
+    "coin": "USDT",
+    "amount": "500",
+    "fromAccountType": "UNIFIED",
+    "toAccountType": "COPYTRADING"
+}
+```
 
 ### 響應示例
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
+        "transferId": "5f95de08-b10f-43be-9746-7b95c4a37d307"
     },
     "retExtInfo": {},
-    "time": 1670841190031
+    "time": 1673258002526
 }
 ```
-</TabItem>
-</Tabs>

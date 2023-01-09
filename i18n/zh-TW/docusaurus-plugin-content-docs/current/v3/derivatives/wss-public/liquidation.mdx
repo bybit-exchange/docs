@@ -22,10 +22,9 @@ slug: /derivatives/ws-public/liquidation
 |data |array |Object |
 |> updatedTime |number |數據更新時間戳 (毫秒) |
 |> symbol |string |合約名稱 |
-|> positionSide |string |持倉方向. `long`：做多, `short`：做空. 結合訂單方向，例如：若positionSide=long, side=Sell, 則表示多倉被強平 |
 |> size |string |成交數量 |
 |> price |string |成交價格 |
-|> execID |string |成交ID |
+|> side |string |方向 |
 
 ### 訂閱示例
 
@@ -33,7 +32,7 @@ slug: /derivatives/ws-public/liquidation
 {
     "op": "subscribe",
     "args": [
-    "liquidation.BTCPERP"
+    "liquidation.GALAUSDT"
     ],
     "req_id": "test" // optional
 }
@@ -42,5 +41,16 @@ slug: /derivatives/ws-public/liquidation
 ### 推送示例
 
 ```json
-
+{
+    "data": {
+        "price": "0.03803",
+        "side": "Buy",
+        "size": "1637",
+        "symbol": "GALAUSDT",
+        "updatedTime": 1673251091822
+    },
+    "topic": "liquidation.GALAUSDT",
+    "ts": 1673251091822,
+    "type": "snapshot"
+}
 ```

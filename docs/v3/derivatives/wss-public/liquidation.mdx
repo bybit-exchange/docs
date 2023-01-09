@@ -21,10 +21,9 @@ Push frequency: **real-time**
 |data |array |Object |
 |> updatedTime |number |Data updated timestamp (ms) |
 |> symbol |string |Symbol name |
-|> positionSide |string |Position side. `long`,`short`. Used to compare with `side`, e.g., if positionSide=long, side=Sell, then it means long order is liquidated.|
 |> size |string |Filled size |
 |> price |string |Filled price |
-|> execID |string |Transaction id |
+|> side |string |Side |
 
 ### Subscription Example
 
@@ -32,7 +31,7 @@ Push frequency: **real-time**
 {
     "op": "subscribe",
     "args": [
-    "liquidation.BTCPERP"
+      "liquidation.GALAUSDT"
     ],
     "req_id": "test" // optional
 }
@@ -41,5 +40,16 @@ Push frequency: **real-time**
 ### Stream Example
 
 ```json
-
+{
+    "data": {
+        "price": "0.03803",
+        "side": "Buy",
+        "size": "1637",
+        "symbol": "GALAUSDT",
+        "updatedTime": 1673251091822
+    },
+    "topic": "liquidation.GALAUSDT",
+    "ts": 1673251091822,
+    "type": "snapshot"
+}
 ```

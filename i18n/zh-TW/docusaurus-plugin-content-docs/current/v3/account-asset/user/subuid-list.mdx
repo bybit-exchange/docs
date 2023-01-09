@@ -1,7 +1,8 @@
 ---
-title: 獲取子帳戶UID列表
-sidebar_label: 獲取子帳戶UID列表
+title: 查詢子帳戶UID列表
+sidebar_label: 查詢子帳戶UID列表
 sidebar_position: 3
+slug: /account-asset/subuid-list
 ---
 獲取當前母帳戶下所有的子帳戶列表。需使用<b>母</b>帳戶的API key。
 
@@ -9,9 +10,7 @@ sidebar_position: 3
 POST `/user/v3/private/query-sub-members`
 
 ### 請求參數
-| 參數 | 是否必須 | 類型 | 說明|
-|:----- |:-------|:-----|------ |
-
+無
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -19,14 +18,11 @@ POST `/user/v3/private/query-sub-members`
 |subMembers |array |Object |
 |uid |string |子帳戶userId |
 |username |string |用戶名|
-|memberType |string |`1`: 普通子帳戶, `6`: 託管子帳戶 |
-|status |string |帳戶狀態.<ul><li>`1`: 正常</li><li>`2`: 登陸封禁</li><li>`4`: 凍結 </li></ul>|
+|memberType |integer |`1`: 普通子帳戶, `6`: 託管子帳戶 |
+|status |integer |帳戶狀態.<ul><li>`1`: 正常</li><li>`2`: 登陸封禁</li><li>`4`: 凍結 </li></ul>|
 |remark |string |備註 |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /user/v3/private/create-sub-member HTTP/1.1
@@ -46,13 +42,7 @@ Content-Length: 109
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -69,5 +59,3 @@ Content-Length: 109
     "time": 1671174837668
 }
 ```
-</TabItem>
-</Tabs>

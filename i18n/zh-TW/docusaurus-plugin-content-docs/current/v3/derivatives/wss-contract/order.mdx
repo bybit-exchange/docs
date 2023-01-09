@@ -4,70 +4,67 @@ sidebar_label: 訂單
 sidebar_position: 3
 slug: /derivatives/ws-contract/order
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-Order stream is triggered when there is a new order placed or order status changed.
+訂閱訂單數據推送。暫不支持USDC永續和期權
+> **覆蓋範圍: USDT永續, 反向合約**
 
-> cover: USDT Perpetual, Inverse Perpetual, Inverse Future
-
-Push frequency: **real-time**
+推送頻率: **實時**
 
 **Topic:**
 `user.order.contractAccount`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|topic |string |Topic name |
+|topic |string |Topic名 |
 |data |array |Object |
-|> symbol |string |Symbol name |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customised order id |
-|> side |string |Side. `Buy`,`Sell` |
-|> orderType |string |Order type. `Market`,`Limit` |
-|> [stopOrderType](../enum#stopordertype) |string |Stop order type |
-|> price |string |Order price |
-|> qty |string |Order qty |
-|> [timeInForce](../enum#timeinforce) |string |Time in force |
-|> [orderStatus](../enum#orderstatus) |string |Order status |
-|> takeProfit |string |Take profit price |
-|> stopLoss |string |Stop loss price |
-|> tpTriggerBy |string |Take profit price trigger by |
-|> slTriggerBy |string |Stop loss price trigger by |
-|> triggerPrice |string |Trigger price |
-|> triggerDirection |integer |`0`: rise, `1`: fall |
-|> [triggerBy](../enum#triggerby) |string |Trigger by |
-|> reduceOnly |boolean |Reduce only |
-|> closeOnTrigger |boolean |Close on trigger |
-|> leavesQty |string |Remaining order qty waiting to be executed |
-|> lastExecQty |string |Last executed qty |
-|> lastExecPrice |string |Last executed price |
-|> cumExecQty |string |Cumulative executed qty |
-|> cumExecValue |string |Cumulative executed value |
-|> createdTime |string |Order created timestamp (ms) |
-|> updatedTime |string |Order updated timestamp (ms) |
+|> symbol |string |合約名稱 |
+|> orderId |string |訂單ID |
+|> orderLinkId |string |用戶自定義ID |
+|> side |string |方向. `Buy`,`Sell` |
+|> orderType |string |訂單類型. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |條件單類型. 若不是條件單，則不會返回任何類型 |
+|> price |string |訂單價格 |
+|> qty |string |訂單數量 |
+|> [timeInForce](../enum#timeinforce) |string |執行策略 |
+|> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
+|> takeProfit |string |止盈價格 |
+|> stopLoss |string |止損價格 |
+|> tpTriggerBy |string |觸發止盈的價格類型 |
+|> slTriggerBy |string |觸發止損的價格類型 |
+|> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格 |
+|> triggerDirection |integer |觸發方向. `0`: 上漲, `1`: 下跌 |
+|> [triggerBy](../enum#triggerby) |string |觸發類型|
+|> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
+|> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> |
+|> leavesQty |string |訂單剩餘未成交的數量 |
+|> lastExecQty |string |成交數量 |
+|> lastExecPrice |string |成交價格 |
+|> cumExecQty |string |累計成交數量 |
+|> cumExecValue |string |累計成交價值 |
+|> createdTime |string |創建訂單的時間戳 (毫秒) |
+|> updatedTime |string |訂單更新的時間戳 (毫秒) |
 
-### Response Example
+### 推送示例
 
 ```json
 {
     "topic": "user.order.contractAccount",
     "data": [
         {
-            "symbol": "ETHUSDT",
-            "orderId": "60da3459-1726-40e9-b4d2-37f6bcd044ca",
+            "symbol": "BTCUSDT",
+            "orderId": "148b77f6-6701-48ee-8308-91ecef2479e4",
             "side": "Buy",
-            "orderType": "Limit",
+            "orderType": "Market",
             "stopOrderType": "UNKNOWN",
-            "price": "1000.00",
-            "qty": "0.1",
-            "timeInForce": "GoodTillCancel",
-            "orderStatus": "New",
+            "price": "18067.00",
+            "qty": "0.05",
+            "timeInForce": "ImmediateOrCancel",
+            "orderStatus": "Filled",
             "triggerPrice": "0.00",
             "orderLinkId": "",
-            "createdTime": "1671347745898",
-            "updatedTime": "1671347745901",
+            "createdTime": "1673249168762",
+            "updatedTime": "1673249168765",
             "takeProfit": "0.00",
             "stopLoss": "0.00",
             "tpTriggerBy": "UNKNOWN",
@@ -76,11 +73,11 @@ Push frequency: **real-time**
             "reduceOnly": false,
             "closeOnTrigger": false,
             "triggerDirection": 0,
-            "leavesQty": "0.1",
-            "lastExecQty": "0",
-            "lastExecPrice": "0.00",
-            "cumExecQty": "0",
-            "cumExecValue": "0"
+            "leavesQty": "0",
+            "lastExecQty": "0.05",
+            "lastExecPrice": "17207.00",
+            "cumExecQty": "0.05",
+            "cumExecValue": "860.35"
         }
     ]
 }

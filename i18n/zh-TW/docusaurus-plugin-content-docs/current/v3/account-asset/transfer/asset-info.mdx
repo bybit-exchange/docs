@@ -2,6 +2,7 @@
 title: 查詢資產信息
 sidebar_label: 查詢資產信息
 sidebar_position: 11
+slug: /account-asset/asset-info
 ---
 查詢資產信息
 
@@ -11,23 +12,20 @@ GET `/asset/v3/private/transfer/asset-info/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype)|false |string |帳戶類型. 默認是SPOT類型. 目前僅支持SPOT|
-|[coin](../enum#coin)|false |string |幣種類型|
+|[accountType](enum#accounttype)|false |string |帳戶類型. 默認是SPOT類型. 目前僅支持SPOT|
+|[coin](enum#coin)|false |string |幣種類型|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |status |string |<ul><li>賬戶狀態: ACCOUNT_STATUS_NORMAL -- 正常</li> <li>ACCOUNT_STATUS_UNSPECIFIED -- 不正常</li></ul>|
 |assets|list|Object|
-|[>coin](../enum#coin)|string |幣種類型 |
+|[>coin](enum#coin)|string |幣種類型 |
 |>frozen |string |掛單凍結金額|
 |>free |string |可用余額 |
 |>withdraw |string |提現中金額 |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 GET /asset/v3/private/transfer/asset-info/query?coin=USDT HTTP/1.1
@@ -38,13 +36,7 @@ X-BAPI-RECV-WINDOW: 50000
 X-BAPI-SIGN: XXXXXXXXXXX
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -67,5 +59,3 @@ X-BAPI-SIGN: XXXXXXXXXXX
     "time": 1670924060108
 }
 ```
-</TabItem>
-</Tabs>

@@ -1,7 +1,8 @@
 ---
-title: 子帳戶充值地址信息查詢
-sidebar_label: 子帳戶充值地址信息查詢
+title: 查詢子帳戶充值地址信息
+sidebar_label: 查詢子帳戶充值地址信息
 sidebar_position: 9
+slug: /account-asset/sub-deposit-addr
 ---
 子帳戶充值地址信息查詢
 
@@ -15,7 +16,7 @@ GET `/asset/v3/private/deposit/sub-member-address/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[coin](../enum#coin) |false |string |幣種|
+|[coin](enum#coin) |false |string |幣種|
 |chainType |false |string |鏈名.<ul><li>注意，此處應傳鏈名，例如ETH，而不是ERC20</li></ul>|
 |subMemberId |<b>true</b> |string |子帳戶userId|
 
@@ -23,7 +24,7 @@ GET `/asset/v3/private/deposit/sub-member-address/query`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result|Object|result object|
-|[coin](../enum#coin)|string |幣種 |
+|[coin](enum#coin)|string |幣種 |
 |chains|Array|Object|
 |chainType|string|鏈類型|
 |addressDeposit|string|充值地址|
@@ -31,9 +32,6 @@ GET `/asset/v3/private/deposit/sub-member-address/query`
 |chain|string|鏈名|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 GET /asset/v3/private/deposit/sub-member-address/query?coin=USDT&chainType=ETH&subMemberId=407767 HTTP/1.1
@@ -44,13 +42,7 @@ X-BAPI-TIMESTAMP: 1671174486288
 X-BAPI-RECV-WINDOW: 50000
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -69,5 +61,3 @@ X-BAPI-RECV-WINDOW: 50000
     "time": 1671174486505
 }
 ```
-</TabItem>
-</Tabs>
