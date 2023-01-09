@@ -28,10 +28,10 @@ GET `/unified/v3/private/account/transaction-log`
 |category |string |Product type |
 |currency |string |USDC、USDT、BTC、ETH |
 |list |array |Object |
-|> transactionTime	|string	|Transaction timestamp (ms)|
+|> transactionTime	|number	|Transaction timestamp (ms)|
 |> type |string |Type |
 |> symbol |string |Symbol name |
-|> side |string |Side. `Buy`,`Sell` |
+|> side |string |Side. `Buy`,`Sell`,`None` |
 |> qty	|string	|Quantity |
 |> size |integer |Size |
 |> tradePrice |string |Trade price |
@@ -48,9 +48,6 @@ GET `/unified/v3/private/account/transaction-log`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 GET /unified/v3/private/account/transaction-log?category=linear&currency=USDC&limit=1&type=SETTLEMENT HTTP/1.1
 Host: api-testnet.bybit.com
@@ -60,13 +57,7 @@ X-BAPI-TIMESTAMP: 1672023156071
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="json-linear" label="linear">
 
 ```json
 {
@@ -101,5 +92,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1672023157776
 }
 ```
-</TabItem>
-</Tabs>

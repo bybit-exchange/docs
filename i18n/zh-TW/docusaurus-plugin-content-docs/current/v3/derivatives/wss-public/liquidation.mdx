@@ -4,36 +4,32 @@ sidebar_label: 強平推送
 sidebar_position: 5
 slug: /derivatives/ws-public/liquidation
 ---
-> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future
 
-Get recent liquidation orders in Bybit.
+訂閱Bybit平台上的期貨強平推送
+> **覆蓋範圍: 正向合約，反向合約**
 
-Push frequency: **real-time**
+推送頻率: **實時**
 
 **Topic:**
-`liquidation.{symbol}`
+`liquidation.{symbol}` e.g., liquidation.BTCUSDT
 
-@确认结构体
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|topic |string |Topic name |
-|type |string |Message type. `snaptshot`|
-|ts |number |The timestamp (ms) that system generates the data. |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot` |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |array |Object |
-|> updatedTime |number |Data updated timestamp (ms) |
-|> symbol |string |Symbol name |
-|> positionSide |string |Position side. `long`,`short`. Used to compare with `side`, e.g., if positionSide=long, side=Sell, then it means long order is liquidated.|
-|> size |string |Filled size |
-|> price |string |Filled price |
-|> execID |string |Transaction id |
+|> updatedTime |number |數據更新時間戳 (毫秒) |
+|> symbol |string |合約名稱 |
+|> positionSide |string |持倉方向. `long`：做多, `short`：做空. 結合訂單方向，例如：若positionSide=long, side=Sell, 則表示多倉被強平 |
+|> size |string |成交數量 |
+|> price |string |成交價格 |
+|> execID |string |成交ID |
 
-### Request Example
+### 訂閱示例
 
-<Tabs>
-<TabItem value="console" label="JSON subscription message">
-
-```javascript
+```json
 {
     "op": "subscribe",
     "args": [
@@ -43,17 +39,8 @@ Push frequency: **real-time**
 }
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="trade-linear" label="trade-linear">
+### 推送示例
 
 ```json
 
 ```
-
-</TabItem>
-</Tabs>

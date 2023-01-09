@@ -4,41 +4,32 @@ sidebar_label: 查詢帳戶配置
 sidebar_position: 7
 slug: /derivatives/unified/usc-account-info
 ---
-Query the configuration under the account.
+該接口可以查詢賬戶下的配置
 
-### HTTP Request
+### HTTP 請求
 GET `/unified/v3/private/account/info`
 
-### Request Parameters
-None
+### 請求參數
+無
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|marginMode |string |`REGULAR_MARGIN`, `PORTFOLIO_MARGIN`|
-|updateTime |string |Account data updated timestamp (ms)|
+|marginMode |string |`REGULAR_MARGIN`（常規保證金模式）,`PORTFOLIO_MARGIN`（組合保證金模式）|
+|updateTime |string |賬戶數據更新的時間，毫秒時間戳|
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 GET /unified/v3/private/account/info HTTP/1.1
 Host: api-testnet.bybit.com
-X-BAPI-SIGN: 92f39a61cc208bedf5045879a9e063cc6bc5dace5d9fd1b091c19af38db69c0e
-X-BAPI-API-KEY: 9pXyrhxTlaVQGSaP3n
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1672023630281
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="response" label="Response">
+### 響應示例
 
 ```json
 {
@@ -48,5 +39,3 @@ X-BAPI-RECV-WINDOW: 5000
     "updateTime": "1658215932000"
 }
 ```
-</TabItem>
-</Tabs>

@@ -7,7 +7,7 @@ slug: /derivatives/contract/trading-stop
 
 import styles from '/src/css/clean_table.module.css';
 
-Set the take profit, stop loss or trailing stop for the position. If under [Tp/SL partial mode](tpsl-mode#), TP/SL/TS orders will not close your entire position.
+Set the take profit, stop loss or trailing stop for the position.
 
 :::tip
 * Passing these parameters will create conditional orders by the system internally.
@@ -30,15 +30,12 @@ POST `/contract/v3/private/position/trading-stop`
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type. default: `LastPrice` |
 |trailingStop |false |string |Cannot be less than 0, 0 means cancel TS |
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached ONLY |
-|positionIdx |**true** |string |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
+|positionIdx |false |string |Used to identify positions in different position modes. For hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters
 None
 
 ### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /contract/v3/private/position/trading-stop HTTP/1.1
@@ -62,15 +59,9 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -79,5 +70,3 @@ Content-Type: application/json
     "time": 1670852788558
 }
 ```
-</TabItem>
-</Tabs>

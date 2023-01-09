@@ -17,9 +17,9 @@ GET `/contract/v3/private/position/list`
 |:----- |:-------|:-----|------ |
 |category |false |string |Product type. `linear`,`inverse`,`option` |
 |symbol |false |string |Symbol name |
-|settleCoin |false |string |Settle coin. Query future, either `symbol` or `settleCoin` is required. `symbol` has a higher priority |
+|settleCoin |false |string |Settle coin. Query `linear`&`inverse`, either `symbol` or `settleCoin` is required. `symbol` has a higher priority |
 |baseCoin |false |string |Base coin. `option` ONLY |
-|limit |false |string |Limit for data size per page. [`1`, `50`]. Default: `20`|
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination |
 
 ### Response Parameters
@@ -33,7 +33,7 @@ GET `/contract/v3/private/position/list`
 |> size |string |Position size |
 |> entryPrice |string |Entry price |
 |> leverage |string |leverage |
-|> positionValue |string |Entry position value |
+|> positionValue |string |Position value |
 |> [positionIdx](../enum#positionidx) |integer |Position index|
 |> riskId |integer |Risk limit id |
 |> riskLimitValue |string |Position limit value corresponding to the risk id |
@@ -60,9 +60,6 @@ GET `/contract/v3/private/position/list`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console-linear" label="linear">
-
 ```http
 GET /contract/v3/private/position/list?symbol=SOLPERP&category=linear HTTP/1.1
 Host: api-testnet.bybit.com
@@ -73,58 +70,50 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "list": [
-{
-    "positionIdx": 0,
-    "riskId": 1,
-    "symbol": "SOLPERP",
-    "side": "Buy",
-    "size": "10",
-    "positionValue": "130.1",
-    "entryPrice": "13.01",
-    "tradeMode": 0,
-    "autoAddMargin": 0,
-    "leverage": "10.00",
-    "positionBalance": "",
-    "liqPrice": "0.005",
-    "bustPrice": "",
-    "takeProfit": "0",
-    "stopLoss": "0",
-    "trailingStop": "",
-    "unrealisedPnl": "-0.01",
-    "createdTime": "1669888302986",
-    "updatedTime": "1670823807496",
-    "tpSlMode": "UNKNOWN",
-    "riskLimitValue": "150000",
-    "activePrice": "",
-    "markPrice": "13.009",
-    "cumRealisedPnl": "-0.07806",
-    "positionMM": "1.371254",
-    "positionIM": "13.080254",
-    "positionStatus": "Normal",
-    "sessionAvgPrice": "13.01",
-    "occClosingFee": ""
-}
-    ],
-    "category": "linear",
-    "nextPageCursor": ""
-},
+        "list": [
+            {
+                "positionIdx": 0,
+                "riskId": 1,
+                "symbol": "SOLPERP",
+                "side": "Buy",
+                "size": "10",
+                "positionValue": "130.1",
+                "entryPrice": "13.01",
+                "tradeMode": 0,
+                "autoAddMargin": 0,
+                "leverage": "10.00",
+                "positionBalance": "",
+                "liqPrice": "0.005",
+                "bustPrice": "",
+                "takeProfit": "0",
+                "stopLoss": "0",
+                "trailingStop": "",
+                "unrealisedPnl": "-0.01",
+                "createdTime": "1669888302986",
+                "updatedTime": "1670823807496",
+                "tpSlMode": "UNKNOWN",
+                "riskLimitValue": "150000",
+                "activePrice": "",
+                "markPrice": "13.009",
+                "cumRealisedPnl": "-0.07806",
+                "positionMM": "1.371254",
+                "positionIM": "13.080254",
+                "positionStatus": "Normal",
+                "sessionAvgPrice": "13.01",
+                "occClosingFee": ""
+            }
+        ],
+        "category": "linear",
+        "nextPageCursor": ""
+    },
     "retExtInfo": {},
     "time": 1670823840914
 }
 ```
-</TabItem>
-</Tabs>

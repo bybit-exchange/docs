@@ -18,7 +18,7 @@ GET `/contract/v3/private/order/unfilled-orders`
 |:----- |:-------|:-----|------ |
 |category |false |string |Product type. `linear`,`inverse`,`option`. Default: `linear` |
 |symbol |false |string |Symbol name |
-|baseCoin |false |string |Base coin. For `option` ONLY. default: BTC records returned.|
+|baseCoin |false |string |Base coin |
 |settleCoin |false |string |Settle coin. One of `symbol`,`baseCoin` and `settleCoin` is **required**. Priority: symbol > baseCoin > settleCoin |
 |orderId |false |string |Order id |
 |orderLinkId |false |string |User customised order id |
@@ -38,11 +38,11 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> side |string |Side. `Buy`,`Sell` |
 |> orderType |string |Order type. `Market`,`Limit` |
 |> price |string |Order price |
-|> iv |string |Implied volatility|
+|> iv |string |Implied volatility. Valid for `option` only|
 |> qty |string |Order qty |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
-|> lastPriceOnCreated |string |Last execution price |
+|> lastPriceOnCreated |string |Last price when create the order |
 |> createdTime |string |Created timestamp (ms) |
 |> updatedTime |string |Updated timestamp (ms) |
 |> [cancelType](../enum#canceltype) |string |Cancel type. Unique field for `linear` and `inverse` |
@@ -60,15 +60,11 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> tpTriggerBy |string |Trigger type of take profit |
 |> slTriggerBy |string |Trigger type of stop loss |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
-|> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
+|> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a>. Keeps `""` for `option` |
 |> blockTradeId |string |Block trade id. Unique field for `option` |
 |> placeType |string |Place type. `price`,`iv`. Unique field for `option` |
 
-
 ### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
 
 ```http
 GET /contract/v3/private/order/unfilled-orders?symbol=SOLUSDT&category=linear HTTP/1.1
@@ -79,15 +75,9 @@ X-BAPI-TIMESTAMP: 1670564324211
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -132,5 +122,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1670564327905
 }
 ```
-</TabItem>
-</Tabs>

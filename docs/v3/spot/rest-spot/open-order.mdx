@@ -8,11 +8,10 @@ slug: /spot/trade/open-order
 import styles from '/src/css/clean_table.module.css';
 
 
-
-#### HTTP Request
+### HTTP Request
 GET <code>/spot/v3/private/open-orders</code>
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | symbol               | false               | string          | Name of the trading pair               |
@@ -20,7 +19,7 @@ GET <code>/spot/v3/private/open-orders</code>
 | limit                | false               | string          | Default value is 500, max 500    |
 | orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 | accountId            | string          | Account ID           |
@@ -44,9 +43,6 @@ GET <code>/spot/v3/private/open-orders</code>
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/open-orders?symbol=BTCUSDT' \
 --header 'X-BAPI-SIGN: e28768ea749013bbd0eb38edf78e1cac187d3018e4807859a84a37cf52feb5c0' \
@@ -55,15 +51,12 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ope
 --header 'X-BAPI-RECV-WINDOW: 5000'
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
 <Tabs>
 <TabItem value="normal" label="Normal order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -100,7 +93,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ope
 
 <TabItem value="stop" label="Stop order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -134,5 +127,4 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ope
 ```
 
 </TabItem>
-
 </Tabs>

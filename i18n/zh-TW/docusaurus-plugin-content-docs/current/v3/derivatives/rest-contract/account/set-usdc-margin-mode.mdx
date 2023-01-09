@@ -5,37 +5,31 @@ sidebar_position: 6
 slug: /derivatives/contract/usdc-margin-mode
 ---
 
-Set USDC Margin Mode. The USDC account is `REGULAR_MARGIN` mode by default.
+設置USDC帳戶的保證金模式. 默認是`REGULAR_MARGIN`，即普通保證金模式.
 
 :::tip
-This endpoint is asynchronous. Please subscribe topic (增加链接) to get real-time switch result.
+該接口是異步的
 :::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/account/setMarginMode`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|setMarginMode |**true** |string |Margin mode. `REGULAR_MAEGIN`,`PORTFOLIO_MARGIN`  |
+|setMarginMode |**true** |string |保證金模式. `REGULAR_MAEGIN`,`PORTFOLIO_MARGIN`  |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
-|retCode |integer |Success/Error code|
-|retMsg |string |Success/Error message |
+|retCode |integer |成功/錯誤碼|
+|retMsg |string |成功/錯誤信息 |
 |result |Object | |
-|> reasons |array |Object. If no error, it is empty array |
-|>> reasonCode |string |The reason code of failure |
-|>> reasonMsg |string |The reason message of failure |
+|> reasons |array |Object. 若不抱錯，則是空數組`[]` |
+|>> reasonCode |string |失敗的錯誤碼 |
+|>> reasonMsg |string |失敗的錯誤信息 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="console">
+### 請求示例
 
 ```http
 POST /contract/v3/private/account/setMarginMode?setMarginMode=REGULAR_MARGIN HTTP/1.1
@@ -50,13 +44,9 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js response1" label="response fail">
+> 請求失敗示例
 
 ```json
 {
@@ -76,9 +66,8 @@ Content-Type: application/json
 }
 }
 ```
-</TabItem>
 
-<TabItem value="js response2" label="response accept">
+> 請求成功示例
 
 ```json
 {
@@ -89,5 +78,3 @@ Content-Type: application/json
     }
 }
 ```
-</TabItem>
-</Tabs>

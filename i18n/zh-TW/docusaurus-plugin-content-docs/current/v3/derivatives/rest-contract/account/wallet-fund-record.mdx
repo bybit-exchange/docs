@@ -5,46 +5,38 @@ sidebar_position: 3
 slug: /derivatives/contract/wallet-fund
 ---
 
-Get wallet fund records. This endpoint also shows exchanges from the <a href="https://www.bybit.com/user/assets/records/trade/exchange">Asset Exchange</a>, where the types for the exchange are `ExchangeOrderWithdraw` and `ExchangeOrderDeposit`.
+獲取錢包資金紀錄. 這個接口還展示來自網頁上<a href="https://www.bybit.com/user/assets/records/trade/exchange">資產兌換</a>下的兌換紀錄, 其中對應的type兌換類型是`ExchangeOrderWithdraw`和`ExchangeOrderDeposit`。
 
 :::tip
-* This endpoint returns incomplete information for transfers involving the derivatives wallet. Use the account asset API(增加跳转) for creating and querying internal transfers.
-* Find more detail for types Withdraw and Refund in the Withdraw Records endpoint(增加跳转).
-* Deposit or withdrawal records which occurred after **2021-07-15** will not be shown by this endpoint. To fetch records after this date you should call the Query Deposit Records(增加跳转) and Query Withdraw Records endpoints(增加跳转). This is due to the introduction of the spot wallet at this time.
+* 這個接口返回的關於衍生品帳戶下的劃轉紀錄的內容是不完整的。推薦使用帳戶資產API完成資產[劃轉](../../account-asset/internal-transfer)的操作和[紀錄](../../account-asset/internal-transfer-list)檢索。
+* 該接口不顯示2021-07-15之後發生的充值提現記錄。要在此日期之後獲取記錄，您應該調用 [查詢充值記錄](../../account-asset/deposit-record) 和 [查詢提現記錄](../../account-asset/withdraw-record)接口。這是由於此時引入了現貨錢包。
 :::
 
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/account/fee-rate`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|coin |false |string |Coin |
-|[walletFundType](../enum#walletfundtype) |false |string |Fund type |
-|startTime |false |integer |Start timestamp (ms)|
-|endTime |false |integer |End timestamp (ms)|
-|limit |false |integer |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|coin |false |string |幣種 |
+|[walletFundType](../enum#walletfundtype) |false |string |資金類型 |
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
 |list |array |Object |
-|> coin |string |Coin |
-|> [type](../enum#walletfundtype) |string |Type |
-|> amount |string |Amount |
-|> walletBalance |string |Wallet balance |
-|> execTime |string |Executed timestamp (ms) |
-|nextPageCursor |string |Cursor. Used to pagination|
+|> coin |string |幣種 |
+|> [type](../enum#walletfundtype) |string |資金類型 |
+|> amount |string |金額 |
+|> walletBalance |string |錢包餘額 |
+|> execTime |string |執行時間戳 (毫秒) |
+|nextPageCursor |string |游標，用於翻頁|
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="console">
+### 請求示例
 
 ```http
 GET /contract/v3/private/account/wallet/fund-records?limit=1 HTTP/1.1
@@ -55,15 +47,9 @@ X-BAPI-TIMESTAMP: 1670931970500
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -83,5 +69,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1670931971341
 }
 ```
-</TabItem>
-</Tabs>

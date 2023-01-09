@@ -47,7 +47,7 @@ POST `/unified/v3/private/order/create`
 |triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > max(market price, basePrice)_<br/>Else, _triggerPrice < min(market price, basePrice)_|
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed |
-|timeInForce |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
+|[timeInForce](../enum#timeinforce) |**true** |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001051">`PostOnly`</a> |
 |positionIdx |false |integer |Position mode. `0`: one-way mode. |
 |orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>**required** param</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price. only take effect upon opening the position |
@@ -66,13 +66,10 @@ POST `/unified/v3/private/order/create`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console-linear" label="linear">
-
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private/order/create' \
 --header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-SIGN: 27ecc5cca2aec6a779c9f5ef828275a3e9ccaf392a030820911c52d6085c34db' \
+--header 'X-BAPI-SIGN: XXXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1657871228347' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
@@ -88,15 +85,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -108,5 +99,3 @@ curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private
     "time": 1664441344238
 }
 ```
-</TabItem>
-</Tabs>

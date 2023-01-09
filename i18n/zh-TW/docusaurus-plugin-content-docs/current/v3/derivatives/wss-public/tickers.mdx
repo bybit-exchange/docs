@@ -4,159 +4,288 @@ sidebar_label: 行情
 sidebar_position: 3
 slug: /derivatives/ws-public/ticker
 ---
-> cover: USDT Perpetual, USDC Perpetual, Inverse Perpetual, Inverse Future, Option
 
-Get latest information of the symbol
+訂閱行情數據
+> **覆蓋範圍: 正向合約，反向合約，期權**
 
 :::info important
-* Future has `snapshot` and `delta` types. If a key does not exist in the field, it means the value is not changed.
-* Option has `snapshot` data ONLY.
+* 期貨，該topic推送delta數據和snapshot数据。如果delta數據為空，表明信息沒有發生變化。
+* 期權只推送snapshot類型數據
 :::
 
-Push frequency: **real-time**
+推送頻率: **實時**
 
 **Topic:**
 `tickers.{symbol}`
 
-### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|id |string |Message id. _Unique field for option_ |
-|topic |string |Topic name |
-|type |string |Message type. `snaptshot`,`delta`|
-|ts |number |The timestamp (ms) that system generates the data. |
-|cs |number |Please ignore |
-|data |Object | |
-|> symbol |string |Symbol name |
-|> [tickDirection](../enum#tickdirection) |string |Direction of price change. _Unique for future_ |
-|> lastPrice |string |Last price |
-|> bid1Price |string |Bid 1 price. _Unique for future_ |
-|> bid1Size |string |Bid 1 size. _Unique for future_ |
-|> ask1Price |string |Ask 1 price. _Unique for future_ |
-|> ask1Size |string |Ask 1 size. _Unique for future_ |
-|> price24hPcnt |string |Percentage change of market price relative to 24h. _Unique for future_ |
-|> prevPrice24h |string |Price of 24 hours ago. _Unique for future_ |
-|> highPrice24h |string |The highest price in the last 24 hours |
-|> lowPrice24h |string |The lowest price in the last 24 hours |
-|> prevPrice1h |string |Hourly market price an hour ago |
-|> change24h |string |24-hour change. _Unique for option_ |
-|> markPrice |string |Mark price |
-|> indexPrice |string |Index price |
-|> openInterest |string |Open interest |
-|> turnover24h |string |24h-turnover |
-|> volume24h |string |24h-volume |
-|> nextFundingTime |string |Next funding time. _Unique for future_ |
-|> fundingRate |string |Funding rate. _Unique for future_ |
-|> predictedFundingRate |string |Predicated funding rate. _Unique for future_ |
-|> bidPrice |string |Bid 1 price. _Unique for option_ |
-|> bidSize |string |Bid 1 size. _Unique for option_ |
-|> bidIv |string |Bid iv. _Unique for option_ |
-|> askPrice |string |Ask 1 price. _Unique for option_ |
-|> askSize |string |Ask 1 size. _Unique for option_ |
-|> askIv |string |Ask iv. _Unique for option_ |
-|> markPriceIv |string |Mark pruce iv. _Unique for option_ |
-|> underlyingPrice |string |Underlying price. _Unique for option_ |
-|> totalVolume |string |Total volume. _Unique for option_ |
-|> totalTurnover |string |Total turnover. _Unique for option_ |
-|> delta |string |delta value. _Unique for option_ |
-|> gamma |string |gamma value. _Unique for option_ |
-|> vega |string |vega value. _Unique for option_ |
-|> theta |string |theta value. _Unique for option_ |
-|> predictedDeliveryPrice |string |Predicted delivery price. _Unique for option_ |
-
-### Request Example
-
+### 響應參數
 <Tabs>
-<TabItem value="console" label="JSON subscription message">
+<TabItem value="future" label="Linear|Inverse" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>topic</td><td>string</td><td>Topic名稱</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>數據類型. `snapshot`,`delta`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>撮合版本號</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>行情服務生成數據的時間戳 (毫秒)</td>
+        </tr>
+        <tr>
+            <td>data</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> tickDirection</td><td>string</td><td>價格變化方向 </td>
+        </tr>
+        <tr>
+            <td>> price24hPcnt</td><td>string</td><td>市場價格相對24h前變化的百分比 </td>
+        </tr>
+        <tr>
+            <td>> lastPrice</td><td>string</td><td>最新市場成交價 </td>
+        </tr>
+        <tr>
+            <td>> prevPrice24h</td><td>string</td><td>24小時前的整點市價 </td>
+        </tr>
+        <tr>
+            <td>> highPrice24h</td><td>string</td><td>最近24小時的最高價 </td>
+        </tr>
+        <tr>
+            <td>> lowPrice24h</td><td>string</td><td>最近24小時的最低價 </td>
+        </tr>
+        <tr>
+            <td>> prevPrice1h</td><td>string</td><td>1小時前的整點市價 </td>
+        </tr>
+        <tr>
+            <td>> markPrice</td><td>string</td><td>標記價格 </td>
+        </tr>
+        <tr>
+            <td>> indexPrice</td><td>string</td><td>指數價格 </td>
+        </tr>
+        <tr>
+            <td>> openInterest</td><td>string</td><td>未平倉合約的數量 </td>
+        </tr>
+        <tr>
+            <td>> openInterestValue</td><td>string</td><td>未平倉合約的價值 </td>
+        </tr>
+        <tr>
+            <td>> turnover24h</td><td>string</td><td>最近24小時成交額 </td>
+        </tr>
+        <tr>
+            <td>> volume24h</td><td>string</td><td>最近24小時成交量 </td>
+        </tr>
+        <tr>
+            <td>> nextFundingTime</td><td>string</td><td>下次結算資金費用的時間(UTC) </td>
+        </tr>
+        <tr>
+            <td>> fundingRate</td><td>string</td><td>資金費率 </td>
+        </tr>
+        <tr>
+            <td>> predictedFundingRate</td><td>string</td><td>預估資金費率 </td>
+        </tr>
+        <tr>
+            <td>> bid1Price</td><td>string</td><td>買1價 </td>
+        </tr>
+        <tr>
+            <td>> bid1Size</td><td>string</td><td>買1價的數量 </td>
+        </tr>
+        <tr>
+            <td>> ask1Price</td><td>string</td><td>賣1價 </td>
+        </tr>
+        <tr>
+            <td>> ask1Size</td><td>string</td><td>賣1價的數量 </td>
+        </tr>
+    </table>
+</TabItem>
 
-```javascript
-{
-    "op": "subscribe",
-    "args": [
-    "tickers.BTCPERP"
-    ],
-    "req_id": "test" // optional
-}
-```
 
+<TabItem value="option" label="Option">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>topic</td><td>string</td><td>Topic名稱</td>
+        </tr>
+        <tr>
+            <td>id</td><td>string</td><td>消息id</td>
+        </tr>
+        <tr>
+            <td>type</td><td>string</td><td>數據類型. `snapshot`</td>
+        </tr>
+        <tr>
+            <td>cs</td><td>integer</td><td>撮合版本號</td>
+        </tr>
+        <tr>
+            <td>ts</td><td>number</td><td>行情服務生成數據的時間戳 (毫秒)</td>
+        </tr>
+        <tr>
+            <td>data</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> bidPrice</td><td>string</td><td>買1價 </td>
+        </tr>
+        <tr>
+            <td>> bidSize</td><td>string</td><td>買1價的數量 </td>
+        </tr>
+        <tr>
+            <td>> bidIv</td><td>string</td><td>買1價對應的iv </td>
+        </tr>
+        <tr>
+            <td>> askPrice</td><td>string</td><td>賣1價 </td>
+        </tr>
+        <tr>
+            <td>> askSize</td><td>string</td><td>賣1價的數量 </td>
+        </tr>
+        <tr>
+            <td>> askIv</td><td>string</td><td>賣1價對應的iv </td>
+        </tr>
+        <tr>
+            <td>> lastPrice</td><td>string</td><td>最新市場成交價 </td>
+        </tr>
+        <tr>
+            <td>> highPrice24h</td><td>string</td><td>最近24小時的最高價 </td>
+        </tr>
+        <tr>
+            <td>> lowPrice24h</td><td>string</td><td>最近24小時的最低價 </td>
+        </tr>
+        <tr>
+            <td>> markPrice</td><td>string</td><td>標記價格 </td>
+        </tr>
+        <tr>
+            <td>> indexPrice</td><td>string</td><td>指數價格 </td>
+        </tr>
+        <tr>
+            <td>> markIv</td><td>string</td><td>標記價格對應的iv </td>
+        </tr>
+        <tr>
+            <td>> underlyingPrice</td><td>string</td><td>底層資產的價格 </td>
+        </tr>
+        <tr>
+            <td>> openInterest</td><td>string</td><td>未平倉合約的數量 </td>
+        </tr>
+        <tr>
+            <td>> turnover24h</td><td>string</td><td>最近24小時成交額 </td>
+        </tr>
+        <tr>
+            <td>> volume24h</td><td>string</td><td>最近24小時成交量 </td>
+        </tr>
+        <tr>
+            <td>> totalVolume</td><td>string</td><td>總成交量 </td>
+        </tr>
+        <tr>
+            <td>> totalTurnover</td><td>string</td><td>總成交額 </td>
+        </tr>
+        <tr>
+            <td>> delta</td><td>string</td><td>Delta </td>
+        </tr>
+        <tr>
+            <td>> gamma</td><td>string</td><td>Gamma </td>
+        </tr>
+        <tr>
+            <td>> vega</td><td>string</td><td>Vega </td>
+        </tr>
+        <tr>
+            <td>> theta</td><td>string</td><td>Theta </td>
+        </tr>
+        <tr>
+            <td>> predictedDeliveryPrice</td><td>string</td><td>預估交割價. 交割前30分鐘有值 </td>
+        </tr>
+        <tr>
+            <td>> change24h</td><td>string</td><td>過去24小時的變化 </td>
+        </tr>
+    </table>
 </TabItem>
 </Tabs>
 
-### Response Example
+### 推送示例
 
 <Tabs>
-<TabItem value="trade-linear" label="trade-linear">
+<TabItem value="ws-linear" label="Linear">
 
 ```json
 {
-    "topic": "tickers.BTCUSDT",
+    "topic": "tickers.BTCPERP",
     "type": "snapshot",
     "data": {
-        "symbol": "BTCUSDT",
-        "tickDirection": "ZeroPlusTick",
-        "price24hPcnt": "-0.038339",
-        "lastPrice": "17006.00",
-        "prevPrice24h": "17684.00",
-        "highPrice24h": "17716.00",
-        "lowPrice24h": "16950.00",
-        "prevPrice1h": "17067.50",
-        "markPrice": "17010.12",
-        "indexPrice": "17017.82",
-        "openInterest": "64463.144",
-        "turnover24h": "2830817790.1754985",
-        "volume24h": "163114.486",
-        "nextFundingTime": "2022-12-16T16:00:00Z",
-        "fundingRate": "0.000058",
-        "predictedFundingRate": "",
-        "bid1Price": "17005.50",
-        "bid1Size": "57.024",
-        "ask1Price": "17006.00",
-        "ask1Size": "51.397"
+        "symbol": "BTCPERP",
+        "tickDirection": "ZeroMinusTick",
+        "price24hPcnt": "-0.002196",
+        "lastPrice": "16580.00",
+        "prevPrice24h": "16616.50",
+        "highPrice24h": "16683.50",
+        "lowPrice24h": "16471.50",
+        "prevPrice1h": "16598.50",
+        "markPrice": "16590.02",
+        "indexPrice": "16616.96",
+        "openInterest": "23418.511",
+        "openInterestValue": "388513565.86",
+        "turnover24h": "17708456.749",
+        "volume24h": "1069.437",
+        "nextFundingTime": "2022-12-29T16:00:00Z",
+        "fundingRate": "0.000083",
+        "predictedFundingRate": "0.000083",
+        "bid1Price": "16580.50",
+        "bid1Size": "10.494",
+        "ask1Price": "16601.00",
+        "ask1Size": "0.039"
     },
-    "cs": 22528804782,
-    "ts": 1671185168730
+    "cs": 654165870,
+    "ts": 1672323890101
 }
 ```
 
 </TabItem>
 
-<TabItem value="trade-option" label="trade-option">
+<TabItem value="js option" label="Option">
 
 ```json
 {
-    "id": "tickers.BTC-17DEC22-17000-P-2214428527-1671185436919",
-    "topic": "tickers.BTC-17DEC22-17000-P",
-    "ts": 1671185436919,
-    "type": "snapshot"
-    "data": {,
-        "symbol": "BTC-17DEC22-17000-P",
-        "bidPrice": "135",
-        "bidSize": "2.04",
-        "bidIv": "0.4227",
-        "askPrice": "160",
-        "askSize": "1.13",
-        "askIv": "0.4966",
-        "lastPrice": "140",
-        "highPrice24h": "175",
-        "lowPrice24h": "10",
-        "markPrice": "159.94599871",
-        "indexPrice": "17020.97",
-        "markPriceIv": "0.4964",
-        "underlyingPrice": "17016.5542",
-        "openInterest": "64.82",
-        "turnover24h": "1703497.517736",
-        "volume24h": "98.88",
-        "totalVolume": "110",
-        "totalTurnover": "1888486",
-        "delta": "-0.47939401",
-        "gamma": "0.00085937",
-        "vega": "3.38384404",
-        "theta": "-83.97755295",
+    "id": "tickers.BTC-6JAN23-17500-C-2480334983-1672917511074",
+    "topic": "tickers.BTC-6JAN23-17500-C",
+    "ts": 1672917511074,
+    "data": {
+        "symbol": "BTC-6JAN23-17500-C",
+        "bidPrice": "0",
+        "bidSize": "0",
+        "bidIv": "0",
+        "askPrice": "10",
+        "askSize": "5.1",
+        "askIv": "0.514",
+        "lastPrice": "10",
+        "highPrice24h": "25",
+        "lowPrice24h": "5",
+        "markPrice": "7.86976724",
+        "indexPrice": "16823.73",
+        "markPriceIv": "0.4896",
+        "underlyingPrice": "16815.1",
+        "openInterest": "49.85",
+        "turnover24h": "446802.8473",
+        "volume24h": "26.55",
+        "totalVolume": "86",
+        "totalTurnover": "1437431",
+        "delta": "0.047831",
+        "gamma": "0.00021453",
+        "vega": "0.81351067",
+        "theta": "-19.9115368",
         "predictedDeliveryPrice": "0",
-        "change24h": "6"
-    }
+        "change24h": "-0.33333334"
+    },
+    "type": "snapshot"
 }
 ```
 
 </TabItem>
+
 </Tabs>

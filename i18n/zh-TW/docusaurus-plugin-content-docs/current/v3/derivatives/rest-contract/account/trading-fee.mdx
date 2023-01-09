@@ -5,31 +5,25 @@ sidebar_position: 2
 slug: /derivatives/contract/fee-rate
 ---
 
-Get user trading fee rate.
+獲取用戶的交易手續費率
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/account/fee-rate`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |false |string |Symbol name|
+|symbol |false |string |合約名稱|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
 |list |array |Object |
-|> symbol |string |Symbol name |
-|> takerFeeRate |string |Taker fee rate |
-|> makerFeeRate |string |Maker fee rate |
+|> symbol |string |合約名稱 |
+|> takerFeeRate |string |Taker手續費率 |
+|> makerFeeRate |string |Maker手續費率 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="console">
+### 請求示例
 
 ```http
 GET /contract/v3/private/account/fee-rate?symbol=SOLPERP HTTP/1.1
@@ -40,15 +34,9 @@ X-BAPI-TIMESTAMP: 1670924049902
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -65,5 +53,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1670924050413
 }
 ```
-</TabItem>
-</Tabs>

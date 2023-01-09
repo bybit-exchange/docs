@@ -8,7 +8,7 @@ slug: /derivatives/unified/replace-order
 您只能修改那些未成交或者部分成交的訂單。
 :::
 
-### HTTP請求
+### HTTP 請求
 POST `/unified/v3/private/order/replace`
 
 ### 請求參數
@@ -23,8 +23,8 @@ POST `/unified/v3/private/order/replace`
 |triggerPrice |false |string |觸發價格. 若希望市場趨勢是上漲至觸發條件單, 則確保:<br/> _triggerPrice > max(market price, basePrice)_ 否則,<br/>_triggerPrice < min(market price, basePrice)_|
 |qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
 |price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
-|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段. 傳0，則表示取消止盈 |
-|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段. 傳0，則表示取消止損 |
+|takeProfit |false |string |修改後的止盈價格. 若不修改，請不要傳該字段|
+|stopLoss |false |string |修改後的止損價格. 若不修改，請不要傳該字段 |
 |tpTriggerBy |false |string |止盈價格觸發類型. `MarkPrice`, `IndexPrice`,`LastPrice` |
 |slTriggerBy |false |string |止損價格觸發類型. `MarkPrice`, `IndexPrice`,`LastPrice` |
 |triggerBy |false |string |觸發價格的觸發類型. `LastPrice`, `IndexPrice`,`MarkPrice`|
@@ -35,10 +35,7 @@ POST `/unified/v3/private/order/replace`
 |orderId |string |訂單Id |
 |orderLinkId |string |用戶自定義訂單Id |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 請求示例
 
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private/order/replace' \
@@ -56,15 +53,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private
     }'
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -74,5 +65,3 @@ curl --location --request POST 'https://api-testnet.bybit.com/unified/v3/private
     }
 }
 ```
-</TabItem>
-</Tabs>

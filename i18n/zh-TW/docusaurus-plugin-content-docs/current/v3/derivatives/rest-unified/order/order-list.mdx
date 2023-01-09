@@ -9,10 +9,7 @@ slug: /derivatives/unified/order-list
 獲取歷史訂單紀錄. 由於訂單創建/撤銷是異步的, 該接口返回數據可能會有延遲. 若您想實時獲取訂單信息, 您可以查詢該[接口](open-order#)或者通過websocket推送(推薦)
 :::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP請求
+### HTTP 請求
 GET `/unified/v3/private/order/list`
 
 ### 請求參數
@@ -20,6 +17,7 @@ GET `/unified/v3/private/order/list`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
 |symbol |false |string |合約名稱|
+|baseCoin |false |string |交易幣種. 若`category`=option，不傳時，默認返回BTC相關數據|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
 |[orderStatus](../enum#orderstatus) |false |string |訂單狀態。不傳則默認查詢所有狀態 |
@@ -29,191 +27,41 @@ GET `/unified/v3/private/order/list`
 |cursor |false |string |游標，用於翻頁|
 
 ### 響應參數
-<Tabs>
-<TabItem value="linear" label="linear" default>
-    <table border="0.5">
-        <tr>
-            <th>參數</th><th>類型</th><th>說明</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>產品類型</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>合約名稱 </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>用戶自定義Id </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>訂單Id </td>
-        </tr>
-        <tr>
-            <td>> stopOrderType</td><td>string</td><td>條件單類型. `TakeProfit`,`StopLoss`,`TrailingStop`,`Stop` </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
-        </tr>
-        <tr>
-            <td>> takeProfit</td><td>string</td><td>止盈價格 </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>大宗交易訂單Id </td>
-        </tr>
-        <tr>
-            <td>> rejectReason</td><td>string</td><td>拒絕原因 </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>訂單價格 </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> tpTriggerBy</td><td>string</td><td>觸發止盈的價格類型 `MarkPrice`, `IndexPrice`,`LastPrice` </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a> </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>當前市價 </td>
-        </tr>
-        <tr>
-            <td>> leavesValue</td><td>string</td><td>訂單剩餘未成交的價值 </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>訂單方向. `Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> triggerPrice</td><td>string</td><td>觸發價格. 僅條件單有效 </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
-        </tr>
-        <tr>
-            <td>> slTriggerBy</td><td>string</td><td>觸發止損的價格類型. `MarkPrice`, `IndexPrice`,`LastPrice`  </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
-        </tr>
-        <tr>
-            <td>> closeOnTrigger</td><td>boolean</td><td>觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>訂單數量 </td>
-        </tr>
-        <tr>
-            <td>> stopLoss</td><td>string</td><td>止損價格 </td>
-        </tr>
-        <tr>
-            <td>> triggerBy</td><td>string</td><td>觸發價格的觸發類型. `LastPrice`, `IndexPrice`, `MarkPrice` </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
-        </tr>
-    </table>
-</TabItem>
-
-<TabItem value="option" label="option">
-    <table border="0.5">
-        <tr>
-            <th>參數</th><th>類型</th><th>說明</th>
-        </tr>
-        <tr>
-            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
-        </tr>
-        <tr>
-            <td>category</td><td>string</td><td>產品類型</td>
-        </tr>
-        <tr>
-            <td>list</td><td>array</td><td>Object</td>
-        </tr>
-        <tr>
-            <td>> symbol</td><td>string</td><td>合約名稱 </td>
-        </tr>
-        <tr>
-            <td>> orderType</td><td>string</td><td>訂單類型. `Market`,`Limit` </td>
-        </tr>
-        <tr>
-            <td>> updatedTime</td><td>number</td><td>訂單更新的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> side</td><td>string</td><td>訂單方向. `Buy`, `Sell` </td>
-        </tr>
-        <tr>
-            <td>> orderLinkId</td><td>string</td><td>用戶自定義Id  </td>
-        </tr>
-        <tr>
-            <td>> cumExecFee</td><td>string</td><td>訂單累計成交的手續費 </td>
-        </tr>
-        <tr>
-            <td>> orderId</td><td>string</td><td>訂單Id </td>
-        </tr>
-        <tr>
-            <td>> leavesQty</td><td>string</td><td>訂單剩餘未成交的數量 </td>
-        </tr>
-        <tr>
-            <td>> orderStatus</td><td>string</td><td>訂單狀態 </td>
-        </tr>
-        <tr>
-            <td>> iv</td><td>string</td><td>隱含波動率 </td>
-        </tr>
-        <tr>
-            <td>> cumExecValue</td><td>string</td><td>訂單累計成交價值 </td>
-        </tr>
-        <tr>
-            <td>> blockTradeId</td><td>string</td><td>大宗交易訂單Id </td>
-        </tr>
-        <tr>
-            <td>> rejectReason</td><td>string</td><td>拒絕原因 </td>
-        </tr>
-        <tr>
-            <td>> cumExecQty</td><td>string</td><td>訂單累計成交數量 </td>
-        </tr>
-        <tr>
-            <td>> reduceOnly</td><td>boolean</td><td>只減倉. `true`表明這是只減倉單 </td>
-        </tr>
-        <tr>
-            <td>> price</td><td>string</td><td>訂單價格 </td>
-        </tr>
-        <tr>
-            <td>> qty</td><td>string</td><td>訂單數量 </td>
-        </tr>
-        <tr>
-            <td>> createdTime</td><td>number</td><td>創建訂單的時間戳 (毫秒) </td>
-        </tr>
-        <tr>
-            <td>> timeInForce</td><td>string</td><td><a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a>. `GoodTillCancel`, `ImmediateOrCancel`, `FillOrKill`, <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001051">`PostOnly`</a>  </td>
-        </tr>
-        <tr>
-            <td>> orderIM</td><td>string</td><td>訂單初始保證金 </td>
-        </tr>
-        <tr>
-            <td>> basePrice</td><td>string</td><td>當前市價 </td>
-        </tr>
-    </table>
-</TabItem>
-</Tabs>
+| 參數 | 類型 | 說明|
+|:-----|:-----|------ |
+|category |string |產品類型 |
+|nextPageCursor |string |游標，用於翻頁 |
+|list |array |Object |
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義Id |
+|> blockTradeId |string |Paradigm大宗交易Id |
+|> symbol |string |合約名稱 |
+|> iv |string |隱含波動率. _`linear`沒有該字段_|
+|> price |string |訂單價格 |
+|> qty |string |訂單數量 |
+|> side |string |方向. `Buy`,`Sell` |
+|> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
+|> orderType |string |訂單類型. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |條件單類型. _`option`沒有該字段_|
+|> [rejectReason](../enum#rejectreason) |string |被拒絕原因 |
+|> cumExecValue |string |訂單累計成交價值 |
+|> cumExecFee |string |訂單累計成交的手續費 |
+|> cumExecQty |string |訂單累計成交數量 |
+|> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型. _`option`沒有該字段_|
+|> [slTriggerBy](../enum#triggerby) |string |Stop loss price. _`option`沒有該字段_|
+|> [timeInForce](../enum#timeinforce) |string |執行策略 |
+|> basePrice |string |基準價格，用於條件單 |
+|> [triggerBy](../enum#triggerby) |string |觸發價格的觸發類型. _`option`沒有該字段_|
+|> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格. _`option`沒有該字段_|
+|> leavesQty |string |訂單剩餘未成交的數量 |
+|> leavesValue |string |訂單剩餘未成交的價值. _`option`沒有該字段_|
+|> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
+|> closeOnTrigger |boolean |觸發後平倉委託. _`option`沒有該字段_|
+|> takeProfit |string |止盈價格. _`option`沒有該字段_|
+|> stopLoss |string |止損價格. _`option`沒有該字段_|
+|> orderIM |string |訂單初始保證金 |
+|> createdTime |number |創建訂單的時間戳 (毫秒) |
+|> updatedTime |number |訂單更新的時間戳 (毫秒) |
 
 ### 請求示例
 

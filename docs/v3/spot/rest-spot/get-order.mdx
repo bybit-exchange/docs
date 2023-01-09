@@ -7,17 +7,17 @@ slug: /spot/trade/get-order
 
 import styles from '/src/css/clean_table.module.css';
 
-#### HTTP Request
+### HTTP Request
 GET <code>/spot/v3/private/order</code>
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | orderId              | false               | string           | Order ID. <b>Required</b> if not passing <code>orderLinkId</code> |
 | orderLinkId          | false               | string           | Unique user-set order ID. <b>Required</b> if not passing <code>orderId</code> |
 | orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 | accountId            | string          | Account ID           |
@@ -42,26 +42,22 @@ GET <code>/spot/v3/private/order</code>
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
+
 
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/order?orderLinkId=spotA0010' \
---header 'X-BAPI-SIGN: 828571067751622ed4191e7e8ee913defccd1f099b9dfb8332a6a05edf799eaf' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659076396894' \
 --header 'X-BAPI-RECV-WINDOW: 5000'
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
 <Tabs>
 <TabItem value="normal" label="Normal order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -96,7 +92,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ord
 
 <TabItem value="stop" label="Stop order">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",

@@ -4,52 +4,50 @@ sidebar_label: 查詢交易日誌
 sidebar_position: 3
 slug: /derivatives/unified/transaction-log
 ---
-Query transaction logs in Unified account.
 
-### HTTP Request
+`UNIFIED`賬戶的交易日誌。
+
+### HTTP 請求
 GET `/unified/v3/private/account/transaction-log`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string	|Product type. `linear`,`option`|
-|currency |**true** |string	|USDC、USDT、BTC、ETH |
-|baseCoin |false |string |baseCoin|
-|[type](../enum#type) |false |string |All transaction logs under this category are returned (except transfer/exchange/given cash). _Note: To query transfer-in and transfer-out logs, type=TRANSFER_IN, type=TRANSFER_OUT must be passed, otherwise the transfer log cannot be found._|
-|startTime |false |integer |The start timestamp (ms) |
-|endTime |false	|integer |The end timestamp (ms) |
-|direction |false |string |Direction: prev: previous page, next: next page, default is next |
-|limit |false |integer |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |Cursor. Used to pagination|
+|category |**true** |string	|產品類型. `linear`,`option`|
+|currency |**true** |string	|幣種. 比如：USDC、USDT、BTC、ETH |
+|baseCoin |false |string |交易幣種|
+|[type](../enum#type) |false |string |默認返回該category下所有交易日誌（除劃轉外）. _注意: 查詢轉入轉出日誌，必須要傳 type=TRANSFER_IN，type=TRANSFER_OUT，否則查不到劃轉日誌._|
+|startTime |false |integer |開始時間戳（毫秒） |
+|endTime |false	|integer |結束時間戳（毫秒） |
+|direction |false |string |搜索方向：`prev`:上一頁,`next`:下一頁,默認為 `next` |
+|limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
+|cursor |false |string |游標，用於分頁|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string |Product type |
-|currency |string |USDC、USDT、BTC、ETH |
+|category |string |產品類型 |
+|currency |string |幣種|
 |list |array |Object |
-|> transactionTime	|string	|Transaction timestamp (ms)|
-|> type |string |Type |
-|> symbol |string |Symbol name |
-|> side |string |Side. `Buy`,`Sell` |
-|> qty	|string	|Quantity |
-|> size |integer |Size |
-|> tradePrice |string |Trade price |
-|> funding	|string	|Funding fee|
-|> fee	|string	|Trading fee，fees are positive and rebates are negative |
-|> cashFlow |string |Cash flow |
-|> change |string |Change |
-|> cashBalance	|string	|Cash balance|
-|> feeRate	|string	|Trading fee rate |
-|> tradeId	|string |Trade id |
-|> orderId	|string	|Order id |
-|> orderLinkId	|string	|User customised order id |
-|nextPageCursor	|string	|Cursor. Used to pagination |
+|> transactionTime	|number	|交易時間戳 (毫秒)|
+|> type |string |類型 |
+|> symbol |string |合約名稱 |
+|> side |string |方向. `Buy`,`Sell`,`None` |
+|> qty	|string	|訂單數量 |
+|> size |integer |倉位數量 |
+|> tradePrice |string |交易價格 |
+|> funding	|string	|資金費用|
+|> fee	|string	|手續費，取資產的fee，正數表示用戶付出xx手續費，負數表示賺取 |
+|> cashFlow |string |現金流 |
+|> change |string |變更 |
+|> cashBalance	|string	|余額（當前幣種）|
+|> feeRate	|string	|手續費率 |
+|> tradeId	|string |交易ID |
+|> orderId	|string	|訂單ID |
+|> orderLinkId	|string	|用戶自定義訂單ID |
+|nextPageCursor	|string	|游標，用於分頁 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 GET /unified/v3/private/account/transaction-log?category=linear&currency=USDC&limit=1&type=SETTLEMENT HTTP/1.1
@@ -60,13 +58,7 @@ X-BAPI-TIMESTAMP: 1672023156071
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="json-linear" label="linear">
+### 響應示例
 
 ```json
 {
@@ -101,5 +93,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1672023157776
 }
 ```
-</TabItem>
-</Tabs>

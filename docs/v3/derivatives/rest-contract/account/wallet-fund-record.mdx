@@ -10,11 +10,10 @@ import styles from '/src/css/clean_table.module.css';
 Get wallet fund records. This endpoint also shows exchanges from the <a href="https://www.bybit.com/user/assets/records/trade/exchange">Asset Exchange</a>, where the types for the exchange are `ExchangeOrderWithdraw` and `ExchangeOrderDeposit`.
 
 :::tip
-* This endpoint returns incomplete information for transfers involving the derivatives wallet. Use the account asset API(增加跳转) for creating and querying internal transfers.
-* Find more detail for types Withdraw and Refund in the Withdraw Records endpoint(增加跳转).
-* Deposit or withdrawal records which occurred after **2021-07-15** will not be shown by this endpoint. To fetch records after this date you should call the Query Deposit Records(增加跳转) and Query Withdraw Records endpoints(增加跳转). This is due to the introduction of the spot wallet at this time.
+* This endpoint returns incomplete information for transfers involving the derivatives wallet. Use the [account asset API](../../account-asset/internal-transfer#) for creating and querying internal transfers.
+* Find more detail for types Withdraw and Refund in the [Withdraw Records endpoint]((../../account-asset/withdraw-record#)).
+* Deposit or withdrawal records which occurred after **2021-07-15** will not be shown by this endpoint. To fetch records after this date you should call the [Query Deposit Records](../../account-asset/deposit-record)and [Query Withdraw Records endpoint](../../account-asset/internal-transfer#). This is due to the introduction of the spot wallet at this time.
 :::
-
 
 ### HTTP Request
 GET `/contract/v3/private/account/fee-rate`
@@ -42,9 +41,6 @@ GET `/contract/v3/private/account/fee-rate`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="console">
-
 ```http
 GET /contract/v3/private/account/wallet/fund-records?limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
@@ -54,15 +50,9 @@ X-BAPI-TIMESTAMP: 1670931970500
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -82,5 +72,3 @@ X-BAPI-RECV-WINDOW: 5000
     "time": 1670931971341
 }
 ```
-</TabItem>
-</Tabs>

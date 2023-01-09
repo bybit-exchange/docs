@@ -33,7 +33,7 @@ Base endpoints:
 <p>Apply for authentication when establishing a connection.</p>
 <p>Note: if you're using <a href="https://github.com/bybit-exchange/pybit">pybit</a> or another high-level library, you can ignore this code - as authentication is handled for you.</p>
 
-```javascript
+```json
 {
     "req_id": "10001", // optional
     "op": "auth",
@@ -91,16 +91,16 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 
 
 ## How to Send Heartbeat Packet
-How to Send
+> How to Send
 
-```javascript
+```json
 // req_id is a customised id, which is optional
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-Response Example
+> The response sample of Pong
 
-```javascript
+```json
 // with req_id
 {"op":"pong","args":[1661741630642],"req_id":"100001","conn_id":"706b870c"}
 
@@ -108,23 +108,21 @@ Response Example
 {"op":"pong","args":[1661741654529],"conn_id":"706b870c"}
 ```
 
-
 :::caution
 To avoid networks or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
 :::
 
-
 ## Rate Limits
-<b>Private channel ONLY</b>：Each API key may have a maximum of 100 private WebSocket connections. The 101st connection will be rejected.
-An IP can connect to a maximum of 50 private spot websocket connections simultaneously.
-
+**Private channel ONLY:**
+- Each API key may have a maximum of 100 private WebSocket connections. The 101st connection will be rejected.
+- An IP can connect to a maximum of 50 private spot websocket connections simultaneously.
 
 ## How to Subscribe to Topics
 ### Understanding Websocket Filters
 
-How to subscribe with a filter
+> How to subscribe with a filter
 
-```javascript
+```json
 // Subscribing to the trade data for BTCUSDT
 {
     "req_id": "10001", // optional
@@ -135,9 +133,9 @@ How to subscribe with a filter
 }
 ```
 
-support many symbol, separate with ','.
+> support many symbol, separate with ','.
 
-```javascript
+```json
 // Example: Subscribing to the trade data for BTCUSDT and ETHUSDT
 {
     "req_id": "10001", // optional
@@ -152,11 +150,11 @@ support many symbol, separate with ','.
 <p>After establishing the connection, you can subscribe to a new topic by sending a JSON request. The request formats are as follows:</p>
 
 
-```javascript
+```json
 ws.send('{"req_id": "10001", "op": "subscribe", "args": ["trade.BTCUSDT", "trade.ETHUSDT", "tickers.BTCUSDT", "bookticker.BTCUSDT"]}')
 ```
 
-:::info
+:::caution
 You can pass a maximum of <b>10</b> args in <code>args</code>
 :::
 
@@ -164,11 +162,11 @@ You can pass a maximum of <b>10</b> args in <code>args</code>
 
 <p>After successful subscription, you can unsubscribe by sending a JSON request. The request formats are as follows:</p>
 
-```javascript
+```json
 ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 ```
 
-```javascript
+```json
 // Example: unsubscribing to the trade data for BTCUSDT and ETHUSDT
 {
     "req_id": "10002", // optional
@@ -180,7 +178,7 @@ ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 }
 ```
 
-```javascript
+```json
 // unsubscribe response sample
 {
     "op": "unsubscribe",
@@ -194,7 +192,7 @@ ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 ## Understanding Subscription Response
 Subscription Response
 
-```javascript
+```json
 {
     "op": "subscribe",
     "success": true,

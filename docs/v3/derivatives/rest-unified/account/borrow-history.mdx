@@ -27,7 +27,7 @@ GET `/unified/v3/private/account/borrow-history`
 |currency |string |`null` |
 |list |array |Object|
 |> currency |string |USDC、USDT、BTC、ETH|
-|> createdTime |integer |Created timestamp (ms)|
+|> createTime |integer |Created timestamp (ms)|
 |> borrowCost |string |Interest|
 |> hourlyBorrowRate |string |Hourly Borrow Rate |
 |> InterestBearingBorrowSize |string |Interest Bearing Borrow Size |
@@ -35,22 +35,36 @@ GET `/unified/v3/private/account/borrow-history`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
+GET /unified/v3/private/account/borrow-history?limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673078071099
+X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="option" label="option">
-
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "1625%3A0%2C1625%3A0",
+        "currency": null,
+        "list": [
+            {
+                "createTime": 1667282700269,
+                "costExemption": "0.00063175360150218",
+                "InterestBearingBorrowSize": "0",
+                "currency": "USDT",
+                "hourlyBorrowRate": "0.000001142",
+                "borrowCost": "0"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1673078071991
+}
 ```
-</TabItem>
-</Tabs>

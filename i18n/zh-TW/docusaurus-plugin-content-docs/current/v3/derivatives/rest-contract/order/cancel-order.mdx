@@ -5,30 +5,29 @@ sidebar_position: 3
 slug: /derivatives/contract/cancel
 ---
 :::note
-You could cancel those **unfilled** or **partially filled** orders.
+* 您必須指定`orderId`或者`orderLinkId`.
+* 若`orderId`和`orderLinkId`之間不匹配, 系統將會優先處理`orderId`.
+* 您只能撤銷未成交和部分成交的訂單.
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/contract/v3/private/order/cancel`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`(default),`inverse` |
-|symbol |**true** |string |Symbol name|
-|orderId |false |string |Order id. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order id. Either `orderId` or `orderLinkId` is required |
+|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`. 默認: `linear`. _暫不支持期權的撤單_ |
+|symbol |**true** |string |合約名稱|
+|orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|orderId |string |Order ID |
-|orderLinkId |string |User customised order id |
+|orderId |string |訂單ID |
+|orderLinkId |string |用戶自定義訂單ID |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
+### 请求示例
 
 ```http
 POST /contract/v3/private/order/cancel HTTP/1.1
@@ -46,25 +45,17 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "orderId": "a0c76874-1777-48dd-9f99-b4120ec71cc0",
-    "orderLinkId": "xrp_12"
-},
+        "orderId": "a0c76874-1777-48dd-9f99-b4120ec71cc0",
+        "orderLinkId": "xrp_12"
+    },
     "retExtInfo": {},
     "time": 1670570872075
 }
 ```
-</TabItem>
-</Tabs>

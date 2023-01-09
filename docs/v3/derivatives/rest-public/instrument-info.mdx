@@ -9,9 +9,6 @@ import styles from '/src/css/clean_table.module.css';
 
 Get launched instruments information.
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 ### HTTP Request
 GET `/derivatives/v3/public/instruments-info`
 
@@ -19,14 +16,14 @@ GET `/derivatives/v3/public/instruments-info`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. Default: `linear`, but in the response category shows `""`|
-|symbol |false |string |Symbol name. <ul><li>query an option symbol, `category` is **required**</li></ul>|
+|[symbol](../enum#symbol) |false |string |Symbol name. <ul><li>query an option symbol, `category` is **required**</li></ul>|
 |baseCoin |false |string |Base coin. <ul><li>Valid when `category`=option</li><li>BTC by default if not passed</li></ul>|
-|limit |false |integer |Limit for data size per page. [1,1000]. Default: 500|
+|limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: 500|
 |cursor |false |string |Cursor. Used for pagination|
 
 ### Response Parameters
 <Tabs>
-<TabItem value="future" label="Linear|Inverse" default>
+<TabItem value="future" label="Linear/Inverse" default>
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -51,6 +48,9 @@ GET `/derivatives/v3/public/instruments-info`
         </tr>
         <tr>
             <td>> quoteCoin</td><td>string</td><td>Quote coin. e.g BTCPERP, USDC is quote coin</td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>string</td><td>Settle coin. e.g BTCUSD, BTC is settle coin</td>
         </tr>
         <tr>
             <td>> launchTime</td><td>string</td><td>The launch timestamp (ms) </td>
@@ -179,7 +179,7 @@ GET `/derivatives/v3/public/instruments-info`
 </TabItem>
 </Tabs>
 
-> Request Example
+### Request Example
 
 <Tabs>
 <TabItem value="console" label="linear">
@@ -201,7 +201,7 @@ Host: api.bybit.com
 </TabItem>
 </Tabs>
 
-> Response Example
+### Response Example
 
 <Tabs>
 <TabItem value="js linear" label="js linear">
@@ -256,7 +256,7 @@ Host: api.bybit.com
 </TabItem>
 <TabItem value="js option" label="js option">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "success",

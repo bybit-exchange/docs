@@ -7,11 +7,10 @@ slug: /spot/trade/batch-cancel
 
 import styles from '/src/css/clean_table.module.css';
 
-
-#### HTTP Request
+### HTTP Request
 POST <code>/spot/v3/private/cancel-orders</code>
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | symbol | **true** | string | Name of the trading pair      |
@@ -19,19 +18,16 @@ POST <code>/spot/v3/private/cancel-orders</code>
 | orderTypes | false | string | Order type. <code>LIMIT</code> in default. It allows multiple types, separated by comma, e.a LIMIT,LIMIT_MAKER |
 | orderCategory | false | int | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 | success | string | Batch cancel successfully or not. <code>0</code>：fail, <code>1</code>：success     |
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cancel-orders' \
---header 'X-BAPI-SIGN: bd24c37216d90bd76214a7e22638e6a0bc9d8f7ec74218e79c3f6f90e8c56b8e' \
+--header 'X-BAPI-SIGN: XXXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659078150737' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
@@ -43,12 +39,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",

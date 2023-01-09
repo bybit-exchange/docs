@@ -5,27 +5,21 @@ sidebar_position: 5
 slug: /derivatives/contract/account-config
 ---
 
-Get USDC account margin mode
+該接口可以查詢USDC賬戶下的配置
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-### HTTP Request
+### HTTP 請求
 GET `/contract/v3/private/account/info`
 
-### Request Parameters
-None
+### 請求參數
+無
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|------ |
-|marginMode |string |Margin mode. `REGULAR_MAEGIN`,`PORTFOLIO_MARGIN` |
-|updateTime |string |Account config update timestamp (ms) |
+|marginMode |string |保證金模式. `REGULAR_MAEGIN`: 普通保證金,`PORTFOLIO_MARGIN`: 組合保證金 |
+|updateTime |string |帳戶數據更新時間戳 (毫秒) |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="console">
+### 請求示例
 
 ```http
 GET /contract/v3/private/account/info HTTP/1.1
@@ -36,15 +30,9 @@ X-BAPI-TIMESTAMP: 1670941248049
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-<Tabs>
-<TabItem value="js response" label="response">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "Success.",
@@ -54,5 +42,3 @@ X-BAPI-RECV-WINDOW: 5000
     }
 }
 ```
-</TabItem>
-</Tabs>

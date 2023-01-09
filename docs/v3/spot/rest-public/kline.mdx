@@ -7,7 +7,6 @@ slug: /spot/public/kline
 
 import styles from '/src/css/clean_table.module.css';
 
-
 :::info
 It only returns the results from latest 3500 candles regardless of what interval is specified
 :::
@@ -16,11 +15,10 @@ It only returns the results from latest 3500 candles regardless of what interval
 If startTime and endTime are not specified, only the latest candles will be sent
 :::
 
-#### HTTP Request
+### HTTP Request
 GET <code>/spot/v3/public/quote/kline</code>
 
-
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | symbol | **true** |string | Name of the trading pair|
@@ -29,7 +27,7 @@ GET <code>/spot/v3/public/quote/kline</code>
 | startTime | false | long | Start time, unit in millisecond |
 | endTime | false | long | End time, unit in millisecond |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |t| long | Timestamp(ms) |
@@ -43,19 +41,13 @@ GET <code>/spot/v3/public/quote/kline</code>
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/kline?symbol=BTCUSDT&interval=1m&limit=1'
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-```javascript
+```json
 {
   "retCode": 0,
   "retMsg": "OK",

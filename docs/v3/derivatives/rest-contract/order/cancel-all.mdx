@@ -18,7 +18,7 @@ POST `/contract/v3/private/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`. default: `linear` |
+|category |false |string |Product type. `linear`,`inverse`. Default: `linear`. Cannot cancel-all `option` order for now |
 |symbol |false|string |Symbol name |
 |baseCoin |false|string |Cancel all open orders by base coin. `option` ONLY |
 |settleCoin |false|string |Cancel all open orders by settle coin|
@@ -32,9 +32,6 @@ POST `/contract/v3/private/order/cancel-all`
 |>> orderLinkId |string |User customised order id |
 
 ### Request Example
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
 
 ```http
 POST /contract/v3/private/order/cancel-all HTTP/1.1
@@ -51,15 +48,9 @@ Content-Type: application/json
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -79,5 +70,3 @@ Content-Type: application/json
     "time": 1670571961179
 }
 ```
-</TabItem>
-</Tabs>
