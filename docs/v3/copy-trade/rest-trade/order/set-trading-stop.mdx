@@ -16,21 +16,19 @@ POST `/contract/v3/private/copytrading/order/trading-stop`
 |parentOrderId |<b>true</b> |string |parentOrderId  |
 |takeProfit |false |string |Take profit price |
 |stopLoss |false |string |Stop loss price |
-|tpTriggerBy|false |string |Type of take-profit activation price, LastPrice by default. |
-|slTriggerBy|false |string |Type of stop-loss activation price, LastPrice by default. |
-|parentOrderLinkId |false |string |parentOrderLinkId |
-
+|[tpTriggerBy](../enum#triggerby)|false |string |Type of take-profit activation price |
+|[slTriggerBy](../enum#triggerby)|false |string |Type of stop-loss activation price |
+|parentOrderLinkId |false |string |parentOrderLinkID |
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
+None
 
 ### Request Example
 
 ```http
 curl --location --request POST 'https://api.bybit.com/contract/v3/private/copytrading/order/trading-stop' \
 --header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-SIGN: 680d2f2d40500756a803a0d2558964896c6573b982b4fa32865f337d45534938' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662026807816' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
@@ -44,16 +42,14 @@ curl --location --request POST 'https://api.bybit.com/contract/v3/private/copytr
     "slTriggerBy": "LastPrice",
     "parentOrderLinkId": "XXXXXXXX"
 }'
-
+```
 
 ### Response Example
 
-
 ```json
 {
-  "retCode": 0,
+    "retCode": 0,
     "retMsg": "success",
-    "result": {
-  }
+    "result": {}
 }
 ```

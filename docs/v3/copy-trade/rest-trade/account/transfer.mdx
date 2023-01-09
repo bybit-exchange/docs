@@ -13,10 +13,10 @@ POST `/contract/v3/private/copytrading/wallet/transfer`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |transferId |**true** |string |UUID, which is unique across the platform |
-|coin |**true** |string |Currency type |
+|coin |**true** |string |Currency. `USDT` only |
 |amount |**true** |string |Exchange to amount |
-|fromAccountType|**true** |string |Account type |
-|toAccountType |**true** |string |Account type |
+|[fromAccountType](../enum#accounttype)|**true** |string |Account type |
+|[toAccountType](../enum#accounttype) |**true** |string |Account type |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -26,14 +26,23 @@ POST `/contract/v3/private/copytrading/wallet/transfer`
 ### Request Example
 
 ```http
-curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/private/copytrading/position/set-leverage' \
---header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-SIGN: 7cef1d820b3e5cb59f0b6c852c800c8f1636e28790dcc13201ea5552fa8197b9' \
---header 'X-BAPI-API-KEY: KAMz86BfHkKT5yWKWE' \
---header 'X-BAPI-TIMESTAMP: 1670841373442' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'Content-Type: application/json' \
---data-raw '{"symbol":"BTCUSDT","buyLeverage":"4","sellLeverage":"4"}'
+POST /contract/v3/private/copytrading/wallet/transfer HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673257786588
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 173
+
+{
+    "transfer_id": "5f95de08-b10f-43be-9746-7b95c4a37d307",
+    "coin": "USDT",
+    "amount": "500",
+    "fromAccountType": "UNIFIED",
+    "toAccountType": "COPYTRADING"
+}
 ```
 
 ### Response Example
@@ -41,10 +50,11 @@ curl --location --request POST 'https://api-testnet.bybit.com/contract/v3/privat
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
+        "transferId": "5f95de08-b10f-43be-9746-7b95c4a37d307"
     },
     "retExtInfo": {},
-    "time": 1670841190031
+    "time": 1673258002526
 }
 ```
