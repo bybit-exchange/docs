@@ -4,89 +4,84 @@ sidebar_label: 持倉
 sidebar_position: 1
 slug: /derivatives/ws-contract/position
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-Position stream is triggered when position size, position setting changes, etc.
-
-> cover: USDT Perpetual, Inverse Perpetual, Inverse Future
-
-Push frequency: **real-time**
+訂閱持倉數據的推送。當倉位有變動時，即推送消息。暫不支持USDC永續和期權
+> **覆蓋範圍: USDT合約，反向合約**
 
 **Topic:**
 `user.position.contractAccount`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|topic |string |Topic name |
+|topic |string |Topic名 |
 |data |array |Object |
-|> symbol |string |Symbol name |
-|> riskId |integer |Risk limit id |
-|> riskLimitValue |string |Risk limit value |
-|> side |string |Side. `Buy`,`Sell` |
-|> size |string |Position size |
-|> entryPrice |string |Average entry price |
-|> positionValue |string |Entry position value |
-|> [positionIdx](../enum#positionidx) |integer |Position idx, used to identify positions in different position modes<ul><li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li> </ul>|
-|> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin|
-|> autoAddMargin |integer |Auto add margin. `0`: false, `1`: true |
-|> leverage |string |Position leverage |
-|> positionBalance |string |Position balance |
-|> markPrice |string |Mark price |
-|> liqPrice |string |Liquidation price |
-|> bustPrice |string |Bankruptcy price |
-|> tpSlMode |string |`Parital`,`Full` |
-|> takeProfit |string |Take profit price |
-|> stopLoss |string |Stop loss price |
-|> trailingStop |string |Trailing stop |
-|> activePrice |string |Trailing stop trigger price |
-|> unrealisedPnl |string |Unrealised PnL |
-|> cumRealisedPnl |string |Cumulative realized P&L |
-|> occClosingFee |string |Position closing fee occupied |
-|> sessionAvgPrice |string |Settlement price. For USDC Perp ONLY |
-|> positionStatus |string |Position status |
-|> positionMM |string |Position Initial margin |
-|> positionIM |string |Position Maintenance margin |
-|> createdTime |string |Position created timestamp (ms) |
-|> updatedTime |string |Position data updated timestamp (ms) |
+|> symbol |string |合約名稱 |
+|> riskId |integer |風險限額ID |
+|> riskLimitValue |string |風險限額 |
+|> side |string |方向. `Buy`,`Sell` |
+|> size |string |持倉大小 |
+|> entryPrice |string |平均入場價 |
+|> positionValue |string |倉位價值 |
+|> [positionIdx](../enum#positionidx) |integer |倉位標識, 用於辨別不同持倉模式<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向持倉模式</li><li>`2`: 賣側雙向持倉模式</li> </ul>|
+|> tradeMode |integer |交易模式. `0`: 全倉, `1`: 逐倉|
+|> autoAddMargin |integer |是否自動增加保證金. `0`: 否, `1`: 是 |
+|> leverage |string |槓桿倍數 |
+|> positionBalance |string |倉位保證金 |
+|> markPrice |string |標記價格 |
+|> liqPrice |string |強平價格 |
+|> bustPrice |string |破產價格 |
+|> tpSlMode |string |止盈止損模式. `Parital`, `Full` |
+|> takeProfit |string |止盈價格 |
+|> stopLoss |string |止損價格 |
+|> trailingStop |string |追蹤止損 |
+|> activePrice |string |追蹤止損的激活價格 |
+|> unrealisedPnl |string |未結盈虧 |
+|> cumRealisedPnl |string |累計盈虧 |
+|> occClosingFee |string |預佔用平倉手續費 |
+|> sessionAvgPrice |string |結算價格 |
+|> positionStatus |string |倉位狀態. `Normal`, `Abnormal` |
+|> positionMM |string |倉位初始保證金 |
+|> positionIM |string |倉位維持保證金 |
+|> createdTime |string |倉位創建時間戳 (毫秒) |
+|> updatedTime |string |倉位創建時間戳 (毫秒) |
 
-### Response Example
+### 推送示例
 
 ```json
 {
     "topic": "user.position.contractAccount",
     "data": [
         {
-            "positionIdx": 2,
-            "riskId": 11,
-            "symbol": "ETHUSDT",
-            "side": "Sell",
-            "size": "0.54",
-            "positionValue": "672.67942107",
-            "entryPrice": "1245.70263158",
+            "positionIdx": 0,
+            "riskId": 221,
+            "symbol": "MATICUSDT",
+            "side": "None",
+            "size": "0",
+            "positionValue": "0",
+            "entryPrice": "0",
             "tradeMode": 0,
             "autoAddMargin": 0,
-            "leverage": "11.5",
-            "positionBalance": "58.93257631",
-            "liqPrice": "16961.00",
-            "bustPrice": "16967.25",
-            "takeProfit": "0.00",
-            "stopLoss": "0.00",
-            "trailingStop": "0.00",
-            "unrealisedPnl": "32.57422107",
-            "createdTime": "1669020372789",
-            "updatedTime": "1671347745901",
-            "tpSlMode": "Partial",
-            "sessionAvgPrice": "0.00",
+            "leverage": "10",
+            "positionBalance": "0",
+            "liqPrice": "0.0000",
+            "bustPrice": "0.0000",
+            "takeProfit": "0.0000",
+            "stopLoss": "0.0000",
+            "trailingStop": "0.0000",
+            "unrealisedPnl": "0",
+            "createdTime": "1672986751927",
+            "updatedTime": "1673248306265",
+            "tpSlMode": "Full",
+            "sessionAvgPrice": "0.0000",
             "positionStatus": "Normal",
-            "occClosingFee": "5.497389",
-            "markPrice": "1185.38",
-            "cumRealisedPnl": "-23.9402743",
-            "activePrice": "0.00",
-            "riskLimitValue": "900000",
-            "positionMM": "45.811575",
-            "positionIM": "6.7267942107"
+            "occClosingFee": "0",
+            "markPrice": "0.8515",
+            "cumRealisedPnl": "2.421023",
+            "activePrice": "0.0000",
+            "riskLimitValue": "200000",
+            "positionMM": "0",
+            "positionIM": "0"
         }
     ]
 }

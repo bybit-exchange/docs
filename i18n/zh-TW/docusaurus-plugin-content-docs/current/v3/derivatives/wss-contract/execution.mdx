@@ -4,44 +4,41 @@ sidebar_label: 個人成交
 sidebar_position: 2
 slug: /derivatives/ws-contract/execution
 ---
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
-Execution stream is triggered when there is an open order filled or partially filled.
+訂閱個人成交的推送. 暫不支持USDC永續和期權
+> **覆蓋範圍: USDT永續, 反向合約**
 
-> cover: USDT Perpetual, Inverse Perpetual, Inverse Future
-
-Push frequency: **real-time**
+推送頻率: **實時**
 
 **Topic:**
 `user.execution.contractAccount`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|topic |string |Topic name |
+|topic |string |Topic名 |
 |data |array |Object |
-|> symbol |string |Symbol name |
-|> side |string |Side. `Buy`,`Sell` |
-|> execId |string |transaction id |
-|> feeRate |string |Trading fee rate |
-|> execFee |string |Executed fee |
-|> execPrice |string |Executed price |
-|> execQty |string |Executed qty |
-|> leavesQty |string |Remaining order qty waiting to be executed |
-|> [execType](../enum#exectype) |string |Executed type |
-|> execValue |string |Executed value |
-|> lastLiquidityInd |string |`AddLiquidity`,`RemovedLiquidity` |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customised order id |
-|> orderPrice |string |Order price |
-|> orderQty |string |Order qty |
-|> orderType |string |Order type. `Market`,`Limit` |
-|> [stopOrderType](../enum#stopordertype) |string |Stop order type |
-|> execTime |string |Transaction timestamp (ms) |
-|> closedSize |string |Position size to be closed |
+|> symbol |string |合約名稱 |
+|> side |string |方向. `Buy`,`Sell` |
+|> execId |string |成交ID |
+|> feeRate |string |手續費率 |
+|> execFee |string |交易手續費 |
+|> execPrice |string |成交價格 |
+|> execQty |string |成交數量 |
+|> leavesQty |string |剩餘委託未成交數量 |
+|> [execType](../enum#exectype) |string |交易類型 |
+|> execValue |string |成交價值 |
+|> lastLiquidityInd |string |流動性標識. `AddLiquidity`,`RemovedLiquidity` |
+|> orderId |string |訂單ID |
+|> orderLinkId |string |用戶自定義訂單ID |
+|> orderPrice |string |訂單價格 |
+|> orderQty |string |訂單數量 |
+|> orderType |string |訂單類型. `Market`,`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |條件單類型. 若不是條件單，則不會返回任何類型 |
+|> execTime |string |交易時間戳 (毫秒) |
+|> closedSize |string |平倉數量 |
 
-### Response Example
+### 推送示例
 
 ```json
 {

@@ -18,7 +18,6 @@ Subscribe order stream.
 |id |string |Message id |
 |topic |string |Topic name |
 |type |string |Message type. `snaptshot`|
-|version |integer |Version|
 |ts |number |The timestamp (ms) that system generates the data. |
 |data |Object | |
 |> version |integer |Version|
@@ -28,6 +27,7 @@ Subscribe order stream.
 |>> orderId  |string |Order id |
 |>> orderLinkId |string |User customised order id |
 |>> orderType |string |Order type. `Market`,`Limit` |
+|>> [stopOrderType](../enum#stopordertype) |string |Stop order type |
 |>> [orderStatus](../enum#orderstatus) |string |Order status |
 |>> price |string |Order price |
 |>> qty |string |Order qty |
@@ -36,7 +36,7 @@ Subscribe order stream.
 |>> cumExecValue |string |Cumulative executed order value |
 |>> cumExecFee |string |Cumulative executed trading fee |
 |>> leavesQty |string |The remaining qty not executed |
-|>> [triggerBy](../enum#triggerby) |string |The price type of trigger price. _`linear` ONLY_ |
+|>> [triggerBy](../enum#triggerby) |string |The price type of trigger price |
 |>> triggerPrice |string |Trigger price. If `stopOrderType`=_TrailingStop_, it is activate price. Otherwise, it is trigger price |
 |>> reduceOnly |boolean |Reduce only. `true` means reduce position size |
 |>> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
@@ -45,13 +45,13 @@ Subscribe order stream.
 |>> takeProfit |string |Take profit price |
 |>> stopLoss |string |Stop loss price |
 |>> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit |
-|>> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss. _`linear` ONLY_ |
+|>> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |>> basePrice |string |Base price |
-|>> blockTradeId  |string |Block trade id |
-|>> createdTime |string |Order created timestamp (ms) |
-|>> updatedTime |string |Order updated timestamp (ms) |
+|>> blockTradeId |string |Block trade ID |
+|>> createdTime |number |Order created timestamp (ms) |
+|>> updatedTime |number |Order updated timestamp (ms) |
 
-### Response Example
+### Stream Example
 
 ```json
 {
