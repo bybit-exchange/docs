@@ -10,26 +10,27 @@ GET <code>/spot/v3/private/cross-margin-repay-history</code>
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|coin|false|string|currency|
-|limit|false|int|Default is 500; Maximum is 500|
+|startTime|false|integer |Start timestamp (ms)|
+|endTime|false|integer|End timestamp (ms)|
+|[coin](../enum#currencycoin)|false|string|currency|
+|limit|false|integer |Limit for data size. [`1`, `500`], Default: `500`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|accountId|string|Account ID|
-|coin|string|currency|
-|repaidAmount|string|Total Amount Repaid|
-|repayId|string|Repay Id|
-|repayMarginOrderId|string|Repay Margin Order Id|
-|repayTime|string|Timestamp, unit in millisecond|
-|transactIds|array|Object|
+|list |array |Object |
+|> accountId|string|Account ID|
+|> coin|string|currency|
 |> repaidAmount|string|Total Amount Repaid|
-|> repaidInterest|string|Total Interest Repaid|
-|> repaidPrincipal|string|Total Principal Repaid|
-|> repaidSerialNumber|string|Repayment No. (Borrowing Order)|
-|> transactId|string|Transaction ID (Borrowing)|
+|> repayId|string|Repay ID|
+|> repayMarginOrderId|string|Repay Margin Order Id|
+|> repayTime|string|Repay timestamp (ms) |
+|> transactIds|array|Object|
+|>> repaidAmount|string|Total Amount Repaid|
+|>> repaidInterest|string|Total Interest Repaid|
+|>> repaidPrincipal|string|Total Principal Repaid|
+|>> repaidSerialNumber|string|Repayment No. (Borrowing Order)|
+|>> transactId|string|Transaction ID (Borrowing)|
 
 ### Request Example
 
@@ -69,7 +70,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
             }
         ]
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1662622151872
 }
 ```

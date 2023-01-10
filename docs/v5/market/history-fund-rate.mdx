@@ -7,6 +7,12 @@ sidebar_position: 7
 Query historical funding rate. Each symbol has a different funding interval. For example, if the interval is 8 hours and the current time is UTC 12, then it returns the last funding rate, which settled at UTC 8. To query the funding rate interval, please refer to [instruments-info](instrument).
 > **Covers: Linear contract / Inverse perpetual**
 
+:::tip
+- Passing `startTime` only, it returns error.
+- Passing `endTime` only, it returns 200 records till `endTime`.
+- Both are not passed, it returns 200 records till current time.
+:::
+
 ### HTTP Request
 GET `/v5/market/funding/history`
 

@@ -4,6 +4,9 @@ sidebar_label: All Asset Info
 slug: /spot/etp/asset-info
 ---
 
+:::info
+It is a public endpoint, and no need to authenticate.
+:::
 
 ### HTTP Request
 GET <code>/spot/v3/public/infos</code>
@@ -16,29 +19,30 @@ GET <code>/spot/v3/public/infos</code>
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|ltCode|string|Abbreviation of the LT|
-|ltName|string|Full name of the LT|
-|maxPurchase|string|Max. purchase amount per transaction|
-|minPurchase|string|Min. purchase amount per transaction|
-|maxPurchaseDaily|string|Max. purchase amount per day|
-|maxRedeem|string|Max. redemption amount per transaction|
-|minRedeem|string|Min. redemption amount per transaction|
-|maxRedeemDaily|string|Max. redemption amount per day|
-|purchaseFeeRate|string|Purchase fees|
-|redeemFeeRate|string|Redemption fees|
-|<a href="#lt-status-status">status</a>|string|Whether the LT can be purchased or redeemed; 1. LT can be purchased and redeemed; 2. LT can be purchased, but not redeemed; 3. LT can be redeemed, but not purchased; 4. LT cannot be purchased nor redeemed|
-|fundFee|string|Funding fees charged daily to users who hold LT|
-|fundFeeTime|long|Timestamps when funding fees are charged|
-|manageFeeRate|string|Management fees|
-|manageFeeTime|long|Timestamps when management fees are charged|
-|value|string|Internal used parameter, please ignore|
-|total|string|Application uplimit|
-|netValue|string|Net asset value|
+|list |array |Object |
+|> ltCode |string |Abbreviation of the LT|
+|> ltName |string |Full name of the LT|
+|> maxPurchase |string |Max. purchase amount per transaction|
+|> minPurchase |string |Min. purchase amount per transaction|
+|> maxPurchaseDaily |string |Max. purchase amount per day|
+|> maxRedeem |string |Max. redemption amount per transaction|
+|> minRedeem |string |Min. redemption amount per transaction|
+|> maxRedeemDaily |string |Max. redemption amount per day|
+|> purchaseFeeRate |string |Purchase fees|
+|> redeemFeeRate |string |Redemption fees|
+|> [status](../enum#ltstatus)|string |Whether the LT can be purchased or redeemed |
+|> fundFee |string |Funding fees charged daily to users who hold LT |
+|> fundFeeTime|number |Timestamps when funding fees are charged |
+|> manageFeeRate|string|Management fees |
+|> manageFeeTime|number |Timestamps when management fees are charged |
+|> value|string|Internal used parameter, please ignore |
+|> total|string|Application upper limit |
+|> netValue|string|Net asset value|
 
 ### Request Example
 
 ```http
-https://api-testnet.bybit.com/spot/v3/public/infos?ltCode=BTC3S
+https://api-testnet.bybit.com/spot/v3/public/infos?ltCode=EOS2LUSDT
 ```
 
 ### Response Example
@@ -46,32 +50,32 @@ https://api-testnet.bybit.com/spot/v3/public/infos?ltCode=BTC3S
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
         "list": [
             {
-                "fundFee": "-77.80535586",
-                "fundFeeTime": 1662566400000,
-                "ltCode": "BTC3SUSDT",
-                "ltName": "3X Short",
+                "fundFee": "21.79800315",
+                "fundFeeTime": 1673366400000,
+                "ltCode": "EOS2LUSDT",
+                "ltName": "Long EOS (2x Leverage)",
                 "manageFeeRate": "0.00005",
-                "manageFeeTime": 1662598800000,
-                "maxPurchase": "10000",
+                "manageFeeTime": 1673398800000,
+                "maxPurchase": "5000",
                 "maxPurchaseDaily": "200000",
-                "maxRedeem": "1000",
-                "maxRedeemDaily": "60000",
+                "maxRedeem": "861",
+                "maxRedeemDaily": "20000",
                 "minPurchase": "100",
-                "minRedeem": "5",
-                "netValue": "27.86850988224310062",
+                "minRedeem": "17",
+                "netValue": "3.781571076822412032",
                 "purchaseFeeRate": "0.0005",
                 "redeemFeeRate": "0.0005",
                 "status": "1",
                 "total": "5000000",
-                "value": "503990989.499587242974184768"
+                "value": "23624.848996419293002588635"
             }
         ]
     },
-    "retExtInfo": null,
-    "time": 1662545667108
+    "retExtInfo": {},
+    "time": 1673345413125
 }
 ```

@@ -5,40 +5,37 @@ sidebar_position: 3
 slug: /spot/trade/cancel
 ---
 
-#### HTTP 請求
+### HTTP 請求
 POST <code>/spot/v3/private/cancel-order</code>
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-| orderId              | false               | string          | 訂單ID. 當<code>orderLinkId</code>為空時, 則<b>必傳</b> |
-| orderLinkId          | false               | string          | 用戶自定義ID. 當<code>orderId</code>為空時, 則<b>必傳</b> |
-| orderCategory        | false               | int             | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
+| orderId | false | string | 訂單ID. 當<code>orderLinkId</code>為空時, 則<b>必傳</b> |
+| orderLinkId | false | string | 用戶自定義ID. 當<code>orderId</code>為空時, 則<b>必傳</b> |
+| orderCategory | false | integer | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| orderId               | string          | 訂單ID |
-| orderLinkId           | string          | 特殊訂單ID，用戶自己生成 |
-| symbol                | string          | 幣對名稱 |
-| status                | string          | 訂單狀態。可能出現的值為：NEW(新訂單，無成交)、PARTIALLY_FILLED（部分成交）、FILLED（全部成交）、CANCELED（已取消）和REJECTED（訂單被拒絕） |
-| accountId             | string          | 賬戶ID |
-| orderPrice            | string          | 訂單價格 |
-| createTime            | string          | 訂單創建時間 |
-| orderQty              | string          | 訂單數量 |
-| execQty               | string          | 成交數量 |
-| timeInForce           | string          | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
-| orderType             | string          | 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
-| side                  | string          | 買賣方向. <code>Buy</code>：買入, <code>Sell</code>：賣出. |
+| orderId | string| 訂單ID |
+| orderLinkId | string| 自定義訂單ID，用戶自己生成 |
+| symbol | string| 幣對名稱 |
+| [status](../enum#orderstatus) | string| 訂單狀態 |
+| accountId | string| 賬戶ID |
+| orderPrice | string| 訂單價格 |
+| createTime | string| 訂單創建時間 |
+| orderQty | string| 訂單數量 |
+| execQty | string| 成交數量 |
+| [timeInForce](../enumtimeinforce) | string| <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+| orderType | string| 訂單類型, LIMIT/MARKET/LIMIT_MAKER |
+| [side](../enuM#side) | string| 買賣方向. <code>BUY</code>：買入, <code>SELL</code>：賣出. |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cancel-order' \
---header 'X-BAPI-SIGN: 2cdc75a6be90f2a3d70875595c289b6342ff55021a26d9fecf988a8f78266ccc' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659078017415' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
@@ -49,12 +46,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",

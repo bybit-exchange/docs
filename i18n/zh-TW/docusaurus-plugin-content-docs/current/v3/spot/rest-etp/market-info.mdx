@@ -4,28 +4,25 @@ sidebar_label: LT 行情查詢
 slug: /spot/etp/market-info
 ---
 
-#### HTTP 請求
+### HTTP 請求
 GET <code>/spot/v3/private/reference</code>
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|ltCode|<b>true</b>|string|想要查詢的LT資產名稱，從資產列表中獲取.|
+|ltCode|<b>true</b>|string|想要查詢的LT資產名稱，從[資產信息](asset-info#)中獲取.|
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|basket|string|名義持倉（總籃子 = 籃子頭寸*發行量)|
-|circulation|string|在二級市場流通的代幣數量|
-|leverage|string|真實槓桿倍數|
-|ltCode|string|LT資產簡稱|
-|nav|string|淨值|
-|navTime|long|淨值更新時間戳UTC毫秒|
+|basket |string |名義持倉（總籃子 = 籃子頭寸*發行量)|
+|circulation |string |在二級市場流通的代幣數量|
+|leverage |string |真實槓桿倍數|
+|ltCode |string |LT資產簡稱|
+|nav |string |淨值|
+|navTime |number |淨值更新時間戳UTC毫秒|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 curl --location --request GET 'https://api.bybit.com/spot/v3/private/reference?ltCode=BTC3S' \
@@ -33,27 +30,24 @@ curl --location --request GET 'https://api.bybit.com/spot/v3/private/reference?l
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662549197919' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: c9a7c916aece021143c891fa3c87bc1469087a3927847ef757e50ff0e783282c'
+--header 'X-BAPI-SIGN: XXXXX'
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
-        "basket": "-111.537000043436201394",
-        "circulation": "26876.652597034302633009",
-        "leverage": "-2.797206317443581498",
-        "ltCode": "BTC3S",
-        "nav": "27.833235232732847932",
-        "navTime": 1662546552568
+        "basket": "230666.700009559600667216",
+        "circulation": "24999.840207851103706443",
+        "leverage": "2.302545313639639446",
+        "ltCode": "EOS2L",
+        "nav": "3.790797803797135639",
+        "navTime": 1673346095226
     },
-    "retExtInfo": null,
-    "time": 1662546552602
+    "retExtInfo": {},
+    "time": 1673346095239
 }
 ```

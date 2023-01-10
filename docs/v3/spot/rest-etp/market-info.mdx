@@ -4,29 +4,28 @@ sidebar_label: Market Info
 slug: /spot/etp/market-info
 ---
 
-
 ### HTTP Request
 GET <code>/spot/v3/private/reference</code>
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|ltCode|<b>true</b>|string|Abbreviation of the LT.|
+|ltCode|<b>true</b>|string|Abbreviation of the LT. Get ltCode from [asset info](asset-info#) api|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|basket|string|Total position value = basket value * total circulation|
-|circulation|string|Circulating supply in the secondary market|
-|leverage|string|Real Leverage calculated by last traded price.|
-|ltCode|string|Abbreviation of the LT|
-|nav|string|Net asset value|
-|navTime|long|Update time for net asset value (in milliseconds and UTC time zone)|
+|basket |string|Total position value = basket value * total circulation|
+|circulation |string |Circulating supply in the secondary market|
+|leverage |string |Real Leverage calculated by last traded price.|
+|ltCode |string |Abbreviation of the LT|
+|nav |string|Net asset value |
+|navTime |number |Update time for net asset value (ms)|
 
 ### Request Example
 
 ```http
-curl --location --request GET 'https://api.bybit.com/spot/v3/private/reference?ltCode=BTC3S' \
+curl --location --request GET 'https://api.bybit.com/spot/v3/private/reference?ltCode=EOS2LUSDT' \
 --header 'X-BAPI-SIGN-TYPE: 2' \
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662549197919' \
@@ -39,16 +38,16 @@ curl --location --request GET 'https://api.bybit.com/spot/v3/private/reference?l
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
-        "basket": "-111.537000043436201394",
-        "circulation": "26876.652597034302633009",
-        "leverage": "-2.797206317443581498",
-        "ltCode": "BTC3S",
-        "nav": "27.833235232732847932",
-        "navTime": 1662546552568
+        "basket": "230666.700009559600667216",
+        "circulation": "24999.840207851103706443",
+        "leverage": "2.302545313639639446",
+        "ltCode": "EOS2L",
+        "nav": "3.790797803797135639",
+        "navTime": 1673346095226
     },
-    "retExtInfo": null,
-    "time": 1662546552602
+    "retExtInfo": {},
+    "time": 1673346095239
 }
 ```

@@ -22,7 +22,7 @@ slug: /copy-trade/ws/connect
 :::
 
 <p>構建連接時，創建鑒權請求。</p>
-<p>注意: 如果您正在使用<a href="https://github.com/bybit-exchange/pybit">pybit</a>或者其他第三方庫, 您可以忽略此項-因為鑒權已經內建。</p>
+<p>注意: 如果您正在使用<a href="https://github.com/bybit-exchange/pybit">pybit</a>, <a href="https://www.npmjs.com/package/bybit-api">bybit-api</a>或者其他第三方庫, 您可以忽略此項-因為鑒權已經內建。</p>
 
 ```json
 {
@@ -36,7 +36,7 @@ slug: /copy-trade/ws/connect
 ```
 
 ```python
-# based on: https://github.com/bybit-exchange/pybit/blob/master/pybit/_http_manager.py
+# 基於: https://github.com/bybit-exchange/pybit/blob/master/pybit/_http_manager.py
 
 import hmac
 import json
@@ -46,10 +46,10 @@ import websocket
 api_key = ""
 api_secret = ""
 
-# Generate expires.
+# 生成expires
 expires = int((time.time() + 1) * 1000)
 
-# Generate signature.
+# 生成簽名
 signature = str(hmac.new(
     bytes(api_secret, "utf-8"),
     bytes(f"GET/realtime{expires}", "utf-8"), digestmod="sha256"
@@ -60,7 +60,7 @@ ws = websocket.WebSocketApp(
     ...
 )
 
-# Authenticate with API.
+# 發送鑒權請求
 ws.send(
     json.dumps({
         "op": "auth",

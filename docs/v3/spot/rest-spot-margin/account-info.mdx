@@ -17,13 +17,13 @@ None
 |debtBalanceSum|string|Total Liability (BTC)|
 |loanAccountList|array|Object|
 |> free|string|Available|
-|> interest|string|Interest Left|
-|> loan|string|Total Liability|
-|> locked|string|Locked|
-|> tokenId|string|Token Id|
+|> interest|string|Outstanding interest|
+|> loan|string|Outstanding principle |
+|> locked|string|Locked amount |
+|> tokenId|string|Token |
 |> total|string|Total|
 |riskRate|string|Risk Rate|
-|status|int|Status (1. Normal 2. Withdrawal/Transfer Restricted 3. Liquidation Alert Triggered 4. Liquidated 5. Negative Equity)|
+|status|integer |Status (1. Normal 2. Withdrawal/Transfer Restricted 3. Liquidation Alert Triggered 4. Liquidated 5. Negative Equity)|
 
 ### Request Example
 
@@ -41,40 +41,64 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "OK",
     "result": {
-        "acctBalanceSum": "0.062912223136001122",
-        "debtBalanceSum": "0.002588651523215288",
+        "acctBalanceSum": "2.924168065639648621",
+        "debtBalanceSum": "0",
         "loanAccountList": [
             {
-                "free": "0.95449",
+                "free": "1.62352868343",
+                "interest": "0",
+                "loan": "0",
+                "locked": "0",
+                "tokenId": "BTC",
+                "total": "1.62352868343"
+            },
+            {
+                "free": "22.21993",
+                "interest": "0",
+                "loan": "0",
+                "locked": "0",
+                "tokenId": "XRP",
+                "total": "22.21993"
+            },
+            {
+                "free": "1.50267",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
                 "tokenId": "ETH",
-                "total": "0.95449"
+                "total": "1.50267"
             },
             {
-                "free": "219.32838547",
+                "free": "0",
                 "interest": "0",
-                "loan": "50.001668",
+                "loan": "0",
+                "locked": "0",
+                "tokenId": "DOGE",
+                "total": "0"
+            },
+            {
+                "free": "20296.8097189",
+                "interest": "0",
+                "loan": "0",
                 "locked": "0",
                 "tokenId": "USDT",
-                "total": "219.32838547"
+                "total": "20296.8097189"
             },
             {
-                "free": "86.186045",
+                "free": "1131.766708",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
                 "tokenId": "USDC",
-                "total": "86.186045"
+                "total": "1131.766708"
             }
         ],
-        "riskRate": "0.0411",
+        "riskRate": "0",
         "status": 1
     },
-    "retExtInfo": null,
-    "time": 1662619341782
+    "retExtInfo": {},
+    "time": 1673353103144
 }
 ```

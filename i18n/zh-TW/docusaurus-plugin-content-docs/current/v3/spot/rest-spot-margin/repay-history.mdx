@@ -4,37 +4,35 @@ sidebar_label: 查詢還款記錄
 slug: /spot/margin/repay-history
 ---
 
-#### HTTP 請求
+### HTTP 請求
 GET <code>/spot/v3/private/cross-margin-repay-history</code>
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|第一條返回的時間戳(毫秒)|
-|endTime|false|long|最後一條返回的時間戳(毫秒)|
-|coin|false|string|幣種|
-|limit|false|int|默認500，最大500|
+|startTime|false|integer |開始時間戳(毫秒)|
+|endTime|false|integer|結束時間戳(毫秒)|
+|[coin](../enum#currencycoin)|false|string|幣種|
+|limit|false|integer |返回數量限制. [`1`, `500`], 默認: `500`|
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|accountId|string|賬戶ID|
-|coin|string|幣種|
-|repaidAmount|string|已還幣金額|
-|repayId|string|還幣交易ID|
-|repayMarginOrderId|string|還幣單號|
-|repayTime|string|還幣交易時間，精確到毫秒|
-|transactIds|array|Object|
+|list |array |Object |
+|> accountId|string|賬戶ID|
+|> coin|string|幣種|
 |> repaidAmount|string|已還幣金額|
-|> repaidInterest|string|該筆還幣交易已還利息|
-|> repaidPrincipal|string|該筆還幣交易已還本金|
-|> repaidSerialNumber|string|借款訂單的還款單號|
-|> transactId|string|原始借幣交易ID|
+|> repayId|string|還幣交易ID|
+|> repayMarginOrderId|string|還幣單號|
+|> repayTime|string|還幣交易時間，精確到毫秒|
+|> transactIds|array|Object|
+|>> repaidAmount|string|已還幣金額|
+|>> repaidInterest|string|該筆還幣交易已還利息|
+|>> repaidPrincipal|string|該筆還幣交易已還本金|
+|>> repaidSerialNumber|string|借款訂單的還款單號|
+|>> transactId|string|原始借幣交易ID|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-repay-history?coin=USDT&startTime=1662480000000&endTime=1662552000000' \
@@ -42,15 +40,12 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662622151668' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: 48db29501c9e20aff22ec80f2bf201022314fe97d6ea11b89025dd6f59b386da'
+--header 'X-BAPI-SIGN: XXXXXXX'
 ```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "success",
@@ -75,7 +70,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
             }
         ]
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1662622151872
 }
 ```

@@ -6,8 +6,8 @@ slug: /spot/trade/order-history
 ---
 
 :::info
-If startTime and endTime are both not specified, it returns last 7 days records by default. 3 days records for institutional clients.
-Supports fetching 3 months worth of data per request. Returns data up to 6 months old.
+- If startTime and endTime are both not specified, it returns last 7 days records by default. 3 days records for institutional clients.
+- Supports fetching 3 months worth of data per request. Returns data up to 6 months old.
 :::
 
 ### HTTP Request
@@ -16,34 +16,36 @@ GET <code>/spot/v3/private/history-orders</code>
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-| symbol               | false               | string          | Name of the trading pair             |
-| orderId              | false               | string          | Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose |
-| limit                | false               | integer          | Default value is 100, max 500  |
-| startTime            | false               | long             | Start time, unit in millisecond        |
-| endTime              | false               | long             | End time, unit in millisecond          |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
+| symbol | false | string | Name of the trading pair             |
+| orderId | false | string | Specify orderId to return all the orders that orderId of which are smaller than this particular one for pagination purpose |
+| limit | false | integer |Limit for data size. [`1`, `500`]. Default: `100` |
+| startTime | false | integer | The start timestamp (ms)|
+| endTime | false | integer | The end timestamp (ms) |
+| orderCategory | false | integer | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order. |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| accountId            | string          | Account ID            |
-| symbol               | string          | Name of the trading pair               |
-| orderLinkId          | string          | User-generated order ID          |
-| orderId              | string          | Order ID              |
-| orderPrice           | string          |  Last traded price                |
-| orderQty             | string          | Order quantity               |
-| execQty              | string          | Executed quantity             |
-| cummulativeQuoteQty  | string          | Total order quantity  |
-| avgPrice             | string          | Average filled price             |
-| status               | string          | Order status               |
-| timeInForce          | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>  |
-| orderType            | string          | Order type            |
-| side                 | string          | Side. <code>Buy</code>, <code>Sell</code>      |
-| stopPrice            | string          | Stop price            |
-| icebergQty           | string          | Please ignore           |
-| createTime           | string          | Order created time in the match engine                 |
-| updateTime           | string          | Last time order was updated           |
-| isWorking            | string          | Is working. <code>0</code>：valid, <code>1</code>：invalid |
+| accountId | string | Account ID |
+| symbol | string | Name of the trading pair |
+| orderLinkId | string | User-generated order ID |
+| orderId | string | Order ID |
+| orderPrice | string | Last traded price |
+| orderQty | string | Order quantity |
+| execQty | string | Executed quantity |
+| cummulativeQuoteQty | string | Total order quantity  |
+| avgPrice | string | Average filled price |
+| [status](../enum#orderstatus) | string | Order status |
+| [timeInForce](../enum#timeinforce) | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>  |
+| [orderType](../enum#ordertype) | string | Order type |
+| [side](../enum#side) | string | Side. <code>BUY</code>, <code>SELL</code> |
+| stopPrice | string | Stop price |
+| icebergQty | string | Please ignore |
+| createTime | number | Order created time in the match engine |
+| updateTime | number | Last time order was updated |
+| isWorking | string | Is working. <code>0</code>：valid, <code>1</code>：invalid |
+| orderCategory | integer | Order category. <code>0</code>：normal order; <code>1</code>：TP/SL order. TP/SL order has this field |
+| triggerPrice | string| Trigger price. TP/SL order has this field |
 
 ### Request Example
 

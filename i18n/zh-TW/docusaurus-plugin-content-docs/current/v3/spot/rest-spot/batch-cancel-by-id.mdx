@@ -5,29 +5,27 @@ sidebar_position: 6
 slug: /spot/trade/cancel-by-id
 ---
 
-#### HTTP 請求
+### HTTP 請求
 POST <code>/spot/v3/private/cancel-orders-by-ids</code>
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 | orderIds | **true** | string | 訂單號, 可用英文逗號拼接表示多個訂單, 不超過100個。 |
 | orderCategory | false | int | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| list> orderId | string | 訂單ID |
-| list> code | string | 錯誤碼 |
+| list | array |Object. 若全部成功，則返回空數組`[]` |
+| > orderId | string | 訂單ID |
+| > code | string | 錯誤碼 |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cancel-orders-by-ids' \
---header 'X-BAPI-SIGN: 84cc9b260300c2fd8b378e8acd1254902b341e4c3ea3a462c7440265245a52e8' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659080877551' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
@@ -37,16 +35,13 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
 <Tabs>
 
 <TabItem value="success" label="Success">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -62,7 +57,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/ca
 
 <TabItem value="partial-success" label="Partial success">
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "",

@@ -5,23 +5,22 @@ sidebar_position: 8
 slug: /spot/public/tickers
 ---
 
-
-#### HTTP 請求
+### HTTP 請求
 GET <code>/spot/v3/public/quote/ticker/24hr</code>
 
 :::info
-如果symbol沒有被發送，所有symbol的數據都會被返回
+如果symbol不傳遞，所有symbol的數據都會被返回
 :::
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 | symbol | false | string | 幣對名稱 |
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|t| long | 當前Unix時間戳，毫秒(ms) |
+|t| number | 當前Unix時間戳 (毫秒) |
 |s| string | 幣對名稱 |
 |lp| string | 最新成交價 |
 |h| string | 最高價 |
@@ -34,35 +33,29 @@ GET <code>/spot/v3/public/quote/ticker/24hr</code>
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/quote/ticker/24hr?symbol=BTCUSDT'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-```javascript
+```json
 {
-  "retCode": 0,
-  "retMsg": "OK",
-  "result": {
-    "t": 1659430933736,
-    "s": "BTCUSDT",
-    "lp": "21127.86",
-    "h": "22000",
-    "l": "19779.14",
-    "o": "19935.19",
-    "bp": "21170.14",
-    "ap": "21250",
-    "v": "211.378621",
-    "qv": "4460854.96730398"
-  },
-  "retExtInfo": {},
-  "time": 1659430975794
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "t": 1659430933736,
+        "s": "BTCUSDT",
+        "lp": "21127.86",
+        "h": "22000",
+        "l": "19779.14",
+        "o": "19935.19",
+        "bp": "21170.14",
+        "ap": "21250",
+        "v": "211.378621",
+        "qv": "4460854.96730398"
+    },
+    "retExtInfo": {},
+    "time": 1659430975794
 }
 ```

@@ -1,45 +1,43 @@
 ---
-title: 獲取保證金幣種信息
-sidebar_label: 獲取保證金幣種信息
+title: 查詢保證金幣種信息
+sidebar_label: 查詢保證金幣種信息
 sidebar_position: 2
 slug: /spot/otc/coin-info
 ---
 
-### HTTP Request
+:::tip
+這是公共接口，無需鑒權。
+:::
+
+### HTTP 請求
 GET <code>/spot/v3/public/margin-ensure-tokens</code>
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|productId | false | string	| ProductId. If not passed, then return all product margin coin. For spot, it returns coin that convertRation greater than 0. |
+|productId | false | string	| 產品ID. 若不傳，則返回所有產品的保證金幣種信息. 現貨返回折算率大於0的幣種. |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |marginToken |array	| Object |
-|> productId |string | Product Id |
-|> spotToken |array	| Spot margin coin |
-|>> token |string | Margin coin |
-|>> convertRatio |string | Margin coin convert ratio |
-|> contractToken |array	| Contract margin coin |
-|>> token |string | Margin coin |
-|>> convertRatio |string | Margin coin convert ratio |
+|> productId |string | 產品ID |
+|> spotToken |array	| 現貨保證金幣種信息 |
+|>> token |string | 保證金幣種 |
+|>> convertRatio |string | 保證金幣種折算率 |
+|> contractToken |array	| 合約保證金幣種信息 |
+|>> token |string | 保證金幣種 |
+|>> convertRatio |string |保證金幣種折算率 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/public/margin-ensure-tokens?productId=70'
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
