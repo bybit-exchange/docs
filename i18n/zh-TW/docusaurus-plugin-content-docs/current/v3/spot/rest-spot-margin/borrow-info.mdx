@@ -11,11 +11,11 @@ GET <code>/spot/v3/private/cross-margin-orders</code>
 #### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|startTime|false|long|第一條返回的時間戳(毫秒)|
-|endTime|false|long|最後一條返回的時間戳(毫秒)|
-|coin|false|string|幣種|
-|status|false|int|狀態. 默认为<code>0</code>. <ul><li><code>0</code>：查詢所有狀態</li><li><code>1</code>：查詢未還清</li><li><code>2</code>：查詢已還清</li></ul>|
-|limit|false|int|默認500，最大500|
+|startTime|false|number |開始時間戳 (毫秒)|
+|endTime|false|number |結束時間戳 (毫秒)|
+|[coin](../enum#currencycoin)|false|string|幣種|
+|status|false|integer|狀態. 默认为<code>0</code>. <ul><li><code>0</code>：查詢所有狀態</li><li><code>1</code>：查詢未還清</li><li><code>2</code>：查詢已還清</li></ul>|
+|limit|false|integer|返回數量限制. [`1`, `500`]. 默認: `500` |
 
 #### 返回參數
 | 參數 | 類型 | 說明|
@@ -23,19 +23,16 @@ GET <code>/spot/v3/private/cross-margin-orders</code>
 |list|array|Object|
 |accountId|string|賬戶ID|
 |coin|string|幣種|
-|createdTime|long|借幣發起時間，精確到毫秒|
-|id|long|借幣ID|
+|createdTime|number |借幣發起時間戳 (毫秒)|
+|id|string |借幣ID|
 |interestAmount|string|利息總額|
 |interestBalance|string|未還利息|
 |loanAmount|string|借幣本金總額|
 |loanBalance|string|未還本金|
-|status|int|狀態. <code>1</code>：未還清, <code>2</code>：已還清|
-|type|int|訂單類型（1，手動借貸 2，自動借貸）|
+|status|integer |狀態. <code>1</code>：未還清, <code>2</code>：已還清|
+|type|integer |訂單類型（1，手動借貸 2，自動借貸）|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-orders?startTime=1662508800000&endTime=1662552000000&coin=USDT&status=1' \
@@ -46,12 +43,9 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 --header 'X-BAPI-SIGN: 00f707bf08f8b91a8d6b7e6a1a4f3f551033482f29a78254debf63515415e637'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "success",
@@ -71,7 +65,7 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
             }
         ]
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1662618592344
 }
 ```

@@ -1,11 +1,10 @@
 ---
-title: Purchase/Redemption History
-sidebar_label: Purchase/Redemption History
+title: Purchase & Redeem History
+sidebar_label: Purchase & Redeem History
 slug: /spot/etp/order-history
 ---
 
 import styles from '/src/css/clean_table.module.css';
-
 
 ### HTTP Request
 GET <code>/spot/v3/private/record</code>
@@ -15,23 +14,23 @@ GET <code>/spot/v3/private/record</code>
 |:----- |:-------|:-----|------ |
 |ltCode|false|string|Abbreviation of the LT.|
 |orderId|false|string|Order ID|
-|startTime|false|long|Start time, unit in millisecond|
-|endTime|false|long|End time, unit in millisecond|
-|limit|false|int|Limit for data size per page, max size is 500. Default as showing 100 pieces of data per page|
-|<a href="#lt-order-type-ordertype">orderType</a>|false|int|Order type; 1. Purchase; 2. Redemption|
+|startTime|false|integer |Start timestamp (ms) |
+|endTime|false|integer|End timestamp (ms) |
+|limit|false|integer|Limit for data size. [`1`, `500`]. Default: `100` |
+|[orderType](../enum#ordertype)|false|int|Order type; `1`: Purchase; `2`: Redeem|
 |serialNo|false|string|Serial number|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |amount|string|Actual purchase quantity of the ETP|
-|excTime|long|Last update time of the order status|
+|excTime|number |Last update time of the order status|
 |fee|string|Trading fees|
 |ltCode|string|Abbreviation of the LT|
 |orderId|string|Order ID|
-|<a href="#lt-order-status-orderstatus">orderStatus</a>|string|Order status; 1. Completed; 2. In progress; 3. Failed|
-|orderTime|long|Order time|
-|<a href="#lt-order-type-ordertype">orderType</a>|int|Order type; 1. Purchase; 2. Redemption|
+|[orderStatus](../enum#ltorderstatus) |string|Order status. `1`: Completed; `2`: In progress; `3`: Failed|
+|orderTime |number |Order time|
+|orderType |integer |Order type; 1. Purchase; 2. Redemption|
 |serialNo|string|Serial number|
 |value|string|Filled value|
 |valueCoin|string|Quote asset|

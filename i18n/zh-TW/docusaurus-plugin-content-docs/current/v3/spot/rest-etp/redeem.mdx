@@ -12,25 +12,22 @@ POST <code>/spot/v3/private/redeem</code>
 |:----- |:-------|:-----|------ |
 |ltCode|<b>true</b>|string|想要查詢的LT資產名稱，從資產列表中獲取.|
 |ltQuantity|<b>true</b>|string|贖回數量|
-|serialNo|false|string|序列號|
+|serialNo|false|string|序列號, 自定義ID|
 
 #### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|id|long|交易單號|
+|id|string |交易單號|
 |ltCode|string|LT資產簡稱|
 |orderAmount|string|實際成交的金額. 一般返回<code>""</code>|
 |orderQuantity|string|實際成交的LT資產數量|
-|orderStatus|string|申購單狀態：1. 已完成 2. 等待中 3. 失敗|
+|[orderStatus](../enum#ltorderstatus)|string|申購單狀態：1. 已完成 2. 等待中 3. 失敗|
 |quantity |string|下單的LT資產數量. 一般返回<code>""</code>|
 |serialNo|string|序列號|
-|timestamp|long|時間戳|
+|timestamp|number |時間戳|
 |valueCoin|string|計價幣種|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/redeem' \
@@ -38,7 +35,7 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/re
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662605726010' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: c6a4d178988d07045c06528b7038842f4d75dde8be840cc8c538ca434f6fc617' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --data-raw '{
     "ltCode": "DOT3LUSDT",
     "ltQuantity": "50",
@@ -46,12 +43,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/re
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "success",

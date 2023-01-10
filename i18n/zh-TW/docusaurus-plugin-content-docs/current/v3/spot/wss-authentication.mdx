@@ -6,46 +6,41 @@ slug: /spot/ws/connect
 
 
 :::info
-**Note that the following endpoints only apply to Spot**. To listen to other websockets, go to:
-* [Derivatives](../../derivatives/ws/connect)
+**以下WSS地址僅適用現貨**. 要想接收期貨的推送，請前往:
+* [衍生品](../../derivatives/ws/connect)
 :::
 
-Base endpoints:
-<ul>
-  <li><b>Testnet</b>:</li>
-  <ul>
-    <li>Public Topics: <span id="testnet_address">wss://stream-testnet.bybit.com/spot/public/v3</span></li>
-    <li>Private Topics: <span id="testnet_private_address">wss://stream-testnet.bybit.com/spot/private/v3</span></li>
-  </ul>
-  <li><b>Mainnet</b>:</li>
-  <ul>
-    <li>Public Topics: <span id="mainnet_address">wss://stream.bybit.com/spot/public/v3</span></li>
-    <li>Private Topics: <span id="mainnet_private_address">wss://stream.bybit.com/spot/private/v3</span></li>
-  </ul>
-</ul>
+**訂閱地址:**<br/>
+**測試網:**
+- **公有頻道:** wss://stream-testnet.bybit.com/spot/public/v3
+- **私有頻道:** wss://stream-testnet.bybit.com/spot/private/v3
+
+**主網:**
+- **公有頻道:** wss://stream.bybit.com/spot/public/v3
+- **私有頻道:** wss://stream.bybit.com/spot/private/v3
 
 :::info
-<b>Public</b> topics do not require authentication. The following section applies to <b>private</b> topics only.
+**公有頻道**不需要鑒權. 以下內容僅適用於**私有頻道**的訂閱
 :::
 
 
-<p>Apply for authentication when establishing a connection.</p>
-<p>Note: if you're using <a href="https://github.com/bybit-exchange/pybit">pybit</a> or another high-level library, you can ignore this code - as authentication is handled for you.</p>
+<p>構建連接時，創建鑒權請求。</p>
+<p>注意: 如果您正在使用<a href="https://github.com/bybit-exchange/pybit">pybit</a>, <a href="https://www.npmjs.com/package/bybit-api">bybit-api</a>或者其他第三方庫, 您可以忽略此項-因為鑒權已經內建。</p>
 
-```javascript
+```json
 {
-    "req_id": "10001", // optional
+    "req_id": "10001", // 可選
     "op": "auth",
     "args": [
         "api_key",
-        1662350400000, //expires greater than currentTimeStamp
+        1662350400000, //過期時間應當大於當前時間戳
         "singature"
     ]
 }
 ```
 
 ```python
-# based on: https://github.com/bybit-exchange/pybit/blob/master/pybit/_http_manager.py
+# 基於: https://github.com/bybit-exchange/pybit/blob/master/pybit/_http_manager.py
 
 import hmac
 import json
@@ -55,10 +50,10 @@ import websocket
 api_key = ""
 api_secret = ""
 
-# Generate expires.
+# 生成expires
 expires = int((time.time() + 1) * 1000)
 
-# Generate signature.
+# 生成簽名
 signature = str(hmac.new(
     bytes(api_secret, "utf-8"),
     bytes(f"GET/realtime{expires}", "utf-8"), digestmod="sha256"
@@ -69,7 +64,7 @@ ws = websocket.WebSocketApp(
     ...
 )
 
-# Authenticate with API.
+# 發送鑒權請求
 ws.send(
     json.dumps({
         "op": "auth",
@@ -78,55 +73,79 @@ ws.send(
 )
 ```
 
+> 鑒權成功的響應示例
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "06a3cbfffe5df9cb-0000000e-00026965-fe306ee9ec20f544-4ab7116c",
+    "req_id": "",
+    "op": "auth"
+}
+```
+
 :::info
-Example signature algorithms can be found <a href="https://github.com/bybit-exchange/api-usage-examples">here</a>.
+簽名生成的示例可以參考<a href="https://github.com/bybit-exchange/api-usage-examples">這裡</a>。
 :::
 
 :::caution
-Due to network complexity, your may get disconnected at any time. Please follow the instructions below to ensure that you receive WebSocket messages on time:
-1. Keep connection alive by <a href="#t-heartbeat">sending heartbeat packet</a>
-2. Reconnect as soon as possible if disconnected
+由於網絡的複雜性，您可能隨時遇到斷連。請參考以下建議確保您能即時接收到推送：
+1. 通過發送[心跳](connect#如何發送心跳)
+2. 遇到斷連時，立即重新連接
 :::
 
 
-## How to Send Heartbeat Packet
-How to Send
+## 如何發送心跳
+
+> 發送ping的示例
 
 ```javascript
-// req_id is a customised id, which is optional
+// req_id是可選參數
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-Response Example
+> 接收到pong的響應示例
 
-```javascript
-// with req_id
-{"op":"pong","args":[1661741630642],"req_id":"100001","conn_id":"706b870c"}
+```json
+// 有req_id
+{
+    "op": "pong",
+    "args": [
+        1661741630642
+    ],
+    "req_id": "100001",
+    "conn_id": "706b870c"
+}
 
-// without req_id
-{"op":"pong","args":[1661741654529],"conn_id":"706b870c"}
+// 沒有req_id
+{
+    "op": "pong",
+    "args": [
+        1661741654529
+    ],
+    "conn_id": "706b870c"
+}
 ```
 
-
 :::caution
-To avoid networks or program issues, we recommend that you send the <code>ping</code> heartbeat packet every <b>20</b> seconds to maintain the WebSocket connection.
+為了維持連接，我們推薦您每**20秒**發送一次心跳。
 :::
 
+## 頻率限制
+**僅限私有頻道：**
+* 每個api_key最多可以保持100個websocket私有連接，超過100個連接後的新連接會被服務器拒絕。
+* 單個IP同時最多50個websocket私有topic鏈接
 
-## Rate Limits
-<b>Private channel ONLY</b>：Each API key may have a maximum of 100 private WebSocket connections. The 101st connection will be rejected.
-An IP can connect to a maximum of 50 private spot websocket connections simultaneously.
+## 如何訂閱topic
+### 理解Websocket裡的args
 
+> 通過傳入args來訂閱指定topic
 
-## How to Subscribe to Topics
-### Understanding Websocket Filters
-
-How to subscribe with a filter
-
-```javascript
-// Subscribing to the trade data for BTCUSDT
+```json
+// 訂閱trade下的BTCUSDT
 {
-    "req_id": "10001", // optional
+    "req_id": "10001", // 可選
     "op": "subscribe",
     "args": [
         "trade.BTCUSDT"
@@ -134,12 +153,11 @@ How to subscribe with a filter
 }
 ```
 
-support many symbol, separate with ','.
+> 通過","來訂閱同一個topic下的多個交易對
 
-```javascript
-// Example: Subscribing to the trade data for BTCUSDT and ETHUSDT
+```json
 {
-    "req_id": "10001", // optional
+    "req_id": "10001", // 可選
     "op": "subscribe",
     "args": [
         "trade.BTCUSDT",
@@ -148,29 +166,28 @@ support many symbol, separate with ','.
 }
 ```
 
-<p>After establishing the connection, you can subscribe to a new topic by sending a JSON request. The request formats are as follows:</p>
-
+> 訂閱多個topic
 
 ```javascript
 ws.send('{"req_id": "10001", "op": "subscribe", "args": ["trade.BTCUSDT", "trade.ETHUSDT", "tickers.BTCUSDT", "bookticker.BTCUSDT"]}')
 ```
 
-:::info
-You can pass a maximum of <b>10</b> args in <code>args</code>
+:::caution
+您最多傳遞10個參數到args裡，超過則報錯
 :::
 
-### Understanding Websocket Filters unsubscription
+### ### 理解如何取消訂閱
 
-<p>After successful subscription, you can unsubscribe by sending a JSON request. The request formats are as follows:</p>
+> 您可以通過發送請求來動態地停止訂閱
 
 ```javascript
 ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 ```
 
-```javascript
-// Example: unsubscribing to the trade data for BTCUSDT and ETHUSDT
+```json
+// 示例: 取消訂閱BTCUSDT和ETHUSDT
 {
-    "req_id": "10002", // optional
+    "req_id": "10002", // 可選
     "op": "unsubscribe",
     "args": [
         "trade.BTCUSDT",
@@ -179,8 +196,8 @@ ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 }
 ```
 
-```javascript
-// unsubscribe response sample
+```json
+// 取消訂閱的響應
 {
     "op": "unsubscribe",
     "success": true,
@@ -190,10 +207,12 @@ ws.send('{"req_id": "10002", "op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
 }
 ```
 
-## Understanding Subscription Response
-Subscription Response
+## 理解訂閱的響應
 
-```javascript
+> 訂閱成功後的響應示例
+
+```json
+// 公共頻道的響應
 {
     "op": "subscribe",
     "success": true,
@@ -203,4 +222,13 @@ Subscription Response
 }
 ```
 
-Once you subscribe successfully, you'd receive result information. You can determine whether the subscription is successful based on the response.
+```json
+// 私有頻道的響應
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "06a3cbfffe5df9cb-0000000e-00026965-fe306ee9ec20f544-4ab7116c",
+    "req_id": "private0001",
+    "op": "subscribe"
+}
+```

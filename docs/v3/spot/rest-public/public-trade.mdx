@@ -14,15 +14,16 @@ GET <code>/spot/v3/public/quote/trades</code>
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 | symbol | **true** | string | Name of the trading pair |
-| limit | false | integer | Default value is 60, max 60 ｜
+| limit | false | integer | Limit for data size. [`1`, `60`]. Default: `60` ｜
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| price | string | Order price |
-| time | long | Current timestamp, unit in millisecond |
-| qty | string | Order quantity |
-| isBuyerMaker | integer | `0`：buy order, `1`：sell order |
+| list | array |Object |
+| > price | string | Order price |
+| > time | number | Current timestamp (ms) |
+| > qty | string | Order quantity |
+| > isBuyerMaker | integer | `0`：Sell or taker order, `1`：Buy maker order |
 
 ### Request Example
 

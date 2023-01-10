@@ -4,24 +4,21 @@ sidebar_label: 歸還借幣
 slug: /spot/margin/repay
 ---
 
-#### HTTP 請求
+### HTTP 請求
 GET <code>/spot/v3/private/cross-margin-repay</code>
 
-#### 請求參數
+### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |coin|<b>true</b>|string|幣種|
 |qty|<b>true</b>|string|歸還數量|
 
-#### 返回參數
+### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |repayId|string|還款id|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-repay' \
@@ -29,26 +26,23 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cr
 --header 'X-BAPI-API-KEY: XXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1662618298354' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: 29e4463832bf753b770853c5559b00dd3be376ae3d42f5d7043ff39be1d7891b' \
+--header 'X-BAPI-SIGN: XXXXXX' \
 --data-raw '{
     "coin": "USDT",
     "qty": "150"
 }'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "success",
     "result": {
         "repayId": "12128"
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1662618298452
 }
 ```

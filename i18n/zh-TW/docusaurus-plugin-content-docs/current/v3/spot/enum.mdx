@@ -5,25 +5,25 @@ slug: /spot/enum
 ---
 
 ### side
-* `Buy`
-* `Sell`
+* `BUY`&emsp;買
+* `SELL`&emsp;賣
 
 ### timeInForce
-* `GTC`&emsp;Good Till Cancel
-* `FOK`&emsp;Fill or Kill
-* `IOC`&emsp;Immediate or Cancel
+* `GTC`&emsp;Good Till Cancel，一直有效至取消
+* `FOK`&emsp;Fill or Kill，完全成交或取消
+* `IOC`&emsp;Immediate or Cancel，立即成交或取消
 
 ### symbol
 * `BTCUSDT`
 * `ETHUSDT`
 * `BTCUSDC`
 * ...<br/>
-You can get all symbols with the [instrument](/spot/public/instrument) endpoint.
+可以通過[獲取交易對規格](/spot/public/instrument)接口，獲取所有可用的交易對
 
 ### orderType
 * `MARKET`
 * `LIMIT`
-* `LIMIT_MAKER`
+* `LIMIT_MAKER`&emsp;被動委託
 
 ### currency/coin
 * `BTC`
@@ -31,7 +31,7 @@ You can get all symbols with the [instrument](/spot/public/instrument) endpoint.
 * `USDT`
 * ...
 
-Cross Margin Trading Endpoints support below currency:
+以下幣種支持全倉槓桿:
 * `BTC`
 * `ETH`
 * `XRP`
@@ -41,45 +41,47 @@ Cross Margin Trading Endpoints support below currency:
 * `LINK`
 * `XLM`
 * `USDC`
-* `USDT`
-You could find all supported coins of margin trade <a href="https://www.bybit.com/en-US/trade/spot/leverage/vip">here</a>.
+* `USDT`<br/>
+您可以通過這個<a href="https://www.bybit.com/en-US/trade/spot/leverage/vip">網址</a>獲得所有全倉槓桿支持的幣種.
 
 ### orderStatus
-* `NEW`
+* `NEW`&emsp;普通單被下達
+* `ORDER_NEW`&emsp;止盈止損單被下達
+* `PENDING_NEW`
 * `PARTIALLY_FILLED`
 * `FILLED`
-* `CANCELED`
+* `CANCELED`&emsp;普通單被取消
+* `ORDER_CANCELED`&emsp;止盈止損單被取消
 * `PENDING_CANCEL`
-* `PENDING_NEW`
 * `REJECTED`
 * `PARTIALLY_FILLED_CANCELLED`
 
 ### interval
-* `1m`&emsp;1 minute
-* `3m`&emsp;3 minutes
-* `5m`&emsp;5 minutes
-* `15m`&emsp;15 minutes
-* `30m`&emsp;30 minutes
-* `1h`&emsp;1 hour
-* `2h`&emsp;2 hours
-* `4h`&emsp;4 hours
-* `6h`&emsp;6 hours
-* `12h`&emsp;12 hours
-* `1d`&emsp;1 day
-* `1w`&emsp;1 week
-* `1M`&emsp;1 month
+* `1m`&emsp;1 分鐘
+* `3m`&emsp;3 分鐘
+* `5m`&emsp;5 分鐘
+* `15m`&emsp;15 分鐘
+* `30m`&emsp;30 分鐘
+* `1h`&emsp;1 小時
+* `2h`&emsp;2 小時
+* `4h`&emsp;4 小時
+* `6h`&emsp;6 小時
+* `12h`&emsp;12 小時
+* `1d`&emsp;1 天
+* `1w`&emsp;1 周
+* `1M`&emsp;1 月
 
 ### ltStatus
-* `1`&emsp;ETP can be purchased and redeemed
-* `2`&emsp;ETP can be purchased, but not redeemed
-* `3`&emsp;ETP can be redeemed, but not purchased
-* `4`&emsp;ETP cannot be purchased nor redeemed
+* `1`&emsp;槓桿代幣支持申贖
+* `2`&emsp;槓桿代幣支持申購，但無法贖回
+* `3`&emsp;槓桿代幣支持贖回，但是無法申購
+* `4`&emsp;槓桿代幣無法申贖
 
 ### ltOrderStatus
-* `1`&emsp;Completed
-* `2`&emsp;In progress
-* `3`&emsp;Failed
+* `1`&emsp;完成
+* `2`&emsp;進行中
+* `3`&emsp;失敗
 
 ### ltOrderType
-* `1`&emsp;Purchase
-* `2`&emsp;Redemption
+* `1`&emsp;申購
+* `2`&emsp;贖回

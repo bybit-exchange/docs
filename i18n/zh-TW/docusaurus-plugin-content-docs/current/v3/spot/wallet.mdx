@@ -9,41 +9,31 @@ slug: /spot/wallet
 GET <code>/spot/v3/private/account</code>
 
 #### 請求參數
-| 參數 | 是否必須 | 類型 | 說明|
-|:----- |:-------|:-----|------ |
+無
 
 #### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| coin                 | string          | 幣種 |
-| coinId               | string          | 幣種 |
-| total                | string          | 總額 |
-| free                 | string          | 可用余額 |
-| locked               | string          | 凍結余額 |
-
+| balances | array | Object |
+|> coin  | string | 幣種 |
+|> coinId | string | 幣種ID |
+|> total | string | 總額 |
+|> free | string | 可用余額 |
+|> locked | string | 凍結余額 |
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/account' \
---header 'X-BAPI-SIGN: 6f5c1a9543ea9033013b4ec0a6d05a74e2d05d109c60ad464ab7f9c6e86ad0d4' \
+--header 'X-BAPI-SIGN: XXXXX' \
 --header 'X-BAPI-API-KEY: {api key}' \
 --header 'X-BAPI-TIMESTAMP: 1659346886605' \
 --header 'X-BAPI-RECV-WINDOW: 5000'
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
 
-<Tabs>
-<TabItem value="normal" label="Normal order">
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -77,6 +67,3 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/acc
     "time": 1659346887407
 }
 ```
-
-</TabItem>
-</Tabs>

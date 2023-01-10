@@ -1,44 +1,39 @@
 ---
-title: 獲取風險率
-sidebar_label: 獲取風險率
+title: 查詢風險率
+sidebar_label: 查詢風險率
 sidebar_position: 5
 slug: /spot/otc/ltv
 ---
-Get LTV. Authentication needed.
 
-#### HTTP Request
+### HTTP 請求
 GET <code>/spot/v3/private/margin-ltv</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
-|:----- |:-------|:-----|------ |
+### 請求參數
+無
 
-#### Response Parameters
-| Parameter | Type | Comments|
+### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |ltvInfo | array | Object |
-|> ltv | string	| Risk rate |
-|> parentUid | string | User id |
-|> subAccountUids | array | Bound user id |
-|> unpaidAmount	| string | Total debt(USDT) |
-|> unpaidInfo | array | Debt details |
-|>> token | string | coin |
-|>> unpaidQty | string | Unpaid principle |
-|>> unpaidInterest | string	| Unpaid interest |
-|> balance | string	| Total asset. (margin coins converted to USDT) |
-|> spotBalanceInfo | array | Spot asset details |
-|>> token | string | Spot margin coin |
-|>> price | string | Spot margin coin price |
-|>> qty	| string | Spot margin coin quantity |
-|> contractInfo	| array	| Contract asset details |
-|>> token | string | Contract margin coin |
-|>> price | string | Contract margin coin index price |
-|>> qty	| string | Contract margin coin quantity |
+|> ltv | string	| 風險率 |
+|> parentUid | string | 用戶ID |
+|> subAccountUids | array | 綁定的子UID |
+|> unpaidAmount	| string | 總負債 (USDT) |
+|> unpaidInfo | array | 負債明細 |
+|>> token | string | 幣種 |
+|>> unpaidQty | string | 未還本金 |
+|>> unpaidInterest | string	| 未還利息 |
+|> balance | string	| 總資產(保證金幣種資產折算為USDT資產) |
+|> spotBalanceInfo | array | 現貨資產明細 |
+|>> token | string | 現貨保證金幣種 |
+|>> price | string | 現貨保證金幣種價格 |
+|>> qty	| string | 現貨保證金數量 |
+|> contractInfo	| array	| 合約資產明細 |
+|>> token | string | 合約保證金幣種 |
+|>> price | string | 合約保證金幣種指數價格 |
+|>> qty	| string | 合約保證金幣種數量 |
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/margin-ltv' \
@@ -46,15 +41,12 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/mar
 --header 'X-BAPI-API-KEY: XXXXXXXXXXX' \
 --header 'X-BAPI-TIMESTAMP: 1669367335035' \
 --header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: 75d8c29b293635f3501c6dc8770892681a05a2788aa3c467dd136e7dabf173a9'
+--header 'X-BAPI-SIGN: XXXXXXXX'
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",

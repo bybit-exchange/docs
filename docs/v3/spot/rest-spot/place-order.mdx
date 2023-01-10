@@ -16,55 +16,54 @@ POST <code>/spot/v3/private/order</code>
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-| symbol               | <b>true</b>         | string          | Name of the trading pair              |
-| orderQty             | <b>true</b>         | string          | |       |
-| side                 | <b>true</b>         | string          | Side. <code>Buy</code>, <code>Sell</code>     |
-| orderType            | <b>true</b>         | string          | Order type           |
-| <a href="#time-in-force-time_in_force">timeInForce</a>| false               | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| orderPrice           | false               | string          | Order price. When the type field is MARKET, the price field is optional. When the type field is LIMIT or LIMIT_MAKER, the price field is required      |
-| orderLinkId          | false               | string          | User-generated order ID         |
-| orderCategory        | false               | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
-| triggerPrice         | false               | string          | Trigger price     |
+| symbol | <b>true</b> | string| Name of the trading pair |
+| orderQty | <b>true</b> | string|Order qty. When you place a MARKET BUY order, this param means quote amount. e.g., MARKET BUY BTCUSDT, orderQty should be **200 USDT**  |
+| [side](../enum#side) | <b>true</b> | string| Side. <code>BUY</code>, <code>SELL</code> |
+| [orderType](../enum#ordertype) | <b>true</b> | string| Order type |
+| [timeInForce](../enum#timeinforce)| false | string| <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+| orderPrice | false | string| Order price. When the type field is MARKET, the price field is optional. When the type field is LIMIT or LIMIT_MAKER, the price field is **required** |
+| orderLinkId| false | string| User-generated order ID |
+| orderCategory | false | integer | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order. |
+| triggerPrice | false | string| Trigger price. Used for TP/SL order |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| orderId              | string          | Order ID             |
-| orderLinkId          | string          | User-generated order ID         |
-| symbol               | string          | Name of the trading pair              |
-| createTime           | string          | Order Creation Time        |
-| orderPrice           | string          |  Last traded price               |
-| orderQty             | string          | Order quantity              |
-| orderType            | string          | Order type           |
-| side                 | string          | Side. <code>Buy</code>, <code>Sell</code>     |
-| status               | string          | Order status              |
-| timeInForce          | string          | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| accountId            | string          | Account ID           |
-| execQty              | string          | Please ignore             |
-| orderCategory        | int             | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order.    |
-| triggerPrice         | string          | Trigger price     |
+| orderId | string| Order ID   |
+| orderLinkId| string| User-generated order ID |
+| symbol | string| Name of the trading pair |
+| createTime | string| Order Creation Time |
+| orderPrice | string|  Last traded price |
+| orderQty | string| Order quantity |
+| [orderType](../enum#ordertype) | string| Order type |
+| side | string| Side. <code>BUY</code>, <code>SELL</code> |
+| [status](../enum#orderstatus) | string| Order status |
+| timeInForce| string| <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+| accountId | string| Account ID |
+| execQty | string| Please ignore |
+| orderCategory | integer | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a> |
+| triggerPrice | string| Trigger price. TP/SL order has this field |
 
 ### Request Example
 
 ```http
-curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/order' \
---header 'X-BAPI-SIGN: cc63fb44be4a87f4b7bbd42db012ddacc1c935c3d3ae3e01c3b4be393522c213' \
---header 'X-BAPI-API-KEY: {api key}' \
---header 'X-BAPI-TIMESTAMP: 1659067662307' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: cc63fb44be4a87f4b7bbd42db012ddacc1c935c3d3ae3e01c3b4be393522c213' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "symbol": "BTCUSDT",
-    "orderQty":"0.01",
-    "side": "Buy",
+POST /spot/v3/private/order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1673333450317
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 146
+
+{
+    "symbol": "ETHUSDT",
+    "orderPrice": "1220",
+    "side": "SELL",
+    "orderQty": "1",
     "orderType": "LIMIT",
-    "timeInForce": "GTC",
-    "orderPrice": "21300",
-    "orderLinkId": "spotx006",
-    "orderCategory": 1,
-    "triggerPrice": "21700"
-}'
+    "timeInForce": "GTC"
+}
 ```
 
 ### Response Example
@@ -74,22 +73,21 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/or
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "orderId": "1230969397479298560",
-        "orderLinkId": "spotx006",
-        "symbol": "BTCUSDT",
-        "createTime": "1661478987332",
-        "orderPrice": "21300",
-        "orderQty": "0.01",
+        "orderId": "1330411843270754304",
+        "orderLinkId": "1673333450634810",
+        "symbol": "ETHUSDT",
+        "createTime": "1673333450646",
+        "orderPrice": "1220",
+        "orderQty": "1",
         "orderType": "LIMIT",
-        "side": "BUY",
-        "status": "ORDER_NEW",
+        "side": "SELL",
+        "status": "NEW",
         "timeInForce": "GTC",
-        "accountId": "554118",
-        "orderCategory": 1,
-        "triggerPrice": "21700"
+        "accountId": "592335",
+        "execQty": "0",
+        "orderCategory": 0
     },
-    "retExtMap": {},
-    "retExtInfo": null,
-    "time": 1661478987364
+    "retExtInfo": {},
+    "time": 1673333450660
 }
 ```

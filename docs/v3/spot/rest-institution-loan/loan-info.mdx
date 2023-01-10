@@ -4,7 +4,7 @@ sidebar_label: Get Loan Info
 sidebar_position: 3
 slug: /spot/otc/loan-info
 ---
-Get those loan orders information. Authentication needed.
+Get loan orders information
 
 ### HTTP Request
 GET <code>/spot/v3/private/margin-loan-infos</code>
@@ -12,17 +12,17 @@ GET <code>/spot/v3/private/margin-loan-infos</code>
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|orderId | false | string | Loan order id. If not passed, then return all orders, sort by loanTime in descend |
-|startTime | false | long | Start time, unit in millisecond |
-|endTime | false | long	| End time, unit in millisecond |
-|limit | false | int | Limit for data size per page. 10 by default, the max is 100 |
+|orderId | false | string | Loan order id. If not passed, then return all orders, sort by `loanTime` in descend |
+|startTime | false | integer | Start timestamp (ms) |
+|endTime | false | integer	| End timestamp (ms) |
+|limit | false | integer | Limit for data size. [`1`, `100`], Default: `10` |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |loanInfo | array | Object |
-|> orderId | string	| Loan order id |
-|> orderProductId | string | Product Id |
+|> orderId | string	| Loan order ID |
+|> orderProductId | string | Product ID |
 |> parentUid | string | User parent UID |
 |> loanTime	| string | Loan timestamp, in milliseconds |
 |> loanCoin	| string | Loan coin |
@@ -32,10 +32,10 @@ GET <code>/spot/v3/private/margin-loan-infos</code>
 |> repaidAmount	| string | Repaid principal |
 |> repaidInterest | string | Repaid interest |
 |> interestRate	| string | Daily interest rate |
-|> status | string | 1：outstanding; 2：paid off |
+|> status | integer | `1`：outstanding; `2`：paid off |
 |> leverage	| string | leverage |
-|> supportSpot | intger	| Whether to support spot. 0:false; 1:true |
-|> supportContract | integer | Whether to support contract . 0:false; 1:true |
+|> supportSpot | integer | Whether to support spot. `0`:false; `1`:true |
+|> supportContract | integer | Whether to support contract . `0`:false; `1`:true |
 |> withdrawLine	| string | Restrict line for withdrawal |
 |> transferLine	| string | Restrict line for transfer |
 |> spotBuyLine | string	| Restrict line for SPOT buy |

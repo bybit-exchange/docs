@@ -1,55 +1,52 @@
 ---
-title: 獲取保證金產品信息
-sidebar_label: 獲取保證金產品信息
+title: 查詢保證金產品信息
+sidebar_label: 查詢保證金產品信息
 sidebar_position: 1
 slug: /spot/otc/product-info
 ---
 
+:::tip
+這是公共接口，無需鑒權。
+:::
 
-#### HTTP Request
+### HTTP 請求
 GET <code>/spot/v3/public/margin-product-infos</code>
 
-#### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|productId | false | string	| Product Id. If not passed, then return all products info
+|productId | false | string	| 產品ID. 若不傳，則返回所有產品數據|
 
-#### Response Parameters
-| Parameter | Type | Comments|
+### 返回參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|marginProductInfo	array	Object
-|> productId | string | Product Id |
-|> leverage	| string | leverage |
-|> supportSpot | integer | Whether to support spot. 0:false; 1:true |
-|> supportContract | integer | Whether to support contract. 0:false; 1:true |
-|> withdrawLine	| string | Restrict line for withdrawal |
-|> transferLine	| string | Restrict line for transfer |
-|> spotBuyLine | string	| Restrict line for SPOT buy |
-|> spotSellLine	| string | Restrict line for SPOT sell |
-|> contractOpenLine	| string | Restrict line for CONTRACT open position |
-|> liquidationLine | string	| Line for liquidation |
-|> stopLiquidationLine | string	| Line for stop liquidation |
-|> contractLeverage	| string | Allowed max leverage of opening contract position |
-|> transferRatio | string | Available transfer ratio of loan funds |
-|> spotSymbols | array | The whitelist of spot trading pairs |
-|> contractSymbols | array | The whitelist of contract trading pairs |
+|marginProductInfo |array |	Object |
+|> productId | string | 產品ID |
+|> leverage	| string | 槓桿倍數 |
+|> supportSpot | integer | 是否支持現貨. `0`:否; `1`:是 |
+|> supportContract | integer | 是否支持合約 . `0`: 否; `1`: 是 |
+|> withdrawLine	| string | 限制提幣線 |
+|> transferLine	| string | 限制劃轉線 |
+|> spotBuyLine | string	| 限制現貨買入線 |
+|> spotSellLine	| string | 限制現貨賣出線 |
+|> contractOpenLine	| string | 限制合約開倉線 |
+|> liquidationLine | string	| 強平線 |
+|> stopLiquidationLine | string	|停止強平線 |
+|> contractLeverage	| string |允許合約開倉倍數 |
+|> transferRatio | string |借貸資金劃轉比例 |
+|> spotSymbols | array |現貨交易對白名單 |
+|> contractSymbols | array |合約交易對白名單 |
 
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/public/margin-product-infos?productId=70'
 ```
 
-</TabItem>
-</Tabs>
+### 響應示例
 
-### Response Example
-
-```javascript
+```json
 {
     "retCode": 0,
     "retMsg": "OK",
