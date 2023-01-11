@@ -21,9 +21,9 @@ GET `/v5/market/orderbook`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`inverse`,`option` |
+|[category](../enum#category) |**true** |string |產品類型. `spot`, `linear`, `inverse`, `option` |
 |[symbol](../enum#symbol) |**true** |string |合約名稱|
-|limit |false |integer |每頁數量限制.<ul><li>`spot`: [1,50], 默認: `1`.</li><li>`linear`&`inverse`: [1,200],默認: `1`.</li><li>`option`: [1,25],默認: `1`.</li></ul>|
+|limit |false |integer |深度限制.<ul><li>`spot`: [`1`, `50`], 默認: `1`.</li><li>`linear`&`inverse`: [`1`, `200`],默認: `25`.</li><li>`option`: [`1`, `25`],默認: `1`.</li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -36,7 +36,7 @@ GET `/v5/market/orderbook`
 |> a[0] |string |賣方報價 |
 |> a[1] |string |賣方數量 |
 |ts |integer |行情服務生成數據時間戳（毫秒） |
-|u |integer |表示數據連續性的id |
+|u |integer |表示數據連續性的id. <ul><li>對於期貨, 它和wss推送裡的200檔的`u`對齊</li><li>對於現貨, 它和wss推送裡的50檔的`u`對齊</li></ul> |
 
 ### 請求示例
 

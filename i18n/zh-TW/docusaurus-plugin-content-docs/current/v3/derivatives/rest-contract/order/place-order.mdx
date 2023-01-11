@@ -26,8 +26,6 @@ slug: /derivatives/contract/place-order
 - **訂單持有上限**: 期貨: 單個账户针对合约可持有每个 symbol 最多可同时持有500个普通活动订单。这是针对合约的，因此可以允许出现例如：账户同时持有300个BTCUSD的活动单、
 280个ETHUSD合约的活动单。針對條件單，單個帳戶針對合約可持有每個 symbol 最多同時持有 10 個條件單。
 期權: 最多可持有100個委託單
-
-- 期權**不支持**創建條件單
 :::
 
 ### HTTP 請求
@@ -36,7 +34,6 @@ POST `/contract/v3/private/order/create`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`. 默認: `linear`. _暫不支持期權的下單_ |
 |symbol |**true** |string |合約名稱|
 |side |**true** |string |方向. `Buy`,`Sell`|
 |orderType |**true** |string |訂單類型. `Market`, `Limit`|
@@ -44,7 +41,6 @@ POST `/contract/v3/private/order/create`
 |[timeInForce](../enum#timeinforce) |**true** |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單策略</a>. |
 |price |false |string |訂單價格. `orderType`=_Market_時，值將被忽略|
 |[positionIdx](../enum#positionidx) |false |integer |倉位標識. `0`: 單向持倉, `1`: 買側雙向持倉, `2`: 賣側雙向持倉. _雙向模式下，該字段**必傳**_ |
-|iv |false |string |隱含波動率. 僅適用於`option`. 按照實際值傳慘，如10%，則傳0.1 |
 |triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
 |triggerPrice |false |string |條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保::<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_|
 |[triggerBy](../enum#triggerby) |false |string |觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`. 默認: `LastPrice`|
@@ -55,7 +51,6 @@ POST `/contract/v3/private/order/create`
 |[slTriggerBy](../enum#triggerby) |false |string |止損激活價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉. _只減倉單的止盈止損不生效_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> 此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行. |
-|mmp |false |boolean |做市商保護. 僅對期權生效. `true`表示該訂單是做市商保護訂單 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -64,9 +59,6 @@ POST `/contract/v3/private/order/create`
 |orderLinkId |string |用戶自定義訂單ID |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
 
 ```http
 POST /contract/v3/private/order/create HTTP/1.1
@@ -77,8 +69,7 @@ X-BAPI-TIMESTAMP: 1670487164902
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json; charset=utf-8
 {
-    "category": "linear",
-    "symbol": "BTCPERP",
+    "symbol": "BTCUSDT",
     "side": "Buy",
     "orderType": "Limit",
     "qty": "0.05",
@@ -90,38 +81,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-</TabItem>
-
-<TabItem value="console-option" label="option">
-
-```http
-POST /contract/v3/private/order/create HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: XXXXX
-X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1670487164902
-X-BAPI-RECV-WINDOW: 5000
-Content-Type: application/json; charset=utf-8
-{
-    "category": "option",
-    "symbol": "BTC-9DEC22-15500-C",
-    "side": "Buy",
-    "orderType": "Limit",
-    "qty": "0.01",
-    "price": "2800",
-    "iv": "700", //higher priority
-    "timeInForce": "FillOrKill",
-    "orderLinkId": "test-option-001"
-}
-```
-
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="linear">
 
 ```json
 {
@@ -135,5 +95,3 @@ Content-Type: application/json; charset=utf-8
     "time": 1670486764551
 }
 ```
-</TabItem>
-</Tabs>

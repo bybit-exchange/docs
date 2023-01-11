@@ -5,23 +5,28 @@ sidebar_position: 4
 slug: /spot/ws-public/ticker
 ---
 
-<p>The 24-hr statistics of a trading pair.</p>
-<p><b>Push frequency</b>: real-time</p>
-<p><b>Topic</b>: <code>tickers.BTCUSDT</code></p>
+The 24-hr statistics of a trading pair.
+
+**Push frequency:** real-time
+
+**Topic:** `tickers.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|t | long | Timestamp (trading time in the match box) |
-|s | string | Trading pair |
-|o | string | Open price |
-|h | string | High price |
-|l | string | Low price |
-|c | string | Close price |
-|v | string | Trading volume |
-|qv | string | Trading quote volume |
-|m | string | Change |
-| ts | long | The time that message is sent out |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> t | long | Timestamp (trading time in the match box) |
+|> s | string | Trading pair |
+|> o | string | Open price |
+|> h | string | High price |
+|> l | string | Low price |
+|> c | string | Close price |
+|> v | string | Trading volume |
+|> qv | string | Trading quote volume |
+|> m | string | Change |
 
 ### Request Example
 
@@ -39,18 +44,19 @@ slug: /spot/ws-public/ticker
 
 ```json
 {
-    "data": {
-        "t": 1661742216005,
-        "s": "BTCUSDT",
-        "o": "19820",
-        "h": "20071.93",
-        "l": "19365.85",
-        "c": "19694.27",
-        "v": "9997.246174",
-        "qv": "197357775.97621786",
-        "m": "-0.0063"
-    },
-    "type": "delta",
     "topic": "tickers.BTCUSDT",
-    "ts": 1661742216011
-}```
+    "ts": 1673437259301,
+    "type": "snapshot",
+    "data": {
+        "t": 1673437259298,
+        "s": "BTCUSDT",
+        "c": "17439.83",
+        "h": "17500.94",
+        "l": "17215.32",
+        "o": "17256.92",
+        "v": "3723.239123",
+        "qv": "64714971.9852585",
+        "m": "0.0106"
+    }
+}
+```

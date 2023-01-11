@@ -8,20 +8,24 @@ slug: /spot/ws-public/public-trade
 <p>This topic pushes raw trade information; each trade has a unique buyer and seller.</p>
 <p>Variable "v" acts as a tradeId. This variable is shared across different symbols; however, each ID is unique. For example, suppose in the last 5 seconds 3 trades happened in ETHUSDT, BTCUSDT, and BHTBTC. Their tradeId (which is "v") will be consecutive: 112, 113, 114.</p>
 <p><b>Push frequency</b>: real-time</p>
-<p><b>Topic</b>: <code>trade.BTCUSDT</code></p>
+
+**Topic:** `trade.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|v | string | TradeId |
-|t | long | Timestamp (trading time in the match box) |
-|p | string | Price |
-|q | string | Quantity |
-|m | boolean | True indicates buy side is taker, false indicates sell side is taker |
-|type | string | Trade type. <code>0</code>：Spot trade. <code>1</code>：Paradigm block trade |
-|ts | long | The time that message is sent out |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> v | string | Trade ID |
+|> t | number | Timestamp (trading time in the match box) |
+|> p | string | Price |
+|> q | string | Quantity |
+|> m | boolean | True indicates buy side is taker, false indicates sell side is taker |
+|> type | string | Trade type. <code>0</code>：Spot trade. <code>1</code>：Paradigm block trade |
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -33,19 +37,20 @@ slug: /spot/ws-public/public-trade
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {
-    "data": {
-        "v": "2100000000001992601",
-        "t": 1661742109857,
-        "p": "19706.87",
-        "q": "0.000158",
-        "m": true
-    },
-    "type": "delta",
     "topic": "trade.BTCUSDT",
-    "ts": 1661742109863
+    "ts": 1673437259397,
+    "type": "snapshot",
+    "data": {
+        "v": "2290000000036455162",
+        "t": 1673437259395,
+        "p": "17440",
+        "q": "0.0002",
+        "m": false,
+        "type": "0"
+    }
 }
 ```

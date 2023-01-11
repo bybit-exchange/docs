@@ -13,12 +13,8 @@ GET `/contract/v3/private/position/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear` |
 |symbol |false |string |合約名稱 |
 |settleCoin |false |string |結算幣種. 查詢期貨時, `symbol` 和 `settleCoin`二者必傳一個. `symbol`優先級更高 |
-|baseCoin |false |string |交易幣種. 僅對期權有效 |
-|limit |false |string |Limit for data size per page. [`1`, `50`]. default: `20`|
-|cursor |false |string |游標，用於翻頁 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -27,7 +23,7 @@ GET `/contract/v3/private/position/list`
 |nextPageCursor |string |游標，用於翻頁 |
 |list |array |Object |
 |> symbol |string |合約名称 |
-|> side |string |方向. `Buy`,`Sell` |
+|> side |string |方向. `Buy`, `Sell`. 單倉模式下，無倉位則返回`None` |
 |> size |string |當前倉位的數量，按照合約張數計算 |
 |> entryPrice |string |平均入場價 |
 |> leverage |string |槓桿倍數 |
@@ -50,20 +46,20 @@ GET `/contract/v3/private/position/list`
 |> cumRealisedPnl |string |累计已结盈亏 |
 |> positionMM |string |倉位維持保證金 |
 |> positionIM |string |倉位起始保證金 |
-|> positionStatus |string |倉位狀態. `Normal`, `Abnormal` |
+|> [positionStatus](../enum#positionstatus) |string |倉位狀態 |
 |> sessionAvgPrice |string |結算價格 |
-|> occClosingFee |string |預佔用平倉手續費. `option`沒有該字段|
+|> occClosingFee |string |預佔用平倉手續費|
 |> createdTime |string |倉位創建時間戳 (毫秒)|
 |> updatedTime |string |倉位數據更新時間 (毫秒) |
 
 ### 請求示例
 
 ```http
-GET /contract/v3/private/position/list?symbol=SOLPERP&category=linear HTTP/1.1
+GET /contract/v3/private/position/list?symbol=ETCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1670823840100
+X-BAPI-TIMESTAMP: 1673421074950
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 ```
@@ -78,40 +74,41 @@ Content-Type: application/json
         "list": [
             {
                 "positionIdx": 0,
-                "riskId": 1,
-                "symbol": "SOLPERP",
-                "side": "Buy",
-                "size": "10",
-                "positionValue": "130.1",
-                "entryPrice": "13.01",
+                "riskId": 236,
+                "symbol": "ETCUSDT",
+                "side": "Sell",
+                "size": "5.0",
+                "positionValue": "101.025",
+                "entryPrice": "20.205",
                 "tradeMode": 0,
                 "autoAddMargin": 0,
-                "leverage": "10.00",
-                "positionBalance": "",
-                "liqPrice": "0.005",
-                "bustPrice": "",
-                "takeProfit": "0",
-                "stopLoss": "0",
-                "trailingStop": "",
-                "unrealisedPnl": "-0.01",
-                "createdTime": "1669888302986",
-                "updatedTime": "1670823807496",
-                "tpSlMode": "UNKNOWN",
-                "riskLimitValue": "150000",
-                "activePrice": "",
-                "markPrice": "13.009",
-                "cumRealisedPnl": "-0.07806",
-                "positionMM": "1.371254",
-                "positionIM": "13.080254",
+                "leverage": "10",
+                "positionBalance": "10.1691765",
+                "liqPrice": "1606.060",
+                "bustPrice": "1606.260",
+                "takeProfit": "0.000",
+                "stopLoss": "0.000",
+                "trailingStop": "0.000",
+                "unrealisedPnl": "1.35",
+                "createdTime": "1672986751942",
+                "updatedTime": "1673419917797",
+                "tpSlMode": "Full",
+                "riskLimitValue": "200000",
+                "activePrice": "0.000",
+                "markPrice": "19.935",
+                "cumRealisedPnl": "0.02758243",
+                "positionMM": "",
+                "positionIM": "",
                 "positionStatus": "Normal",
-                "sessionAvgPrice": "13.01",
-                "occClosingFee": ""
+                "sessionAvgPrice": "0.000",
+                "occClosingFee": "4.81878",
+                "avgPrice": "20.205"
             }
         ],
-        "category": "linear",
+        "category": "",
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1670823840914
+    "time": 1673421076067
 }
 ```

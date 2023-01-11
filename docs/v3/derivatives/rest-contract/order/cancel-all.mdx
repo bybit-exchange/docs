@@ -5,9 +5,10 @@ sidebar_position: 5
 slug: /derivatives/contract/cancel-all
 ---
 
-:::tip
 This endpoint enables to cancel all open orders.
-- If `category`=_linear_, one of param `baseCoin`, `settleCoin`, `symbol` must be passed.
+
+:::tip
+One of param `settleCoin`, `symbol` must be passed.
 :::
 
 #### HTTP Request
@@ -16,10 +17,8 @@ POST `/contract/v3/private/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`. Default: `linear`. Cannot cancel-all `option` order for now |
-|symbol |false|string |Symbol name |
-|baseCoin |false|string |Cancel all open orders by base coin. `option` ONLY |
-|settleCoin |false|string |Cancel all open orders by settle coin|
+|symbol |false|string |Symbol name. Either `symbol` or `settleCoin` is **required** |
+|settleCoin |false|string |Cancel all open orders by settle coin. Either `symbol` or `settleCoin` is **required**|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -40,7 +39,6 @@ X-BAPI-TIMESTAMP: 1670571959925
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 {
-    "category": "linear",
     "settleCoin": "USDT",
     "symbol": null
 }

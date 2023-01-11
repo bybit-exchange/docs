@@ -9,7 +9,6 @@ slug: /derivatives/contract/execution-list
 
 **支持時間範圍:**<br/>
 * USDT永續, 反向永續, 反向交割: 過去兩年
-* USDC永續, 期權: 過去30天
 
 :::tip
 單筆訂單可能會有多次成交
@@ -21,11 +20,9 @@ GET `/contract/v3/private/execution/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |產品類型. `linear`,`inverse`,`option`. 默認: `linear` |
-|symbol |false |string |合約名稱. 若`category`為linear或inverse，則該參數**必傳** |
+|symbol |**true** |string |合約名稱 |
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單iD |
-|baseCoin |false |string |交易幣種. 僅對期權有效 |
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |[execType](../enum#exectype) |false |string |成交類型|
@@ -54,8 +51,8 @@ GET `/contract/v3/private/execution/list`
 |> execValue |string |成交價值 |
 |> feeRate |string |手續費率 |
 |> [lastLiquidityInd](../enum#lastliquidityind) |string |流動性類型. `AddedLiquidity`, `RemovedLiquidity` |
-|> isMaker |boolean |是否是maker單. `option`沒有該字段 |
-|> leavesQty |string |剩餘委託未成交價值. `option`沒有該字段 |
+|> isMaker |boolean |是否是maker單 |
+|> leavesQty |string |剩餘委託未成交價值 |
 |> closedSize |string |平倉數量 |
 |> iv |string |隱含波動率 |
 |> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID |
@@ -114,7 +111,7 @@ X-BAPI-RECV-WINDOW: 5000
             }
         ],
         "nextPageCursor": "ZzU3NlU4M1JlLzhFTWkzeW9hemRVcitqUk4wVW9LL21KVTRWV3JPR0tYTG9uTENWSkFvUDJuWk44OVBlNnB0ZjJHTTFwdlJRV0tpZFM0Z0RzUlQ0d2FSbzVRN2lpZ0ZrZmt2UTZuRlJVSHdQSHdoYXUvdDN6aExzOEpmcDNFY2NLc2dYTnRvOXhmTmY3NVNreVgzQ2RKUFZtekptU0NQNU1rOWd5YzZRV1ZDejVFM0t0MGdlMENNc04ybzQvc2JQQ3BVRkQycHU3MFdBK3RqdFlWaVRkMTNGQmZRUUZpaVc4MkE1SnRCT09iZDRNL2FlNDVSMithdU96NTROWGFxcTFucW1MSnJSaTluM29pZm85dHVkNzJMSVQwODk4UTJLbHEybDJ0Uk9UYmtCcU5ScU9zZWRCa2Znc0dwbmNEOWJoaCtnZkRkWjlrMEl6elRmWnljeHZpYXBPWVdzZSs0UEtvdnZ4cTJHQ2JZcm1UQkU3TXFKS01yU1dmaloyT3pVS1psbmVaamh3N3Ntc0hFbEgwckxtQT09",
-        "category": "linear"
+        "category": ""
     },
     "retExtInfo": {},
     "time": 1673150404910
