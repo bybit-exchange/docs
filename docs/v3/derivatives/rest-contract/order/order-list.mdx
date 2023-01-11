@@ -16,9 +16,7 @@ GET `/contract/v3/private/order/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |false |string |Product type. `linear`,`inverse`,`option`. Default: `linear` |
 |symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin. For `option` ONLY|
 |orderId |false |string |Order id |
 |orderLinkId |false |string |User customised order id |
 |[orderStatus](../enum#orderStatus) |false |string |Order status. Return all status orders if not passed|
@@ -33,8 +31,8 @@ GET `/contract/v3/private/order/list`
 |nextPageCursor |string |Cursor. Used to pagination |
 |list |list |Object |
 |> symbol |string |Symbol name |
-|> orderId |string |Order id |
-|> orderLinkId |string |User customised order id. |
+|> orderId |string |Order ID |
+|> orderLinkId |string |User customised order ID. |
 |> side |string |`Buy`,`Sell` |
 |> orderType |string |Order type. `Market`,`Limit`|
 |> price |string |Order price |
@@ -42,7 +40,7 @@ GET `/contract/v3/private/order/list`
 |> qty |string |Order quantity |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
-|> [positionIdx](../enum#positionidx) |integer |Position index |
+|> [positionIdx](../enum#positionidx) |integer |Position index. `0`: one-way mode, `1`: buy side hedge mode, `2`: sell side hedge mode |
 |> lastPriceOnCreated |string |Last price when place the order |
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
@@ -63,66 +61,67 @@ GET `/contract/v3/private/order/list`
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss|
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
 |> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a>. Keeps `""` for `option` |
-|> blockTradeId |string |Block trade Id. Unique field for `option` |
-|> placeType |string |Place type. `price`,`iv`. Unique field for `option` |
+|> blockTradeId |string |Paradigm block trade ID|
 
 ### Request Example
 
 ```http
-GET /contract/v3/private/order/list?orderStatus=Filled&limit=1&category=option&baseCoin=ETH HTTP/1.1
+GET /contract/v3/private/order/list?orderStatus=Cancelled&limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1670577969789
+X-BAPI-TIMESTAMP: 1673420679798
 X-BAPI-RECV-WINDOW: 5000
+cdn-request-id: test-10
 ```
 
 ### Response Example
 
 ```json
 {
+    "retCode": 0,
+    "retMsg": "OK",
     "result": {
-        "nextPageCursor": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279%2C41e45bf7-6788-4e89-b67c-8ee3a4a9dee2%3A1669614818279",
-        "category": "option",
         "list": [
             {
-                "symbol": "ETH-29NOV22-1150-P",
-                "orderType": "Market",
-                "orderLinkId": "",
-                "orderId": "41e45bf7-6788-4e89-b67c-8ee3a4a9dee2",
-                "cancelType": "UNKNOWN",
-                "stopOrderType": "UNKNOWN",
-                "lastPriceOnCreated": "",
-                "orderStatus": "Filled",
-                "takeProfit": "",
-                "cumExecValue": "0.02",
-                "triggerDirection": "",
-                "blockTradeId": "",
-                "rejectReason": "",
-                "price": "0.2",
-                "createdTime": "1669614818279",
-                "tpTriggerBy": "",
-                "positionIdx": 0,
-                "timeInForce": "ImmediateOrCancel",
-                "leavesValue": "0",
-                "updatedTime": "1669614818300",
-                "side": "Sell",
-                "triggerPrice": "",
-                "cumExecFee": "0.0025",
-                "leavesQty": "0",
-                "slTriggerBy": "",
-                "iv": "",
-                "placeType": "price",
-                "closeOnTrigger": "",
-                "cumExecQty": "0.1",
+                "symbol": "BNBUSDT",
+                "side": "Buy",
+                "orderType": "Limit",
+                "price": "150.00",
+                "qty": "10.00",
                 "reduceOnly": false,
-                "qty": "0.1",
-                "stopLoss": "",
-                "triggerBy": ""
+                "timeInForce": "GoodTillCancel",
+                "orderStatus": "Cancelled",
+                "leavesQty": "0.00",
+                "leavesValue": "0",
+                "cumExecQty": "0.00",
+                "cumExecValue": "0",
+                "cumExecFee": "0",
+                "lastPriceOnCreated": "0.00",
+                "rejectReason": "EC_PerCancelRequest",
+                "orderLinkId": "",
+                "createdTime": "1673144925398",
+                "updatedTime": "1673419917797",
+                "orderId": "afe0b943-99f2-4a58-8578-3ec0f29973f1",
+                "stopOrderType": "UNKNOWN",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "tpTriggerBy": "UNKNOWN",
+                "slTriggerBy": "UNKNOWN",
+                "triggerPrice": "0.00",
+                "closeOnTrigger": false,
+                "triggerDirection": 0,
+                "positionIdx": 0,
+                "cancelType": "CancelByUser",
+                "iv": "",
+                "triggerBy": "UNKNOWN",
+                "blockTradeId": ""
             }
-        ]
+        ],
+        "nextPageCursor": "eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiJleUpOSWpwN0luQnJJanA3SWtJaU9pSktSMFp0V2xSQ2FVOVVVWHBNVkdzMVdtcEpkRTVIUlRGUFF6QTBUbFJqTkV4VVRteFpla0p0VFdwck5VNTZUbTFOVVQwOUluMHNJbDkxYjNOZklqcDdJa0lpT2lKQk9EWlVTa0ZGU0NKOUxDSmZjMnRmSWpwN0lrSWlPaUpHZW1jd1kyVm5aa0l2WkdoYWJWVjNXV3ByTUUxNU1EVlBWMWw1VEZSU2FFNVVaM1JQUkZVelQwTXdlbHBYVFhkYWFrazFUMVJqZWxwcVJUMGlmWDE5In0=",
+        "category": ""
     },
-    "retCode": 0,
-    "retMsg": "Success."
+    "retExtInfo": {},
+    "time": 1673420680735
 }
 ```

@@ -8,7 +8,7 @@ slug: /derivatives/contract/cancel-all
 撤銷全部委託單
 
 :::tip
-- 若`category`=_linear_, 則`baseCoin`, `settleCoin`, `symbol`三個參數必傳其中一個
+- `settleCoin`, `symbol`兩個參數必傳其中一個
 :::
 
 ### HTTP 請求
@@ -17,10 +17,8 @@ POST `/contract/v3/private/order/cancel-all`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |false |string |產品類型. `linear`,`inverse`. 默認: `linear`. _暫不支持期權的全部撤單_ |
 |symbol |false|string |合約名稱 |
-|baseCoin |false|string |交易幣種. 僅期權使用. |
-|settleCoin |false|string |結算幣種|
+|settleCoin |false|string |結算幣種 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -41,7 +39,6 @@ X-BAPI-TIMESTAMP: 1670571959925
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 {
-    "category": "linear",
     "settleCoin": "USDT",
     "symbol": null
 }

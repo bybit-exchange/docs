@@ -29,10 +29,6 @@ ID to cancel active orders. Meanwhile, your customized order ID should be no lon
 - Each account can hold a maximum of _500_ active orders simultaneously. This is contract-specific, so the following
 situation is allowed: _The same account can hold 300 BTCUSD active orders and 280 ETHUSD active orders at the same time._
 When the upper limit of orders is reached, you can still place orders with parameters of **reduceOnly** or **closeOnTrigger**.
-
-- `option` **cannot** place conditional order
-
-- `option` is not supported for now, it will be available soon.
 :::
 
 ### HTTP Request
@@ -41,15 +37,12 @@ POST `/contract/v3/private/order/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`. Default: `linear`. Cannot place `option` order for now |
 |symbol |**true** |string |Symbol name|
 |side |**true** |string |`Buy`,`Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
 |[timeInForce](../enum#timeinforce) |**true** |string |Read more about <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a>. |
 |price |false |string |Order price. Invalid if `orderType`=_Market_|
-|iv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g., for 10%, 0.1 should be passed. It has a higher priority than `price` |
-|mmp |false |boolean |Market maker protection. `option` ONLY. `true` means this order is a market maker protection order |
 |triggerDirection |false |integer |_Conditional order param_. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li></ul>|
 |triggerPrice |false |string |_Conditional order param_. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type. default:`LastPrice`.|
@@ -70,9 +63,6 @@ POST `/contract/v3/private/order/create`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console-linear" label="linear">
-
 ```http
 POST /contract/v3/private/order/create HTTP/1.1
 Host: api-testnet.bybit.com
@@ -82,8 +72,7 @@ X-BAPI-TIMESTAMP: 1670487164902
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json; charset=utf-8
 {
-    "category": "linear",
-    "symbol": "BTCPERP",
+    "symbol": "BTCUSDT",
     "side": "Buy",
     "orderType": "Limit",
     "qty": "0.05",
@@ -95,38 +84,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-</TabItem>
-
-<TabItem value="console-option" label="option">
-
-```http
-POST /contract/v3/private/order/create HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: XXXXX
-X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1670487164902
-X-BAPI-RECV-WINDOW: 5000
-Content-Type: application/json; charset=utf-8
-{
-    "category": "option",
-    "symbol": "BTC-9DEC22-15500-C",
-    "side": "Buy",
-    "orderType": "Limit",
-    "qty": "0.01",
-    "price": "2800",
-    "iv": "700", //higher priority
-    "timeInForce": "FillOrKill",
-    "orderLinkId": "test-option-001"
-}
-```
-
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="linear">
 
 ```json
 {
@@ -140,5 +98,3 @@ Content-Type: application/json; charset=utf-8
     "time": 1670486764551
 }
 ```
-</TabItem>
-</Tabs>
