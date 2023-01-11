@@ -5,49 +5,52 @@ sidebar_position: 2
 slug: /spot/ws-public/kline
 ---
 
-<p>The topic name is <code>kline</code>. To subscribe to different intervals, pass your desired interval with the <code>klineType</code> parameter. Available intervals are listed <a href="#kline-interval-interval">here</a>.</p>
-<p><b>Push frequency</b>: real-time</p>
-<p><b>Topic</b>: <code>kline.1m.BTCUSDT</code></p>
+Subscribe the kline stream. Please find desired kline interval [here](../enum#interval).
+
+**Topic:** `kline.{interval}.{symbol}` e.g., kline.30m.BTCUSDT
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|t | long | Start timestamp point for result, in milliseconds |
-|s | string | Trading pair |
-|c | string | Close price |
-|h | string | High price |
-|l | string | Low price |
-|o | string | Open price |
-|v | string | Trading volume |
-| ts | long | The time that message is sent out |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> t | number | The start timestamp (ms) of the bar |
+|> s | string | Trading pair |
+|> c | string | Close price |
+|> h | string | High price |
+|> l | string | Low price |
+|> o | string | Open price |
+|> v | string | Trading volume |
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
     "req_id": "kline00001", //optional
     "op": "subscribe",
     "args": [
-        "kline.1h.BTCUSDT"
+        "kline.30m.BTCUSDT"
     ]
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {
+    "type": "snapshot",
+    "topic": "kline.30m.BTCUSDT",
     "data": {
-        "t": 1661742000000,
         "s": "BTCUSDT",
-        "c": "19685.55",
-        "h": "19756.95",
-        "l": "19674.61",
-        "o": "19705.38",
-        "v": "0.232154"
+        "t": 1673436600000,
+        "o": "17439.16",
+        "c": "17437.82",
+        "h": "17450.45",
+        "l": "17433.5",
+        "v": "34.059614"
     },
-    "type": "delta",
-    "topic": "kline.1h.BTCUSDT",
-    "ts": 1661745259605
+    "ts": 1673438143609
 }
 ```

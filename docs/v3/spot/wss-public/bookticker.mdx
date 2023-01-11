@@ -7,20 +7,24 @@ slug: /spot/ws-public/bookticker
 
 <p>Best bid price and best ask price</p>
 <p><b>Push frequency</b>: 100ms</p>
-<p><b>Topic</b>: <code>bookticker.BTCUSDT</code></p>
+
+**Topic:** `bookticker.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| s | string | Trading pair |
-| bp | string | Best bid price |
-| bq | string | Bid quantity |
-| ap | string | Best ask price|
-| aq | boolean | Ask quantity |
-| t | long | timestamp(ms). The time that system generates the data. |
-| ts | long | The time that message is sent out |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> s | string | Trading pair |
+|> bp | string | Best bid price |
+|> bq | string | Bid quantity |
+|> ap | string | Best ask price|
+|> aq | string | Ask quantity |
+|> t | number | The timestamp (ms) that system generates the data|
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -32,20 +36,20 @@ slug: /spot/ws-public/bookticker
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {
+    "topic": "bookticker.BTCUSDT",
+    "ts": 1673437259336,
+    "type": "snapshot",
     "data": {
         "s": "BTCUSDT",
-        "bp": "19693.04",
-        "bq": "0.913957",
-        "ap": "19694.27",
-        "aq": "0.705447",
-        "t": 1661742216108
-    },
-    "type": "delta",
-    "topic": "bookticker.BTCUSDT",
-    "ts": 1661742216109
+        "bp": "17440",
+        "bq": "0.0002",
+        "ap": "17440.01",
+        "aq": "0.21302",
+        "t": 1673437259336
+    }
 }
 ```

@@ -5,27 +5,28 @@ sidebar_position: 5
 slug: /spot/ws-public/bookticker
 ---
 
-<p>Best bid price and best ask price</p>
-<p><b>Push frequency</b>: 100ms</p>
-<p><b>Topic</b>: <code>bookticker.BTCUSDT</code></p>
+<p>最優買一賣一價</p>
+<p><b>推送频率</b>: 100ms</p>
 
-### Response Parameters
-| Parameter | Type | Comments|
+**Topic:** `bookticker.{symbol}`
+
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| s | string | Trading pair |
-| bp | string | Best bid price |
-| bq | string | Bid quantity |
-| ap | string | Best ask price|
-| aq | boolean | Ask quantity |
-| t | long | timestamp(ms). The time that system generates the data. |
-| ts | long | The time that message is sent out |
+|topic |string |Topic名 |
+|ts |number |消息被推送出來的時間戳 (毫秒) |
+|type |string |數據類型. `snapshot`|
+|data |array |Object |
+| s | string | 交易對 |
+| bp | string | 買一價 |
+| bq | string | 買一價數量 |
+| ap | string | 賣一價|
+| aq | string | 賣一價數量 |
+| t | number |系統生成該數據的時間戳 (毫秒) |
 
-### Request Example
+### 訂閱示例
 
-<Tabs>
-<TabItem value="console" label="JSON subscription message">
-
-```javascript
+```json
 {
     "req_id": "bookticker00001", //optional
     "op": "subscribe",
@@ -35,23 +36,20 @@ slug: /spot/ws-public/bookticker
 }
 ```
 
-</TabItem>
-</Tabs>
+### 推送示例
 
-### Response Example
-
-```javascript
+```json
 {
+    "topic": "bookticker.BTCUSDT",
+    "ts": 1673437259336,
+    "type": "snapshot",
     "data": {
         "s": "BTCUSDT",
-        "bp": "19693.04",
-        "bq": "0.913957",
-        "ap": "19694.27",
-        "aq": "0.705447",
-        "t": 1661742216108
-    },
-    "type": "delta",
-    "topic": "bookticker.BTCUSDT",
-    "ts": 1661742216109
+        "bp": "17440",
+        "bq": "0.0002",
+        "ap": "17440.01",
+        "aq": "0.21302",
+        "t": 1673437259336
+    }
 }
 ```

@@ -5,32 +5,37 @@ sidebar_position: 1
 slug: /spot/ws-public/orderbook
 ---
 
-<p>Market depth data for a trading pair: </p>
-<ul>
-  <li>Snapshot depth: <b>40</b> each for asks and bids.</li>
-  <li>Events trigger order book version change:
-    <ul>
-      <li>order enters order book</li>
-      <li>order leaves order book</li>
-      <li>order quantity changes</li>
-      <li>order filled</li>
-    </ul>
-  </li>
-</ul>
-<p>Pushes snapshot data only, please ignore type=<code>delta</code> in the message</p>
-<p><b>Push frequency</b>: 100ms</p>
-<p><b>Topic</b>: <code>orderbook.40.BTCUSDT</code></p>
+Market depth data for a trading pair:
+* Snapshot depth: **40** each for asks and bids.
+* Events trigger order book version change:
+  * order enters order book
+  * order leaves order book
+  * order quantity changes
+  * order filled
+
+Pushes **snapshot** data only
+
+**Push frequency**: 100ms
+
+**Topic:** `orderbook.40.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| t | long | timestamp(ms). The time that system generates the data. |
-| s | string | Trading pair |
-| b | list | Bid price, quantity |
-| a | list | Ask price, quantity |
-| ts | long | The time that message is sent out |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> s | string | Trading pair |
+|> t | number | The timestamp (ms) that system generates the data. |
+|> b | array | Bids. The element is sorted by price in descending order|
+|>> b[0] | string | Bid price|
+|>> b[1] | string | Bid size|
+|> a | array | Asks. The element is sorted by price in ascending order |
+|>> a[0] | string | Ask price|
+|>> a[1] | string | Ask size|
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -42,46 +47,38 @@ slug: /spot/ws-public/orderbook
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {
+    "topic": "orderbook.40.BTCUSDT",
+    "ts": 1673439424737,
+    "type": "snapshot",
     "data": {
         "s": "BTCUSDT",
-        "t": 1661743689733,
+        "t": 1673439424737,
         "b": [
             [
-                "19721.9",
-                "0.784806"
+                "17423",
+                "0.809534"
             ],
             [
-                "19719.37",
-                "1.215194"
+                "17422.86",
+                "0.043596"
             ],
-            [
-                "19713.18",
-                "0.001"
-            ]
             ...
         ],
         "a": [
-            [
-                "19721.91",
-                "0.192687"
-            ],
-            [
-                "19727.85",
-                "0.914128"
-            ],
-            [
-                "19731.24",
-                "1.008273"
-            ]
             ...
+            [
+                "17428.28",
+                "0.004811"
+            ],
+            [
+                "17428.62",
+                "0.23"
+            ]
         ]
-    },
-    "type": "delta",
-    "topic": "orderbook.40.BTCUSDT",
-    "ts": 1661743689735
+    }
 }
 ```
