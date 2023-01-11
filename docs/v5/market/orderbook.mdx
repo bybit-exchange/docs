@@ -7,9 +7,9 @@ sidebar_position: 5
 Query orderbook data
 > **Covers: Spot / Linear contract / Inverse contract / Option**
 
-* future: A maximum of 200-level of orderbook data can be returned.
-* spot: A maximum of 50-level of orderbook data can be returned.
-* option: 25-level of orderbook data can be returned ONLY.
+* future: 200-level of orderbook data
+* spot: 50-level of orderbook data
+* option: 25-level of orderbook data
 
 :::tip
 The response is in the snapshot format.
@@ -21,9 +21,9 @@ GET `/v5/market/orderbook`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
+|[category](../enum#category) |**true** |string |Product type. `spot`, `linear`, `inverse`, `option` |
 |symbol |**true** |string |Symbol name|
-|limit |false |integer |Limit for data size per page.<ul><li>`spot`: [1,50], default: `1`.</li><li>`linear`&`inverse`: [1,200],default: `1`.</li><li>`option`: [1,25],default: `1`.</li></ul>|
+|limit |false |integer |Limit size for each bid and ask<ul><li>`spot`: [`1`, `50`]. Default: `1`.</li><li>`linear`&`inverse`: [`1`, `200`]. Default: `25`.</li><li>`option`: [`1`, `25`]. Default: `1`.</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -36,7 +36,7 @@ GET `/v5/market/orderbook`
 |> a[0] |string |Ask price |
 |> a[1] |string |Ask size |
 |ts |integer |The timestamp (ms) that the system generates the data |
-|u |integer |Update ID, is always in sequence |
+|u |integer |Update ID, is always in sequence<ul><li>For future, it is corresponding to `u` in the wss 200-level orderbook</li><li>For spot, it is corresponding to `u` in the wss 50-level orderbook</li></ul> |
 
 ### Request Example
 
