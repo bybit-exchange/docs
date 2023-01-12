@@ -5,24 +5,28 @@ sidebar_position: 4
 slug: /spot/ws-private/wallet
 ---
 
-<p>This topic pushes account information</p>
+<p>This topic pushes spot wallet information</p>
 <p><b>Push frequency</b>: real-time</p>
 <p><b>Topic</b>: <code>outboundAccountInfo</code></p>
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| e | string | Event type |
-| E | string | Timestamp |
-| T | boolean | Allow trade |
-| W | boolean | Allow withdraw |
-| D | boolean | Allow deposit|
-| B | list | Wallet balance change |
-| a | string | coin name |
-| f | string | Available balance |
-| l | string | Reserved for orders |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> e | string | Event type |
+|> E | string | Timestamp |
+|> T | boolean | Allow trade |
+|> W | boolean | Allow withdraw |
+|> D | boolean | Allow deposit|
+|> B | array | Wallet balance change |
+|>> a | string | coin name |
+|>> f | string | Available balance |
+|>> l | string | Reserved for orders |
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -34,7 +38,7 @@ slug: /spot/ws-private/wallet
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {

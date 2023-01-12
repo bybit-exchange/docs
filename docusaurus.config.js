@@ -222,6 +222,12 @@ const config = {
           },
           {
             type: 'doc',
+            docId: 'pilot-feature/pilot',
+            position: 'left',
+            label: 'Pilot Feature',
+          },
+          {
+            type: 'doc',
             docId: 'changelog/v5',
             position: 'left',
             label: 'Changelog',
@@ -229,7 +235,7 @@ const config = {
           // {
           //   to: '/api-explorer/v5/category',
           //   position: 'left',
-          //   label: 'API explorer',
+          //   label: 'API Explorer',
           // },
           {
             label: 'Previous Version',

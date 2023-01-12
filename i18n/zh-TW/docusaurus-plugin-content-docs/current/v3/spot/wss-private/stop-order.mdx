@@ -5,38 +5,39 @@ sidebar_position: 2
 slug: /spot/ws-private/stop-order
 ---
 
-<p>This topic pushes conditional order, TP/SL order information placed by <b>web/app</b> channel, and TP/SL order information placed by <b>open api</b> channel. It'll be triggered as long as order status is changed</p>
-<p><b>Push frequency</b>: real-time</p>
+<p>該訂閱推送web/app下的條件和止盈止損訂單信息, 或者是openAPI下的止盈止損訂單信息推送。只要訂單狀態發生改變，就會推送消息。</p>
+<p><b>推送頻率</b>: 實時</p>
 <p><b>Topic</b>: <code>stopOrder</code></p>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-| e | string | Event type |
-| E | string | Event time |
-| s | string | Trading pair |
-| c | string | User-generated order ID |
-| S | string | BUY indicates buy order, SELL indicates sell order |
-| <a href="#order-type-type-ordertypes">o</a> | string | Order type, LIMIT/MARKET_OF_QUOTE/MARKET_OF_BASE |
-| <a href="#timeinforce-timeinforce">f</a> | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| q | string | Quantity |
-| p | string | Price |
-| <a href="#order-status-status">X</a> | string | TP/SL order status |
-| i | string | Order ID |
-| T | string | Order created time |
-| t | string | Order triggered time. The field is filled only when order status is <code>ORDER_FILLED</code> and <code>ORDER_FAILED</code> |
-| C | string | Order updated time. It is updated when order status is changed. |
-| qp | string | The market price when place the order |
-| eo | string | The new order id after the TP/SL order is triggered. |
-| ti | string | Please ignore |
-| si | string | Please ignore |
+|topic |string |Topic名 |
+|ts |string |消息被推送出來的時間戳 (毫秒) |
+|type |string |數據類型. `snapshot`|
+|data |array |Object |
+|> e | string | 事件類型 |
+|> E | string | 事件時間戳 |
+|> s | string | 交易對 |
+|> c | string | U用戶自定義訂單ID |
+|> S | string | 訂單方向. `BUY`, `SELL`|
+|> [o](../enum#ordertype) | string |訂單類型. `LIMIT`, `MARKET_OF_QUOTE`(市價買), `MARKET_OF_BASE`(市價賣) |
+|> [f](../enum#timeinforce) | string | <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">執行策略</a> |
+|> q | string | 訂單數量 |
+|> p | string | 訂單價格 |
+|> [X](../enum#orderstatus) | string |止盈止損單訂單狀態 |
+|> i | string | 訂單ID |
+|> T | string | 訂單創建時間戳 (毫秒) |
+|> t | string | 訂單觸發時間戳 (毫秒). 僅訂單狀態是`ORDER_FILLED`或者`ORDER_FAILED`才有值 |
+|> C | string | 訂單更新時間戳 (毫秒). 每當訂單狀態發生變更時，會更新該時間 |
+|> qp | string | 下單時的行情價格 |
+|> eo | string | 止盈止損訂單被觸發後轉化為普通訂單後的訂單ID |
+|> ti | string | 與業務無關，請忽略 |
+|> si | string | 與業務無關，請忽略 |
 
-### Request Example
+### 訂閱示例
 
-<Tabs>
-<TabItem value="console" label="JSON subscription message">
-
-```javascript
+```json
 {
     "req_id": "stopOrder_1", //optional
     "op": "subscribe",
@@ -46,12 +47,9 @@ slug: /spot/ws-private/stop-order
 }
 ```
 
-</TabItem>
-</Tabs>
+### 推送示例
 
-### Response Example
-
-```javascript
+```json
 {
     "type": "snapshot",
     "topic": "stopOrder",

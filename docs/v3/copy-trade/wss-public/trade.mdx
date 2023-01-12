@@ -1,49 +1,66 @@
 ---
 title: Public Trade
 sidebar_label: Public Trade
-sidebar_position: 3
+sidebar_position: 2
 slug: /copy-trade/ws-public/trade
 ---
 
-Push frequency: **100ms**<br/>
-**Topic:**<br/>
-`trade.{symbol}`
+Get recent public trades data in Bybit.
+
+:::info
+After subscription, you will be pushed delta trade message in real-time once there is an order filled.
+:::
+
+Push frequency: **real-time**
+
+**Topic:**
+`publicTrade.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|timestamp |string |UTC time  |
-|trade_time_ms |number |Millisecond timestamp |
-|symbol|string |Symbol    |
-|side |string |Side |
-|size |number |Position qty |
-|price |number |Order price |
-|tick_direction |string |Direction of price change |
-|trade_id |string |Trade ID  |
-|cross_seq |number |Cross sequence (internal value) |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot` |
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |array |Object |
+|> T |number | The timestamp (ms) that the order is filled |
+|> s |string |Symbol name |
+|> S |string |Direction of taker. `Buy`,`Sell` |
+|> v |string |qty |
+|> p |string |Executed price |
+|> [L](../enum#tickdirection) |string |Direction of price change |
+|> i |string |Trade id |
+|> BT |boolean |Block trade or not |
 
 ### Request Example
 
-```http
-ws.send('{"op": "subscribe", "args": ["trade.BTCUSDT"]}')
+```json
+{
+    "op": "subscribe",
+    "args": [
+    "publicTrade.BTCUSDT"
+    ],
+    "req_id": "test" // optional
+}
 ```
 
 ### Response Example
 
 ```json
 {
-    "topic": "trade.BTCUSDT",
+    "topic": "publicTrade.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1671181689023,
     "data": [
         {
-            "timestamp": "2020-01-12T16:59:59.000Z",
-            "trade_time_ms": 1582793344685, // trade time in millisecond
-            "symbol": "BTCUSDT",
-            "side": "Sell",
-            "size": 328,
-            "price": 8098,
-            "tick_direction": "MinusTick",
-            "trade_id": "00c706e1-ba52-5bb0-98d0-bf694bdc69f7",
-            "cross_seq": 1052816407
+            "T": 1671181689021,
+            "s": "BTCUSDT",
+            "S": "Buy",
+            "v": "0.002",
+            "p": "17032.50",
+            "L": "MinusTick",
+            "i": "d9cd8295-40dc-5dce-8deb-42882580a7ab",
+            "BT": false
         }
     ]
 }
