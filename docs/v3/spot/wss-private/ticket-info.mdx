@@ -12,22 +12,26 @@ slug: /spot/ws-private/execution
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| e | string | Event type |
-| E | string | Event time |
-| s | string | Trading pair |
-| q | string | Quantity |
-| t | string | Timestamp |
-| p | string | Price |
-| T | string | Trade ID |
-| o | string | Order ID |
-| c | string | User-generated order ID |
-| O | string | Order ID of the opponent trader |
-| a | string | Account ID |
-| A | string | Account ID of the opponent trader |
-| m | boolean | Is MAKER. true=maker, false=taker |
-| S | string | BUY or SELL |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> e | string | Event type |
+|> E | string | Event time |
+|> s | string | Trading pair |
+|> q | string | Filled quantity |
+|> t | string | Filled timestamp (ms) |
+|> p | string | Filled price |
+|> T | string | Trade ID |
+|> o | string | Order ID |
+|> c | string | User-generated order ID |
+|> O | string | Order ID of the opponent trader |
+|> a | string | Account ID |
+|> A | string | Account ID of the opponent trader |
+|> m | boolean | Is MAKER. `true`: maker, `false`: taker |
+|> S | string | Side. `BUY`, `SELL` |
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -39,7 +43,7 @@ slug: /spot/ws-private/execution
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {

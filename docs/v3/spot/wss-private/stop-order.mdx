@@ -12,26 +12,30 @@ slug: /spot/ws-private/stop-order
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| e | string | Event type |
-| E | string | Event time |
-| s | string | Trading pair |
-| c | string | User-generated order ID |
-| S | string | BUY indicates buy order, SELL indicates sell order |
-| <a href="#order-type-type-ordertypes">o</a> | string | Order type, LIMIT/MARKET_OF_QUOTE/MARKET_OF_BASE |
-| <a href="#timeinforce-timeinforce">f</a> | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
-| q | string | Quantity |
-| p | string | Price |
-| <a href="#order-status-status">X</a> | string | TP/SL order status |
-| i | string | Order ID |
-| T | string | Order created time |
-| t | string | Order triggered time. The field is filled only when order status is <code>ORDER_FILLED</code> and <code>ORDER_FAILED</code> |
-| C | string | Order updated time. It is updated when order status is changed. |
-| qp | string | The market price when place the order |
-| eo | string | The new order id after the TP/SL order is triggered. |
-| ti | string | Please ignore |
-| si | string | Please ignore |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that message is sent out |
+|type |string |Data type. `snapshot`|
+|data |array |Object |
+|> e | string | Event type |
+|> E | string | Event time |
+|> s | string | Trading pair |
+|> c | string | User-generated order ID |
+|> S | string | `BUY`: buy order, `SELL`: sell order |
+|> [o](../enum#ordertype) | string | Order type. `LIMIT`, `MARKET_OF_QUOTE`(Market Buy), `MARKET_OF_BASE`(Market Sell) |
+|> [f](../enum#timeinforce) | string | <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> |
+|> q | string | Order quantity |
+|> p | string | Order price |
+|> [X](../enum#orderstatus) | string | Order status |
+|> i | string | Order ID |
+|> T | string | Order created timestamp (ms) |
+|> t | string | TP/SL order triggered timestamp (ms). The field has value only when order status is `ORDER_FILLED` and `ORDER_FAILED` |
+|> C | string | Order updated time. It is updated when order status is changed |
+|> qp | string | The market price when place the order |
+|> eo | string | The new order ID after the TP/SL order is triggered |
+|> ti | string | Please ignore |
+|> si | string | Please ignore |
 
-### Request Example
+### Subscribe Example
 
 ```json
 {
@@ -43,7 +47,7 @@ slug: /spot/ws-private/stop-order
 }
 ```
 
-### Response Example
+### Stream Example
 
 ```json
 {
