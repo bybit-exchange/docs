@@ -1,60 +1,63 @@
 ---
-title: 平臺成交
-sidebar_label: 平臺成交
-sidebar_position: 3
+title: 平台成交
+sidebar_label: 平台成交
+sidebar_position: 2
+slug: /copy-trade/ws-public/trade
 ---
 
-推送頻率：**100ms**<br/>
-**Topic:**<br/>
-`trade.{symbol}`
+訂閱Bybit平台上最近成交的推送. 從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
 
-### 返回參數
+推送頻率: **實時**
+
+**Topic:**
+`publicTrade.{symbol}`
+
+### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|timestamp |string |UTC 時間 |
-|trade_time_ms |number |毫秒時間戳 |
-|symbol|string |合約類型 |
-|side |string |taker的買賣方向 |
-|size |number |倉位數量 |
-|price |number |委托價格 |
-|tick_direction |string |價格變化方向 |
-|trade_id |string |交易ID  |
-|cross_seq |number |撮合版本號 |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`|
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
+|data |array |Object |
+|> T |number |成交時間戳 (毫秒) |
+|> s |array |合約名稱  |
+|> S |string |方向. `Buy`,`Sell` |
+|> v |string |成交數量 |
+|> p |string |成交價格 |
+|> [L](../enum#tickdirection) |string |價格變化的方向 |
+|> i |string |成交Id |
+|> BT |boolean |成交類型是否為大宗交易|
 
-### 請求訂閱
+### 訂閱示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
-```http
-ws.send('{"op": "subscribe", "args": ["trade.BTCUSDT"]}')
+```json
+{
+    "op": "subscribe",
+    "args": [
+    "publicTrade.BTCUSDT"
+    ],
+    "req_id": "test" // optional
+}
 ```
 
-</TabItem>
-</Tabs>
+### 推送示例
 
-### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
+```json
 {
-    "topic": "trade.BTCUSDT",
+    "topic": "publicTrade.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1671181689023,
     "data": [
         {
-            "timestamp": "2020-01-12T16:59:59.000Z",
-            "trade_time_ms": 1582793344685, // trade time in millisecond
-            "symbol": "BTCUSDT",
-            "side": "Sell",
-            "size": 328,
-            "price": 8098,
-            "tick_direction": "MinusTick",
-            "trade_id": "00c706e1-ba52-5bb0-98d0-bf694bdc69f7",
-            "cross_seq": 1052816407
+            "T": 1671181689021,
+            "s": "BTCUSDT",
+            "S": "Buy",
+            "v": "0.002",
+            "p": "17032.50",
+            "L": "MinusTick",
+            "i": "d9cd8295-40dc-5dce-8deb-42882580a7ab",
+            "BT": false
         }
     ]
 }
 ```
-</TabItem>
-</Tabs>

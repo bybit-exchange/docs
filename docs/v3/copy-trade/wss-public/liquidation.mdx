@@ -1,42 +1,54 @@
 ---
 title: Liquidation
 sidebar_label: Liquidation
-sidebar_position: 7
+sidebar_position: 5
 slug: /copy-trade/ws-public/liquidation
 ---
+Get recent liquidation orders in Bybit.
 
-Pushes liquidation orders.
+Push frequency: **real-time**
 
-Push frequency: **real-time**<br/>
-**Topic:**<br/>
+**Topic:**
 `liquidation.{symbol}`
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|symbol|string |Symbol |
-|side|string |Liquidated position's side |
-|price|string |Bankruptcy price |
-|qty|string |Order quantity in USD |
-|time|number |Millisecond timestamp |
+|topic |string |Topic name |
+|type |string |Message type. `snaptshot`|
+|ts |number |The timestamp (ms) that system generates the data. |
+|data |array |Object |
+|> updatedTime |number |Data updated timestamp (ms) |
+|> symbol |string |Symbol name |
+|> size |string |Filled size |
+|> price |string |Filled price |
+|> side |string |Side |
 
-### Request Example
-
-```http
-ws.send('{"op":"subscribe","args":["liquidation.ETHUSD"]}')
-```
-
-### Response Example
+### Subscription Example
 
 ```json
 {
-    "topic":"liquidation.ETHUSD",
+    "op": "subscribe",
+    "args": [
+      "liquidation.GALAUSDT"
+    ],
+    "req_id": "test" // optional
+}
+```
+
+### Stream Example
+
+```json
+{
     "data": {
-        "symbol":"ETHUSD",
-        "side":"Sell",
-        "price":"3384.15",
-        "qty":"3655",
-        "time":1631608881954
-    }
+        "price": "0.03803",
+        "side": "Buy",
+        "size": "1637",
+        "symbol": "GALAUSDT",
+        "updatedTime": 1673251091822
+    },
+    "topic": "liquidation.GALAUSDT",
+    "ts": 1673251091822,
+    "type": "snapshot"
 }
 ```
