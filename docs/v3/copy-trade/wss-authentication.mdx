@@ -12,12 +12,12 @@ Base endpoints:
 <ul>
   <li><b>Testnet</b>:</li>
   <ul>
-    <li>Public Channel: <span id="testnet_address">wss://stream-testnet.bybit.com/realtime_public</span></li>
+    <li>Public Channel: <span id="testnet_address">wss://stream-testnet.bybit.com/contract/usdt/public/v3</span></li>
     <li>Private Channel: <span id="testnet_private_address">wss://stream-testnet.bybit.com/realtime_private</span></li>
   </ul>
   <li><b>Mainnet</b>:</li>
   <ul>
-    <li>Public Channel: <span id="mainnet_address">wss://stream.bybit.com/realtime_public</span></li>
+    <li>Public Channel: <span id="mainnet_address">wss://stream.bybit.com/contract/usdt/public/v3</span></li>
     <li>Private Channel: <span id="mainnet_private_address">wss://stream.bybit.com/realtime_private</span></li>
   </ul>
 </ul>
@@ -102,8 +102,12 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 2. Reconnect as soon as possible if disconnected
 :::
 
+## IP Limits
+* Do not frequently connect and disconnect the connection.
+* Do not build over 500 connections in 5 minutes.
 
 ## How to Send Heartbeat Packet
+
 > How to Send
 
 ```javascript
@@ -113,6 +117,18 @@ ws.send('{"op":"ping"}');
 > Pong response Example
 
 ```json
+// Pong example of public channel
+{
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "13271fcb-53ed-4e80-948e-2bdbe3a6587d",
+    "req_id": "",
+    "op": "ping"
+}
+```
+
+```json
+// Pong example of private channel
 {
     "success": true,
     "ret_msg": "pong",
@@ -134,42 +150,33 @@ To avoid networks or program issues, we recommend that you send the <code>ping</
 > How to subscribe with a filter
 
 ```json
-// Subscribing to the trade data for BTCUSDT
+// Subscribing level 1 orderbook
 {
+    "req_id": "test", // optional
     "op": "subscribe",
     "args": [
-        "trade.BTCUSDT"
+        "orderbook.1.BTCUSDT"
     ]
 }
 ```
-> Subscribe multiple symbols with "|" for the same topic
+> Support subscribe multiple symbols and topics, separate with ','.
 
 ```json
 // Example: Subscribing to the trade data for BTCUSDT and ETHUSDT
 {
+    "req_id": "test", // optional
     "op": "subscribe",
     "args": [
-        "trade.BTCUSDT|XRPUSDT"
-    ]
-}
-```
-
-> Subscribe all symbols of the same topic
-
-```json
-{
-    "op": "subscribe",
-    "args": [
-        "trade.*"
+        "publicTrade.BTCUSDT",
+        "publicTrade.ETHUSDT"
     ]
 }
 ```
 
 <p>After establishing the connection, you can subscribe to a new topic by sending a JSON request. The request formats are as follows:</p>
 
-
 ```json
-ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT", "trade.ETHUSDT|BTCUSDT", "instrument_info.100ms.BTCUSDT", "klineV2.1.BTCUSDT"]}')
+ws.send('{"op": "subscribe", "args": ["orderbook.1.BTCUSDT","publicTrade.BTCUSDT","orderbook.1.ETHUSDT]}')
 ```
 
 ### Understanding Websocket Filters unsubscription
@@ -177,34 +184,35 @@ ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT", "trade.ETHUSDT|B
 <p>After successful subscription, you can unsubscribe by sending a JSON request. The request formats are as follows:</p>
 
 ```json
-ws.send('{"op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
+ws.send('{"op": "unsubscribe", "args": ["publicTrade.BTCUSDT"]}');
 ```
 
 ```json
-// Example: unsubscribing to the trade data for BTCUSDT and ETHUSDT
 {
     "op": "unsubscribe",
     "args": [
-        "trade.BTCUSDT|ETHUSDT"
+        "publicTrade.BTCUSDT"
     ]
 }
 ```
 
-```json
-// unsubscribe response sample
-{
-    "op": "unsubscribe",
-    "success": true,
-    "req_id": "10002",
-    "ret_msg": "unsubscribe",
-    "conn_id": "46f097b7"
-}
-```
-
 ## Understanding Subscription Response
+
 > Subscription Response
 
 ```json
+// Subscription response of public channel
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "322b49ce-d6a5-494a-9019-f1d51cd541ae",
+    "req_id": "",
+    "op": "subscribe"
+}
+```
+
+```json
+// Subscription response of private channel
 {
     "success": true,
     "ret_msg": "",
@@ -212,12 +220,12 @@ ws.send('{"op": "unsubscribe", "args": ["trade.BTCUSDT"]}');
     "request": {
         "op": "subscribe",
         "args": [
-            "position",
-            "order",
-            "execution"
+            "copyTradePosition",
+            "copyTradeOrder",
+            "copyTradeExecution"
         ]
     }
 }
 ```
 
-Once you subscribe successfully, you'd receive result information. You can determine whether the subscription is successful based on the response.
+> Once you subscribe successfully, you'd receive result information. You can determine whether the subscription is successful based on the response.
