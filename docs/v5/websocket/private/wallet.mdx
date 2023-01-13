@@ -16,22 +16,23 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
 |> accountType |string |Account type. For now, `UNIFIED` ONLY |
-|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance Base Coin。In non-uniform margin mode, the field will be returned as an empty string.|
-|> totalMarginBalance |string |Margin Balance of account converted to usd：Account Wallet Balance Base Coin + Account Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|> totalAvailableBalance |string |Available Balance of account converted to usd：RM：Account Margin Balance Base Coin - Account Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Asset Perp UPL Base Coin. In non-uniform margin mode, the field will be returned as an empty string.|
-|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
-|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-uniform margin mode, the field will be returned as an empty string. |
+|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode, the field will be returned as an empty string|
+|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode, the field will be returned as an empty string.|
+|> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-unified mode, the field will be returned as an empty string.|
+|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance By USD value of each asset. In non-unified mode, the field will be returned as an empty string.|
+|> totalMarginBalance |string |Margin Balance of account converted to usd：totalWalletBalance + totalPerpUPL. In non-unified mode, the field will be returned as an empty string. |
+|> totalAvailableBalance |string |Available Balance of account converted to usd：Regular mode：totalMarginBalance - totalInitialMargin. In non-unified mode, the field will be returned as an empty string. |
+|> totalPerpUPL |string |Unrealised P&L of perpetuals of account converted to usd：∑ Each perp upl by base coin. In non-unified mode, the field will be returned as an empty string.|
+|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-unified mode, the field will be returned as an empty string.|
+|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-unified mode, the field will be returned as an empty string.|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity |
-|>> usdValue |string |usd value |
-|>> walletBalance |string |Wallet balance |
-|>> borrowAmount |string |Borrow Amount. Only USDC, USDT has it. BTC and ETH return 0 |
-|>> availableToBorrow |string |Available amount to borrow。Only USDC, USDT has it. BTC and ETH return 0 |
+|>> equity |string |Equity of current coin |
+|>> usdValue |string |USD value of current coin. If this coin cannot be collateral, then it is 0|
+|>> walletBalance |string |Wallet balance of current coin |
+|>> borrowAmount |string |Borrow amount of current coin|
+|>> availableToBorrow |string |Available amount to borrow of current coin|
+|>> availableToWithdraw |string |Available amount to withdraw of current coin |
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order |
 |>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee |
