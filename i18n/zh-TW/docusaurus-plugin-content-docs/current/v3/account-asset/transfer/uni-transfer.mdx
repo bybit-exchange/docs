@@ -4,7 +4,11 @@ sidebar_label: 萬能劃轉
 sidebar_position: 7
 slug: /account-asset/uni-transfer
 ---
-萬能劃轉
+萬能劃轉, 您可以進行子帳戶之間，以及母子之間的劃轉
+
+:::caution
+僅支持**母帳戶**API key請求
+:::
 
 ### HTTP 請求
 POST `/asset/v3/private/transfer/universal-transfer`
@@ -14,9 +18,9 @@ POST `/asset/v3/private/transfer/universal-transfer`
 |:----- |:-------|:-----|------ |
 |transferId |<b>true</b> |string |UUID,全局唯一 |
 |[coin](enum#coin)|<b>true</b> |string |幣種類型 |
-|amount |<b>true</b> |string |兌入數量 |
-|fromMemberId |<b>true</b> |string |劃出的賬號uid |
-|toMemberId |<b>true</b> |string |劃入的賬號uid |
+|amount |<b>true</b> |string |劃轉數量 |
+|fromMemberId |<b>true</b> |string |劃出的賬號uid. `fromMemberId`和`toMemberId`不能一樣 |
+|toMemberId |<b>true</b> |string |劃入的賬號uid. `fromMemberId`和`toMemberId`不能一樣 |
 |[fromAccountType](enum#accounttype)|<b>true</b> |string |劃出賬戶類型 |
 |[toAccountType](enum#accounttype) |<b>true</b> |string |劃入賬戶類型 |
 

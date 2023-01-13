@@ -6,11 +6,8 @@ slug: /account-asset/coin-balance
 ---
 支持查詢母帳戶的幣種餘額，以及母帳戶下各子帳戶的幣種餘額。
 
-注：不支持使用子帳戶apikey查詢母帳戶的幣種餘額
-
-
-:::caution Important
-注意: 不允許通過子賬戶api key獲取主賬戶coin餘額。
+:::caution 重要
+無法通過子賬戶api key獲取主賬戶帳戶餘額
 :::
 
 ### HTTP 請求
@@ -19,19 +16,19 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|memberId|<b>true</b> |string |用戶ID. 當使用母帳號api key查詢子帳戶的幣種餘額時，該字段<b>必傳</b> |
-|[fromAccountType](enum#accounttype)|<b>true</b> |string |賬戶類型 |
+|memberId|false|string |用戶ID. 當使用母帳號api key查詢子帳戶的幣種餘額時，該字段<b>必傳</b> |
+|[accountType](enum#accounttype)|<b>true</b> |string |賬戶類型 |
 |[coin](enum#coin) |<b>true</b> |string |幣種類型 |
-|withBonus|<b>true</b> |string |是否查詢體驗金. `0`：不查詢; `1`：查詢. 默認不查詢 |
+|withBonus|false |string |是否查詢體驗金. `0`(默認)：不查詢; `1`：查詢|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |[accountType](enum#accounttype) |string |賬戶類型|
-|bizType |int |帳戶業務子類型|
+|bizType |integer |帳戶業務子類型|
 |accountId |string |賬戶ID|
 |memberId |string |用戶ID|
-|balance |Array |Object|
+|balance |Object ||
 |> coin |string |幣種類型|
 |> walletBalance |string |錢包余額|
 |> transferBalance |string |可划余額|
@@ -65,7 +62,7 @@ curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/t
             "bonus": "0"
         }
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1661139455294
 }
 ```

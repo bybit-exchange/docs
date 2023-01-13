@@ -6,10 +6,10 @@ slug: /account-asset/coin-balance
 ---
 Coin balance in account
 
-You could get coin balance under the master account, and those sub account coin balance of master account.
+You could get coin balance under the master account, and sub account coin balance.
 
 :::caution Important
-Notice: It's not allowed to get master account coin balance via sub account api key.
+It's not allowed to get master account coin balance via sub account api key.
 :::
 
 ### HTTP Request
@@ -18,19 +18,19 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|memberId|<b>true</b> |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
-|[fromAccountType](enum#accounttype)|<b>true</b> |string |Account type |
+|memberId|false |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
+|[accountType](enum#accounttype)|<b>true</b> |string |Account type |
 |[coin](enum#coin) |<b>true</b> |string |Currency type |
-|withBonus|<b>true</b> |string |Account type | Whether query bonus or not. `0`：false; `1`：true; Not query is in default |
+|withBonus|false |string |Whether query bonus or not. `0`(default)：false; `1`：true |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |[accountType](enum#accounttype) |string |Account type|
-|bizType |int |Account business subtype|
+|bizType |integer |Account business subtype|
 |accountId |string |AccountID|
 |memberId |string |UserID|
-|balance |Array |Object|
+|balance |Object ||
 |> coin |string |Currency type|
 |> walletBalance |string |Wallet balance|
 |> transferBalance |string |Transferable balance = available balance - bonus|
@@ -64,7 +64,7 @@ curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/t
             "bonus": "0"
         }
     },
-    "retExtInfo": null,
+    "retExtInfo": {},
     "time": 1661139455294
 }
 ```

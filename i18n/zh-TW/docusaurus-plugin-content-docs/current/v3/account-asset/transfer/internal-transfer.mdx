@@ -1,6 +1,6 @@
 ---
-title: 劃轉
-sidebar_label: 劃轉
+title: 劃轉(單帳號內)
+sidebar_label: 劃轉(單帳號內)
 sidebar_position: 1
 slug: /account-asset/internal-transfer
 ---
@@ -9,10 +9,9 @@ slug: /account-asset/internal-transfer
 要發送[賬戶類型](enum#accounttype)和父子不可知的轉賬，請使用[創建萬能轉賬](uni-transfer#)接口。
 
 :::tip
-請註意該接口入參請求數據中的transferId字段為UUID全局唯一。
-請註意該接口支持期貨賬戶、現貨賬戶、理財賬戶。
-轉入和轉出賬戶類型不能相同。
-升級到統一保證金帳戶後，僅支持從現貨帳戶轉帳USDT到統保帳戶。
+* 請註意該接口入參請求數據中的transferId字段為UUID全局唯一。
+* 轉入和轉出賬戶類型不能相同。
+* 升級到統一帳戶後，僅支持從現貨帳戶轉帳USDT到統保帳戶。
 :::
 
 ### HTTP 請求
@@ -34,9 +33,6 @@ POST `/asset/v3/private/transfer/inter-transfer`
 
 ### 請求示例
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
 POST /asset/v3/private/transfer/inter-transfer HTTP/1.1
 Host: api-testnet.bybit.com
@@ -56,13 +52,7 @@ Content-Length: 164
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -75,5 +65,3 @@ Content-Length: 164
     "time": 1670925349100
 }
 ```
-</TabItem>
-</Tabs>

@@ -1,7 +1,7 @@
 ---
 title: Get Internal Transfer List
 sidebar_label: Get Internal Transfer List
-sidebar_position: 3
+sidebar_position: 1.5
 slug: /account-asset/internal-transfer-list
 ---
 
@@ -14,24 +14,25 @@ GET `/asset/v3/private/transfer/inter-transfer/list/query`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |transferId |<b>true</b> |string |UUID, which is unique across the platform |
-|[coin](enum#coin)|<b>true</b>|string |Currency type |
-|status |false |string |Transfer status<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
-|startTime |false |integer |Start timestamp point for result, in `milliseconds` |
-|endTime |false |integer |End timestamp point for result, in `milliseconds` |
-|limit |false |integer |Number of records|
-|cursor |false |string |cursor information: used for pagination. Default value: ""|
+|[coin](enum#coin)|<b>true</b>|string |Currency |
+|[status](enum#transferstatus) |false |string |Transfer status|
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end timestamp (ms)  |
+|limit |false |integer |Limit of data size |
+|cursor |false |string |Cursor, used for pagination|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|transferId |string |UUID, which is unique across the platform |
-|[coin](enum#coin)|string |Currency type |
-|amount |string |Exchange to amount |
-|[fromAccountType](enum#accounttype)|string |Account type |
-|[toAccountType](enum#accounttype) |string |Account type |
-|timestamp |integer |timestamp|
-|status|string |status<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
-|nextPageCursor |string |cursor information: used for pagination. Default value: ""|
+|list |array |Object |
+|> transferId |string |UUID, which is unique across the platform |
+|> [coin](enum#coin)|string |Currency |
+|> amount |string |Transfer amount |
+|> [fromAccountType](enum#accounttype)|string |From account type |
+|> [toAccountType](enum#accounttype) |string |To account type |
+|> timestamp |string |Created timestamp (ms)|
+|> [status](enum#transferstatus)|string |Transfer status|
+|nextPageCursor |string |Cursor, used for pagination|
 
 ### Request Example
 

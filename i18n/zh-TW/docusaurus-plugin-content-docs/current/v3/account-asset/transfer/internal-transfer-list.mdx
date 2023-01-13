@@ -1,7 +1,7 @@
 ---
-title: 查詢劃轉記錄列表
-sidebar_label: 查詢劃轉記錄列表
-sidebar_position: 3
+title: 查詢劃轉記錄(單帳號內)
+sidebar_label: 查詢劃轉記錄(單帳號內)
+sidebar_position: 1.5
 slug: /account-asset/internal-transfer-list
 ---
 
@@ -15,28 +15,25 @@ GET `/asset/v3/private/transfer/inter-transfer/list/query`
 |:----- |:-------|:-----|------ |
 |transferId |<b>true</b> |string |UUID,全局唯一 |
 |[coin](enum#coin)|<b>true</b>|string |幣種類型 |
-|status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
+|[status](enum#transferstatus) |false |string |劃轉狀態|
 |startTime |false |integer |開始時間戳（毫秒) |
 |endTime |false |integer |結束時間戳（毫秒) |
-|limit |false |integer |記錄條數|
-|cursor |false |string |游標信息：用來分頁|
+|limit |false |integer |每頁數量限制|
+|cursor |false |string |游標, 用來分頁|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |transferId |string |UUID,全局唯一 |
 |[coin](enum#coin)|string |幣種類型 |
-|amount |string |兌入數量 |
-|[fromAccountType](enum#accounttype)|string |賬戶類型 |
-|[toAccountType](enum#accounttype) |string |賬戶類型 |
-|timestamp |integer |時間戳|
-|status|string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
+|amount |string |劃轉數量 |
+|[fromAccountType](enum#accounttype)|string |轉出賬戶類型 |
+|[toAccountType](enum#accounttype) |string |轉入賬戶類型 |
+|timestamp |string |創建時間戳 (毫秒)|
+|[status](enum#transferstatus)|string |劃轉狀態|
 |nextPageCursor |string |游標信息：用來分頁|
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 GET /asset/v3/private/transfer/inter-transfer/list/query?coin=USDT HTTP/1.1
@@ -46,13 +43,8 @@ X-BAPI-TIMESTAMP: 1670926842754
 X-BAPI-RECV-WINDOW: 50000
 X-BAPI-SIGN: xxxxxxxxxxxxxxx
 ```
-</TabItem>
-</Tabs>
 
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -85,5 +77,3 @@ X-BAPI-SIGN: xxxxxxxxxxxxxxx
     "time": 1670926842908
 }
 ```
-</TabItem>
-</Tabs>

@@ -1,16 +1,16 @@
 ---
-title: 配置可互相劃轉的子賬號列表
-sidebar_label: 配置可互相劃轉的子賬號列表
+title: 配置可互相劃轉的子賬號
+sidebar_label: 配置可互相劃轉的子賬號
 sidebar_position: 6
 slug: /account-asset/enable-unitransfer
 ---
 配置可互相劃轉的子賬號列表
 
 :::tip
-萬能轉賬使您可以在兩個子賬戶（而不是子 -> 主 -> 子）和任何[賬戶類型](enum#accounttype) （CONTRACT、SPOT等）之間劃轉。
+萬能轉賬使您可以在兩個子賬戶或者母子帳戶在各種[賬戶類型](enum#accounttype)(CONTRACT、SPOT等)之間劃轉。
 :::
 
-你需要通過這個接口來設置可互相劃轉的子賬號。如果不設置，這些賬戶之間不能互相劃轉
+你需要通過這個接口來設置可互相劃轉的子賬號。如果不設置，這些子賬戶之間不能互相劃轉
 
 ### HTTP 請求
 POST `/asset/v3/private/transfer/transfer-sub-member-save`
@@ -18,16 +18,12 @@ POST `/asset/v3/private/transfer/transfer-sub-member-save`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|subMemberIds |false|string |逗號隔開的id列表，例："123,45,14,26,46" |
+|subMemberIds |false|array&lt;string&gt; |逗號隔開的id列表，例：`"123,45,14,26,46"`<ul><li>若不傳，則表示移除子帳戶萬能劃轉的能力</li></ul> |
 
 ### 返回參數
-| 參數 | 類型 | 說明|
-|:----- |:-----|----- |
+無
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /asset/v3/private/transfer/transfer-sub-member-save HTTP/1.1
@@ -44,13 +40,7 @@ Content-Length: 43
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -61,5 +51,3 @@ Content-Length: 43
     "time": 1670928736727
 }
 ```
-</TabItem>
-</Tabs>

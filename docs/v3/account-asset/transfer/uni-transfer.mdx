@@ -6,6 +6,12 @@ slug: /account-asset/uni-transfer
 ---
 Create Universal Transfer
 
+It allows to transfer funds between sub accounts, or master-sub account.
+
+:::caution
+Can use **master** api key to request only
+:::
+
 ### HTTP Request
 POST `/asset/v3/private/transfer/universal-transfer`
 
@@ -15,8 +21,8 @@ POST `/asset/v3/private/transfer/universal-transfer`
 |transferId |<b>true</b> |string |UUID, which is unique across the platform |
 |[coin](enum#coin)|<b>true</b> |string |Currency type |
 |amount |<b>true</b> |string |Exchange to amount |
-|fromMemberId |<b>true</b> |string |From UserID |
-|toMemberId |<b>true</b> |string |To UserID |
+|fromMemberId |<b>true</b> |string |From UserID. `fromMemberId` cannot be the same as `toMemberId` |
+|toMemberId |<b>true</b> |string |To UserID. `fromMemberId` cannot be the same as `toMemberId` |
 |[fromAccountType](enum#accounttype)|<b>true</b> |string |Account type |
 |[toAccountType](enum#accounttype) |<b>true</b> |string |Account type |
 
