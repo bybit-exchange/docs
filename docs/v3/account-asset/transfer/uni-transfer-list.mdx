@@ -7,7 +7,7 @@ slug: /account-asset/uni-transfer-list
 
 Query Universal Transfer List
 
-Only transfers made with the universal transfer API will be returned by this endpoint. Transfers made by other endpoints will not be returned.
+Only transfers made with the universal transfer API or web transfer will be returned by this endpoint. Transfers made by other endpoints will not be returned.
 
 ### HTTP Request
 GET `/asset/v3/private/transfer/universal-transfer/list/query`
@@ -17,25 +17,26 @@ GET `/asset/v3/private/transfer/universal-transfer/list/query`
 |:----- |:-------|:-----|------ |
 |transferId |<b>true</b> |string |UUID, which is unique across the platform |
 |[coin](enum#coin)|<b>true</b> |string |Currency type |
-|status |false |string |Transfer status<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
-|startTime |false |integer |Start timestamp point for result, in `milliseconds` |
-|endTime |false |integer |End timestamp point for result, in `milliseconds` |
-|limit |false |integer |Limit for data size per page, max size is 50. Default as showing 20 pieces of data per page|
-|cursor |false |string |cursor information: used for pagination. Default value: ""|
+|[status](enum#transferstatus) |false |string |Transfer status|
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end timestamp (ms)  |
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
+|cursor |false |string |Cursor, used for pagination|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|transferId |string |UUID, which is unique across the platform |
-|[coin](enum#coin)|string |Currency type |
-|amount |string |Exchange to amount |
-|timestamp |integer |timestamp|
-|status|string |status<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
-|[fromAccountType](enum#accounttype)|string |Account type |
-|[toAccountType](enum#accounttype) |string |Account type |
-|fromMemberId |string |From UserID |
-|toMemberId |string |To UserID |
-|nextPageCursor |string |cursor information: used for pagination. Default value: ""|
+|list |array |Object|
+|> transferId |string |UUID, which is unique across the platform |
+|> [coin](enum#coin)|string |Currency type |
+|> amount |string |Transfer amount |
+|> timestamp |string |Created timestamp (ms)|
+|> [status](enum#transferstatus)|string |status|
+|> [fromAccountType](enum#accounttype)|string |From account type |
+|> [toAccountType](enum#accounttype) |string |To account type |
+|> fromMemberId |string |From UID |
+|> toMemberId |string |To UID |
+|nextPageCursor |string |Cursor, used for pagination.|
 
 ### Request Example
 

@@ -1,11 +1,15 @@
 ---
-title: 查詢子母劃轉記錄列表
-sidebar_label: 查詢子母劃轉記錄列表
+title: 查詢子母間劃轉記錄
+sidebar_label: 查詢子母間劃轉記錄
 sidebar_position: 4
 slug: /account-asset/sub-transfer-list
 ---
 
-查詢子母劃轉記錄列表
+查詢子母帳戶間的劃轉記錄
+
+:::caution
+僅支持使用**母帳戶**API key查詢
+:::
 
 ### HTTP 請求
 GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
@@ -15,23 +19,24 @@ GET `/asset/v3/private/transfer/sub-member-transfer/list/query`
 |:----- |:-------|:-----|------ |
 |transferId | false |string |UUID,全局唯一 |
 |[coin](enum#coin)|false|string |幣種類型 |
-|status |false |string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li></ul>|
+|[status](enum#transferstatus) |false |string |劃轉狀態|
 |startTime |false |integer |開始時間戳（毫秒) |
 |endTime |false |integer |結束時間戳（毫秒) |
-|limit |false |integer |記錄條數|
-|cursor |false |string |游標信息：用來分頁|
+|limit |false |integer |每頁數量限制|
+|cursor |false |string |游標，用來分頁|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|transferId |string |UUID,全局唯一 |
-|[coin](enum#coin)|string |幣種類型 |
-|amount |string |兌入數量 |
-|memberId |integer | 賬戶 |
-|subMemberId |integer|子賬戶 |
-|timestamp |integer |時間戳|
-|status|string |劃轉狀態<ul><li>SUCCESS</li><li>PENDING</li><li>FAILED</li> </ul>|
-|type |string |轉入轉出類型.<ul><li>`IN` 從主賬戶轉賬到子賬戶</li><li>`OUT` 從子賬戶轉賬到主賬戶</li> </ul>|
+|list |array |Object |
+|> transferId |string |UUID,全局唯一 |
+|> [coin](enum#coin)|string |幣種類型 |
+|> amount |string |劃轉數量 |
+|> memberId |integer | 母賬戶ID |
+|> subMemberId |integer|子賬戶ID |
+|> timestamp |string |創建時間戳 (毫秒)|
+|> [status](enum#transferstatus)|string |劃轉狀態|
+|> type |string |轉入轉出類型.<ul><li>`IN` 從主賬戶轉賬到子賬戶</li><li>`OUT` 從子賬戶轉賬到主賬戶</li> </ul>|
 |nextPageCursor |string |游標信息：用來分頁|
 
 ### 請求示例
