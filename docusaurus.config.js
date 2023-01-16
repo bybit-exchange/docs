@@ -220,23 +220,23 @@ const config = {
             position: 'left',
             label: 'V3 API',
           },
-          {
-            type: 'dropdown',
-            position: 'left',
-            label: 'V1 API (USDC)',
-            items: [
-              {
-                type: 'doc',
-                docId: 'v1/option/intro',
-                label: 'Option'
-              },
-              {
-                type: 'doc',
-                docId: 'v1/usdc-perp/intro',
-                label: 'USDC Perpetual'
-              }
-            ]
-          },
+          // {
+          //   type: 'dropdown',
+          //   position: 'left',
+          //   label: 'V1 API (USDC)',
+          //   items: [
+          //     {
+          //       type: 'doc',
+          //       docId: 'v1/option/intro',
+          //       label: 'Option'
+          //     },
+          //     {
+          //       type: 'doc',
+          //       docId: 'v1/usdc-perp/intro',
+          //       label: 'USDC Perpetual'
+          //     }
+          //   ]
+          // },
           {
             type: 'doc',
             docId: 'pilot-feature/pilot',
