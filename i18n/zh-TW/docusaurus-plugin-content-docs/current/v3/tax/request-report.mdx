@@ -5,28 +5,23 @@ sidebar_position: 2
 slug: /tax/report
 ---
 
-Request Export Report
-
-### HTTP Request
+### HTTP 請求
 POST `/fht/compliance/tax/v3/private/create`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|type |<b>true</b> |string |[Report Type](enum#reporttype)|
-|number |<b>true</b> |string |[Report Number](enum#reportnumber) |
-|startTime |<b>true</b> |string |UNIX Time. This is in seconds. TimeStamp for Report Start Time. The StartTime is included in the Time range for the Data Export.|
-|endTime |<b>true</b> |string |UNIX Time. This is in seconds. TimeStamp for Report End Time. The EndTime is not included in the Time range for the Data Export. Do note that for each request, `we will only allow up to 2 months time range search from the StartTime`. |
+|[type](enum#reporttype) |<b>true</b> |string |報告類型|
+|[number](enum#reportnumber) |<b>true</b> |string |不同類型下的類別號 |
+|startTime |<b>true</b> |string |UNIX 時間。這是以秒為單位。報告開始時間的時間戳。 StartTime 包含在數據導出的時間範圍內。|
+|endTime |<b>true</b> |string |UNIX 時間。這是以秒為單位。報告結束時間的時間戳。 EndTime 不包含在數據導出的時間範圍內。*請注意，對於每個請求，我們最多只允許從 StartTime 開始搜索 **2 個月**的時間範圍。*|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|queryId|string|Report Request ID|
+|queryId|string|報告請求 ID|
 
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /fht/compliance/tax/v3/private/create HTTP/1.1
@@ -40,13 +35,7 @@ Content-Type: application/json
 {"startTime":"1667264621","endTime":"1669261057","type":"TRADE","number":"2"}
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="assets">
+### 響應示例
 
 ```json
 {
@@ -59,5 +48,3 @@ Content-Type: application/json
     "time": 1671183681990
 }
 ```
-</TabItem>
-</Tabs>
