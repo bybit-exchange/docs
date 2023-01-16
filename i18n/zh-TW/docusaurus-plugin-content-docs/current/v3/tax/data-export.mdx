@@ -5,30 +5,25 @@ sidebar_position: 4
 slug: /tax/data-export
 ---
 
-Retrieve Data Export
-
-### HTTP Request
+### HTTP 請求
 POST `/fht/compliance/tax/v3/private/url`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|queryId|<b>true</b>|string|Report Request ID|
+|queryId|<b>true</b>|string|報告請求 ID|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|url|string|URL of files (Basepath+Files). To shorten the time it takes to generate the report, it could generate multiple files. Do take note of this and combine the several files using the same basepath when requesting the data export|
+|url|string|文件的URL網址 (Basepath+Files)。為了縮短生成報告所需的時間，它可以生成多個文件。*請注意這一點，並在請求數據導出時使用相同的基本路徑組合多個文件*|
 
 
-:::tip
-Convert S3 Files To CSV using python script
+:::info
+使用python將S3文件轉換為 CSV的示例
 :::
 
-### Sample Python Script
-
-<Tabs>
-<TabItem value="console" label="Console">
+### Python腳本
 
 ```python
 
@@ -78,13 +73,7 @@ if __name__ == '__main__':
     test.get_data(file_path=path)
 ```
 
-</TabItem>
-</Tabs>
-
-### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
+### 請求示例
 
 ```http
 POST /fht/compliance/tax/v3/private/url HTTP/1.1
@@ -98,13 +87,7 @@ Content-Type: application/json
 {"queryId":"12312312415325325"}
 ```
 
-</TabItem>
-</Tabs>
-
-### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="assets">
+### 響應示例
 
 ```json
 {
@@ -117,5 +100,3 @@ Content-Type: application/json
     "time": 1671184057646
 }
 ```
-</TabItem>
-</Tabs>

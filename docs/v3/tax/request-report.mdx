@@ -5,7 +5,7 @@ sidebar_position: 2
 slug: /tax/report
 ---
 
-Request Export Report
+Request to export report
 
 ### HTTP Request
 POST `/fht/compliance/tax/v3/private/create`
@@ -13,10 +13,10 @@ POST `/fht/compliance/tax/v3/private/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|type |<b>true</b> |string |[Report Type](enum#reporttype)|
-|number |<b>true</b> |string |[Report Number](enum#reportnumber) |
-|startTime |<b>true</b> |string |UNIX Time. This is in seconds. TimeStamp for Report Start Time. The StartTime is included in the Time range for the Data Export.|
-|endTime |<b>true</b> |string |UNIX Time. This is in seconds. TimeStamp for Report End Time. The EndTime is not included in the Time range for the Data Export. Do note that for each request, `we will only allow up to 2 months time range search from the StartTime`. |
+|[type](enum#reporttype) |<b>true</b> |string |Report Type |
+|[number](enum#reportnumber) |<b>true</b> |string |Report Number |
+|startTime |<b>true</b> |string |UNIX Time. This is in seconds. Timestamp for report start time. The StartTime is included in the Time range for the Data Export.|
+|endTime |<b>true</b> |string |UNIX Time. This is in seconds. Timestamp for report end time. The EndTime is not included in the Time range for the Data Export. *Do note that for each request, we will only allow **up to 2 months** time range search from the StartTime*|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -24,9 +24,6 @@ POST `/fht/compliance/tax/v3/private/create`
 |queryId|string|Report Request ID|
 
 ### Request Example
-
-<Tabs>
-<TabItem value="console" label="Console">
 
 ```http
 POST /fht/compliance/tax/v3/private/create HTTP/1.1
@@ -40,13 +37,7 @@ Content-Type: application/json
 {"startTime":"1667264621","endTime":"1669261057","type":"TRADE","number":"2"}
 ```
 
-</TabItem>
-</Tabs>
-
 ### Response Example
-
-<Tabs>
-<TabItem value="js linear" label="assets">
 
 ```json
 {
@@ -59,5 +50,3 @@ Content-Type: application/json
     "time": 1671183681990
 }
 ```
-</TabItem>
-</Tabs>
