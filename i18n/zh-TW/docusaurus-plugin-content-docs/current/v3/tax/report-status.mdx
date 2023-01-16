@@ -1,22 +1,23 @@
 ---
-title: Get User Register Date
-sidebar_label: Get User Register Date
-sidebar_position: 1
-slug: /tax/time
+title: 查詢報告導出狀態
+sidebar_label: 查詢報告導出狀態
+sidebar_position: 3
+slug: /tax/status
 ---
-Get User Register Date
+Get Export Report Status
 
 ### HTTP Request
-POST `/fht/compliance/tax/v3/private/registertime`
+POST `/fht/compliance/tax/v3/private/status`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|queryId|<b>true</b>|string|Report Request ID|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|registerTime|string|UNIX Time. This is in milleseconds. Date that the specific user registers on the platform|
+|status|number|<ul><li>`-1` Failed</li><li>`0` Queued</li><li>`1` Processing</li><li>`2` Processed</li><li>`3` Expired</li></ul>|
 
 ### Request Example
 
@@ -24,15 +25,15 @@ POST `/fht/compliance/tax/v3/private/registertime`
 <TabItem value="console" label="Console">
 
 ```http
-POST /fht/compliance/tax/v3/private/registertime HTTP/1.1
+POST /fht/compliance/tax/v3/private/status HTTP/1.1
 Host: api.bybit.com
 X-BAPI-SIGN-TYPE: 2
-X-BAPI-SIGN: xxxxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671183584043
+X-BAPI-SIGN: xxxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1671183923110
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-{}
+{"queryId":"12312312415325325"}
 ```
 
 </TabItem>
@@ -48,10 +49,10 @@ Content-Type: application/json
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "registerTime": "1634515200"
+        "status": "2"
     },
     "retExtInfo": {},
-    "time": 1671183584270
+    "time": 1671183923244
 }
 ```
 </TabItem>
