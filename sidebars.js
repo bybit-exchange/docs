@@ -155,6 +155,7 @@ const sidebars = {
             }
           ]
         },
+          'v3/derivatives/rate-limit',
           'v3/derivatives/enum',
           'v3/derivatives/error',
       ],
@@ -254,6 +255,7 @@ const sidebars = {
             }
           ]
         },
+        'v3/spot/rate-limit',
         'v3/spot/enum',
         'v3/spot/error',
       ]
@@ -348,6 +350,7 @@ const sidebars = {
             }
           ]
         },
+        'v3/copy-trade/rate-limit',
         'v3/copy-trade/enum',
         'v3/copy-trade/error',
       ]
