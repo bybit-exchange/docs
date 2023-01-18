@@ -19,6 +19,7 @@ const sidebars = {
   // But you can create a sidebar manually
   v3SideBar: [
       'v3/intro',
+      'v3/server-time',
     {
       type: 'category',
       label: 'Derivatives',
