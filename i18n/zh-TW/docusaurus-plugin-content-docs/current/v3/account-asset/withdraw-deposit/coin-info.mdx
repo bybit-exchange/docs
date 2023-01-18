@@ -17,19 +17,20 @@ GET `/asset/v3/private/coin-info/query`
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|name|string|幣種名稱|
-|[coin](enum#coin)|string |幣種 |
-|remainAmount|string|該幣種當前最大可提現數量|
-|chains|array|Object|
-|> chainType|string|鏈類型|
-|> confirmation|string|充值上賬確認數|
-|> withdrawFee|string|提現手續費。如果提現費為空，則表示該幣不支持提現|
-|> depositMin|string|最小充值數量|
-|> withdrawMin|string|最小提現數量|
-|> chain|string|鏈名|
-|> chainDeposit|string|幣鏈是否可充值. `0`：暫停; `1`：正常|
-|> chainWithdraw|string|幣鏈是否可提幣. `0`：暫停; `1`：正常|
-|> minAccuracy|string|充提幣的最小精度|
+|rows|array |Object |
+|> name|string|幣種名稱|
+|> [coin](enum#coin)|string |幣種 |
+|> remainAmount|string|該幣種當前最大可提現數量|
+|> chains|array|Object|
+|>> chainType|string|鏈類型|
+|>> confirmation|string|充值上賬確認數|
+|>> withdrawFee|string|提現手續費 <ul><li>如果提現費為空，則表示該幣不支持提現</li><li>若為0, 可能該幣種手續費為百分比, 後續會增加相關字段</li></ul>|
+|>> depositMin|string|最小充值數量|
+|>> withdrawMin|string|最小提現數量|
+|>> chain|string|鏈名|
+|>> chainDeposit|string|幣鏈是否可充值. `0`：暫停; `1`：正常|
+|>> chainWithdraw|string|幣鏈是否可提幣. `0`：暫停; `1`：正常|
+|>> minAccuracy|string|充提幣的最小精度|
 
 ### 請求示例
 

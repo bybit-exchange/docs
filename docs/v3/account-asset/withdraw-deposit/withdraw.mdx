@@ -4,10 +4,10 @@ sidebar_label: Withdraw
 sidebar_position: 6
 slug: /account-asset/withdraw
 ---
-Withdraw
 
 :::info
-Withdrawals are always made from the SPOT wallet.
+* Withdrawals are always made from the SPOT wallet
+* Make sure you have added withdraw address <a href="https://www.bybit.com/user/assets/money-address">here</a>
 :::
 
 ### HTTP Request
@@ -18,16 +18,16 @@ POST `/asset/v3/private/withdraw/create`
 |:----- |:-------|:-----|------ |
 |[coin](enum#coin) |<b>true</b> |string |coin name|
 |chain|<b>true</b>|string|chain name|
-|address|<b>true</b>|string|Address| Address verification whether there is a whitelist of withdrawal addresses|
-|tag|false|string|Need to fill in if there is a tag|
-|amount|<b>true</b>|string|withdraw amounts. Rules: Greater than or equal to the minimum withdrawal amount. The minimum withdrawal amount can be obtained from the Coin Info Query API|
-|timestamp|<b>true</b>|integer|timestamp. Allowed timeframe is 5 mins before and after based on current timestamp|
+|address|<b>true</b>|string|Withdraw address|
+|tag|false|string|Need to fill in if there is a memo/tag when adding the wallet address|
+|amount|<b>true</b>|string|withdraw amounts. The minimum withdrawal amount can be obtained from the [Coin Info](coin-info#) Query API|
+|timestamp|<b>true</b>|integer|Current timestamp |
 |forceChain|false|integer|Force to withdraw on chain or not. <ul><li>`0`：If parsed as internal address, then internal transfer (by default)</li><li>`1`：Force withdraw on chain</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|id|string|withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint)|
+|id|string|Withdrawal ID |
 
 ### Request Example
 
@@ -56,12 +56,12 @@ Content-Length: 193
 
 ```json
 {
-  "retCode": 0,
+    "retCode": 0,
     "retMsg": "success",
     "result": {
-    "id": "xxxxxxxxxxx"
-  },
-  "retExtInfo": null,
+        "id": "xxxxxxxxxxx"
+      },
+    "retExtInfo": null,
     "time": 1671172180550
 }
 ```

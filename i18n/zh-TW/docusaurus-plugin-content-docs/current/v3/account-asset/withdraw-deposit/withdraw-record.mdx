@@ -6,7 +6,7 @@ slug: /account-asset/withdraw-record
 ---
 提現記錄查詢
 
-:::info Rules
+:::info
 規則：按id倒序進行，開始時間和截止時間差最大限制為30天
 :::
 
@@ -27,19 +27,19 @@ GET `/asset/v3/private/withdraw/record/query`
 ### 返回參數
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|rows|Array|Object|
-|[coin](enum#coin)|string |提現的幣種 |
-|[chain](enum#chain)|string|鏈名|
-|amount|string|提現的數量|
-|txID|string|交易ID。提現失敗/提現撤銷/內部轉帳：為空|
-|status|int|[提現狀態](enum#withdrawStatus)|
-|toAddress|string|提現目標地址. 內部轉帳：顯示郵箱或手機號|
-|tag|string|提現目標地址的tag|
-|withdrawFee|string|提現手續費|
-|createTime|string|發起提幣時間|
-|updateTime|string|提幣狀態更新時間|
-|withdrawId|string|提現ID。 (提現API響應參數中的提現請求ID)|
-|withdrawType|int|出金類型.<ul><li>`0`：鏈上出金;</li> <li>`1`：內部地址轉帳</li></ul>|
+|rows|array|Object|
+|> [coin](enum#coin)|string |提現的幣種 |
+|> [chain](enum#chain)|string|鏈名|
+|> amount|string|提現的數量|
+|> txID|string|交易ID。提現失敗/提現撤銷/內部轉帳：為空|
+|> [status](enum#withdrawStatus)|integer |提現狀態|
+|> toAddress|string|提現目標地址. 內部轉帳：顯示郵箱或手機號|
+|> tag|string|提現目標地址的tag|
+|> withdrawFee|string|提現手續費|
+|> createTime|string|發起提幣時間|
+|> updateTime|string|提幣狀態更新時間|
+|> withdrawId|string|提現ID |
+|> withdrawType|integer |出金類型.<ul><li>`0`：鏈上出金;</li> <li>`1`：內部地址轉帳</li></ul>|
 |nextPageCursor|string|游標信息：用來分頁|
 
 ### 請求示例

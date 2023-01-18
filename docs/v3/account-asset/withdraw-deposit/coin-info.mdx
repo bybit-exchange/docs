@@ -17,19 +17,20 @@ GET `/asset/v3/private/coin-info/query`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|name|string|Name|
-|[coin](enum#coin)|string |Coin name |
-|remainAmount|string|Current maximum withdrawal amount|
-|chains|array|Object|
-|> chainType|string|chain type|
-|> confirmation|string|deposit confirmation number|
-|> withdrawFee|string|withdraw fee. if withdraw fee is empty, It means that this coin does not support withdrawal|
-|> depositMin|string|minimum deposit amount|
-|> withdrawMin|string|minimum withdrawal amount|
-|> chain|string|chain name|
-|> chainDeposit|string|The chain status of deposit. `0`：suspend; `1`：normal|
-|> chainWithdraw|string|The chain status of deposit. `0`：suspend; `1`：normal|
-|> minAccuracy|string|The precision of withdraw or deposit|
+|rows|array |Object |
+|> name|string|Name|
+|> [coin](enum#coin)|string |Coin name |
+|> remainAmount|string|Current maximum withdrawal amount|
+|> chains|array|Object|
+|>> chainType|string|chain type|
+|>> confirmation|string|deposit confirmation number|
+|>> withdrawFee|string|withdraw fee <ul><li>If withdraw fee is empty, It means that this coin does not support withdrawal</li><li>If withdraw fee is zero, the fee might be calculated by percentage, we will add a new field later</li></ul>|
+|>> depositMin|string|minimum deposit amount|
+|>> withdrawMin|string|minimum withdrawal amount|
+|>> chain|string|chain name|
+|>> chainDeposit|string|The chain status of deposit. `0`：suspend; `1`：normal|
+|>> chainWithdraw|string|The chain status of deposit. `0`：suspend; `1`：normal|
+|>> minAccuracy|string|The precision of withdraw or deposit|
 
 ### Request Example
 

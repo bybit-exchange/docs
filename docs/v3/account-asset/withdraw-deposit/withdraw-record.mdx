@@ -17,30 +17,30 @@ GET `/asset/v3/private/withdraw/record/query`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |withdrawID |false |integer |withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint) |
-|startTime |false |integer |start time (ms). Default value: 30 days before the current time |
-|endTime |false |integer |end time (ms). Default value: current time |
+|startTime |false |integer |The start time (ms). Default value: 30 days before the current time |
+|endTime |false |integer |The end time (ms). Default value: current time |
 |[coin](enum#coin) |false |string |coin name: for example, BTC. Default value: all |
 |withdrawType |false |string |<ul><li>`0 (default)`：on chain.</li> <li>`1`：off chain.</li><li> `2`：on and off chain</li></ul>|
-|cursor |false |string |cursor infomation: used for pagination |
+|cursor |false |string |Cursor, used for pagination |
 |limit |false |integer |Number of items per page. [`1`, `50`] Default value: `50` |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|rows|Array|Object|
-|[coin](enum#coin)|string |withdrawal coin |
-|[chain](enum#chain)|string|chain name|
-|amount|string|withdrawal quantity|
-|txID|string|transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled or internal transfer|
-|status|int|[status](enum#withdrawStatus)|
-|toAddress|string|withdrawal target address. It shows email or mobile number for internal transfer|
-|tag|string|tag of withdrawal target address|
-|withdrawFee|string|withdrawal fee|
-|createTime|string|withdrawal create time|
-|updateTime|string|withdrawal status updated time|
-|withdrawId|string|withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint)|
-|withdrawType|integer|Withdraw type. <ul><li>`0`：on chain;</li> <li>`1`：internal address transfer</li></ul>|
-|nextPageCursor|string|cursor information: used for pagination. Default value: `""`|
+|rows|array|Object|
+|> [coin](enum#coin)|string |withdrawal coin |
+|> [chain](enum#chain)|string|chain name|
+|> amount|string|withdrawal quantity|
+|> txID|string|transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled or internal transfer|
+|> status|int|[status](enum#withdrawStatus)|
+|> toAddress|string|withdrawal target address. It shows email or mobile number for internal transfer|
+|> tag|string|tag of withdrawal target address|
+|> withdrawFee|string|withdrawal fee|
+|> createTime|string|withdrawal create time|
+|> updateTime|string|withdrawal status updated time|
+|> withdrawId|string|withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint)|
+|> withdrawType|integer|Withdraw type. <ul><li>`0`：on chain;</li> <li>`1`：internal address transfer</li></ul>|
+|nextPageCursor|string|cursor information, used for pagination|
 
 ### Request Example
 
