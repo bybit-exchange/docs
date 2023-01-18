@@ -41,7 +41,7 @@ A smaller `X-BAPI-RECV-WINDOW` is more secure, but your request may fail if the 
 :::caution
 Please make sure that the timestamp parameter adheres to the **following rule**:<br/>
 _server_time - recv_window <= timestamp < server_time + 1000_<br/>
-server_time stands for Bybit server time, which can be queried via the [Server Time endpoint](../spot/public/server-time#).
+server_time stands for Bybit server time, which can be queried via the [Server Time endpoint](server-time#).
 :::
 
 ### Create A Request
@@ -175,12 +175,80 @@ Host: api-testnet.bybit.com
     "retExtInfo": {},
     "time": 1671017572923
 }
+```
 
-// /contract/v3/private/account/transaction-log
+### Spot
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |number |Success/Error code |
+|retMsg |string |Success/Error msg. Can be `OK`,`success`,`Success` for Success message|
+|result |Object |Business data result|
+|retExtInfo |Object |Extend info. Most of time, it is `{}`|
+|time |number |Current timestamp (ms)|
+
+```json
 {
+    "retCode": 0,
+    "retMsg": "OK",
     "result": {
     },
+    "retExtInfo": {},
+    "time": 1671017382656
+}
+
+{
     "retCode": 0,
-    "retMsg": "Success."
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017473888
+}
+
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017572923
+}
+```
+
+### Account Asset
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |number |Success/Error code |
+|retMsg |string |Success/Error msg. Can be `OK`,`success`,`Success` for Success message|
+|result |Object |Business data result|
+|retExtInfo |Object |Extend info. Most of time, it is `{}`|
+|time |number |Current timestamp (ms)|
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017382656
+}
+
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017473888
+}
+
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017572923
 }
 ```

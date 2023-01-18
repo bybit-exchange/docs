@@ -6,7 +6,8 @@ slug: /account-asset/withdraw
 ---
 
 :::info
-提現總是來自現貨錢包內的資產。
+* 提現總是來自現貨錢包內的資產。
+* 確保您已經將提幣地址加入到<a href="https://www.bybit.com/user/assets/money-address">這裡</a>
 :::
 
 ### HTTP 請求
@@ -17,16 +18,16 @@ POST `/asset/v3/private/withdraw/create`
 |:----- |:-------|:-----|------ |
 |[coin](enum#coin) |<b>true</b> |string |幣種|
 |chain|<b>true</b>|string|鏈名|
-|address|<b>true</b>|string|Address|地址。地址校驗是否存在提現地址的白名單|
+|address|<b>true</b>|string| 提幣地址 |
 |tag|false|string|存在tag的需要填寫|
-|amount|<b>true</b>|string|提幣數量。規則：大於等於最小提幣金額，最小提幣金額可從幣種信息接口獲取。|
-|timestamp|<b>true</b>|integer|時間戳. 允許範圍是當前時間的前後5分鐘|
+|amount|<b>true</b>|string|提幣數量。最小提幣金額可從[幣種信息接口](coin-info#)獲取。|
+|timestamp|<b>true</b>|integer|取用當前時間戳|
 |forceChain|false|integer|是否強制走鏈提幣. <ul><li>`0`：解析到若為內部地址 (默認)，則內部轉帳</li><li>`1`：強制走鏈</li></ul>|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|id|string|提現ID。 (提現API響應參數中的提現請求ID)|
+|id|string|提現ID |
 
 ### 請求示例
 
@@ -55,12 +56,12 @@ Content-Length: 193
 
 ```json
 {
-  "retCode": 0,
+    "retCode": 0,
     "retMsg": "success",
     "result": {
-    "id": "xxxxxxxxxxx"
-  },
-  "retExtInfo": null,
+        "id": "xxxxxxxxxxx"
+      },
+    "retExtInfo": {},
     "time": 1671172180550
 }
 ```

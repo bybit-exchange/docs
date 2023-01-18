@@ -16,29 +16,29 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|subMemberId |<b>true</b> |integer | Sub user Id
-|startTime |false |integer |start time (In Millisecond). Default value: 30 days before the current time |
-|endTime |false |integer |end time (In Millisecond). Default value: current time |
-|[coin](enum#coin) |false |string |coin name: for example, BTC. Default value: all |
-|cursor |false |string |cursor infomation: used for pagination |
+|subMemberId |<b>true</b> |integer | Sub user Id |
+|startTime |false |integer |The start time (ms). Default value: 30 days before the current time |
+|endTime |false |integer |Tbe end time (ms). Default value: current time |
+|[coin](enum#coin) |false |string |Coin name: for example, BTC. Default value: all |
+|cursor |false |string |Cursor, used for pagination |
 |limit |false |integer |Number of items per page, [`1`, `50`]. Default value: 50 |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|rows|Array|Object|
-|[coin](enum#coin)|string |deposit coin |
-|[chain](enum#chain)|string|chain name|
-|amount|string|deposit amount|
-|txID|string|transaction ID. It is `""` when deposit failed or deposit cancelled|
-|status|integer|<ul><li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li></ul>|
-|toAddress|string|deposit target address|
-|tag|string|tag of deposit target address|
-|depositFee|string|deposit fee|
-|successAt|string|last updated time|
-|confirmations|string|number of confirmation blocks|
-|txIndex|string|transaction sequence number|
-|blockHash|string|hash number on the chain|
+|rows|array |Object|
+|> [coin](enum#coin)|string |deposit coin |
+|> [chain](enum#chain)|string|chain name|
+|> amount|string|deposit amount|
+|> txID|string|transaction ID. It is `""` when deposit failed or deposit cancelled|
+|> status|integer|<ul><li>0=unknown</li><li>1=ToBeConfirmed</li><li>2=processing</li><li>3=success</li><li>4=deposit failed</li></ul>|
+|> toAddress|string|deposit target address|
+|> tag|string|tag of deposit target address|
+|> depositFee|string|deposit fee|
+|> successAt|string|last updated time|
+|> confirmations|string|number of confirmation blocks|
+|> txIndex|string|transaction sequence number|
+|> blockHash|string|hash number on the chain|
 |nextPageCursor|string|cursor information: used for pagination. Default value: `""`|
 
 ### Request Example

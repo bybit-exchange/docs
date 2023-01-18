@@ -34,7 +34,7 @@ https://api.bytick.com
 :::caution
 註意，timestamp參數必須符合如下規則:<br/>
 _server_time - recv_window <= timestamp < server_time + 1000_<br/>
-其中server_time是Bybit服務器時間，您可以通過[Bybit服務器時間](../spot/public/server-time#)接口獲取.
+其中server_time是Bybit服務器時間，您可以通過[Bybit服務器時間](server-time#)接口獲取.
 :::
 
 ### 構建請求
@@ -132,7 +132,7 @@ Host: api-testnet.bybit.com
 </Tabs>
 
 ## 外層通用數據結構
-### 衍生品v3
+### 衍生品
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |retCode |number |成功/錯誤碼 |
@@ -168,12 +168,80 @@ Host: api-testnet.bybit.com
     "retExtInfo": {},
     "time": 1671017572923
 }
+```
 
-// /contract/v3/private/account/transaction-log
+### 現貨
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|retCode |number |成功/錯誤碼 |
+|retMsg |string |成功/錯誤消息. 成功消息可以是`OK`,`success`,`SUCCESS`|
+|result |Object |業務數據體|
+|retExtInfo |Object |額外信息. 大部分場景下都是`{}`|
+|time |number |當前時間戳 (毫秒)|
+
+```json
 {
+    "retCode": 0,
+    "retMsg": "OK",
     "result": {
     },
+    "retExtInfo": {},
+    "time": 1671017382656
+}
+
+{
     "retCode": 0,
-    "retMsg": "Success."
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017473888
+}
+
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017572923
+}
+```
+
+### 帳戶資產
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|retCode |number |成功/錯誤碼 |
+|retMsg |string |成功/錯誤消息. 成功消息可以是`OK`,`success`,`SUCCESS`|
+|result |Object |業務數據體|
+|retExtInfo |Object |額外信息. 大部分場景下都是`{}`|
+|time |number |當前時間戳 (毫秒)|
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017382656
+}
+
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017473888
+}
+
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+    },
+    "retExtInfo": {},
+    "time": 1671017572923
 }
 ```
