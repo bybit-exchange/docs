@@ -214,22 +214,24 @@ paths:
                   type: string
                   enum:
                     - linear
-                    - inverse
                     - option
-                  description: Product type. Currently spot is not supported.
-                  default: linear
+                  description: Product type
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 orderId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 orderLinkId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 qty:
                   type: string
                   description: Modify the order qty
+                  example:
                 price:
                   type: string
                   description: Modify the order price
@@ -282,7 +284,7 @@ paths:
       tags:
         - trade
       summary: Cancel Order
-      description: Cancel a order.
+      description: Cancel a single order.
       operationId: cancel-order
       parameters:
         - name: apiKey
@@ -310,28 +312,30 @@ paths:
                   type: string
                   enum:
                     - linear
-                    - inverse
                     - option
                     - spot
                   description: Product type
-                  default: linear
+                  example: spot
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 orderId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 orderLinkId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 orderFilter:
                   type: string
                   enum:
                     - Order
-                    - StopOrder
                     - tpslOrder
                   description: Take profit stop loss or ordinary order. Only valid for spot.
                   default: Order
+                  example: Order
               required:
                 - category
                 - symbol
@@ -340,8 +344,8 @@ paths:
     get:
       tags:
         - trade
-      summary: Get Open Orders
-      description: Get unfilled orders.
+      summary: Get Open Orders (real-time)
+      description: Get unfilled orders or partially filled orders
       operationId: open-order
       parameters:
         - name: apiKey
@@ -364,10 +368,8 @@ paths:
             type: string
             enum:
               - linear
-              - inverse
               - option
               - spot
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
@@ -382,6 +384,7 @@ paths:
             type: string
         - name: settleCoin
           in: query
+          description: Settle coin. Spot is not available
           required: false
           schema:
             type: string
@@ -398,7 +401,7 @@ paths:
             type: string
         - name: orderFilter
           in: query
-          description: Order filter
+          description: Order filter. Default：all kinds of orders
           required: false
           schema:
             type: string
@@ -411,7 +414,7 @@ paths:
           description: Whether to only query active orders, if openOnly = 0, only get active orders. If it is 1, return only the order data of the final status (cancelled/rejected/completely filled, etc.) in the last 10 minutes
           required: false
           schema:
-            type: int
+            type: integer
             enum:
               - 0
               - 1
@@ -425,7 +428,7 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor, used for pagination
           required: false
           schema:
             type: string
@@ -437,7 +440,7 @@ paths:
     post:
       tags:
         - trade
-      summary: Cancel All Order
+      summary: Cancel All Orders
       description: Cancel all orders.
       operationId: cancel-all
       parameters:
@@ -466,19 +469,18 @@ paths:
                   type: string
                   enum:
                     - linear
-                    - inverse
                     - option
-                  description: Product type. Currently spot is not supported.
-                  default: linear
+                    - spot
+                  description: Product type
                 symbol:
                   type: string
                   description: Symbol name
                 baseCoin:
                   type: string
-                  description: Cancel by base coin. option ONLY
+                  description: Cancel by base coin
                 settleCoin:
                   type: string
-                  description: Cancel by settle coin. linear ONLY
+                  description: Cancel by settle coin. spot is not available
               required:
                 - category
 
@@ -486,7 +488,7 @@ paths:
     get:
       tags:
         - trade
-      summary: Get Order List
+      summary: Get Order History (2 years)
       description: Get order history.
       operationId: order-list
       parameters:
@@ -510,10 +512,8 @@ paths:
             type: string
             enum:
               - linear
-              - inverse
               - option
               - spot
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
@@ -522,7 +522,7 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: Base coin. option ONLY
+          description: Base coin
           required: false
           schema:
             type: string
@@ -543,6 +543,19 @@ paths:
           required: false
           schema:
             type: string
+            enum:
+              - Created
+              - New
+              - Rejected
+              - PartiallyFilled
+              - PartillyFilledCancelled
+              - Filled
+              - PendingCancel
+              - Cancelled
+              - Untriggered
+              - Triggered
+              - Deactivated
+              - Active
         - name: orderFilter
           in: query
           description: Order filter
@@ -614,6 +627,7 @@ paths:
                       symbol:
                         type: string
                         description: Symbol name
+                        example: ETH-25JAN23-1600-P
                       side:
                         type: string
                         enum:
@@ -635,7 +649,7 @@ paths:
                         decription: Order price
                       orderIv:
                         type: string
-                        decription: Order iv. For option order
+                        decription: Order iv
                       timeInForce:
                         type: string
                         enum:
@@ -662,19 +676,12 @@ paths:
                           - false
                         description: specify true if a close position order
                         example: false
-                      closeOnTrigger:
-                        type: string
-                        enum:
-                          - true
-                          - false
-                        description: close on trigger
-                        example: false
                       mmp:
                         type: boolean
                         enum:
                           - true
                           - false
-                        description: market marker protection. for option order
+                        description: market marker protection
                         example:
                     required:
                       - symbol
@@ -690,9 +697,9 @@ paths:
     post:
       tags:
         - trade
-      summary: Batch Replace Order
-      description: Batch replace orders
-      operationId: batch-replace-place
+      summary: Batch Amend Order
+      description: Batch amend orders
+      operationId: batch-amend
       parameters:
         - name: apiKey
           in: header
@@ -717,10 +724,10 @@ paths:
               properties:
                 category:
                   type: string
-                  required: true
                   enum:
                     - option
-                  description: Product type. option ONLY.
+                  description: Product type
+                  example: option
                 request:
                   type: array
                   maxItems: 10
@@ -730,15 +737,19 @@ paths:
                       symbol:
                         type: string
                         description: Symbol name
+                        example: ETH-25JAN23-1600-P
                       orderId:
                         type: string
                         description: Either orderId or orderLinkId is required
+                        example:
                       orderLinkId:
                         type: string
                         description: Either orderId or orderLinkId is required
+                        example: option-test-001
                       qty:
                         type: string
                         description: Modify the order qty
+                        example: 10
                       price:
                         type: string
                         description: Modify the order price
@@ -783,10 +794,10 @@ paths:
               properties:
                 category:
                   type: string
-                  required: true
                   enum:
                     - option
                   description: Product type
+                  example: option
                 request:
                   type: array
                   maxItems: 10
@@ -796,12 +807,17 @@ paths:
                       symbol:
                         type: string
                         description: Symbol name
+                        example: ETH-25JAN23-1600-P
                       orderId:
                         type: string
                         description: Either orderId or orderLinkId is required
+                        example:
                       orderLinkId:
                         type: string
                         description: Either orderId or orderLinkId is required
+                        example: option-test-001
+                    required:
+                      - symbol
               required:
                 - category
                 - request
@@ -810,8 +826,8 @@ paths:
     get:
       tags:
         - trade
-      summary: My Position
-      description: Query the user's spot available quota
+      summary: Get Borrow Quota (Spot)
+      description: Query user's spot available quota
       operationId: query-spot-quota
       parameters:
         - name: apiKey
@@ -834,7 +850,6 @@ paths:
             type: string
             enum:
               - spot
-            default: spot
         - name: symbol
           in: query
           description: Symbol name
