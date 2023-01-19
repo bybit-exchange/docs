@@ -16,18 +16,18 @@ paths:
     get:
       tags:
         - position
-      summary: My Position.
+      summary: Get Position Info
       operationId: position-info
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -40,7 +40,6 @@ paths:
             enum:
               - linear
               - option
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
@@ -48,13 +47,13 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: for option only
+          description: Base coin. For option only
           required: false
           schema:
             type: string
         - name: settleCoin
           in: query
-          description: symbol or settleCoin is required
+          description: Used for linear, symbol or settleCoin is required
           required: false
           schema:
             type: string
@@ -63,11 +62,11 @@ paths:
           description: 1-200. max 200
           required: false
           schema:
-            type: string
+            type: integer
             default: 200
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor, used for pagination
           required: false
           schema:
             type: string
@@ -85,13 +84,13 @@ paths:
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -109,10 +108,11 @@ paths:
                   description: Product type.
                   enum:
                     - linear
-                  default: linear
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: BTCUSDT
                 buyLeverage:
                   type: string
                   description: Buy side leverage
@@ -131,19 +131,19 @@ paths:
     post:
       tags:
         - position
-      summary: Switch TP/SL Mode
-      description: Switch tp/sl mode.
+      summary: Set TP/SL Mode
+      description: Set tp/sl mode.
       operationId: tpsl-mode
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -158,16 +158,17 @@ paths:
               properties:
                 category:
                   type: string
-                  description: Product type.
+                  description: Product type
                   enum:
                     - linear
-                  default: linear
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 tpSlMode:
                   type: string
-                  description: Full=full position TP/SL, Partial=partial mode tp/sl
+                  description: Full = full position TP/SL, Partial = partial mode tp/sl
                   enum:
                     - Full
                     - Partial
@@ -187,13 +188,13 @@ paths:
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -208,10 +209,11 @@ paths:
               properties:
                 category:
                   type: string
-                  description: Product type.
+                  description: Product type
                   enum:
                     - linear
-                  default: linear
+                    - inverse
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name
@@ -244,13 +246,13 @@ paths:
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -265,21 +267,22 @@ paths:
               properties:
                 category:
                   type: string
-                  description: Product type.
+                  description: Product type
                   enum:
                     - linear
-                  default: linear
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 takeProfit:
                   type: string
                   description: Take profit price
-                  example:
+                  example: "1600"
                 stopLoss:
                   type: string
                   description: Stop loss price
-                  example:
+                  example: "1000"
                 tpSize:
                   type: string
                   description: Take profit size
@@ -295,7 +298,7 @@ paths:
                     - LastPrice
                     - MarkPrice
                     - IndexPrice
-                  example: "MarkPrice"
+                  example: MarkPrice
                 slTriggerBy:
                   type: string
                   description: Stop loss trigger price type
@@ -303,7 +306,7 @@ paths:
                     - LastPrice
                     - MarkPrice
                     - IndexPrice
-                  example: "MarkPrice"
+                  example: MarkPrice
                 trailingStop:
                   type: string
                   description: Trailing stop
@@ -329,19 +332,19 @@ paths:
     get:
       tags:
         - position
-      summary: Get Execution List
-      description: Get execution list.
+      summary: Get Execution (half year)
+      description: Get execution list
       operationId: execution
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -363,7 +366,7 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: Base coin. option ONLY
+          description: Base coin
           required: false
           schema:
             type: string
@@ -412,293 +415,13 @@ paths:
             default: 50
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor to pagination
           required: false
           schema:
             type: string
       responses:
         "200":
           description: successful operation
-
-  /v5/asset/delivery-record:
-    get:
-      tags:
-        - position
-      summary: Get Delivery Record
-      description: Get Delivery Record.
-      operationId: delivery-record
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: category
-          in: query
-          description: Product type
-          required: true
-          schema:
-            type: string
-            enum:
-              - option
-        - name: symbol
-          in: query
-          description: Symbol name
-          required: false
-          schema:
-            type: string
-        - name: expDate
-          in: query
-          description: expired date
-          required: false
-          schema:
-            type: string
-          example:
-        - name: limit
-          in: query
-          description: 1-50. max 50
-          required: false
-          schema:
-            type: integer
-            default: 20
-        - name: cursor
-          in: query
-          description: cursor to pagnition
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-
-  /v5/asset/settlement-record:
-    get:
-      tags:
-        - position
-      summary: Get Settlement Record
-      description: Get Settlement Record.
-      operationId: settlement-record
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: category
-          in: query
-          description: Product type. USDC Perpetuals ONLY
-          required: true
-          schema:
-            type: string
-            enum:
-              - linear
-        - name: symbol
-          in: query
-          description: Symbol name
-          required: false
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: 1-50. max 50
-          required: false
-          schema:
-            type: integer
-            default: 20
-        - name: cursor
-          in: query
-          description: cursor to pagnition
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-
-  /v5/position/switch-isolated:
-    post:
-      tags:
-        - position
-      summary: Switch Cross/Isolated Margin
-      description: Switch cross/isolated margin mode.
-      operationId: cross-isolated-margin
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                category:
-                  type: string
-                  description: Product type.
-                  enum:
-                    - linear
-                  default: linear
-                symbol:
-                  type: string
-                  description: Symbol name
-                tradeMode:
-                  type: integer
-                  description: Trade mode. 0=crossMargin, 1=isolatedMargin
-                  enum:
-                    - 0
-                    - 1
-                  example: 0
-                buyLeverage:
-                  type: string
-                  description: Buy side leverage. Make sure buyLeverage equals to sellLeverage
-                  example: "10"
-                sellLeverage:
-                  type: string
-                  description: Sell side leverage. Make sure buyLeverage equals to sellLeverage
-                  example: "10"
-              required:
-                - category
-                - symbol
-                - tradeMode
-                - buyLeverage
-                - sellLeverage
-
-  /v5/position/switch-mode:
-    post:
-      tags:
-        - position
-      summary: Switch Position Mode
-      description: Switch position mode.
-      operationId: position-mode
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                category:
-                  type: string
-                  description: Product type.
-                  enum:
-                    - linear
-                  default: linear
-                symbol:
-                  type: string
-                  description: Symbol name. Either symbol or coin is required
-                coin:
-                  type: string
-                  description: Coin. Either symbol or coin is required
-                  example: "USDT"
-                mode:
-                  type: string
-                  description: Position mode. 0=mergedSingle, 3=bothSide
-                  enum:
-                    - 0
-                    - 3
-                  example: "0"
-              required:
-                - category
-                - mode
-
-  /v5/position/set-auto-add-margin:
-    post:
-      tags:
-        - position
-      summary: Set Auto Add Margin
-      description: Turn on/off auto add position margin.
-      operationId: auto-margin
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                category:
-                  type: string
-                  description: Product type.
-                  enum:
-                    - linear
-                  default: linear
-                symbol:
-                  type: string
-                  description: Symbol name
-                autoAddMargin:
-                  type: integer
-                  description: Turn on / off. 0=off, 1=on
-                  enum:
-                    - 0
-                    - 1
-                  example: 0
-                positionIdx:
-                  type: integer
-                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
-                  enum:
-                    - 0
-                    - 1
-                    - 2
-                  example: 0
-              required:
-                - category
-                - symbol
-                - autoAddMargin
 
   /v5/position/closed-pnl:
     get:
@@ -710,19 +433,19 @@ paths:
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: category
           in: query
-          description: Product type.
+          description: Product type
           required: true
           schema:
             type: string
@@ -755,7 +478,7 @@ paths:
             default: 50
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor for pagination
           required: false
           schema:
             type: string
