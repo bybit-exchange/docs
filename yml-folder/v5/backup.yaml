@@ -1,0 +1,174 @@
+
+
+
+
+  /v5/position/switch-isolated:
+    post:
+      tags:
+        - position
+      summary: Switch Cross/Isolated Margin
+      description: Switch cross/isolated margin mode.
+      operationId: cross-isolated-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                tradeMode:
+                  type: integer
+                  description: Trade mode. 0=crossMargin, 1=isolatedMargin
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                buyLeverage:
+                  type: string
+                  description: Buy side leverage. Make sure buyLeverage equals to sellLeverage
+                  example: "10"
+                sellLeverage:
+                  type: string
+                  description: Sell side leverage. Make sure buyLeverage equals to sellLeverage
+                  example: "10"
+              required:
+                - category
+                - symbol
+                - tradeMode
+                - buyLeverage
+                - sellLeverage
+
+  /v5/position/switch-mode:
+    post:
+      tags:
+        - position
+      summary: Switch Position Mode
+      description: Switch position mode.
+      operationId: position-mode
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name. Either symbol or coin is required
+                coin:
+                  type: string
+                  description: Coin. Either symbol or coin is required
+                  example: "USDT"
+                mode:
+                  type: string
+                  description: Position mode. 0=mergedSingle, 3=bothSide
+                  enum:
+                    - 0
+                    - 3
+                  example: "0"
+              required:
+                - category
+                - mode
+
+  /v5/position/set-auto-add-margin:
+    post:
+      tags:
+        - position
+      summary: Set Auto Add Margin
+      description: Turn on/off auto add position margin.
+      operationId: auto-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: If not input, the default one will be used
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type.
+                  enum:
+                    - linear
+                  default: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                autoAddMargin:
+                  type: integer
+                  description: Turn on / off. 0=off, 1=on
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - autoAddMargin

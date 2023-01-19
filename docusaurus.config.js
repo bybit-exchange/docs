@@ -232,11 +232,11 @@ const config = {
             position: 'left',
             label: 'Changelog',
           },
-          // {
-          //   to: '/api-explorer/v5/category',
-          //   position: 'left',
-          //   label: 'API Explorer',
-          // },
+          {
+            to: '/api-explorer/v5/category',
+            position: 'left',
+            label: 'API Explorer',
+          },
           {
             label: 'Previous Version',
             position: 'right',

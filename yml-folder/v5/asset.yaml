@@ -16,23 +16,181 @@ x-tagGroups:
     tags:
       - asset
 paths:
-  /v5/asset/transfer/query-asset-info:
+  /v5/asset/exchange/order-record:
     get:
       tags:
         - asset
-      summary: Get Wallet Balance
-      description: Get wallet balance. Please read [API-DOC](../../../v5/asset/asset-info#) first.
-      operationId: asset-info
+      summary: Get Coin Exchange Records
+      description: Get exchange records
+      operationId: exchange
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: fromCoin
+          in: query
+          description: From coin
+          required: false
+          schema:
+            type: string
+        - name: toCoin
+          in: query
+          description: To coin
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: true
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: Cursor, used for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/delivery-record:
+    get:
+      tags:
+        - asset
+      summary: Get Option Delivery Record
+      description: Get delivery record
+      operationId: delivery-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - option
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: false
+          schema:
+            type: string
+        - name: expDate
+          in: query
+          description: expired date
+          required: false
+          schema:
+            type: string
+          example:
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor, used for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/settlement-record:
+    get:
+      tags:
+        - asset
+      summary: Get USDC Perpetual Settlement
+      description: Get Settlement Record.
+      operationId: settlement-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: string
+            enum:
+              - linear
+        - name: symbol
+          in: query
+          description: Symbol name. USDC perp symbol only
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1-50. max 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor, used for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/transfer/query-asset-info:
+    get:
+      tags:
+        - asset
+      summary: Get Asset Info
+      description: Get spot asset
+      operationId: asset-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -43,7 +201,7 @@ paths:
           schema:
             type: string
             enum:
-              - UNIFIED
+              - SPOT
         - name: coin
           in: query
           description: Coin name
@@ -53,24 +211,25 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/transfer/query-account-coin-balance:
     get:
       tags:
         - asset
-      summary: Coin Balance Of Specific Account Type
-      description: Get coin balance of specific account type. Please read [API-DOC](../../../v5/asset/account-coin-balance#) first.
+      summary: Get Balance of Specific Account Type
+      description: Get balance of specific account type
       operationId: account-coin-balance
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: memberId
@@ -99,7 +258,7 @@ paths:
             type: string
         - name: withBonus
           in: query
-          description: Query bonus or not
+          description: Query bonus or not. 0=false, 1=true
           required: false
           schema:
             type: integer
@@ -110,23 +269,24 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/transfer/query-transfer-coin-list:
     get:
       tags:
         - asset
       summary: Get Transferable Coin
-      description: Get transferable coins. Please read [API-DOC](../../../v5/asset/transferable-coin#) first.
+      description: Get transferable coins
       operationId: transferable-coin
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -157,23 +317,24 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/transfer/inter-transfer:
     post:
       tags:
         - asset
       summary: Create Internal Transfer
-      description: Create internal transfer. Please read [API-DOC](../../../v5/asset/create-inter-transfer#) first.
+      description: Create internal transfer
       operationId: create-inter-transfer
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -217,36 +378,37 @@ paths:
                     - SPOT
                     - OPTION
                     - INVESTMENT
-                  example: CONTRACT
+                  example: SPOT
               required:
                 - transferId
                 - coin
                 - amount
                 - fromAccountType
                 - toAccountType
+
   /v5/asset/transfer/query-inter-transfer-list:
     get:
       tags:
         - asset
       summary: Get Internal Transfer Records
-      description: Get internal transfer records. Please read [API-DOC](../../../v5/asset/inter-transfer-list#) first.
+      description: Get internal transfer records
       operationId: inter-transfer-list
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: transferId
           in: query
-          description: Transfer id.
+          description: Transfer id
           required: false
           schema:
             type: string
@@ -287,54 +449,56 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: Cursor, used to pagination
+          description: Cursor, used for pagination
           required: false
           schema:
             type: string
       responses:
         "200":
           description: successful operation
+
   /v5/asset/transfer/query-sub-member-list:
     get:
       tags:
         - asset
       summary: Get Sub UID
-      description: Get sub uid. Please read [API-DOC](../../../v5/asset/sub-uid-list#) first.
+      description: Get sub uid
       operationId: sub-uid-list
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
       responses:
         "200":
           description: successful operation
+
   /v5/asset/transfer/save-transfer-sub-member:
     post:
       tags:
         - asset
-      summary: Enable Sub UID For Universal Transfer
-      description: Enable sub uid for universal transfer. Please read [API-DOC](../../../v5/asset/enable-unitransfer-subuid#) first.
+      summary: Enable Universal Transfer For Sub UID
+      description: Enable sub uid for universal transfer
       operationId: enable-unitransfer-subuid
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
       responses:
@@ -354,24 +518,25 @@ paths:
                     example: "1234,3213,4321"
               required:
                 - subMemberIds
+
   /v5/asset/transfer/universal-transfer:
     post:
       tags:
         - asset
-      summary: Universal Transfer
-      description: Universal transfer. Please read [API-DOC](../../../v5/asset/unitransfer#) first.
+      summary: Create Universal Transfer
+      description: Create universal transfer
       operationId: unitransfer
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
       responses:
@@ -422,7 +587,7 @@ paths:
                     - SPOT
                     - INVESTMENT
                     - OPTION
-                  example: CONTRACT
+                  example: SPOT
               required:
                 - transferId
                 - coin
@@ -431,24 +596,25 @@ paths:
                 - toMemberId
                 - fromAccountType
                 - toAccountType
+
   /v5/asset/transfer/query-universal-transfer-list:
     get:
       tags:
         - asset
-      summary: Get Universal Transfer Record
-      description: Get universal transfer record. Please read [API-DOC](../../../v5/asset/unitransfer-list#) first.
+      summary: Get Universal Transfer Records
+      description: Get universal transfer record
       operationId: unitransfer-list
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: transferId
@@ -494,7 +660,7 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: Cursor, used to pagination
+          description: Cursor, used for pagination
           required: false
           schema:
             type: string
@@ -506,30 +672,18 @@ paths:
       tags:
         - asset
       summary: Get Allowed Deposit Coin Info
-      description: Get allowed deposit coin info. Please read [API-DOC](../../../v5/asset/deposit-coin-spec#) first.
+      description: Get allowed deposit coin info
       operationId: deposit-coin-spec
       parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
         - name: coin
           in: query
-          description: Coin name
+          description: Coin name. coin and chain must be paired if passed
           required: false
           schema:
             type: string
         - name: chain
           in: query
-          description: Chain name
+          description: Chain name. coin and chain must be paired if passed
           required: false
           schema:
             type: string
@@ -542,30 +696,31 @@ paths:
             default: 10
         - name: cursor
           in: query
-          description: Cursor, used to pagination
+          description: Cursor, used for pagination
           required: false
           schema:
             type: string
       responses:
         "200":
           description: successful operation
+
   /v5/asset/deposit/query-record:
     get:
       tags:
         - asset
       summary: Get Deposit Record
-      description: Get deposit record. Please read [API-DOC](../../../v5/asset/deposit-record#) first.
+      description: Get deposit record
       operationId: deposit-record
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -603,29 +758,30 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/deposit/query-sub-member-record:
     get:
       tags:
         - asset
       summary: Get Sub Account Deposit Record
-      description: Get sub account deposit record. Please read [API-DOC](../../../v5/asset/sub-deposit-record#) first.
+      description: Get sub account deposit record
       operationId: sub-deposit-record
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: subMemberId
           in: query
-          description: Sub uid
+          description: Sub UID
           required: true
           schema:
             type: string
@@ -656,31 +812,32 @@ paths:
             default: 50
         - name: cursor
           in: query
-          description: Cursor, used to pagination
+          description: Cursor, used for pagination
           required: false
           schema:
             type: string
       responses:
         "200":
           description: successful operation
+
   /v5/asset/deposit/query-address:
     get:
       tags:
         - asset
       summary: Get Master Deposit Address
-      description: Get master deposit address. Please read [API-DOC](../../../v5/asset/master-deposit-addr#) first.
+      description: Get master deposit address
       operationId: master-deposit-addr
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: coin
@@ -698,24 +855,25 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/deposit/query-sub-member-address:
     get:
       tags:
         - asset
       summary: Get Sub Deposit Address
-      description: Get sub deposit address. Please read [API-DOC](../../../v5/asset/sub-deposit-addr#) first.
+      description: Get sub deposit address
       operationId: sub-deposit-addr
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: coin
@@ -732,30 +890,31 @@ paths:
             type: string
         - name: subMemberId
           in: query
-          description: Sub user id
+          description: Sub UID
           required: true
           schema:
             type: string
       responses:
         "200":
           description: successful operation
+
   /v5/asset/coin/query-info:
     get:
       tags:
         - asset
       summary: Get Coin Info
-      description: Get coin info. Please read [API-DOC](../../../v5/asset/coin-info#) first.
+      description: Get coin info
       operationId: coin-info
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A UTA sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -768,29 +927,30 @@ paths:
       responses:
         "200":
           description: successful operation
+
   /v5/asset/withdraw/query-record:
     get:
       tags:
         - asset
       summary: Get Withdraw Record
-      description: Get withdraw record. Please read [API-DOC](../../../v5/asset/withdraw-record#) first.
+      description: Get withdraw record
       operationId: withdraw-record
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api key
+          required: true
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
-          required: false
+          description: Use master UID api secret
+          required: true
           schema:
             type: string
         - name: withdrawID
           in: query
-          description: Withdraw id
+          description: Withdraw ID
           required: false
           schema:
             type: string
@@ -830,156 +990,6 @@ paths:
           schema:
             type: integer
             default: 50
-        - name: cursor
-          in: query
-          description: Cursor, used to pagination
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-  /v5/asset/withdraw/create:
-    post:
-      tags:
-        - asset
-      summary: Withdraw
-      description: Create withdraw. Please read [API-DOC](../../../v5/asset/withdraw#) first.
-      operationId: withdraw
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                coin:
-                  type: string
-                  description: array of sub UIDs
-                  example: USDT
-                chain:
-                  type: string
-                  description: Chain name
-                  example: ETH
-                address:
-                  type: string
-                  description: Wallet address
-                  example:
-                tag:
-                  type: string
-                  description: Tag
-                  example:
-                amount:
-                  type: string
-                  description: Amount
-                  example: "20"
-                timestamp:
-                  type: integer
-                  description: Current timestamp (ms)
-                  example:
-                forceChain:
-                  type: integer
-                  description: 0=If the address is internal address, then internal transfer, 1=Force withdraw on chain
-                  enum:
-                    - 0
-                    - 1
-                  example: 0
-                  default: 0
-              required:
-                - coin
-                - chain
-                - address
-                - amount
-                - timestamp
-  /v5/asset/withdraw/cancel:
-    post:
-      tags:
-        - asset
-      summary: Cancel Withdraw
-      description: Cancel withdraw. Please read [API-DOC](../../../v5/asset/cancel-withdraw#) first.
-      operationId: cancel-withdraw
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: Withdraw id
-                  example:
-              required:
-                - id
-  /v5/asset/exchange/order-record:
-    get:
-      tags:
-        - asset
-      summary: Get Exchange Records
-      description: Get exchange records. Please read [API-DOC](../../../v5/asset/exchange#) first.
-      operationId: exchange
-      parameters:
-        - name: apiKey
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: If not input, the default one will be used
-          required: false
-          schema:
-            type: string
-        - name: fromCoin
-          in: query
-          description: From coin
-          required: false
-          schema:
-            type: string
-        - name: toCoin
-          in: query
-          description: To coin
-          required: false
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: Limit size. 1-50
-          required: true
-          schema:
-            type: integer
-            default: 20
         - name: cursor
           in: query
           description: Cursor, used to pagination
