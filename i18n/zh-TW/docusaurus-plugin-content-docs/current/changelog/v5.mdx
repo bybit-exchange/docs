@@ -1,11 +1,25 @@
 ---
 title: V5
 ---
+## 2023-01-19
+### REST API
+* [設置保證金模式](../v5/account/set-margin-mode)
+    * USDT合約納入組合保證金模式
+* [查詢持倉 (實時)](../v5/position)
+    * 組合保證金模式下, `positionIM`, `positionMM`, `leverage`, `riskLimitValue` 返回 "", `riskId` 返回 0
+* [查詢錢包餘額](../v5/account/wallet-balance)
+    * 組合保證金模式下, `totalOrderIM`, `totalPositionIM`, `totoalPositionMM` 返回 ""
+
+### WebSocket API
+* [持倉](../v5/websocket/private/position)
+    * 組合保證金模式下, `positionIM`, `positionMM`, `leverage`, `riskLimitValue` 返回 "", `riskId` 返回 0
+* [錢包](../v5/websocket/private/wallet)
+    * 組合保證金模式下, `totalOrderIM`, `totalPositionIM`, `totoalPositionMM` 返回 ""
 
 ## 2023-01-16
 ### REST API
 * [查詢最新行情信息](../v5/market/tickers) [spot]
-  * `usdIndexPrice` 已經添加到響應體中. 該字段表示為USD指數價格, 可以為空。
+    * `usdIndexPrice` 已經添加到響應體中. 該字段表示為USD指數價格, 可以為空。
 
 ### WebSocket API
 * [行情](../v5/websocket/public/ticker) [現貨]
