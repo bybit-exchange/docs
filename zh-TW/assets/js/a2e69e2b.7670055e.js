@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocusaurus_docs=self.webpackChunkdocusaurus_docs||[]).push([[9828],{82446:e=>{e.exports=JSON.parse('{"title":"V5 API","slug":"/api-explorer/v5/category/","permalink":"/docs-v2/zh-TW/api-explorer/v5/category/","navigation":{"next":{"title":"Introduction","permalink":"/docs-v2/zh-TW/api-explorer/v5/market/bybit-open-api-v-5-explorer"}}}')}}]);
