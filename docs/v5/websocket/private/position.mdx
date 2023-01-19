@@ -22,14 +22,14 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
 |> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` under unified margin account |
 |> positionValue |string |Position value |
-|> riskId |integer |Risk limit ID |
-|> riskLimitValue |string |Risk limit value corresponding to riskId|
+|> riskId |integer |Risk limit ID. _Note: for portfolio margin mode, it returns 0, which the risk limit value is invalid_|
+|> riskLimitValue |string |Risk limit value corresponding to riskId. _Note: for portfolio margin mode, it returns "", which the risk limit value is invalid_|
 |> entryPrice |string |Entry price |
 |> markPrice |string |Mark price |
-|> leverage |string |Leverage |
+|> leverage |string |Leverage. _Note: for portfolio margin mode, it returns "", which the leverage value is invalid_|
 |> positionBalance |string |Please ignore |
-|> positionMM |string |Position maintenance margin |
-|> positionIM |string |Position initial margin |
+|> positionMM |string |Position maintenance margin. _Note: for portfolio margin mode, it returns ""_|
+|> positionIM |string |Position initial margin. _Note: for portfolio margin mode, it returns ""_|
 |> liqPrice |string |Est.liquidation price. `""` for unified margin account |
 |> bustPrice |string |Est.bankruptcy price. `""` for unified margin account |
 |> tpSlMode |string |Tp/Sl mode. `Full`,`Partial` |

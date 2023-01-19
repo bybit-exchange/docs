@@ -43,19 +43,18 @@ paths:
               properties:
                 category:
                   type: string
-                  description: Product type.
+                  description: Product type
+                  example: linear
                   enum:
                     - linear
-                    - inverse
                     - option
                     - spot
-                  default: linear
                 symbol:
                   type: string
                   description: Symbol name
                   example: ETHUSDT
                 isLeverage:
-                  type: int
+                  type: integer
                   enum:
                     - 0
                     - 1
@@ -104,13 +103,14 @@ paths:
                     - tpslOrder
                   description: Take profit stop loss or ordinary order. Only valid for spot.
                   default: Order
+                  example:
                 orderIv:
                   type: string
                   description: Implied volatility. param for option order
                   example:
                 timeInForce:
                   type: string
-                  description: Time in force.
+                  description: Time in force
                   enum:
                     - GTC
                     - IOC
@@ -161,7 +161,7 @@ paths:
                     - false
                   example: false
                 closeOnTrigger:
-                  type: string
+                  type: boolean
                   description: close on trigger
                   enum:
                     - true
@@ -185,9 +185,9 @@ paths:
     post:
       tags:
         - trade
-      summary: Replace Order
-      description: Replace an order.
-      operationId: replace-order
+      summary: Amend Order
+      description: Amend an order.
+      operationId: amend-order
       parameters:
         - name: apiKey
           in: header

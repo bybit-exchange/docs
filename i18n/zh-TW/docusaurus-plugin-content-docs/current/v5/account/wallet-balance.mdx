@@ -3,7 +3,7 @@ title: 查詢錢包餘額
 sidebar_label: 查詢錢包餘額
 sidebar_position: 1
 ---
-獲取錢包餘額
+獲取錢包餘額, 查詢各個幣種的資產信息，以及統一保證金模式下的帳戶風險率信息。默認不返回資產或負債為0的幣種信息。
 
 ### HTTP 請求
 GET `/v5/account/wallet-balance`
@@ -37,9 +37,9 @@ GET `/v5/account/wallet-balance`
 |>> availableToBorrow |string |當前幣種的可用借貸額度 |
 |>> availableToWithdraw |string |當前幣種的可劃轉提現金額 |
 |>> accruedInterest	|string	|當前幣種的預計要在下一個利息週期收取的利息金額|
-|>> totalOrderIM |string |以當前幣種結算的訂單委託預佔用保證金|
-|>> totalPositionIM	|string	|以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費|
-|>> totalPositionMM	|string |以當前幣種結算的所有倉位維持保證金求和|
+|>> totalOrderIM |string |以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串|
+|>> totalPositionIM	|string	|以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費. 組合保證金模式下，該字段返回空字符串|
+|>> totalPositionMM	|string |以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串|
 |>> unrealisedPnl |string |以當前幣種結算的所有倉位的未結盈虧之和|
 |>> cumRealisedPnl |string |以當前幣種結算的所有倉位的累計已結盈虧之和|
 

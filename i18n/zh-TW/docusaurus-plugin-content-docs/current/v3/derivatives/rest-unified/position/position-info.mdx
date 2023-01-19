@@ -41,7 +41,7 @@ GET `/unified/v3/private/position/list`
             <td>> symbol</td><td>string</td><td>合約名稱 </td>
         </tr>
         <tr>
-            <td>> leverage</td><td>string</td><td>槓桿倍數 </td>
+            <td>> leverage</td><td>string</td><td>槓桿倍數. 注意: 組合保證金模式下，該字段返回""，槓桿規則失效</td>
         </tr>
         <tr>
             <td>> updatedTime</td><td>integer</td><td>倉位數據更新時間戳 (ms) </td>
@@ -59,7 +59,7 @@ GET `/unified/v3/private/position/list`
             <td>> tpslMode</td><td>string</td><td>止盈止損模式. `Partial`, `Full` </td>
         </tr>
         <tr>
-            <td>> riskId</td><td>integer</td><td>風險限額Id </td>
+            <td>> riskId</td><td>integer</td><td>風險限額ID. 注意: 組合保證金模式下，該字段返回0，風險限額規則失效</td>
         </tr>
         <tr>
             <td>> trailingStop</td><td>string</td><td>追蹤止損 (距離當前價格的距離) </td>
@@ -83,7 +83,7 @@ GET `/unified/v3/private/position/list`
             <td>> cumRealisedPnl</td><td>string</td><td>累計已結盈虧 </td>
         </tr>
         <tr>
-            <td>> positionMM</td><td>string</td><td>倉位維持保證金 </td>
+            <td>> positionMM</td><td>string</td><td>倉位維持保證金. 組合保證金模式下，該字段返回""</td>
         </tr>
         <tr>
             <td>> createdTime</td><td>integer</td><td>建立倉位時間戳 (毫秒) </td>
@@ -92,7 +92,7 @@ GET `/unified/v3/private/position/list`
             <td>> positionIdx</td><td>integer</td><td>倉位標識,  用于在不同仓位模式下标识仓位<li>`0`: 單向持倉, 統一保證金只有單向持倉</li></td>
         </tr>
         <tr>
-            <td>> positionIM</td><td>string</td><td>倉位初始保證金 </td>
+            <td>> positionIM</td><td>string</td><td>倉位初始保證金. 組合保證金模式下，該字段返回""</td>
         </tr>
     </table>
 </TabItem>
@@ -139,7 +139,7 @@ GET `/unified/v3/private/position/list`
             <td>> cumRealisedPnl</td><td>string</td><td>累计已结盈亏 </td>
         </tr>
         <tr>
-            <td>> positionMM</td><td>string</td><td>倉位維持保證金 </td>
+            <td>> positionMM</td><td>string</td><td>倉位維持保證金. 組合保證金模式下，該字段返回""</td>
         </tr>
         <tr>
             <td>> createdTime</td><td>integer</td><td>建立倉位時間戳 (毫秒)</td>
@@ -148,7 +148,7 @@ GET `/unified/v3/private/position/list`
             <td>> positionIdx</td><td>integer</td><td>期權無效, 默認為`0` </td>
         </tr>
         <tr>
-            <td>> positionIM</td><td>string</td><td>倉位初始保證金 </td>
+            <td>> positionIM</td><td>string</td><td>倉位初始保證金. 組合保證金模式下，該字段返回"" </td>
         </tr>
     </table>
 </TabItem>
