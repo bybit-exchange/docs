@@ -17,18 +17,18 @@ paths:
       tags:
         - contract
       summary: Place Order
-      description: Place a future or option order. Please read [API-DOC](../../../../derivatives/contract/place-order##) first.
+      description: Place a future or option order.
       operationId: create-order
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -41,14 +41,6 @@ paths:
             schema:
               type: object
               properties:
-                category:
-                  type: string
-                  description: Product type. option is not availale for now
-                  enum:
-                    - linear
-                    - inverse
-                    - option
-                  default: linear
                 symbol:
                   type: string
                   description: Symbol name
@@ -90,10 +82,6 @@ paths:
                     - IndexPrice
                   description: param for StopOrder
                   example:
-                iv:
-                  type: string
-                  description: param for option order
-                  example:
                 timeInForce:
                   type: string
                   description: Time in force
@@ -113,7 +101,7 @@ paths:
                   example: 0
                 orderLinkId:
                   type: string
-                  description: required param for option order
+                  description: User customised order ID
                   example: test-xx1
                 takeProfit:
                   type: string
@@ -153,13 +141,6 @@ paths:
                     - true
                     - false
                   example: false
-                mmp:
-                  type: boolean
-                  description: market marker protection. for option order
-                  enum:
-                    - true
-                    - false
-                  example:
               required:
                 - symbol
                 - side
@@ -172,32 +153,21 @@ paths:
       tags:
         - contract
       summary: Get Open Orders
-      description: Get unfilled orders. Please read [API-DOC](../../../../derivatives/contract/open-order#) first.
+      description: Get unfilled orders.
       operationId: open-order
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
-        - name: category
-          in: query
-          description: Product type
-          required: false
-          schema:
-            type: string
-            enum:
-              - linear
-              - inverse
-              - option
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
@@ -244,7 +214,7 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor for pagination
           required: false
           schema:
             type: string
@@ -256,18 +226,18 @@ paths:
       tags:
         - contract
       summary: Replace Order
-      description: Replace an order. Please read [API-DOC](../../../../derivatives/contract/replace-order#) first.
+      description: Replace an order.
       operationId: replace-order
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -280,33 +250,25 @@ paths:
             schema:
               type: object
               properties:
-                category:
-                  type: string
-                  enum:
-                    - linear
-                    - inverse
-                    - option
-                  description: Product type
-                  default: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 orderId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 orderLinkId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 qty:
                   type: string
                   description: Modify the order qty
+                  example:
                 price:
                   type: string
                   description: Modify the order price
-                  example:
-                iv:
-                  type: string
-                  description: Modify option order iv
                   example:
                 triggerPrice:
                   type: string
@@ -351,18 +313,18 @@ paths:
       tags:
         - contract
       summary: Cancel Order
-      description: Cancel a order. Please read [API-DOC](../../../../derivatives/contract/cancel#) first.
+      description: Cancel a order.
       operationId: cancel-order
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -375,23 +337,18 @@ paths:
             schema:
               type: object
               properties:
-                category:
-                  type: string
-                  enum:
-                    - linear
-                    - inverse
-                    - option
-                  description: Product type
-                  default: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 orderId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
                 orderLinkId:
                   type: string
                   description: Either orderId or orderLinkId is required
+                  example:
               required:
                 - symbol
   /contract/v3/private/order/cancel-all:
@@ -399,18 +356,18 @@ paths:
       tags:
         - contract
       summary: Cancel All Order
-      description: Cancel all orders. Please read [API-DOC](../../../../derivatives/contract/cancel-all#) first.
+      description: Cancel all orders.
       operationId: cancel-all
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -423,65 +380,41 @@ paths:
             schema:
               type: object
               properties:
-                category:
-                  type: string
-                  enum:
-                    - linear
-                    - inverse
-                    - option
-                  description: Product type
-                  default: linear
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 baseCoin:
                   type: string
-                  description: Cancel by base coin. option ONLY
+                  description: Cancel by base coin
+                  example:
                 settleCoin:
                   type: string
                   description: Cancel by settle coin
-              required:
-                - symbol
+                  example:
   /contract/v3/private/order/list:
     get:
       tags:
         - contract
       summary: Get Order List
-      description: Get order history. Please read [API-DOC](../../../../derivatives/contract/order-list#) first.
+      description: Get order history.
       operationId: order-list
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
-        - name: category
-          in: query
-          description: Product type
-          required: false
-          schema:
-            type: string
-            enum:
-              - linear
-              - inverse
-              - option
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
-          required: false
-          schema:
-            type: string
-        - name: baseCoin
-          in: query
-          description: Base coin. option ONLY
           required: false
           schema:
             type: string
@@ -520,7 +453,7 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor to pagination
           required: false
           schema:
             type: string
@@ -532,41 +465,24 @@ paths:
       tags:
         - contract
       summary: My Position
-      description: Get real-time position data. Please read [API-DOC](../../../../derivatives/contract/position-list#) first.
+      description: Get real-time position data.
       operationId: position-info
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
-        - name: category
-          in: query
-          description: Product type
-          required: false
-          schema:
-            type: string
-            enum:
-              - linear
-              - inverse
-              - option
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
-          schema:
-            type: string
-        - name: baseCoin
-          in: query
-          description: for option only
-          required: false
           schema:
             type: string
         - name: settleCoin
@@ -584,7 +500,7 @@ paths:
             default: 20
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor to pagination
           required: false
           schema:
             type: string
@@ -596,18 +512,18 @@ paths:
       tags:
         - contract
       summary: Set Auto Add Margin
-      description: Turn on/off auto add position margin. Please read [API-DOC](../../../../derivatives/contract/auto-margin#) first.
+      description: Turn on/off auto add position margin.
       operationId: auto-margin
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -654,18 +570,18 @@ paths:
       tags:
         - contract
       summary: Switch Cross/Isolated Margin
-      description: Switch cross/isolated margin mode. Please read [API-DOC](../../../../derivatives/contract/cross-isolated#) first.
+      description: Switch cross/isolated margin mode.
       operationId: cross-isolated-margin
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -681,6 +597,7 @@ paths:
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 tradeMode:
                   type: integer
                   description: Trade mode. 0=crossMargin, 1=isolatedMargin
@@ -706,18 +623,18 @@ paths:
       tags:
         - contract
       summary: Switch Position Mode
-      description: Switch position mode. Please read [API-DOC](../../../../derivatives/contract/position-mode#) first.
+      description: Switch position mode.
       operationId: position-mode
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -733,10 +650,11 @@ paths:
                 symbol:
                   type: string
                   description: Symbol name. Either symbol or coin is required
+                  example: ETHUSDT
                 coin:
                   type: string
                   description: Coin. Either symbol or coin is required
-                  example: "USDT"
+                  example:
                 mode:
                   type: string
                   description: Position mode. 0=mergedSingle, 3=bothSide
@@ -751,18 +669,18 @@ paths:
       tags:
         - contract
       summary: Switch TP/SL Mode
-      description: Switch tp/sl mode. Please read [API-DOC](../../../../derivatives/contract/tpsl-mode#) first.
+      description: Switch tp/sl mode.
       operationId: tpsl-mode
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -778,6 +696,7 @@ paths:
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 tpSlMode:
                   type: string
                   description: Full=full position TP/SL, Partial=partial mode tp/sl
@@ -793,18 +712,18 @@ paths:
       tags:
         - contract
       summary: Set Leverage
-      description: Set levearage. Please read [API-DOC](../../../../derivatives/contract/leverage#) first.
+      description: Set levearage.
       operationId: leverage
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -820,6 +739,7 @@ paths:
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 buyLeverage:
                   type: string
                   description: Buy side leverage
@@ -837,18 +757,18 @@ paths:
       tags:
         - contract
       summary: Set Trading Stop
-      description: Set trade stop. Please read [API-DOC](../../../../derivatives/contract/trading-stop#) first.
+      description: Set trade stop.
       operationId: trading-stop
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -864,6 +784,7 @@ paths:
                 symbol:
                   type: string
                   description: Symbol name
+                  example: ETHUSDT
                 takeProfit:
                   type: string
                   description: Take profit price
@@ -887,7 +808,7 @@ paths:
                     - LastPrice
                     - MarkPrice
                     - IndexPrice
-                  example: "MarkPrice"
+                  example: MarkPrice
                 slTriggerBy:
                   type: string
                   description: Stop loss trigger price type
@@ -895,7 +816,7 @@ paths:
                     - LastPrice
                     - MarkPrice
                     - IndexPrice
-                  example: "MarkPrice"
+                  example: MarkPrice
                 trailingStop:
                   type: string
                   description: Trailing stop
@@ -920,18 +841,18 @@ paths:
       tags:
         - contract
       summary: Set Risk Limit
-      description: Set risk limit. Please read [API-DOC](../../../../derivatives/contract/set-risk-limit#) first.
+      description: Set risk limit.
       operationId: set-risk-limit
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -969,45 +890,27 @@ paths:
       tags:
         - contract
       summary: Get Execution List
-      description: Get execution list. Please read [API-DOC](../../../../derivatives/contract/execution-list#) first.
+      description: Get execution list.
       operationId: execution
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
-        - name: category
-          in: query
-          description: Product type
-          required: false
-          schema:
-            type: string
-            enum:
-              - linear
-              - inverse
-              - option
-            default: linear
         - name: symbol
           in: query
           description: Symbol name
-          required: false
+          required: true
           schema:
             type: string
-        - name: baseCoin
-          in: query
-          description: Base coin
-          required: false
-          schema:
-            type: string
-          example:
         - name: orderId
           in: query
           required: false
@@ -1052,7 +955,7 @@ paths:
             default: 50
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor to pagination
           required: false
           schema:
             type: string
@@ -1064,18 +967,18 @@ paths:
       tags:
         - contract
       summary: Get Closed PnL
-      description: Get closed pnl. Please read [API-DOC](../../../../derivatives/contract/closepnl#) first.
+      description: Get closed pnl.
       operationId: close-pnl
       parameters:
         - name: apiKey
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
         - name: secret
           in: header
-          description: If not input, the default one will be used
+          description: A normal sub account API key is provided by default
           required: false
           schema:
             type: string
@@ -1106,7 +1009,7 @@ paths:
             default: 50
         - name: cursor
           in: query
-          description: cursor to pagnition
+          description: cursor to pagination
           required: false
           schema:
             type: string
