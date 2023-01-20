@@ -1,0 +1,33 @@
+---
+id: orderbook
+title: "Order Book"
+description: "Get order book data"
+sidebar_label: Order Book
+hide_title: true
+hide_table_of_contents: true
+api: {"tags":["market"],"description":"Get order book data","operationId":"orderbook","parameters":[{"name":"category","in":"query","description":"Products category","required":false,"schema":{"type":"array","items":{"type":"string","enum":["linear","inverse","option"],"default":"linear"}}},{"name":"symbol","in":"query","description":"Symbol name","required":true,"schema":{"type":"string"}},{"name":"limit","in":"query","description":"Maximum 500","required":false,"schema":{"type":"int","default":25}}],"responses":{"200":{"description":"successful operation","content":{"application/json":{"schema":{"type":"object","properties":{"retCode":{"type":"integer"},"retMsg":{"type":"string"},"result":{"type":"object","properties":{"s":{"type":"string"},"b":{"type":"array","items":{"type":"array","example":["16972","2.46"]}},"a":{"type":"array","items":{"type":"array","example":["16972.5","8.818"]}},"ts":{"type":"integer","format":"timestamp","example":1668740049061},"u":{"type":"integer","format":"sequence","example":1592092}}},"retExtInfo":{"type":"object"},"time":{"type":"integer","format":"timestamp","example":1668740049062}}}}}}},"method":"get","path":"/derivatives/v3/public/order-book/L2","servers":[{"url":"https://api-testnet.bybit.com","description":"Testnet server"}],"info":{"description":"Collection of derivatives Restul API\n","version":"3.0.0","title":"Bybit derivatives explorer"},"postman":{"name":"Order Book","description":{"content":"Get order book data","type":"text/plain"},"url":{"path":["derivatives","v3","public","order-book","L2"],"host":["{{baseUrl}}"],"query":[{"disabled":false,"description":{"content":"Products category","type":"text/plain"},"key":"category","value":""},{"disabled":false,"description":{"content":"(Required) Symbol name","type":"text/plain"},"key":"symbol","value":""},{"disabled":false,"description":{"content":"Maximum 500","type":"text/plain"},"key":"limit","value":""}],"variable":[]},"header":[{"key":"Accept","value":"application/json"}],"method":"GET"}}
+sidebar_class_name: "get api-method"
+info_path: api-explorer/derivatives/market/bybit-derivatives-explorer
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem"
+import SchemaTabs from "@theme/SchemaTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import TabItem from "@theme/TabItem";
+
+## Order Book
+
+
+
+Get order book data
+
+<details style={{"marginBottom":"1rem"}} data-collapsed={false} open={true}><summary style={{}}><strong>Query Parameters</strong></summary><div><ul><ParamsItem className={"paramsItem"} param={{"name":"category","in":"query","description":"Products category","required":false,"schema":{"type":"array","items":{"type":"string","enum":["linear","inverse","option"],"default":"linear"}}}}></ParamsItem><ParamsItem className={"paramsItem"} param={{"name":"symbol","in":"query","description":"Symbol name","required":true,"schema":{"type":"string"}}}></ParamsItem><ParamsItem className={"paramsItem"} param={{"name":"limit","in":"query","description":"Maximum 500","required":false,"schema":{"type":"int","default":25}}}></ParamsItem></ul></div></details><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+
+successful operation
+
+</div><div><MimeTabs schemaType={"response"}><TabItem label={"application/json"} value={"application/json"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"retCode"} required={false} schemaDescription={undefined} schemaName={"integer"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"retMsg"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>result</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"s"} required={false} schemaDescription={undefined} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"b"} required={false} schemaDescription={undefined} schemaName={"array[]"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"a"} required={false} schemaDescription={undefined} schemaName={"array[]"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"ts"} required={false} schemaDescription={undefined} schemaName={"timestamp"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"u"} required={false} schemaDescription={undefined} schemaName={"sequence"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></div></details></SchemaItem><SchemaItem collapsible={false} name={"retExtInfo"} required={false} schemaDescription={undefined} schemaName={"object"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"time"} required={false} schemaDescription={undefined} schemaName={"timestamp"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></ul></details></TabItem><TabItem label={"Example (from schema)"} value={"Example (from schema)"}><ResponseSamples responseExample={"{\n  \"retCode\": 0,\n  \"retMsg\": \"string\",\n  \"result\": {\n    \"s\": \"string\",\n    \"b\": [\n      [\n        \"16972\",\n        \"2.46\"\n      ]\n    ],\n    \"a\": [\n      [\n        \"16972.5\",\n        \"8.818\"\n      ]\n    ],\n    \"ts\": 1668740049061,\n    \"u\": 1592092\n  },\n  \"retExtInfo\": {},\n  \"time\": 1668740049062\n}"} language={"json"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem></ApiTabs></div>
+      
