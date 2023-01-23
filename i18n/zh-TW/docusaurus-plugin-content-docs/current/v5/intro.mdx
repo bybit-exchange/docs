@@ -14,15 +14,15 @@ sidebar_label: 概覽
 
 REST接口根URL:
 - **測試網:**<br/>
-https://api-testnet.bybit.com
+`https://api-testnet.bybit.com`
 - **主網**(請根據您的網絡情況選擇以下任意一個地址使用):<br/>
-https://api.bybit.com<br/>
-https://api.bytick.com
+`https://api.bybit.com`<br/>
+`https://api.bytick.com`
 
 ### 公共參數
 需要簽名的接口必須包含以下http頭參數:
 
-* `X-BAPI-API-KEY` - api密鑰
+* `X-BAPI-API-KEY` - API密鑰
 * `X-BAPI-TIMESTAMP` - UTC毫秒時間戳
 * `X-BAPI-SIGN` - 請求參數簽名<br/>
 
@@ -41,7 +41,7 @@ _server_time - recv_window <= timestamp < server_time + 1000_<br/>
 :::
 
 **基本步驟:**
-1. 時間戳 + api-key + [recv_window]+ [queryString(無需排序) | jsonBodyString]<br/>
+1. 時間戳 + API key + [recv_window]+ [queryString(無需排序) | jsonBodyString]<br/>
 2. 使用**HMAC_SHA256**算法對第1步中拼接的string簽名，並轉換為16進製字符串，得出sign參數。<br/>
 3. 添加生成的簽名到HTTP頭當中
 **注意:** **GET**和**POST**請求的加密明文是不相同，請參考以下示例.
