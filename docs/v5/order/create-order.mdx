@@ -50,18 +50,18 @@ POST `/v5/order/create`
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `spot`, `linear`, `option` |
 |symbol |**true** |string |Symbol name|
-|isLeverage |false |integer |Whether to borrow. Valid for `spot` ONLY. `0`(default): false, `1`: true|
+|isLeverage |false |integer |Whether to borrow. Valid for `spot` **only**. `0`(default): false, `1`: true|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|
 |price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>|
-|orderFilter |false |string |Valid for `spot` ONLY. `Order`,`tpslOrder`. If not passed, `Order` by default|
+|orderFilter |false |string |Valid for `spot` **only**. `Order`,`tpslOrder`. If not passed, `Order` by default|
 |triggerPrice |false |string |<ul><li>For futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is the TP/SL order trigger price</li></ul>|
 |[triggerBy](../enum#triggerby) |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
-|orderIv |false |string |Implied volatility. `option` ONLY. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
+|orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
-|[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. For `linear` ONLY, and under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
+|[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. For `linear` **only**, and under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 |orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_`future` orderLinkId rules_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price. Only takes effect upon opening the position |
 |stopLoss |false |string |Stop loss price. Only takes effect upon opening the position |
@@ -69,7 +69,7 @@ POST `/v5/order/create`
 |[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
-|mmp |false |boolean |Market maker protection. `option` ONLY. `true` means set the order as a market maker protection order |
+|mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order |
 
 ### Response Parameters
 | Parameter | Type | Comments|
