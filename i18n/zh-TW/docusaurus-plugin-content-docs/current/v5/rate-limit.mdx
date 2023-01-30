@@ -186,6 +186,141 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     </tr>
 </table>
 
+## 不同VIP等級的接口限頻規則
+|VIP等級|期貨限頻 |期權限頻 |現貨限頻 |
+|:----|:----:|:----:|:----:|
+|默認|10/s|10/s|20/s|
+|VIP 1|20/s|20/s|25/s|
+|VIP 2|40/s|40/s|30/s|
+|VIP 3|60/s|60/s|40/s|
+|PRO 1|100/s|100/s|50/s|
+|PRO 2|150/s|150/s|75/s|
+|PRO 3|200/s|200/s|100/s|
+|MM 1|100/s|100/s|50/s|
+|MM 2|150/s|150/s|75/s|
+|MM 3|200/s|200/s|100/s|
+
+### 覆蓋接口
+#### 單筆訂單接口 (期貨 & 期權)
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>接口</th><th>默認限頻</th>
+    </tr>
+    <tr>
+        <td rowSpan="5">下單</td><td>/v5/order/create</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/place-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/place-order</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">該單</td><td>/v5/order/amend</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/replace-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/replace-order</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">撤單</td><td>/v5/order/cancel</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/cancel-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/cancel-order</td>
+    </tr>
+</table>
+</span>
+
+#### 單筆訂單接口 (現貨)
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>接口</th><th>默認限頻</th>
+    </tr>
+    <tr>
+        <td rowSpan="3">下單</td><td>/v5/order/create</td><td rowSpan="3">20 req/s</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/private/order</td>
+    </tr>
+    <tr>
+        <td><b>POST</b> /spot/v1/order</td>
+    </tr>
+    <tr>
+        <td rowSpan="4">撤單</td><td>/v5/order/cancel</td><td rowSpan="4">20 req/s</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/private/cancel-order</td>
+    </tr>
+    <tr>
+        <td><b>DELETE</b> /spot/v1/order</td>
+    </tr>
+    <tr>
+        <td><b>DELETE</b> /spot/v1/order/fast</td>
+    </tr>
+</table>
+</span>
+
+#### 批量訂單接口
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>接口</th><th>默認限頻</th>
+    </tr>
+    <tr>
+        <td>批量下單</td><td>/unified/v3/private/order/create-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>批量改單</td><td>/unified/v3/private/order/replace-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>批量撤單</td><td>/unified/v3/private/order/cancel-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>全部撤單</td><td>/unified/v3/private/order/cancel-all</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>批量撤單</td><td>/spot/v3/private/cancel-orders</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>根據訂單ID撤單</td><td>/spot/v3/private/cancel-orders-by-ids</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>批量撤單</td><td><b>DELETE</b> /spot/order/batch-cancel</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>批量快速撤單</td><td><b>DELETE</b> /spot/order/batch-fast-cancel</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>根據訂單ID批量撤單</td><td><b>DELETE</b> /spot/order/batch-cancel-by-ids</td><td>20 req/s</td>
+    </tr>
+</table>
+</span>
+
 ## 如何提高頻率限製
 請發送郵件到 api@bybit.com，我們會在 1-4 個工作日內答復。郵件內容必須包含以下內容：
 1. 您的姓名和公司名稱和簡介
