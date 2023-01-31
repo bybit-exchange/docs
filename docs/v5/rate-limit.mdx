@@ -190,6 +190,141 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     </tr>
 </table>
 
+## API Rate Limit Rules For VIPs
+|VIP Level |Limit for Futures |Limit for Options |Limit for Spot |
+|:----|:----:|:----:|:----:|
+|Default|10/s|10/s|20/s|
+|VIP 1|20/s|20/s|25/s|
+|VIP 2|40/s|40/s|30/s|
+|VIP 3|60/s|60/s|40/s|
+|PRO 1|100/s|100/s|50/s|
+|PRO 2|150/s|150/s|75/s|
+|PRO 3|200/s|200/s|100/s|
+|MM 1|100/s|100/s|50/s|
+|MM 2|150/s|150/s|75/s|
+|MM 3|200/s|200/s|100/s|
+
+### Covered APIs
+#### Single order (Futures & Options)
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>Path</th><th>Limit By Default</th>
+    </tr>
+    <tr>
+        <td rowSpan="5">Place an order</td><td>/v5/order/create</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/create</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/place-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/place-order</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">Modify an order</td><td>/v5/order/amend</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/replace</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/replace-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/replace-order</td>
+    </tr>
+    <tr>
+        <td rowSpan="5">Cancel an order</td><td>/v5/order/cancel</td><td rowSpan="5">10 req/s</td>
+    </tr>
+    <tr>
+        <td>/unified/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td>/contract/v3/private/order/cancel</td>
+    </tr>
+    <tr>
+        <td>/perpetual/usdc/openapi/private/v1/cancel-order</td>
+    </tr>
+    <tr>
+        <td>/option/usdc/openapi/private/v1/cancel-order</td>
+    </tr>
+</table>
+</span>
+
+#### Single order (Spot)
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>Path</th><th>Limit By Default</th>
+    </tr>
+    <tr>
+        <td rowSpan="3">Place an order</td><td>/v5/order/create</td><td rowSpan="3">20 req/s</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/private/order</td>
+    </tr>
+    <tr>
+        <td><b>POST</b> /spot/v1/order</td>
+    </tr>
+    <tr>
+        <td rowSpan="4">Cancel an order</td><td>/v5/order/cancel</td><td rowSpan="4">20 req/s</td>
+    </tr>
+    <tr>
+        <td>/spot/v3/private/cancel-order</td>
+    </tr>
+    <tr>
+        <td><b>DELETE</b> /spot/v1/order</td>
+    </tr>
+    <tr>
+        <td><b>DELETE</b> /spot/v1/order/fast</td>
+    </tr>
+</table>
+</span>
+
+#### Batch orders
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th></th><th>Path</th><th>Limit By Default</th>
+    </tr>
+    <tr>
+        <td>Batch place orders</td><td>/unified/v3/private/order/create-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch replace orders</td><td>/unified/v3/private/order/replace-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch cancel orders</td><td>/unified/v3/private/order/cancel-batch</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>Cancel all orders</td><td>/unified/v3/private/order/cancel-all</td><td>2 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch cancel orders</td><td>/spot/v3/private/cancel-orders</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>Cancel orders by IDs</td><td>/spot/v3/private/cancel-orders-by-ids</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch cancel orders</td><td><b>DELETE</b> /spot/order/batch-cancel</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch fast cancel orders</td><td><b>DELETE</b> /spot/order/batch-fast-cancel</td><td>20 req/s</td>
+    </tr>
+    <tr>
+        <td>Batch cancel orders by IDs</td><td><b>DELETE</b> /spot/order/batch-cancel-by-ids</td><td>20 req/s</td>
+    </tr>
+</table>
+</span>
+
 ## How to increase API Limit
 Please email api@bybit.com with the following information. We will reply within 1-4 working days:
 1. Your name and your company details
