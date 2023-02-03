@@ -6,7 +6,8 @@ sidebar_position: 6
 
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
-> **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
+> **Unified account covers: Spot / Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::info
 * The orders in the last 7 days: supports querying all statuses
@@ -20,9 +21,9 @@ GET `/v5/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`option` |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin |
+|baseCoin |false |string |Base coin. _Normal account does **not** support this param_|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order. Default: all kinds of orders|

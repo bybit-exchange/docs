@@ -5,7 +5,8 @@ sidebar_position: 2
 ---
 
 Set the leverage
-> **Covers: Linear contract(Unified Account)**
+> **Unified account covers: Linear contract**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 ### HTTP Request
 POST `/v5/position/set-leverage`
@@ -13,7 +14,7 @@ POST `/v5/position/set-leverage`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |**true** |string |Symbol name|
 |buyLeverage |**true** |string |[`0`, max leverage of corresponding [risk limit](../market/risk-limit#)]. _Note: Under one-way mode, `buyLeverage` must be the same as `sellLeverage`_ |
 |sellLeverage |**true** |string |[`0`, max leverage of corresponding risk limit]. _Note: Under one-way mode, `buyLeverage` must be the same as `sellLeverage`_|
