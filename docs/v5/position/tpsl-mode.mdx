@@ -5,7 +5,8 @@ sidebar_position: 2.5
 ---
 
 Set TP/SL mode to Full or Partial
-> **Covers: Linear contract (Unified Account)**
+> **Unified account covers: Linear contract**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::info
 For partial TP/SL mode, you can set the TP/SL size smaller than position size.
@@ -17,7 +18,7 @@ POST `/v5/position/set-tpsl-mode`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, USDT perpetual **only**|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |**true** |string |Symbol name|
 |tpSlMode |**true** |string |TP/SL mode. `Full`,`Partial` |
 

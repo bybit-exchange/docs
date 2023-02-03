@@ -5,7 +5,8 @@ sidebar_position: 1
 ---
 
 Query real-time position data, such as position size, cumulative realizedPNL.
-> **Covers: Linear contract(Unified Account) / Option(Unified Account)**
+> **Unified account covers: Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 ### HTTP Request
 GET `/v5/position/list`
@@ -13,10 +14,10 @@ GET `/v5/position/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../v5/enum#category) |**true** |string |Product type. `linear`,`option` |
-|symbol |false |string |Symbol name<ul><li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li><li>If category and symbol are not matched, it returns null</li></ul>|
+|[category](../v5/enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|symbol |false |string |Symbol name<ul><li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li></ul>|
 |baseCoin |false |string |Base coin. `option` **only**. Return all option positions if not passed|
-|settleCoin |false |string |Settle coin. For `linear` & `inverse`, either `symbol` or `settleCon` is **required** `symbol` has a higher priority |
+|settleCoin |false |string |Settle coin. For `linear` & `inverse`, either `symbol` or `settleCon` is **required**. `symbol` has a higher priority |
 |limit |false |integer |Limit for data size per page. [`1`, `200`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination|
 

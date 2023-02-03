@@ -3,8 +3,9 @@ title: Place Order
 sidebar_label: Place Order
 sidebar_position: 1
 ---
-This endpoint supports to create the order for spot, spot margin, linear perpetual and option.
-> **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
+This endpoint supports to create the order for spot, spot margin, linear perpetual, inverse futures and options.
+> **Unified account covers: Spot / Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::info
 - **Supported order type (`orderType`):**<br/>
@@ -48,7 +49,7 @@ POST `/v5/order/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `spot`, `linear`, `option` |
+|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |**true** |string |Symbol name|
 |isLeverage |false |integer |Whether to borrow. Valid for `spot` **only**. `0`(default): false, `1`: true|
 |side |**true** |string |`Buy`, `Sell`|
