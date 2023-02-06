@@ -62,7 +62,7 @@ Bybit根據請求方式有不同的IP頻率限制。 我們不建議您在這些
 :::caution
 如果您收到這樣的響應`"ret_msg": "Too many visits!"`, 則表示您觸發了帳戶頻率限制, 請等到頻率限制重置以後, 再繼續發送請求。
 :::
-Bybit基於**每秒鍾/分钟**的滾動時間窗口來做頻率限製，並且是按**賬戶**（uid）來做劃分限製，每次請求API響應頭(response header)中都會包含如下字段：
+Bybit基於**每分鐘**的滾動時間窗口來做頻率限製，並且是按**賬戶**（uid）來做劃分限製，每次請求API響應頭(response header)中都會包含如下字段：
 * `X-Bapi-Limit-Status` - 該接口當前時間窗口剩余可用請求數
 * `X-Bapi-Limit` - 該接口當前頻率限製上限
 * `X-Bapi-Limit-Reset-Timestamp` - 如果您已超過該接口當前窗口頻率限製，該字段表示下個可用時間窗口的時間戳（毫秒），即什麽時候可以恢復訪問；如果您未超過該接口當前窗口頻率限製，該字段表示返回的是當前服務器時間（毫秒).
@@ -128,7 +128,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <th>路徑</th><th>頻率</th>
     </tr>
     <tr>
-        <td>/asset/v3/private/deposit/sub-member-record/query</td><td rowSpan="5">300 req/s</td>
+        <td>/asset/v3/private/deposit/sub-member-record/query</td><td rowSpan="5">300 req/min</td>
     </tr>
     <tr>
         <td>/asset/v3/private/deposit/record/query</td>
