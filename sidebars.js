@@ -575,7 +575,9 @@ const sidebars = {
   ],
   changelogSidebar: [
     "changelog/v5",
-    "changelog/derivatives-v3"
+    "changelog/derivatives-v3",
+    "changelog/spot-v3",
+    "changelog/asset-v3",
   ]
 };
 
