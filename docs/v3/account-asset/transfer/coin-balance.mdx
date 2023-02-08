@@ -1,15 +1,14 @@
 ---
-title: Get Coin balance in account
-sidebar_label: Get Coin balance in account
+title: Get Single Coin Balance
+sidebar_label: Get Single Coin Balance
 sidebar_position: 10
 slug: /account-asset/coin-balance
 ---
-Coin balance in account
 
-You could get coin balance under the master account, and sub account coin balance.
+You could get a single coin balance under the master account, and sub account coin balance.
 
 :::caution Important
-It's not allowed to get master account coin balance via sub account api key.
+It is not allowed to get master account coin balance via sub account api key.
 :::
 
 ### HTTP Request
@@ -20,7 +19,7 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 |:----- |:-------|:-----|------ |
 |memberId|false |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
 |[accountType](enum#accounttype)|<b>true</b> |string |Account type |
-|[coin](enum#coin) |<b>true</b> |string |Currency type |
+|[coin](enum#coin) |<b>true</b> |string |Coin name |
 |withBonus|false |string |Whether query bonus or not. `0`(default)：false; `1`：true |
 
 ### Response Parameters
@@ -33,7 +32,7 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 |balance |Object ||
 |> coin |string |Currency type|
 |> walletBalance |string |Wallet balance|
-|> transferBalance |string |Transferable balance = available balance - bonus|
+|> transferBalance |string |Transferable balance|
 |> bonus |string |The bonus|
 
 ### Request Example
