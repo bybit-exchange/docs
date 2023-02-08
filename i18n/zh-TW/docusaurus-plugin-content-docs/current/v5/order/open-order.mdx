@@ -4,7 +4,8 @@ sidebar_label: 查詢實時委託單
 sidebar_position: 4
 ---
 實時查詢未成交或部分成交的訂單信息. 若需要查詢更久的訂單紀錄，請使用[查詢歷史訂單](order-list#)接口.
-> **覆盖范围：現貨（統一帳戶）/正向合約（統一帳戶）/期權（統一帳戶）**
+> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 期權**
+> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::tip
 - 該接口還支持查詢已成交，取消和拒絕類型的訂單信息，但僅限最近10分鐘內且最多每個UID下提供500條數據.
@@ -12,22 +13,19 @@ sidebar_position: 4
 - 返回的結果將以`createdTime`從新到舊排序.
 :::
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 ### HTTP請求
 GET `/v5/order/realtime`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |產品類型. `spot`,`linear`,`option` |
+|category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul>|
 |symbol |false |string |合約名稱. 對於`linear` 和 `inverse`, `symbol` 和 `settleCoin`**必傳**其中一個|
 |baseCoin |false |string |交易幣種. 僅`option`有效. 若不傳，則返回期權下所有活動委託單|
 |settleCoin |false |string |結算幣種. 對於`linear` 和 `inverse`, `symbol` 和 `settleCoin`**必傳**其中一個|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
-|openOnly |false |integer |<ul><li>`0`(默認): 僅查詢活動委託訂單</li><li>`1`: 返回最近10分鐘僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶下最多保留500條紀錄，如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</li></ul>|
+|openOnly |false |integer |<ul><li>統一帳戶 & 普通帳戶`0`(默認): 僅查詢活動委託訂單</li><li>統一帳戶: `1`, 普通帳戶: `2`: 返回最近10分鐘僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶下最多保留500條紀錄，如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</li></ul>|
 |orderFilter |false |string|`Order`: 活動單, `StopOrder`: 條件單，僅期貨有效, `tpslOrder`: 止盈止損單, 僅現貨有效. 默認: 全部類型訂單|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|

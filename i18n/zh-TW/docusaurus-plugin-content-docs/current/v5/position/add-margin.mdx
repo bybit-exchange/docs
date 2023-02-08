@@ -1,27 +1,28 @@
 ---
-title: Set Auto Add Margin
-sidebar_label: Set Auto Add Margin
+title: 設置自動追加保證金
+sidebar_label: 設置自動追加保證金
 sidebar_position: 4.5
 ---
 
-Turn on/off auto-add-margin for **isolated** margin position
-> **Covers: USDT perpetual(Normal Account)**
+開關自動追加保證金，僅適用於**逐倉**保證金模式
+> **統一帳戶覆蓋範圍: 不支持**
+> **普通帳戶覆蓋範圍: USDT永續**
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/position/set-auto-add-margin`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear` |
-|symbol |false |string |Symbol name |
-|autoAddMargin |**true** |integer |Turn on/off. `0`: off. `1`: on |
-|positionIdx |false |integer |Used to identify positions in different position modes. For hedge mode position, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+|category |**true** |string |產品類型, `linear`|
+|symbol |**true** |string |合約名稱 |
+|autoAddMargin |**true** |integer |是否自動追加保證金. `0`: 關閉. `1`: 開啟 |
+|positionIdx |false |integer |倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段必傳**required**<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向持倉模式</li><li>`2`: 賣側雙向持倉模式</li></ul>|
 
-### Response Parameters
-None
+### 響應參數
+無
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/position/set-auto-add-margin HTTP/1.1
@@ -41,7 +42,7 @@ Content-Type: application/json
 }
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {
