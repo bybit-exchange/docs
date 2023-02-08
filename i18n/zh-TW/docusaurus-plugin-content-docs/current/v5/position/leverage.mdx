@@ -5,7 +5,8 @@ sidebar_position: 2
 ---
 
 設置槓桿
-> **覆蓋範圍: 正向合約(統一帳戶)**
+> **統一帳戶覆蓋範圍: 正向合約**
+> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 ### HTTP 請求
 POST `/v5/position/set-leverage`
@@ -13,7 +14,7 @@ POST `/v5/position/set-leverage`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `linear` |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |**true** |string |合約名稱|
 |buyLeverage |**true** |string |(0, [風險限額](../market/risk-limit#)允許的最大槓桿數]. _注意：單倉模式下，`buyLeverage`需要和`sellLeverage`保持一致_ |
 |sellLeverage |**true** |string |(0, [風險限額](../market/risk-limit#)允許的最大槓桿數]. _注意：單倉模式下，`buyLeverage`需要和`sellLeverage`保持一致_|

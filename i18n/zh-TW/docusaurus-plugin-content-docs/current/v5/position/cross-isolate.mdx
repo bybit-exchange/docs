@@ -1,28 +1,29 @@
 ---
-title: Switch Cross/Isolated Margin
-sidebar_label: Switch Cross/Isolated Margin
+title: 切換全倉/逐倉保證金模式
+sidebar_label: 切換全倉/逐倉保證金模式
 sidebar_position: 2.3
 ---
 
-Select cross margin mode or isolated margin mode
-> **Covers: USDT perpetual(Normal Account)/Inverse contract(Normal Account)**
+選擇全倉保證金或者是逐倉保證金，請參閱<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article/?language=en_US&id=000001053">這裡</a>了解關於全倉/逐倉保證金模式。
+> **統一帳戶覆蓋範圍: 僅支持全倉保證金**
+> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/position/switch-isolated`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear`,`inverse`. **note**: unified account is not applicable |
-|symbol |**true** |string |Symbol name |
-|tradeMode |**true** |integer |`0`: cross margin. `1`: isolated margin |
-|buyLeverage |**true** |string |The value must be equal to `sellLeverage` value|
-|sellLeverage |**true** |string |The value must be equal to `buyLeverage` value|
+|category |**true** |string |產品類型, `linear`, `inverse` <ul><li>這裡`category`字段不參與業務邏輯，僅做路由使用</li><li>統一帳戶不適用該接口</li></ul> |
+|symbol |**true** |string |合約名稱 |
+|tradeMode |**true** |integer |`0`: 全倉. `1`: 逐倉 |
+|buyLeverage |**true** |string |買側槓桿倍數. 必須與`sellLeverage`的值保持相同|
+|sellLeverage |**true** |string |賣側槓桿倍數. 必須與`buyLeverage`的值保持相同|
 
-### Response Parameters
-None
+### 響應參數
+無
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/position/switch-isolated HTTP/1.1
@@ -44,7 +45,7 @@ Content-Length: 121
 }
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

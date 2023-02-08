@@ -20,18 +20,19 @@ sidebar_position: 1
 |> side |string |持倉方向. `Buy`,`Sell` |
 |> size |string |持倉大小 |
 |> [positionIdx](../../enum#positionidx) |integer |倉位標識|
-|> tradeMode |integer |交易模式. `0`: 全倉, `1`: 逐倉. 統保下總是`0` |
+|> tradeMode |integer |交易模式. `0`: 全倉, `1`: 逐倉. 統一帳戶下總是`0` |
 |> positionValue |string |倉位價值 |
 |> riskId |integer |風險限額id. _注意: 組合保證金模式下，該字段返回0，風險限額規則失效_|
 |> riskLimitValue |string |風險限額id對應的風險限額度. _注意: 組合保證金模式下，該字段返回空字符串，風險限額規則失效_|
 |> entryPrice |string |入場價 |
 |> markPrice |string |標記價 |
 |> leverage |string |槓桿. _注意: 組合保證金模式下，該字段返回""，槓桿規則失效_|
-|> positionBalance |string |當前無意義，請忽略|
+|> positionBalance |string |倉位保證金. _統一帳戶沒有該字段_|
+|> autoAddMargin |integer |是否自動添加保證金. `0`: false, `1`: true. _統一帳戶沒有該字段_|
 |> positionMM |string |倉位維持保證金. _注意: 組合保證金模式下，該字段返回空字符串_|
 |> positionIM |string |倉位初始保證金. _注意: 組合保證金模式下，該字段返回空字符串_|
-|> liqPrice |string |預估強平價. 統保為空 |
-|> bustPrice |string |預估破產價. 統保為空 |
+|> liqPrice |string |預估強平價. 統一帳戶為空 |
+|> bustPrice |string |預估破產價. 統一帳戶為空 |
 |> tpSlMode |string |止盈止損模式. `Full`,`Partial` |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
@@ -71,7 +72,6 @@ sidebar_position: 1
             "entryPrice": "0.3615",
             "leverage": "10",
             "positionValue": "27.1125",
-            "positionBalance": "0",
             "markPrice": "0.3374",
             "positionIM": "2.72589075",
             "positionMM": "0.28576575",

@@ -3,8 +3,9 @@ title: 創建委託單
 sidebar_label: 創建委託單
 sidebar_position: 1
 ---
-本接口提供幣幣交易，現貨槓桿交易，正向合約（統一帳戶）以及期權（統一帳戶）的訂單創建。
-> **覆蓋範圍: 現貨 (統一帳戶) / 正向合約 (統一帳戶) / 期權 (統一帳戶)**
+本接口提供幣幣交易，現貨槓桿交易，合約以及期權的訂單創建。
+> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 期權**
+> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::info
 - **支持的訂單類型 (`orderType`):**<br/>
@@ -43,7 +44,7 @@ POST `/v5/order/create`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |產品類型. `spot`, `linear`, `option` |
+|category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul>|
 |symbol |**true** |string |合約名稱|
 |isLeverage |false |integer |是否借貸. 僅現貨有效. `0`(default): 否, `1`: 是|
 |side |**true** |string |`Buy`, `Sell`|

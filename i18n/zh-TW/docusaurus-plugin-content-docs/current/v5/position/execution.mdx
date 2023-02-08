@@ -5,7 +5,8 @@ sidebar_position: 5
 ---
 
 獲取用戶成交紀錄，返回結果按`execTime`降序排列
-> **覆蓋範圍: 現貨 (統一帳戶) / 正向合約 (統一帳戶) / 期權 (統一帳戶)**
+> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 期權**
+> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::tip
 * 單筆訂單可能會有多次成交.
@@ -19,11 +20,11 @@ GET `/v5/execution/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `spot`,`linear`,`option` |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |false |string |合約名稱 |
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單id |
-|baseCoin |false |string |交易幣種 |
+|baseCoin |false |string |交易幣種. 普通帳戶不支持該字段查詢|
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |[execType](../enum#exectype) |false |string |執行類型|
@@ -35,7 +36,7 @@ GET `/v5/execution/list`
 |:----- |:-----|----- |
 | [category](../enum#category) | string  | 產品類型 |
 | list | array | Object |
-|> symbol |string   |合約名稱|
+|> symbol |string |合約名稱|
 |> orderId |string |訂單Id |
 |> orderLinkId |string |用戶自定義訂單id|
 |> side |string |訂單方向.買： `Buy`,賣：`Sell` |
@@ -44,7 +45,7 @@ GET `/v5/execution/list`
 |> leavesQty |string |剩餘委託未成交數量|
 |> orderType |string |訂單類型. 市價單：`Market`,限價單：`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |条件单的订单类型。如果该订单不是条件单，则不会返回任何类型 |
-|> execFee |string   |交易手續費|
+|> execFee |string |交易手續費|
 |> execId |string |成交Id |
 |> execPrice |string |成交價格 |
 |> execQty |string |成交數量 |
