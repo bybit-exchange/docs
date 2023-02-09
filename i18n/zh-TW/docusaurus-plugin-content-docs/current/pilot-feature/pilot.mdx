@@ -3,9 +3,31 @@ title: 試點功能
 slug: /pilot-feature
 ---
 
-## V5支持普通帳戶
-* 可用日期: *測試網 - 已上線, 主網 - 已上線*
-* 覆蓋範圍: 非統一帳戶可以使用V5接口交易**USDT永續**以及**反向合約**
+## V5接口支持普通帳戶
+* 可用日期: *測試網 - 已上線, 主網 - 2023年2月9日*
+* 覆蓋範圍: _普通帳戶支持交易 **USDT永續** and **反向合約**_
+* 詳細內容: 此次發佈之後，如果您有以下行為，您可能會遭遇一些**404錯誤**:
+1. 您仍然在使用v1/v2的鑒權方式訪問V5接口：
+
+```shell
+GET https://api.bybit.com/v5/position/list?api_key=xxx&category=linear&recv_window=5000&symbol=ETHUSDT&timestamp=1675929695887&sign=xxx
+```
+> 您應該將鑒權參數放在請求頭當中:
+
+```http
+Host: api-testnet.bybit.com
+-H 'X-BAPI-SIGN: XXXXXXXXXX' \
+-H 'X-BAPI-API-KEY: XXXXXXXXXX' \
+-H 'X-BAPI-TIMESTAMP: 1658384431891' \
+-H 'X-BAPI-RECV-WINDOW: 5000'
+```
+
+2. 對於以下接口，如果您傳入不恰當的category值, 比如, 您是普通帳戶，但category傳入了option/spot, 或者
+您是統一帳戶，但category傳入了inverse.
+* [查詢實時委託單](v5/order/open-order)
+* [查詢歷史訂單](v5/order/order-list)
+* [查詢持倉 (實時)](v5/position)
+* [查詢成交紀錄 (半年)](v5/position/execution)
 
 ---
 

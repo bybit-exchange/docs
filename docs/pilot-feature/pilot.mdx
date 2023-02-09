@@ -4,8 +4,30 @@ slug: /pilot-feature
 ---
 
 ## Normal account is supported by V5 API
-* Available date: *Testnet - alive, Mainnet - alive*
-* Cover: non-unified account can trade **USDT perpetual** and **Inverse contract**
+* Available date: *Testnet - alive, Mainnet - 9 Feb 2023*
+* Cover: _non-unified account can trade **USDT perpetual** and **Inverse contract**_
+* Details: After this release, you may get some **404 errors** if you have following actions:
+1. You are using v1/v2 way to pass authentication params:
+
+```shell
+GET https://api.bybit.com/v5/position/list?api_key=xxx&category=linear&recv_window=5000&symbol=ETHUSDT&timestamp=1675929695887&sign=xxx
+```
+> You should pass them in the request header:
+
+```http
+Host: api-testnet.bybit.com
+-H 'X-BAPI-SIGN: XXXXXXXXXX' \
+-H 'X-BAPI-API-KEY: XXXXXXXXXX' \
+-H 'X-BAPI-TIMESTAMP: 1658384431891' \
+-H 'X-BAPI-RECV-WINDOW: 5000'
+```
+
+2. For below APIs, if you use unsuitable category, i.e., you use Normal account to access `category=option/spot`, or
+you use Unified account to access `category=inverse`
+* [Get Open Orders](v5/order/open-order)
+* [Get Order History](v5/order/order-list)
+* [Get Position Info](v5/position)
+* [Get Execution (half year)](v5/position/execution)
 
 ## Adjust error code
 * Available date: *Testnet - alive, Mainnet - 19 JAN 2023*
