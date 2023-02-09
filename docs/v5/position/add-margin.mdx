@@ -1,0 +1,54 @@
+---
+title: Set Auto Add Margin
+sidebar_label: Set Auto Add Margin
+sidebar_position: 4.5
+---
+
+Turn on/off auto-add-margin for **isolated** margin position
+> **Covers: USDT perpetual(Normal Account)**
+
+### HTTP Request
+POST `/v5/position/set-auto-add-margin`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `linear` |
+|symbol |**true** |string |Symbol name |
+|autoAddMargin |**true** |integer |Turn on/off. `0`: off. `1`: on |
+|positionIdx |false |integer |Used to identify positions in different position modes. For hedge mode position, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+
+### Response Parameters
+None
+
+### Request Example
+
+```http
+POST /v5/position/set-auto-add-margin HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675255134857
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "linear",
+    "symbol": "BTCUSDT",
+    "autoAddmargin": 1,
+    "positionIdx": null
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1675255135069
+}
+```

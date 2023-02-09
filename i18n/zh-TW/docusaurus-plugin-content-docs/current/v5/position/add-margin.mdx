@@ -1,0 +1,55 @@
+---
+title: 設置自動追加保證金
+sidebar_label: 設置自動追加保證金
+sidebar_position: 4.5
+---
+
+開關自動追加保證金，僅適用於**逐倉**保證金模式
+> **統一帳戶覆蓋範圍: 不支持**<br/>
+> **普通帳戶覆蓋範圍: USDT永續**
+
+### HTTP 請求
+POST `/v5/position/set-auto-add-margin`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category |**true** |string |產品類型, `linear`|
+|symbol |**true** |string |合約名稱 |
+|autoAddMargin |**true** |integer |是否自動追加保證金. `0`: 關閉. `1`: 開啟 |
+|positionIdx |false |integer |倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向持倉模式</li><li>`2`: 賣側雙向持倉模式</li></ul>|
+
+### 響應參數
+無
+
+### 請求示例
+
+```http
+POST /v5/position/set-auto-add-margin HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675255134857
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "linear",
+    "symbol": "BTCUSDT",
+    "autoAddmargin": 1,
+    "positionIdx": null
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1675255135069
+}
+```

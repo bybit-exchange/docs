@@ -5,7 +5,8 @@ sidebar_position: 4
 ---
 
 Set the take profit, stop loss or trailing stop for the position.
-> **Covers: Linear contract(Unified Account)**
+> **Unified account covers: Linear contract**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::tip
 Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
@@ -17,16 +18,16 @@ POST `/v5/position/trading-stop`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |**true** |string |Symbol name|
 |takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
 |stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
-|trailingStop |false |string |Cannot be less than 0, 0 means cancel TS. _note: valid for USDT Perpetual **only**_ |
+|trailingStop |false |string |Cannot be less than 0, 0 means cancel TS |
 |[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type |
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type|
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only** |
-|tpSize |false |string |Take profit size. Valid in TP/SL partial mode. _note: partial TP/SL valid for USDT Perpetual **only**_ |
-|slSize |false |string |Stop loss size. Valid in TP/SL partial mode. _note: partial TP/SL valid for USDT Perpetual **only**_ |
+|tpSize |false |string |Take profit size. Valid in TP/SL partial mode |
+|slSize |false |string |Stop loss size. Valid in TP/SL partial mode |
 |[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters

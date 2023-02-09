@@ -5,7 +5,8 @@ sidebar_position: 11
 ---
 
 Query user's closed profit and loss records. The results are sorted by `createdTime` in descending order.
-> **Covers: Linear contract(Unified Account) **
+> **Unified account covers: Linear contract**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 ### HTTP Request
 GET `/v5/position/closed-pnl`
@@ -13,8 +14,8 @@ GET `/v5/position/closed-pnl`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear` |
-|symbol |false |true |Symbol name |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|symbol |false |true |Symbol name. _This is a **required** parameter for Normal account_ |
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `200`]. Default: `50`|

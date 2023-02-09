@@ -5,7 +5,8 @@ sidebar_position: 5
 ---
 
 Query users' execution records, sorted by `execTime` in descending order
-> **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
+> **Unified account covers: Spot / Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::tip
 * You may have multiple executions in a single order.
@@ -19,11 +20,11 @@ GET `/v5/execution/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`option` |
-|symbol |false |string |Symbol name |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|symbol |false |string |Symbol name. _Normal account, either `symbol` or `orderId` is **required**_ |
 |orderId |false |string |Order ID |
-|orderLinkId |false |string |User customised order ID |
-|baseCoin |false |string |Base coin |
+|orderLinkId |false |string |User customised order ID. _Normal account does not support this param_ |
+|baseCoin |false |string |Base coin. _Normal account does not support this param_ |
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type|
@@ -33,7 +34,7 @@ GET `/v5/execution/list`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-| category | string  | Product type. `spot`,`linear`,`option`|
+| category | string  | Product type|
 | list | array | Object |
 |> symbol |string   |Symbol name |
 |> orderId |string |Order ID |

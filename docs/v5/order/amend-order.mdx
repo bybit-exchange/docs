@@ -3,7 +3,8 @@ title: Amend Order
 sidebar_label: Amend Order
 sidebar_position: 2
 ---
-> **Covers: Linear contract (Unified Account) / Option (Unified Account)**
+> **Unified account covers: Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::info important
 You can modify **unfilled** or **partially filled** orders.
@@ -15,7 +16,7 @@ POST `/v5/order/amend`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`,`option` |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |**true** |string |Symbol name|
 |orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |

@@ -5,7 +5,8 @@ sidebar_position: 2.5
 ---
 
 可以將止盈止損模式設置為部分止盈止損或者全部止盈止損
-> **覆蓋範圍: 正向合約(統一帳戶)**
+> **統一帳戶覆蓋範圍: 正向合約**<br/>
+> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::info
 在部分止盈止損下，您可以設置小於倉位大小的止盈止損數量
@@ -17,7 +18,7 @@ POST `/v5/position/set-tpsl-mode`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `linear`, 僅限USDT永續|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, 僅USDT永續</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul>|
 |symbol |**true** |string |合約名稱|
 |tpSlMode |**true** |string |TP/SL模式. `Full`,`Partial` |
 

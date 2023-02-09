@@ -4,7 +4,8 @@ sidebar_label: Cancel All Orders
 sidebar_position: 5
 ---
 Cancel all open orders
-> **Covers: Spot (Unified Account) / Linear contract (Unified Account) / Option (Unified Account)**
+> **Unified account covers: Spot / Linear contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
 
 :::info
 - Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, the system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
@@ -17,7 +18,7 @@ POST `/v5/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Products category. `spot`,`linear`,`option` |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic. If cancel all by baseCoin, it will cancel all linear & inverse orders_</li></ul>|
 |symbol |false|string |Symbol name |
 |baseCoin |false|string |Base coin |
 |settleCoin |false|string |Settle coin. It does not support `spot`|

@@ -1,9 +1,10 @@
 ---
 title: Switch Position Mode
 sidebar_label: Switch Position Mode
-sidebar_position: 9
+sidebar_position: 2.8
 ---
 It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
+> **Covers: USDT perpetual(Normal account)/Inverse Futures(Normal account)**
 
 :::tip
 * Priority for configuration to take effect: symbol > coin > system default
@@ -55,19 +56,19 @@ It supports to switch the position mode for **USDT perpetual** and **Inverse fut
 ### The position-switch ability for each contract
 <table class="custom_table">
     <tr>
-        <th></th><th>Regular account</th><th>Unified margin account</th>
+        <th></th><th>Normal account</th><th>Unified account</th>
     </tr>
     <tr>
-        <td>USDT perpetual</td><td><b>Support one-way & hedge-mode</b></td><td>Support one-way **only**</td>
+        <td>USDT perpetual</td><td><b>Support one-way & hedge-mode</b></td><td>Support one-way <b>only</b></td>
     </tr>
     <tr>
-        <td>USDC perpetual</td><td>Support one-way **only**</td><td>Support one-way **only**</td>
+        <td>USDC perpetual</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
     </tr>
     <tr>
-        <td>Inverse perpetual</td><td>Support one-way **only**</td><td>N/A</td>
+        <td>Inverse perpetual</td><td>Support one-way <b>only</b></td><td>N/A</td>
     </tr>
     <tr>
-        <td>Inverse future	</td><td><b>Support one-way & hedge-mode</b></td><td>N/A</td>
+        <td>Inverse future</td><td><b>Support one-way & hedge-mode</b></td><td>N/A</td>
     </tr>
 </table>
 
@@ -77,33 +78,42 @@ POST `/v5/position/switch-mode`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear`,`inverse`. **note**: unified margin account is not applicable |
+|category |**true** |string |Product type. `linear`,`inverse` <ul><li>Please note that `category` is **not** involved with business logic</li><li>Unified account is not applicable</li></ul> |
 |symbol |false |string |Symbol name. Either `symbol` or `coin` is **required**. `symbol` has a higher priority |
 |coin |false |string |Coin |
-|mode |**true** |string |Position mode. `0`: Merged Single. `1`: Both Side|
+|mode |**true** |integer |Position mode. `0`: Merged Single. `3`: Both Sides|
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
+None
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console" label="Console">
-
 ```http
-```
+POST /v5/position/switch-mode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675249072041
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 87
 
-</TabItem>
-</Tabs>
+{
+    "category":"inverse",
+    "symbol":"BTCUSDH23",
+    "coin": null,
+    "mode": 0
+}
+```
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js linear" label="linear">
-
-```javascript
-
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1675249072814
+}
 ```
-</TabItem>
-</Tabs>
