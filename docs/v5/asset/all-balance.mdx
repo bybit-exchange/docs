@@ -1,0 +1,67 @@
+---
+title: Get All Coins Balance
+sidebar_label: Get All Coins Balance
+sidebar_position: 0.2
+---
+
+You could get all coin balance of all account types under the master account, and sub account.
+
+:::caution Important
+It is not allowed to get master account coin balance via sub account api key.
+:::
+
+### HTTP Request
+GET `/v5/asset/transfer/query-account-coins-balance`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|memberId|false |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
+|[accountType](../enum#accounttype)|<b>true</b> |string |Account type |
+|coin |false |string |Coin name <ul><li>Query all coins if not passed</li><li>Can query multiple coins, separated by comma. `USDT,USDC,ETH`</li></ul> |
+|withBonus|false |string |Whether query bonus or not. `0`(default)：false; `1`：true |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|[accountType](../enum#accounttype) |string |Account type|
+|memberId |string |UserID|
+|balance |array |Object |
+|> coin |string |Currency type|
+|> walletBalance |string |Wallet balance|
+|> transferBalance |string |Transferable balance|
+|> bonus |string |The bonus|
+
+### Request Example
+
+```http
+GET /v5/asset/transfer/query-account-coins-balance?accountType=FUND&coin=USDC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675866354698
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "memberId": "XXXX",
+        "accountType": "FUND",
+        "balance": [
+            {
+                "coin": "USDC",
+                "transferBalance": "0",
+                "walletBalance": "0",
+                "bonus": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1675866354913
+}
+```
