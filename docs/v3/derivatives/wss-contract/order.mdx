@@ -25,8 +25,13 @@ Push frequency: **real-time**
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |
 |> price |string |Order price |
 |> qty |string |Order qty |
+|> blockTradeId  |string |Block trade ID |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
+|> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
+|> [cancelType](../enum#canceltype) |string |Cancel type |
+|> [rejectReason](../enum#rejectreason) |string |Reject reason |
+|> avgPrice |string |Average filled price. If unfilled, it is `""` |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
 |> tpTriggerBy |string |Take profit price trigger by |
@@ -37,8 +42,10 @@ Push frequency: **real-time**
 |> reduceOnly |boolean |Reduce only. `true` means reduce the position |
 |> closeOnTrigger |boolean |Close on trigger |
 |> leavesQty |string |Remaining order qty waiting to be executed |
+|> leavesValue |string |The remaining value not executed |
 |> lastExecQty |string |Last executed qty |
 |> lastExecPrice |string |Last executed price |
+|> cumExecFee |string |Cumulative executed trading fee |
 |> cumExecQty |string |Cumulative executed qty |
 |> cumExecValue |string |Cumulative executed value |
 |> createdTime |string |Order created timestamp (ms) |
@@ -52,18 +59,18 @@ Push frequency: **real-time**
     "data": [
         {
             "symbol": "ETHUSDT",
-            "orderId": "60da3459-1726-40e9-b4d2-37f6bcd044ca",
+            "orderId": "e62a3099-eced-499f-bd81-185e8747187f",
             "side": "Buy",
-            "orderType": "Limit",
+            "orderType": "Market",
             "stopOrderType": "UNKNOWN",
-            "price": "1000.00",
-            "qty": "0.1",
-            "timeInForce": "GoodTillCancel",
-            "orderStatus": "New",
+            "price": "1622.55",
+            "qty": "0.2",
+            "timeInForce": "ImmediateOrCancel",
+            "orderStatus": "Filled",
             "triggerPrice": "0.00",
             "orderLinkId": "",
-            "createdTime": "1671347745898",
-            "updatedTime": "1671347745901",
+            "createdTime": "1675999655229",
+            "updatedTime": "1675999655232",
             "takeProfit": "0.00",
             "stopLoss": "0.00",
             "tpTriggerBy": "UNKNOWN",
@@ -72,11 +79,18 @@ Push frequency: **real-time**
             "reduceOnly": false,
             "closeOnTrigger": false,
             "triggerDirection": 0,
-            "leavesQty": "0.1",
-            "lastExecQty": "0",
-            "lastExecPrice": "0.00",
-            "cumExecQty": "0",
-            "cumExecValue": "0"
+            "leavesQty": "0",
+            "lastExecQty": "0.2",
+            "lastExecPrice": "1545.30",
+            "cumExecQty": "0.2",
+            "cumExecValue": "309.06",
+            "avgPrice": "1545.30",
+            "blockTradeId": "",
+            "cancelType": "UNKNOWN",
+            "cumExecFee": "0.185436",
+            "leavesValue": "0",
+            "positionIdx": 1,
+            "rejectReason": "EC_NoError"
         }
     ]
 }
