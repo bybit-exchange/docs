@@ -26,8 +26,13 @@ slug: /derivatives/ws-contract/order
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型. 若不是條件單，則不會返回任何類型 |
 |> price |string |訂單價格 |
 |> qty |string |訂單數量 |
+|> blockTradeId  |string |大宗交易訂單Id |
 |> [timeInForce](../enum#timeinforce) |string |執行策略 |
 |> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
+|> [positionIdx](../enum#positionidx) |integer |倉位標識。用戶不同倉位模式|
+|> [cancelType](../enum#canceltype) |string |訂單被取消類型 |
+|> [rejectReason](../enum#rejectreason) |string |拒絕原因 |
+|> avgPrice |string |訂單平均成交價格. 若沒有成交，則返回`""` |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
 |> tpTriggerBy |string |觸發止盈的價格類型 |
@@ -38,10 +43,12 @@ slug: /derivatives/ws-contract/order
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
 |> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> |
 |> leavesQty |string |訂單剩餘未成交的數量 |
+|> leavesValue |string |訂單剩餘未成交的價值 |
 |> lastExecQty |string |成交數量 |
 |> lastExecPrice |string |成交價格 |
 |> cumExecQty |string |累計成交數量 |
 |> cumExecValue |string |累計成交價值 |
+|> cumExecFee |string |訂單累計成交的手續費 |
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
 
@@ -52,19 +59,19 @@ slug: /derivatives/ws-contract/order
     "topic": "user.order.contractAccount",
     "data": [
         {
-            "symbol": "BTCUSDT",
-            "orderId": "148b77f6-6701-48ee-8308-91ecef2479e4",
+            "symbol": "ETHUSDT",
+            "orderId": "e62a3099-eced-499f-bd81-185e8747187f",
             "side": "Buy",
             "orderType": "Market",
             "stopOrderType": "UNKNOWN",
-            "price": "18067.00",
-            "qty": "0.05",
+            "price": "1622.55",
+            "qty": "0.2",
             "timeInForce": "ImmediateOrCancel",
             "orderStatus": "Filled",
             "triggerPrice": "0.00",
             "orderLinkId": "",
-            "createdTime": "1673249168762",
-            "updatedTime": "1673249168765",
+            "createdTime": "1675999655229",
+            "updatedTime": "1675999655232",
             "takeProfit": "0.00",
             "stopLoss": "0.00",
             "tpTriggerBy": "UNKNOWN",
@@ -74,10 +81,17 @@ slug: /derivatives/ws-contract/order
             "closeOnTrigger": false,
             "triggerDirection": 0,
             "leavesQty": "0",
-            "lastExecQty": "0.05",
-            "lastExecPrice": "17207.00",
-            "cumExecQty": "0.05",
-            "cumExecValue": "860.35"
+            "lastExecQty": "0.2",
+            "lastExecPrice": "1545.30",
+            "cumExecQty": "0.2",
+            "cumExecValue": "309.06",
+            "avgPrice": "1545.30",
+            "blockTradeId": "",
+            "cancelType": "UNKNOWN",
+            "cumExecFee": "0.185436",
+            "leavesValue": "0",
+            "positionIdx": 1,
+            "rejectReason": "EC_NoError"
         }
     ]
 }
