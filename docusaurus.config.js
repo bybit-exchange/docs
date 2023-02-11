@@ -187,6 +187,19 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      algolia: {
+        appId: '6BDPYQN4N6',
+        apiKey: '3945cc0bcfa5510237aa55a2fb83dd20',
+        indexName: 'bybit-exchangeio',
+        contextualSearch: true,
+        externalUrlRegex: 'external\\.com|domain\\.com',
+        replaceSearchResultPathname: {
+          from: '/docs/', // or as RegExp: /\/docs\//
+          to: '/',
+        },
+        searchParameters: {},
+        searchPagePath: 'search',
+      },
       colorMode: {
         defaultMode: 'dark',
       },
