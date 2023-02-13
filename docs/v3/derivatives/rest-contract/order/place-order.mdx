@@ -13,8 +13,7 @@ the optimal buying price. Both the limit price and the executed price can be que
 - **Limit order**: You can set an executed price for your order. When the market price touches the price you set, the system
 will fill the order for you.
 
-- **<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001138">Take profit / Stop loss</a>**: You can only set TP/SL while opening positions. Once you have held
-positions, the TP/SL linked when you submit active orders will not take effect. Besides, you could modify the position's TP/SL.
+- **<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001138">Take profit / Stop loss</a>**: You can set TP/SL while placing orders. Besides, you could modify the position's TP/SL.
 
 - **Order quantity**: The quantity of perpetual contracts you are going to buy/sell. For the order quantity, Bybit only supports positive number at present.
 
@@ -48,8 +47,8 @@ POST `/contract/v3/private/order/create`
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type. default:`LastPrice`.|
 |[positionIdx](../enum#positionidx) |false |integer |Position index. It is **required** for hedge position mode |
 |orderLinkId |false |string |User customised order id. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `future`_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_rule of `option`_:<br/><li>This param is **required**</li><li>always unique</li></ul>|
-|takeProfit |false |string |Take profit price. only take effect upon opening the position |
-|stopLoss |false |string |Stop loss price. only take effect upon opening the position |
+|takeProfit |false |string |Take profit price |
+|stopLoss |false |string |Stop loss price |
 |[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. default:`LastPrice` |
 |[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. default:`LastPrice` |
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. _When reduce_only is true, take profit/stop loss cannot be set_ |
