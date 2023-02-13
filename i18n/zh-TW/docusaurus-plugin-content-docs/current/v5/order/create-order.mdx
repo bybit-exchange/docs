@@ -21,7 +21,7 @@ sidebar_position: 1
 - **如何創建條件單:**<br/>
 在提交訂單時，如果設置了**triggerPrice**，則該訂單會自動轉為條件單。另外條件單不佔用保證金，如果條件單觸發後，保證金不足，則該筆訂單會被取消。
 
-- **<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001138">止盈 / 止損</a>**: 您只能在初次開倉下單時設置TP/SL。如果您已經持有倉位，則新的訂單設置的TP/SL將不會生效。但，您可以修改倉位的TP/SL。
+- **<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001138">止盈 / 止損</a>**: 您可以在下單時設置止盈止損。另外，您可以通過[設置止盈止損](../position/trading-stop)接口修改持倉時的止盈止損價格。
 
 - **訂單數量**: 訂單數量，只支持正數。
 
@@ -59,8 +59,8 @@ POST `/v5/order/create`
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><ul><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li> </ul>|
 |[positionIdx](../enum#positionidx) |false |integer |倉位標識, 用戶不同倉位模式. 該字段對於雙向持倉模式是**必傳**:<ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li></ul>統一帳戶下只有單向持倉模式|
 |orderLinkId |false |string |用戶自定義訂單Id. category=`option`時，該參數必傳|
-|takeProfit |false |string |止盈價格，僅開倉時的設置有效 |
-|stopLoss |false |string |止損價格，僅開倉時的設置有效|
+|takeProfit |false |string |止盈價格 |
+|stopLoss |false |string |止損價格 |
 |[tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`|
 |[slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`|
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉，_只減倉單的止盈止損不生效_ |
