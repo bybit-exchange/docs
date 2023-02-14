@@ -1,0 +1,58 @@
+---
+title: Get Fee Rate (Derivatives)
+sidebar_label: Get Fee Rate (Derivatives)
+sidebar_position: 7
+---
+Get the trading fee rate of derivatives.
+> **Covers: USDT perpetual / Inverse perpetual / Inverse futures**
+
+:::info
+It is expected to support Spot, USDC Perp and Options in the future release.
+:::
+
+### HTTP Request
+GET `/v5/account/fee-rate`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Symbol name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> symbol |string |Symbol name|
+|> takerFeeRate |string |Taker fee rate|
+|> makerFeeRate |string |Maker fee rate|
+
+### Request Example
+
+```http
+GET /v5/account/fee-rate?symbol=ETHUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1676360412362
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "symbol": "ETHUSDT",
+                "takerFeeRate": "0.0006",
+                "makerFeeRate": "0.0001"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1676360412576
+}
+```
