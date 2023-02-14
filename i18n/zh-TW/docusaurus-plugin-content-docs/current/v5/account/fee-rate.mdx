@@ -1,0 +1,57 @@
+---
+title: 查詢手續費率 (期貨)
+sidebar_label: 查詢手續費率 (期貨)
+sidebar_position: 7
+---
+查詢期貨的交易手續費率。
+> **覆蓋範圍: USDT永續 / 反向永續 / 反向交割**
+
+:::info
+該接口在後面的迭代中將支持現貨、USDC永續和期權的手續費率查詢。
+:::
+
+### HTTP 請求
+GET `/v5/account/fee-rate`
+
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |合約名稱|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> symbol |string |合約名稱|
+|> takerFeeRate |string |吃單手續費率|
+|> makerFeeRate |string |掛單手續費率|
+
+### 請求示例
+
+```http
+GET /v5/account/fee-rate?symbol=ETHUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1676360412362
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "symbol": "ETHUSDT",
+                "takerFeeRate": "0.0006",
+                "makerFeeRate": "0.0001"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1676360412576
+}
+```
