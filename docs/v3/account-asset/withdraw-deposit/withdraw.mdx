@@ -6,9 +6,8 @@ slug: /account-asset/withdraw
 ---
 
 :::info
-* Currently we are upgrading the fund account, if your funding account has been upgraded, the API will now be withdrawn via **funding account**, please transfer funds to the funding account first, and then withdraw cash
-* If your funding account has not been upgraded, the API will still uses **spot account** to withdraw cash.
-* It is expected that in the next two weeks, all users' funding account upgrades will be completed.
+* Currently we are upgrading the fund account, if your funding account has been upgraded, you can select the wallet to be withdrawn from.
+* If your funding account has not been upgraded, the API will still use **spot wallet** to withdraw cash, but you cannot select the wallet to be withdrawn from.
 * Make sure you have added withdraw address <a href="https://www.bybit.com/user/assets/money-address">here</a>
 :::
 
@@ -25,6 +24,7 @@ POST `/asset/v3/private/withdraw/create`
 |amount|<b>true</b>|string|withdraw amounts. The minimum withdrawal amount can be obtained from the [Coin Info](coin-info#) Query API|
 |timestamp|<b>true</b>|integer|Current timestamp |
 |forceChain|false|integer|Force to withdraw on chain or not. <ul><li>`0`：If parsed as internal address, then internal transfer (by default)</li><li>`1`：Force withdraw on chain</li></ul>|
+|accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`：spot wallet (default)</li><li>`FUND`：Funding wallet</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -50,7 +50,8 @@ Content-Length: 193
     "tag": null,
     "amount": "10",
     "timestamp": 1670919612851,
-    "forceChain": 1
+    "forceChain": 1,
+    "accountType": "FUND"
 }
 ```
 

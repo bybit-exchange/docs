@@ -7,8 +7,8 @@ sidebar_position: 16
 Withdraw assets from the **SPOT** account. You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
 
 :::note
-* Currently we are upgrading the fund account, if your funding account has been upgraded, the API will now be withdrawn via **funding account**, please transfer funds to the funding account first, and then withdraw cash
-* If your funding account has not been upgraded, the API will still uses **spot account** to withdraw cash.
+* Currently we are upgrading the fund account, if your funding account has been upgraded, you can select the wallet to be withdrawn from.
+* If your funding account has not been upgraded, the API will still use **spot wallet** to withdraw cash, but you cannot select the wallet to be withdrawn from.
 * It is expected that in the next two weeks, all users' funding account upgrades will be completed.
 :::
 
@@ -30,6 +30,7 @@ POST `/v5/asset/withdraw/create`
 |amount |**true** |string |Withdraw amount |
 |timestamp |**true** |integer |Current timestamp (ms). Used for preventing from withdraw replay |
 |forceChain |false |integer |Whether or not to force an on-chain withdrawal<ul><li>`0`: If the address is parsed out to be an internal address, then internal transfer (default)</li><li>`1`: Force the withdrawal to occur on-chain</li> </ul>|
+|accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`：spot wallet (default)</li><li>`FUND`：Funding wallet</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -54,7 +55,8 @@ Content-Type: application/json
     "tag": null,
     "amount": "24",
     "timestamp": 1672196561407,
-    "forceChain": 0
+    "forceChain": 0,
+    "accountType": "FUND"
 }
 ```
 

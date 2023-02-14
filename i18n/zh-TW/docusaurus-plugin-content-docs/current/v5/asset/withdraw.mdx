@@ -7,9 +7,8 @@ sidebar_position: 16
 提現僅從現貨帳戶中完成. 若目標地址是Bybit平台內部地址，您可以實現內部平台轉帳
 
 :::note
-* 目前正在做資金帳戶升級，若您的帳號被升級了，則提現接口將走**資金帳戶**提現，請先劃轉資金到資金帳戶，再提現。
-* 若您的帳號還未被升級，則依然是走**現貨帳戶**進行提現。
-* 預計在未來的兩週，將完成所有用戶的資金帳戶升級。
+* 目前正在做資金帳戶升級，若您的帳號被升級了，則提現接口將默認走**現貨帳戶**提現，但同時可以選擇出金帳戶（現貨或資金）。
+* 若您的帳號還未被升級，則依然是走**現貨帳戶**進行提現，但無法設置出金帳戶。
 :::
 
 :::caution
@@ -30,6 +29,7 @@ POST `/v5/asset/withdraw/create`
 |amount |**true** |string |提現金額 |
 |timestamp |**true** |integer |當前時間戳 (毫秒). 用於防止請求重放 |
 |forceChain |false |integer |是否強制走鏈<ul><li>`0`(默認): 若提現地址解析後發現是平台內部地址，則自動轉為走內部平台轉帳</li><li>`1`: 強制走鏈</li> </ul>|
+|accountType|false|string |設置出金帳戶. <ul><li>`SPOT`：走現貨錢包出金 (默認)</li><li>`FUND`：走資金錢包出金</li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -54,7 +54,8 @@ Content-Type: application/json
     "tag": null,
     "amount": "24",
     "timestamp": 1672196561407,
-    "forceChain": 0
+    "forceChain": 0,
+     "accountType": "FUND"
 }
 ```
 
