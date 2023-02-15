@@ -8,7 +8,7 @@ slug: /account-asset/modify-master-apikey
 
 :::tip
 在調用接口時，使用的API key至少需要擁有以下其中一種權限
-* 母子API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+* 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 :::
 
 :::info
@@ -21,7 +21,7 @@ POST `/user/v3/private/update-api`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|readOnly |<b>true</b> |integer |`0`：可讀可寫. `1`：只讀 |
+|readOnly |false |integer |`0` (默認)：可讀可寫. `1`：只讀 |
 |ips |false |array |綁定IP. 比如: ["192.168.0.1,192.168.0.2"]<b>注意:</b><ul><li>不傳參數ips 或者入参值為["*"]意味著不綁定</li><li>不綁定IP的api key將有90天的有效期限</li><li>一旦帳戶密碼做了修改，帳戶下的api key將在7天後失效</li></ul>|
 |permissions |<b>true</b> |Object |勾選api key權限.<ul><li> 注意: 必須傳入以下權限類型的任意一種, 否則報錯</li></ul>|
 |> ContractTrade |false |array |合約. ["Order","Position"] |
@@ -33,7 +33,6 @@ POST `/user/v3/private/update-api`
 |> BlockTrade |false |array |大宗商品交易. ["BlockTrade"] |
 |> Exchange |false |array |兌換. ["ExchangeHistory"] |
 |> NFT |false |array |NFT. ["NFTQueryProductList"]|
-
 
 ### 返回參數
 | 參數 | 類型 | 說明|

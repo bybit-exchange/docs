@@ -2,7 +2,6 @@
 title: 修改子帳戶的API Key設置
 sidebar_label: 修改子帳戶的API Key設置
 sidebar_position: 7
-slug: /account-asset/modify-sub-apikey
 ---
 修改子帳戶API key的設置。使用待修改的api key調用接口。需使用子帳戶的API key。
 
@@ -16,7 +15,7 @@ slug: /account-asset/modify-sub-apikey
 :::
 
 ### HTTP 請求
-POST `/user/v3/private/update-sub-api`
+POST `/v5/user/update-sub-api`
 
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
@@ -54,38 +53,31 @@ POST `/user/v3/private/update-sub-api`
 ### 請求示例
 
 ```http
-POST /user/v3/private/update-sub-api HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671180069231
-X-BAPI-RECV-WINDOW: 50000
+POST /v5/user/update-sub-api HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1676431795752
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 531
 
 {
     "readOnly": 0,
     "ips": ["*"],
     "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
+            "ContractTrade": [],
             "Spot": [
                 "SpotTrade"
             ],
             "Wallet": [
                 "AccountTransfer"
             ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
-            "Exchange": [
-                "ExchangeHistory"
-            ]
+            "Options": [],
+            "Derivatives": [],
+            "CopyTrading": [],
+            "BlockTrade": [],
+            "Exchange": [],
+            "NFT": []
         }
 }
 ```
@@ -95,35 +87,26 @@ Content-Length: 531
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
-        "id": "111111111",
-        "note": "TESTNET subacc testing",
-        "apiKey": "xxxxxxxxxxxxx",
+        "id": "16651472",
+        "note": "testxxx",
+        "apiKey": "xxxxxx",
         "readOnly": 0,
         "secret": "",
         "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
+            "ContractTrade": [],
             "Spot": [
                 "SpotTrade"
             ],
             "Wallet": [
                 "AccountTransfer"
             ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
+            "Options": [],
+            "Derivatives": [],
             "CopyTrading": [],
             "BlockTrade": [],
-            "Exchange": [
-                "ExchangeHistory"
-            ],
+            "Exchange": [],
             "NFT": []
         },
         "ips": [
@@ -131,6 +114,6 @@ Content-Length: 531
         ]
     },
     "retExtInfo": {},
-    "time": 1671180069386
+    "time": 1676431796263
 }
 ```

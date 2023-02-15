@@ -1,14 +1,13 @@
 ---
-title: Modify Master API Key
-sidebar_label: Modify Master API Key
-sidebar_position: 6
-slug: /account-asset/modify-master-apikey
+title: Modify Sub API Key
+sidebar_label: Modify Sub API Key
+sidebar_position: 7
 ---
-Modify the settings of master api key. Use the api key pending to be modified to call the endpoint. Use **master user's api key** **only**.
+Modify the settings of sub api key. Use the api key pending to be modified to call the endpoint. Use **sub user's api key** **only**.
 
 :::tip
 The API key must own one of permissions will be allowed to call the following API endpoint.
-* master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+* sub API key: "Account Transfer"
 :::
 
 :::info
@@ -16,7 +15,7 @@ The API key must own one of permissions will be allowed to call the following AP
 :::
 
 ### HTTP Request
-POST `/user/v3/private/update-api`
+POST `/v5/user/update-sub-api`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -26,13 +25,10 @@ POST `/user/v3/private/update-api`
 |permissions |<b>true</b> |Object |Tick the types of permission.<ul><li> one of below types must be passed, otherwise the error is thrown</li></ul>|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
-|> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransfer"]` |
+|> Wallet |false |array |Wallet. `["AccountTransfer"]` |
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
 |> Derivatives |false |array |Derivatives v3. `["DerivativesTrade"]`|
-|> CopyTrading |false |array |Copytrade. `["CopyTrading"]`|
-|> BlockTrade |false |array |Blocktrade. `["BlockTrade"]` |
 |> Exchange |false |array |Exchange. `["ExchangeHistory"]` |
-|> NFT |false |array |NFT. `["NFTQueryProductList"]` |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -57,44 +53,31 @@ POST `/user/v3/private/update-api`
 ### Request Example
 
 ```http
-POST /user/v3/private/update-api HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671179084116
-X-BAPI-RECV-WINDOW: 50000
+POST /v5/user/update-sub-api HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1676431795752
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 741
 
 {
     "readOnly": 0,
-    "ips": ["xxx.xxx.xxx.xx"],
+    "ips": ["*"],
     "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
+            "ContractTrade": [],
             "Spot": [
                 "SpotTrade"
             ],
             "Wallet": [
-                "AccountTransfer",
-                "SubMemberTransfer"
+                "AccountTransfer"
             ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
-            "CopyTrading": [
-                "CopyTrading"
-            ],
-            "BlockTrade": ["BlockTrade"],
-            "Exchange": [
-                "ExchangeHistory"
-            ],
-            "NFT": ["NFTQueryProductList"]
+            "Options": [],
+            "Derivatives": [],
+            "CopyTrading": [],
+            "BlockTrade": [],
+            "Exchange": [],
+            "NFT": []
         }
 }
 ```
@@ -104,49 +87,33 @@ Content-Length: 741
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
-        "id": "341509",
-        "note": "TESTING12SEP",
-        "apiKey": "xxxxxxxxxxxxx",
+        "id": "16651472",
+        "note": "testxxx",
+        "apiKey": "xxxxxx",
         "readOnly": 0,
         "secret": "",
         "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
+            "ContractTrade": [],
             "Spot": [
                 "SpotTrade"
             ],
             "Wallet": [
-                "AccountTransfer",
-                "SubMemberTransfer"
+                "AccountTransfer"
             ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
-            "CopyTrading": [
-                "CopyTrading"
-            ],
-            "BlockTrade": [
-                "BlockTrade"
-            ],
-            "Exchange": [
-                "ExchangeHistory"
-            ],
-            "NFT": [
-                "NFTQueryProductList"
-            ]
+            "Options": [],
+            "Derivatives": [],
+            "CopyTrading": [],
+            "BlockTrade": [],
+            "Exchange": [],
+            "NFT": []
         },
         "ips": [
-            "xxx.xxx.xxx.xxx"
+            "*"
         ]
     },
     "retExtInfo": {},
-    "time": 1671179084363
+    "time": 1676431796263
 }
 ```

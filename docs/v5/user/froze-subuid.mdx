@@ -1,0 +1,51 @@
+---
+title: Froze Sub UID
+sidebar_label: Froze Sub UID
+sidebar_position: 4
+---
+Froze sub uid. Use **master user's api key** **only**.
+
+:::tip
+The API key must own one of permissions will be allowed to call the following API endpoint.
+* master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+:::
+
+### HTTP Request
+POST `/v5/user/frozen-sub-member`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|subuid |<b>true</b> |integer |Sub user Id |
+|frozen |<b>true</b> |integer |`0`：unfreeze, `1`：freeze |
+
+### Response Parameters
+None
+
+### Request Example
+
+```http
+POST /v5/user/frozen-sub-member HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "subuid": 53888001,
+    "frozen": 1
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1676430697553
+}
+```

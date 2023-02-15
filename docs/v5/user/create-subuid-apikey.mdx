@@ -2,7 +2,6 @@
 title: Create Sub UID API Key
 sidebar_label: Create Sub UID API Key
 sidebar_position: 2
-slug: /account-asset/create-subuid-apikey
 ---
 To create new API key for those newly created sub UID. Use **master user's api key** **only**.
 
@@ -12,7 +11,7 @@ The API key must own one of permissions will be allowed to call the following AP
 :::
 
 ### HTTP Request
-POST `/user/v3/private/create-sub-api`
+POST `/v5/user/create-sub-api`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -51,50 +50,23 @@ POST `/user/v3/private/create-sub-api`
 ### Request Example
 
 ```http
-POST /user/v3/private/create-sub-api HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671176685767
-X-BAPI-RECV-WINDOW: 50000
+POST /v5/user/create-sub-api HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1676430005459
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 796
 
 {
-    "subuid": 1111111111,
-    "note": "mytest",
-    "readOnly": 1,
-    "ips": ["*"],
+    "subuid": 53888000,
+    "note": "testxxx",
+    "readOnly": 0,
     "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
-            "Spot": [
-                "SpotTrade"
-            ],
-            "Wallet": [
-                "AccountTransfer"
-            ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
-            "CopyTrading": [
-                "CopyTrading"
-            ],
-            "BlockTrade": [
-                "BlockTrade"
-            ],
-            "Exchange": [
-                "ExchangeHistory"
-            ],
-            "NFT": [
-                "NFTQueryProductList"
-            ]
-        }
+        "Wallet": [
+            "AccountTransfer"
+        ]
+    }
 }
 ```
 
@@ -103,45 +75,28 @@ Content-Length: 796
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
-        "id": "1111111111",
-        "note": "mytest",
-        "apiKey": "xxxxxxxxxxxxx",
-        "readOnly": 1,
-        "secret": "xxxxxxxxxxxxx",
+        "id": "16651283",
+        "note": "testxxx",
+        "apiKey": "xxxxx",
+        "readOnly": 0,
+        "secret": "xxxxxxxx",
         "permissions": {
-            "ContractTrade": [
-                "Order",
-                "Position"
-            ],
-            "Spot": [
-                "SpotTrade"
-            ],
+            "ContractTrade": [],
+            "Spot": [],
             "Wallet": [
                 "AccountTransfer"
             ],
-            "Options": [
-                "OptionsTrade"
-            ],
-            "Derivatives": [
-                "DerivativesTrade"
-            ],
-            "CopyTrading": [
-                "CopyTrading"
-            ],
-            "BlockTrade": [
-                "BlockTrade"
-            ],
-            "Exchange": [
-                "ExchangeHistory"
-            ],
-            "NFT": [
-                "NFTQueryProductList"
-            ]
+            "Options": [],
+            "Derivatives": [],
+            "CopyTrading": [],
+            "BlockTrade": [],
+            "Exchange": [],
+            "NFT": []
         }
     },
     "retExtInfo": {},
-    "time": 1671176685954
+    "time": 1676430007643
 }
 ```

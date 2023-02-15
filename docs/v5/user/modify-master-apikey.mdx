@@ -2,7 +2,6 @@
 title: Modify Master API Key
 sidebar_label: Modify Master API Key
 sidebar_position: 6
-slug: /account-asset/modify-master-apikey
 ---
 Modify the settings of master api key. Use the api key pending to be modified to call the endpoint. Use **master user's api key** **only**.
 
@@ -16,7 +15,7 @@ The API key must own one of permissions will be allowed to call the following AP
 :::
 
 ### HTTP Request
-POST `/user/v3/private/update-api`
+POST `/v5/user/update-api`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -57,18 +56,17 @@ POST `/user/v3/private/update-api`
 ### Request Example
 
 ```http
-POST /user/v3/private/update-api HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671179084116
-X-BAPI-RECV-WINDOW: 50000
+POST /v5/user/update-api HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1676431264739
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
 Content-Type: application/json
-Content-Length: 741
 
 {
-    "readOnly": 0,
-    "ips": ["xxx.xxx.xxx.xx"],
+    "readOnly": null,
+    "ips": ["*"],
     "permissions": {
             "ContractTrade": [
                 "Order",
@@ -90,11 +88,13 @@ Content-Length: 741
             "CopyTrading": [
                 "CopyTrading"
             ],
-            "BlockTrade": ["BlockTrade"],
+            "BlockTrade": [],
             "Exchange": [
                 "ExchangeHistory"
             ],
-            "NFT": ["NFTQueryProductList"]
+            "NFT": [
+                "NFTQueryProductList"
+            ]
         }
 }
 ```
@@ -104,11 +104,11 @@ Content-Length: 741
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
-        "id": "341509",
-        "note": "TESTING12SEP",
-        "apiKey": "xxxxxxxxxxxxx",
+        "id": "13770661",
+        "note": "xxxxx",
+        "apiKey": "xxxxx",
         "readOnly": 0,
         "secret": "",
         "permissions": {
@@ -132,9 +132,7 @@ Content-Length: 741
             "CopyTrading": [
                 "CopyTrading"
             ],
-            "BlockTrade": [
-                "BlockTrade"
-            ],
+            "BlockTrade": [],
             "Exchange": [
                 "ExchangeHistory"
             ],
@@ -143,10 +141,10 @@ Content-Length: 741
             ]
         },
         "ips": [
-            "xxx.xxx.xxx.xxx"
+            "*"
         ]
     },
     "retExtInfo": {},
-    "time": 1671179084363
+    "time": 1676431265427
 }
 ```

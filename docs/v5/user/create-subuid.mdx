@@ -2,7 +2,6 @@
 title: Create Sub UID
 sidebar_label: Create Sub UID
 sidebar_position: 1
-slug: /account-asset/create-subuid
 ---
 Create a new sub user id. Use **master user's api key** **only**.
 
@@ -12,7 +11,7 @@ The API key must own one of permissions will be allowed to call the following AP
 :::
 
 ### HTTP Request
-POST `/user/v3/private/create-sub-member`
+POST `/v5/user/create-sub-member`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -34,20 +33,19 @@ POST `/user/v3/private/create-sub-member`
 ### Request Example
 
 ```http
-POST /user/v3/private/create-sub-member HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671174837503
-X-BAPI-RECV-WINDOW: 50000
+POST /v5/user/create-sub-member HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1676429344202
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 109
 
 {
-    "username": "testsubaccount",
+    "username": "xxxxx",
     "memberType": 1,
     "switch": 1,
-    "note": "testnet subaccount"
+    "note": "test"
 }
 ```
 
@@ -56,15 +54,15 @@ Content-Length: 109
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
-        "uid": "111111111",
-        "username": "testsubaccount",
+        "uid": "53888000",
+        "username": "xxxxx",
         "memberType": 1,
         "status": 1,
-        "remark": "testnet subaccount"
+        "remark": "test"
     },
     "retExtInfo": {},
-    "time": 1671174837668
+    "time": 1676429344734
 }
 ```
