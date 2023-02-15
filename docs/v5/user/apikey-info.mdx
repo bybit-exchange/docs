@@ -1,0 +1,103 @@
+---
+title: Get API Key Information
+sidebar_label: Get API Key Information
+sidebar_position: 5
+---
+Get the information of the api key. Use the api key pending to be checked to call the endpoint. Both **master and sub user's api key** are applicable.
+
+:::tip
+Any permission can access this endpoint.
+:::
+
+### HTTP Request
+GET `/v5/user/query-api`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Unique id. Internal used|
+|note |string |The remark |
+|apiKey |string |Api key |
+|readOnly |integer |`0`：Read and Write. `1`：Read only |
+|secret |string |Always `""` |
+|permissions |Object |The types of permission |
+|> ContractTrade |array |Permission of contract trade |
+|> Spot |array |Permission of spot |
+|> Wallet |array |Permission of wallet |
+|> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
+|> Derivatives |array |Permission of derivatives |
+|> CopyTrading |array |Permission of copytrade. Not applicable to sub account, always `[]`|
+|> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]`|
+|> Exchange |array |Permission of exchange |
+|> NFT |array |Permission of NFT. Not applicable to sub account, always `[]` |
+|ips |array |IP bound|
+|type |integer |The type of api key. `1`：personal, `2`：connected to the third-party app |
+|deadlineDay |integer |The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed |
+|expiredAt |datetime |The expiry day of the api key. Only for those api key with no IP bound or the password has been changed|
+|createdAt |datetime |The create day of the api key |
+|unified |integer |Whether the account to which the api key belongs is a unified margin account. `0`：regular account; `1`：unified margin account |
+|uta |integer |Whether the account to which the account upgrade to unified trade account. `0`：regular account; `1`：unified trade account |
+|userID |integer |User ID |
+|inviterID |integer |Inviter ID (the UID of the account which invited this account to the platform) |
+|vipLevel |string |VIP Level |
+|mktMakerLevel |string |Market maker level |
+|affiliateID |integer |Affiliate Id. `0` represents that there is no binding relationship. |
+
+### Request Example
+
+```http
+GET /v5/user/query-api HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "id": "16651472",
+        "note": "testxxx",
+        "apiKey": "opjSlSOzqIeXROT5rq",
+        "readOnly": 0,
+        "secret": "",
+        "permissions": {
+            "ContractTrade": [],
+            "Spot": [],
+            "Wallet": [
+                "AccountTransfer"
+            ],
+            "Options": [],
+            "Derivatives": [],
+            "CopyTrading": [],
+            "BlockTrade": [],
+            "Exchange": [],
+            "NFT": []
+        },
+        "ips": [
+            "*"
+        ],
+        "type": 1,
+        "deadlineDay": 88,
+        "expiredAt": "2023-05-15T03:13:24Z",
+        "createdAt": "2023-02-15T03:13:24Z",
+        "unified": 0,
+        "uta": 0,
+        "userID": 53888001,
+        "inviterID": 0,
+        "vipLevel": "No VIP",
+        "mktMakerLevel": "0",
+        "affiliateID": 0
+    },
+    "retExtInfo": {},
+    "time": 1676430843547
+}
+```
