@@ -4,8 +4,8 @@ sidebar_label: Get Open Orders (real-time)
 sidebar_position: 4
 ---
 Query unfilled or partially filled orders in **real-time**. To query older order records, please use the [order history](order-list#) interface.
-> **Unified account covers: Spot / Linear contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
+> **Unified account covers: Spot / Linear contract / Inverse contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse contract**
 
 :::tip
 - It also supports querying filled, cancelled, and rejected orders which occurred in last 10 minutes (check the `openOnly` param). At most, 500 orders will be returned.
@@ -19,13 +19,13 @@ GET `/v5/order/realtime`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
+|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |false |string |Symbol name. For `linear` & `inverse`, either `symbol` or `settleCoin` is **required** |
 |baseCoin |false |string |Base coin. For `option` **only**. Return all option open orders if not passed|
 |settleCoin |false |string |Settle coin. For `linear` & `inverse`, either `symbol` or `settleCoin` is **required** |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|openOnly |false |integer |<ul><li>Unified account & Normal account: `0`(default) - query open orders **only**</li><li>Unified account: `1`, Normal account: `2` - return cancelled, rejected or totally filled orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li></ul>|
+|openOnly |false |integer |<ul><li>Unified account & Normal account: `0`(default) - query open orders **only**</li><li>Unified account - spot / linear / option: `1`<br/>Unified account - inverse & Normal account: `2` <br/>return cancelled, rejected or totally filled orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li></ul>|
 |orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order. Default: all kinds of orders|
 |limit |false |integere |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination|

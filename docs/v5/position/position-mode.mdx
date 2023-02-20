@@ -4,7 +4,8 @@ sidebar_label: Switch Position Mode
 sidebar_position: 2.8
 ---
 It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
-> **Covers: USDT perpetual(Normal account)/Inverse Futures(Normal account)**
+> **Unified account covers: Inverse Futures**<br/>
+> **Normal account covers: USDT perpetual / Inverse Futures**
 
 :::tip
 * Priority for configuration to take effect: symbol > coin > system default
@@ -78,7 +79,7 @@ POST `/v5/position/switch-mode`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `linear`,`inverse` <ul><li>Please note that `category` is **not** involved with business logic</li><li>Unified account is not applicable</li></ul> |
+|category |**true** |string |Product type<ul><li> Unified account: `inverse`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |false |string |Symbol name. Either `symbol` or `coin` is **required**. `symbol` has a higher priority |
 |coin |false |string |Coin |
 |mode |**true** |integer |Position mode. `0`: Merged Single. `3`: Both Sides|
