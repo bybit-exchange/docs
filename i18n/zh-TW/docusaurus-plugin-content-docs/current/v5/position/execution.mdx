@@ -5,13 +5,13 @@ sidebar_position: 5
 ---
 
 獲取用戶成交紀錄，返回結果按`execTime`降序排列
-> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 期權**<br/>
+> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 反向合約 / 期權**<br/>
 > **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::tip
 * 單筆訂單可能會有多次成交.
 * 該接口支持查詢半年內數據.
-* 您可以通過指定symbol, baseCoin, orderId and orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
+* 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
 :::
 
 ### HTTP 請求
@@ -20,11 +20,11 @@ GET `/v5/execution/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |false |string |合約名稱. _普通帳戶: `symbol` 和 `orderId`**必傳**其中一個_ |
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單id. 普通帳戶不支持該字段查詢 |
-|baseCoin |false |string |交易幣種. 普通帳戶不支持該字段查詢|
+|baseCoin |false |string |交易幣種. 統一帳戶(反向)和普通帳戶不支持該字段查詢|
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |[execType](../enum#exectype) |false |string |執行類型|

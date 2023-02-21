@@ -13,7 +13,7 @@ GET `/derivatives/v3/public/instruments-info`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. Default: `linear`, but in the response category shows `""`|
+|[category](../enum#category) |false |string |Product type. `linear`,`inverse`,`option`. Default: returns futures|
 |[symbol](../enum#symbol) |false |string |Symbol name. <ul><li>query an option symbol, `category` is **required**</li></ul>|
 |baseCoin |false |string |Base coin. <ul><li>Valid when `category`=option</li><li>BTC by default if not passed</li></ul>|
 |limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: 500|
@@ -100,6 +100,9 @@ GET `/derivatives/v3/public/instruments-info`
         </tr>
         <tr>
             <td>> unifiedMarginTrade</td><td>boolean</td><td>Support unified margin trade or not </td>
+        </tr>
+        <tr>
+            <td>> fundingInterval</td><td>integer</td><td>Funding interval (minute) </td>
         </tr>
         <tr>
             <td>nextPageCursor</td><td>string</td><td>The cursor used to pagination</td>

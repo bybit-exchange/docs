@@ -49,7 +49,7 @@ _server_time - recv_window <= timestamp < server_time + 1000_<br/>
 
 **基本步驟:**
 1. 時間戳 + API key + [recv_window]+ [queryString(無需排序) | jsonBodyString]<br/>
-2. 使用**HMAC_SHA256**算法對第1步中拼接的string簽名，並轉換為16進製字符串，得出sign參數。<br/>
+2. 使用**HMAC_SHA256**或者**RSA_SHA256**算法對第1步中拼接的string簽名，並轉換為16進製字符串，得出sign參數。<br/>
 3. 添加生成的簽名到HTTP頭當中
 **注意:** **GET**和**POST**請求的加密明文是不相同，請參考以下示例.
 

@@ -15,24 +15,24 @@ Subscribe to the position stream to see changes to your position data in **real-
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> category |string |Product type <ul><li>Unified account: does not have this field</li><li>Normal account: `linear`, `inverse`.</li></ul>|
+|> category |string |Product type <ul><li>Unified account: does not have this field</li><li>Unified account - inverse & Normal account: `linear`, `inverse`.</li></ul>|
 |> symbol |string |Symbol name |
 |> side |string |Position side. `Buy`,`Sell` |
 |> size |string |Position size |
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
-|> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` under unified margin account |
+|> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` for unified account trade(spot/linear/option) |
 |> positionValue |string |Position value |
 |> riskId |integer |Risk limit ID. _Note: for portfolio margin mode, it returns 0, which the risk limit value is invalid_|
 |> riskLimitValue |string |Risk limit value corresponding to riskId. _Note: for portfolio margin mode, it returns "", which the risk limit value is invalid_|
 |> entryPrice |string |Entry price |
 |> markPrice |string |Mark price |
 |> leverage |string |Leverage. _Note: for portfolio margin mode, it returns "", which the leverage value is invalid_|
-|> positionBalance |string |Position margin. _Unified account does not have this field_ |
-|> autoAddMargin |integer |Whether to add margin automatically. `0`: false, `1`: true. _Unified account does not have this field_ |
+|> positionBalance |string |Position margin. _Unified trade(spot/linear/options) does not have this field_ |
+|> autoAddMargin |integer |Whether to add margin automatically. `0`: false, `1`: true.<br/>_Unified trade(spot/linear/options) does not have this field_ |
 |> positionMM |string |Position maintenance margin. _Note: for portfolio margin mode, it returns ""_|
 |> positionIM |string |Position initial margin. _Note: for portfolio margin mode, it returns ""_|
-|> liqPrice |string |Est.liquidation price. `""` for unified margin account |
-|> bustPrice |string |Est.bankruptcy price. `""` for unified margin account |
+|> liqPrice |string |Est.liquidation price. `""` for Unified trade(spot/linear/options) |
+|> bustPrice |string |Est.bankruptcy price. `""` for Unified trade(spot/linear/options) |
 |> tpSlMode |string |Tp/Sl mode. `Full`,`Partial` |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
