@@ -5,7 +5,7 @@ sidebar_position: 11
 ---
 
 獲取當前用戶的所有平倉盈虧數據，返回結果按照`createdTime`降序排列.
-> **統一帳戶覆蓋範圍: 正向合約**<br/>
+> **統一帳戶覆蓋範圍: 正向合約 / 反向合約**<br/>
 > **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 ### HTTP 請求
@@ -14,8 +14,8 @@ GET `/v5/position/closed-pnl`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
-|symbol |false |string |合約名稱. 普通帳戶該**字段**必傳|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
+|symbol |false |string |合約名稱. 統一帳戶(反向)和普通帳戶該字段**必傳**|
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |limit |false |integer |每頁數量限制. [`1`, `200`]. 默認: `50`|

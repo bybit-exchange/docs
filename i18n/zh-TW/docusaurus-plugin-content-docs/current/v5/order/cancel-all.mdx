@@ -4,7 +4,7 @@ sidebar_label: 撤銷所有訂單
 sidebar_position: 5
 ---
 撤銷全部委託單
-> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 期權**<br/>
+> **統一帳戶覆蓋範圍: 現貨 / 正向合約 / 反向合約 / 期權**<br/>
 > **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
 
 :::info
@@ -18,22 +18,45 @@ POST `/v5/order/cancel-all`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用，意味著當通過baseCoin來取消全部時，會將正向和反向的訂單都取消掉</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |false|string |合約名稱 |
-|baseCoin |false|string |交易幣種 |
+|baseCoin |false|string |交易幣種. 當通過baseCoin來全部撤單時，會將linear和inverse訂單全部撤掉 |
 |settleCoin |false|string |結算幣種. 不支持`spot`|
 |orderFilter |false |string |僅`spot`有效. `Order`: 普通單,`tpslOrder`: 止盈止損單. 若不傳, 默認是`Order`|
 
 ### 響應參數
-| 參數 | 類型 | 說明|
-|:----- |:-----|----- |
-|list |array |Object |
-|> orderId |string |訂單Id |
-|> orderLinkId |string |用戶自定義訂單Id |
+<Tabs>
+<TabItem value="future" label="Linear/Inverse/Option" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> orderId</td><td>string</td><td>Order ID </td>
+        </tr>
+        <tr>
+            <td>> orderLinkId</td><td>string</td><td>User customised order ID</td>
+        </tr>
+    </table>
+</TabItem>
+
+
+<TabItem value="spot" label="Spot">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>success</td><td>string</td><td><code>1</code>: success, <code>0</code>: fail</td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
 
 ### 請求示例
-
-
 ```http
 POST /v5/order/cancel-all HTTP/1.1
 Host: api-testnet.bybit.com
@@ -51,6 +74,8 @@ Content-Type: application/json
 ```
 
 ### 響應示例
+<Tabs>
+<TabItem value="linear-option" label="Linear/Inverse/Option">
 
 ```json
 {
@@ -68,3 +93,20 @@ Content-Type: application/json
     "time": 1672219780463
 }
 ```
+
+</TabItem>
+<TabItem value="spot" label="Spot">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "success": "1"
+    },
+    "retExtInfo": {},
+    "time": 1676962409398
+}
+```
+</TabItem>
+</Tabs>

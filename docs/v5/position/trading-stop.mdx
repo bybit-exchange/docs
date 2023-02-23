@@ -5,8 +5,8 @@ sidebar_position: 4
 ---
 
 Set the take profit, stop loss or trailing stop for the position.
-> **Unified account covers: Linear contract**<br/>
-> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
+> **Unified account covers: Linear contract / Inverse contract**<br/>
+> **Normal account covers: USDT perpetual / Inverse contract**
 
 :::tip
 Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
@@ -18,7 +18,7 @@ POST `/v5/position/trading-stop`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |**true** |string |Symbol name|
 |takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
 |stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |

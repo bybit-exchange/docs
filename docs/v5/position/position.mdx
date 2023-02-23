@@ -5,8 +5,8 @@ sidebar_position: 1
 ---
 
 Query real-time position data, such as position size, cumulative realizedPNL.
-> **Unified account covers: Linear contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
+> **Unified account covers: Linear contract / Inverse contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse contract**
 
 ### HTTP Request
 GET `/v5/position/list`
@@ -14,7 +14,7 @@ GET `/v5/position/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../v5/enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|[category](../v5/enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |false |string |Symbol name<ul><li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null, it returns position size grater than zero.</li></ul>|
 |baseCoin |false |string |Base coin. `option` **only**. Return all option positions if not passed|
 |settleCoin |false |string |Settle coin. For `linear` & `inverse`, either `symbol` or `settleCon` is **required**. `symbol` has a higher priority |
@@ -35,12 +35,12 @@ GET `/v5/position/list`
 |> avgPrice |string  |Average entry price |
 |> positionValue | string  |Position value|
 |> tradeMode | integer |Trade mode. `0`: cross-margin, `1`: isolated margin |
-|> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. _Unique field for normal account_ |
+|> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. _Unified account(spot/linear/option) does not return this field_ |
 |> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage. Valid for contract. _Note: for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
 |> markPrice | string  |Last mark price |
-|> liqPrice | string  |Position liquidation price. _Note: the value returned in the unified mode is the estimated liquidation price, because the unified margin mode controls the risk rate according to the account, so the liquidation price on a single position is only estimated_|
-|> bustPrice | string  |Bankruptcy price. _Note: Unified mode returns `""`, no position bankruptcy price_|
+|> liqPrice | string  |Position liquidation price. _Note: the value returned in the unified mode is the estimated liquidation price, because the unified margin mode controls the risk rate according to the account, so the liquidation price on a single position is only estimated (exclude inverse trade under UTA)_|
+|> bustPrice | string  |Bankruptcy price. _Note: Unified mode returns `""`, no position bankruptcy price (exclude inverse trade under UTA)_|
 |> positionIM | string  |Initial margin. For portfolio margin mode, it returns "" |
 |> positionMM | string  |Maintenance margin. For portfolio margin mode, it returns "" |
 |> tpslMode | string  |Take profit/stop loss mode. `Full`,`Partial`|

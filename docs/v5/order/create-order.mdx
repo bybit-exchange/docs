@@ -4,8 +4,8 @@ sidebar_label: Place Order
 sidebar_position: 1
 ---
 This endpoint supports to create the order for spot, spot margin, linear perpetual, inverse futures and options.
-> **Unified account covers: Spot / Linear contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse perpetual / Inverse futures**
+> **Unified account covers: Spot / Linear contract / Inverse contract / Options**<br/>
+> **Normal account covers: USDT perpetual / Inverse contract**
 
 :::info
 - **Supported order type (`orderType`):**<br/>
@@ -48,7 +48,7 @@ POST `/v5/order/create`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |**true** |string |Symbol name|
 |isLeverage |false |integer |Whether to borrow. Valid for `spot` **only**. `0`(default): false then spot trading, `1`: true then margin trading|
 |side |**true** |string |`Buy`, `Sell`|
@@ -61,7 +61,7 @@ POST `/v5/order/create`
 |[triggerBy](../enum#triggerby) |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
-|[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>Unified account has one-way mode only|
+|[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
 |orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_`future` orderLinkId rules_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li><li>An orderLinkId can be reused once the original order is either `Filled` or `Cancelled`</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price|
 |stopLoss |false |string |Stop loss price|
