@@ -31,11 +31,12 @@ GET `/asset/v3/private/coin-info/query`
 |>> chainDeposit|string|The chain status of deposit. `0`：suspend; `1`：normal|
 |>> chainWithdraw|string|The chain status of deposit. `0`：suspend; `1`：normal|
 |>> minAccuracy|string|The precision of withdraw or deposit|
+|>> withdrawPercentageFee |string |The withdraw fee percentage. It is a real figure, e.g., 0.022 means 2.2%  |
 
 ### Request Example
 
 ```http
-GET /asset/v3/private/coin-info/query?coin=BTC HTTP/1.1
+GET /asset/v3/private/coin-info/query?coin=ETH HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-API-KEY: xxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1671172180432
@@ -48,30 +49,43 @@ X-BAPI-SIGN: xxxxxxxxxxx
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "",
     "result": {
         "rows": [
             {
-                "name": "BTC",
-                "coin": "BTC",
-                "remainAmount": "150",
+                "name": "ETH",
+                "coin": "ETH",
+                "remainAmount": "1020000",
                 "chains": [
                     {
-                        "chainType": "BTC",
+                        "chainType": "ETH",
                         "confirmation": "10000",
-                        "withdrawFee": "0.0005",
-                        "depositMin": "0.0005",
-                        "withdrawMin": "0.001",
-                        "chain": "BTC",
+                        "withdrawFee": "0.005",
+                        "depositMin": "0.01",
+                        "withdrawMin": "0.02",
+                        "chain": "ETH",
                         "chainDeposit": "1",
                         "chainWithdraw": "1",
-                        "minAccuracy": "8"
+                        "minAccuracy": "8",
+                        "withdrawPercentageFee": "0.022"
+                    },
+                    {
+                        "chainType": "Arbitrum One",
+                        "confirmation": "10",
+                        "withdrawFee": "0.01",
+                        "depositMin": "0.001",
+                        "withdrawMin": "0.1",
+                        "chain": "ARBI",
+                        "chainDeposit": "1",
+                        "chainWithdraw": "1",
+                        "minAccuracy": "8",
+                        "withdrawPercentageFee": "0"
                     }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1671172180550
+    "time": 1677478088215
 }
 ```
