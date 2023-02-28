@@ -5,8 +5,8 @@ sidebar_position: 1
 ---
 
 該接口可以獲取用戶的持倉信息，比如持倉數量，累計盈虧等
-> **統一帳戶覆蓋範圍: 正向合約 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: 正向永續 / 反向合約**
+> **統一帳戶覆蓋範圍: USDT和USDC永續 / 反向合約 / 期權**<br/>
+> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
 
 ### HTTP 請求
 GET `/v5/position/list`
@@ -35,7 +35,7 @@ GET `/v5/position/list`
 |> avgPrice| string | 當前倉位的平均入場價格 |
 |> positionValue | string |仓位的價值 |
 |> tradeMode| integer | 交易模式。`0`:全倉，`1`：逐倉 |
-|> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. _統一帳戶(現貨/正向合約/期權)不返回該字段_ |
+|> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. _統一帳戶(現貨/USDT和USDC永續/期權)不返回該字段_ |
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**. _注意：若賬戶為組合保證金模式(PM)，該字段返回空字符串，槓桿規則失效_|
 |> markPrice| string  | symbol 的最新標記價格  |

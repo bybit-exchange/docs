@@ -10,51 +10,14 @@ slug: /spot/rate-limit
 仍被禁止，則您可能會被永久禁止。
 :::
 
-Bybit根據請求方式有不同的IP頻率限制。 我們不建議您在這些限制的邊緣運行您的應用程序，以防異常的網絡活動導致意外違規。
+我們不建議您在這些限制的邊緣運行您的應用程序，以防異常的網絡活動導致意外違規。
 
-* `GET` 請求:
-* 連續 2 分鐘內每秒不超過 50 個請求
-* 連續 5 秒內每秒不超過 70 個請求
-* `POST` 請求:
-* 連續 2 分鐘內每秒不超過 20 個請求
-* 連續 5 秒內每秒不超過 50 個請求
+* `GET`/`POST` 請求 (共享):
+    * 連續 5 秒內每秒不超過 120 個請求
 
-此表顯示了根據您使用的 API 的不同 IP 頻率限制數。
-
-<span class="blocky_table">
-<table border="0.8">
-    <tr>
-        <th>IP頻率限制</th><th>API</th><th>Path</th>
-    </tr>
-    <tr>
-        <td rowSpan="5">GET: 2分鐘內50次/秒; 5秒鐘內70次/秒<br/>POST: 2分鐘內20次/秒; 5秒鐘內50次/秒</td><td>統一保證金 V3</td><td>/derivatives/v3/public, /unified/v3</td>
-    </tr>
-    <tr>
-        <td>合約 V3</td><td>/derivatives/v3/public, /contract/v3</td>
-    </tr>
-    <tr>
-        <td>反向永續 V2</td><td>/v2</td>
-    </tr>
-    <tr>
-        <td>反向交割 V2</td><td>/futures</td>
-    </tr>
-    <tr>
-        <td>正向永續 V2</td><td>/public/linear, /private/linear</td>
-    </tr>
-    <tr>
-        <td>GET: 2分鐘內50次/秒; 5秒鐘內70次/秒<br/>POST: 2分鐘內20次/秒; 5秒鐘內50次/秒</td><td>帳戶資產 V1, 帳戶資產 V3</td><td>/asset/v1, /asset/v3, /user/v3</td>
-    </tr>
-    <tr>
-        <td>GET&DELETE: 2分鐘內50次/秒; 5秒鐘內70次/秒<br/>POST: 2分鐘內20次/秒; 5秒鐘內50次/秒</td><td>現貨 V1, 現貨 V3</td><td>/spot/v1, /spot/v3</td>
-    </tr>
-    <tr>
-        <td rowSpan="2">GET: 2分鐘內50次/秒; 5秒鐘內70次/秒<br/>POST: 2分鐘內20次/秒; 5秒鐘內50次/秒</td><td>期權 V1</td><td>/option</td>
-    </tr>
-    <tr>
-        <td>USDC永續 V1</td><td>/perpetual</td>
-    </tr>
-</table>
-</span>
+:::note
+所有到`api.bybit.com`或`api.bytick.com`的流量共享此限制，無論是訪問現貨、期貨還是期權。
+:::
 
 違反限制後，您的 IP 將被禁止一段時間（通常為 30 分鐘）。 持續違反限制將導致永久禁止。 我們不能撤銷永久禁令或縮短臨時禁令。
 

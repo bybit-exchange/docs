@@ -1,0 +1,48 @@
+---
+title: Get Internal Deposit Records (across Bybit)
+sidebar_label: Get Internal Deposit Records (across Bybit)
+sidebar_position: 13.05
+---
+Query deposit records through Bybit platform
+
+:::info Rules
+<li>The maximum difference between the start time and the end time is 30 days.</li>
+<li>Support to get deposit records by Master or Sub Member Api Key</li>
+:::
+
+### HTTP Request
+GET `/v5/asset/deposit/query-internal-record`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|startTime |false |integer |Start time (ms). Default value: 30 days before the current time |
+|endTime |false |integer |End time (ms). Default value: current time |
+|[coin](enum#coin) |false |string |Coin name: for example, BTC. Default value: all |
+|cursor |false |string |Cursor, used for pagination |
+|limit |false |integer |Number of items per page, [`1`, `50`]. Default value: 50 |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|rows|array |Object|
+|> id|string|ID|
+|> type|integer|`1`: Internal deposit|
+|> [coin](enum#coin)|string |Deposit coin |
+|> amount|string|Deposit amount|
+|> status|integer |<ul><li>1=Processing</li><li>2=Success</li><li>3=deposit failed</li></ul>|
+|> address|string|Email address or phone number|
+|> createdTime|string|Deposit created timestamp|
+|nextPageCursor|string|cursor information: used for pagination. Default value: `""`|
+
+### Request Example
+
+```http
+
+```
+
+### Response Example
+
+```json
+
+```

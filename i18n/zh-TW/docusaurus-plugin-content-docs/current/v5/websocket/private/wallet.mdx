@@ -15,7 +15,7 @@ sidebar_position: 4
 |topic |string |Topic名 |
 |creationTime |number |消息數據創建時間 |
 |data |array |Object |
-|> accountType |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/正向合約/期權), `CONTRACT`(反向合約)</li><li>普通帳戶: `CONTRACT`</li></ul> |
+|> accountType |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向合約)</li><li>普通帳戶: `CONTRACT`</li></ul> |
 |> accountIMRate |string |帳戶初始保證金率: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
 |> accountMMRate |string |帳戶維持保證金率: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
 |> totalEquity |string |賬戶維度換算成usd的資產淨值：Account Margin Balance Base Coin + Account Option Value Base Coin。非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
@@ -39,6 +39,7 @@ sidebar_position: 4
 |>> totalPositionMM	|string |以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串|
 |>> unrealisedPnl |string |以當前幣種結算的所有倉位的未結盈虧之和|
 |>> cumRealisedPnl |string |以當前幣種結算的所有倉位的累計已結盈虧之和|
+|>> bonus |string |體驗金. _UNIFIED帳戶的獨有字段_ |
 
 ### 訂閱示例
 ```json
@@ -82,7 +83,8 @@ sidebar_position: 4
                     "totalPositionIM": "202.99874213",
                     "totalPositionMM": "39.14289747",
                     "unrealisedPnl": "74.2768991",
-                    "cumRealisedPnl": "-209.1544627"
+                    "cumRealisedPnl": "-209.1544627",
+                    "bonus": "0"
                 },
                 {
                     "coin": "BTC",
@@ -97,7 +99,8 @@ sidebar_position: 4
                     "totalPositionIM": "0",
                     "totalPositionMM": "0",
                     "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
+                    "cumRealisedPnl": "0",
+                    "bonus": "0"
                 },
                 {
                     "coin": "ETH",
@@ -112,7 +115,8 @@ sidebar_position: 4
                     "totalPositionIM": "0",
                     "totalPositionMM": "0",
                     "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
+                    "cumRealisedPnl": "0",
+                    "bonus": "0"
                 },
                 {
                     "coin": "USDT",
@@ -127,7 +131,8 @@ sidebar_position: 4
                     "totalPositionIM": "2.72589075",
                     "totalPositionMM": "0.28576575",
                     "unrealisedPnl": "-1.8975",
-                    "cumRealisedPnl": "0.64782276"
+                    "cumRealisedPnl": "0.64782276",
+                    "bonus": "0"
                 },
                 {
                     "coin": "EOS3L",
@@ -142,7 +147,8 @@ sidebar_position: 4
                     "totalPositionIM": "0",
                     "totalPositionMM": "0",
                     "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
+                    "cumRealisedPnl": "0",
+                    "bonus": "0"
                 },
                 {
                     "coin": "BIT",
@@ -157,7 +163,8 @@ sidebar_position: 4
                     "totalPositionIM": "0",
                     "totalPositionMM": "0",
                     "unrealisedPnl": "0",
-                    "cumRealisedPnl": "0"
+                    "cumRealisedPnl": "0",
+                    "bonus": "0"
                 }
             ],
             "accountType": "UNIFIED"
