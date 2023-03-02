@@ -1,0 +1,51 @@
+---
+title: Toggle Margin Trade
+sidebar_label: Toggle Margin Trade
+sidebar_position: 1
+---
+Turn on / off spot margin trade
+> **Covers: Margin trade (Normal Account)**
+
+### HTTP Request
+POST `/v5/spot-cross-margin-trade/switch`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|switch |**true** |integer |`1`: on, `0`: off |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|switchStatus |integer |Margin trade status. `1`: on, `0`: off|
+
+### Request Example
+
+```http
+POST /v5/spot-cross-margin-trade/switch HTTP/1.1
+Host: api-testnet.bybit.com
+Content-Type: application/json
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1677747804512
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+Content-Length: 19
+
+{
+    "switch": 0
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "switchStatus": 0
+    },
+    "retExtInfo": {},
+    "time": 1677747804974
+}
+```

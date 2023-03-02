@@ -1,0 +1,69 @@
+---
+title: Query Borrowing Info
+sidebar_label: Query Borrowing Info
+---
+
+### HTTP Request
+GET <code>/spot/v3/private/cross-margin-orders</code>
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|startTime|false|long|Start time, unit in millisecond|
+|endTime|false|long|End time, unit in millisecond|
+|[coin](../enum#currencycoin)|false|string|currency|
+|status|false|integer |Status. <code>0</code> by default<ul><li><code>0</code>：get all kinds of status</li><li><code>1</code>：uncleared</li><li><code>2</code>：cleared</li></ul>|
+|limit|false|integer |Limit for data size. [`1`, `500`]. Default: `500`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|accountId|string|Account ID|
+|coin|string|currency|
+|createdTime|number |Borrow created timestamp (ms)|
+|id|string |Borrowing Id|
+|interestAmount|string|Total Interest|
+|interestBalance|string|Outstanding Interest|
+|loanAmount|string|Principal Amount|
+|loanBalance|string|Outstanding Principal|
+|status|integer|Status. <code>1</code>：uncleared, <code>2</code>：cleared|
+|type|integer|Order Type (1. Manual 2. Auto)|
+
+### Request Example
+
+```http
+curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-orders?startTime=1662508800000&endTime=1662552000000&coin=USDT&status=1' \
+--header 'X-BAPI-SIGN-TYPE: 2' \
+--header 'X-BAPI-API-KEY: XXXXXXXXX' \
+--header 'X-BAPI-TIMESTAMP: 1662619080929' \
+--header 'X-BAPI-RECV-WINDOW: 5000' \
+--header 'X-BAPI-SIGN: XXXXX'
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "accountId": "533287",
+                "coin": "USDT",
+                "createdTime": 1662617849000,
+                "id": "14143",
+                "interestAmount": "0.001668",
+                "interestBalance": "0",
+                "loanAmount": "200",
+                "loanBalance": "50.001668",
+                "status": 1,
+                "type": 2
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1662618592344
+}
+```
