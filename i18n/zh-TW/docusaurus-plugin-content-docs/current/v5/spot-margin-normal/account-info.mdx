@@ -1,34 +1,34 @@
 ---
-title: Get Loan Account Info
-sidebar_label: Get Loan Account Info
+title: 查詢借貸帳戶信息
+sidebar_label: 查詢借貸帳戶信息
 sidebar_position: 4
 ---
-> **Covers: Margin trade (Normal Account)**
+> **覆蓋範圍: 全倉槓桿 (普通帳戶)**
 
-### HTTP Request
+### HTTP 請求
 GET `/v5/spot-cross-margin-trade/account`
 
-### Request Parameters
-None
+### 請求參數
+無
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|acctBalanceSum|string|Total equity (BTC)|
-|debtBalanceSum|string|Total liability (BTC)|
+|acctBalanceSum|string|總資產 (折算成BTC)|
+|debtBalanceSum|string|總負債 (折算成BTC)|
 |loanAccountList|array|Object|
-|> free|string|Available balance|
-|> interest|string|Outstanding interest|
-|> loan|string|Outstanding principle |
-|> remainAmount|string|Remaining debt = interest + loan|
-|> locked|string|Locked amount |
-|> tokenId|string|Coin name |
-|> total|string|Total|
-|riskRate|string|Risk rate|
-|status|integer |Loan account status <ul><li>`1`: normal</li><li>`2`: withdrawal/transfer restricted</li><li>`3`: liquidation alert triggered</li><li>`4`: liquidated</li></ul>|
-|switchStatus|integer |`0`: margin trade off, `1`: margin trade on|
+|> free|string|可用餘額|
+|> interest|string|未還利息|
+|> loan|string|未還本金 |
+|> remainAmount|string|總未還金額 = 未還利息 + 未還本金|
+|> locked|string|鎖定金額 |
+|> tokenId|string|幣種 |
+|> total|string|合計|
+|riskRate|string|風險率|
+|status|integer |借貸帳戶狀態 <ul><li>`1`: 正常</li><li>`2`: 限制提幣/劃轉</li><li>`3`: 預警</li><li>`4`: 已爆倉</li></ul>|
+|switchStatus|integer |全倉槓桿狀態 `0`: 關閉, `1`: 開啟|
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/spot-cross-margin-trade/account HTTP/1.1
@@ -39,7 +39,7 @@ X-BAPI-RECV-WINDOW: 5000
 X-BAPI-SIGN: XXXXXX
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

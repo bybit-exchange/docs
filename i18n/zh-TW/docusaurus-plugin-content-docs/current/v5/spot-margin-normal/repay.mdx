@@ -1,26 +1,26 @@
 ---
-title: Repay
-sidebar_label: Repay
+title: 還款
+sidebar_label: 還款
 sidebar_position: 6
 ---
-> **Covers: Margin trade (Normal Account)**
+> **覆蓋範圍: 全倉槓桿 (普通帳戶)**
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/spot-cross-margin-trade/repay`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 |是否必需| 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|coin|**true** |string|Coin name|
-|qty|false|string |Amount to repay <ul><li>`qty` is **required** when `completeRepayment`=0</li><li>`qty` is invalid when `completeRepayment`=1</li></ul>|
-|completeRepayment|false |integer |Whether to pay off all debts. `0`(default): false, `1`: true|
+|coin|**true** |string|幣種名稱|
+|qty|false|string |還款金額 <ul><li>當`completeRepayment`=0時, `qty`**必傳** </li><li>當`completeRepayment`=1時, `qty`無效</li></ul>|
+|completeRepayment|false |integer |是否一鍵全部還款. `0`(默認): 否, `1`: 是|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|repayId|string|Repayment transaction ID|
+|repayId|string|還款交易ID|
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/spot-cross-margin-trade/repay HTTP/1.1
@@ -39,7 +39,7 @@ Content-Length: 66
 }
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {
