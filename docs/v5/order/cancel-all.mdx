@@ -19,9 +19,9 @@ POST `/v5/order/cancel-all`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic._</li></ul>|
-|symbol |false|string |Symbol name |
-|baseCoin |false|string |Base coin. If cancel all by baseCoin, it will cancel all linear & inverse orders|
-|settleCoin |false|string |Settle coin. It does not support `spot`|
+|symbol |false|string |Symbol name. **Required** if not passing baseCoin or settleCoin|
+|baseCoin |false|string |Base coin. If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin|
+|settleCoin |false|string |Settle coin. Does not support `spot`. **Required** if not passing symbol or baseCoin|
 |orderFilter |false |string |Valid for `spot` **only**. `Order`,`tpslOrder`. If not passed, `Order` by default|
 
 ### Response Parameters
