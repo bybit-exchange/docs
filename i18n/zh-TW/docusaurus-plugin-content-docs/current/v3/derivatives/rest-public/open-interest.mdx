@@ -24,6 +24,7 @@ GET `/derivatives/v3/public/open-interest`
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |limit |false |integer |每頁數量限制. [`1`, `200`]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁 |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -33,24 +34,16 @@ GET `/derivatives/v3/public/open-interest`
 |list |array |Object |
 |> openInterest |string |未平倉合約數量 |
 |> timestamp |string |數據產生的時間戳（毫秒）|
+|nextPageCursor |string |游標，用於翻頁 |
 
 ### 請求示例
-
-<Tabs>
-<TabItem value="console-linear" label="linear">
 
 ```http
 GET /derivatives/v3/public/open-interest?category=linear&symbol=ETHUSDT&interval=5min&limit=2 HTTP/1.1
 Host: api.bybit.com
 ```
 
-</TabItem>
-</Tabs>
-
 ### 響應示例
-
-<Tabs>
-<TabItem value="js linear" label="linear">
 
 ```json
 {
@@ -61,18 +54,17 @@ Host: api.bybit.com
         "category": "linear",
         "list": [
             {
-                "openInterest": "558472.29000000",
-                "timestamp": "1671970800000"
+                "openInterest": "411496.22000000",
+                "timestamp": "1677832800000"
             },
             {
-                "openInterest": "559352.46000000",
-                "timestamp": "1671970500000"
+                "openInterest": "411484.61000000",
+                "timestamp": "1677832500000"
             }
-        ]
-},
+        ],
+        "nextPageCursor": "lastid%3D44487872"
+    },
     "retExtInfo": {},
-    "time": 1671971027117
+    "time": 1677832955976
 }
 ```
-</TabItem>
-</Tabs>
