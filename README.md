@@ -12,11 +12,11 @@ npm install --global yarn
 ```
 
 ```
-$ git clone git@github.com:bybit-exchange/docs-v2.git  # clone the repo
+$ git clone git@github.com:bybit-exchange/docs.git  # clone the repo
 ```
 
 ```
-$ cd docs-v2
+$ cd docs
 ```
 
 ```
@@ -40,7 +40,7 @@ As we have english and chinese in the application, so you need to start them sep
 $ yarn start  # start the local EN site
 ```
 ```
-$ yarn start --locale zh  # start the local CN site
+$ yarn start --locale zh-TW  # start the local CN site
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
