@@ -49,31 +49,34 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>Path</th><th>linear</th><th>option</th><th>spot</th>
+        <th>Method</th><th>Path</th><th>linear</th><th>inverse</th><th>option</th><th>spot</th>
     </tr>
     <tr>
-        <td>/v5/order/create</td><td>10 req/s</td><td>5 req/s</td><td>20 req/s</td>
+        <td rowSpan="7">POST</td><td>/v5/order/create</td><td>10 req/s</td><td>10 req/s</td><td>5 req/s</td><td>20 req/s</td>
     </tr>
     <tr>
-        <td>/v5/order/amend</td><td>10 req/s</td><td>5 req/s</td><td>-</td>
+        <td>/v5/order/amend</td><td>10 req/s</td><td>10 req/s</td><td>5 req/s</td><td>-</td>
     </tr>
     <tr>
-        <td>/v5/order/cancel</td><td>10 req/s</td><td>5 req/s</td><td>20 req/s</td>
+        <td>/v5/order/cancel</td><td>10 req/s</td><td>10 req/s</td><td>5 req/s</td><td>20 req/s</td>
     </tr>
     <tr>
-        <td>/v5/order/cancel-all</td><td>10 req/s</td><td>1 req/s</td><td>20 req/s</td>
+        <td>/v5/order/cancel-all</td><td>10 req/s</td><td>10 req/s</td><td>1 req/s</td><td>20 req/s</td>
     </tr>
     <tr>
-        <td>/v5/order/create-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+        <td>/v5/order/create-batch</td><td>-</td><td>-</td><td>5 req/s</td><td>-</td>
     </tr>
     <tr>
-        <td>/v5/order/amend-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+        <td>/v5/order/amend-batch</td><td>-</td><td>-</td><td>5 req/s</td><td>-</td>
     </tr>
     <tr>
-        <td>/v5/order/cancel-batch</td><td>-</td><td>5 req/s</td><td>-</td>
+        <td>/v5/order/cancel-batch</td><td>-</td><td>-</td><td>5 req/s</td><td>-</td>
     </tr>
     <tr>
-        <td colSpan="4">For now, there is no limit for other endpoints</td>
+        <td rowSpan="2">GET</td><td>/v5/order/realtime</td><td>10 req/s</td><td>10 req/s</td><td>-</td><td>-</td>
+    </tr>
+    <tr>
+        <td>/v5/order/history</td><td>10 req/s</td><td>10 req/s</td><td>-</td><td>-</td>
     </tr>
 </table>
 </span>
@@ -82,10 +85,19 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>Path</th><th>linear</th>
+        <th>Method</th><th>Path</th><th>linear/inverse</th>
     </tr>
     <tr>
-        <td>/v5/position/set-leverage</td><td>10 req/s</td>
+        <td rowSpan="3">GET</td><td>/v5/position/list</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/execution/list</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td>/v5/position/closed-pnl</td><td>10 req/s</td>
+    </tr>
+    <tr>
+        <td rowSpan="4">POST</td><td>/v5/position/set-leverage</td><td>10 req/s</td>
     </tr>
     <tr>
         <td>/v5/position/set-tpsl-mode</td><td>10 req/s</td>
@@ -96,9 +108,6 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     <tr>
         <td>/v5/position/trading-stop</td><td>10 req/s</td>
     </tr>
-    <tr>
-        <td colSpan="2">For now, there is no limit for other endpoints under this category</td>
-    </tr>
 </table>
 </span>
 
@@ -106,13 +115,13 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>Path</th><th>Limit</th>
+        <th>Method</th><th>Path</th><th>Limit</th>
+    </tr>
+    <tr>
+        <td rowSpan="2">GET</td><td>/v5/account/wallet-balance</td><td>10 req/s</td>
     </tr>
     <tr>
         <td>/v5/account/fee-rate</td><td>10 req/s</td>
-    </tr>
-    <tr>
-        <td colSpan="2">For now, there is no limit for other endpoints under this category</td>
     </tr>
 </table>
 </span>
@@ -184,34 +193,34 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>Path</th><th>Limit</th>
+        <th>Method</th><th>Path</th><th>Limit</th>
     </tr>
     <tr>
-        <td>v5/user/create-sub-member</td><td rowSpan="7">5 req/s</td>
+        <td rowSpan="7">POST</td><td>v5/user/create-sub-member</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/create-sub-api</td>
+        <td>/v5/user/create-sub-api</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/frozen-sub-member</td>
+        <td>/v5/user/frozen-sub-member</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/update-api</td>
+        <td>/v5/user/update-api</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/update-sub-api</td>
+        <td>/v5/user/update-sub-api</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/delete-api</td>
+        <td>/v5/user/delete-api</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/delete-sub-api</td>
+        <td>/v5/user/delete-sub-api</td><td>5 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/query-sub-members</td><td rowSpan="2">10 req/s</td>
+        <td rowSpan="2">GET</td><td>/v5/user/query-sub-members</td><td>10 req/s</td>
     </tr>
     <tr>
-        <td>/v5/user/query-api</td>
+        <td>/v5/user/query-api</td><td>10 req/s</td>
     </tr>
 </table>
 </span>
@@ -220,19 +229,34 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 <span class="blocky_table">
 
 |Method |Path |Limit |
-|:----|:----|----|
-|Get |/v5/spot-lever-token/order-record | 50 req/s|
-|Post |/v5/spot-lever-token/purchase | 20 req/s|
-|Post |/v5/spot-lever-token/redeem | 20 req/s|
+|:----|:----:|----|
+|GET |/v5/spot-lever-token/order-record | 50 req/s|
+|POST |/v5/spot-lever-token/purchase | 20 req/s|
+|POST |/v5/spot-lever-token/redeem | 20 req/s|
 
 </span>
 
-#### Spot Margin Trade
+#### Spot Margin Trade (UTA)
 <table border="0.8">
     <tr>
         <td>For now, there is no limit for endpoints under this category</td>
     </tr>
 </table>
+
+#### Spot Margin Trade (Normal)
+<span class="blocky_table">
+
+|Method |Path |Limit |
+|:----|:----:|----|
+|GET |/v5/spot-cross-margin-trade/loan-info | 50 req/s|
+|GET |/v5/spot-cross-margin-trade/account | 50 req/s|
+|GET |/v5/spot-cross-margin-trade/orders | 50 req/s|
+|GET |/v5/spot-cross-margin-trade/repay-history | 50 req/s|
+|POST |/v5/spot-cross-margin-trade/loan | 20 req/s|
+|POST |/v5/spot-cross-margin-trade/repay | 20 req/s|
+|POST |/v5/spot-cross-margin-trade/switch | 20 req/s|
+
+</span>
 
 ## API Rate Limit Rules For VIPs
 |VIP Level |Limit for Futures |Limit for Options |Limit for Spot |

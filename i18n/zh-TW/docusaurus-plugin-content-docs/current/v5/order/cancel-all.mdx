@@ -19,9 +19,9 @@ POST `/v5/order/cancel-all`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
-|symbol |false|string |合約名稱 |
-|baseCoin |false|string |交易幣種. 當通過baseCoin來全部撤單時，會將linear和inverse訂單全部撤掉 |
-|settleCoin |false|string |結算幣種. 不支持`spot`|
+|symbol |false|string |合約名稱. 該字段**必傳**, 若不傳`baseCoin`和`settleCoin` |
+|baseCoin |false|string |交易幣種. 當通過baseCoin來全部撤單時，會將linear和inverse訂單全部撤掉. 該字段**必傳**, 若不傳`symbol`和`baseCoin` |
+|settleCoin |false|string |結算幣種. 不支持`spot`. 該字段**必傳**, 若不傳`symbol`和`baseCoin`|
 |orderFilter |false |string |僅`spot`有效. `Order`: 普通單,`tpslOrder`: 止盈止損單. 若不傳, 默認是`Order`|
 
 ### 響應參數
