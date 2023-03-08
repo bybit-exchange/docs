@@ -39,6 +39,7 @@ paths:
             type: string
             enum:
               - linear
+              - inverse
               - option
         - name: symbol
           in: query
@@ -53,7 +54,7 @@ paths:
             type: string
         - name: settleCoin
           in: query
-          description: Used for linear, symbol or settleCoin is required
+          description: Used for linear & inverse, symbol or settleCoin is required
           required: false
           schema:
             type: string
@@ -63,7 +64,7 @@ paths:
           required: false
           schema:
             type: integer
-            default: 200
+            default: 20
         - name: cursor
           in: query
           description: cursor, used for pagination
@@ -105,9 +106,10 @@ paths:
               properties:
                 category:
                   type: string
-                  description: Product type.
+                  description: Product type
                   enum:
                     - linear
+                    - inverse
                   example: linear
                 symbol:
                   type: string
@@ -124,6 +126,67 @@ paths:
               required:
                 - category
                 - symbol
+                - buyLevarge
+                - sellLevarge
+  /v5/position/switch-isolated:
+    post:
+      tags:
+        - position
+      summary: Switch Cross/Isolated Margin
+      description: Select cross margin mode or isolated margin mode
+      operationId: cross-isolate
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type
+                  enum:
+                    - linear
+                    - inverse
+                  example: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: BTCUSDT
+                tradeMode:
+                  type: integer
+                  description: 0 - cross margin, 1 - isolated margin
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                buyLeverage:
+                  type: string
+                  description: Buy side leverage
+                  example: "10"
+                sellLeverage:
+                  type: string
+                  description: Sell side leverage
+                  example: "10"
+              required:
+                - category
+                - symbol
+                - tradeMode
                 - buyLevarge
                 - sellLevarge
 
@@ -161,6 +224,7 @@ paths:
                   description: Product type
                   enum:
                     - linear
+                    - inverse
                   example: linear
                 symbol:
                   type: string
@@ -177,6 +241,61 @@ paths:
                 - category
                 - symbol
                 - tpSlMode
+
+  /v5/position/switch-mode:
+    post:
+      tags:
+        - position
+      summary: Switch Position Mode
+      description: Switch Position Mode
+      operationId: position-mode
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type
+                  enum:
+                    - linear
+                    - inverse
+                  example: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: ETHUSDT
+                coin:
+                  type: string
+                  description: Coin name
+                  example: USDT
+                mode:
+                  type: integer
+                  description: Position mode. 0 - Merged single, 3 - Both sides
+                  enum:
+                    - 0
+                    - 3
+                  example: 0
+              required:
+                - category
+                - mode
 
   /v5/position/set-risk-limit:
     post:
@@ -234,7 +353,6 @@ paths:
                 - category
                 - symbol
                 - riskId
-                - positionIdx
 
   /v5/position/trading-stop:
     post:
@@ -270,6 +388,7 @@ paths:
                   description: Product type
                   enum:
                     - linear
+                    - inverse
                   example: linear
                 symbol:
                   type: string
@@ -328,11 +447,68 @@ paths:
                 - symbol
                 - positionIdx
 
+  /v5/position/set-auto-add-margin:
+    post:
+      tags:
+        - position
+      summary: Set Auto Add Margin
+      description: Set Auto Add Margin
+      operationId: add-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type
+                  enum:
+                    - linear
+                  example: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: ETHUSDT
+                autoAddMargin:
+                  type: integer
+                  description: 0 - turn on, 1 - turn off
+                  example: 0
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - autoAddMargin
+                - positionIdx
+
   /v5/execution/list:
     get:
       tags:
         - position
-      summary: Get Execution (half year)
+      summary: Get Execution (2 years)
       description: Get execution list
       operationId: execution
       parameters:
@@ -356,6 +532,7 @@ paths:
             type: string
             enum:
               - linear
+              - inverse
               - spot
               - option
         - name: symbol
@@ -428,7 +605,7 @@ paths:
       tags:
         - position
       summary: Get Closed PnL
-      description: Get closed pnl.
+      description: Get closed pnl
       operationId: close-pnl
       parameters:
         - name: apiKey
@@ -451,6 +628,7 @@ paths:
             type: string
             enum:
               - linear
+              - inverse
         - name: symbol
           in: query
           description: Symbol name

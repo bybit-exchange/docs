@@ -71,7 +71,7 @@ paths:
         - asset
       summary: Get Option Delivery Record
       description: Get delivery record
-      operationId: delivery-record
+      operationId: option-delivery
       parameters:
         - name: apiKey
           in: header
@@ -129,7 +129,7 @@ paths:
         - asset
       summary: Get USDC Perpetual Settlement
       description: Get Settlement Record.
-      operationId: settlement-record
+      operationId: settlement
       parameters:
         - name: apiKey
           in: header
@@ -178,7 +178,7 @@ paths:
     get:
       tags:
         - asset
-      summary: Get Asset Info
+      summary: Get Asset Info (Spot)
       description: Get spot asset
       operationId: asset-info
       parameters:
@@ -212,12 +212,71 @@ paths:
         "200":
           description: successful operation
 
+  /v5/asset/transfer/query-account-coins-balance:
+    get:
+      tags:
+        - asset
+      summary: Get All Coins Balance
+      description: Get All Coins Balance
+      operationId: all-balance
+      parameters:
+        - name: apiKey
+          in: header
+          description: Use master UID api key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Use master UID api secret
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: query
+          description: If query sub user balance, please input sub uid
+          required: false
+          schema:
+            type: string
+        - name: accountType
+          in: query
+          description: Account type
+          required: true
+          schema:
+            type: string
+            enum:
+              - SPOT
+              - CONTRACT
+              - UNIFIED
+              - OPTION
+              - INVESTMENT
+              - FUND
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: withBonus
+          in: query
+          description: Query bonus or not. 0=false, 1=true
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+            default: 0
+      responses:
+        "200":
+          description: successful operation
+
   /v5/asset/transfer/query-account-coin-balance:
     get:
       tags:
         - asset
-      summary: Get Balance of Specific Account Type
-      description: Get balance of specific account type
+      summary: Get Single Coin Balance
+      description: Get Single Coin Balance
       operationId: account-coin-balance
       parameters:
         - name: apiKey
@@ -241,7 +300,7 @@ paths:
         - name: accountType
           in: query
           description: Account type
-          required: false
+          required: true
           schema:
             type: string
             enum:
@@ -250,10 +309,11 @@ paths:
               - UNIFIED
               - OPTION
               - INVESTMENT
+              - FUND
         - name: coin
           in: query
           description: Coin name
-          required: false
+          required: true
           schema:
             type: string
         - name: withBonus
@@ -293,7 +353,7 @@ paths:
         - name: fromAccountType
           in: query
           description: From account type
-          required: false
+          required: true
           schema:
             type: string
             enum:
@@ -302,10 +362,11 @@ paths:
               - SPOT
               - OPTION
               - INVESTMENT
+              - FUND
         - name: toAccountType
           in: query
           description: To account type
-          required: false
+          required: true
           schema:
             type: string
             enum:
@@ -314,6 +375,7 @@ paths:
               - SPOT
               - OPTION
               - INVESTMENT
+              - FUND
       responses:
         "200":
           description: successful operation
@@ -368,6 +430,7 @@ paths:
                     - SPOT
                     - OPTION
                     - INVESTMENT
+                    - FUND
                   example: UNIFIED
                 toAccountType:
                   type: string
@@ -378,6 +441,7 @@ paths:
                     - SPOT
                     - OPTION
                     - INVESTMENT
+                    - FUND
                   example: SPOT
               required:
                 - transferId
@@ -577,6 +641,7 @@ paths:
                     - SPOT
                     - INVESTMENT
                     - OPTION
+                    - FUND
                   example: UNIFIED
                 toAccountType:
                   type: string
@@ -587,6 +652,7 @@ paths:
                     - SPOT
                     - INVESTMENT
                     - OPTION
+                    - FUND
                   example: SPOT
               required:
                 - transferId
@@ -704,11 +770,53 @@ paths:
         "200":
           description: successful operation
 
+  /v5/asset/deposit/deposit-to-account:
+    post:
+      tags:
+        - asset
+      summary: Set Deposit Account
+      description: Set Deposit Account
+      operationId: set-deposit-acct
+      parameters:
+        - name: apiKey
+          in: header
+          description: Use master UID api key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Use master UID api secret
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                AccountType:
+                  type: string
+                  description: From account type
+                  enum:
+                    - UNIFIED
+                    - CONTRACT
+                    - SPOT
+                    - OPTION
+                    - FUND
+                  example: UNIFIED
+              required:
+                - AccountType
+
   /v5/asset/deposit/query-record:
     get:
       tags:
         - asset
-      summary: Get Deposit Record
+      summary: Get Deposit Record (on-chain)
       description: Get deposit record
       operationId: deposit-record
       parameters:
@@ -763,7 +871,7 @@ paths:
     get:
       tags:
         - asset
-      summary: Get Sub Account Deposit Record
+      summary: Get Sub Account Deposit Records (on-chain)
       description: Get sub account deposit record
       operationId: sub-deposit-record
       parameters:
@@ -782,6 +890,61 @@ paths:
         - name: subMemberId
           in: query
           description: Sub UID
+          required: true
+          schema:
+            type: string
+        - name: coin
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The start timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: endTime
+          in: query
+          description: The end timestamp (ms)
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit size. 1-50
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: cursor
+          in: query
+          description: Cursor, used for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/asset/deposit/query-internal-record:
+    get:
+      tags:
+        - asset
+      summary: Get Internal Deposit Records (across Bybit)
+      description: Get deposit records through Bybit platform
+      operationId: internal-deposit-record
+      parameters:
+        - name: apiKey
+          in: header
+          description: Use master UID api key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Use master UID api secret
           required: true
           schema:
             type: string
@@ -932,7 +1095,7 @@ paths:
     get:
       tags:
         - asset
-      summary: Get Withdraw Record
+      summary: Get Withdraw Records
       description: Get withdraw record
       operationId: withdraw-record
       parameters:
