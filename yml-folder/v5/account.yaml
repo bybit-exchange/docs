@@ -21,7 +21,7 @@ paths:
       tags:
         - account
       summary: Get Wallet Balance
-      description: Get wallet balance. Please read [API-DOC](../../../v5/account/wallet-balance#) first.
+      description: Get wallet balance
       operationId: wallet
       parameters:
         - name: apiKey
@@ -44,6 +44,7 @@ paths:
             type: string
             enum:
               - UNIFIED
+              - CONTRACT
         - name: coin
           in: query
           description: Coin name. You can pass mutiple coins like USDT,USDC
@@ -59,7 +60,7 @@ paths:
         - account
       summary: Upgrade to Unified Account
       description: Upgrade to UTA
-      operationId: upgrade-uta
+      operationId: upgrade-unified-account
       parameters:
         - name: apiKey
           in: header
@@ -189,6 +190,35 @@ paths:
         - name: baseCoin
           in: query
           description: Base coin
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/account/fee-rate:
+    get:
+      tags:
+        - account
+      summary: Get Fee Rate (Derivatives)
+      description: Get fee rate
+      operationId: fee-rate
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: symbol
+          in: query
+          description: Symbol name
           required: false
           schema:
             type: string
