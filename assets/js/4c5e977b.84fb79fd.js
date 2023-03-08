@@ -1,1 +1,0 @@
-(self.webpackChunkdocusaurus_docs=self.webpackChunkdocusaurus_docs||[]).push([[1893],{31769:(s,u,c)=>{"use strict";c.d(u,{Z:()=>o});c(67294);var a=c(42752),e=c(65488),d=c(85162);const o={...a.Z,Tabs:e.Z,TabItem:d.Z}},44616:()=>{},42480:()=>{}}]);
