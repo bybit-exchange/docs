@@ -47,6 +47,7 @@ paths:
                   example: linear
                   enum:
                     - linear
+                    - inverse
                     - option
                     - spot
                 symbol:
@@ -58,7 +59,7 @@ paths:
                   enum:
                     - 0
                     - 1
-                  description: Whether there is a loan, only for spot. 0:No;1:Yes.
+                  description: Whether to loan, only for spot. 0:No;1:Yes.
                 side:
                   type: string
                   enum:
@@ -214,8 +215,10 @@ paths:
                   type: string
                   enum:
                     - linear
+                    - inverse
                     - option
                   description: Product type
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name
@@ -312,6 +315,7 @@ paths:
                   type: string
                   enum:
                     - linear
+                    - inverse
                     - option
                     - spot
                   description: Product type
@@ -368,6 +372,7 @@ paths:
             type: string
             enum:
               - linear
+              - inverse
               - option
               - spot
         - name: symbol
@@ -378,7 +383,7 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: Base coin
+          description: Base coin. For option only
           required: false
           schema:
             type: string
@@ -418,6 +423,7 @@ paths:
             enum:
               - 0
               - 1
+              - 2
             default: 0
         - name: limit
           in: query
@@ -469,18 +475,23 @@ paths:
                   type: string
                   enum:
                     - linear
+                    - inverse
                     - option
                     - spot
                   description: Product type
+                  example: linear
                 symbol:
                   type: string
                   description: Symbol name. **Required** if not passing baseCoin or settleCoin
+                  example: BTCUSDT
                 baseCoin:
                   type: string
                   description: Cancel by base coin. **Required** if not passing symbol or settleCoin
+                  example:
                 settleCoin:
                   type: string
                   description: Cancel by settle coin. Does not support `spot`. **Required** if not passing symbol or baseCoin
+                  example:
               required:
                 - category
 
@@ -512,6 +523,7 @@ paths:
             type: string
             enum:
               - linear
+              - inverse
               - option
               - spot
         - name: symbol
@@ -618,6 +630,7 @@ paths:
                   enum:
                     - option
                   description: Product type. option ONLY
+                  example: option
                 request:
                   type: array
                   maxItems: 10
@@ -681,8 +694,8 @@ paths:
                         enum:
                           - true
                           - false
-                        description: market marker protection
-                        example:
+                        description: enable market marker protection
+                        example: false
                     required:
                       - symbol
                       - side
