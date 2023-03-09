@@ -7,12 +7,16 @@ sidebar_position: 6
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
 > **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse contract**
+> **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
 * The orders in the last 7 days: supports querying all statuses
 * The orders beyond 7 days: supports querying filled orders
 * You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+:::
+
+:::tip
+Normal account spot can get final status orders only
 :::
 
 ### HTTP Request
@@ -21,13 +25,13 @@ GET `/v5/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |Symbol name|
 |baseCoin |false |string |Base coin. _Unified account - inverse & Normal account does **not** support this param_|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order. Default: all kinds of orders|
-|[orderStatus](../enum#orderstatus) |false |string |Return all status orders if not passed |
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order  <ul><li>Normal `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Normal `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination|
 
@@ -38,22 +42,22 @@ GET `/v5/order/history`
 |list |array |Object |
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> blockTradeId  |string |Block trade ID |
+|> blockTradeId  |string |Block trade ID. _Normal `spot` is not supported_ |
 |> symbol |string |Symbol name |
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
-|> isLeverage |string |Whether to borrow. _`spot` **only**_. `0`: false, `1`: true|
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Normal `spot` is not supported, always `0`_ |
 |> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
-|> [rejectReason](../enum#rejectreason) |string |Reject reason |
+|> [rejectReason](../enum#rejectreason) |string |Reject reason. _Normal `spot` is not supported_ |
 |> avgPrice |string |Average filled price. If unfilled, it is `""` |
-|> leavesQty |string |The remaining qty not executed |
-|> leavesValue |string |The estimated value not executed |
+|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
+|> leavesValue |string |The estimated value not executed. _Normal `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
-|> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |Cumulative executed trading fee |
+|> cumExecValue |string |Cumulative executed order value. _Normal `spot` is not supported_ |
+|> cumExecFee |string |Cumulative executed trading fee. _Normal `spot` is not supported_ |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |

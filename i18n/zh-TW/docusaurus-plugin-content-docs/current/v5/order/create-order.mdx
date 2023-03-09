@@ -5,7 +5,7 @@ sidebar_position: 1
 ---
 本接口提供幣幣交易，現貨槓桿交易，合約以及期權的訂單創建。
 > **統一帳戶覆蓋範圍: 現貨 / USDT和USDC永續 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **普通帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::info
 - **支持的訂單類型 (`orderType`):**<br/>
@@ -38,15 +38,19 @@ sidebar_position: 1
 請參見[接口頻率限制表](../rate-limit#交易)，如需要提高請求頻率，請聯繫您對應的客戶經理或通過點擊<a href="https://www.bybit.com/future-activity/zh-TW/institutional-services">這裡</a>提交
 :::
 
+:::tip
+對於普通帳戶進行全倉槓桿交易時，您需要先去[這裡](../spot-margin-normal/borrow)進行借貸
+:::
+
 ### HTTP請求
 POST `/v5/order/create`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul>|
+|category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |合約名稱|
-|isLeverage |false |integer |是否借貸. 僅現貨有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
+|isLeverage |false |integer |是否借貸. 僅**統一帳戶的現貨交易**有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |訂單類型. `Market`, `Limit`|
 |qty |**true** |string |訂單數量. 若category=spot, 且是Market Buy單，則qty表示為報價幣種金額 |
