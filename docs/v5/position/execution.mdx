@@ -4,9 +4,9 @@ sidebar_label: Get Execution (2 years)
 sidebar_position: 5
 ---
 
-Query users' execution records, sorted by `execTime` in descending order
+Query users' execution records, sorted by `execTime` in descending order. However, for Normal `spot`, they are sorted by `execId` in descending order.
 > **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse contract**
+> **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
 * You may have multiple executions in a single order.
@@ -19,14 +19,14 @@ GET `/v5/execution/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
-|symbol |false |string |Symbol name. _For normal account, either `symbol` or `orderId` is **required**_ |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
+|symbol |false |string |Symbol name. _For normal `linver` & `inverse`, either `symbol` or `orderId` is **required**_ |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID. _Normal account does not support this param_ |
 |baseCoin |false |string |Base coin. _Unified account - inverse and Normal account do not support this param_ |
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
-|[execType](../enum#exectype) |false |string |Execution type|
+|[execType](../enum#exectype) |false |string |Execution type. _Normal `spot` is not supported_|
 |limit |false |integer |Limit for data size per page. [`1`, `100`]. Default: `50`|
 |cursor |false |string |Cursor. Used for pagination|
 
@@ -37,28 +37,28 @@ GET `/v5/execution/list`
 | list | array | Object |
 |> symbol |string   |Symbol name |
 |> orderId |string |Order ID |
-|> orderLinkId |string |User customized order ID |
+|> orderLinkId |string |User customized order ID. _Normal `spot` is not supported_|
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
-|> leavesQty |string |The remaining qty not executed |
+|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
 |> orderType |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
 |> execFee |string   |Executed trading fee |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
-|> [execType](../enum#exectype) |string |Executed type|
-|> execValue |string |Executed order value |
+|> [execType](../enum#exectype) |string |Executed type. _Normal `spot` is not supported_|
+|> execValue |string |Executed order value. _Normal `spot` is not supported_ |
 |> execTime |string |Executed timestamp（ms） |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
 |> feeRate |string |Trading fee rate |
 |> tradeIv |string |Implied volatility. Valid for `option` |
 |> markIv |string |Implied volatility of mark price. Valid for `option`|
-|> markPrice |string |The mark price of the symbol when executing |
-|> indexPrice |string |The index price of the symbol when executing |
-|> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
-|> blockTradeId |string |Paradigm block trade ID|
+|> markPrice |string |The mark price of the symbol when executing. _Normal `spot` is not supported_ |
+|> indexPrice |string |The index price of the symbol when executing. _Valid for `option` only_|
+|> underlyingPrice |string |The underlying price of the symbol when executing. _Valid for `option`_|
+|> blockTradeId |string |Paradigm block trade ID. _Normal `spot` is not supported_|
 |nextPageCursor |string |Cursor. Used for pagination|
 
 <a href="/api-explorer/v5/position/execution"><Button>RUN >></Button></a>

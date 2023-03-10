@@ -5,7 +5,7 @@ sidebar_position: 1
 ---
 This endpoint supports to create the order for spot, spot margin, linear perpetual, inverse futures and options.
 > **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse contract**
+> **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
 - **Supported order type (`orderType`):**<br/>
@@ -42,15 +42,19 @@ ID to cancel active orders, and if both orderId and orderLinkId are entered in t
 Please refer to [rate limit table](../rate-limit#trade). If you need to raise the rate limit, please contact your client manager or submit an application via <a href="https://www.bybit.com/future-activity/en-US/institutional-services">here</a>
 :::
 
+:::tip
+For normal account spot margin trade, you need to go [here](../spot-margin-normal/borrow) to borrow margin first.
+:::
+
 ### HTTP Request
 POST `/v5/order/create`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |**true** |string |Symbol name|
-|isLeverage |false |integer |Whether to borrow. Valid for `spot` **only**. `0`(default): false then spot trading, `1`: true then margin trading|
+|isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
 |qty |**true** |string |Order quantity|

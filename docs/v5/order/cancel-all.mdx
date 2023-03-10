@@ -5,11 +5,12 @@ sidebar_position: 5
 ---
 Cancel all open orders
 > **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
-> **Normal account covers: USDT perpetual / Inverse contract**
+> **Normal account covers: Spot USDT perpetual / Inverse contract**
 
 :::info
 - Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, the system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
-- **NOTE**: `category`=_option_, you can cancel all option open orders without passing any of those three params. However, for other products, you must specify one of those three params.
+- **NOTE**: `category`=_option_, you can cancel all option open orders without passing any of those three params. However, for `linear` and `inverse`, you must specify one of those three params.
+- **NOTE**: `category`=_spot_, you can cancel all spot open orders (normal order by default) without passing other params.
 :::
 
 ### HTTP Request
@@ -18,11 +19,11 @@ POST `/v5/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic._</li></ul>|
-|symbol |false|string |Symbol name. **Required** if not passing baseCoin or settleCoin|
-|baseCoin |false|string |Base coin. If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin|
-|settleCoin |false|string |Settle coin. Does not support `spot`. **Required** if not passing symbol or baseCoin|
-|orderFilter |false |string |Valid for `spot` **only**. `Order`,`tpslOrder`. If not passed, `Order` by default|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul>|
+|symbol |false|string |Symbol name. `linear` & `inverse`: **Required** if not passing baseCoin or settleCoin|
+|baseCoin |false|string |Base coin <ul><li>`linear` & `inverse`: If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin</li><li>Normal `spot`: invalid</li></ul>|
+|settleCoin |false|string |Settle coin <ul><li>`linear` & `inverse`: **Required** if not passing symbol or baseCoin</li><li>Does not support `spot`</li></ul>|
+|orderFilter |false |string |Valid for `spot` **only**. `Order`, `tpslOrder`. If not passed, `Order` by default|
 
 <a href="/api-explorer/v5/trade/cancel-all"><Button>RUN >></Button></a>
 

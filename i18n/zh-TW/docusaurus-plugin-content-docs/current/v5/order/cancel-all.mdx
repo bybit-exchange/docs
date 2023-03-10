@@ -9,7 +9,8 @@ sidebar_position: 5
 
 :::info
 - 支持按照`symbol`/`baseCoin`/`settleCoin`撤銷訂單，若您傳入了多個參數組合, 系統僅會處理其中一個參數，其中優先級為`symbol` > `baseCoin` > `settleCoin`.
-- **注意**: 當`category`=_option_, 您可以不傳人三個參數中的任何一個，就能取消所有期權的委託單。但是, 對於其他產品, 您必需指定三個參數的其中一個。
+- **注意**: 當`category`=_option_, 您可以不傳人三個參數中的任何一個，就能取消所有期權的委託單。但是, 對於`linear`和`inverse`, 您必需指定三個參數的其中一個。
+- **注意**: 當`category`=_spot_, 您可以不傳人任何參數，就能取消所有現貨的委託單 (默認普通單)。
 :::
 
 ### HTTP請求
@@ -18,10 +19,10 @@ POST `/v5/order/cancel-all`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
-|symbol |false|string |合約名稱. 該字段**必傳**, 若不傳`baseCoin`和`settleCoin` |
-|baseCoin |false|string |交易幣種. 當通過baseCoin來全部撤單時，會將linear和inverse訂單全部撤掉. 該字段**必傳**, 若不傳`symbol`和`baseCoin` |
-|settleCoin |false|string |結算幣種. 不支持`spot`. 該字段**必傳**, 若不傳`symbol`和`baseCoin`|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul> |
+|symbol |false|string |合約名稱. 對於`linear` & `inverse`: 該字段**必傳**, 若不傳`baseCoin`和`settleCoin` |
+|baseCoin |false|string |交易幣種. <ul><li>對於`linear` & `inverse`: 當通過baseCoin來全部撤單時，會將linear和inverse訂單全部撤掉, 且該字段**必傳**, 若不傳`symbol`和`baseCoin`</li><li>對於普通帳戶的現貨: 該字段無效</li></ul> |
+|settleCoin |false|string |結算幣種. <ul><li>對於`linear` & `inverse`: 該字段**必傳**, 若不傳`symbol`和`baseCoin`</li><li>該字段不支持`spot`</li></ul> |
 |orderFilter |false |string |僅`spot`有效. `Order`: 普通單,`tpslOrder`: 止盈止損單. 若不傳, 默認是`Order`|
 
 <a href="/api-explorer/v5/trade/cancel-all"><Button>運行實例 >></Button></a>

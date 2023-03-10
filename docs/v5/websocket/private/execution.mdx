@@ -19,32 +19,32 @@ You may have multiple executions for one order in a single message.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> [category](../../enum#category) | string  | Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`.</li></ul>|
+|> [category](../../enum#category) | string  | Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`.</li></ul>|
 |> symbol |string   |Symbol name |
-|> isLeverage |string |Whether to borrow. Valid for `spot` **only**. `0`(default): false, `1`: true|
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Normal `spot` is not supported, always `0`_|
 |> orderId |string |Order ID |
 |> orderLinkId |string |User customized order ID |
 |> side |string |Side. `Buy`,`Sell` |
-|> orderPrice |string |Order price |
-|> orderQty |string |Order qty |
-|> leavesQty |string |The remaining qty not executed |
+|> orderPrice |string |Order price. _Normal `spot` is not supported_ |
+|> orderQty |string |Order qty. _Normal `spot` is not supported_ |
+|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
 |> orderType |string |Order type. `Market`,`Limit` |
-|> [stopOrderType](../../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned |
+|> [stopOrderType](../../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned. _Normal `spot` is not supported_ |
 |> execFee |string |Executed trading fee |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
-|> [execType](../../enum#exectype) |string |Executed type |
-|> execValue |string |Executed order value |
+|> [execType](../../enum#exectype) |string |Executed type. _Normal `spot` is not supported_ |
+|> execValue |string |Executed order value. _Normal `spot` is not supported_ |
 |> execTime |string |Executed timestamp（ms） |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
-|> feeRate |string |Trading fee rate |
+|> feeRate |string |Trading fee rate. _Normal `spot` is not supported_ |
 |> tradeIv |string |Implied volatility. Valid for `option` |
 |> markIv |string |Implied volatility of mark price. Valid for `option`|
-|> markPrice |string |The mark price of the symbol when executing |
-|> indexPrice |string |The index price of the symbol when executing |
+|> markPrice |string |The mark price of the symbol when executing. Valid for `option` |
+|> indexPrice |string |The index price of the symbol when executing. Valid for `option` |
 |> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
-|> blockTradeId |string |Paradigm block trade ID|
+|> blockTradeId |string |Paradigm block trade ID. _Normal `spot` is not supported_|
 
 ### Subscribe Example
 ```json

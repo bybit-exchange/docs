@@ -4,9 +4,9 @@ sidebar_label: 查詢成交紀錄 (2年)
 sidebar_position: 5
 ---
 
-獲取用戶成交紀錄，返回結果按`execTime`降序排列
+獲取用戶成交紀錄，返回結果按`execTime`降序排列。但是，對於普通帳戶現貨交易，返回結果按`execId`降序排列
 > **統一帳戶覆蓋範圍: 現貨 / USDT和USDC永續 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **普通帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::tip
 * 單筆訂單可能會有多次成交.
@@ -19,14 +19,14 @@ GET `/v5/execution/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
-|symbol |false |string |合約名稱. _普通帳戶: `symbol` 和 `orderId`**必傳**其中一個_ |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul> |
+|symbol |false |string |合約名稱. _普通帳戶`linear`和`inverse`: `symbol` 和 `orderId`**必傳**其中一個_ |
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單id. 普通帳戶不支持該字段查詢 |
 |baseCoin |false |string |交易幣種. 統一帳戶(反向)和普通帳戶不支持該字段查詢|
 |startTime |false |integer |開始時間戳 (毫秒)|
 |endTime |false |integer |結束時間戳 (毫秒)|
-|[execType](../enum#exectype) |false |string |執行類型|
+|[execType](../enum#exectype) |false |string |執行類型. _普通帳戶現貨交易無效_|
 |limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
 |cursor |false |string |游標，用於翻頁|
 
@@ -37,28 +37,28 @@ GET `/v5/execution/list`
 | list | array | Object |
 |> symbol |string |合約名稱|
 |> orderId |string |訂單Id |
-|> orderLinkId |string |用戶自定義訂單id|
+|> orderLinkId |string |用戶自定義訂單id. _普通帳戶現貨交易不支持_|
 |> side |string |訂單方向.買： `Buy`,賣：`Sell` |
 |> orderPrice |string |訂單價格 |
 |> orderQty |string |訂單數量 |
-|> leavesQty |string |剩餘委託未成交數量|
+|> leavesQty |string |剩餘委託未成交數量. _普通帳戶現貨交易不支持_|
 |> orderType |string |訂單類型. 市價單：`Market`,限價單：`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |条件单的订单类型。如果该订单不是条件单，则不会返回任何类型 |
 |> execFee |string |交易手續費|
 |> execId |string |成交Id |
 |> execPrice |string |成交價格 |
 |> execQty |string |成交數量 |
-|> [execType](../enum#exectype) |string |交易類型|
-|> execValue |string |成交價值 |
+|> [execType](../enum#exectype) |string |交易類型. _普通帳戶現貨交易不支持_|
+|> execValue |string |成交價值. _普通帳戶現貨交易不支持_ |
 |> execTime |string |成交時間（毫秒） |
 |> isMaker |Bool |是否是 Maker 訂單,`true` 為 maker 訂單，`false` 為 taker 訂單 |
 |> feeRate |string |手續費率 |
 |> tradeIv |string |隱含波動率，僅期權有效 |
 |> markIv |string |標記價格的隱含波動率，僅期權有效 |
-|> markPrice |string |成交執行時，該 symbol 當時的標記價格 |
+|> markPrice |string |成交執行時，該 symbol 當時的標記價格. _普通帳戶現貨交易不支持_ |
 |> indexPrice |string |成交執行時，該 symbol 當時的指數價格，目前僅對期權業務有效 |
 |> underlyingPrice |string |成交執行時，該 symbol 當時的底層資產價格，僅期權有效|
-|> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID |
+|> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID. _普通帳戶現貨交易不支持_ |
 |nextPageCursor |string |游標，用於翻頁|
 
 <a href="/api-explorer/v5/position/execution"><Button>運行實例 >></Button></a>

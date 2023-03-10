@@ -15,7 +15,7 @@ sidebar_position: 4
 |topic |string |Topic名 |
 |creationTime |number |消息數據創建時間 |
 |data |array |Object |
-|> accountType |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向合約)</li><li>普通帳戶: `CONTRACT`</li></ul> |
+|> accountType |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向合約)</li><li>普通帳戶: `CONTRACT`, `SPOT`</li></ul> |
 |> accountIMRate |string |帳戶初始保證金率: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
 |> accountMMRate |string |帳戶維持保證金率: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
 |> totalEquity |string |賬戶維度換算成usd的資產淨值：Account Margin Balance Base Coin + Account Option Value Base Coin。非統一保證金模式和統一帳戶(反向)下，該字段返回為空。|
@@ -30,6 +30,8 @@ sidebar_position: 4
 |>> equity |string |當前幣種的資產淨值|
 |>> usdValue |string |當前幣種折算成 usd 的價值，如果該幣種不能作為保證金的抵押品，則該數值為0|
 |>> walletBalance |string |當前幣種的錢包餘額|
+|>> free |string |普通帳戶現貨錢包的可用餘額. _普通帳戶現貨錢包的獨有字段_ |
+|>> locked |string |普通帳戶現貨錢包的凍結餘額. _普通帳戶現貨錢包的獨有字段_ |
 |>> borrowAmount |string |當前幣種的已用借貸額度 |
 |>> availableToBorrow |string |當前幣種的可用借貸額度 |
 |>> availableToWithdraw |string |當前幣種的可劃轉提現金額 |
