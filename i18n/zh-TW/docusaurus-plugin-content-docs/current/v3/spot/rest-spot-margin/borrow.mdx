@@ -1,6 +1,6 @@
 ---
-title: 申請借幣
-sidebar_label: 申請借幣
+title: 借款
+sidebar_label: 借款
 slug: /spot/margin/borrow
 ---
 
@@ -8,7 +8,7 @@ slug: /spot/margin/borrow
 POST <code>/spot/v3/private/cross-margin-loan</code>
 
 ### 請求參數
-| 參數 | 是否必須 | 類型 | 說明|
+| 參數 |是否必需| 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |coin|<b>true</b>|string|幣種|
 |qty|<b>true</b>|string|借幣數量|
@@ -16,21 +16,24 @@ POST <code>/spot/v3/private/cross-margin-loan</code>
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|transactId|string|借款訂單id|
+|transactId|string|借款交易ID|
 
 ### 請求示例
 
 ```http
-curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-loan' \
---header 'Content-Type: application/json' \
---header 'X-BAPI-API-KEY: XXXXXXXXX' \
---header 'X-BAPI-TIMESTAMP: 1662617848755' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: XXXXXX' \
---data-raw '{
-    "coin": "USDT",
-    "qty": "200"
-}'
+POST /spot/v3/private/cross-margin-loan HTTP/1.1
+Host: api-testnet.bybit.com
+Content-Type: application/json
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1677751838628
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+Content-Length: 38
+
+{
+    "coin": "ETH",
+    "qty": "10"
+}
 ```
 
 ### 響應示例
@@ -40,9 +43,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cr
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "transactId": "14143"
+        "transactId": "21005"
     },
     "retExtInfo": {},
-    "time": 1662617848970
+    "time": 1677751839688
 }
 ```

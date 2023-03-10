@@ -1,6 +1,6 @@
 ---
-title: Query Account Info
-sidebar_label: Query Account Info
+title: Get Loan Account Info
+sidebar_label: Get Loan Account Info
 slug: /spot/margin/account
 ---
 
@@ -13,27 +13,29 @@ None
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|acctBalanceSum|string|Total Equity (BTC)|
-|debtBalanceSum|string|Total Liability (BTC)|
+|acctBalanceSum|string|Total equity (BTC)|
+|debtBalanceSum|string|Total liability (BTC)|
 |loanAccountList|array|Object|
-|> free|string|Available|
+|> free|string|Available balance|
 |> interest|string|Outstanding interest|
 |> loan|string|Outstanding principle |
+|> remainAmount|string|Remaining debt = interest + loan|
 |> locked|string|Locked amount |
-|> tokenId|string|Token |
+|> tokenId|string|Coin name |
 |> total|string|Total|
-|riskRate|string|Risk Rate|
-|status|integer |Status (1. Normal 2. Withdrawal/Transfer Restricted 3. Liquidation Alert Triggered 4. Liquidated 5. Negative Equity)|
+|riskRate|string|Risk rate|
+|status|integer |Loan account status <ul><li>`1`: normal</li><li>`2`: withdrawal/transfer restricted</li><li>`3`: liquidation alert triggered</li><li>`4`: liquidated</li></ul>|
+|switchStatus|integer |`0`: margin trade off, `1`: margin trade on|
 
 ### Request Example
 
 ```http
-curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-account' \
---header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-API-KEY: XXXXXXXXX' \
---header 'X-BAPI-TIMESTAMP: 1662619341689' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: XXXXX'
+GET /spot/v3/private/cross-margin-account HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1677751305868
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
 ```
 
 ### Response Example
@@ -41,64 +43,53 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "success",
     "result": {
-        "acctBalanceSum": "2.924168065639648621",
+        "acctBalanceSum": "0.455189592150138021",
         "debtBalanceSum": "0",
         "loanAccountList": [
             {
-                "free": "1.62352868343",
+                "free": "0.01444",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
+                "remainAmount": "0",
                 "tokenId": "BTC",
-                "total": "1.62352868343"
+                "total": "0.01444"
             },
             {
-                "free": "22.21993",
+                "free": "0.21147048",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
-                "tokenId": "XRP",
-                "total": "22.21993"
-            },
-            {
-                "free": "1.50267",
-                "interest": "0",
-                "loan": "0",
-                "locked": "0",
+                "remainAmount": "0",
                 "tokenId": "ETH",
-                "total": "1.50267"
+                "total": "0.21147048"
             },
             {
-                "free": "0",
+                "free": "7963.58978991849",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
-                "tokenId": "DOGE",
-                "total": "0"
-            },
-            {
-                "free": "20296.8097189",
-                "interest": "0",
-                "loan": "0",
-                "locked": "0",
+                "remainAmount": "0",
                 "tokenId": "USDT",
-                "total": "20296.8097189"
+                "total": "7963.58978991849"
             },
             {
-                "free": "1131.766708",
+                "free": "1380.28832",
                 "interest": "0",
                 "loan": "0",
                 "locked": "0",
+                "remainAmount": "0",
                 "tokenId": "USDC",
-                "total": "1131.766708"
+                "total": "1380.28832"
             }
         ],
         "riskRate": "0",
-        "status": 1
+        "status": 1,
+        "switchStatus": 1
     },
     "retExtInfo": {},
-    "time": 1673353103144
+    "time": 1677751306287
 }
 ```

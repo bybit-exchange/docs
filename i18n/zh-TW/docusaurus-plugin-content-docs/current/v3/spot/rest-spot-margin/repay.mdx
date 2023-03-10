@@ -1,6 +1,6 @@
 ---
-title: 歸還借幣
-sidebar_label: 歸還借幣
+title: 還款
+sidebar_label: 還款
 slug: /spot/margin/repay
 ---
 
@@ -8,29 +8,34 @@ slug: /spot/margin/repay
 POST <code>/spot/v3/private/cross-margin-repay</code>
 
 ### 請求參數
-| 參數 | 是否必須 | 類型 | 說明|
+| 參數 |是否必需| 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|coin|<b>true</b>|string|幣種|
-|qty|<b>true</b>|string|歸還數量|
+|coin|**true** |string|幣種名稱|
+|qty|false|string |還款金額 <ul><li>當`completeRepayment`=0時, `qty`**必傳** </li><li>當`completeRepayment`=1時, `qty`無效</li></ul>|
+|completeRepayment|false |integer |是否一鍵全部還款. `0`(默認): 否, `1`: 是|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|repayId|string|還款id|
+|repayId|string|還款交易ID|
 
 ### 請求示例
 
 ```http
-curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-repay' \
---header 'Content-Type: application/json' \
---header 'X-BAPI-API-KEY: XXXXXXXXX' \
---header 'X-BAPI-TIMESTAMP: 1662618298354' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: XXXXXX' \
---data-raw '{
-    "coin": "USDT",
-    "qty": "150"
-}'
+POST /spot/v3/private/cross-margin-repay HTTP/1.1
+Host: api-testnet.bybit.com
+Content-Type: application/json
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1677751944347
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+Content-Length: 66
+
+{
+    "coin": "ETH",
+    "qty": null,
+    "completeRepayment": 1
+}
 ```
 
 ### 響應示例
@@ -40,9 +45,9 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/cr
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "repayId": "12128"
+        "repayId": "19070"
     },
     "retExtInfo": {},
-    "time": 1662618298452
+    "time": 1677751941219
 }
 ```

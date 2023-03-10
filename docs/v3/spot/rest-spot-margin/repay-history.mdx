@@ -1,6 +1,6 @@
 ---
-title: Query Repayment History
-sidebar_label: Query Repayment History
+title: Get Repayment Order Detail
+sidebar_label: Get Repayment Order Detail
 slug: /spot/margin/repay-history
 ---
 
@@ -10,37 +10,36 @@ GET <code>/spot/v3/private/cross-margin-repay-history</code>
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|startTime|false|integer |Start timestamp (ms)|
-|endTime|false|integer|End timestamp (ms)|
-|[coin](../enum#currencycoin)|false|string|currency|
-|limit|false|integer |Limit for data size. [`1`, `500`], Default: `500`|
+|startTime|false|long |The start timestamp (ms)|
+|endTime|false|long|The end timestamp (ms)|
+|coin|false|string|Coin name|
+|limit|false|integer |Limit for data size per page. [`1`, `500`], Default: `500`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array |Object |
 |> accountId|string|Account ID|
-|> coin|string|currency|
-|> repaidAmount|string|Total Amount Repaid|
+|> coin|string|Coin name|
+|> repaidAmount|string|Repaid amount|
 |> repayId|string|Repay ID|
-|> repayMarginOrderId|string|Repay Margin Order Id|
+|> repayMarginOrderId|string|Repay margin order ID|
 |> repayTime|string|Repay timestamp (ms) |
 |> transactIds|array|Object|
-|>> repaidAmount|string|Total Amount Repaid|
-|>> repaidInterest|string|Total Interest Repaid|
-|>> repaidPrincipal|string|Total Principal Repaid|
+|>> repaidInterest|string|Interest repaid|
+|>> repaidPrincipal|string|Principal repaid|
 |>> repaidSerialNumber|string|Repayment No. (Borrowing Order)|
-|>> transactId|string|Transaction ID (Borrowing)|
+|>> transactId|string|Borrowing transaction ID|
 
 ### Request Example
 
 ```http
-curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cross-margin-repay-history?coin=USDT&startTime=1662480000000&endTime=1662552000000' \
---header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-API-KEY: XXXXXXXXX' \
---header 'X-BAPI-TIMESTAMP: 1662622151668' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: XXXXX'
+GET /spot/v3/private/cross-margin-repay-history?coin=ETH&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1677755884678
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXXX
 ```
 
 ### Response Example
@@ -52,19 +51,19 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/cro
     "result": {
         "list": [
             {
-                "accountId": "533287",
-                "coin": "USDT",
-                "repaidAmount": "150",
-                "repayId": "12128",
-                "repayMarginOrderId": "1240526631777624064",
-                "repayTime": "1662618298000",
+                "accountId": "592335",
+                "coin": "ETH",
+                "repaidAmount": "10.0001",
+                "repayId": "19070",
+                "repayMarginOrderId": "1367476828218072576",
+                "repayTime": "1677751941000",
                 "transactIds": [
                     {
-                        "repaidAmount": "150",
-                        "repaidInterest": "0.001668",
-                        "repaidPrincipal": "149.998332",
-                        "repaidSerialNumber": "1240522860586622976",
-                        "transactId": "14143"
+                        "repaidAmount": "10.0001",
+                        "repaidInterest": "0.0001",
+                        "repaidPrincipal": "10",
+                        "repaidSerialNumber": "1367475973544746496",
+                        "transactId": "21005"
                     }
                 ]
             }
