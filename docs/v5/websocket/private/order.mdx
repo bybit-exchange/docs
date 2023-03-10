@@ -15,22 +15,22 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> category |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `linear`, `inverse`.</li></ul>|
+|> category |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`.</li></ul>|
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> isLeverage |string |Whether to borrow. `spot` returns this field **only**. `0`(default): false, `1`: true|
-|> blockTradeId  |string |Block trade ID |
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Normal `spot` is not supported, always `0`_|
+|> blockTradeId  |string |Block trade ID. _Normal `spot` is not supported_ |
 |> symbol |string |Symbol name |
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
 |> [positionIdx](../../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../../enum#orderstatus) |string |Order status |
-|> [cancelType](../../enum#canceltype) |string |Cancel type |
-|> [rejectReason](../../enum#rejectreason) |string |Reject reason |
-|> avgPrice |string |Average filled price. If unfilled, it is `""` |
-|> leavesQty |string |The remaining qty not executed |
-|> leavesValue |string |The remaining value not executed |
+|> [cancelType](../../enum#canceltype) |string |Cancel type. _Normal `spot` is not supported_ |
+|> [rejectReason](../../enum#rejectreason) |string |Reject reason. _Normal `spot` is not supported_ |
+|> avgPrice |string |Average filled price. If unfilled, it is `""`. . _Normal `spot` is not supported_ |
+|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
+|> leavesValue |string |The remaining value not executed. _Normal `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
 |> cumExecFee |string |Cumulative executed trading fee |
@@ -45,7 +45,7 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |> [slTriggerBy](../../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
 |> [triggerBy](../../enum#triggerby) |string |The price type of trigger price |
-|> lastPriceOnCreated |string |Last price when place the order. For `linear` **only** |
+|> lastPriceOnCreated |string |Last price when place the order|
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
 |> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
 |> createdTime |string |Order created timestamp (ms) |

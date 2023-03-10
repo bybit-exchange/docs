@@ -15,8 +15,8 @@ GET `/v5/account/wallet-balance`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向)</li><li>普通帳戶: `CONTRACT`(期貨)</li></ul>|
-|coin |false |string |幣種名稱|
+|[accountType](../enum#accounttype) |**true** |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向)</li><li>普通帳戶: `CONTRACT`(期貨), `SPOT`(現貨)</li></ul>|
+|coin |false |string |幣種名稱 <ul><li>不傳則返回非零資產信息</li><li>可以傳多個幣進行查詢，以逗號分隔, `USDT,USDC`</li>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -37,6 +37,8 @@ GET `/v5/account/wallet-balance`
 |>> equity |string |當前幣種的資產淨值|
 |>> usdValue |string |當前幣種折算成 usd 的價值，如果該幣種不能作為保證金的抵押品，則該數值為0|
 |>> walletBalance |string |當前幣種的錢包餘額|
+|>> free |string |普通帳戶現貨錢包的可用餘額. _普通帳戶現貨錢包的獨有字段_ |
+|>> locked |string |普通帳戶現貨錢包的凍結餘額. _普通帳戶現貨錢包的獨有字段_ |
 |>> borrowAmount |string |當前幣種的已用借貸額度 |
 |>> availableToBorrow |string |當前幣種的可用借貸額度 |
 |>> availableToWithdraw |string |當前幣種的可劃轉提現金額 |
