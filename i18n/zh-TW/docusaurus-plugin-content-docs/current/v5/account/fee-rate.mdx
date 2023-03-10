@@ -1,13 +1,13 @@
 ---
-title: 查詢手續費率 (期貨)
-sidebar_label: 查詢手續費率 (期貨)
+title: 查詢手續費率
+sidebar_label: 查詢手續費率
 sidebar_position: 7
 ---
 查詢期貨的交易手續費率。
-> **覆蓋範圍: USDT永續 / 反向永續 / 反向交割**
+> **覆蓋範圍: USDT永續 / 反向永續 / 反向交割/ 期權**
 
 :::info
-該接口在後面的迭代中將支持現貨、USDC永續和期權的手續費率查詢。
+該接口在後面的迭代中將支持現貨、USDC永續的手續費率查詢。
 :::
 
 ### HTTP 請求
@@ -15,13 +15,17 @@ GET `/v5/account/fee-rate`
 
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |false |string |合約名稱|
+|category |**true** |string |產品類型. `linear`, `inverse`, `option`|
+|symbol |false |string |合約名稱. 僅`linear`, `inverse`有效|
+|baseCoin |false |string |交易幣種. `SOL`, `BTC`, `ETH`. Valid for `option`|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
+|category |string |產品類型. `option`. _僅期權返回該字段_ |
 |list |array |Object |
-|> symbol |string |合約名稱|
+|> symbol |string |合約名稱. 期權總是為`""` |
+|> baseCoin |string |交易幣種. `SOL`, `BTC`, `ETH`. _僅期權返回該字段_|
 |> takerFeeRate |string |吃單手續費率|
 |> makerFeeRate |string |掛單手續費率|
 
