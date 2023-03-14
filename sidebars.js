@@ -608,6 +608,7 @@ const sidebars = {
     "changelog/derivatives-v3",
     "changelog/spot-v3",
     "changelog/asset-v3",
+    "changelog/copytrade",
   ]
 };
 
