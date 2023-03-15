@@ -20,6 +20,7 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |[accountType](../enum#accounttype) |**true** |string |帳戶類型 |
 |coin |**true** |string |幣種 |
 |withBonus |false |integer |是否查詢體驗金. `0`: 否,`1`: 是. 默認不查詢  |
+|withTransferSafeAmount|false |integer |是否查詢延遲提幣安全限額 <ul><li>`0`(默認)：否, `1`：是</li><li>什麼是[延遲提幣](delay-amount#)?</li></ul> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -33,6 +34,7 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |> walletBalance |string |錢包余額 |
 |> transferBalance |string |可划余額 |
 |> bonus |string |可用金額中包含的体验金 |
+|> transferSafeAmount |string |可劃轉的安全限額. 若不查詢，則返回`""`|
 
 <a href="/api-explorer/v5/asset/account-coin-balance"><Button>運行實例 >></Button></a>
 
@@ -57,18 +59,19 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "accountType": "UNIFIED",
+        "accountType": "CONTRACT",
         "bizType": 1,
-        "accountId": "1016175",
-        "memberId": "592324",
+        "accountId": "533285",
+        "memberId": "533285",
         "balance": {
-            "coin": "BTC",
-            "walletBalance": "0.805994",
-            "transferBalance": "0.805994",
-            "bonus": "0"
+            "coin": "USDT",
+            "walletBalance": "0",
+            "transferBalance": "-995.3506",
+            "bonus": "995.3506",
+            "transferSafeAmount": ""
         }
     },
     "retExtInfo": {},
-    "time": 1672138189328
+    "time": 1678794546779
 }
 ```
