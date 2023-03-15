@@ -20,6 +20,7 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |[accountType](../enum#accounttype) |**true** |string |Account type |
 |coin |**true** |string |Coin |
 |withBonus |false |integer |`0`: not query bonus. `1`: query bonus  |
+|withTransferSafeAmount|false |integer |Whether query delay withdraw/transfer safe amount <ul><li>`0`(default)：false, `1`：true</li><li>What is [delay withdraw amount](delay-amount#)?</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -33,6 +34,7 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |> walletBalance |string |Wallet balance |
 |> transferBalance |string |Transferable balance |
 |> bonus |string |bonus |
+|> transferSafeAmount |string |Safe amount to transfer. Keep `""` if not query|
 
 <a href="/api-explorer/v5/asset/account-coin-balance"><Button>RUN >></Button></a>
 
@@ -56,18 +58,19 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "accountType": "UNIFIED",
+        "accountType": "CONTRACT",
         "bizType": 1,
-        "accountId": "1016175",
-        "memberId": "592324",
+        "accountId": "533285",
+        "memberId": "533285",
         "balance": {
-            "coin": "BTC",
-            "walletBalance": "0.805994",
-            "transferBalance": "0.805994",
-            "bonus": "0"
+            "coin": "USDT",
+            "walletBalance": "0",
+            "transferBalance": "-995.3506",
+            "bonus": "995.3506",
+            "transferSafeAmount": ""
         }
-},
+    },
     "retExtInfo": {},
-    "time": 1672138189328
+    "time": 1678794546779
 }
 ```
