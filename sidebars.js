@@ -413,6 +413,7 @@ const sidebars = {
   v5SideBar: [
       'v5/intro',
       'v5/upgrade-guide',
+      'v5/announcement',
     {
       type: 'category',
       label: 'Market',
