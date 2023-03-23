@@ -16,6 +16,7 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
 |> accountType |string |Account type. <ul><li>Unified account: `UNIFIED` (spot/linear/options), `CONTRACT`(inverse)</li><li>Normal account: `CONTRACT`, `SPOT`</li></ul> |
+|> accountLTV |string |Account LTV: account total borrowed size / account total equity + account total borrowed size. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
 |> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse), the field will be returned as an empty string|
 |> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
 |> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
@@ -169,7 +170,8 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
                     "bonus": "0"
                 }
             ],
-            "accountType": "UNIFIED"
+            "accountType": "UNIFIED",
+            "accountLTV": "0.017"
         }
     ]
 }
