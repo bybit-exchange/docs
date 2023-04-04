@@ -37,12 +37,6 @@ To get testnet funds, just go to master account asset page to request.
 (whether or not the position was only opened/closed by one order executed at one price - it is more complicated if multiple orders opened/closed a position.)
 * For instance, the entry_price and exit_price reported by this endpoint are influenced by the fee paid/received on the orders.
 
-### Why are values returned to too many decimal places? (float precision issue)
-* For example, you received 11.969999 but you expected 11.97.
-* Some values are returned to too many decimal places, or a fraction too high or low, due to a float precision problem.
-* For now, we recommend rounding the received value to the correct decimal place. This can be done with reference to the [instrument-info](/v5/market/instrument#).
-* This issue will be has been fixed in the latest major version of the API: V3/V5.
-
 ### How can I ensure I am using up-to-date data?
 * It is possible, although unlikely, that the REST API or (even less likely) the websocket could return/push old data.
 * For the greatest level of data resilience, we recommend clients to:
@@ -54,3 +48,8 @@ To get testnet funds, just go to master account asset page to request.
 ### What is the difference between turnover and volume?
 * `Turnover`: is in the opposite currency to the quantity's currency
 * `Volume`: is in the same currency as the quantity's currency
+
+### Why is the price returned in the place market order response wrong?
+Market orders are (in the backend) just limit orders submitted at a worse price. This is to reduce the chance of a flash crash or a similar event, where a trader might submit a market order which executes at a significantly worse price than they expected it to. The price returned here is that internal limit order price. This "inaccurate" price is returned because the place order endpoint is asynchronous, meaning the response is returned to you before the order is actually executed.
+
+If you want the true execution price (`execPrice`) you should subscribe to the [execution websocket](https://bybit-exchange.github.io/docs/v5/websocket/private/execution).
