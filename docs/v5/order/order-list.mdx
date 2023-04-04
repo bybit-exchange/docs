@@ -6,7 +6,7 @@ sidebar_position: 6
 
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
-> **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
+> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
 > **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
@@ -32,6 +32,8 @@ GET `/v5/order/history`
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order, `tpslOrder`: spot TP/SL order  <ul><li>Normal `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |[orderStatus](../enum#orderstatus) |false |string |<ul><li>Normal `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
+|startTime |false |integer |The start timestamp (ms) <ul><li>Support UTA only temporarily</li><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li></ul>|
+|endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Used for pagination|
 
@@ -69,9 +71,10 @@ GET `/v5/order/history`
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
 |> [triggerBy](../enum#triggerby) |string |The price type of trigger price |
-|> lastPriceOnCreated |string |Last price when place the order. For `linear` **only** |
+|> lastPriceOnCreated |string |Last price when place the order |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
 |> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
+|> placeType |string |Place type, `option` used. `iv`, `price`|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
 |nextPageCursor |string |Cursor. Used for pagination |
@@ -135,7 +138,8 @@ X-BAPI-RECV-WINDOW: 5000
                 "reduceOnly": false,
                 "qty": "0.1",
                 "stopLoss": "",
-                "triggerBy": "UNKNOWN"
+                "triggerBy": "UNKNOWN",
+                "placeType": ""
             }
         ]
     },

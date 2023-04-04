@@ -1,0 +1,73 @@
+---
+title: Get Announcement
+sidebar_label: Get Announcement
+---
+
+### HTTP Request
+GET `/v5/announcements/index`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[locale](enum#locale) |**true** |string |Language symbol|
+|[type](enum#announcementtype) |false |string |Announcement type|
+|[tag](enum#announcementtag) |false |string |Announcement tag|
+|page |false |integer |Page number. Default: `1`|
+|limit |false |integer |Limit for data size per page. Default: `20`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|total |integer |Total records |
+|list |array |Object |
+|> title |string |Announcement title |
+|> description |string |Announcement description |
+|> type |Object | |
+|>> title |string |The title of announcement type |
+|>> [key](enum#announcementtype) |string |The key of announcement type |
+|> [tags](enum#announcementtag) |array&lt;string&gt; |The tag of announcement |
+|> url |string |Announcement url |
+|> dateTimestamp |number |Publish timestamp (ms) of announcement |
+|> startDataTimestamp |number |The start timestamp (ms) of the event, only valid when `list.type.key == "latest_activities"` |
+|> endDataTimestamp |number |The end timestamp (ms) of the event, only valid when `list.type.key == "latest_activities"` |
+
+---
+
+### Request Example
+
+```http
+GET /v5/announcements/index?locale=en-US&limit=1 HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "total": 735,
+        "list": [
+            {
+                "title": "New Listing: Arbitrum (ARB) — Deposit, Trade and Stake ARB to Share a 400,000 USDT Prize Pool!",
+                "description": "Bybit is excited to announce the listing of ARB on our trading platform!",
+                "type": {
+                    "title": "New Listings",
+                    "key": "new_crypto"
+                },
+                "tags": [
+                    "Spot",
+                    "Spot Listings"
+                ],
+                "url": "https://announcements.bybit.com/en-US/article/new-listing-arbitrum-arb-deposit-trade-and-stake-arb-to-share-a-400-000-usdt-prize-pool--bltf662314c211a8616/",
+                "dateTimestamp": 1679045608000,
+                "startDateTimestamp": 1679045608000,
+                "endDateTimestamp": 1679045608000
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1679415136117
+}
+```

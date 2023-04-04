@@ -4,7 +4,7 @@ sidebar_label: 查詢實時委託單
 sidebar_position: 4
 ---
 實時查詢未成交或部分成交的訂單信息. 若需要查詢更久的訂單紀錄，請使用[查詢歷史訂單](order-list#)接口.
-> **統一帳戶覆蓋範圍: 現貨 / USDT和USDC永續 / 反向合約 / 期權**<br/>
+> **統一帳戶覆蓋範圍: 現貨 / USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
 > **普通帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::tip
@@ -72,6 +72,7 @@ GET `/v5/order/realtime`
 |> lastPriceOnCreated |string |下單時的市場價格 |
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
 |> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> |
+|> placeType |string |下單類型, 僅期權使用. `iv`, `price`|
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
 
@@ -135,7 +136,8 @@ Content-Type: application/json
                 "reduceOnly": false,
                 "qty": "0.5",
                 "stopLoss": "",
-                "triggerBy": "1192.5"
+                "triggerBy": "1192.5",
+                "placeType": ""
             }
         ]
     },

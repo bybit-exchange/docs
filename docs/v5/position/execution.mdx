@@ -5,7 +5,7 @@ sidebar_position: 5
 ---
 
 Query users' execution records, sorted by `execTime` in descending order. However, for Normal `spot`, they are sorted by `execId` in descending order.
-> **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
+> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
 > **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
@@ -20,7 +20,7 @@ GET `/v5/execution/list`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
-|symbol |false |string |Symbol name. _For normal `linver` & `inverse`, either `symbol` or `orderId` is **required**_ |
+|symbol |false |string |Symbol name. _For normal `linear` & `inverse`, either `symbol` or `orderId` is **required**_ |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID. _Normal account does not support this param_ |
 |baseCoin |false |string |Base coin. _Unified account - inverse and Normal account do not support this param_ |
@@ -59,6 +59,7 @@ GET `/v5/execution/list`
 |> indexPrice |string |The index price of the symbol when executing. _Valid for `option` only_|
 |> underlyingPrice |string |The underlying price of the symbol when executing. _Valid for `option`_|
 |> blockTradeId |string |Paradigm block trade ID. _Normal `spot` is not supported_|
+|> closedSize |string |Closed position size |
 |nextPageCursor |string |Cursor. Used for pagination|
 
 <a href="/api-explorer/v5/position/execution"><Button>RUN >></Button></a>
@@ -110,7 +111,8 @@ X-BAPI-RECV-WINDOW: 5000
                 "orderPrice": "1236.9",
                 "execValue": "119.015",
                 "execType": "Trade",
-                "execQty": "0.1"
+                "execQty": "0.1",
+                "closedSize": ""
             }
         ]
     },

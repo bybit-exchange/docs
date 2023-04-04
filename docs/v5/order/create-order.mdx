@@ -3,8 +3,8 @@ title: Place Order
 sidebar_label: Place Order
 sidebar_position: 1
 ---
-This endpoint supports to create the order for spot, spot margin, linear perpetual, inverse futures and options.
-> **Unified account covers: Spot / USDT and USDC perpetual / Inverse contract / Options**<br/>
+This endpoint supports to create the order for spot, spot margin, USDT perpetual, USDC perpetual, USDC futures, inverse futures and options.
+> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
 > **Normal account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
@@ -57,7 +57,7 @@ POST `/v5/order/create`
 |isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
 |side |**true** |string |`Buy`, `Sell`|
 |orderType |**true** |string |`Market`, `Limit`|
-|qty |**true** |string |Order quantity|
+|qty |**true** |string |Order quantity. For **Spot Market Buy order**, please note that qty should be quote curreny amount|
 |price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>|
 |orderFilter |false |string |Valid for `spot` **only**. `Order`,`tpslOrder`. If not passed, `Order` by default|

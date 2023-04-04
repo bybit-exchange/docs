@@ -19,7 +19,8 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 |memberId|false|string |用戶ID. 當使用母帳號api key查詢子帳戶的幣種餘額時，該字段<b>必傳</b> |
 |[accountType](enum#accounttype)|<b>true</b> |string |賬戶類型 |
 |[coin](enum#coin) |<b>true</b> |string |幣種類型 |
-|withBonus|false |string |是否查詢體驗金. `0`(默認)：不查詢; `1`：查詢|
+|withBonus|false |integer |是否查詢體驗金. `0`(默認)：不查詢; `1`：查詢|
+|withTransferSafeAmount|false |integer |是否查詢延遲提幣安全限額 <ul><li>`0`(默認)：否, `1`：是</li><li>什麼是[延遲提幣](delay-amount#)?</li></ul> |
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -33,15 +34,17 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 |> walletBalance |string |錢包余額|
 |> transferBalance |string |可划余額|
 |> bonus |string |体验金|
+|> transferSafeAmount |string |可劃轉的安全限額. 若不查詢，則返回`""`|
 
 ### 請求示例
 
 ```http
-curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/transfer/account-coin/balance/query?memberId=123&accountType=CONTRACT&coin=BTC&withBonus=0' \
---header 'X-BAPI-TIMESTAMP: 1660794864052' \
---header 'X-BAPI-API-KEY: XXXXXXXXXXXX' \
---header 'X-BAPI-RECV-WINDOW: 999999999' \
---header 'X-BAPI-SIGN: c4f6cbc0581a8afa81cade431c9389a62ff7817e3e6c4aee456fd3f86796f619' \
+GET /asset/v3/private/transfer/account-coin/balance/query?accountType=CONTRACT&coin=USDT&withTransferSafeAmount=1&withBonus=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1678794085278
+X-BAPI-RECV-WINDOW: 50000
 ```
 
 ### 響應示例
@@ -51,18 +54,19 @@ curl --location --request GET 'https://api-testnet.bybit.com//asset/v3/private/t
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "accountType": "UNIFIED",
+        "accountType": "CONTRACT",
         "bizType": 1,
-        "accountId": "618463",
+        "accountId": "533285",
         "memberId": "533285",
         "balance": {
             "coin": "USDT",
-            "walletBalance": "1847.9874",
-            "transferBalance": "1847.9874",
-            "bonus": "0"
+            "walletBalance": "0",
+            "transferBalance": "-995.3506",
+            "bonus": "995.3506",
+            "transferSafeAmount": "-995.3506"
         }
     },
     "retExtInfo": {},
-    "time": 1661139455294
+    "time": 1678794085705
 }
 ```

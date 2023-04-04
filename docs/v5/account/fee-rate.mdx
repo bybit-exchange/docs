@@ -3,12 +3,8 @@ title: Get Fee Rate
 sidebar_label: Get Fee Rate
 sidebar_position: 7
 ---
-Get the trading fee rate of derivatives.
-> **Covers: USDT perpetual / Inverse perpetual / Inverse futures / Options**
-
-:::info
-It is expected to support Spot, USDC Perp in the future release.
-:::
+Get the trading fee rate.
+> **Covers: Spot / USDT perpetual / Inverse perpetual / Inverse futures / Options**
 
 ### HTTP Request
 GET `/v5/account/fee-rate`
@@ -17,16 +13,16 @@ GET `/v5/account/fee-rate`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type. `spot`, `linear`, `inverse`, `option`|
-|symbol |false |string |Symbol name. Valid for `linear`, `inverse`|
+|symbol |false |string |Symbol name. Valid for `linear`, `inverse`, `spot`|
 |baseCoin |false |string |Base coin. `SOL`, `BTC`, `ETH`. Valid for `option`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|category |string |Product type. `option`. _Derivatives does not have this field_  |
+|category |string |Product type. `spot`, `option`. _Derivatives does not have this field_  |
 |list |array |Object |
 |> symbol |string |Symbol name. Keeps `""` for Options|
-|> baseCoin |string |Base coin. `SOL`, `BTC`, `ETH`. _Derivatives does not have this field_|
+|> baseCoin |string |Base coin. `SOL`, `BTC`, `ETH` <ul><li>Derivatives does not have this field</li><li>Keeps `""` for Spot</li></ul>|
 |> takerFeeRate |string |Taker fee rate|
 |> makerFeeRate |string |Maker fee rate|
 

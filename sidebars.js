@@ -413,6 +413,7 @@ const sidebars = {
   v5SideBar: [
       'v5/intro',
       'v5/upgrade-guide',
+      'v5/announcement',
     {
       type: 'category',
       label: 'Market',
@@ -608,6 +609,7 @@ const sidebars = {
     "changelog/derivatives-v3",
     "changelog/spot-v3",
     "changelog/asset-v3",
+    "changelog/copytrade",
   ]
 };
 

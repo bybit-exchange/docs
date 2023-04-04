@@ -1,6 +1,63 @@
 ---
 title: V5
 ---
+## 2023-04-04
+### REST API
+* [查詢歷史訂單](../v5/order/order-list) [更新]
+    * 新增請求參數 `startTime` `endTime`,目前僅對UTA模式有效
+    * 新增響應字段 `placeType`, 供期權訂單使用
+
+* [查詢成交紀錄](../v5/position/execution) [更新]
+    * 新增響應字段 `closedSize`
+
+* [查詢持倉 (實時)](../v5/position) [更新]
+    * 新增響應字段`adlRankIndicator`
+
+### WebSocket API
+* [持倉](../v5/websocket/private/position) [更新]
+    * 新增響應字段`adlRankIndicator`
+    * UTA帳戶的推送新增字段`category`
+
+* [訂單](../v5/websocket/private/order) [更新]
+    * 新增響應字段 `placeType`, 供期權訂單使用
+
+* [個人成交](../v5/websocket/private/execution) [更新]
+    * 新增響應字段 `closedSize`
+
+## 2023-03-24
+### REST API
+* [查詢手續費率](../v5/account/fee-rate) [更新]
+    * 支持查詢現貨手續費率
+
+## 2023-03-23
+### REST API
+* [查詢錢包餘額](../v5/account/wallet-balance) [更新]
+    * 新增返回字段 `accountLTV`
+
+* [新建子帳戶的API Key](../v5/user/create-subuid-apikey) [更新]
+    * 錢包下新增權限項`SubMemberTransferList`
+
+* [萬能劃轉](../v5/asset/unitransfer) [更新]
+    * 支持使用子帳號api key調用
+
+* [查詢萬能劃轉記錄](../v5/asset/unitransfer-list) [更新]
+    * 支持使用子帳號api key查詢本帳號下相關劃轉紀錄
+
+
+### WebSocket API
+* [錢包](../v5/websocket/private/wallet) [更新]
+    * 新增返回字段 `accountLTV`
+
+## 2023-03-22
+### REST API
+* [查詢公告](../v5/announcement) [新增]
+    * 新增接口用戶查詢Bybit公告
+
+## 2023-03-15
+### REST API
+* [查詢帳戶單個幣種餘額](../v5/asset/account-coin-balance) [更新]
+    * 新增請求字段`withTransferSafeAmount` 和響應字段 `transferSafeAmount`
+
 ## 2023-03-10
 ### REST API
 * [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
