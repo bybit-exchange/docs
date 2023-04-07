@@ -143,6 +143,14 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
+          v5_user: {
+            specPath: "yml-folder/v5/user.yaml",
+            outputDir: "docs/api-explorer/v5/user",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
           v5_lt: {
             specPath: "yml-folder/v5/lt.yaml",
             outputDir: "docs/api-explorer/v5/lt",
@@ -151,9 +159,17 @@ const config = {
               categoryLinkSource: "tag"
             }
           },
-          v5_spot_margin: {
-            specPath: "yml-folder/v5/spot-margin.yaml",
-            outputDir: "docs/api-explorer/v5/spot-margin",
+          v5_spot_margin_uta: {
+            specPath: "yml-folder/v5/spot-margin-uta.yaml",
+            outputDir: "docs/api-explorer/v5/spot-margin-uta",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag"
+            }
+          },
+          v5_spot_margin_normal: {
+            specPath: "yml-folder/v5/spot-margin-normal.yaml",
+            outputDir: "docs/api-explorer/v5/spot-margin-normal",
             sidebarOptions: {
               groupPathsBy: "tag",
               categoryLinkSource: "tag"

@@ -1,0 +1,1 @@
+module.exports = [{"type":"category","label":"User","link":{"type":"doc","id":"api-explorer/v5/user/user"},"items":[{"type":"doc","id":"api-explorer/v5/user/apikey-info","label":"Get API Key Information","className":"api-method get"}]}];

@@ -561,8 +561,10 @@ const sidebars = {
         require("./docs/api-explorer/v5/position/sidebar.js"),
         require("./docs/api-explorer/v5/account/sidebar.js"),
         require("./docs/api-explorer/v5/asset/sidebar.js"),
+        require("./docs/api-explorer/v5/user/sidebar.js"),
         require("./docs/api-explorer/v5/lt/sidebar.js"),
-        require("./docs/api-explorer/v5/spot-margin/sidebar.js"),
+        require("./docs/api-explorer/v5/spot-margin-uta/sidebar.js"),
+        require("./docs/api-explorer/v5/spot-margin-normal/sidebar.js"),
       ]
     },
     {

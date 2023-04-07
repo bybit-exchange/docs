@@ -8,18 +8,18 @@ info:
   version: 3.0.0
   title: Bybit Open API v5 explorer - Spot margin trade
 tags:
-  - name: margin-trade
-    description: Spot margin trade endpoints
-    x-displayName: Spot Margin Trade
+  - name: uta-margin-trade
+    description: Spot margin trade (UTA) endpoints
+    x-displayName: Spot Margin Trade (UTA)
 x-tagGroups:
   - name: private
     tags:
-      - margin-trade
+      - uta-margin-trade
 paths:
   /v5/spot-margin-trade/switch-mode:
     post:
       tags:
-        - margin-trade
+        - uta-margin-trade
       summary: Toggle Margin Trade
       description: Toggle margin trade
       operationId: switch-mode
@@ -57,7 +57,7 @@ paths:
   /v5/spot-margin-trade/set-leverage:
     post:
       tags:
-        - margin-trade
+        - uta-margin-trade
       summary: Set Leverage
       description: Set leverage for margin trade
       operationId: set-leverage
@@ -85,12 +85,17 @@ paths:
               properties:
                 leverage:
                   type: integer
-                  description: Levearge, support 2-5
+                  description: Levearge, support 2-10
                   enum:
                     - 2
                     - 3
                     - 4
                     - 5
+                    - 6
+                    - 7
+                    - 8
+                    - 9
+                    - 10
                   example: 5
                 required:
                   - leverage
