@@ -45,6 +45,7 @@ paths:
             enum:
               - UNIFIED
               - CONTRACT
+              - SPOT
         - name: coin
           in: query
           description: Coin name. You can pass mutiple coins like USDT,USDC
@@ -200,7 +201,7 @@ paths:
     get:
       tags:
         - account
-      summary: Get Fee Rate (Derivatives)
+      summary: Get Fee Rate
       description: Get fee rate
       operationId: fee-rate
       parameters:
@@ -216,12 +217,33 @@ paths:
           required: false
           schema:
             type: string
+        - name: category
+          in: query
+          description: Product type. working for spot and option
+          required: true
+          schema:
+            type: string
+            enum:
+              - spot
+              - linear
+              - inverse
+              - option
         - name: symbol
           in: query
-          description: Symbol name
+          description: Symbol name. valid for linear,inverse and spot
           required: false
           schema:
             type: string
+        - name: baseCoin
+          in: query
+          description: Base coin. Valid for option
+          required: false
+          schema:
+            type: string
+            enum:
+              - SOL
+              - BTC
+              - ETH
       responses:
         "200":
           description: successful operation
