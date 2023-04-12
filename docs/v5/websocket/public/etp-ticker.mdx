@@ -27,6 +27,25 @@ Subscribe to the leveraged token ticker stream.
 
 ### 響應示例
 
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="spot",
+)
+def handle_message(message):
+    print(message)
+ws.lt_ticker_stream(
+    symbol="EOS3LUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+### Response Example
+
 ```json
 {
     "topic": "tickers_lt.EOS3LUSDT",

@@ -82,6 +82,9 @@ GET `/v5/order/realtime`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/order/realtime?category=spot&openOnly=1&limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
@@ -92,6 +95,26 @@ X-BAPI-TIMESTAMP: 1672219525810
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+print(session.get_open_orders(
+    category="spot",
+    openOnly=1,
+    limit=1,
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

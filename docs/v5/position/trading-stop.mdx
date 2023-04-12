@@ -39,6 +39,9 @@ None
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/position/trading-stop HTTP/1.1
 Host: api-testnet.bybit.com
@@ -60,6 +63,32 @@ Content-Type: application/json
     "positionIdx": 0
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+print(session.set_trading_stop(
+    category="linear",
+    symbol="XRPUSDT",
+    takePofit="0.5",
+    stopLoss="0.2",
+    tpTriggrBy="MarkPrice",
+    slTriggerB="IndexPrice",
+    tpSize="5",
+    slSiz="50",
+    positonIdx=0,
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

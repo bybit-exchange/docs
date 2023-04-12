@@ -252,6 +252,11 @@ GET `/v5/market/instruments-info`
 
 <Tabs>
 <TabItem value="console-linear" label="Linear">
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/instruments-info?category=linear&symbol=BTCUSDT HTTP/1.1
@@ -259,8 +264,26 @@ Host: api-testnet.bybit.com
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
 
-<TabItem value="console-option" label="Option">
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_instruments_info(
+    category="linear",
+    symbol="BTCUSDT",
+))
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+
+<TabItem value="option" label="Option">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/instruments-info?category=option&symbol=ETH-3JAN23-1250-P HTTP/1.1
@@ -268,13 +291,46 @@ Host: api-testnet.bybit.com
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
 
-<TabItem value="console-spot" label="Spot">
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_instruments_info(
+    category="option",
+    symbol="ETH-3JAN23-1250-P",
+))
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/instruments-info?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_instruments_info(
+    category="spot",
+    symbol="BTCUSDT",
+))
+```
+
+</TabItem>
+</Tabs>
 
 </TabItem>
 </Tabs>

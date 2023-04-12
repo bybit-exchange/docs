@@ -35,6 +35,9 @@ GET `/v5/spot-cross-margin-trade/orders`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/spot-cross-margin-trade/orders?coin=ETH&limit=1&status=2 HTTP/1.1
 Host: api-testnet.bybit.com
@@ -43,6 +46,26 @@ X-BAPI-TIMESTAMP: 1677754328650
 X-BAPI-RECV-WINDOW: 5000
 X-BAPI-SIGN: XXXXXX
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+print(session.spot_margin_trade_normal_get_borrow_order_detail(
+    coin="ETH",
+    limit=1,
+    status=2,
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

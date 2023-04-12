@@ -45,6 +45,9 @@ POST `/v5/order/cancel-batch`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/order/cancel-batch HTTP/1.1
 Host: api-testnet.bybit.com
@@ -70,6 +73,36 @@ Content-Type: application/json
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+print(session.cancel_batch_order(
+    category="option",
+    request=[
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+        }
+    ]
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

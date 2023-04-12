@@ -36,6 +36,9 @@ POST `/v5/asset/transfer/universal-transfer`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/asset/transfer/universal-transfer HTTP/1.1
 Host: api-testnet.bybit.com
@@ -56,6 +59,30 @@ Content-Type: application/json
 
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+print(session.create_universal_transfer(
+    transferId="be7a2462-1138-4e27-80b1-62653f24925e",
+    coin="ETH",
+    amount="0.5",
+    fromMemberId=592334,
+    toMemberId=592324,
+    fromAccountType="CONTRACT",
+    toAccountType="UNIFIED",
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 
