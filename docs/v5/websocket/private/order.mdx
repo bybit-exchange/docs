@@ -62,6 +62,22 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 }
 ```
 
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="private",
+    api_key="IRynE10jWa2E5c9hTG",
+    api_secret="EkRi3YxK7MSfrrIBjmbK1SIQkTceyEAKc1FE",
+)
+def handle_message(message):
+    print(message)
+ws.order_stream(callback=handle_message)
+while True:
+    sleep(1)
+```
+
 ### Stream Example
 
 ```json

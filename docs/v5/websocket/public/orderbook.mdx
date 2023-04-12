@@ -50,6 +50,26 @@ Level 100 data, push frequency: **100ms**<br/>
 |u |integer |Update ID. Is a sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook  |
 |seq |integer |Cross sequence |
 
+### Subscribe Example
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.orderbook_stream(
+    depth=50,
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### Response Example
 
 ```json

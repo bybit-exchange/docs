@@ -39,6 +39,26 @@ If `confirm`=true, this means that the candle has closed. Otherwise, the candle 
 |> confirm |boolean |Weather the tick is ended or not |
 |> timestamp |number |The timestamp (ms) of the last matched order in the candle |
 
+### Subscribe Example
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="spot",
+)
+def handle_message(message):
+    print(message)
+ws.lt_kline_stream(
+    interval=30,
+    symbol="EOS3LUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### Response Example
 
 ```json
