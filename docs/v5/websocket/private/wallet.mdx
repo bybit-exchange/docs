@@ -54,6 +54,22 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 }
 ```
 
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="private",
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+def handle_message(message):
+    print(message)
+ws.wallet_stream(callback=handle_message)
+while True:
+    sleep(1)
+```
+
 ### Stream Example
 
 ```json

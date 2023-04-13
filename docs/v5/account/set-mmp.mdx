@@ -44,6 +44,9 @@ POST `/v5/account/mmp-modify`
 None
 
 ### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/account/mmp-modify HTTP/1.1
 Host: api.bybit.com
@@ -55,12 +58,34 @@ Content-Type: application/json
 
 {
     "baseCoin": "ETH",
-    "window":"5000",
-    "frozenPeriod":"100000",
-    "qtyLimit":"50",
-    "deltaLimit":"20"
+    "window": "5000",
+    "frozenPeriod": "100000",
+    "qtyLimit": "50",
+    "deltaLimit": "20"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.set_mmp(
+    baseCoin="ETH",
+    window="5000",
+    frozenPeriod="100000",
+    qtyLimit="50",
+    deltaLimit="20"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

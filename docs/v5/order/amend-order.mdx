@@ -42,6 +42,9 @@ POST `/v5/order/amend`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/order/amend HTTP/1.1
 Host: api-testnet.bybit.com
@@ -52,9 +55,9 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "category":"linear",
-    "symbol":"ETHPERP",
-    "orderLinkId":"linear-004",
+    "category": "linear",
+    "symbol": "ETHPERP",
+    "orderLinkId": "linear-004",
     "triggerPrice": "1145",
     "qty": "0.15",
     "price": "1050",
@@ -62,6 +65,31 @@ Content-Type: application/json
     "stopLoss": "0"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.amend_order(
+    category="linear",
+    symbol="ETHPERP",
+    orderLinkId="linear-004",
+    triggerPrice="1145",
+    qty="0.15",
+    price="1050",
+    takeProfit="0",
+    stopLoss="0",
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

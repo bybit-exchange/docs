@@ -23,8 +23,8 @@ GET `/v5/market/tickers`
 |expDate |false |string |Expiry date. e.g., 25DEC22. For `option` **only**|
 
 ### Response Parameters
-<Tabs>
-<TabItem value="future" label="Linear/Inverse" default>
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear/Inverse" default>
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -259,8 +259,11 @@ GET `/v5/market/tickers`
 
 ### Request Example
 
-<Tabs>
-<TabItem value="console-inverse" label="Inverse">
+<Tabs groupId="market-category">
+<TabItem value="inverse" label="Inverse">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/tickers?category=inverse&symbol=BTCUSD HTTP/1.1
@@ -268,8 +271,26 @@ Host: api-testnet.bybit.com
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
 
-<TabItem value="console-option" label="Option">
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_tickers(
+    category="inverse",
+    symbol="BTCUSD",
+))
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+
+<TabItem value="option" label="Option">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/tickers?category=option&symbol=BTC-30DEC22-18000-C HTTP/1.1
@@ -277,8 +298,26 @@ Host: api-testnet.bybit.com
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
 
-<TabItem value="console-spot" label="Spot">
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_tickers(
+    category="option",
+    symbol="BTC-30DEC22-18000-C",
+))
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/market/tickers?category=spot&symbol=BTCUSDT HTTP/1.1
@@ -286,12 +325,27 @@ Host: api-testnet.bybit.com
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(testnet=True)
+print(session.get_tickers(
+    category="spot",
+    symbol="BTCUSDT",
+))
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
 </Tabs>
 
 ### Response Example
 
-<Tabs>
-<TabItem value="js inverse" label="Inverse">
+<Tabs groupId="market-category">
+<TabItem value="inverse" label="Inverse">
 
 ```json
 {
@@ -334,7 +388,7 @@ Host: api-testnet.bybit.com
 ```
 </TabItem>
 
-<TabItem value="js option" label="Option">
+<TabItem value="option" label="Option">
 
 ```json
 {
@@ -378,7 +432,7 @@ Host: api-testnet.bybit.com
 ```
 </TabItem>
 
-<TabItem value="js spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 ```json
 {

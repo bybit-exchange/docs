@@ -49,6 +49,9 @@ POST `/v5/user/create-sub-api`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/user/create-sub-api HTTP/1.1
 Host: api.bybit.com
@@ -69,6 +72,31 @@ Content-Type: application/json
     }
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.create_sub_api_key(
+    subuid=53888000,
+    note="testxxx",
+    readOnly=0,
+    permissions={
+        "Wallet": [
+            "AccountTransfer"
+        ]
+    },
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

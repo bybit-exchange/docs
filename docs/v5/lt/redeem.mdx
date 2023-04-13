@@ -34,6 +34,9 @@ POST `/v5/spot-lever-token/redeem`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/spot-lever-token/redeem HTTP/1.1
 Host: api-testnet.bybit.com
@@ -44,11 +47,31 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "ltCoin":"EOS3L",
-    "quantity":"150",
+    "ltCoin": "EOS3L",
+    "quantity": "150",
     "serialNo": "redeem-001"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.redeem_leveraged_token(
+    ltCoin="EOS3L",
+    quantity="150",
+    serialNo="redeem-001"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

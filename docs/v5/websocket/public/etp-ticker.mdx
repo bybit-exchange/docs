@@ -25,7 +25,26 @@ Subscribe to the leveraged token ticker stream.
 |> highPrice24h |string |Highest price in the past 24 hours  |
 |> lowPrice24h |string |Lowest price in the past 24 hours |
 
-### 響應示例
+### Subscribe Example
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="spot",
+)
+def handle_message(message):
+    print(message)
+ws.lt_ticker_stream(
+    symbol="EOS3LUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+### Response Example
 
 ```json
 {
