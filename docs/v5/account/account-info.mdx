@@ -21,8 +21,8 @@ None
 |[unifiedMarginStatus](../enum#unifiedmarginstatus) |integer |Account status |
 |marginMode |string |`REGULAR_MARGIN`, `PORTFOLIO_MARGIN`|
 |dcpStatus |string |[Disconnected-CancelAll-Prevention](../order/dcp) status: `ON`, `OFF`|
-|timeWindow |string |DCP trigger time window which user pre-set. Between [10, 300] seconds, default: 10 sec|
-|smpGroup |integer | |
+|timeWindow |integer |DCP trigger time window which user pre-set. Between [10, 300] seconds, default: 10 sec|
+|smpGroup |integer |Smp group ID. If the uid has no group, it is `0` by default |
 |updatedTime |string |Account data updated timestamp (ms)|
 
 <a href="/api-explorer/v5/account/account-info"><Button>RUN >></Button></a>
@@ -64,11 +64,14 @@ print(session.get_account_info())
 ```json
 {
     "retCode": 0,
-    "retMsg": "",
+    "retMsg": "OK",
     "result": {
         "marginMode": "REGULAR_MARGIN",
-        "updatedTime": "1672106576000",
-        "unifiedMarginStatus": 3
+        "updatedTime": "1681283529000",
+        "unifiedMarginStatus": 3,
+        "dcpStatus": "OFF",
+        "timeWindow": 10,
+        "smpGroup": 0
     }
 }
 ```

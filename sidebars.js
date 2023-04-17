@@ -20,6 +20,7 @@ const sidebars = {
   v3SideBar: [
       'v3/intro',
       'v3/server-time',
+      'v3/smp',
     {
       type: 'category',
       label: 'Derivatives',

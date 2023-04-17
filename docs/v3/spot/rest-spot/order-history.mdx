@@ -47,6 +47,10 @@ GET <code>/spot/v3/private/history-orders</code>
 | orderCategory | integer | Order category. <code>0</code>：normal order; <code>1</code>：TP/SL order. TP/SL order has this field |
 | triggerPrice | string| Trigger price. TP/SL order has this field |
 | blockTradeId | string| Paradigm block trade ID |
+|> cancelType |string |Cancel type. `CancelBySmp`|
+|> [smpType](../enum#smptype) |string |SMP execution type|
+|> smpGroup |integer |Smp group ID. If the uid has no group, it is `0` by default |
+|> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 
 ### Request Example
 
@@ -89,6 +93,10 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/his
                 "updateTime": 1659081332225,
                 "isWorking": "1",
                 "blockTradeId": "",
+                "cancelType": "UNKNOWN"
+                "smpGroup": 0,
+                "smpOrderId": "",
+                "smpType": "None"
             }
         ]
     },
