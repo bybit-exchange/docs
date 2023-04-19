@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Bybit API Documentation',
   tagline: '',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://bybit-exchange.github.io',
   baseUrl: '/docs/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
