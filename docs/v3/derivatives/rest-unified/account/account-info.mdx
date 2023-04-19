@@ -15,8 +15,12 @@ None
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
+|[unifiedMarginStatus](../enum#unifiedmarginstatus) |integer |Account status |
 |marginMode |string |`REGULAR_MARGIN`, `PORTFOLIO_MARGIN`|
-|updateTime |string |Account data updated timestamp (ms)|
+|dcpStatus |string |[Disconnected-CancelAll-Prevention](dcp#) status: `ON`, `OFF`|
+|timeWindow |integer |DCP trigger time window which user pre-set. Between [10, 300] seconds, default: 10 sec|
+|smpGroup |integer |Smp group ID. If the uid has no group, it is `0` by default |
+|updatedTime |string |Account data updated timestamp (ms)|
 
 ### Request Example
 
@@ -35,7 +39,13 @@ X-BAPI-RECV-WINDOW: 5000
 {
     "retCode": 0,
     "retMsg": "OK",
-    "marginMode": "REGULAR_MARGIN",
-    "updateTime": "1658215932000"
+    "result": {
+        "marginMode": "REGULAR_MARGIN",
+        "updatedTime": "1672918286000",
+        "unifiedMarginStatus": 3,
+        "dcpStatus": "ON",
+        "timeWindow": 30,
+        "smpGroup": 0
+    }
 }
 ```

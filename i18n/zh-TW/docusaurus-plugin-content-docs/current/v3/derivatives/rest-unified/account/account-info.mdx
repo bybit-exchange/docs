@@ -15,8 +15,12 @@ GET `/unified/v3/private/account/info`
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|marginMode |string |`REGULAR_MARGIN`（常規保證金模式）,`PORTFOLIO_MARGIN`（組合保證金模式）|
-|updateTime |string |賬戶數據更新的時間，毫秒時間戳|
+|[unifiedMarginStatus](../enum#unifiedmarginstatus) |integer |帳戶狀態類型|
+|marginMode |string |`REGULAR_MARGIN`（常規保證金模式） `PORTFOLIO_MARGIN`（組合保證金模式） |
+|dcpStatus |string |[設置斷線保護時間](dcp#) 開關狀態: `ON`, `OFF`|
+|timeWindow |integer |設置的DCP觸發時間窗口. 範圍為[10, 300] 秒, 默認: 10 秒|
+|smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+|updatedTime |string |賬戶數據更新的時間，毫秒時間戳|
 
 ### 請求示例
 
@@ -35,7 +39,13 @@ X-BAPI-RECV-WINDOW: 5000
 {
     "retCode": 0,
     "retMsg": "OK",
-    "marginMode": "REGULAR_MARGIN",
-    "updateTime": "1658215932000"
+    "result": {
+        "marginMode": "REGULAR_MARGIN",
+        "updatedTime": "1672918286000",
+        "unifiedMarginStatus": 3,
+        "dcpStatus": "ON",
+        "timeWindow": 30,
+        "smpGroup": 0
+    }
 }
 ```

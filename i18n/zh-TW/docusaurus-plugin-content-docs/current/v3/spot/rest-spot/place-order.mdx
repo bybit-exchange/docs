@@ -23,6 +23,7 @@ POST <code>/spot/v3/private/order</code>
 | orderLinkId| false | string| 特殊訂單ID，用戶自己生成 |
 | orderCategory | false | integer | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>, 下止盈止損單，該參數**必傳** |
 | triggerPrice | false | string| 觸發價格. 用於止盈止損單 |
+|[smpType](../enum#smptype) |false |string |Smp執行類型. [什麼是SMP?](/v3/smp)|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -41,6 +42,7 @@ POST <code>/spot/v3/private/order</code>
 | execQty | string| 請忽略 |
 | orderCategory | integer | 訂單類型. 默認為<code>0</code>：普通訂單; <code>1</code>：<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001736">止盈止損訂單</a>，若是止盈止損則<b>必傳</b> |
 | triggerPrice  | string| 觸發價格 |
+| [smpType](../enum#smptype) | string| Smp執行類型 |
 
 ### 請求示例
 
@@ -83,7 +85,8 @@ curl --location --request POST 'https://api-testnet.bybit.com/spot/v3/private/or
         "timeInForce": "GTC",
         "accountId": "554118",
         "orderCategory": 1,
-        "triggerPrice": "21700"
+        "triggerPrice": "21700",
+        "smpType": "None"
     },
     "retExtMap": {},
     "retExtInfo": {},

@@ -23,6 +23,7 @@ POST <code>/spot/v3/private/order</code>
 | orderLinkId| false | string| User-generated order ID |
 | orderCategory | false | integer | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a>, <b>Required</b> for TP/SL order. |
 | triggerPrice | false | string| Trigger price. Used for TP/SL order |
+|[smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](/v3/smp)|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -41,6 +42,7 @@ POST <code>/spot/v3/private/order</code>
 | execQty | string| Please ignore |
 | orderCategory | integer | Order category. <code>0</code>：normal order by default; <code>1</code>：<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=us_EN&id=000001736">TP/SL order</a> |
 | triggerPrice | string| Trigger price. TP/SL order has this field |
+| [smpType](../enum#smptype) | string| Smp execution type |
 
 ### Request Example
 
@@ -83,7 +85,8 @@ Content-Length: 146
         "timeInForce": "GTC",
         "accountId": "592335",
         "execQty": "0",
-        "orderCategory": 0
+        "orderCategory": 0,
+        "smpType": "None"
     },
     "retExtInfo": {},
     "time": 1673333450660

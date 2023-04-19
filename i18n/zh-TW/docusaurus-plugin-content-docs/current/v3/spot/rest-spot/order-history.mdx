@@ -47,6 +47,10 @@ GET <code>/spot/v3/private/history-orders</code>
 | orderCategory | integer | 訂單種類. <code>0</code>：普通單; <code>1</code>：止盈止損單. 止盈止損單有這個字段 |
 | triggerPrice | string| 觸發價格. 止盈止損單有這個字段 |
 | blockTradeId         | string          | Paradigm大宗交易ID |
+| cancelType |string |Cancel type. `CancelBySmp`|
+| [smpType](../enum#smptype) |string |SMP執行類型|
+| smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+| smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 
 ### 請求示例
 
@@ -94,7 +98,11 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/his
                 "createTime": 1659081332185,
                 "updateTime": 1659081332225,
                 "isWorking": "1",
-                "blockTradeId": "1"
+                "blockTradeId": "1",
+                "cancelType": "UNKNOWN"
+                "smpGroup": 0,
+                "smpOrderId": "",
+                "smpType": "None"
             }
         ]
     },

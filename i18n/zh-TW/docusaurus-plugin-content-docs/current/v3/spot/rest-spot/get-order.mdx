@@ -38,6 +38,10 @@ GET <code>/spot/v3/private/order</code>
 | isWorking            | string          | 是否生效. <code>0</code>：未生效, <code>1</code>：已生效 |
 | locked               | string          | 鎖定數量（如果為0，則說明該筆訂單的資金已完成結算） |
 | blockTradeId         | string          | Paradigm大宗交易ID |
+| cancelType |string |Cancel type. `CancelBySmp`|
+| [smpType](../enum#smptype) |string |SMP執行類型|
+| smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+| smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 
 ### 請求示例
 
@@ -84,7 +88,11 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/ord
         "updateTime": "1659075830497",
         "isWorking": "1",
         "locked": "0.01",
-        "blockTradeId": ""
+        "blockTradeId": "",
+        "cancelType": "UNKNOWN"
+        "smpGroup": 0,
+        "smpOrderId": "",
+        "smpType": "None"
     },
     "retExtMap": {},
     "retExtInfo": {},

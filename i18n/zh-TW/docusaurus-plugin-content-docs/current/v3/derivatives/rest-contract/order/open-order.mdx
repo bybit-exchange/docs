@@ -59,6 +59,9 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> slTriggerBy |string |觸發止損的價格類型 |
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單|
 |> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>. 該字段對期權無效，一直是`""` |
+|> [smpType](../enum#smptype) |string |SMP執行類型|
+|> smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+|> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |訂單創建時間戳 (毫秒) |
 |> updatedTime |string |訂單更新時間戳 (毫秒) |
 
@@ -110,7 +113,10 @@ X-BAPI-RECV-WINDOW: 5000
             "cancelType": "UNKNOWN",
             "lastPriceOnCreated": "",
             "iv": "",
-            "closeOnTrigger": false
+            "closeOnTrigger": false,
+            "smpGroup": 0,
+            "smpOrderId": "",
+            "smpType": "None"
         }
     ],
     "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",

@@ -59,6 +59,9 @@ GET `/contract/v3/private/order/list`
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單|
 |> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>|
 |> blockTradeId |string |Paradigm 大宗交易ID|
+|> [smpType](../enum#smptype) |string |SMP執行類型|
+|> smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+|> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |訂單創建時間戳 (毫秒) |
 |> updatedTime |string |訂單更新時間戳 (毫秒) |
 
@@ -114,7 +117,10 @@ cdn-request-id: test-10
                 "cancelType": "CancelByUser",
                 "iv": "",
                 "triggerBy": "UNKNOWN",
-                "blockTradeId": ""
+                "blockTradeId": "",
+                "smpGroup": 0,
+                "smpOrderId": "",
+                "smpType": "None"
             }
         ],
         "nextPageCursor": "eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiJleUpOSWpwN0luQnJJanA3SWtJaU9pSktSMFp0V2xSQ2FVOVVVWHBNVkdzMVdtcEpkRTVIUlRGUFF6QTBUbFJqTkV4VVRteFpla0p0VFdwck5VNTZUbTFOVVQwOUluMHNJbDkxYjNOZklqcDdJa0lpT2lKQk9EWlVTa0ZGU0NKOUxDSmZjMnRmSWpwN0lrSWlPaUpHZW1jd1kyVm5aa0l2WkdoYWJWVjNXV3ByTUUxNU1EVlBWMWw1VEZSU2FFNVVaM1JQUkZVelQwTXdlbHBYVFhkYWFrazFUMVJqZWxwcVJUMGlmWDE5In0=",

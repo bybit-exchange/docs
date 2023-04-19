@@ -20,6 +20,7 @@ const sidebars = {
   v3SideBar: [
       'v3/intro',
       'v3/server-time',
+      'v3/smp',
     {
       type: 'category',
       label: 'Derivatives',
@@ -414,6 +415,7 @@ const sidebars = {
       'v5/intro',
       'v5/upgrade-guide',
       'v5/announcement',
+      'v5/smp',
     {
       type: 'category',
       label: 'Market',
