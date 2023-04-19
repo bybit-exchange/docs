@@ -73,6 +73,9 @@ GET `/v5/order/realtime`
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單 |
 |> closeOnTrigger |boolean |觸發後平倉委託. <a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a> |
 |> placeType |string |下單類型, 僅期權使用. `iv`, `price`|
+|> [smpType](../enum#smptype) |string |SMP執行類型|
+|> smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+|> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
 
@@ -137,7 +140,10 @@ Content-Type: application/json
                 "qty": "0.5",
                 "stopLoss": "",
                 "triggerBy": "1192.5",
-                "placeType": ""
+                "placeType": "",
+                "smpGroup": 0,
+                "smpOrderId": "",
+                "smpType": "None"
             }
         ]
     },

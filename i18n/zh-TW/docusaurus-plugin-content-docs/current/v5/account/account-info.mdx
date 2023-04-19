@@ -5,10 +5,6 @@ sidebar_position: 8
 ---
 該接口可以查詢賬戶下的配置
 
-:::note
-第一版本是查詢保證金模式, 支持 RM 和 PM 模式查詢, 以及支持查詢帳戶的升級狀態
-:::
-
 ### HTTP 請求
 GET `/v5/account/info`
 
@@ -20,6 +16,9 @@ GET `/v5/account/info`
 |:----- |:-----|----- |
 |[unifiedMarginStatus](../enum#unifiedmarginstatus) |integer |帳戶狀態類型|
 |marginMode |string |`REGULAR_MARGIN`（常規保證金模式） `PORTFOLIO_MARGIN`（組合保證金模式） |
+|dcpStatus |string |[設置斷線保護時間](../order/dcp) 開關狀態: `ON`, `OFF`|
+|timeWindow |integer |設置的DCP觸發時間窗口. 範圍為[10, 300] 秒, 默認: 10 秒|
+|smpGroup |integer |所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
 |updatedTime |string |賬戶數據更新的時間，毫秒時間戳|
 
 <a href="/api-explorer/v5/account/account-info"><Button>運行實例 >></Button></a>
@@ -44,9 +43,12 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "marginMode": "PORTFOLIO_MARGIN",
-        "updatedTime": "1672737044000",
-        "unifiedMarginStatus": 3
+        "marginMode": "REGULAR_MARGIN",
+        "updatedTime": "1681283529000",
+        "unifiedMarginStatus": 3,
+        "dcpStatus": "OFF",
+        "timeWindow": 10,
+        "smpGroup": 0
     }
 }
 ```

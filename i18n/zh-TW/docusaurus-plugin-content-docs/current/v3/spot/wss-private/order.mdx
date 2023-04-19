@@ -44,6 +44,10 @@ slug: /spot/ws-private/order
 |> d | string | `NO_LIQ`: 非強平單. `IOC`: 強平單 |
 |> t | string | 成交ID |
 |> b | string | Paradigm大宗交易ID |
+|> ct | string | 取消類型. `CancelBySmp` |
+|> [st](../enum#smptype) | string | SMP執行類型 |
+|> sg | integer | 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0` |
+|> so | string | 觸發此SMP執行的交易對手的 orderID |
 
 ### 訂閱示例
 
@@ -93,6 +97,10 @@ slug: /spot/ws-private/order
             "v": "0",
             "d": "NO_LIQ",
             "t": "2100000000002220938",
+            "sg": 1005,
+            "st": "CancelTaker",
+            "ct": "CancelBySmp",
+            "so": "1400584538658193920",
             "b": ""
         }
     ]
