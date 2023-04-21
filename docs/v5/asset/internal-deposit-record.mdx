@@ -47,13 +47,28 @@ GET `/v5/asset/deposit/query-internal-record`
 <TabItem value="http" label="HTTP">
 
 ```http
-
+GET /v5/asset/deposit/query-internal-record?startTime=1667260800000&endTime=1667347200000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1682099024473
+X-BAPI-RECV-WINDOW: 50000
 ```
 
 </TabItem>
 <TabItem value="python" label="Python">
 
 ```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_internal_deposit_records(
+    startTime=1667260800000,
+    endTime=1667347200000,
+))
 ```
 
 </TabItem>
@@ -62,5 +77,24 @@ GET `/v5/asset/deposit/query-internal-record`
 ### Response Example
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "id": "19097",
+                "amount": "0.001",
+                "type": 1,
+                "coin": "BTC",
+                "address": "gas***gmail.com",
+                "status": 2,
+                "createdTime": "1667319101"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTkwOTcsIm1heElEIjoxOTA5N30="
+    },
+    "retExtInfo": {},
+    "time": 1682099394381
+}
 ```
