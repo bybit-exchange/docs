@@ -1,0 +1,51 @@
+---
+title: Get Lending Account Info
+sidebar_label: Get Lending Account Info
+sidebar_position: 5
+---
+
+### HTTP Request
+GET `/v5/lending/account`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |**true** |string |Coin name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|coin |string |Coin name |
+|principalInterest |string |Redeemable interest |
+|principalQty |string |Redeemable principle quantity |
+|principalTotal |string |Redeemable total quantity |
+|quantity	|string	|Current deposited quantity |
+
+### Request Example
+
+```http
+GET /v5/lending/account?coin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1682049556563
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "coin": "BTC",
+        "principalInterest": "0",
+        "principalQty": "1",
+        "principalTotal": "1",
+        "quantity": "1"
+    },
+    "retExtInfo": {},
+    "time": 1682049706988
+}
+```
