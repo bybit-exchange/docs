@@ -38,6 +38,9 @@ POST `/v5/asset/withdraw/create`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/asset/withdraw/create HTTP/1.1
 Host: api-testnet.bybit.com
@@ -55,9 +58,33 @@ Content-Type: application/json
     "amount": "24",
     "timestamp": 1672196561407,
     "forceChain": 0,
-     "accountType": "FUND"
+    "accountType": "FUND"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.withdraw(
+    coin="USDT",
+    chain="ETH",
+    address="0x99ced129603abc771c0dabe935c326ff6c86645d",
+    amount="24",
+    timestamp=1672196561407,
+    forceChain=0,
+    accountType="FUND",
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

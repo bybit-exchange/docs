@@ -42,9 +42,36 @@ GET `/v5/asset/deposit/query-internal-record`
 
 ### 請求示例
 
-```http
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
+```http
+GET /v5/asset/deposit/query-internal-record?startTime=1667260800000&endTime=1667347200000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1682099024473
+X-BAPI-RECV-WINDOW: 50000
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_internal_deposit_records(
+    startTime=1667260800000,
+    endTime=1667347200000,
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

@@ -52,6 +52,9 @@ POST `/v5/order/create-batch`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/order/create-batch HTTP/1.1
 Host: api-testnet.bybit.com
@@ -93,6 +96,50 @@ Content-Type: application/json
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.place_batch_order(
+    category="option",
+    request=[
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-500-C",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "1",
+            "orderIv": "6",
+            "timeInForce": "GTC",
+            "orderLinkId": "option-test-001",
+            "mmp": False,
+            "reduceOnly": False
+        },
+        {
+            "category": "option",
+            "symbol": "ETH-30DEC22-700-C",
+            "orderType": "Limit",
+            "side": "Sell",
+            "qty": "2",
+            "price": "700",
+            "timeInForce": "GTC",
+            "orderLinkId": "option-test-001",
+            "mmp": False,
+            "reduceOnly": False
+        }
+    ]
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

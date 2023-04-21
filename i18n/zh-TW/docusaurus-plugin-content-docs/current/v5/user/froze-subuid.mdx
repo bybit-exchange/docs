@@ -24,21 +24,42 @@ POST `/v5/user/frozen-sub-member`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/user/frozen-sub-member HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671177689823
-X-BAPI-RECV-WINDOW: 50000
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 42
 
 {
-    "subuid": 111111111,
+    "subuid": 53888001,
     "frozen": 1
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.freeze_sub_uid(
+    subuid=53888001,
+    frozen=1,
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

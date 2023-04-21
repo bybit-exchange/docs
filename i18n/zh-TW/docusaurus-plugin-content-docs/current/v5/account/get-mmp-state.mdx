@@ -26,6 +26,9 @@ GET `/v5/account/mmp-state`
 |> mmpFrozen |boolean |當前是否觸發了mmp凍結. <ul><li>`true`: mmpFrozenUntil的值有意義</li><li>`false`: 請忽略mmpFrozenUntil字段的值</li></ul>|
 
 ### 請求示例
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/account/mmp-reset HTTP/1.1
 Host: api.bybit.com
@@ -39,6 +42,24 @@ Content-Type: application/json
     "baseCoin": "ETH"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_mmp_state(
+    baseCoin="ETH",
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

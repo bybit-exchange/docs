@@ -24,6 +24,25 @@ sidebar_position: 5
 |> size |string |成交數量 |
 |> price |string |成交價格 |
 
+### 訂閱示例
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.liquidation_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### 響應示例
 
 ```json
