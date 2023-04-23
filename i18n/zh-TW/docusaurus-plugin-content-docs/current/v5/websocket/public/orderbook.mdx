@@ -52,6 +52,26 @@ USDT和USDC永續 & 反向合約 1檔數據: 若3秒內無變化，將會再次�
 |u |integer |更新id, 一般情況下該id是連續的。偶爾會因後台的重啟而發送"u"=1的全量數據，接收到後請覆蓋本地保存的orderbook |
 |seq |integer |撮合版本號|
 
+### 訂閱示例
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.orderbook_stream(
+    depth=50,
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### 響應示例
 
 ```json

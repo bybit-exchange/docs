@@ -29,6 +29,25 @@ sidebar_position: 2
 |> i |string |成交Id |
 |> BT |boolean |成交類型是否為大宗交易|
 
+### 訂閱示例
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.trade_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### 響應示例
 
 ```json

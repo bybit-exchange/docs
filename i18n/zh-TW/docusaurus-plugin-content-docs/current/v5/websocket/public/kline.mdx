@@ -41,6 +41,26 @@ sidebar_position: 4
 |> confirm |boolean |是否確認 |
 |> timestamp |number |蠟燭中最後一筆淨值時間戳 (毫秒) |
 
+### 訂閱示例
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.kline_stream(
+    interval=5,
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
 ### 響應示例
 
 ```json

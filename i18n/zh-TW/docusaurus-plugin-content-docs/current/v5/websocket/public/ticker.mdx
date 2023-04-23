@@ -15,8 +15,8 @@ sidebar_position: 3
 `tickers.{symbol}`
 
 ### 響應參數
-<Tabs>
-<TabItem value="future" label="Linear/Inverse" default>
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear/Inverse" default>
     <table border="0.8">
         <tr>
             <th>參數</th><th>類型</th><th>說明</th>
@@ -261,10 +261,77 @@ sidebar_position: 3
 </TabItem>
 </Tabs>
 
+### 訂閱示例
+
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.ticker_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+
+<TabItem value="option" label="Option">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="option",
+)
+def handle_message(message):
+    print(message)
+ws.ticker_stream(
+    symbol="tickers.BTC-22JAN23-17500-C",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+
+<TabItem value="spot" label="Spot">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="spot",
+)
+def handle_message(message):
+    print(message)
+ws.ticker_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
+
 ### 響應示例
 
-<Tabs>
-<TabItem value="ws-linear" label="Linear">
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear">
 
 ```json
 {
@@ -299,7 +366,7 @@ sidebar_position: 3
 
 </TabItem>
 
-<TabItem value="js option" label="Option">
+<TabItem value="option" label="Option">
 
 ```json
 {
@@ -339,7 +406,7 @@ sidebar_position: 3
 
 </TabItem>
 
-<TabItem value="ws-spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 ```json
 {

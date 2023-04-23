@@ -55,6 +55,9 @@ POST `/v5/user/update-api`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/user/update-api HTTP/1.1
 Host: api.bybit.com
@@ -98,6 +101,53 @@ Content-Type: application/json
         }
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.modify_master_api_key(
+    ips=["*"],
+    permissions={
+            "ContractTrade": [
+                "Order",
+                "Position"
+            ],
+            "Spot": [
+                "SpotTrade"
+            ],
+            "Wallet": [
+                "AccountTransfer",
+                "SubMemberTransfer"
+            ],
+            "Options": [
+                "OptionsTrade"
+            ],
+            "Derivatives": [
+                "DerivativesTrade"
+            ],
+            "CopyTrading": [
+                "CopyTrading"
+            ],
+            "BlockTrade": [],
+            "Exchange": [
+                "ExchangeHistory"
+            ],
+            "NFT": [
+                "NFTQueryProductList"
+            ]
+        }
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 

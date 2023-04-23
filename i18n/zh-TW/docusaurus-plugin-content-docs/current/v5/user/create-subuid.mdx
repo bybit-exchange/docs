@@ -33,23 +33,46 @@ POST `/v5/user/create-sub-member`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/user/create-sub-member HTTP/1.1
-Host: api-testnet.bybit.com
-X-BAPI-SIGN: xxxxxxxxxxxx
-X-BAPI-API-KEY: xxxxxxxxxxxx
-X-BAPI-TIMESTAMP: 1671174837503
-X-BAPI-RECV-WINDOW: 50000
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1676429344202
+X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 109
 
 {
-    "username": "testsubaccount",
+    "username": "xxxxx",
     "memberType": 1,
     "switch": 1,
-    "note": "testnet subaccount"
+    "note": "test"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.create_sub_uid(
+    username="xxxxx",
+    memberType=1,
+    switch=1,
+    note="test",
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 
