@@ -1,0 +1,116 @@
+---
+title: 查詢升級前成交紀錄
+sidebar_label: 查詢升級前成交紀錄
+sidebar_position: 2
+---
+
+返回結果按`execTime`降序排列. 目前，僅支持USDT永續 / 反向合約
+
+:::tip
+* 單筆訂單可能會有多次成交.
+* 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
+:::
+
+### HTTP 請求
+GET `v5/pre-upgrade/execution/list`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型 `linear`, `inverse` |
+|symbol |false |string |合約名稱 |
+|orderId |false |string |訂單ID |
+|orderLinkId |false |string |用戶自定義訂單ID |
+|baseCoin |false |string |交易幣種. 期權的預留字段 |
+|startTime |false |integer |開始時間戳 (毫秒)|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|[execType](../enum#exectype) |false |string |執行類型|
+|limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+| [category](../enum#category) | string  | 產品類型 |
+| list | array | Object |
+|> symbol |string |合約名稱|
+|> orderId |string |訂單Id |
+|> orderLinkId |string |用戶自定義訂單id|
+|> side |string |訂單方向.買： `Buy`,賣：`Sell` |
+|> orderPrice |string |訂單價格 |
+|> orderQty |string |訂單數量 |
+|> leavesQty |string |剩餘委託未成交數量|
+|> orderType |string |訂單類型. 市價單：`Market`,限價單：`Limit` |
+|> [stopOrderType](../enum#stopordertype) |string |条件单的订单类型。如果该订单不是条件单，则不会返回任何类型 |
+|> execFee |string |交易手續費|
+|> execId |string |成交Id |
+|> execPrice |string |成交價格 |
+|> execQty |string |成交數量 |
+|> [execType](../enum#exectype) |string |交易類型|
+|> execValue |string |成交價值 |
+|> execTime |string |成交時間（毫秒） |
+|> isMaker |Bool |是否是 Maker 訂單,`true` 為 maker 訂單，`false` 為 taker 訂單 |
+|> feeRate |string |手續費率 |
+|> tradeIv |string |隱含波動率，僅期權有效 |
+|> markIv |string |標記價格的隱含波動率，僅期權有效 |
+|> markPrice |string |成交執行時，該 symbol 當時的標記價格 |
+|> indexPrice |string |成交執行時，該 symbol 當時的指數價格，目前僅對期權業務有效 |
+|> underlyingPrice |string |成交執行時，該 symbol 當時的底層資產價格，僅期權有效|
+|> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID|
+|> closedSize |string |平倉數量 |
+|nextPageCursor |string |游標，用於翻頁|
+
+### Request Example
+
+```http
+GET /v5/pre-upgrade/execution/list?category=linear&limit=1&execType=Funding&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1682580752432
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "orderId": "1682553600-BTCUSDT-592334-Sell",
+                "orderLinkId": "",
+                "side": "Sell",
+                "orderPrice": "0.00",
+                "orderQty": "0.000",
+                "leavesQty": "0.000",
+                "orderType": "UNKNOWN",
+                "stopOrderType": "UNKNOWN",
+                "execFee": "0.6364003",
+                "execId": "11f1c4ed-ff20-4d73-acb7-96e43a917f25",
+                "execPrice": "28399.90",
+                "execQty": "0.011",
+                "execType": "Funding",
+                "execValue": "312.3989",
+                "execTime": "1682553600000",
+                "isMaker": false,
+                "feeRate": "0.00203714",
+                "tradeIv": "",
+                "markIv": "",
+                "markPrice": "28399.90",
+                "indexPrice": "",
+                "underlyingPrice": "",
+                "blockTradeId": "",
+                "closedSize": "0.000"
+            }
+        ],
+        "nextPageCursor": "page_token%3D96184191%26",
+        "category": "linear"
+    },
+    "retExtInfo": {},
+    "time": 1682580752717
+}
+```
