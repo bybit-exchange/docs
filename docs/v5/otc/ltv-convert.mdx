@@ -1,12 +1,12 @@
 ---
-title: Get LTV
-sidebar_label: Get LTV
-sidebar_position: 6
+title: Get LTV with Ladder Conversion Rate
+sidebar_label: Get LTV with Ladder Conversion Rate
+sidebar_position: 7
 ---
 Get LTV
 
 ### HTTP Request
-GET `/v5/ins-loan/ltv`
+GET `/v5/ins-loan/ltv-convert`
 
 ### Request Parameters
 None
@@ -28,10 +28,7 @@ None
 |>> token | string | Spot margin coin |
 |>> price | string | Spot margin coin price |
 |>> qty	| string | Spot margin coin quantity |
-|> contractInfo	| array	| Contract asset details |
-|>> token | string | Contract margin coin |
-|>> price | string | Contract margin coin index price |
-|>> qty	| string | Contract margin coin quantity (available balance of Contract account, and it is not involved with LTV calculation) |
+|>> convertedAmount	| string | Spot margin conversion amount |
 
 ### Request Example
 
@@ -53,44 +50,38 @@ X-BAPI-SIGN: XXXXX
     "result": {
         "ltvInfo": [
             {
-                "ltv": "0.1147",
-                "parentUid": "999805",
+                "ltv": "0.8225",
+                "parentUid": "9454643",
                 "subAccountUids": [
-                    "999805"
+                    "9454643"
                 ],
-                "unpaidAmount": "",
+                "unpaidAmount": "150",
                 "unpaidInfo": [
                     {
                         "token": "USDT",
-                        "unpaidQty": "6351.49614274",
-                        "unpaidInterest": "264.0137162"
+                        "unpaidQty": "150",
+                        "unpaidInterest": "0"
                     }
                 ],
-                "balance": "57626.875915433333333332400000000",
-                "spotBalanceInfo": [
+                "balance": "182.37746792706196",
+                "balanceInfo": [
                     {
                         "token": "BTC",
-                        "price": "16375.621333333333333332",
-                        "qty": "0.2"
+                        "price": "29116.13",
+                        "qty": "0.000193557642",
+                        "convertedAmount": "5.63564946696546"
                     },
-                    ....
-                    {
-                        "token": "XRP",
-                        "price": "0.409517",
-                        "qty": "10000"
-                    }
-                ],
-                "contractInfo": [
                     {
                         "token": "USDT",
                         "price": "1",
-                        "qty": "0"
+                        "qty": "176.7418184600965",
+                        "convertedAmount": "176.7418184600965"
                     }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1669367335608
+    "time": 1683275368320
 }
 ```
