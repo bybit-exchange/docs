@@ -33,7 +33,7 @@ GET `/contract/v3/private/order/list`
 |> orderId |string |訂單ID |
 |> orderLinkId |string |用戶自定義ID |
 |> side |string |方向. `Buy`,`Sell` |
-|> orderType |string |訂單類型. `Market`,`Limit`|
+|> orderType |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型|
 |> price |string |訂單價格 |
 |> iv |string |隱含波動率|
 |> qty |string |訂單數量 |
@@ -54,6 +54,9 @@ GET `/contract/v3/private/order/list`
 |> leavesQty |string |訂單剩餘未成交的數量 |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
+|> tpslMode |string |**(僅testnet)** 止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
+|> tpLimitPrice |string |**(僅testnet)** 觸發止盈後轉換為限價單的價格 |
+|> slLimitPrice |string |**(僅testnet)** 觸發止損後轉換為限價單的價格 |
 |> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型|
 |> [slTriggerBy](../enum#triggerby) |string |觸發止損的價格類型|
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單|

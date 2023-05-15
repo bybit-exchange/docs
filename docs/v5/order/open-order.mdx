@@ -59,12 +59,15 @@ GET `/v5/order/realtime`
 |> cumExecValue |string |Cumulative executed order value. _Normal `spot` is not supported_  |
 |> cumExecFee |string |Cumulative executed trading fee. _Normal `spot` is not supported_  |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
-|> orderType |string |Order type. `Market`,`Limit` |
+|> orderType |string |Order type. `Market`,`Limit`. For TP/SL order, it means the order type after triggered |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |
 |> orderIv |string |Implied volatility |
 |> triggerPrice |string |Trigger price. If `stopOrderType`=_TrailingStop_, it is activate price. Otherwise, it is trigger price|
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
+|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
+|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
+|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
 |> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit |
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |

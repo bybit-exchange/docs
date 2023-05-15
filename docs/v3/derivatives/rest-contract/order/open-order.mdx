@@ -37,7 +37,7 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> orderId |string |Order id |
 |> orderLinkId |string |User customised order id |
 |> side |string |Side. `Buy`,`Sell` |
-|> orderType |string |Order type. `Market`,`Limit` |
+|> orderType |string |Order type. `Market`,`Limit`. For TP/SL order, it means the order type after triggered |
 |> price |string |Order price |
 |> iv |string |Implied volatility. Not applicable for future|
 |> qty |string |Order qty |
@@ -58,6 +58,9 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> leavesQty |string |The remaining quantity waiting to be traded |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
+|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
+|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
+|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
 |> tpTriggerBy |string |Trigger type of take profit |
 |> slTriggerBy |string |Trigger type of stop loss |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |

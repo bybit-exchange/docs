@@ -22,7 +22,7 @@ slug: /derivatives/ws-contract/order
 |> orderId |string |訂單ID |
 |> orderLinkId |string |用戶自定義ID |
 |> side |string |方向. `Buy`,`Sell` |
-|> orderType |string |訂單類型. `Market`,`Limit` |
+|> orderType |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型 |
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型. 若不是條件單，則不會返回任何類型 |
 |> price |string |訂單價格 |
 |> qty |string |訂單數量 |
@@ -35,6 +35,9 @@ slug: /derivatives/ws-contract/order
 |> avgPrice |string |訂單平均成交價格. 若沒有成交，則返回`""` |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
+|> tpslMode |string |**(僅testnet)** 止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
+|> tpLimitPrice |string |**(僅testnet)** 觸發止盈後轉換為限價單的價格 |
+|> slLimitPrice |string |**(僅testnet)** 觸發止損後轉換為限價單的價格 |
 |> tpTriggerBy |string |觸發止盈的價格類型 |
 |> slTriggerBy |string |觸發止損的價格類型 |
 |> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格 |

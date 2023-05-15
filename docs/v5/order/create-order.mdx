@@ -75,6 +75,11 @@ POST `/v5/order/create`
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 |[smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
 |mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
+|tpslMode |false |string |**(testnet)** TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>|
+|tpLimitPrice |false |string |**(testnet)** The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
+|slLimitPrice |false |string |**(testnet)** The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
+|tpOrderType |false |string |**(testnet)** The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
+|slOrderType |false |string |**(testnet)** The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
 
 ### Response Parameters
 | Parameter | Type | Comments|
