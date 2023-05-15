@@ -12,6 +12,19 @@ Set the take profit, stop loss or trailing stop for the position.
 Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
 :::
 
+:::info
+New version of TP/SL function supports both holding entire position TP/SL orders and holding partial position TP/SL orders.
+* Full position TP/SL orders: This API can be used to modify the parameters of existing TP/SL orders.
+* Partial position TP/SL orders: This API can only add partial position TP/SL orders.
+:::
+
+:::note
+Under the new version of Tp/SL function, when calling this API to perform one-sided take profit or stop loss modification
+on existing TP/SL orders on the holding position, it will cause the paired tp/sl orders to lose binding relationship.
+This means that when calling the cancel API through the tp/sl order ID, it will only cancel the corresponding one-sided
+take profit or stop loss order ID.
+:::
+
 ### HTTP Request
 POST `/v5/position/trading-stop`
 
@@ -26,8 +39,13 @@ POST `/v5/position/trading-stop`
 |[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type |
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type|
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only** |
-|tpSize |false |string |Take profit size. Valid in TP/SL partial mode |
-|slSize |false |string |Stop loss size. Valid in TP/SL partial mode |
+|tpslMode |false |string |**(testnet)** TP/SL mode. `Full`: entire position TP/SL, `Partial`: partial position TP/SL. As each contract has an initial full TP/SL mode, if it has been modified before, it may be partial. Therefore, if not provided, the system will automatically retrieve the current TP/SL mode configuration for the contract.|
+|tpSize |false |string |Take profit size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
+|slSize |false |string |Stop loss size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
+|tpLimitPrice |false |string |**(testnet)** The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
+|slLimitPrice |false |string |**(testnet)** The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
+|tpOrderType |false |string |**(testnet)** The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
+|slOrderType |false |string |**(testnet)** The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
 |[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters
