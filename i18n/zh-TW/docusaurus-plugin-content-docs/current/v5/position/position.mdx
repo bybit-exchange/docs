@@ -34,16 +34,17 @@ GET `/v5/position/list`
 |> size| string | 當前倉位的合约數量 |
 |> avgPrice| string | 當前倉位的平均入場價格 |
 |> positionValue | string |仓位的價值 |
-|> tradeMode| integer | 交易模式。`0`:全倉，`1`：逐倉 |
-|> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. _統一帳戶(現貨/USDT和USDC永續/期權)不返回該字段_ |
+|> tradeMode| integer | 交易模式。<ul><li>統一帳戶 (反向合約) & 普通帳戶: `0`: 全倉, `1`: 逐倉</li><li>統一帳戶: 廢棄, 總是 `0`</li></ul> |
+|> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. 僅當統一帳戶(除反向合約)開啟了帳戶維度的逐倉保證金模式, 該字段才有意義 |
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**. _注意：若賬戶為組合保證金模式(PM)，該字段返回空字符串，槓桿規則失效_|
 |> markPrice| string  | symbol 的最新標記價格  |
-|> liqPrice| string  | 倉位強平價格，在統一保證金模式下返回的數值為預估強平價格，因統一保證金模式的交易是按照賬戶來控制風險率，因此單個倉位上的破產價格僅為預估計算。(不包括統一帳戶下的反向交易) |
+|> liqPrice| string  | 倉位強平價格，<ul><li>UTA(反向合約) & 普通账户 & UTA(開啟逐倉保證金模式)：是逐倉和全倉持仓的真實價格。</li><li>統一帳戶(全倉保證金)：是全倉持仓的预估价格（因为统一帳戶模式是按照帳戶維度控制风险率)</li></ul>但是對於組合保證金模式，此字段為空，不會提供強平價格 |
 |> bustPrice| string  | 倉位破產價格. 統一保證金模式返回`""`, 無倉位破產價格 (不包括統一帳戶下的反向交易)  |
 |> positionIM| string  | 倉位起始保證金. 組合保證金模式(PM)下, 該字段返回為空字符串|
 |> positionMM| string  | 倉位維持保證金. 組合保證金模式(PM)下, 該字段返回為空字符串|
 |> tpslMode| string  | 該字段廢棄, 無意義, 總是返回"Full". 期權總是返回"" |
+|> positionBalance | string  |倉位保證金. 組合保證金模式(PM)下, 該字段返回為空字符串 |
 |> takeProfit| string  | 止盈價格 |
 |> stopLoss| string  | 止損價格|
 |> trailingStop| string  | 追蹤止損（與當前價格的距離）|

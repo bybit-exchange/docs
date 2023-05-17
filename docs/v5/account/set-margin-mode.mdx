@@ -3,7 +3,12 @@ title: Set Margin Mode
 sidebar_label: Set Margin Mode
 sidebar_position: 10
 ---
-Default is regular margin mode. This mode is valid for USDT Perp, USDC Perp and USDC Option.
+Default is regular margin mode
+
+:::info
+* UTA account can be switched between these 3 kinds of margin modes, which is across UID level, working for USDT Perp, USDC Perp, USDC Futures and Options (Option does not support ISOLATED_MARGIN)
+* Normal account can be switched between `REGULAR_MARGIN` and `PORTFOLIO_MARGIN`, only work for USDC Perp and Options trading.
+:::
 
 ### HTTP Request
 POST `/v5/account/set-margin-mode`
@@ -11,7 +16,7 @@ POST `/v5/account/set-margin-mode`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|setMarginMode |**true** |string |`REGULAR_MARGIN`, `PORTFOLIO_MARGIN`|
+|setMarginMode |**true** |string |`ISOLATED_MARGIN`, `REGULAR_MARGIN`(i.e. Cross margin), `PORTFOLIO_MARGIN`|
 
 ### Response Parameters
 | Parameter | Type | Comments|

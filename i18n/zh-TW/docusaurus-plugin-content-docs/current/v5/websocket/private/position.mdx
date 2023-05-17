@@ -20,18 +20,18 @@ sidebar_position: 1
 |> side |string |持倉方向. `Buy`,`Sell` |
 |> size |string |持倉大小 |
 |> [positionIdx](../../enum#positionidx) |integer |倉位標識|
-|> tradeMode |integer |交易模式. `0`: 全倉, `1`: 逐倉. 統一帳戶(現貨/USDT和USDC永續/期權)下總是`0` |
+|> tradeMode| integer | 交易模式。<ul><li>統一帳戶 (反向合約) & 普通帳戶: `0`: 全倉, `1`: 逐倉</li><li>統一帳戶: 廢棄, 總是 `0`</li></ul> |
 |> positionValue |string |倉位價值 |
 |> riskId |integer |風險限額id. _注意: 組合保證金模式下，該字段返回0，風險限額規則失效_|
 |> riskLimitValue |string |風險限額id對應的風險限額度. _注意: 組合保證金模式下，該字段返回空字符串，風險限額規則失效_|
 |> entryPrice |string |入場價 |
 |> markPrice |string |標記價 |
 |> leverage |string |槓桿. _注意: 組合保證金模式下，該字段返回""，槓桿規則失效_|
-|> positionBalance |string |倉位保證金. _統一帳戶(現貨/USDT和USDC永續/期權)沒有該字段_|
-|> autoAddMargin |integer |是否自動追加保證金. `0`: false, `1`: true. _統一帳戶(現貨/USDT和USDC永續/期權)沒有該字段_|
+|> positionBalance | string  |倉位保證金. 組合保證金模式(PM)下, 該字段返回為空字符串 |
+|> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. 僅當統一帳戶(除反向合約)開啟了帳戶維度的逐倉保證金模式, 該字段才有意義 |
 |> positionMM |string |倉位維持保證金. _注意: 組合保證金模式下，該字段返回空字符串_|
 |> positionIM |string |倉位初始保證金. _注意: 組合保證金模式下，該字段返回空字符串_|
-|> liqPrice |string |預估強平價. 統一帳戶(現貨/USDT和USDC永續/期權)為空 |
+|> liqPrice| string  | 倉位強平價格，<ul><li>UTA(反向合約) & 普通账户 & UTA(開啟逐倉保證金模式)：是逐倉和全倉持仓的真實價格。</li><li>統一帳戶(全倉保證金)：是全倉持仓的预估价格（因为统一帳戶模式是按照帳戶維度控制风险率)</li></ul>但是對於組合保證金模式，此字段為空，不會提供強平價格 |
 |> bustPrice |string |預估破產價. 統一帳戶(現貨/USDT和USDC永續/期權)為空 |
 |> tpslMode |string |該字段廢棄, 無意義, 總是返回"Full". 期權總是返回"" |
 |> takeProfit |string |止盈價格 |
