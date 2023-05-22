@@ -39,13 +39,13 @@ POST `/v5/position/trading-stop`
 |[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type |
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type|
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only** |
-|tpslMode |false |string |**(testnet)** TP/SL mode. `Full`: entire position TP/SL, `Partial`: partial position TP/SL. As each contract has an initial full TP/SL mode, if it has been modified before, it may be partial. Therefore, if not provided, the system will automatically retrieve the current TP/SL mode configuration for the contract.|
+|tpslMode |false |string |TP/SL mode. `Full`: entire position TP/SL, `Partial`: partial position TP/SL. As each contract has an initial full TP/SL mode, if it has been modified before, it may be partial. Therefore, if not provided, the system will automatically retrieve the current TP/SL mode configuration for the contract.|
 |tpSize |false |string |Take profit size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
 |slSize |false |string |Stop loss size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
-|tpLimitPrice |false |string |**(testnet)** The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
-|slLimitPrice |false |string |**(testnet)** The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
-|tpOrderType |false |string |**(testnet)** The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
-|slOrderType |false |string |**(testnet)** The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
+|tpLimitPrice |false |string |The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
+|slLimitPrice |false |string |The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
+|tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
+|slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
 |[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters
@@ -76,8 +76,13 @@ Content-Type: application/json
     "stopLoss": "0.2",
     "tpTriggerBy": "MarkPrice",
     "slTriggerBy": "IndexPrice",
+    "tpslMode": "Partial",
+    "tpOrderType": "Limit"
+    "slOrderType": "Limit"
     "tpSize": "50",
     "slSize": "50",
+    "tpLimitPrice": "0.49",
+    "slLimitPrice": "0.21",
     "positionIdx": 0
 }
 ```
@@ -99,8 +104,13 @@ print(session.set_trading_stop(
     stopLoss="0.2",
     tpTriggerBy="MarkPrice",
     slTriggerB="IndexPrice",
-    tpSize="5",
-    slSiz="50",
+    tpslMode="Partial",
+    tpOrderType="Limit"
+    slOrderType="Limit"
+    tpSize="50",
+    slSize="50",
+    tpLimitPrice="0.49",
+    slLimitPrice="0.21",
     positionIdx=0,
 ))
 ```

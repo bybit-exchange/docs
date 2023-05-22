@@ -65,9 +65,9 @@ GET `/v5/order/realtime`
 |> triggerPrice |string |Trigger price. If `stopOrderType`=_TrailingStop_, it is activate price. Otherwise, it is trigger price|
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
-|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
-|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
-|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
+|> tpslMode |string |TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl. Spot does not have this field, and Option returns always "" |
+|> tpLimitPrice |string |The limit order price when take profit price is triggered|
+|> slLimitPrice |string |The limit order price when stop loss price is triggered|
 |> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit |
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
@@ -92,9 +92,8 @@ GET `/v5/order/realtime`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/order/realtime?category=spot&openOnly=1&limit=1 HTTP/1.1
+GET /v5/order/realtime?symbol=ETHUSDT&category=linear&openOnly=0&limit=1  HTTP/1.1
 Host: api-testnet.bybit.com
-X-BAPI-SIGN-TYPE: 2
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1672219525810
@@ -113,8 +112,9 @@ session = HTTP(
     api_secret="XXXXX",
 )
 print(session.get_open_orders(
-    category="spot",
-    openOnly=1,
+    category="linear",
+    symbol="ETHUSDT",
+    openOnly=0,
     limit=1,
 ))
 ```
@@ -129,51 +129,55 @@ print(session.get_open_orders(
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "nextPageCursor": "1321052653536515584%3A1672217748287%2C1321052653536515584%3A1672217748287",
-        "category": "spot",
         "list": [
             {
+                "orderId": "fd4300ae-7847-404e-b947-b46980a4d140",
+                "orderLinkId": "test-000005",
+                "blockTradeId": "",
                 "symbol": "ETHUSDT",
-                "orderType": "Limit",
-                "orderLinkId": "1672217748277652",
-                "orderId": "1321052653536515584",
-                "cancelType": "UNKNOWN",
-                "avgPrice": "",
-                "stopOrderType": "tpslOrder",
-                "lastPriceOnCreated": "",
-                "orderStatus": "Cancelled",
-                "takeProfit": "",
-                "cumExecValue": "0",
-                "triggerDirection": 0,
-                "isLeverage": "0",
-                "rejectReason": "",
-                "price": "1000",
-                "orderIv": "",
-                "createdTime": "1672217748287",
-                "tpTriggerBy": "",
-                "positionIdx": 0,
-                "timeInForce": "GTC",
-                "leavesValue": "500",
-                "updatedTime": "1672217748287",
+                "price": "1600.00",
+                "qty": "0.10",
                 "side": "Buy",
-                "triggerPrice": "1500",
+                "isLeverage": "",
+                "positionIdx": 1,
+                "orderStatus": "New",
+                "cancelType": "UNKNOWN",
+                "rejectReason": "EC_NoError",
+                "avgPrice": "0",
+                "leavesQty": "0.10",
+                "leavesValue": "160",
+                "cumExecQty": "0.00",
+                "cumExecValue": "0",
                 "cumExecFee": "0",
-                "leavesQty": "0",
-                "slTriggerBy": "",
-                "closeOnTrigger": false,
-                "cumExecQty": "0",
+                "timeInForce": "GTC",
+                "orderType": "Limit",
+                "stopOrderType": "UNKNOWN",
+                "orderIv": "",
+                "triggerPrice": "0.00",
+                "takeProfit": "2500.00",
+                "stopLoss": "1500.00",
+                "tpTriggerBy": "LastPrice",
+                "slTriggerBy": "LastPrice",
+                "triggerDirection": 0,
+                "triggerBy": "UNKNOWN",
+                "lastPriceOnCreated": "",
                 "reduceOnly": false,
-                "qty": "0.5",
-                "stopLoss": "",
-                "triggerBy": "1192.5",
-                "placeType": "",
+                "closeOnTrigger": false,
+                "smpType": "None",
                 "smpGroup": 0,
                 "smpOrderId": "",
-                "smpType": "None"
+                "tpslMode": "Full",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "placeType": "",
+                "createdTime": "1684738540559",
+                "updatedTime": "1684738540561"
             }
-        ]
+        ],
+        "nextPageCursor": "page_args%3Dfd4300ae-7847-404e-b947-b46980a4d140%26symbol%3D6%26",
+        "category": "linear"
     },
     "retExtInfo": {},
-    "time": 1672219526294
+    "time": 1684765770483
 }
 ```
