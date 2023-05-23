@@ -57,9 +57,9 @@ GET `/contract/v3/private/order/list`
 |> leavesQty |string |The remaining qty not executed |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
-|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
-|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
-|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
+|> tpslMode |string |TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
+|> tpLimitPrice |string |The limit order price when take profit price is triggered|
+|> slLimitPrice |string |The limit order price when stop loss price is triggered|
 |> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit|
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss|
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
@@ -72,7 +72,7 @@ GET `/contract/v3/private/order/list`
 ### Request Example
 
 ```http
-GET /contract/v3/private/order/list?orderStatus=Cancelled&limit=1 HTTP/1.1
+GET /contract/v3/private/order/list?symbol=BTCUSDT&orderId=806f5fc6-d487-46d1-9a57-4b4964126c90 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -90,25 +90,25 @@ cdn-request-id: test-10
     "result": {
         "list": [
             {
-                "symbol": "BNBUSDT",
+                "symbol": "BTCUSDT",
                 "side": "Buy",
                 "orderType": "Limit",
-                "price": "150.00",
-                "qty": "10.00",
+                "price": "26864.40",
+                "qty": "0.003",
                 "reduceOnly": false,
-                "timeInForce": "GoodTillCancel",
+                "timeInForce": "PostOnly",
                 "orderStatus": "Cancelled",
-                "leavesQty": "0.00",
+                "leavesQty": "0.000",
                 "leavesValue": "0",
-                "cumExecQty": "0.00",
+                "cumExecQty": "0.000",
                 "cumExecValue": "0",
                 "cumExecFee": "0",
                 "lastPriceOnCreated": "0.00",
                 "rejectReason": "EC_PerCancelRequest",
-                "orderLinkId": "",
-                "createdTime": "1673144925398",
-                "updatedTime": "1673419917797",
-                "orderId": "afe0b943-99f2-4a58-8578-3ec0f29973f1",
+                "orderLinkId": "YLxaWKMiHU",
+                "createdTime": "1684810640078",
+                "updatedTime": "1684810770380",
+                "orderId": "806f5fc6-d487-46d1-9a57-4b4964126c90",
                 "stopOrderType": "UNKNOWN",
                 "takeProfit": "0.00",
                 "stopLoss": "0.00",
@@ -117,20 +117,23 @@ cdn-request-id: test-10
                 "triggerPrice": "0.00",
                 "closeOnTrigger": false,
                 "triggerDirection": 0,
-                "positionIdx": 0,
+                "positionIdx": 1,
                 "cancelType": "CancelByUser",
                 "iv": "",
                 "triggerBy": "UNKNOWN",
                 "blockTradeId": "",
+                "tpslMode": "Full",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "smpType": "None",
                 "smpGroup": 0,
-                "smpOrderId": "",
-                "smpType": "None"
+                "smpOrderId": ""
             }
         ],
-        "nextPageCursor": "eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiJleUpOSWpwN0luQnJJanA3SWtJaU9pSktSMFp0V2xSQ2FVOVVVWHBNVkdzMVdtcEpkRTVIUlRGUFF6QTBUbFJqTkV4VVRteFpla0p0VFdwck5VNTZUbTFOVVQwOUluMHNJbDkxYjNOZklqcDdJa0lpT2lKQk9EWlVTa0ZGU0NKOUxDSmZjMnRmSWpwN0lrSWlPaUpHZW1jd1kyVm5aa0l2WkdoYWJWVjNXV3ByTUUxNU1EVlBWMWw1VEZSU2FFNVVaM1JQUkZVelQwTXdlbHBYVFhkYWFrazFUMVJqZWxwcVJUMGlmWDE5In0=",
+        "nextPageCursor": "eyJza2lwX2xvY2FsX3N5bWJvbCI6ZmFsc2UsInBhZ2VfdG9rZW4iOiIzOTQ3NCJ9",
         "category": ""
     },
     "retExtInfo": {},
-    "time": 1673420680735
+    "time": 1684810802126
 }
 ```

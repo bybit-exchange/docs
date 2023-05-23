@@ -58,9 +58,9 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> leavesQty |string |The remaining quantity waiting to be traded |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
-|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
-|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
-|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
+|> tpslMode |string |TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
+|> tpLimitPrice |string |The limit order price when take profit price is triggered|
+|> slLimitPrice |string |The limit order price when stop loss price is triggered|
 |> tpTriggerBy |string |Trigger type of take profit |
 |> slTriggerBy |string |Trigger type of stop loss |
 |> reduceOnly |boolean |Reduce only. `true` means reduce position size |
@@ -72,7 +72,7 @@ GET `/contract/v3/private/order/unfilled-orders`
 ### Request Example
 
 ```http
-GET /contract/v3/private/order/unfilled-orders?symbol=SOLUSDT HTTP/1.1
+GET /contract/v3/private/order/unfilled-orders?symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -87,46 +87,49 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "list": [
-        {
-            "symbol": "SOLUSDT",
-            "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
-            "side": "Sell",
-            "orderType": "Limit",
-            "stopOrderType": "UNKNOWN",
-            "price": "14.500",
-            "qty": "50.0",
-            "timeInForce": "GoodTillCancel",
-            "orderStatus": "New",
-            "triggerPrice": "0.000",
-            "orderLinkId": "",
-            "createdTime": "1670554867548",
-            "updatedTime": "1670554904611",
-            "takeProfit": "0.000",
-            "stopLoss": "0.000",
-            "tpTriggerBy": "UNKNOWN",
-            "slTriggerBy": "UNKNOWN",
-            "triggerBy": "UNKNOWN",
-            "reduceOnly": false,
-            "leavesQty": "50.0",
-            "leavesValue": "725",
-            "cumExecQty": "0.0",
-            "cumExecValue": "0",
-            "cumExecFee": "0",
-            "triggerDirection": 0,
-            "cancelType": "UNKNOWN",
-            "lastPriceOnCreated": "",
-            "iv": "",
-            "closeOnTrigger": false,
-            "smpGroup": 0,
-            "smpOrderId": "",
-            "smpType": "None"
-        }
-    ],
-    "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",
-    "category": ""
-},
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "orderId": "806f5fc6-d487-46d1-9a57-4b4964126c90",
+                "side": "Buy",
+                "orderType": "Limit",
+                "stopOrderType": "UNKNOWN",
+                "price": "26864.40",
+                "qty": "0.003",
+                "timeInForce": "PostOnly",
+                "orderStatus": "New",
+                "triggerPrice": "0.00",
+                "orderLinkId": "YLxaWKMiHU",
+                "createdTime": "1684810640078",
+                "updatedTime": "1684810640080",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "tpTriggerBy": "UNKNOWN",
+                "slTriggerBy": "UNKNOWN",
+                "triggerBy": "UNKNOWN",
+                "reduceOnly": false,
+                "leavesQty": "0.003",
+                "leavesValue": "80.5932",
+                "cumExecQty": "0.000",
+                "cumExecValue": "0",
+                "cumExecFee": "0",
+                "triggerDirection": 0,
+                "cancelType": "UNKNOWN",
+                "lastPriceOnCreated": "",
+                "iv": "",
+                "closeOnTrigger": false,
+                "tpslMode": "Full",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "smpType": "None",
+                "smpGroup": 0,
+                "smpOrderId": ""
+            }
+        ],
+        "nextPageCursor": "",
+        "category": ""
+    },
     "retExtInfo": {},
-    "time": 1670564327905
+    "time": 1684810643363
 }
 ```
