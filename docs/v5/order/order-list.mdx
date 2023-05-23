@@ -67,9 +67,9 @@ GET `/v5/order/history`
 |> triggerPrice |string |Trigger price. If `stopOrderType`=_TrailingStop_, it is activate price. Otherwise, it is trigger price |
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
-|> tpslMode |string |**(testnet)** TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl|
-|> tpLimitPrice |string |**(testnet)** The limit order price when take profit price is triggered|
-|> slLimitPrice |string |**(testnet)** The limit order price when stop loss price is triggered|
+|> tpslMode |string |TP/SL mode, `Full`: entire position for TP/SL. `Partial`: partial position tp/sl. Spot does not have this field, and Option returns always "" |
+|> tpLimitPrice |string |The limit order price when take profit price is triggered|
+|> slLimitPrice |string |The limit order price when stop loss price is triggered|
 |> [tpTriggerBy](../enum#triggerby) |string |The price type to trigger take profit |
 |> [slTriggerBy](../enum#triggerby) |string |The price type to trigger stop loss |
 |> triggerDirection |integer |Trigger direction. `1`: rise, `2`: fall |
@@ -129,52 +129,55 @@ print(session.get_order_history(
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "nextPageCursor": "03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387%2C03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387",
-        "category": "linear",
         "list": [
             {
-                "symbol": "BTCUSDT",
-                "orderType": "Limit",
-                "orderLinkId": "test-001",
-                "orderId": "03234de9-1332-41eb-b805-4a9f42c136a3",
-                "cancelType": "CancelByUser",
-                "avgPrice": "0",
-                "stopOrderType": "UNKNOWN",
-                "lastPriceOnCreated": "16656.5",
-                "orderStatus": "Cancelled",
-                "takeProfit": "",
-                "cumExecValue": "0",
-                "triggerDirection": 0,
+                "orderId": "14bad3a1-6454-43d8-bcf2-5345896cf74d",
+                "orderLinkId": "YLxaWKMiHU",
                 "blockTradeId": "",
-                "rejectReason": "EC_PerCancelRequest",
+                "symbol": "BTCUSDT",
+                "price": "26864.40",
+                "qty": "0.003",
+                "side": "Buy",
                 "isLeverage": "",
-                "price": "18000",
-                "orderIv": "",
-                "createdTime": "1672220109387",
-                "tpTriggerBy": "UNKNOWN",
-                "positionIdx": 0,
-                "timeInForce": "GTC",
+                "positionIdx": 1,
+                "orderStatus": "Cancelled",
+                "cancelType": "UNKNOWN",
+                "rejectReason": "EC_PostOnlyWillTakeLiquidity",
+                "avgPrice": "0",
+                "leavesQty": "0.000",
                 "leavesValue": "0",
-                "updatedTime": "1672220114123",
-                "side": "Sell",
-                "triggerPrice": "",
+                "cumExecQty": "0.000",
+                "cumExecValue": "0",
                 "cumExecFee": "0",
+                "timeInForce": "PostOnly",
+                "orderType": "Limit",
+                "stopOrderType": "UNKNOWN",
+                "orderIv": "",
+                "triggerPrice": "0.00",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "tpTriggerBy": "UNKNOWN",
                 "slTriggerBy": "UNKNOWN",
-                "leavesQty": "0",
-                "closeOnTrigger": false,
-                "cumExecQty": "0",
-                "reduceOnly": false,
-                "qty": "0.1",
-                "stopLoss": "",
+                "triggerDirection": 0,
                 "triggerBy": "UNKNOWN",
-                "placeType": "",
+                "lastPriceOnCreated": "0.00",
+                "reduceOnly": false,
+                "closeOnTrigger": false,
+                "smpType": "None",
                 "smpGroup": 0,
                 "smpOrderId": "",
-                "smpType": "None"
+                "tpslMode": "",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "placeType": "",
+                "createdTime": "1684476068369",
+                "updatedTime": "1684476068372"
             }
-        ]
+        ],
+        "nextPageCursor": "page_token%3D39380%26",
+        "category": "linear"
     },
     "retExtInfo": {},
-    "time": 1672221263862
+    "time": 1684766282976
 }
 ```

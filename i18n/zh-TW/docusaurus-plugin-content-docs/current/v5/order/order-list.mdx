@@ -62,9 +62,9 @@ GET `/v5/order/history`
 |> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格 |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
-|> tpslMode |string |**(僅testnet)** 止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
-|> tpLimitPrice |string |**(僅testnet)** 觸發止盈後轉換為限價單的價格 |
-|> slLimitPrice |string |**(僅testnet)** 觸發止損後轉換為限價單的價格 |
+|> tpslMode |string |止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損. 現貨不返回該字段, 期權總是返回""|
+|> tpLimitPrice |string |觸發止盈後轉換為限價單的價格 |
+|> slLimitPrice |string |觸發止損後轉換為限價單的價格 |
 |> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型 |
 |> [slTriggerBy](../enum#triggerby) |string |觸發止損的價格類型 |
 |> triggerDirection |integer |觸發方向. `1`: 上漲, `2`: 下跌 |
@@ -124,52 +124,55 @@ print(session.get_order_history(
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "nextPageCursor": "03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387%2C03234de9-1332-41eb-b805-4a9f42c136a3%3A1672220109387",
-        "category": "linear",
         "list": [
             {
-                "symbol": "BTCUSDT",
-                "orderType": "Limit",
-                "orderLinkId": "test-001",
-                "orderId": "03234de9-1332-41eb-b805-4a9f42c136a3",
-                "cancelType": "CancelByUser",
-                "avgPrice": "0",
-                "stopOrderType": "UNKNOWN",
-                "lastPriceOnCreated": "16656.5",
-                "orderStatus": "Cancelled",
-                "takeProfit": "",
-                "cumExecValue": "0",
-                "triggerDirection": 0,
+                "orderId": "14bad3a1-6454-43d8-bcf2-5345896cf74d",
+                "orderLinkId": "YLxaWKMiHU",
                 "blockTradeId": "",
-                "rejectReason": "EC_PerCancelRequest",
+                "symbol": "BTCUSDT",
+                "price": "26864.40",
+                "qty": "0.003",
+                "side": "Buy",
                 "isLeverage": "",
-                "price": "18000",
-                "orderIv": "",
-                "createdTime": "1672220109387",
-                "tpTriggerBy": "UNKNOWN",
-                "positionIdx": 0,
-                "timeInForce": "GTC",
+                "positionIdx": 1,
+                "orderStatus": "Cancelled",
+                "cancelType": "UNKNOWN",
+                "rejectReason": "EC_PostOnlyWillTakeLiquidity",
+                "avgPrice": "0",
+                "leavesQty": "0.000",
                 "leavesValue": "0",
-                "updatedTime": "1672220114123",
-                "side": "Sell",
-                "triggerPrice": "",
+                "cumExecQty": "0.000",
+                "cumExecValue": "0",
                 "cumExecFee": "0",
+                "timeInForce": "PostOnly",
+                "orderType": "Limit",
+                "stopOrderType": "UNKNOWN",
+                "orderIv": "",
+                "triggerPrice": "0.00",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "tpTriggerBy": "UNKNOWN",
                 "slTriggerBy": "UNKNOWN",
-                "leavesQty": "0",
-                "closeOnTrigger": false,
-                "cumExecQty": "0",
-                "reduceOnly": false,
-                "qty": "0.1",
-                "stopLoss": "",
+                "triggerDirection": 0,
                 "triggerBy": "UNKNOWN",
-                "placeType": "",
+                "lastPriceOnCreated": "0.00",
+                "reduceOnly": false,
+                "closeOnTrigger": false,
+                "smpType": "None",
                 "smpGroup": 0,
                 "smpOrderId": "",
-                "smpType": "None"
+                "tpslMode": "",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "placeType": "",
+                "createdTime": "1684476068369",
+                "updatedTime": "1684476068372"
             }
-        ]
+        ],
+        "nextPageCursor": "page_token%3D39380%26",
+        "category": "linear"
     },
     "retExtInfo": {},
-    "time": 1672221263862
+    "time": 1684766282976
 }
 ```

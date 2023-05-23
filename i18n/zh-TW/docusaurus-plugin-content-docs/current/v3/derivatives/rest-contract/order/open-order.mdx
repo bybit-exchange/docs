@@ -55,9 +55,9 @@ GET `/contract/v3/private/order/unfilled-orders`
 |> leavesQty |string |訂單剩餘未成交的數量 |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
-|> tpslMode |string |**(僅testnet)** 止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
-|> tpLimitPrice |string |**(僅testnet)** 觸發止盈後轉換為限價單的價格 |
-|> slLimitPrice |string |**(僅testnet)** 觸發止損後轉換為限價單的價格 |
+|> tpslMode |string |止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
+|> tpLimitPrice |string |觸發止盈後轉換為限價單的價格 |
+|> slLimitPrice |string |觸發止損後轉換為限價單的價格 |
 |> tpTriggerBy |string |觸發止盈的價格類型 |
 |> slTriggerBy |string |觸發止損的價格類型 |
 |> reduceOnly |boolean |只減倉. `true`表明這是只減倉單|
@@ -71,7 +71,7 @@ GET `/contract/v3/private/order/unfilled-orders`
 ### 請求示例
 
 ```http
-GET /contract/v3/private/order/unfilled-orders?symbol=SOLUSDT HTTP/1.1
+GET /contract/v3/private/order/unfilled-orders?symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -86,46 +86,49 @@ X-BAPI-RECV-WINDOW: 5000
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "list": [
-        {
-            "symbol": "SOLUSDT",
-            "orderId": "5ba57394-0ff0-4cb8-8000-59085d2c3aba",
-            "side": "Sell",
-            "orderType": "Limit",
-            "stopOrderType": "UNKNOWN",
-            "price": "14.500",
-            "qty": "50.0",
-            "timeInForce": "GoodTillCancel",
-            "orderStatus": "New",
-            "triggerPrice": "0.000",
-            "orderLinkId": "",
-            "createdTime": "1670554867548",
-            "updatedTime": "1670554904611",
-            "takeProfit": "0.000",
-            "stopLoss": "0.000",
-            "tpTriggerBy": "UNKNOWN",
-            "slTriggerBy": "UNKNOWN",
-            "triggerBy": "UNKNOWN",
-            "reduceOnly": false,
-            "leavesQty": "50.0",
-            "leavesValue": "725",
-            "cumExecQty": "0.0",
-            "cumExecValue": "0",
-            "cumExecFee": "0",
-            "triggerDirection": 0,
-            "cancelType": "UNKNOWN",
-            "lastPriceOnCreated": "",
-            "iv": "",
-            "closeOnTrigger": false,
-            "smpGroup": 0,
-            "smpOrderId": "",
-            "smpType": "None"
-        }
-    ],
-    "nextPageCursor": "OG9ZSThoajFOVDU2SDZxY1h6SmowM1FqTTZ4c09HVXJuVUtYMlcwNldlZEJ6VFlaRndUcFBXSWpKVExtNFlzZTFQT0VZNXI2bHpDOFhzTHVTZjJwamc9PQ==",
-    "category": ""
-},
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "orderId": "806f5fc6-d487-46d1-9a57-4b4964126c90",
+                "side": "Buy",
+                "orderType": "Limit",
+                "stopOrderType": "UNKNOWN",
+                "price": "26864.40",
+                "qty": "0.003",
+                "timeInForce": "PostOnly",
+                "orderStatus": "New",
+                "triggerPrice": "0.00",
+                "orderLinkId": "YLxaWKMiHU",
+                "createdTime": "1684810640078",
+                "updatedTime": "1684810640080",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "tpTriggerBy": "UNKNOWN",
+                "slTriggerBy": "UNKNOWN",
+                "triggerBy": "UNKNOWN",
+                "reduceOnly": false,
+                "leavesQty": "0.003",
+                "leavesValue": "80.5932",
+                "cumExecQty": "0.000",
+                "cumExecValue": "0",
+                "cumExecFee": "0",
+                "triggerDirection": 0,
+                "cancelType": "UNKNOWN",
+                "lastPriceOnCreated": "",
+                "iv": "",
+                "closeOnTrigger": false,
+                "tpslMode": "Full",
+                "tpLimitPrice": "",
+                "slLimitPrice": "",
+                "smpType": "None",
+                "smpGroup": 0,
+                "smpOrderId": ""
+            }
+        ],
+        "nextPageCursor": "",
+        "category": ""
+    },
     "retExtInfo": {},
-    "time": 1670564327905
+    "time": 1684810643363
 }
 ```

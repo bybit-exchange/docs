@@ -43,7 +43,7 @@ GET `/v5/position/list`
 |> bustPrice | string  |Bankruptcy price. _Note: Unified mode returns `""`, no position bankruptcy price (exclude inverse trade under UTA)_|
 |> positionIM | string  |Initial margin. For portfolio margin mode, it returns "" |
 |> positionMM | string  |Maintenance margin. For portfolio margin mode, it returns "" |
-|> tpslMode | string  |Take profit/stop loss mode. `Full`,`Partial`|
+|> tpslMode | string  |Depreciated, meaningless here, always "Full". Spot does not return this field. Option returns ""|
 |> takeProfit | string  |Take profit price|
 |> stopLoss | string  |Stop loss price|
 |> trailingStop | string  |Trailing stop (The distance from market price)|
@@ -64,7 +64,7 @@ GET `/v5/position/list`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/position/list?category=linear&symbol=XRPUSDT HTTP/1.1
+GET /v5/position/list?category=inverse&symbol=BTCUSD HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -83,8 +83,8 @@ session = HTTP(
     api_secret="XXXXX",
 )
 print(session.get_positions(
-    category="linear",
-    symbol="XRPUSDT",
+    category="inverse",
+    symbol="BTCUSD",
 ))
 ```
 
@@ -98,39 +98,41 @@ print(session.get_positions(
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "nextPageCursor": "updateAt%3D1672279322668",
-        "category": "linear",
         "list": [
             {
-                "symbol": "XRPUSDT",
-                "leverage": "10",
-                "avgPrice": "0.3615",
-                "liqPrice": "0.0001",
-                "riskLimitValue": "200000",
-                "takeProfit": "",
-                "positionValue": "36.15",
-                "tpslMode": "Full",
-                "riskId": 41,
-                "trailingStop": "0",
-                "unrealisedPnl": "-1.83",
-                "markPrice": "0.3432",
-                "cumRealisedPnl": "0.48805876",
-                "positionMM": "0.381021",
-                "createdTime": "1672121182216",
                 "positionIdx": 0,
-                "positionIM": "3.634521",
-                "updatedTime": "1672279322668",
-                "side": "Buy",
-                "bustPrice": "",
-                "size": "100",
-                "positionStatus": "Normal",
-                "stopLoss": "",
+                "riskId": 1,
+                "riskLimitValue": "150",
+                "symbol": "BTCUSD",
+                "side": "Sell",
+                "size": "299",
+                "avgPrice": "30004.5006751",
+                "positionValue": "0.00996518",
                 "tradeMode": 0,
-                "adlRankIndicator": 2
+                "positionStatus": "Normal",
+                "autoAddMargin": 1,
+                "adlRankIndicator": 2,
+                "leverage": "10",
+                "positionBalance": "0.00100189",
+                "markPrice": "26926.00",
+                "liqPrice": "999999.00",
+                "bustPrice": "999999.00",
+                "positionMM": "0.0000015",
+                "positionIM": "0.00009965",
+                "tpslMode": "Full",
+                "takeProfit": "0.00",
+                "stopLoss": "0.00",
+                "trailingStop": "0.00",
+                "unrealisedPnl": "0.00113932",
+                "cumRealisedPnl": "-0.00121275",
+                "createdTime": "1676538056258",
+                "updatedTime": "1684742400015"
             }
-        ]
+        ],
+        "nextPageCursor": "",
+        "category": "inverse"
     },
     "retExtInfo": {},
-    "time": 1672280219169
+    "time": 1684767531904
 }
 ```
