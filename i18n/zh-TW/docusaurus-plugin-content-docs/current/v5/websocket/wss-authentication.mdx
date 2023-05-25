@@ -105,9 +105,10 @@ ws.send(
 * 不要在5分鐘內構建超過500個連接。
 
 ## 公有頻道訂閱參數限制
+不管是期貨、現貨、期權, 對於單個連接, args裡的數組元素長度總和不能超過21,000個字符
 * 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求，但單個公有連接沒有args訂閱限制
 * 期權單個訂閱連接，至多訂閱2000個args
-* 目前期貨沒有args限制
+* 期貨單個訂閱連接args限制
 
 ## 如何發送心跳
 
@@ -116,7 +117,7 @@ ws.send(
 ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 ```
 
-> 接收到pong的響應示例
+> 公共頻道接收到pong的響應示例
 
 <Tabs>
 <TabItem value="spot" label="現貨">
@@ -159,6 +160,19 @@ ws.send(JSON.stringify({"req_id": "100001", "op": "ping"}));
 
 </TabItem>
 </Tabs>
+
+> 私有頻道接收到pong的響應示例
+
+```json
+{
+    "req_id": "test",
+    "op": "pong",
+    "args": [
+        "1675418560633"
+    ],
+    "conn_id": "cfcb4ocsvfriu23r3er0-1b"
+}
+```
 
 :::caution
 為了維持連接，我們推薦您每<b>20</b>秒發送一次心跳。
