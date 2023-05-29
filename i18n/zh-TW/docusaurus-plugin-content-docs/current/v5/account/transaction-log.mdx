@@ -34,12 +34,12 @@ GET `/v5/account/transaction-log`
 |> size |string |倉位|
 |> currency |string |USDC、USDT、BTC、ETH|
 |> tradePrice |string |交易價格|
-|> funding	|string	|資金費用|
-|> fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示賺取|
+|> funding	|string	|資金費用. 正數表示用戶收取xx資金費，負數表示用戶支出xx資金費|
+|> fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示返佣|
 |> cashFlow |string |現金流|
 |> change |string |變更|
 |> cashBalance	|string	|餘額（當前幣種）|
-|> feeRate	|string	|手續費率|
+|> feeRate	|string	|<ul><li>對於type=`TRADE`, 則表示交易手續費率</li><li>對於type=`SETTLEMENT`, 則表示資金費率. 當side=Buy, feeRate=市場結算費率; 當side=Sell, feeRate=-市場結算費率</li></ul> |
 |> bonusChange	|string	|體驗金的變化|
 |> tradeId	|string |交易id|
 |> orderId	|string	|訂單id|

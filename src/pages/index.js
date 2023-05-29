@@ -17,7 +17,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/v5/upgrade-guide">
+            to="/v5/intro">
             Introduction to the Bybit V5 APIs – 5min ⏱️
           </Link>
         </div>
