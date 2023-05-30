@@ -9,6 +9,7 @@ This API is used for affiliate to get their users information
 :::tip
 * Use master UID only
 * The api key can only have "Affiliate" permission
+* The transaction volume and deposit amount are the total amount of the user done on Bybit, and have nothing to do with commission settlement. Any transaction volume data related to commission settlement is subject to the Affiliate Portal.
 :::
 
 ### HTTP Request
@@ -27,13 +28,13 @@ GET `/v5/customer/info`
 |vipLevel |string |VIP level |
 |takerVol30Day |string |Taker volume in last 30 days |
 |makerVol30Day |string |Maker volume in last 30 days |
-|depositAmount |string |Deposit amount in last 30 days |
-|takerVolTotal |string |Total taker volume in the past year |
-|makerVolTotal |string |Total maker volume in the past year |
-|tradeVolTotal |string |Total trading volume in the past year |
-|depositAmountTotal |string |Total deposit amount in the past year |
-|totalWalletBalance |string |Total wallet balance |
-|depositUpdateTime |string |The last date time of deposit |
+|depositAmount30Day |string |Deposit amount in last 30 days |
+|takerVol365Day |string |Total taker volume in the past year |
+|makerVol365Day |string |Total maker volume in the past year |
+|tradeVol365Day |string |Total trading volume in the past year |
+|depositAmount365Day |string |Total deposit amount in the past year |
+|totalWalletBalance |string |Wallet balance range <ul><li>`1`: less than 100 USDT value</li><li>`2`: [100, 250) USDT value</li><li>`3`: [250, 500) USDT value</li><li>greater than 500 USDT value</li></ul> |
+|depositUpdateTime |string |The update time of deposit data |
 
 ### Request Example
 
