@@ -23,16 +23,16 @@ GET `/v5/account/wallet-balance`
 |:----- |:-----|----- |
 |list |array |Object |
 |> accountType |string |帳戶類型 |
-|> accountLTV |string |帳戶LTV: account total borrowed size / (account total equity + account total borrowed size). 非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> accountIMRate |string |帳戶初始保證金率: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> accountMMRate |string |帳戶維持保證金率: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
+|> accountLTV |string |帳戶LTV: account total borrowed size / (account total equity + account total borrowed size). 非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> accountIMRate |string |帳戶初始保證金率: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> accountMMRate |string |帳戶維持保證金率: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
 |> totalEquity |string |賬戶維度換算成usd的資產淨值：Account Margin Balance Base Coin + Account Option Value Base Coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalWalletBalance |string |賬戶維度換算成usd的產錢包餘額：∑ Asset Wallet Balance By USD value of each asset。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額：totalWalletBalance + totalPerpUPL。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額：RM：totalMarginBalance - totalInitialMargin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
+|> totalWalletBalance |string |賬戶維度換算成usd的產錢包餘額：∑ Asset Wallet Balance By USD value of each asset。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額：totalWalletBalance + totalPerpUPL。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額：RM：totalMarginBalance - totalInitialMargin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
 |> totalPerpUPL |string |賬戶維度換算成usd的永續浮動盈虧：∑ Each perp upl by base coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金：∑ Asset Total Initial Margin Base Coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑ Asset Total Maintenance Margin Base Coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
+|> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金：∑ Asset Total Initial Margin Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑ Asset Total Maintenance Margin Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
 |> coin |arrays |幣種列表|
 |>> coin |string |幣種名稱，例如 BTC，ETH，USDT，USDC|
 |>> equity |string |當前幣種的資產淨值|

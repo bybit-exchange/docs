@@ -20,18 +20,18 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> side |string |Position side. `Buy`,`Sell` |
 |> size |string |Position size |
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
-|> tradeMode |integer |Trade mode. `0`: cross margin, `1`: isolated margin. Always `0` for unified account trade(spot/linear/option) |
+|> tradeMode | integer |Trade mode <ul><li>Normal & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
 |> positionValue |string |Position value |
 |> riskId |integer |Risk limit ID. _Note: for portfolio margin mode, it returns 0, which the risk limit value is invalid_|
 |> riskLimitValue |string |Risk limit value corresponding to riskId. _Note: for portfolio margin mode, it returns "", which the risk limit value is invalid_|
 |> entryPrice |string |Entry price |
 |> markPrice |string |Mark price |
 |> leverage |string |Leverage. _Note: for portfolio margin mode, it returns "", which the leverage value is invalid_|
-|> positionBalance |string |Position margin. _Unified trade(spot/linear/options) does not have this field_ |
-|> autoAddMargin |integer |Whether to add margin automatically. `0`: false, `1`: true.<br/>_Unified trade(spot/linear/options) does not have this field_ |
+|> positionBalance |string |Position margin. For portfolio margin mode, it returns ""|
+|> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. For UTA, it is meaningful only when UTA enables `ISOLATED_MARGIN` |
 |> positionMM |string |Position maintenance margin. _Note: for portfolio margin mode, it returns ""_|
 |> positionIM |string |Position initial margin. _Note: for portfolio margin mode, it returns ""_|
-|> liqPrice |string |Est.liquidation price. `""` for Unified trade(spot/linear/options) |
+|> liqPrice | string  |Position liquidation price <ul><li>Normal account & inverse under UTA: it is the real price for isolated and cross positions.</li><li>UTA: it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account)</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
 |> bustPrice |string |Est.bankruptcy price. `""` for Unified trade(spot/linear/options) |
 |> tpslMode |string |Depreciated, meaningless here, always "Full". Spot does not return this field. Option returns "" |
 |> takeProfit |string |Take profit price |

@@ -3,7 +3,12 @@ title: 設置保證金模式
 sidebar_label: 設置保證金模式
 sidebar_position: 10
 ---
-用戶如果不設置，默認按常規保證金。該模式對 USDT永续, USDC永续和期权有效。
+用戶如果不設置，默認按全倉保證金
+
+:::info
+* UTA帳戶支持切換三種帳戶維度的保證金模式, 對USDT永續, USDC永續, USDC交割以及期權有效 (其中, 期權不支持逐倉保證金模式)
+* 普通帳戶支持切換全倉保證金模式和組合保證金模式, 但僅作用於USDC永續和期權
+:::
 
 ### HTTP 請求
 POST `/v5/account/set-margin-mode`
@@ -11,7 +16,7 @@ POST `/v5/account/set-margin-mode`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|setMarginMode |**true** |string |`REGULAR_MARGIN`（常規保證金模式）`PORTFOLIO_MARGIN`（組合保證金模式）默認常規，傳常規則返回設置成功|
+|setMarginMode |**true** |string |`ISOLATED_MARGIN`(逐倉保證金模式), `REGULAR_MARGIN`（全倉保證金模式）`PORTFOLIO_MARGIN`（組合保證金模式）默認常規，傳常規則返回設置成功|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
