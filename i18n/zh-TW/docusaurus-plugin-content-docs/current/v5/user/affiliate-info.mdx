@@ -18,23 +18,24 @@ GET `/v5/customer/info`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|UID |**true** |string |代理的母帳戶uid|
-|coin |false |string |幣種名稱. 若不傳, 則默認返回USDT數據|
+|UID |**true** |string |被代理用戶的母帳戶uid|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |uid |string |帳戶uid|
 |vipLevel |string |VIP等級 |
-|takerVol30Day |string |過去30天的吃單交易量 |
-|makerVol30Day |string |過去30天的掛單交易量 |
-|depositAmount30Day |string |過去30天的入金金額 |
-|takerVol365Day |string |過去一年的吃單交易量 |
-|makerVol365Day |string |過去一年的掛單交易量 |
-|tradeVol365Day |string |過去一年的總交易量 |
-|depositAmount365Day |string |過去一年的總入金金額 |
-|totalWalletBalance |string |資產餘額區間<ul><li>`1`: 少於100 USDT的價值</li><li>`2`: 100(含) ~ 250 USDT的價值</li><li>`3`: 250(含) ~ 500 USDT的價值</li><li>大於 500USDT的價值</li></ul>  |
-|depositUpdateTime |string |入金數據更新時間 |
+|takerVol30Day |string |過去30天的吃單交易量. 單位: USDT |
+|makerVol30Day |string |過去30天的掛單交易量. 單位: USDT |
+|tradeVol30Day |string |過去30天的總交易量. 單位: USDT |
+|depositAmount30Day |string |過去30天的入金金額. 單位: USDT |
+|takerVol365Day |string |過去一年的吃單交易量. 單位: USDT |
+|makerVol365Day |string |過去一年的掛單交易量. 單位: USDT |
+|tradeVol365Day |string |過去一年的總交易量. 單位: USDT |
+|depositAmount365Day |string |過去一年的總入金金額. 單位: USDT |
+|totalWalletBalance |string |資產餘額區間<ul><li>`1`: 少於100 USDT的價值</li><li>`2`: 100(含) ~ 250 USDT的價值</li><li>`3`: 250(含) ~ 500 USDT的價值</li><li>`4`: 大於 500USDT的價值</li></ul>  |
+|depositUpdateTime |string |入金數據更新時間. UTC時間 |
+|volUpdateTime |string |交易量數據更新日期 |
 
 ### 請求示例
 
@@ -42,7 +43,13 @@ GET `/v5/customer/info`
 <TabItem value="http" label="HTTP">
 
 ```http
-
+GET /v5/user/aff-customer-info?uid=1513500 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: uQ61dcX0lSe7ygD2EA
+X-BAPI-TIMESTAMP: 1685596324209
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: xxxxxx
+Content-Type: application/json
 ```
 
 </TabItem>
@@ -58,5 +65,25 @@ GET `/v5/customer/info`
 ### 響應示例
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "uid": "1513500",
+        "takerVol30Day": "10",
+        "makerVol30Day": "20",
+        "tradeVol30Day": "30",
+        "depositAmount30Day": "90",
+        "takerVol365Day": "100",
+        "makerVol365Day": "500",
+        "tradeVol365Day": "600",
+        "depositAmount365Day": "1300",
+        "totalWalletBalance": "4",
+        "depositUpdateTime": "2023-06-01 05:12:04",
+        "vipLevel": "99",
+        "volUpdateTime": "2023-05-31"
+    },
+    "retExtInfo": {},
+    "time": 1685596324508
+}
 ```

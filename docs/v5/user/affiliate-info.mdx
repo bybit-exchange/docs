@@ -19,22 +19,23 @@ GET `/v5/customer/info`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |UID |**true** |string |The master account uid of affiliate|
-|coin |false |string |Coin name. If not passed, "USDT" by default|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |uid |string |uid|
 |vipLevel |string |VIP level |
-|takerVol30Day |string |Taker volume in last 30 days |
-|makerVol30Day |string |Maker volume in last 30 days |
-|depositAmount30Day |string |Deposit amount in last 30 days |
-|takerVol365Day |string |Total taker volume in the past year |
-|makerVol365Day |string |Total maker volume in the past year |
-|tradeVol365Day |string |Total trading volume in the past year |
-|depositAmount365Day |string |Total deposit amount in the past year |
-|totalWalletBalance |string |Wallet balance range <ul><li>`1`: less than 100 USDT value</li><li>`2`: [100, 250) USDT value</li><li>`3`: [250, 500) USDT value</li><li>greater than 500 USDT value</li></ul> |
-|depositUpdateTime |string |The update time of deposit data |
+|takerVol30Day |string |Taker volume in last 30 days (USDT) |
+|makerVol30Day |string |Maker volume in last 30 days (USDT)|
+|tradeVol30Day |string |Total trading volume in last 30 days (USDT)|
+|depositAmount30Day |string |Deposit amount in last 30 days (USDT)|
+|takerVol365Day |string |Taker volume in the past year (USDT)|
+|makerVol365Day |string |Maker volume in the past year (USDT)|
+|tradeVol365Day |string |Total trading volume in the past year (USDT)|
+|depositAmount365Day |string |Total deposit amount in the past year (USDT)|
+|totalWalletBalance |string |Wallet balance range <ul><li>`1`: less than 100 USDT value</li><li>`2`: [100, 250) USDT value</li><li>`3`: [250, 500) USDT value</li><li>`4`: greater than 500 USDT value</li></ul> |
+|depositUpdateTime |string |The update date time (UTC) of deposit data |
+|volUpdateTime |string |The update date of volume data |
 
 ### Request Example
 
@@ -42,7 +43,13 @@ GET `/v5/customer/info`
 <TabItem value="http" label="HTTP">
 
 ```http
-
+GET /v5/user/aff-customer-info?uid=1513500 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: uQ61dcX0lSe7ygD2EA
+X-BAPI-TIMESTAMP: 1685596324209
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: xxxxxx
+Content-Type: application/json
 ```
 
 </TabItem>
@@ -58,5 +65,25 @@ GET `/v5/customer/info`
 ### Response Example
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "uid": "1513500",
+        "takerVol30Day": "10",
+        "makerVol30Day": "20",
+        "tradeVol30Day": "30",
+        "depositAmount30Day": "90",
+        "takerVol365Day": "100",
+        "makerVol365Day": "500",
+        "tradeVol365Day": "600",
+        "depositAmount365Day": "1300",
+        "totalWalletBalance": "4",
+        "depositUpdateTime": "2023-06-01 05:12:04",
+        "vipLevel": "99",
+        "volUpdateTime": "2023-05-31"
+    },
+    "retExtInfo": {},
+    "time": 1685596324508
+}
 ```
