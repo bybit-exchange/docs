@@ -16,6 +16,16 @@ Withdraw assets from your Bybit account. You can make an off-chain transfer if t
 * Can query by the master UID's api key **only**
 :::
 
+:::info formula
+**feeType=0:**
+* withdrawPercentageFee != 0: _handlingFee = inputAmount / (1 - withdrawPercentageFee) * withdrawPercentageFee + withdrawFee_
+* withdrawPercentageFee = 0: _handlingFee = withdrawFee_
+
+**feeType=1:**
+* withdrawPercentageFee != 0: _handlingFee = withdrawFee + (inputAmount - withdrawFee) * withdrawPercentageFee_
+* withdrawPercentageFee = 0: _handlingFee = withdrawFee_
+:::
+
 ### HTTP Request
 POST `/v5/asset/withdraw/create`
 
@@ -28,8 +38,9 @@ POST `/v5/asset/withdraw/create`
 |tag |false |string |Tag <ul><li>**Required** if tag exists in the wallet address list.</li><li>**Note**: please do not set a tag/memo in the address book if the chain does not support tag</li></ul> |
 |amount |**true** |string |Withdraw amount |
 |timestamp |**true** |integer |Current timestamp (ms). Used for preventing from withdraw replay |
-|forceChain |false |integer |Whether or not to force an on-chain withdrawal<ul><li>`0`: If the address is parsed out to be an internal address, then internal transfer (default)</li><li>`1`: Force the withdrawal to occur on-chain</li> </ul>|
+|forceChain |false |integer |Whether or not to force an on-chain withdrawal<ul><li>`0`(default): If the address is parsed out to be an internal address, then internal transfer</li><li>`1`: Force the withdrawal to occur on-chain</li> </ul>|
 |accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`：spot wallet (default)</li><li>`FUND`：Funding wallet</li></ul>|
+|feeType|false|integer |Handling fee option <ul><li>`0`(default): input amount is the actual amount received, so you have to calculate handling fee manually</li><li>`1`: input amount is not the actual amount you received, the system will help to deduct the handling fee automatically</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|

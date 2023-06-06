@@ -16,6 +16,16 @@ sidebar_position: 16
 * 僅支持**母帳號**的API key
 :::
 
+:::info 公式
+**feeType=0:**
+* 若百分比手續費 != 0: _手續費 = 輸入金額 / (1 - 百分比手續費) * 百分比手續費 + 固定手續費_
+* 若百分比手續費 = 0: _手續費 = 固定手續費_
+
+**feeType=1:**
+* 若百分比手續費 != 0: _手續費 = 固定手續費 + (輸入金額 - 固定手續費) * 百分比手續費_
+* 若百分比手續費 = 0: _手續費 = 固定手續費_
+:::
+
 ### HTTP 請求
 POST `/v5/asset/withdraw/create`
 
@@ -30,6 +40,7 @@ POST `/v5/asset/withdraw/create`
 |timestamp |**true** |integer |當前時間戳 (毫秒). 用於防止請求重放 |
 |forceChain |false |integer |是否強制走鏈<ul><li>`0`(默認): 若提現地址解析後發現是平台內部地址，則自動轉為走內部平台轉帳</li><li>`1`: 強制走鏈</li> </ul>|
 |accountType|false|string |設置出金帳戶. <ul><li>`SPOT`：走現貨錢包出金 (默認)</li><li>`FUND`：走資金錢包出金</li></ul>|
+|feeType|false|integer |手續費選項 <ul><li>`0`(默認): 輸入金額即實際收到的金額, 所以您需要額外考慮手續費</li><li>`1`: 輸入金額不是實際收到的金額, 系統將會自動計算所需的手續費</li></ul> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
