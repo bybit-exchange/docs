@@ -5,10 +5,27 @@ sidebar_position: 6
 slug: /account-asset/withdraw
 ---
 
+Withdraw assets from your Bybit account. You can make an off-chain transfer if the target wallet address is from Bybit. This means that no blockchain fee will be charged.
+
 :::danger
 * For **UTA** users, please note that Bybit will merge `SPOT` account into `UNIFIED` account (est.end of Feb), so please adjust your withdrawal logic
 by transferring funds to `FUND` account first, then call withdraw API.
 * How do I know if my account is a UTA account? Call [this endpoint](apikey-info#), and if `uta`=1, then it is a UTA account.
+:::
+
+:::caution
+* Make sure you have whitelisted your wallet address <a href="https://www.bybit.com/user/assets/money-address">here</a>
+* Can query by the master UID's api key **only**
+:::
+
+:::info formula
+**feeType=0:**
+* withdrawPercentageFee != 0: _handlingFee = inputAmount / (1 - withdrawPercentageFee) * withdrawPercentageFee + withdrawFee_
+* withdrawPercentageFee = 0: _handlingFee = withdrawFee_
+
+**feeType=1:**
+* withdrawPercentageFee != 0: _handlingFee = withdrawFee + (inputAmount - withdrawFee) * withdrawPercentageFee_
+* withdrawPercentageFee = 0: _handlingFee = withdrawFee_
 :::
 
 ### HTTP Request
@@ -23,8 +40,9 @@ POST `/asset/v3/private/withdraw/create`
 |tag|false|string|Need to fill in if there is a memo/tag when adding the wallet address. **Note**: please do not set a tag/memo in the address book if the chain does not support tag|
 |amount|<b>true</b>|string|withdraw amounts. The minimum withdrawal amount can be obtained from the [Coin Info](coin-info#) Query API|
 |timestamp|<b>true</b>|integer|Current timestamp |
-|forceChain|false|integer|Force to withdraw on chain or not. <ul><li>`0`：If parsed as internal address, then internal transfer (by default)</li><li>`1`：Force withdraw on chain</li></ul>|
-|accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`：spot wallet (default)</li><li>`FUND`：Funding wallet</li></ul>|
+|forceChain|false|integer|Force to withdraw on chain or not. <ul><li>`0`(default)：If parsed as internal address, then internal transfer </li><li>`1`：Force withdraw on chain</li></ul>|
+|accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`(default)：spot wallet </li><li>`FUND`：Funding wallet</li></ul>|
+|feeType|false|integer |Handling fee option <ul><li>`0`(default): input amount is the actual amount received, so you have to calculate handling fee manually</li><li>`1`: input amount is not the actual amount you received, the system will help to deduct the handling fee automatically</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|

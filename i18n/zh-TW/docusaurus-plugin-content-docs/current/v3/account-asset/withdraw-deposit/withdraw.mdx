@@ -5,6 +5,8 @@ sidebar_position: 6
 slug: /account-asset/withdraw
 ---
 
+若目標地址是Bybit平台內部地址，您可以實現內部平台轉帳
+
 :::info
 * 確保您已經將提幣地址加入到<a href="https://www.bybit.com/user/assets/money-address">這裡</a>
 :::
@@ -12,6 +14,16 @@ slug: /account-asset/withdraw
 :::danger
 * 請**UTA**用戶注意, Bybit預計在二月底將操作現貨帳戶合併入統一帳戶, 所以請調整提現邏輯，即先將資金轉入資金帳戶，然完成提現。
 * 如何確定當前帳戶是否為UTA帳戶? 調用該[接口](apikey-info#), 若`uta`=1, 則表面該api key所屬的帳戶是UTA帳戶。
+:::
+
+:::info 公式
+**feeType=0:**
+* 若百分比手續費 != 0: _手續費 = 輸入金額 / (1 - 百分比手續費) * 百分比手續費 + 固定手續費_
+* 若百分比手續費 = 0: _手續費 = 固定手續費_
+
+**feeType=1:**
+* 若百分比手續費 != 0: _手續費 = 固定手續費 + (輸入金額 - 固定手續費) * 百分比手續費_
+* 若百分比手續費 = 0: _手續費 = 固定手續費_
 :::
 
 ### HTTP 請求
@@ -26,8 +38,9 @@ POST `/asset/v3/private/withdraw/create`
 |tag|false|string|存在tag的需要填寫. **注意**: 如果鏈不支持tag/memo，請移除地址簿中的tag/memo，然後調用接口時，也不要傳tag字段|
 |amount|<b>true</b>|string|提幣數量。最小提幣金額可從[幣種信息接口](coin-info#)獲取。|
 |timestamp|<b>true</b>|integer|取用當前時間戳|
-|forceChain|false|integer|是否強制走鏈提幣. <ul><li>`0`：解析到若為內部地址 (默認)，則內部轉帳</li><li>`1`：強制走鏈</li></ul>|
-|accountType|false|string |設置出金帳戶. <ul><li>`SPOT`：走現貨錢包出金 (默認)</li><li>`FUND`：走資金錢包出金</li></ul>|
+|forceChain|false|integer|是否強制走鏈提幣. <ul><li>`0`(默認)：解析到若為內部地址 ，則內部轉帳</li><li>`1`：強制走鏈</li></ul>|
+|accountType|false|string |設置出金帳戶. <ul><li>`SPOT`(默認)：走現貨錢包出金 </li><li>`FUND`：走資金錢包出金</li></ul>|
+|feeType|false|integer |手續費選項 <ul><li>`0`(默認): 輸入金額即實際收到的金額, 所以您需要額外考慮手續費</li><li>`1`: 輸入金額不是實際收到的金額, 系統將會自動計算所需的手續費</li></ul> |
 
 ### 返回參數
 | 參數 | 類型 | 說明|
