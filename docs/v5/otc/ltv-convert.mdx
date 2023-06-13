@@ -1,7 +1,7 @@
 ---
-title: Get LTV with Ladder Conversion Rate
-sidebar_label: Get LTV with Ladder Conversion Rate
-sidebar_position: 7
+title: Get LTV
+sidebar_label: Get LTV
+sidebar_position: 6
 ---
 Get LTV
 
@@ -24,19 +24,19 @@ None
 |>> unpaidQty | string | Unpaid principle |
 |>> unpaidInterest | string	| Unpaid interest |
 |> balance | string	| Total asset. (margin coins converted to USDT). Please read <a href="https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending">here</a> to understand the calculation |
-|> spotBalanceInfo | array | Spot asset details |
-|>> token | string | Spot margin coin |
-|>> price | string | Spot margin coin price |
-|>> qty	| string | Spot margin coin quantity |
-|>> convertedAmount	| string | Spot margin conversion amount |
+|> balanceInfo | array | Asset details |
+|>> token | string | Margin coin |
+|>> price | string | Margin coin price |
+|>> qty	| string | Margin coin quantity |
+|>> convertedAmount	| string | Margin conversion amount |
 
 ### Request Example
 
 ```http
-GET /v5/ins-loan/ltv HTTP/1.1
+GET /v5/ins-loan/ltv-convert HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1678688069538
+X-BAPI-TIMESTAMP: 1686638165351
 X-BAPI-RECV-WINDOW: 5000
 X-BAPI-SIGN: XXXXX
 ```
@@ -50,38 +50,32 @@ X-BAPI-SIGN: XXXXX
     "result": {
         "ltvInfo": [
             {
-                "ltv": "0.8225",
-                "parentUid": "9454643",
+                "ltv": "0.75",
+                "parentUid": "xxxxx",
                 "subAccountUids": [
-                    "9454643"
+                    "60568258"
                 ],
-                "unpaidAmount": "150",
+                "unpaidAmount": "30",
                 "unpaidInfo": [
                     {
                         "token": "USDT",
-                        "unpaidQty": "150",
+                        "unpaidQty": "30",
                         "unpaidInterest": "0"
                     }
                 ],
-                "balance": "182.37746792706196",
+                "balance": "40",
                 "balanceInfo": [
-                    {
-                        "token": "BTC",
-                        "price": "29116.13",
-                        "qty": "0.000193557642",
-                        "convertedAmount": "5.63564946696546"
-                    },
                     {
                         "token": "USDT",
                         "price": "1",
-                        "qty": "176.7418184600965",
-                        "convertedAmount": "176.7418184600965"
+                        "qty": "40",
+                        "convertedAmount": "40"
                     }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1683275368320
+    "time": 1686638166323
 }
 ```

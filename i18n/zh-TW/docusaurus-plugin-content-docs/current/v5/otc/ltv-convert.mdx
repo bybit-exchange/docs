@@ -1,7 +1,7 @@
 ---
-title: 查詢風險率 階梯折算率
-sidebar_label: 查詢風險率 階梯折算率
-sidebar_position: 7
+title: 查詢風險率
+sidebar_label: 查詢風險率
+sidebar_position: 6
 ---
 
 ### HTTP 請求
@@ -23,21 +23,21 @@ GET `/v5/ins-loan/ltv-convert`
 |>> unpaidQty | string | 未還本金 |
 |>> unpaidInterest | string	| 未還利息 |
 |> balance | string	| 總資產(保證金幣種資產折算為USDT資產). 可以參考<a href="https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending">這裡</a>了解詳細計算 |
-|> spotBalanceInfo | array | 現貨資產明細 |
-|>> token | string | 現貨保證金幣種 |
-|>> price | string | 現貨保證金幣種價格 |
-|>> qty	| string | 現貨保證金數量 |
+|> balanceInfo | array | 資產明細 |
+|>> token | string | 保證金幣種 |
+|>> price | string | 保證金幣種價格 |
+|>> qty	| string | 保證金數量 |
 |>> convertedAmount	| string | 保證金折算金額 |
 
 ### 請求示例
 
 ```http
-curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/margin-ltv' \
---header 'X-BAPI-SIGN-TYPE: 2' \
---header 'X-BAPI-API-KEY: XXXXXXXXXXX' \
---header 'X-BAPI-TIMESTAMP: 1669367335035' \
---header 'X-BAPI-RECV-WINDOW: 5000' \
---header 'X-BAPI-SIGN: XXXXXXXX'
+GET /v5/ins-loan/ltv-convert HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1686638165351
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
 ```
 
 ### 響應示例
@@ -49,38 +49,32 @@ curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/mar
     "result": {
         "ltvInfo": [
             {
-                "ltv": "0.8225",
-                "parentUid": "9454643",
+                "ltv": "0.75",
+                "parentUid": "xxxxx",
                 "subAccountUids": [
-                    "9454643"
+                    "60568258"
                 ],
-                "unpaidAmount": "150",
+                "unpaidAmount": "30",
                 "unpaidInfo": [
                     {
                         "token": "USDT",
-                        "unpaidQty": "150",
+                        "unpaidQty": "30",
                         "unpaidInterest": "0"
                     }
                 ],
-                "balance": "182.37746792706196",
+                "balance": "40",
                 "balanceInfo": [
-                    {
-                        "token": "BTC",
-                        "price": "29116.13",
-                        "qty": "0.000193557642",
-                        "convertedAmount": "5.63564946696546"
-                    },
                     {
                         "token": "USDT",
                         "price": "1",
-                        "qty": "176.7418184600965",
-                        "convertedAmount": "176.7418184600965"
+                        "qty": "40",
+                        "convertedAmount": "40"
                     }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1683275368320
+    "time": 1686638166323
 }
 ```
