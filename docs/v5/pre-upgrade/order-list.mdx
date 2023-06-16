@@ -4,9 +4,7 @@ sidebar_label: Get Pre-upgrade Order History
 sidebar_position: 1
 ---
 
-Get those orders which occurred before you upgrade the account to Unified account.
-
-For now, it only supports to query USDT perpetual, USDC perpetual, Inverse perpetual and futures.
+After the account is upgraded to Unified account, you can get those orders which occurred before your upgrade.
 
 :::info
 * can get all status in 7 days
@@ -19,9 +17,9 @@ GET `/v5/pre-upgrade/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `inverse` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `inverse`, `option` |
 |symbol |false |string |Symbol name. <ul><li>If not passed, return settleCoin=USDT by default</li><li>To get USDC perp, please pass symbol</li></ul>|
-|baseCoin |false |string |Base coin. Reserved for `option` query|
+|baseCoin |false |string |Base coin. Used for `option` query|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
