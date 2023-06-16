@@ -27,7 +27,7 @@ GET `/v5/pre-upgrade/order/history`
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
-|cursor |false |string |Cursor. Used for pagination|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -72,7 +72,7 @@ GET `/v5/pre-upgrade/order/history`
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
-|nextPageCursor |string |Cursor. Used for pagination |
+|nextPageCursor |string |Refer to the `cursor` request parameter |
 
 ### Request Example
 
