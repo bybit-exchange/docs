@@ -168,12 +168,50 @@ paths:
                     - true
                     - false
                   example: false
+                smpType:
+                  type: string
+                  description: Smp execution type
+                  enum:
+                    - None
+                    - CancelMaker
+                    - CancelTaker
+                    - CancelBoth
+                  example:
                 mmp:
                   type: boolean
                   description: market marker protection. for option order
                   enum:
                     - true
                     - false
+                  example:
+                tpslMode:
+                  type: string
+                  description: TP/SL mode
+                  enum:
+                    - Full
+                    - Partial
+                  example:
+                tpLimitPrice:
+                  type: string
+                  description: The limit order price when take profit price is triggered
+                  example:
+                slLimitPrice:
+                  type: string
+                  description: The limit order price when stop loss price is triggered
+                  example:
+                tpOrderType:
+                  type: string
+                  description: The order type when take profit is triggered
+                  enum:
+                    - Market
+                    - Limit
+                  example:
+                slOrderType:
+                  type: string
+                  description: The order type when stop loss is triggered
+                  enum:
+                    - Market
+                    - Limit
                   example:
               required:
                 - category
@@ -278,6 +316,14 @@ paths:
                     - MarkPrice
                     - IndexPrice
                   description: Modify trigger stop loss price price type
+                  example:
+                tpLimitPrice:
+                  type: string
+                  description: The limit order price when take profit price is triggered
+                  example:
+                slLimitPrice:
+                  type: string
+                  description: The limit order price when stop loss price is triggered
                   example:
               required:
                 - category
@@ -708,6 +754,15 @@ paths:
                           - false
                         description: enable market marker protection
                         example: false
+                      smpType:
+                        type: string
+                        description: Smp execution type
+                        enum:
+                          - None
+                          - CancelMaker
+                          - CancelTaker
+                          - CancelBoth
+                        example:
                     required:
                       - symbol
                       - side

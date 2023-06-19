@@ -442,6 +442,28 @@ paths:
                     - 1
                     - 2
                   example: 0
+                tpLimitPrice:
+                  type: string
+                  description: The limit order price when take profit price is triggered
+                  example:
+                slLimitPrice:
+                  type: string
+                  description: The limit order price when stop loss price is triggered
+                  example:
+                tpOrderType:
+                  type: string
+                  description: The order type when take profit is triggered
+                  enum:
+                    - Market
+                    - Limit
+                  example:
+                slOrderType:
+                  type: string
+                  description: The order type when stop loss is triggered
+                  enum:
+                    - Market
+                    - Limit
+                  example:
               required:
                 - category
                 - symbol
@@ -453,7 +475,7 @@ paths:
         - position
       summary: Set Auto Add Margin
       description: Set Auto Add Margin
-      operationId: add-margin
+      operationId: auto-add-margin
       parameters:
         - name: apiKey
           in: header
@@ -481,6 +503,7 @@ paths:
                   description: Product type
                   enum:
                     - linear
+                    - inverse
                   example: linear
                 symbol:
                   type: string
@@ -502,6 +525,64 @@ paths:
                 - category
                 - symbol
                 - autoAddMargin
+                - positionIdx
+
+  /v5/position/add-margin:
+    post:
+      tags:
+        - position
+      summary: Add Or Reduce Margin
+      description: Manually add or reduce margin for isolated margin position
+      operationId: manual-add-margin
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: Product type
+                  enum:
+                    - linear
+                    - inverse
+                  example: linear
+                symbol:
+                  type: string
+                  description: Symbol name
+                  example: ETHUSDT
+                margin:
+                  type: string
+                  description: 10 - add, -10 - reduce
+                  example: "11.5"
+                positionIdx:
+                  type: integer
+                  description: Position index. 0=one-way-mode, 1=buy-hedge-mode, 2=sell-hedege-mode. <b>REQUIRED</b> for hedge-mode
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                  example: 0
+              required:
+                - category
+                - symbol
+                - margin
                 - positionIdx
 
   /v5/execution/list:
