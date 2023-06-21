@@ -120,6 +120,31 @@ print(session.get_order_history(
 ```
 
 </TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+    testnet: true,
+    key: 'apikey',
+    secret: 'apisecret',
+});
+
+client
+    .getHistoricOrders({
+        category: 'linear',
+        limit: 1,
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+```
+
+</TabItem>
 </Tabs>
 
 ### Response Example
