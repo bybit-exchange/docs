@@ -264,12 +264,12 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Copy Trade',
+      label: 'Copy Trade (Pre-upgrade)',
       link: {
         type: 'generated-index',
         title: 'Copy Trade Guides',
         description:
-            "Let's learn about copy trade concepts!",
+            "Please note that you are not allowed to access this API once you upgrade to new Copy trading. Check changelog for more information",
         image: '/img/docusaurus.png',
       },
       items: [
