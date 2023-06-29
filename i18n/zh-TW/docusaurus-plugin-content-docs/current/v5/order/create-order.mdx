@@ -101,18 +101,24 @@ X-BAPI-TIMESTAMP: 1672211928338
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
-{
-    "category": "spot",
-    "symbol": "BTCUSDT",
-    "side": "Buy",
-    "orderType": "Limit",
-    "qty": "0.1",
-    "price": "15600",
-    "timeInForce": "PostOnly",
-    "orderLinkId": "spot-test-postonly",
-    "isLeverage": 0,
-    "orderFilter": "Order"
-}
+// 現貨下僅maker單
+{"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}
+
+// 現貨止盈止損單
+{"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}
+
+// 槓桿交易單 (統一帳戶)
+{"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"Limit","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}
+
+// 現貨市價單, qty為報價幣種金額
+{"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}
+
+
+// USDT永續開多倉訂單 (單向持倉)
+{"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}
+
+// USDT永續平多倉訂單 (單向持倉)
+{"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}
 ```
 
 </TabItem>
