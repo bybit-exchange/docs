@@ -24,9 +24,9 @@ GET `/v5/order/realtime`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul>|
-|symbol |false |string |合約名稱. 對於`linear` 和 `inverse`, `symbol`, `baseCoin` 和 `settleCoin`**必傳**其中一個|
+|symbol |false |string |合約名稱. 對於**linear 和 inverse**, `symbol`, `baseCoin` 和 `settleCoin`**必傳**其中一個|
 |baseCoin |false |string |交易幣種. 支持`linear`, `inverse`和`option`. 對於若不傳，則返回期權下所有活動委託單|
-|settleCoin |false |string |結算幣種 <ul><li>`linear` 和 `inverse`: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li></ul>|
+|settleCoin |false |string |結算幣種 <ul><li><b>linear 和 inverse</b>: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li></ul>|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
 |openOnly |false |integer |<ul><li>統一帳戶 & 普通帳戶`0`(默認): 僅查詢活動委託訂單</li><li>統一帳戶: `1`,&emsp;統一帳戶(反向)和普通帳戶: `2` <br/>返回最近10分鐘僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶下最多保留500條紀錄，如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</li><li>普通帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>|
