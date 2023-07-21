@@ -5,6 +5,10 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 ## Installation
 
 ### Requirements
+* install latest version of NodeJs (version greater than 16.14). You could install it via npm
+```shell
+npm install -g n
+```
 
 * install yarn. You could install it via npm
 ```shell
