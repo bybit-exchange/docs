@@ -24,6 +24,7 @@ GET `/v5/user/query-sub-members`
 |> username |string |用戶名|
 |> memberType |integer |`1`: 普通子帳戶, `6`: 託管子帳戶 |
 |> status |integer |帳戶狀態.<ul><li>`1`: 正常</li><li>`2`: 登陸封禁</li><li>`4`: 凍結 </li></ul>|
+|> accountMode |integer |帳戶模式.<ul><li>`1`: 經典帳戶</li><li>`2`: UMA帳戶</li><li>`3`: UTA帳戶 </li></ul>|
 |> remark |string |備註 |
 
 ### 請求示例
@@ -69,14 +70,16 @@ print(session.get_sub_uid())
                 "username": "xxx001",
                 "memberType": 1,
                 "status": 1,
-                "remark": "test"
+                "remark": "test",
+                "accountMode": 1
             },
             {
                 "uid": "53888002",
                 "username": "xxx002",
                 "memberType": 6,
                 "status": 1,
-                "remark": ""
+                "remark": "",
+                "accountMode": 3
             }
         ]
     },

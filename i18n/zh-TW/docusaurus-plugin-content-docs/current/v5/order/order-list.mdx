@@ -6,12 +6,16 @@ sidebar_position: 6
 
 獲取歷史訂單紀錄. 由於訂單創建/撤銷是**異步**的, 該接口返回數據可能會有延遲. 若您想實時獲取訂單信息, 您可以查詢該[接口](open-order#)或者通過websocket推送(推薦)
 > **統一帳戶覆蓋範圍: 現貨 / USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **普通帳戶覆蓋範圍: USDT永續 / 反向合約 / 現貨**
 
 :::info
 * 7天內的訂單: 支持查詢全狀態
 * 7天外的訂單: 可以查詢僅成交的訂單類型
 * 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
+:::
+
+:::tip
+普通現貨僅能查詢終態訂單
 :::
 
 ### HTTP請求
@@ -23,6 +27,7 @@ GET `/v5/order/history`
 |[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |合約名稱|
 |baseCoin |false |string |交易幣種. 統一帳戶（反向）以及普通帳戶不支持該字段的查詢 |
+|settleCoin |false |string |結算幣種. 統一帳戶（反向）以及普通帳戶不支持該字段的查詢 |
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
 |orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單, `tpslOrder`: 現貨止盈止損單 <ul><li>普通帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
