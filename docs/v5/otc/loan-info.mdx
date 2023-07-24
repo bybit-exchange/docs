@@ -36,10 +36,10 @@ GET `/v5/ins-loan/loan-order`
 |> repaidAmount	| string | Repaid principal |
 |> repaidInterest | string | Repaid interest |
 |> interestRate	| string | Daily interest rate |
-|> status | integer | `1`：outstanding; `2`：paid off |
+|> status | string | `1`：outstanding; `2`：paid off |
 |> leverage	| string | leverage |
-|> supportSpot | integer | Whether to support spot. `0`:false; `1`:true |
-|> supportContract | integer | Whether to support contract . `0`:false; `1`:true |
+|> supportSpot | string | Whether to support spot. `0`:false; `1`:true |
+|> supportContract | string | Whether to support contract . `0`:false; `1`:true |
 |> withdrawLine	| string | Restrict line for withdrawal |
 |> transferLine	| string | Restrict line for transfer |
 |> spotBuyLine | string	| Restrict line for SPOT buy |
@@ -51,6 +51,23 @@ GET `/v5/ins-loan/loan-order`
 |> transferRatio | string | Available transfer ratio of loan funds |
 |> spotSymbols | array | The whitelist of spot trading pairs |
 |> contractSymbols | array |The whitelist of contract trading pairs |
+|> supportUSDCContract | string |Whether to support USDC contract. `'0'`:false; `'1'`:true|
+|> supportUSDCOptions | string |Whether to support Option. `'0'`:false; `'1'`:true |
+|> USDTPerpetualOpenLine | string |Restrict line to open USDT Perpetual position |
+|> USDCContractOpenLine | string |Restrict line to open USDC Contract position |
+|> USDCOptionsOpenLine | string |Restrict line to open Option position |
+|> USDTPerpetualCloseLine | string |Restrict line to close USDT Perpetual position |
+|> USDCContractCloseLine | string |Restrict line to close USDC Contract position |
+|> USDCOptionsCloseLine | string |Restrict line to close Option position |
+|> USDCContractSymbols | array |The whitelist of USDC contract trading pairs <ul><li>If no whitelist symbols, it is `[]`, and you can trade any</li><li>If supportUSDCContract="0", it is `[]`</li></ul>|
+|> USDCOptionsSymbols | array |The whitelist of Option symbols <ul><li>If no whitelisted, it is `[]`, and you can trade any</li><li>If supportUSDCOptions="0", it is `[]`</li></ul> |
+|> marginLeverage | string |The allowable maximum leverage for spot margin |
+|> USDTPerpetualLeverage | array |Object <ul><li>If supportContract="0", it is `[]`</li><li>If no whitelist USDT perp symbols, it returns all trading symbols and leverage by default</li><li>If there are whitelist symbols, it return those whitelist data</li></ul> |
+|>> symbol | string |Symbol name |
+|>> leverage | string |Maximum leverage |
+|> USDCContractLeverage | array |Object <ul><li>If supportUSDCContract="0", it is `[]`</li><li>If no whitelist USDC contract symbols, it returns all trading symbols and leverage by default</li><li>If there are whitelist symbols, it return those whitelist data</li></ul> |
+|>> symbol | string |Symbol name |
+|>> leverage | string |Maximum leverage |
 
 ### Request Example
 
@@ -72,44 +89,105 @@ X-BAPI-SIGN: XXXXX
     "result": {
         "loanInfo": [
             {
-                "orderId": "1244781478207029504",
-                "orderProductId": "34",
-                "parentUid": "999805",
-                "loanTime": "1663126149000",
+                "orderId": "1468005106166530304",
+                "orderProductId": "96",
+                "parentUid": "1631521",
+                "loanTime": "1689735916000",
                 "loanCoin": "USDT",
-                "loanAmount": "500000",
-                "unpaidAmount": "6351.49614274",
-                "unpaidInterest": "264.0137162",
-                "repaidAmount": "493648.50385726",
+                "loanAmount": "204",
+                "unpaidAmount": "52.07924201",
+                "unpaidInterest": "0",
+                "repaidAmount": "151.92075799",
                 "repaidInterest": "0",
-                "interestRate": "0.00027397",
-                "status": 1,
-                "leverage": "20",
-                "supportSpot": 1,
-                "supportContract": 1,
-                "withdrawLine": "0.5",
-                "transferLine": "0.6",
-                "spotBuyLine": "0.7",
-                "spotSellLine": "0.8",
-                "contractOpenLine": "0.9",
-                "liquidationLine": "0.95",
-                "stopLiquidationLine": "0.20000000",
-                "contractLeverage": "3",
-                "transferRatio": "0.1",
-                "spotSymbols": [
-                    "DYDXQQTEST001",
-                    "DYDXNEO",
-                    "PMTEST16USDT"
+                "interestRate": "0.00019178",
+                "status": "1",
+                "leverage": "4",
+                "supportSpot": "1",
+                "supportContract": "1",
+                "withdrawLine": "",
+                "transferLine": "",
+                "spotBuyLine": "0.71",
+                "spotSellLine": "0.71",
+                "contractOpenLine": "0.71",
+                "liquidationLine": "0.75",
+                "stopLiquidationLine": "0.35000000",
+                "contractLeverage": "7",
+                "transferRatio": "1",
+                "spotSymbols": [],
+                "contractSymbols": [],
+                "supportUSDCContract": "1",
+                "supportUSDCOptions": "1",
+                "USDTPerpetualOpenLine": "0.71",
+                "USDCContractOpenLine": "0.71",
+                "USDCOptionsOpenLine": "0.71",
+                "USDTPerpetualCloseLine": "0.71",
+                "USDCContractCloseLine": "0.71",
+                "USDCOptionsCloseLine": "0.71",
+                "USDCContractSymbols": [],
+                "USDCOptionsSymbols": [],
+                "marginLeverage": "4",
+                "USDTPerpetualLeverage": [
+                    {
+                        "symbol": "SUSHIUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "INJUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "RDNTUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "ZRXUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "HIGHUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "WAVESUSDT",
+                        "leverage": "7"
+                    },
+                    ...
+                    {
+                        "symbol": "ACHUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "SUNUSDT",
+                        "leverage": "7"
+                    }
                 ],
-                "contractSymbols": [
-                    "RAYUSDT",
-                    "API3USDT",
-                    "SUSHIUSDT"
+                "USDCContractLeverage": [
+                    {
+                        "symbol": "BTCPERP",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "BTC-Futures",
+                        "leverage": "8"
+                    },
+                    ...
+                    {
+                        "symbol": "ETH-Futures",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "SOLPERP",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "ETHPERP",
+                        "leverage": "8"
+                    }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1669364798924
+    "time": 1689745773187
 }
 ```

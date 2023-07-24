@@ -1,6 +1,32 @@
 ---
 title: V5
 ---
+## 2023-07-24
+### REST API
+* [Get Product Info](../v5/otc/margin-product-info)
+    * Add new Response fields: `USDTPerpetualOpenLine``USDCContractOpenLine`, `USDCOptionsOpenLine`, `USDTPerpetualCloseLine`,
+    `USDCContractCloseLine`, `USDCOptionsCloseLine`, `USDCContractSymbols`, `USDCOptionsSymbols`, `marginLeverage`,
+    `USDTPerpetualLeverage`, `symbol`, `leverage`, `USDCContractLeverage`
+
+* [Get Loan Orders](../v5/otc/loan-info)
+    * Add new Response fields: `USDTPerpetualOpenLine`, `USDCContractOpenLine`, `USDCOptionsOpenLine`, `USDTPerpetualCloseLine`,
+    `USDCContractCloseLine`, `USDCOptionsCloseLine`, `USDCContractSymbols`, `USDCOptionsSymbols`, `marginLeverage`,
+    `USDTPerpetualLeverage`, `symbol`, `leverage`, `USDCContractLeverage`
+* Add error codes for UTA with OTC loan when trade Spot, Futures and Option
+
+|New error code |Description|
+|:------|:------|
+|30133 |USDT Perp: When the trading pair is not in the whitelist|
+|30134 |USDC Contract: When the trading pair is not in the whitelist|
+|30135 |USDT Perp: When you try to change a leverage higher than the maximum leverage in OTC loan|
+|30136 |USDC Contract: When you try to change a leverage higher than the maximum leverage in OTC loan|
+|3200316 |Option: restrict to trade|
+|3200317 |Option: restrict to buy|
+|170709 |Spot: When the trading pair is not in the whitelist |
+|170215 |Spot: restrict to buy|
+|170216 |Spot: margin leverage exceeded|
+|170220 |Spot: restrict to trade|
+
 ## 2023-07-13
 ### REST API
 * [Get Sub UID List](../v5/user/subuid-list)

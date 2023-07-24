@@ -36,10 +36,10 @@ GET `/v5/ins-loan/loan-order`
 |> repaidAmount	| string | 已還本金 |
 |> repaidInterest | string |已還利息 |
 |> interestRate	| string | 日利率 |
-|> status | integer | `1`：未還清; `2`：已還清 |
+|> status | string | `1`：未還清; `2`：已還清 |
 |> leverage	| string | 槓桿倍數 |
-|> supportSpot | integer | 是否支持現貨. `0`:否; `1`:是 |
-|> supportContract | integer | 是否支持合約 . `0`: 否; `1`: 是 |
+|> supportSpot | string | 是否支持現貨. `0`:否; `1`:是 |
+|> supportContract | string | 是否支持合約 . `0`: 否; `1`: 是 |
 |> withdrawLine	| string | 限制提幣線 |
 |> transferLine	| string | 限制劃轉線 |
 |> spotBuyLine | string	| 限制現貨買入線 |
@@ -51,6 +51,23 @@ GET `/v5/ins-loan/loan-order`
 |> transferRatio | string |借貸資金劃轉比例 |
 |> spotSymbols | array |現貨交易對白名單 |
 |> contractSymbols | array |合約交易對白名單 |
+|> supportUSDCContract | string |是否支持USDC合約交易. `'0'`:否; `'1'`:是|
+|> supportUSDCOptions | string |是否支持期權交易. `'0'`:false; `'1'`:true |
+|> USDTPerpetualOpenLine | string |USDT永續的開倉限制線 |
+|> USDCContractOpenLine | string |USDC合約的開倉限制線 |
+|> USDCOptionsOpenLine | string |期權的開倉限制線 |
+|> USDTPerpetualCloseLine | string |USDT永續的平倉限制線 |
+|> USDCContractCloseLine | string |USDC合約倉位的平倉限制線 |
+|> USDCOptionsCloseLine | string |期權倉位的平倉限制線 |
+|> USDCContractSymbols | array |USDC合約的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCContract="0", 則也是空數組`[]`</li></ul>|
+|> USDCOptionsSymbols | array |期權的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCOptions="0", 則也是空數組`[]`</li></ul> |
+|> marginLeverage | string |全倉槓桿允許可開的最高槓桿 |
+|> USDTPerpetualLeverage | array |Object <ul><li>如果 supportContract="0", 則返回空數組`[]`</li><li>如果沒有配置USDT永續交易對白名單, 則返回所有的合約和槓桿</li><li>如果有白名單配置, 則只返回白名單列表的合約和槓桿</li></ul> |
+|>> symbol | string |合約名 |
+|>> leverage | string |最高可開槓桿 |
+|> USDCContractLeverage | array |Object <ul><li>如果 supportUSDCContract="0", 則返回空數組`[]`</li><li>如果沒有配置USDC合約交易對白名單, 則返回所有的合約和槓桿</li><li>如果有白名單配置, 則只返回白名單列表的合約和槓桿</li></ul> |
+|>> symbol | string |合約名 |
+|>> leverage | string |最高可開槓桿 |
 
 ### 請求示例
 
@@ -72,44 +89,105 @@ X-BAPI-SIGN: XXXXX
     "result": {
         "loanInfo": [
             {
-                "orderId": "1244781478207029504",
-                "orderProductId": "34",
-                "parentUid": "999805",
-                "loanTime": "1663126149000",
+                "orderId": "1468005106166530304",
+                "orderProductId": "96",
+                "parentUid": "1631521",
+                "loanTime": "1689735916000",
                 "loanCoin": "USDT",
-                "loanAmount": "500000",
-                "unpaidAmount": "6351.49614274",
-                "unpaidInterest": "264.0137162",
-                "repaidAmount": "493648.50385726",
+                "loanAmount": "204",
+                "unpaidAmount": "52.07924201",
+                "unpaidInterest": "0",
+                "repaidAmount": "151.92075799",
                 "repaidInterest": "0",
-                "interestRate": "0.00027397",
-                "status": 1,
-                "leverage": "20",
-                "supportSpot": 1,
-                "supportContract": 1,
-                "withdrawLine": "0.5",
-                "transferLine": "0.6",
-                "spotBuyLine": "0.7",
-                "spotSellLine": "0.8",
-                "contractOpenLine": "0.9",
-                "liquidationLine": "0.95",
-                "stopLiquidationLine": "0.20000000",
-                "contractLeverage": "3",
-                "transferRatio": "0.1",
-                "spotSymbols": [
-                    "DYDXQQTEST001",
-                    "DYDXNEO",
-                    "PMTEST16USDT"
+                "interestRate": "0.00019178",
+                "status": "1",
+                "leverage": "4",
+                "supportSpot": "1",
+                "supportContract": "1",
+                "withdrawLine": "",
+                "transferLine": "",
+                "spotBuyLine": "0.71",
+                "spotSellLine": "0.71",
+                "contractOpenLine": "0.71",
+                "liquidationLine": "0.75",
+                "stopLiquidationLine": "0.35000000",
+                "contractLeverage": "7",
+                "transferRatio": "1",
+                "spotSymbols": [],
+                "contractSymbols": [],
+                "supportUSDCContract": "1",
+                "supportUSDCOptions": "1",
+                "USDTPerpetualOpenLine": "0.71",
+                "USDCContractOpenLine": "0.71",
+                "USDCOptionsOpenLine": "0.71",
+                "USDTPerpetualCloseLine": "0.71",
+                "USDCContractCloseLine": "0.71",
+                "USDCOptionsCloseLine": "0.71",
+                "USDCContractSymbols": [],
+                "USDCOptionsSymbols": [],
+                "marginLeverage": "4",
+                "USDTPerpetualLeverage": [
+                    {
+                        "symbol": "SUSHIUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "INJUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "RDNTUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "ZRXUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "HIGHUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "WAVESUSDT",
+                        "leverage": "7"
+                    },
+                    ...
+                    {
+                        "symbol": "ACHUSDT",
+                        "leverage": "7"
+                    },
+                    {
+                        "symbol": "SUNUSDT",
+                        "leverage": "7"
+                    }
                 ],
-                "contractSymbols": [
-                    "RAYUSDT",
-                    "API3USDT",
-                    "SUSHIUSDT"
+                "USDCContractLeverage": [
+                    {
+                        "symbol": "BTCPERP",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "BTC-Futures",
+                        "leverage": "8"
+                    },
+                    ...
+                    {
+                        "symbol": "ETH-Futures",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "SOLPERP",
+                        "leverage": "8"
+                    },
+                    {
+                        "symbol": "ETHPERP",
+                        "leverage": "8"
+                    }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1669364798924
+    "time": 1689745773187
 }
 ```

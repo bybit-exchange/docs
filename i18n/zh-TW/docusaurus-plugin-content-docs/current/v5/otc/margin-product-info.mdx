@@ -35,12 +35,28 @@ GET `/v5/ins-loan/product-infos`
 |> transferRatio | string |借貸資金劃轉比例 |
 |> spotSymbols | array |現貨交易對白名單 <ul><li>如果是空數組, 則表明可以交易任何交易對</li><li>如果不為空, 則表示僅能交易所列出的交易對</li></ul>|
 |> contractSymbols | array |合約交易對白名單 <ul><li>如果是空數組, 則表明可以交易任何交易對</li><li>如果不為空, 則表示僅能交易所列出的交易對</li></ul>|
-
+|> supportUSDCContract | integer |是否支持USDC合約交易. `'0'`:否; `'1'`:是|
+|> supportUSDCOptions | integer |是否支持期權交易. `'0'`:false; `'1'`:true |
+|> USDTPerpetualOpenLine | string |USDT永續的開倉限制線 |
+|> USDCContractOpenLine | string |USDC合約的開倉限制線 |
+|> USDCOptionsOpenLine | string |期權的開倉限制線 |
+|> USDTPerpetualCloseLine | string |USDT永續的平倉限制線 |
+|> USDCContractCloseLine | string |USDC合約倉位的平倉限制線 |
+|> USDCOptionsCloseLine | string |期權倉位的平倉限制線 |
+|> USDCContractSymbols | array |USDC合約的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCContract="0", 則也是空數組`[]`</li></ul>|
+|> USDCOptionsSymbols | array |期權的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCOptions="0", 則也是空數組`[]`</li></ul> |
+|> marginLeverage | string |全倉槓桿允許可開的最高槓桿 |
+|> USDTPerpetualLeverage | array |Object <ul><li>如果 supportContract="0", 則返回空數組`[]`</li><li>如果沒有配置USDT永續交易對白名單, 則返回所有的合約和槓桿</li><li>如果有白名單配置, 則只返回白名單列表的合約和槓桿</li></ul> |
+|>> symbol | string |合約名 |
+|>> leverage | string |最高可開槓桿 |
+|> USDCContractLeverage | array |Object <ul><li>如果 supportUSDCContract="0", 則返回空數組`[]`</li><li>如果沒有配置USDC合約交易對白名單, 則返回所有的合約和槓桿</li><li>如果有白名單配置, 則只返回白名單列表的合約和槓桿</li></ul> |
+|>> symbol | string |合約名 |
+|>> leverage | string |最高可開槓桿 |
 
 ### 請求示例
 
 ```http
-GET /v5/ins-loan/product-infos?productId=70 HTTP/1.1
+GET /v5/ins-loan/product-infos?productId=91 HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -53,30 +69,38 @@ Host: api-testnet.bybit.com
     "result": {
         "marginProductInfo": [
             {
-                "productId": "70",
-                "leverage": "5.00000000",
+                "productId": "91",
+                "leverage": "4.00000000",
                 "supportSpot": 1,
-                "supportContract": 1,
-                "withdrawLine": "0.5",
-                "transferLine": "0.6",
-                "spotBuyLine": "0.7",
-                "spotSellLine": "0.8",
-                "contractOpenLine": "0.9",
-                "liquidationLine": "0.95",
-                "stopLiquidationLine": "0.40000000",
-                "contractLeverage": "",
-                "transferRatio": "",
-                "spotSymbols": [
-                    "DYDXQQTEST001"
-                ],
-                "contractSymbols": [
-                    "RAYUSDT",
-                    "API3USDT"
-                ]
+                "supportContract": 0,
+                "withdrawLine": "",
+                "transferLine": "",
+                "spotBuyLine": "",
+                "spotSellLine": "",
+                "contractOpenLine": "",
+                "liquidationLine": "0.75",
+                "stopLiquidationLine": "0.35000000",
+                "contractLeverage": "0",
+                "transferRatio": "0",
+                "spotSymbols": [],
+                "contractSymbols": [],
+                "supportUSDCContract": 0,
+                "supportUSDCOptions": 0,
+                "USDTPerpetualOpenLine": "",
+                "USDCContractOpenLine": "",
+                "USDCOptionsOpenLine": "",
+                "USDTPerpetualCloseLine": "",
+                "USDCContractCloseLine": "",
+                "USDCOptionsCloseLine": "",
+                "USDCContractSymbols": [],
+                "USDCOptionsSymbols": [],
+                "marginLeverage": "0",
+                "USDTPerpetualLeverage": [],
+                "USDCContractLeverage": []
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1669362961705
+    "time": 1689747746332
 }
 ```

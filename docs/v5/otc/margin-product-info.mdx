@@ -35,11 +35,28 @@ GET `/v5/ins-loan/product-infos`
 |> transferRatio | string | Available transfer ratio of loan funds |
 |> spotSymbols | array | The whitelist of spot trading pairs <ul><li>If empty array, then you can trade any symbols</li><li>If not empty, then you can only trade listed symbols</li></ul> |
 |> contractSymbols | array | The whitelist of contract trading pairs <ul><li>If empty array, then you can trade any symbols</li><li>If not empty, then you can only trade listed symbols</li></ul> |
+|> supportUSDCContract | integer |Whether to support USDC contract. `'0'`:false; `'1'`:true|
+|> supportUSDCOptions | integer |Whether to support Option. `'0'`:false; `'1'`:true |
+|> USDTPerpetualOpenLine | string |Restrict line to open USDT Perpetual position |
+|> USDCContractOpenLine | string |Restrict line to open USDC Contract position |
+|> USDCOptionsOpenLine | string |Restrict line to open Option position |
+|> USDTPerpetualCloseLine | string |Restrict line to close USDT Perpetual position |
+|> USDCContractCloseLine | string |Restrict line to close USDC Contract position |
+|> USDCOptionsCloseLine | string |Restrict line to close Option position |
+|> USDCContractSymbols | array |The whitelist of USDC contract trading pairs <ul><li>If no whitelist symbols, it is `[]`, and you can trade any</li><li>If supportUSDCContract="0", it is `[]`</li></ul>|
+|> USDCOptionsSymbols | array |The whitelist of Option symbols <ul><li>If no whitelisted, it is `[]`, and you can trade any</li><li>If supportUSDCOptions="0", it is `[]`</li></ul> |
+|> marginLeverage | string |The allowable maximum leverage for spot margin |
+|> USDTPerpetualLeverage | array |Object <ul><li>If supportContract="0", it is `[]`</li><li>If no whitelist USDT perp symbols, it returns all trading symbols and leverage by default</li><li>If there are whitelist symbols, it return those whitelist data</li></ul> |
+|>> symbol | string |Symbol name |
+|>> leverage | string |Maximum leverage |
+|> USDCContractLeverage | array |Object <ul><li>If supportUSDCContract="0", it is `[]`</li><li>If no whitelist USDC contract symbols, it returns all trading symbols and leverage by default</li><li>If there are whitelist symbols, it return those whitelist data</li></ul> |
+|>> symbol | string |Symbol name |
+|>> leverage | string |Maximum leverage |
 
 ### Request Example
 
 ```http
-GET /v5/ins-loan/product-infos?productId=70 HTTP/1.1
+GET /v5/ins-loan/product-infos?productId=91 HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -52,30 +69,38 @@ Host: api-testnet.bybit.com
     "result": {
         "marginProductInfo": [
             {
-                "productId": "70",
-                "leverage": "5.00000000",
+                "productId": "91",
+                "leverage": "4.00000000",
                 "supportSpot": 1,
-                "supportContract": 1,
-                "withdrawLine": "0.5",
-                "transferLine": "0.6",
-                "spotBuyLine": "0.7",
-                "spotSellLine": "0.8",
-                "contractOpenLine": "0.9",
-                "liquidationLine": "0.95",
-                "stopLiquidationLine": "0.40000000",
-                "contractLeverage": "3",
-                "transferRatio": "0.1",
-                "spotSymbols": [
-                    "DYDXQQTEST001"
-                ],
-                "contractSymbols": [
-                    "RAYUSDT",
-                    "API3USDT"
-                ]
+                "supportContract": 0,
+                "withdrawLine": "",
+                "transferLine": "",
+                "spotBuyLine": "",
+                "spotSellLine": "",
+                "contractOpenLine": "",
+                "liquidationLine": "0.75",
+                "stopLiquidationLine": "0.35000000",
+                "contractLeverage": "0",
+                "transferRatio": "0",
+                "spotSymbols": [],
+                "contractSymbols": [],
+                "supportUSDCContract": 0,
+                "supportUSDCOptions": 0,
+                "USDTPerpetualOpenLine": "",
+                "USDCContractOpenLine": "",
+                "USDCOptionsOpenLine": "",
+                "USDTPerpetualCloseLine": "",
+                "USDCContractCloseLine": "",
+                "USDCOptionsCloseLine": "",
+                "USDCContractSymbols": [],
+                "USDCOptionsSymbols": [],
+                "marginLeverage": "0",
+                "USDTPerpetualLeverage": [],
+                "USDCContractLeverage": []
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1678687628953
+    "time": 1689747746332
 }
 ```
