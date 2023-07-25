@@ -6,6 +6,8 @@ slug: /account-asset/coin-balance
 ---
 
 You could get a single coin balance under the master account, and sub account coin balance.
+Also, you can check the transferable amount from master to sub account, sub to master account or sub to sub account, especially
+for user who has INS loan.
 
 :::caution Important
 It is not allowed to get master account coin balance via sub account api key.
@@ -18,10 +20,13 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |memberId|false |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
+|toMemberId |false |string |UID. **Required** when querying the transferable balance between different uids |
 |[accountType](enum#accounttype)|<b>true</b> |string |Account type |
+|[toAccountType](../enum#accounttype) |false |string |To account type. **Required** when querying the transferable balance between different account types|
 |[coin](enum#coin) |<b>true</b> |string |Coin name |
 |withBonus|false |integer |Whether query bonus or not. `0`(default)：false; `1`：true |
 |withTransferSafeAmount|false |integer |Whether query delay withdraw/transfer safe amount <ul><li>`0`(default)：false, `1`：true</li><li>What is [delay withdraw amount](delay-amount#)?</li></ul> |
+|withLtvTransferSafeAmount|false |integer |For OTC loan users in particular, you can check the transferable amount under risk level<ul><li>`0`(default)：false, `1`：true</li><li>`toAccountType` is mandatory</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -36,6 +41,7 @@ GET `/asset/v3/private/transfer/account-coin/balance/query`
 |> transferBalance |string |Transferable balance|
 |> bonus |string |The bonus|
 |> transferSafeAmount |string |Safe amount to transfer. Keep `""` if not query|
+|> ltvTransferSafeAmount |string |Transferable amount for ins loan account. Keep `""` if not query|
 
 ### Request Example
 
@@ -64,7 +70,8 @@ X-BAPI-RECV-WINDOW: 50000
             "walletBalance": "0",
             "transferBalance": "-995.3506",
             "bonus": "995.3506",
-            "transferSafeAmount": "-995.3506"
+            "transferSafeAmount": "-995.3506",
+            "ltvTransferSafeAmount": ""
         }
     },
     "retExtInfo": {},
