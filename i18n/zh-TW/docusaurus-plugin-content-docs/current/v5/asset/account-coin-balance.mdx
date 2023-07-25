@@ -5,6 +5,7 @@ sidebar_position: 0.3
 ---
 
 獲取某[帳戶類型](../enum#accounttype)下某指定幣種的餘額。支持通過輸入子帳戶id來查詢子帳戶的某個帳戶類型下的某個幣種餘額
+同時, 支持查詢母子帳戶、子子帳戶、子母帳戶之間的可劃轉金額，特別是針對於擁有機構借貸的用戶。
 
 :::caution
 無法通過子賬戶api key獲取主賬戶帳戶餘額
@@ -17,10 +18,13 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |memberId |false |string |用戶Id. 當查詢子帳號的餘額時，該字段**必傳**|
+|toMemberId |false |string |劃入帳戶UID. 當查詢帳戶間劃轉時, 該字段**必傳**|
 |[accountType](../enum#accounttype) |**true** |string |帳戶類型 |
+|[toAccountType](../enum#accounttype) |false |string |劃入帳戶類型. 當查詢不同帳戶類型間的劃轉時, 該字段**必傳**|
 |coin |**true** |string |幣種 |
 |withBonus |false |integer |是否查詢體驗金. `0`: 否,`1`: 是. 默認不查詢  |
 |withTransferSafeAmount|false |integer |是否查詢延遲提幣安全限額 <ul><li>`0`(默認)：否, `1`：是</li><li>什麼是[延遲提幣](delay-amount#)?</li></ul> |
+|withLtvTransferSafeAmount|false |integer |特別用於機構借貸用戶, 可以查詢風險水平內的可劃轉餘額<ul><li>`0`(default)：false, `1`：true</li><li>此時`toAccountType`字段**必傳**</li></ul> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -35,6 +39,7 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |> transferBalance |string |可划余額 |
 |> bonus |string |可用金額中包含的体验金 |
 |> transferSafeAmount |string |可劃轉的安全限額. 若不查詢，則返回`""`|
+|> ltvTransferSafeAmount |string |機構借貸用戶的可劃轉餘額. 若不查詢，則返回`""`|
 
 <a href="/api-explorer/v5/asset/account-coin-balance"><Button>運行實例 >></Button></a>
 
@@ -46,11 +51,11 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=BTC&memberId=592324 HTTP/1.1
+GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=USDT&toAccountType=FUND&withLtvTransferSafeAmount=1 HTTP/1.1
 Host: api-testnet.bybit.com
-X-BAPI-SIGN: XXXXX
-X-BAPI-API-KEY: XXXXX
-X-BAPI-TIMESTAMP: 1672138188999
+X-BAPI-SIGN: xxxxx
+X-BAPI-API-KEY: xxxxx
+X-BAPI-TIMESTAMP: 1690254520644
 X-BAPI-RECV-WINDOW: 5000
 ```
 
@@ -82,19 +87,20 @@ print(session.get_coin_balance(
     "retCode": 0,
     "retMsg": "success",
     "result": {
-        "accountType": "CONTRACT",
+        "accountType": "UNIFIED",
         "bizType": 1,
-        "accountId": "533285",
-        "memberId": "533285",
+        "accountId": "1631385",
+        "memberId": "1631373",
         "balance": {
             "coin": "USDT",
-            "walletBalance": "0",
-            "transferBalance": "-995.3506",
-            "bonus": "995.3506",
-            "transferSafeAmount": ""
+            "walletBalance": "11999",
+            "transferBalance": "11999",
+            "bonus": "0",
+            "transferSafeAmount": "",
+            "ltvTransferSafeAmount": "7602.4861"
         }
     },
     "retExtInfo": {},
-    "time": 1678794546779
+    "time": 1690254521256
 }
 ```
