@@ -39,7 +39,7 @@ GET `/v5/position/list`
 |> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage. Valid for contract. _Note: for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
 |> markPrice | string  |Last mark price |
-|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Normal account: it is the real price for isolated and cross positions.</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account)</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
+|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Normal account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice < minPrice or liqPrice > maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice < minPrice or liqPrice > maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
 |> bustPrice | string  |Bankruptcy price. _Note: Unified mode returns `""`, no position bankruptcy price (exclude inverse trade under UTA)_|
 |> positionIM | string  |Initial margin. For portfolio margin mode, it returns "" |
 |> positionMM | string  |Maintenance margin. For portfolio margin mode, it returns "" |
