@@ -205,7 +205,7 @@ const config = {
     ({
       announcementBar: {
         id: 'offline_oldAPI',
-        content: 'Bybit will offline old version APIs, for more information, please refer to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates"> Transition from Legacy Version to New V5 API</a>',
+        content: 'Bybit will soon make old versions of the API obsolete. For more information, please refer to our guide to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates">transition from the legacy versions to the V5 API</a>.',
         backgroundColor: '#20232a',
         textColor: '#fff',
         isCloseable: false,
