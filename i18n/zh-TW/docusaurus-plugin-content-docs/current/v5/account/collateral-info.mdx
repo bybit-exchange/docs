@@ -24,7 +24,8 @@ GET `/v5/account/collateral-info`
 |> borrowAmount |string |已用借貸額度|
 |> availableToBorrow |string |用戶剩餘可藉額度|
 |> borrowable |boolean |是否是可藉貸的幣種, `true`: 是. `false`: 否|
-|> marginCollateral |boolean |是否可作為保證金抵押幣種, `true`: 是. `false`: 否|
+|> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <li>當marginCollateral=false時, 則collateralSwitch無意義</li>|
+|> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li>|
 |> collateralRatio |string |抵押品幣種折算為保證金的折算率|
 
 <a href="/api-explorer/v5/account/collateral-info"><Button>運行實例 >></Button></a>
@@ -72,6 +73,7 @@ print(session.get_collateral_info(
     "result": {
         "list": [
             {
+                "collateralSwitch": true,
                 "borrowAmount": "0",
                 "availableToBorrow": "2.5",
                 "freeBorrowingAmount": "0",
