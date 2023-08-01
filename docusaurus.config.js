@@ -203,6 +203,13 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      announcementBar: {
+        id: 'offline_oldAPI',
+        content: 'Bybit will offline old version APIs, for more information, please refer to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates"> Transition from Legacy Version to New V5 API</a>',
+        backgroundColor: '#20232a',
+        textColor: '#fff',
+        isCloseable: false,
+      },
       algolia: {
         appId: '6BDPYQN4N6',
         apiKey: '3945cc0bcfa5510237aa55a2fb83dd20',

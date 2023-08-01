@@ -52,6 +52,8 @@ GET `/v5/account/wallet-balance`
 |>> unrealisedPnl |string |Unrealised P&L |
 |>> cumRealisedPnl |string |Cumulative Realised P&L |
 |>> bonus |string |Bonus. _This is a unique field for UNIFIED account_ |
+|>> collateralSwitch |boolean |Whether it can be used as a margin collateral currency (platform) <ul><li>When marginCollateral=false, then collateralSwitch is meaningless</li><li>This is a unique field for UNIFIED account</li></ul> |
+|>> marginCollateral |boolean |Whether the collateral is turned on by user (user) <ul><li>When marginCollateral=true, then collateralSwitch is meaningful</li><li>This is a unique field for UNIFIED account</li></ul> |
 
 <a href="/api-explorer/v5/account/wallet"><Button>RUN >></Button></a>
 
@@ -99,32 +101,35 @@ print(session.get_wallet_balance(
     "result": {
         "list": [
             {
-                "totalEquity": "18070.32797922",
-                "accountIMRate": "0.0101",
-                "totalMarginBalance": "18070.32797922",
-                "totalInitialMargin": "182.60183684",
+                "totalEquity": "3.31216591",
+                "accountIMRate": "0",
+                "totalMarginBalance": "3.00326056",
+                "totalInitialMargin": "0",
                 "accountType": "UNIFIED",
-                "totalAvailableBalance": "17887.72614237",
+                "totalAvailableBalance": "3.00326056",
                 "accountMMRate": "0",
-                "totalPerpUPL": "-0.11001349",
-                "totalWalletBalance": "18070.43799271",
-                "accountLTV": "0.017",
-                "totalMaintenanceMargin": "0.38106773",
+                "totalPerpUPL": "0",
+                "totalWalletBalance": "3.00326056",
+                "accountLTV": "0",
+                "totalMaintenanceMargin": "0",
                 "coin": [
                     {
-                        "availableToBorrow": "2.5",
+                        "availableToBorrow": "3",
                         "bonus": "0",
                         "accruedInterest": "0",
-                        "availableToWithdraw": "0.805994",
+                        "availableToWithdraw": "0",
                         "totalOrderIM": "0",
-                        "equity": "0.805994",
+                        "equity": "0",
                         "totalPositionMM": "0",
-                        "usdValue": "12920.95352538",
+                        "usdValue": "0",
                         "unrealisedPnl": "0",
-                        "borrowAmount": "0",
+                        "collateralSwitch": true,
+                        "borrowAmount": "0.0",
                         "totalPositionIM": "0",
-                        "walletBalance": "0.805994",
+                        "walletBalance": "0",
                         "cumRealisedPnl": "0",
+                        "locked": "0",
+                        "marginCollateral": true,
                         "coin": "BTC"
                     }
                 ]
@@ -132,6 +137,6 @@ print(session.get_wallet_balance(
         ]
     },
     "retExtInfo": {},
-    "time": 1672125441042
+    "time": 1690872862481
 }
 ```

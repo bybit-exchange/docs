@@ -24,7 +24,8 @@ GET `/v5/account/collateral-info`
 |> borrowAmount |string |Borrow amount|
 |> availableToBorrow |string |Available amount to borrow|
 |> borrowable |boolean |Whether currency can be borrowed|
-|> marginCollateral |boolean |Whether it can be used as a margin collateral currency |
+|> marginCollateral |boolean |Whether it can be used as a margin collateral currency (platform) <li>When marginCollateral=false, then collateralSwitch is meaningless</li> |
+|> collateralSwitch |boolean |Whether the collateral is turned on by user (user) <li>When marginCollateral=true, then collateralSwitch is meaningful</li>|
 |> collateralRatio |string |Collateral ratio|
 
 <a href="/api-explorer/v5/account/collateral-info"><Button>RUN >></Button></a>
@@ -72,19 +73,20 @@ print(session.get_collateral_info(
     "result": {
         "list": [
             {
+                "collateralSwitch": true,
                 "borrowAmount": "0",
-                "availableToBorrow": "2.5",
+                "availableToBorrow": "3",
                 "freeBorrowingAmount": "0",
                 "borrowable": true,
                 "currency": "BTC",
-                "maxBorrowingAmount": "2.5",
-                "hourlyBorrowRate": "0.00000212",
+                "maxBorrowingAmount": "3",
+                "hourlyBorrowRate": "0.00000439",
                 "marginCollateral": true,
                 "collateralRatio": "0.95"
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1672127953899
+    "time": 1690872942477
 }
 ```

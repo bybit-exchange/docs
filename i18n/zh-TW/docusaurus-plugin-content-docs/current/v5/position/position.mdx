@@ -39,7 +39,7 @@ GET `/v5/position/list`
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**. _注意：若賬戶為組合保證金模式(PM)，該字段返回空字符串，槓桿規則失效_|
 |> markPrice| string  | symbol 的最新標記價格  |
-|> liqPrice| string  | 倉位強平價格，<ul><li>UTA(反向合約) & 普通账户 & UTA(開啟逐倉保證金模式)：是逐倉和全倉持仓的真實價格, 當強平價 < minPrice或者 強平價 > maxPrice, 則為`""`。</li><li>統一帳戶(全倉保證金)：是全倉持仓的预估价格（因为统一帳戶模式是按照帳戶維度控制风险率), 當強平價 < minPrice或者 強平價 > maxPrice, 則為`""`</li></ul>但是對於組合保證金模式，此字段為空，不會提供強平價格 |
+|> liqPrice| string  | 倉位強平價格，<ul><li>UTA(反向合約) & 普通账户 & UTA(開啟逐倉保證金模式)：是逐倉和全倉持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>統一帳戶(全倉保證金)：是全倉持仓的预估价格（因为统一帳戶模式是按照帳戶維度控制风险率), 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>但是對於組合保證金模式，此字段為空，不會提供強平價格 |
 |> bustPrice| string  | 倉位破產價格. 統一保證金模式返回`""`, 無倉位破產價格 (不包括統一帳戶下的反向交易)  |
 |> positionIM| string  | 倉位起始保證金. 組合保證金模式(PM)下, 該字段返回為空字符串|
 |> positionMM| string  | 倉位維持保證金. 組合保證金模式(PM)下, 該字段返回為空字符串|
