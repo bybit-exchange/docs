@@ -274,40 +274,6 @@ const config = {
             label: 'API Explorer',
           },
           {
-            label: 'Previous Version',
-            position: 'right',
-            items: [
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction',
-                label: 'Spot v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/usdc/perpetual/#t-introduction',
-                label: 'USDC Perpetual v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-introduction',
-                label: 'USDC Option v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/account_asset/v1/#t-introduction',
-                label: 'Account Asset v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/linear/#t-introduction',
-                label: 'USDT Perpetual v2'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/inverse/#t-introduction',
-                label: 'Inverse Perpetual v2'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/inverse_futures/#t-introduction',
-                label: 'Inverse Future v2'
-              },
-            ]
-          },
-          {
             to: '/faq',
             position: 'right',
             label: 'FAQ',
