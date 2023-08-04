@@ -30,7 +30,7 @@ GET `/v5/order/realtime`
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
 |openOnly |false |integer |<ul><li>統一帳戶 & 普通帳戶`0`(默認): 僅查詢活動委託訂單</li><li>統一帳戶: `1`,&emsp;統一帳戶(反向)和普通帳戶: `2` <br/>返回最近10分鐘僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶下最多保留500條紀錄，如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</li><li>普通帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>|
-|orderFilter |false |string|`Order`: 活動單, `StopOrder`: 條件單，僅期貨有效, `tpslOrder`: 止盈止損單, 僅現貨有效 <ul><li>普通帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
+|orderFilter |false |string|`Order`: 活動單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 止盈止損單, 僅現貨有效 <ul><li>普通帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 
