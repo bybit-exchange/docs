@@ -1,6 +1,40 @@
 ---
 title: V5
 ---
+## 2023-08-08
+### REST API
+* [升級統一保證金賬戶](../v5/account/upgrade-unified-account) [更新]
+    * 支持升級至UTA Pro
+
+* [查詢賬戶配置](../v5/account/account-info) [更新]
+    * "unifiedMarginStatus"新增枚舉值`4`, 用於表示UTA Pro
+
+## 2023-08-07
+### REST API
+* [創建委託單](../v5/order/create-order) [更新]
+    * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`, 用於下單
+
+* [撤銷委託單](../v5/order/cancel-order) [更新]
+    * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`, 用於撤單
+
+* [撤銷所有訂單](../v5/order/cancel-all) [更新]
+    * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`
+
+* [查詢實時委託單](../v5/order/open-order) [更新]
+    * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`, stopOrderType字段復用`Stop`, 同時表示現貨條件單類型
+
+* [查詢歷史訂單](../v5/order/order-list) [更新]
+    * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`, stopOrderType字段復用`Stop`, 同時表示現貨條件單類型
+
+* [配置互相劃轉的子帳號](../v5/asset/enable-unitransfer-subuid) [廢棄]
+    * 該接口廢棄, 因為移除了萬能劃轉限制, 默認所有子帳戶都可以進行萬能劃轉
+
+### Websocket API
+* [訂單](../v5/websocket/private/order) [更新]
+    * stopOrderType字段復用`Stop`, 同時表示現貨條件單類型
+    * 新增響應字段`feeCurrency`, 用於表示現貨交易的手續費幣種
+    * 經典帳戶下的現貨交易, `updatedTime`不再是空字符串
+
 ## 2023-07-31
 ### REST API
 * [查詢持倉 (實時)](../v5/position)

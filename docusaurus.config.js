@@ -205,7 +205,7 @@ const config = {
     ({
       announcementBar: {
         id: 'offline_oldAPI',
-        content: 'Bybit will offline old version APIs, for more information, please refer to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates"> Transition from Legacy Version to New V5 API</a>',
+        content: 'Bybit will soon make old versions of the API obsolete. For more information, please refer to our guide to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates">transition from the legacy versions to the V5 API</a>.',
         backgroundColor: '#20232a',
         textColor: '#fff',
         isCloseable: false,
@@ -272,40 +272,6 @@ const config = {
             to: '/api-explorer/v5/category',
             position: 'left',
             label: 'API Explorer',
-          },
-          {
-            label: 'Previous Version',
-            position: 'right',
-            items: [
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction',
-                label: 'Spot v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/usdc/perpetual/#t-introduction',
-                label: 'USDC Perpetual v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-introduction',
-                label: 'USDC Option v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/account_asset/v1/#t-introduction',
-                label: 'Account Asset v1'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/linear/#t-introduction',
-                label: 'USDT Perpetual v2'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/inverse/#t-introduction',
-                label: 'Inverse Perpetual v2'
-              },
-              {
-                href: 'https://bybit-exchange.github.io/docs-legacy/futuresV2/inverse_futures/#t-introduction',
-                label: 'Inverse Future v2'
-              },
-            ]
           },
           {
             to: '/faq',

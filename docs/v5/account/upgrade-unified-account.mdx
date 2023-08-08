@@ -5,6 +5,20 @@ sidebar_position: 2
 ---
 Upgrade Unified Account
 
+:::tip Upgrade Guidance
+Check your current account status by calling this [Get Account Info](account-info)
+
+* if unifiedMarginStatus=1, then it is classic account, you can call below upgrade endpoint to UTA Pro. Check
+[Get Account Info](account-info) after a while and if unifiedMarginStatus=4, then it is successfully upgraded to UTA Pro.
+
+* if unifiedMarginStatus=2, then it is UMA, you need to call below upgrade endpoint twice. The first call,
+your account will be upgraded to UTA, please make sure you call this [Get Account Info](account-info) and unifiedMarginStatus=3, then
+you can start the 2nd call, if you see unifiedMarginStatus=4, then it is UTA Pro.
+
+* if unifiedMarginStatus=3, then it is UTA, you need to call below upgrade endpoint to UTA Pro. Check
+[Get Account Info](account-info) after a while and if unifiedMarginStatus=4, then it is successfully upgraded to UTA Pro.
+:::
+
 :::note important
 Banned / Express path users cannot upgrade the account to Unified Account for now.
 :::
@@ -24,8 +38,8 @@ You can upgrade the normal acct to unified acct without closing positions now, b
 * **Cannot have TPSL order either**
 
 3. When the `unifiedUpgradeProcess` = PROCESS, it means that the system needs asynchronous verification processing, and the upgrade
-result cannot be returned in real time. You can check API [Get API Key Information](../user/apikey-info) after 3-5 minutes,
-check whether the upgrade is successful according to the "uta" field in the return.
+result cannot be returned in real time. You can check API [Get Account Info](account-info) after 3-5 minutes,
+check whether the upgrade is successful according to the "unifiedMarginStatus" field in the return.
 
 4. During the account upgrade process, the data of **Rest API/Websocket stream** may be inaccurate due to the fact that the account-related
 asset data is in the processing state. It is recommended to query and use it after the upgrade is completed.

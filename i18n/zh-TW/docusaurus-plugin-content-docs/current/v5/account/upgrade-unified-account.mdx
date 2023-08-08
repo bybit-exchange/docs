@@ -5,6 +5,19 @@ sidebar_position: 2
 ---
 升級統一保證金賬戶
 
+:::tip 升級引導
+通過調[查詢賬戶配置](account-info)來確認當前的帳戶型態
+
+* 如果unifiedMarginStatus=1, 則表示當前帳戶是經典帳戶, 您可以調用以下接口升級到UTA Pro. 等到調用升級接口後一段時間, 重新調用[查詢賬戶配置](account-info),
+如果unifiedMarginStatus=4, 則表示帳戶已經成功升級至UTA Pro.
+
+* 如果unifiedMarginStatus=2, 則表示當前帳戶是統一保證金帳戶(UMA), 您需要調用下面升級接口兩次. 通過第一次請求, 您的帳戶可以被升級到統一交易帳戶 (UTA), 但依然需要通過
+[查詢賬戶配置](account-info)接口來確認是否unifiedMarginStatus=3, 如果是的, 則可以開始第二次請求, 當您看見unifiedMarginStatus=4, 則表面帳戶被升級到了UTA Pro.
+
+* 如果unifiedMarginStatus=3, 則表示當前帳戶是統一交易帳戶 (UTA), 您可以調用以下接口升級到UTA Pro. 等到調用升級接口後一段時間, 重新調用[查詢賬戶配置](account-info),
+如果unifiedMarginStatus=4, 則表示帳戶已經成功升級至UTA Pro.
+:::
+
 :::note important
 封禁 / 極簡鏈路用戶當前無法升級至統一帳戶.
 :::
