@@ -1,0 +1,61 @@
+---
+title: Set Collateral Coin
+sidebar_label: Set Collateral Coin
+sidebar_position: 4.5
+---
+You can decide whether the assets in the Unified account needs to be collateral coins.
+
+### HTTP Request
+GET `/v5/account/set-collateral-switch`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |**true** |string |Coin name <ul><li>You can get collateral coin from [here](collateral-info)</li><li>USDT, USDC cannot be switched off</li></ul>|
+|collateralSwitch |**true** |string |`ON`: switch on collateral, `OFF`: switch off collateral|
+
+### Response Parameters
+None
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/set-collateral-switch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1690513916181
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 55
+
+{
+    "coin": "BTC",
+    "collateralSwitch": "ON"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1690515818656
+}
+```
