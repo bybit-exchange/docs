@@ -19,11 +19,12 @@ GET `/v5/account/collateral-info`
 |list |array |Object |
 |> currency |string |Currency of all current collateral|
 |> hourlyBorrowRate |string |Hourly borrow rate|
-|> maxBorrowingAmount |string |Max borrow amount|
+|> maxBorrowingAmount |string |Max borrow amount. This value is shared across main-sub uids|
 |> freeBorrowingAmount |string |Free borrow amount|
 |> borrowAmount |string |Borrow amount|
-|> availableToBorrow |string |Available amount to borrow|
+|> availableToBorrow |string |Available amount to borrow. This value is shared across main-sub uids|
 |> borrowable |boolean |Whether currency can be borrowed|
+|> borrowUsageRate |string |Borrow usage rate: borrowAmount/maxBorrowingAmount. It is an actual value between 0 and 1|
 |> marginCollateral |boolean |Whether it can be used as a margin collateral currency (platform) <li>When marginCollateral=false, then collateralSwitch is meaningless</li> |
 |> collateralSwitch |boolean |Whether the collateral is turned on by user (user) <li>When marginCollateral=true, then collateralSwitch is meaningful</li>|
 |> collateralRatio |string |Collateral ratio|
@@ -74,19 +75,20 @@ print(session.get_collateral_info(
         "list": [
             {
                 "collateralSwitch": true,
-                "borrowAmount": "0",
-                "availableToBorrow": "3",
+                "borrowAmount": "1.12849124",
+                "availableToBorrow": "1.87150875",
                 "freeBorrowingAmount": "0",
                 "borrowable": true,
                 "currency": "BTC",
                 "maxBorrowingAmount": "3",
-                "hourlyBorrowRate": "0.00000439",
+                "hourlyBorrowRate": "0.0000013",
+                "borrowUsageRate": "0.376163",
                 "marginCollateral": true,
                 "collateralRatio": "0.95"
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1690872942477
+    "time": 1691565901952
 }
 ```
