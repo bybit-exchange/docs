@@ -36,9 +36,9 @@ GET `/v5/account/transaction-log`
 |> tradePrice |string |Trade price |
 |> funding	|string	|Funding fee <ul><li>Positive value means receiving funding fee</li><li>Negative value means deducting funding fee</li></ul>|
 |> fee	|string	|Trading fee <ul><li>Positive fee value means expense</li><li>Negative fee value means rebates</li></ul>|
-|> cashFlow |string |Cash flow |
-|> change |string |Change |
-|> cashBalance	|string	|Cash balance|
+|> cashFlow |string |Cash flow, e.g., (1) close the position, and unRPL converts to RPL, (2) 8-hour session settlement for USDC Perp and Futures, (3) transfer in or transfer out. This does not include trading fee, funding fee |
+|> change |string |Change = cashFlow + funding - fee |
+|> cashBalance	|string	|Cash balance. This is the wallet balance after a cash change|
 |> feeRate	|string	|<ul><li>When type=`TRADE`, then it is trading fee rate</li><li>When type=`SETTLEMENT`, it means funding fee rate. For side=Buy, feeRate=market fee rate; For side=Sell, feeRate= - market fee rate</li></ul> |
 |> bonusChange	|string	|The change of bonus |
 |> tradeId	|string |Trade ID |
