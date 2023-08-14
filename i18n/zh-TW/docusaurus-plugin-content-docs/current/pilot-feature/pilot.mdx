@@ -2,6 +2,27 @@
 title: 試點功能
 slug: /pilot-feature
 ---
+## 增加WS私有連接可配置斷線時間
+* 可用日期: *測試網 - 已上線, 主網 - 2023年8月17日*
+* 覆蓋範圍: *構建v5私有連接時可用該配置參數*
+* Details: *構建連接時, 設置`/v5/private?max_active_time=`, 值可以是從`30s`到`600s`之間。當服務端與客戶端之間無上下行數據時, 當達到這個配置的時間間隔時, 服務端則會斷開連接 (並不完全準確, 因為當前ticker的輪訓時間是30秒)*
+
+---
+
+## 調整錯誤碼
+* 可用日期: *測試網 - 已上線, 主網 - 2023年8月14日*
+* 覆蓋範圍: [全倉槓桿開關](v5/spot-margin-uta/switch-mode#), [全倉槓桿設置](v5/spot-margin-uta/set-leverage#),
+[設置保證金模式](v5/account/set-margin-mode#), [設置保證金模式](/derivatives/unified/usc-margin-mode#),
+<a href="https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-assetinfo">設置保證金模式</a>
+* 詳細內容: 當機構借貸用戶處於強平時, 相關接口調用返回的錯誤碼發生改變
+
+|舊錯誤碼 |新錯誤碼 | 消息 |
+|:----- |:------|:------|
+|~~3400128~~ |3200320 |Operations Restriction: The current LTV ratio of your Institutional Loan has hit the liquidation threshold. Assets in your account are being liquidated. |
+|~~176036~~ |3200320 |Operations Restriction: The current LTV ratio of your Institutional Loan has hit the liquidation threshold. Assets in your account are being liquidated. |
+
+---
+
 ## UTA母子帳戶間共享借貸額度
 * 可用日期: *測試網 - 已上線, 主網 - 2023年8月11日*
 * 覆蓋範圍: _統一帳戶_

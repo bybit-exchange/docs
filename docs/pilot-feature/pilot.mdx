@@ -2,6 +2,27 @@
 title: Pilot Features
 slug: /pilot-feature
 ---
+## Add Customised Disconnection Configuration
+* Available date: *Testnet - alive, Mainnet - 17 Aug 2023*
+* Cover: *All kinds of accounts - V5 Websocket Private Connection*
+* Details: *Set `/v5/private?max_active_time=`, supported range is from `30s` to `600s`*
+
+---
+
+## Adjust error code
+* Available date: *Testnet - alive, Mainnet - 14 Aug 2023*
+* Cover: [Toggle Margin Trade](v5/spot-margin-uta/switch-mode#), [Set Leverage](v5/spot-margin-uta/set-leverage#),
+[Set Margin Mode](v5/account/set-margin-mode#), [Set Margin Mode](/derivatives/unified/usc-margin-mode#),
+<a href="https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-assetinfo">Set Margin Mode</a>
+* Details: If ins loan account has a liquidation, the error while calling relative API is changed.
+
+|Old error code |New error code | Msg |
+|:----- |:------|:------|
+|~~3400128~~ |3200320 |Operations Restriction: The current LTV ratio of your Institutional Loan has hit the liquidation threshold. Assets in your account are being liquidated. |
+|~~176036~~ |3200320 |Operations Restriction: The current LTV ratio of your Institutional Loan has hit the liquidation threshold. Assets in your account are being liquidated. |
+
+---
+
 ## UTA borrow quota is shared across main-sub uids
 * Available date: *Testnet - alive, Mainnet - 11 Aug 2023*
 * Cover: _UTA account_
