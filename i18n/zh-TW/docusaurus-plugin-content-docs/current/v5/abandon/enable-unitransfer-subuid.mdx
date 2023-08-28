@@ -1,36 +1,38 @@
 ---
-title: Enable Universal Transfer for Sub UID (Depreciated)
-sidebar_label: Enable Universal Transfer for Sub UID (Depreciated)
-sidebar_position: 4
+title: 配置互相劃轉的子帳號
+sidebar_label: 配置互相劃轉的子帳號
+sidebar_position: 3
 ---
 :::info
-No need to configure transferable sub uids. Any sub uids can be transferred universally.
+無需再配置可劃轉的子帳號, 該限制已移除, 默認任意子帳號之間可以劃轉
 :::
 
-Transfer between sub-sub or main-sub
+該接口用於配置開啟萬能劃轉的子帳號列表。沒有進行配置的子帳號是無法進行萬能劃轉的。
 
-Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
+:::tip
+萬能劃轉是允許您將資金直接從一個子帳號劃轉到另一個子帳號，同樣允許母子帳號間的劃轉。
+:::
 
 :::caution
-Can query by the master UID's api key **only**
+僅支持母帳號API key
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/asset/transfer/save-transfer-sub-member`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|subMemberIds |**true** |array | This list has a <b>single item</b>. Separate multiple UIDs by comma, e.g., ``"uid1,uid2,uid3"``|
+|subMemberIds |**true** |array&ltstring&gt |子帳號. 支持輸入多個子帳號，用逗號隔開, 比如, "uid1,uid2,uid3"|
 
-### Response Parameters
-None
+### 響應參數
+無
 
-<a href="/api-explorer/v5/asset/enable-unitransfer-subuid"><Button>RUN >></Button></a>
+<a href="/api-explorer/v5/asset/enable-unitransfer-subuid"><Button>運行實例 >></Button></a>
 
 ---
 
-### Request Example
+### 請求示例
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
