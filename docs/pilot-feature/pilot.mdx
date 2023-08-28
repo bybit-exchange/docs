@@ -2,6 +2,234 @@
 title: Pilot Features
 slug: /pilot-feature
 ---
+## UTA Pro Batch Feature
+* Available date: *Testnet - alive, Mainnet - 31 Aug 2023*
+* Cover: *UTA Pro, USDT Perpetual, USDC Perpetual & USDC Futures (linear)*
+* Details: *UTA Pro user can batch create/amend/cancel linear orders*
+
+<details>
+<summary>Sample code</summary>
+
+<Tabs>
+<TabItem value="Batch Create">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/create-batch
+
+> Request Body
+{
+    "category": "linear",
+    "request": [
+        {
+
+            "symbol": "BTCUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "0.1",
+            "price": "25500",
+            "timeInForce": "GTC",
+            "orderLinkId": "test-03",
+            "reduceOnly": false,
+            "tpslMode": "Full",
+            "takeProfit": "26300",
+            "stopLoss": "24800",
+            "triggerDirection": null,
+            "triggerPrice": null,
+            "triggerBy": null,
+            "positioIdx": 0,
+            "smpType": null,
+            "tpLimitPrice": null,
+            "slLimitPrice": null,
+            "slOrderType": null,
+            "tpOrderType": null
+
+        },
+        {
+
+            "symbol": "ETHUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "0.1",
+            "price": "1550",
+            "timeInForce": "GTC",
+            "orderLinkId": "test-04",
+            "reduceOnly": false,
+            "tpslMode": "Full",
+            "takeProfit": "1680",
+            "stopLoss": "1490",
+            "triggerDirection": null,
+            "triggerPrice": null,
+            "triggerBy": null,
+            "positioIdx": 0,
+            "smpType": null,
+            "tpLimitPrice": null,
+            "slLimitPrice": null,
+            "slOrderType": null,
+            "tpOrderType": null
+        }
+    ]
+}
+> Response
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03",
+                "createAt": "1693212677410"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04",
+                "createAt": "1693212677410"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212677411
+}
+```
+</TabItem>
+
+<TabItem value="Batch Amend">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/amend-batch
+
+> Request Body
+{
+    "category": "linear",
+    "request": [
+        {
+            "symbol": "BTCUSDT",
+            "orderType": "Limit",
+            "qty": "0.05",
+            "price": "25800",
+            "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14"
+        },
+        {
+            "symbol": "ETHUSDT",
+            "orderType": "Limit",
+            "qty": "0.05",
+            "price": "1495",
+            "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c"
+        }
+    ]
+}
+> Response
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212802143
+}
+```
+</TabItem>
+
+<TabItem value="Batch Cancel">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/cancel-batch
+
+> Request Body
+{
+    "category": "linear",
+    "request": [
+        {
+            "symbol": "BTCUSDT",
+            "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14"
+        },
+        {
+            "symbol": "ETHUSDT",
+            "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c"
+        }
+    ]
+}
+> Response
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212965773
+}
+```
+</TabItem>
+</Tabs>
+</details>
+
+---
+
 ## Add Customised Disconnection Configuration
 * Available date: *Testnet - alive, Mainnet - 16 Aug 2023*
 * Cover: *All kinds of accounts - V5 Websocket Private Connection*

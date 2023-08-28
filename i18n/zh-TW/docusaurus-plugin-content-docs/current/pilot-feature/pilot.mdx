@@ -2,6 +2,234 @@
 title: 試點功能
 slug: /pilot-feature
 ---
+## UTA Pro支持批量下單
+* 可用日期: *測試網 - 已上線, 主網 - 2023年8月31日*
+* 覆蓋範圍: *UTA Pro帳戶: USDT永續, USDC永續 & USDC交割 (正向合約linear)*
+* 詳細內容: *UTA Pro帳戶能夠進行正向合約的批量下改撤*
+
+<details>
+<summary>示例</summary>
+
+<Tabs>
+<TabItem value="批量下單">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/create-batch
+
+> 請求體
+{
+    "category": "linear",
+    "request": [
+        {
+
+            "symbol": "BTCUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "0.1",
+            "price": "25500",
+            "timeInForce": "GTC",
+            "orderLinkId": "test-03",
+            "reduceOnly": false,
+            "tpslMode": "Full",
+            "takeProfit": "26300",
+            "stopLoss": "24800",
+            "triggerDirection": null,
+            "triggerPrice": null,
+            "triggerBy": null,
+            "positioIdx": 0,
+            "smpType": null,
+            "tpLimitPrice": null,
+            "slLimitPrice": null,
+            "slOrderType": null,
+            "tpOrderType": null
+
+        },
+        {
+
+            "symbol": "ETHUSDT",
+            "orderType": "Limit",
+            "side": "Buy",
+            "qty": "0.1",
+            "price": "1550",
+            "timeInForce": "GTC",
+            "orderLinkId": "test-04",
+            "reduceOnly": false,
+            "tpslMode": "Full",
+            "takeProfit": "1680",
+            "stopLoss": "1490",
+            "triggerDirection": null,
+            "triggerPrice": null,
+            "triggerBy": null,
+            "positioIdx": 0,
+            "smpType": null,
+            "tpLimitPrice": null,
+            "slLimitPrice": null,
+            "slOrderType": null,
+            "tpOrderType": null
+        }
+    ]
+}
+> 響應
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03",
+                "createAt": "1693212677410"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04",
+                "createAt": "1693212677410"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212677411
+}
+```
+</TabItem>
+
+<TabItem value="批量改單">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/amend-batch
+
+> Request Body
+{
+    "category": "linear",
+    "request": [
+        {
+            "symbol": "BTCUSDT",
+            "orderType": "Limit",
+            "qty": "0.05",
+            "price": "25800",
+            "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14"
+        },
+        {
+            "symbol": "ETHUSDT",
+            "orderType": "Limit",
+            "qty": "0.05",
+            "price": "1495",
+            "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c"
+        }
+    ]
+}
+> Response
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04"
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212802143
+}
+```
+</TabItem>
+
+<TabItem value="批量撤單">
+
+```http
+POST https://api-testnet.bybit.com/v5/order/cancel-batch
+
+> Request Body
+{
+    "category": "linear",
+    "request": [
+        {
+            "symbol": "BTCUSDT",
+            "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14"
+        },
+        {
+            "symbol": "ETHUSDT",
+            "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c"
+        }
+    ]
+}
+> Response
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "BTCUSDT",
+                "orderId": "6afd7e83-7176-4f73-93e0-44a8f2babd14",
+                "orderLinkId": "test-03"
+            },
+            {
+                "category": "linear",
+                "symbol": "ETHUSDT",
+                "orderId": "9eeef30c-c682-42b2-a4a7-7e403db8506c",
+                "orderLinkId": "test-04"
+            }
+        ]
+},
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 0,
+                "msg": "OK"
+            },
+            {
+                "code": 0,
+                "msg": "OK"
+            }
+        ]
+    },
+    "time": 1693212965773
+}
+```
+</TabItem>
+</Tabs>
+</details>
+
+---
+
 ## 增加WS私有連接可配置斷線時間
 * 可用日期: *測試網 - 已上線, 主網 - 2023年8月16日*
 * 覆蓋範圍: *構建v5私有連接時可用該配置參數*
