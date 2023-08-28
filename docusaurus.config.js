@@ -252,12 +252,6 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'v3/intro',
-            position: 'left',
-            label: 'V3 API',
-          },
-          {
-            type: 'doc',
             docId: 'pilot-feature/pilot',
             position: 'left',
             label: 'Pilot Feature',
@@ -272,6 +266,12 @@ const config = {
             to: '/api-explorer/v5/category',
             position: 'left',
             label: 'API Explorer',
+          },
+          {
+            type: 'doc',
+            docId: 'v3/intro',
+            position: 'right',
+            label: 'V3 API',
           },
           {
             to: '/faq',
