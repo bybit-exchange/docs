@@ -53,7 +53,7 @@ POST `/v5/order/create`
 |isLeverage |false |integer |是否借貸. 僅**統一帳戶的現貨交易**有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
 |side |**true** |string |`Buy`, `Sell`|
 |[orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
-|qty |**true** |string |訂單數量. 若category=spot, 且是Market Buy單，則qty表示為報價幣種金額 |
+|qty |**true** |string |訂單數量 <ul><li>若category=spot, 且是Market Buy單，則qty表示為報價幣種金額，精度需要满足[交易產品規格接口](../market/instrument#response-parameters)現貨下的`quotePrecision`</li><li>除此之外, 輸入的qty需要是各產品規定的`minOrderQty`的整數倍</li></ul> |
 |price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
 |triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
 |orderFilter |false |string |僅對現貨有效. `Order`: 普通單,`tpslOrder`: 止盈止損單,`StopOrder`: 條件單. 若不傳, 默認`Order`|

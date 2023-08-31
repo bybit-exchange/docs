@@ -1,6 +1,23 @@
 ---
 title: V5
 ---
+## 2023-08-31
+### REST API
+* [撤銷所有訂單](../v5/order/cancel-all) [更新]
+    * 新增可選請求參數 `stopOrderType`
+    * 字段*orderFilter*的枚舉值 `Order` 和 `StopOrder` 支持linear和inverse的產品類型
+
+* [查詢充值紀錄 (鏈上)](../v5/asset/deposit-record) [更新]
+    * 新增響應字段`depositType`, 表示該筆充值的類型, 如觸發了每日充值限額或者充值異常, 可以在網站上處理那些無法充值成功的資產
+
+* [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/sub-deposit-record) [更新]
+    * 新增響應字段`depositType`, 表示該筆充值的類型, 如觸發了每日充值限額或者充值異常, 可以在網站上處理那些無法充值成功的資產
+
+## 2023-08-30
+### REST API
+* [查詢API Key相關信息](../v5/user/apikey-info) [更新]
+    * 新增響應字段 `parentUid`
+
 ## 2023-08-25
 ### REST API
 * [配置互相劃轉的子帳號](../v5/abandon/enable-unitransfer-subuid) [廢棄]
@@ -90,9 +107,6 @@ title: V5
 
 * [查詢歷史訂單](../v5/order/order-list) [更新]
     * 現貨支持條件單, orderFilter新增枚舉值 `StopOrder`, stopOrderType字段復用`Stop`, 同時表示現貨條件單類型
-
-* [配置互相劃轉的子帳號](../v5/asset/enable-unitransfer-subuid) [廢棄]
-    * 該接口廢棄, 因為移除了萬能劃轉限制, 默認所有子帳戶都可以進行萬能劃轉
 
 ### Websocket API
 * [訂單](../v5/websocket/private/order) [更新]

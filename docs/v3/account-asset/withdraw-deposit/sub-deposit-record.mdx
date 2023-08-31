@@ -40,6 +40,7 @@ GET `/asset/v3/private/deposit/sub-member-record/query`
 |> txIndex|string|transaction sequence number|
 |> blockHash|string|hash number on the chain|
 |> batchReleaseLimit|string|The deposit limit for this coin in this chain. `"-1"` means no limit|
+|> depositType|integer|The deposit type. `0`: normal deposit, `10`: the deposit reaches daily deposit limit, `20`: abnormal deposit|
 |nextPageCursor|string|cursor information: used for pagination. Default value: `""`|
 
 ### Request Example
@@ -74,7 +75,8 @@ X-BAPI-RECV-WINDOW: 50000
                 "confirmations": "10000",
                 "txIndex": "",
                 "blockHash": "",
-                "batchReleaseLimit": "-1"
+                "batchReleaseLimit": "-1",
+                "depositType": 0
             }
         ],
         "nextPageCursor": "eyJtaW5JRCI6MTAwNTYwNiwibWF4SUQiOjEwMzE1MjN9"
