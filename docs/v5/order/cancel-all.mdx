@@ -23,7 +23,8 @@ POST `/v5/order/cancel-all`
 |symbol |false|string |Symbol name. `linear` & `inverse`: **Required** if not passing baseCoin or settleCoin|
 |baseCoin |false|string |Base coin <ul><li>`linear` & `inverse`: If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin</li><li>Normal `spot`: invalid</li></ul>|
 |settleCoin |false|string |Settle coin <ul><li>`linear` & `inverse`: **Required** if not passing symbol or baseCoin</li><li>Does not support `spot`</li></ul>|
-|orderFilter |false |string |Valid for `spot` **only**. `Order`, `tpslOrder`, `StopOrder`. If not passed, `Order` by default|
+|orderFilter |false |string |<ul><li>category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`. If not passed, `Order` by default</li><li>category=`linear` or `inverse`, you can pass `Order`, `StopOrder`. If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order</li><li>category=`option`, you can pass `Order`. No matter it is passed or not, always cancel all orders</li></ul>|
+|stopOrderType |false |string |Stop order type, `Stop` <li>Only used for category=`linear` or `inverse` and orderFilter=`StopOrder`,you can cancel conditional orders except TP/SL order and Trailing stop orders with this param</li> |
 
 <a href="/api-explorer/v5/trade/cancel-all"><Button>RUN >></Button></a>
 
