@@ -42,88 +42,193 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 
 ### 接口頻率限制表
 #### 交易
+<Tabs groupId="trade">
+<TabItem value="classic" label="經典帳戶">
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th rowSpan="2">請求方式</th><th rowSpan="2">路徑</th><th colSpan="3" align="center">普通帳戶 / UTA</th><th colSpan="4">UTA Pro</th><th rowSpan="2">是否可提頻</th>
+        <th rowSpan="2">Method</th><th rowSpan="2">Path</th><th colSpan="3" align="center">經典帳戶</th><th rowSpan="2">是否可提頻</th>
     </tr>
     <tr>
-        <th>正向合約 & 反向合約</th><th>期權</th><th>現貨</th><th>正向合約</th><th>反向合約</th><th>期權</th><th>現貨</th>
+        <th>inverse</th><th>linear</th><th>spot</th>
     </tr>
     <tr>
-        <td rowSpan="7">POST</td><td>/v5/order/create</td><td align="center">10/s</td><td>10/s</td><td>20/s</td><td>10/s</td><td>10/s</td><td>10/s</td><td>20/s</td><td>Y</td>
+        <td rowSpan="4">POST</td><td>/v5/order/create</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">Y</td>
     </tr>
     <tr>
-        <td>/v5/order/amend</td><td align="center">10/s</td><td>10/s</td><td>-</td><td>10/s</td><td>10/s</td><td>10/s</td><td>-</td><td>Y</td>
+        <td>/v5/order/amend</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">Y</td>
     </tr>
     <tr>
-        <td>/v5/order/cancel</td><td align="center">10/s</td><td>10/s</td><td>20/s</td><td>10/s</td><td>10/s</td><td>10/s</td><td>20/s</td><td>Y</td>
+        <td>/v5/order/cancel</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">Y</td>
     </tr>
     <tr>
-        <td>/v5/order/cancel-all</td><td align="center">10/s</td><td>1/s</td><td>20/s</td><td>10/s</td><td>10/s</td><td>1/s</td><td>20/s</td><td>N</td>
+        <td>/v5/order/cancel-all</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">N</td>
     </tr>
     <tr>
-        <td>/v5/order/create-batch</td><td align="center">-</td><td>10/s</td><td>-</td><td>-</td><td>-</td><td>10/s</td><td>-</td><td>Y</td>
+        <td rowSpan="2">GET</td><td>/v5/order/realtime</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">N</td>
     </tr>
     <tr>
-        <td>/v5/order/amend-batch</td><td align="center">-</td><td>10/s</td><td>-</td><td>-</td><td>-</td><td>10/s</td><td>-</td><td>Y</td>
-    </tr>
-    <tr>
-        <td>/v5/order/cancel-batch</td><td align="center">-</td><td>10/s</td><td>-</td><td>-</td><td>-</td><td>10/s</td><td>-</td><td>Y</td>
-    </tr>
-    <tr>
-        <td rowSpan="2">GET</td><td>/v5/order/realtime</td><td align="center">10/s</td><td>10/s</td><td>20/s</td><td>10/s</td><td>10/s</td><td>10/s</td><td>20/s</td><td>N</td>
-    </tr>
-    <tr>
-        <td>/v5/order/history</td><td align="center">10/s</td><td>10/s</td><td>20/s</td><td>10/s</td><td>10/s</td><td>10/s</td><td>20/s</td><td>N</td>
+        <td>/v5/order/history</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">N</td>
     </tr>
 </table>
 </span>
+</TabItem>
+
+<TabItem value="uta-pro" label="UTA Pro">
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th rowSpan="2">請求方式</th><th rowSpan="2">路徑</th><th colSpan="4" align="center">UTA Pro</th><th rowSpan="2">是否可提頻</th>
+    </tr>
+    <tr>
+        <th>inverse</th><th>linear</th><th>option</th><th>spot</th>
+    </tr>
+    <tr>
+        <td rowSpan="7">POST</td><td>/v5/order/create</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">10/s</td><td>20/s</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td>/v5/order/amend</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">10/s</td><td>20/s</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel-all</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">1/s</td><td>20/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/order/create-batch</td><td align="center">-</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td>/v5/order/amend-batch</td><td align="center">-</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td>/v5/order/cancel-batch</td><td align="center">-</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">Y</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">GET</td><td>/v5/order/realtime</td><td align="center">10/s</td><td colSpan="3" align="center">50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/order/history</td><td align="center">10/s</td><td colSpan="3" align="center">50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/order/spot-borrow-check</td><td colSpan="3" align="center">-</td><td align="center">50/s</td><td align="center">N</td>
+    </tr>
+</table>
+</span>
+</TabItem>
+</Tabs>
 
 #### 持倉
+<Tabs groupId="position">
+<TabItem value="classic" label="經典帳戶">
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>請求方式</th><th>路徑</th><th>正向/反向合約</th><th>現貨</th><td>是否可提頻</td>
+        <th rowSpan="2">請求方式</th><th rowSpan="2">路徑</th><th colSpan="3" align="center">經典帳戶</th><th rowSpan="2">是否可提頻</th>
     </tr>
     <tr>
-        <td rowSpan="3">GET</td><td>/v5/position/list</td><td>10 req/s</td><td>-</td><td>N</td>
+        <th>inverse</th><th>linear</th><th>spot</th>
     </tr>
     <tr>
-        <td>/v5/execution/list</td><td>10 req/s</td><td>20 req/s</td><td>N</td>
+        <td rowSpan="3">GET</td><td>/v5/position/list</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">N</td>
     </tr>
     <tr>
-        <td>/v5/position/closed-pnl</td><td>10 req/s</td><td>-</td><td>N</td>
+        <td>/v5/execution/list</td><td colSpan="2" align="center">10/s</td><td>20/s</td><td align="center">N</td>
     </tr>
     <tr>
-        <td rowSpan="4">POST</td><td>/v5/position/set-leverage</td><td>10 req/s</td><td>-</td><td>N</td>
-    </tr>
-    <tr>
-        <td>/v5/position/set-tpsl-mode</td><td>10 req/s</td><td>-</td><td>N</td>
-    </tr>
-    <tr>
-        <td>/v5/position/set-risk-limit</td><td>10 req/s</td><td>-</td><td>N</td>
-    </tr>
-    <tr>
-        <td>/v5/position/trading-stop</td><td>10 req/s</td><td>-</td><td>N</td>
+        <td>/v5/position/closed-pnl</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">N</td>
     </tr>
 </table>
 </span>
+</TabItem>
+
+<TabItem value="uta-pro" label="UTA Pro">
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th rowSpan="2">請求方式</th><th rowSpan="2">路徑</th><th colSpan="4" align="center">UTA Pro</th><th rowSpan="2">是否可提頻</th>
+    </tr>
+    <tr>
+        <th>inverse</th><th>linear</th><th>option</th><th>spot</th>
+    </tr>
+    <tr>
+        <td rowSpan="3">GET</td><td>/v5/position/list</td><td align="center">10/s</td><td colSpan="2" align="center">50/s</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/execution/list</td><td align="center">10/s</td><td colSpan="3" align="center">50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/closed-pnl</td><td align="center">10/s</td><td align="center">50/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+</table>
+</span>
+</TabItem>
+</Tabs>
 
 #### 帳戶
+<Tabs groupId="account">
+<TabItem value="classic" label="經典帳戶">
 <span class="blocky_table">
 <table border="0.8">
     <tr>
-        <th>請求方式</th><th>路徑</th><th>頻率</th><td>是否可提頻</td>
+        <th>請求方式</th><th>路徑</th><th></th><th>頻率</th><th>是否可提頻</th>
     </tr>
     <tr>
-        <td rowSpan="2">GET</td><td>/v5/account/wallet-balance</td><td>10 req/s</td><td>N</td>
+        <td rowSpan="5">GET</td><td rowSpan="2">/v5/account/wallet-balance</td><td>accountType=SPOT</td><td>20/s</td><td align="center">N</td>
     </tr>
     <tr>
-        <td>/v5/account/fee-rate</td><td>10 req/s</td><td>N</td>
+         <td>accountType=CONTRACT</td><td>10/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">/v5/account/fee-rate</td><td>category=linear</td><td>10/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+         <td>category=spot</td><td>5/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+         <td>category=option</td><td>5/s</td><td align="center">N</td>
     </tr>
 </table>
 </span>
+</TabItem>
+
+<TabItem value="uta-pro" label="UTA Pro">
+<span class="blocky_table">
+<table border="0.8">
+    <tr>
+        <th>請求方式</th><th>路徑</th><th></th><th>頻率</th><th>是否可提頻</th>
+    </tr>
+    <tr>
+        <td rowSpan="9">GET</td><td rowSpan="2">/v5/account/wallet-balance</td><td>accountType=CONTRACT</td><td rowSpan="2">50/s</td><td rowSpan="2" align="center">N</td>
+    </tr>
+    <tr>
+         <td>accountType=UNIFIED</td>
+    </tr>
+    <tr>
+        <td>/v5/account/borrow-history</td><td></td><td>50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/account/collateral-info</td><td></td><td>50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/coin-greeks</td><td></td><td>50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/account/transaction-log</td><td>accountType=UNIFIED</td><td>50/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">/v5/account/fee-rate</td><td>category=linear</td><td>10/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+         <td>category=spot</td><td>5/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+         <td>category=option</td><td>5/s</td><td align="center">N</td>
+    </tr>
+</table>
+</span>
+</TabItem>
+</Tabs>
 
 #### 資產
 <span class="blocky_table">
@@ -263,23 +368,23 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 ## 不同VIP/PRO等級的接口限頻規則
 :::info
 - 表格中的數值，代表對應等級的可申請上限，並不代表處於該等級的用戶實際默認自動享有對應的API Rate Limit
-- 普通帳戶不支持交易USDC衍生品
+- 經典帳戶不支持交易USDC衍生品
 :::
 
-<!-- :::tip 批量接口特別說明
+:::tip 批量接口特別說明(僅category=linear時)
 - 批量下單的接口，api rate limit：接口的頻次，還是統一沿用當前配置，但是計數消耗會根據實際的訂單數來消耗。（消耗數=請求數*請求中包含的訂單數），業務線配置相互獨立。
 
 - 批量接口允許1-20orders/request，例如，批量下單請求一次，包含10個orders，則本次請求limit數量消耗10。
 
 - 若1s內的最後一次請求的批量訂單，部分超限，則超過的部分會失敗（報錯超過上限），未超過的部分會成功。例如，這1s中，limit還剩10，但是此時下了一個包含15個orders的批量請求，
 那麼前10個orders會下單成功，11-15的orders，會報錯超過上限，下單失敗。
-:::-->
+:::
 
 <span class="blocky_table">
 
 <table class="custom_table">
     <tr>
-        <th></th><th colSpan="3" align="center">普通帳戶 & UTA</th><th colSpan="3">UTA Pro</th>
+        <th></th><th colSpan="3" align="center">經典帳戶 & UTA</th><th colSpan="3">UTA Pro</th>
     </tr>
     <tr>
         <td>等級\產品</td><td><b>期貨</b></td><td><b>期權</b></td><td><b>現貨</b></td><td><b>期貨</b></td><td><b>期權</b></td><td><b>現貨</b></td>
