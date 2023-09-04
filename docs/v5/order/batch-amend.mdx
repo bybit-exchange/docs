@@ -3,7 +3,7 @@ title: Batch Amend Order
 sidebar_label: Batch Amend Order
 sidebar_position: 8
 ---
-> **Covers: Option (Unified Account)**
+> **Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)**
 
 :::tip
 This endpoint allows you to amend more than one open order in a single request.
@@ -17,14 +17,22 @@ POST `/v5/order/amend-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |request |**true** |array |Object |
-|> symbol |**true** |string |Symbol name |
+|> symbol |**true** |string |Symbol name|
 |> orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
 |> orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |
-|> qty |false |string |Order quantity after modification. Don't pass it if not modify the qty |
-|> price |false |string |Order price after modification. Don't pass it if not modify the price |
 |> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed |
+|> triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
+|> qty |false |string |Order quantity after modification. Do not pass it if not modify the qty|
+|> price |false |string |Order price after modification. Do not pass it if not modify the price|
+|> takeProfit |false |string |Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit |
+|> stopLoss |false |string |Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss |
+|> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. When set a take profit, this param is **required** if no initial value for the order|
+|> [slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. When set a take profit, this param is **required** if no initial value for the order|
+|> [triggerBy](../enum#triggerby) |false |string |Trigger price type|
+|> tpLimitPrice |false |string |Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl|
+|> slLimitPrice |false |string |Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl|
 
 ### Response Parameters
 | Parameter | Type | Comments|
