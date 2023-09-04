@@ -3,12 +3,16 @@ title: 批量創建委託單
 sidebar_label: 批量創建委託單
 sidebar_position: 7
 ---
-> **覆蓋範圍: 期權 (統一帳戶)**
+> **覆蓋範圍: 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
 
 :::tip
 該接口支持批量創建委託單
 - 下單時需確保帳戶內有足夠的資金。一旦下單，根據訂單所需資金，您的帳戶資金將在訂單生命週期內凍結相應額度，被凍結的資金額度取決於訂單屬性。
 - 每個請求包含的訂單數最大是20筆，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
+:::
+
+:::info
+當category=`linear`時, 請從[這裡](../rate-limit#不同vippro等級的接口限頻規則)查閱其API限頻說明
 :::
 
 ### HTTP請求
@@ -17,19 +21,33 @@ POST `/v5/order/create-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `option` |
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱|
 |> side |**true** |string |方向. `Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
 |> qty |**true** |string |訂單數量|
-|> price |false |string |訂單價格. 當`orderType`=_Market_, 設置的price無效|
-|> orderIv |false |string |隱含波動率. 僅`option`. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `orderIv`比`price`有更高的優先級. |
-|> timeInForce |false|string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><ul><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li> </ul>|
-|> orderLinkId |**true** |string |用戶自定義訂單Id. 最長支持36位字符，可由數字，字母，橫線，下劃線組成。<br/>_`option`規則_:<br/><ul><li>**必傳**</li><li>總是唯一</li></ul>|
-|> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉訂單?</a> `true` 將這筆訂單設為只減倉，_只減倉單的止盈止損不生效_ |
-|> mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單 |
+|> price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
+|> triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
+|> triggerPrice |false |string |<ul><li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li></ul>|
+|> [triggerBy](../enum#triggerby) |false |string |條件單參數. 觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`|
+|> orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `orderIv`比`price`有更高的優先級 |
+|> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><ul><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li> </ul>|
+|> [positionIdx](../enum#positionidx) |false |integer |倉位標識, 用戶不同倉位模式. 該字段對於雙向持倉模式是**必傳**:<ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li></ul>|
+|> orderLinkId |false |string |用戶自定義訂單Id. category=`option`時，該參數必傳|
+|> takeProfit |false |string |止盈價格 |
+|> stopLoss |false |string |止損價格 |
+|> [tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`|
+|> [slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`|
+|> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉 <ul><li>當減倉時, reduceOnly=true**必傳**</li><li>只減倉單的止盈止損不生效</li></ul> |
+|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行. |
 |> [smpType](../enum#smptype) |false |string |Smp執行類型. [什麼是SMP?](../smp)|
+|> mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單. [什麼是做市商保護?](../account/set-mmp)|
+|> tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損. 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>|
+|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格. 僅tpslMode=Partial且tpOrderType=Limit時有效|
+|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格. 僅tpslMode=Partial且slOrderType=Limit時有效|
+|> tpOrderType |false |string |止盈觸發後的訂單類型. `Market`(默認), `Limit`. 對於tpslMode=Full時, 僅支持tpOrderType=Market|
+|> slOrderType |false |string |止損觸發後的訂單類型. `Market`(默認), `Limit`. 對於tpslMode=Full時, 僅支持slOrderType=Market|
 
 ### 響應參數
 | 參數 | 類型 | 說明|

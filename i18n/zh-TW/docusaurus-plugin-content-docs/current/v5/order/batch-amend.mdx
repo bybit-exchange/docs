@@ -3,7 +3,7 @@ title: 批量修改委託單
 sidebar_label: 批量修改委託單
 sidebar_position: 8
 ---
-> **覆蓋範圍: 期權 (統一帳戶)**
+> **覆蓋範圍: 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
 
 :::tip
 該接口支持批量修改委託單
@@ -17,14 +17,22 @@ POST `/v5/order/amend-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `option` |
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
 |request |**true** |array |Object |
-|> symbol |**true** |string |合約名稱 |
-|> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
+|> symbol |**true** |string |合約名稱|
+|> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
 |> orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
-|> qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段 |
-|> price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段 |
-|> orderIv |false |string |隱含波動率. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
+|> orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
+|> triggerPrice |false |string |觸發價格. 若希望市場趨勢是上漲至觸發條件單, 則確保:<br/> _觸發價格 > 市場價格_<br/>否則,_觸發價格 < 市場價格_|
+|> qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
+|> price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
+|> takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段|
+|> stopLoss |false |string |修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段|
+|> [tpTriggerBy](../enum#triggerby) |false |string |止盈價格觸發類型. 若下單時未設置該值，則調用該接口修改止盈價格時，該字段**必傳**|
+|> [slTriggerBy](../enum#triggerby) |false |string |止損價格觸發類型. 若下單時未設置該值，則調用該接口修改止損價格時，該字段**必傳**|
+|> [triggerBy](../enum#triggerby) |false |string |觸發價格的觸發類型|
+|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
+|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
 
 ### 響應參數
 | 參數 | 類型 | 說明|

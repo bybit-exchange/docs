@@ -3,7 +3,7 @@ title: Batch Place Order
 sidebar_label: Batch Place Order
 sidebar_position: 7
 ---
-> **Covers: Option (Unified Account)**
+> **Covers: Option (UTA, UTA Pro) / USDT Perpetual, UDSC Perpetual, USDC Futures (UTA Pro)**
 
 :::tip
 This endpoint allows you to place more than one order in a single request.
@@ -14,25 +14,43 @@ of the order.
 The first list indicates whether or not the order creation was successful and the second list details the created order information. The structure of the two lists are completely consistent.
 :::
 
+:::info
+Check the rate limit instruction when category=`linear` [here](../rate-limit#api-rate-limit-rules-for-vipspros)
+:::
+
 ### HTTP Request
 POST `/v5/order/create-batch`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name|
 |> side |**true** |string |`Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |`Market`, `Limit`|
 |> qty |**true** |string |Order quantity|
-|> price |false |string |Order price. Invalid if `orderType`=_Market_|
-|> orderIv |false |string |Implied volatility. `option` **only**. `orderIv` has a higher priority than `price`. Pass the real value, e.g for 10%, 0.1 should be passed |
+|> price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
+|> triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>|
+|> triggerPrice |false |string |<ul><li>For futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li></ul>|
+|> [triggerBy](../enum#triggerby) |false |string |Conditional order param. Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
+|> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
-|> orderLinkId |**true** |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_rule of `option`_:<br/><ul><li>**required** param</li><li>always unique</li></ul>|
-|> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. |
-|> mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order |
+|> [positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+|> orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/><ul>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
+|> takeProfit |false |string |Take profit price|
+|> stopLoss |false |string |Stop loss price|
+|> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice` |
+|> [slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice` |
+|> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. <ul><li>You **must** specify it as `true` when you are about to close/reduce the position</li><li>When reduceOnly is true, take profit/stop loss cannot be set</li></ul> |
+|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin. |
 |> [smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
+|> mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
+|> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>|
+|> tpLimitPrice |false |string |The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
+|> slLimitPrice |false |string |The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
+|> tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
+|> slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
 
 ### Response Parameters
 | Parameter | Type | Comments|
