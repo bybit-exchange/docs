@@ -26,7 +26,7 @@ POST `/v5/order/create-batch`
 |> symbol |**true** |string |合約名稱|
 |> side |**true** |string |方向. `Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
-|> qty |**true** |string |訂單數量|
+|> qty |**true** |string |訂單數量 <li>特別地, 對於期貨而言, 如果您傳入qty="0", 則可以全部平掉對應合約的倉位</li>|
 |> price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
 |> triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
 |> triggerPrice |false |string |<ul><li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li></ul>|

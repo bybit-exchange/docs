@@ -29,7 +29,7 @@ POST `/v5/order/create-batch`
 |> symbol |**true** |string |Symbol name|
 |> side |**true** |string |`Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |`Market`, `Limit`|
-|> qty |**true** |string |Order quantity|
+|> qty |**true** |string |Order quantity <li>In particular, for `linear`, if you pass qty="0", you can close the whole position of current symbol</li>|
 |> price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |> triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>|
 |> triggerPrice |false |string |<ul><li>For futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li></ul>|
