@@ -382,12 +382,12 @@ this level will automatically enjoy the corresponding API Rate Limit by default.
 but the counting consumption will be consumed according to the actual number of orders. (Number of consumption = number
 of requests * number of orders included in a single request), and the configuration of business lines is independent of each other.
 
-- The batch APIs allows 1-20 orders/request. For example, if a batch order request is made once and contains 10 orders,
-then the request limit will consume 10.
+- The batch APIs allows 1-10 orders/request. For example, if a batch order request is made once and contains 5 orders,
+then the request limit will consume 5.
 
 - If part of the last batch of orders requested within 1s exceeds the limit, the part that exceeds the limit will fail, and
-the part that does not exceed the limit will succeed. For example, in the 1 second, the limit is 10, but a batch request
-containing 15 orders is placed at this time, then the first 10 orders will be successfully placed, and the 11-15th orders
+the part that does not exceed the limit will succeed. For example, in the 1 second, the remaining limit is 5, but a batch request
+containing 8 orders is placed at this time, then the first 5 orders will be successfully placed, and the 6-8th orders
 will report an error exceeding the limit, and these orders will fail.
 :::
 

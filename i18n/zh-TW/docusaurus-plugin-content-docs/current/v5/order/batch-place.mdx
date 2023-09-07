@@ -8,7 +8,7 @@ sidebar_position: 7
 :::tip
 該接口支持批量創建委託單
 - 下單時需確保帳戶內有足夠的資金。一旦下單，根據訂單所需資金，您的帳戶資金將在訂單生命週期內凍結相應額度，被凍結的資金額度取決於訂單屬性。
-- 每個請求包含的訂單數最大是20筆，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
+- 每個請求包含的訂單數最大是: 20筆(期权), 10筆(期貨)，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
 :::
 
 :::info
@@ -26,7 +26,7 @@ POST `/v5/order/create-batch`
 |> symbol |**true** |string |合約名稱|
 |> side |**true** |string |方向. `Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
-|> qty |**true** |string |訂單數量|
+|> qty |**true** |string |訂單數量 <li>特別地, 對於期貨而言, 如果您傳入qty="0", 則可以全部平掉對應合約的倉位</li>|
 |> price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
 |> triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
 |> triggerPrice |false |string |<ul><li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li></ul>|

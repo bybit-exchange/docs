@@ -34,7 +34,7 @@ ID to cancel active orders, and if both orderId and orderLinkId are entered in t
 
 - **Open orders up limit:**<br/>
 **Future:** Each account can hold a maximum of _500_ **active** orders simultaneously. This is contract-specific, so the following situation is allowed: _the same account can hold 300 BTCUSD active orders and 280 ETHUSD active orders at the same time._ For **conditional** orders, each account can hold a maximum of **10 active orders** simultaneously. When the upper limit of orders is reached, you can still place orders with parameters of **reduceOnly** or **closeOnTrigger**.<br/>
-**Spot:** No limit for normal order but a maximum of 30 open TP/SL orders<br/>
+**Spot:** 500 orders in total, including a maximum of 30 open TP/SL orders, a maximum of 30 open conditional orders<br/>
 **Option:** a maximum of 100 open orders
 
 - **Rate limit:**<br/>
@@ -56,7 +56,7 @@ POST `/v5/order/create`
 |isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
 |side |**true** |string |`Buy`, `Sell`|
 |[orderType](../enum#ordertype) |**true** |string |`Market`, `Limit`|
-|qty |**true** |string |Order quantity. <ul><li>For **Spot Market Buy order**, please note that qty should be quote curreny amount, and make sure it satisfies `quotePrecision` in Spot instrument spec </li><li>For other cases, please make sure the input qty is the multiples of `minOrderQty` from [instrument info](../market/instrument#response-parameters) endpoint</li></ul>|
+|qty |**true** |string |Order quantity. <ul><li>For **Spot Market Buy order**, please note that qty should be quote curreny amount, and make sure it satisfies `quotePrecision` in Spot instrument spec </li><li>For other cases, please make sure the input qty is the multiples of `minOrderQty` from [instrument info](../market/instrument#response-parameters) endpoint</li><li>In particular, for Futures & Perps, if you pass qty="0", you can close the whole position of current symbol</li></ul>|
 |price |false |string |Order price. If you have net position, price needs to be greater than liquidation price |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>|
 |orderFilter |false |string |Valid for `spot` **only**. `Order`,`tpslOrder`, `StopOrder`. If not passed, `Order` by default|
@@ -65,7 +65,7 @@ POST `/v5/order/create`
 |orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
 |[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
-|orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_`future` orderLinkId rules_:<br/><ul><li>optional param</li><li>The same orderLinkId can be used for both USDC PERP and USDT PERP.</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
+|orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures & Perps: orderLinkId rules_:<br/><ul><li>optional param</li><li>always unique</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price|
 |stopLoss |false |string |Stop loss price|
 |[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice` |

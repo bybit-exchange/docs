@@ -31,7 +31,7 @@ sidebar_position: 1
 
 - **訂單持有上限:**<br/>
 **期貨:** 單個账户针对合约可持有每个 symbol 最多可同时持有500个普通活动订单。这是针对合约的，因此可以允许出现例如：账户同时持有300个BTCUSD的活动单、280个ETHUSD合约的活动单。針對**條件單**，單個帳戶針對合約可持有每個 symbol 最多同時持有 **10** 個條件單<br/>
-**現貨:** 普通單沒有限制，但是最多持有30個止盈止損委託單<br/>
+**現貨:** 總計支持500個掛單，包括最多持有30個止盈止損委託單和30個條件單委託單<br/>
 **期權:** 最多可持有100個委託單
 
 - **API限頻:**<br/>
@@ -53,7 +53,7 @@ POST `/v5/order/create`
 |isLeverage |false |integer |是否借貸. 僅**統一帳戶的現貨交易**有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
 |side |**true** |string |`Buy`, `Sell`|
 |[orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
-|qty |**true** |string |訂單數量 <ul><li>若category=spot, 且是Market Buy單，則qty表示為報價幣種金額，精度需要满足[交易產品規格接口](../market/instrument#response-parameters)現貨下的`quotePrecision`</li><li>除此之外, 輸入的qty需要是各產品規定的`minOrderQty`的整數倍</li></ul> |
+|qty |**true** |string |訂單數量 <ul><li>若category=spot, 且是Market Buy單，則qty表示為報價幣種金額，精度需要满足[交易產品規格接口](../market/instrument#response-parameters)現貨下的`quotePrecision`</li><li>除此之外, 輸入的qty需要是各產品規定的`minOrderQty`的整數倍</li><li>特別地, 對於期貨而言, 如果您傳入qty="0", 則可以全部平掉對應合約的倉位</li></ul> |
 |price |false |string |訂單價格. 如果您有持倉, 價格需要大於強平價|
 |triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>|
 |orderFilter |false |string |僅對現貨有效. `Order`: 普通單,`tpslOrder`: 止盈止損單,`StopOrder`: 條件單. 若不傳, 默認`Order`|
