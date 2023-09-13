@@ -7,7 +7,7 @@ sidebar_position: 6
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
 > **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
-> **Normal account covers: Spot / USDT perpetual / Inverse contract**
+> **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
 * The orders in the last 7 days: supports querying all statuses
@@ -16,7 +16,7 @@ real-time order information, you could query this [endpoint](open-order#) or rel
 :::
 
 :::tip
-Normal account spot can get final status orders only
+Classic account spot can get final status orders only
 :::
 
 ### HTTP Request
@@ -25,15 +25,15 @@ GET `/v5/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |Symbol name|
-|baseCoin |false |string |Base coin. _Unified account - inverse & Normal account does **not** support this param_|
-|settleCoin |false |string |Settle coin. _Unified account - inverse & Normal account does **not** support this param_|
+|baseCoin |false |string |Base coin. _Unified account - inverse & Classic account does **not** support this param_|
+|settleCoin |false |string |Settle coin. _Unified account - inverse & Classic account does **not** support this param_|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order  <ul><li>Normal `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
-|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Normal `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
-|startTime |false |integer |The start timestamp (ms) <ul><li>Normal spot is not supported temporarily</li><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li><li>For each request, startTime and endTime interval should be less then 7 days</li></ul>|
+|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order  <ul><li>Classic `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
+|startTime |false |integer |The start timestamp (ms) <ul><li>Classic spot is not supported temporarily</li><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li><li>For each request, startTime and endTime interval should be less then 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms) <ul><li>For each request, startTime and endTime interval should be less then 7 days</li></ul>|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
@@ -50,17 +50,17 @@ GET `/v5/order/history`
 |> price |string |Order price |
 |> qty |string |Order qty |
 |> side |string |Side. `Buy`,`Sell`|
-|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Normal `spot` is not supported, always `0`_ |
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Classic `spot` is not supported, always `0`_ |
 |> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../enum#orderstatus) |string |Order status |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
-|> [rejectReason](../enum#rejectreason) |string |Reject reason. _Normal `spot` is not supported_ |
+|> [rejectReason](../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
 |> avgPrice |string |Average filled price. If unfilled, it is `""` |
-|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
-|> leavesValue |string |The estimated value not executed. _Normal `spot` is not supported_ |
+|> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
+|> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
-|> cumExecValue |string |Cumulative executed order value. _Normal `spot` is not supported_ |
-|> cumExecFee |string |Cumulative executed trading fee. _Normal `spot` is not supported_ |
+|> cumExecValue |string |Cumulative executed order value. _Classic `spot` is not supported_ |
+|> cumExecFee |string |Cumulative executed trading fee. _Classic `spot` is not supported_ |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL order, it means the order type after triggered <li>`Block trade Roll Back`, `Block trade-Limit`: Unique enum values for Unified account block trades</li>  |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |

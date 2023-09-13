@@ -20,7 +20,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> side |string |Position side. `Buy`,`Sell` |
 |> size |string |Position size |
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
-|> tradeMode | integer |Trade mode <ul><li>Normal & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
+|> tradeMode | integer |Trade mode <ul><li>Classic & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
 |> positionValue |string |Position value |
 |> riskId |integer |Risk limit ID. _Note: for portfolio margin mode, it returns 0, which the risk limit value is invalid_|
 |> riskLimitValue |string |Risk limit value corresponding to riskId. _Note: for portfolio margin mode, it returns "", which the risk limit value is invalid_|
@@ -31,7 +31,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. For UTA, it is meaningful only when UTA enables `ISOLATED_MARGIN` |
 |> positionMM |string |Position maintenance margin. _Note: for portfolio margin mode, it returns ""_|
 |> positionIM |string |Position initial margin. _Note: for portfolio margin mode, it returns ""_|
-|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Normal account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
+|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Classic account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
 |> bustPrice |string |Est.bankruptcy price. `""` for Unified trade(spot/linear/options) |
 |> tpslMode |string |Depreciated, meaningless here, always "Full". Spot does not return this field. Option returns "" |
 |> takeProfit |string |Take profit price |
@@ -39,7 +39,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> trailingStop |string |Trailing stop |
 |> unrealisedPnl |string |Unrealised profit and loss |
 |> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: it is the realised P&L when you hold that position</li></ul>|
-|> [positionStatus](../../enum#positionstatus) |string |Position status. `Normal`, `Liq`, `Adl` |
+|> [positionStatus](../../enum#positionstatus) |string |Position status. `Classic`, `Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
 |> createdTime |string |Position created timestamp (ms) |
 |> updatedTime |string |Position data updated timestamp (ms) |
@@ -104,7 +104,7 @@ while True:
             "liqPrice": "",
             "bustPrice": "",
             "category": "linear",
-            "positionStatus": "Normal",
+            "positionStatus": "Classic",
             "adlRankIndicator": 2
         }
     ]
