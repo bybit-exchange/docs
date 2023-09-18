@@ -5,22 +5,26 @@ sidebar_position: 9
 slug: /account-asset/rm-sub-apikey
 ---
 
-Delete the api key of sub account. Use the api key pending to be delete to call the endpoint. Use **sub user's api key** **only**.
+Delete the api key of sub account. Use the sub api key pending to be delete to call the endpoint or use the master api key
+to delete corresponding sub account api key
 
 :::tip
-The API key must have one of the below permissions in order to call this endpoint..
-* sub API key: "Account Transfer"
+The API key must have one of the below permissions in order to call this endpoint.
+* sub API key: "Account Transfer", "Sub Member Transfer"
+* master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
 :::
 
 :::danger
-BE CAREFUL! The API key used to call this interface will be invalid immediately.
+BE CAREFUL! The Sub account API key will be invalid immediately after calling the endpoint.
 :::
 
 ### HTTP Request
 POST `/user/v3/private/delete-sub-api`
 
 ### Request Parameters
-None
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|apikey |false |string |Sub account api key <ul><li>You must pass this param when you use master account manage sub account api key settings</li><li>If you use corresponding sub uid api key call this endpoint, `apikey` param cannot be passed, otherwise throwing an error</li></ul> |
 
 ### Response Parameters
 None
