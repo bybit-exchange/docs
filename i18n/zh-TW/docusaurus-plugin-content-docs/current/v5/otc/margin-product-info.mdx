@@ -5,7 +5,8 @@ sidebar_position: 1
 ---
 
 :::tip
-這是公共接口，無需鑒權。
+* 該接口在不傳入api key和secret進行鑒權時, 則返回公共產品數據
+* 該接口在傳入api key和secret進行鑒權時且uid綁定了場外借貸產品, 則返回特定的產品數據
 :::
 
 ### HTTP 請求
@@ -21,28 +22,29 @@ GET `/v5/ins-loan/product-infos`
 |:----- |:-----|----- |
 |marginProductInfo |array |	Object |
 |> productId | string | 產品ID |
-|> leverage	| string | 槓桿倍數 |
+|> leverage	| string | 該借貸產品的最大槓桿倍數 |
 |> supportSpot | integer | 是否支持現貨. `0`:否; `1`:是 |
 |> supportContract | integer | 是否支持合約 . `0`: 否; `1`: 是 |
 |> withdrawLine	| string | 限制提幣線 |
 |> transferLine	| string | 限制劃轉線 |
 |> spotBuyLine | string	| 限制現貨買入線 |
-|> spotSellLine	| string | 限制現貨賣出線 |
+|> spotSellLine	| string | 限制現貨交易線 |
 |> contractOpenLine	| string | 限制合約開倉線 |
 |> liquidationLine | string	| 強平線 |
 |> stopLiquidationLine | string	|停止強平線 |
-|> contractLeverage	| string |允許合約開倉倍數 |
-|> transferRatio | string |借貸資金劃轉比例 |
-|> spotSymbols | array |現貨交易對白名單 <ul><li>如果是空數組, 則表明可以交易任何交易對</li><li>如果不為空, 則表示僅能交易所列出的交易對</li></ul>|
-|> contractSymbols | array |合約交易對白名單 <ul><li>如果是空數組, 則表明可以交易任何交易對</li><li>如果不為空, 則表示僅能交易所列出的交易對</li></ul>|
+|> contractLeverage	| string |允許USDT永續默認開倉倍數 |
+|> transferRatio | string |現貨帳戶到合約帳戶的借貸資金劃轉比例 |
+|> spotSymbols | array |現貨交易對白名單. 若沒有配置白名單, 則返回[] |
+|> contractSymbols | array |USDT永續合約交易對白名單 <ul><li>若沒有配置白名單, 則返回[]</li><li>若supportContract="0", 則也是[]</li></ul> |
 |> supportUSDCContract | integer |是否支持USDC合約交易. `'0'`:否; `'1'`:是|
 |> supportUSDCOptions | integer |是否支持期權交易. `'0'`:false; `'1'`:true |
-|> USDTPerpetualOpenLine | string |USDT永續的開倉限制線 |
-|> USDCContractOpenLine | string |USDC合約的開倉限制線 |
-|> USDCOptionsOpenLine | string |期權的開倉限制線 |
-|> USDTPerpetualCloseLine | string |USDT永續的平倉限制線 |
-|> USDCContractCloseLine | string |USDC合約倉位的平倉限制線 |
-|> USDCOptionsCloseLine | string |期權倉位的平倉限制線 |
+|> supportMarginTrading | integer | 是否支持現貨槓桿交易. `0`: 否; `1`: 是 |
+|> USDTPerpetualOpenLine | string |限制USDT永續的開倉線 |
+|> USDCContractOpenLine | string |限制USDC合約的開倉線 |
+|> USDCOptionsOpenLine | string |限制期權的開倉線 |
+|> USDTPerpetualCloseLine | string |限制USDT永續的交易線 |
+|> USDCContractCloseLine | string |限制USDC合約的交易線 |
+|> USDCOptionsCloseLine | string |限制期權的交易線 |
 |> USDCContractSymbols | array |USDC合約的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCContract="0", 則也是空數組`[]`</li></ul>|
 |> USDCOptionsSymbols | array |期權的白名單交易對 <ul><li>若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約</li><li>如果 supportUSDCOptions="0", 則也是空數組`[]`</li></ul> |
 |> marginLeverage | string |全倉槓桿允許可開的最高槓桿 |

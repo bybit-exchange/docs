@@ -27,7 +27,7 @@ GET `/v5/ins-loan/loan-order`
 |loanInfo | array | Object |
 |> orderId | string	| Loan order ID |
 |> orderProductId | string | Product ID |
-|> parentUid | string | User parent UID |
+|> parentUid | string |The uid that used to bind OTC loan product |
 |> loanTime	| string | Loan timestamp, in milliseconds |
 |> loanCoin	| string | Loan coin |
 |> loanAmount | string | Loan amount |
@@ -37,31 +37,32 @@ GET `/v5/ins-loan/loan-order`
 |> repaidInterest | string | Repaid interest |
 |> interestRate	| string | Daily interest rate |
 |> status | string | `1`：outstanding; `2`：paid off |
-|> leverage	| string | leverage |
+|> leverage	| string | The maximum leverage for this loan product |
 |> supportSpot | string | Whether to support spot. `0`:false; `1`:true |
 |> supportContract | string | Whether to support contract . `0`:false; `1`:true |
 |> withdrawLine	| string | Restrict line for withdrawal |
 |> transferLine	| string | Restrict line for transfer |
 |> spotBuyLine | string	| Restrict line for SPOT buy |
 |> spotSellLine	| string | Restrict line for SPOT sell |
-|> contractOpenLine	| string | Restrict line for CONTRACT open position |
+|> contractOpenLine	| string | Restrict line for USDT Perpetual open position |
 |> liquidationLine | string	| Line for liquidation |
 |> stopLiquidationLine | string	| Line for stop liquidation |
-|> contractLeverage	| string | Allowed max leverage of opening contract position |
-|> transferRatio | string | Available transfer ratio of loan funds |
-|> spotSymbols | array | The whitelist of spot trading pairs |
-|> contractSymbols | array |The whitelist of contract trading pairs |
-|> supportUSDCContract | string |Whether to support USDC contract. `'0'`:false; `'1'`:true|
-|> supportUSDCOptions | string |Whether to support Option. `'0'`:false; `'1'`:true |
+|> contractLeverage	| string | The allowed default leverage for USDT Perpetual  |
+|> transferRatio | string |The transfer ratio for loan funds to transfer from Spot wallet to Contract wallet |
+|> spotSymbols | array | The whitelist of spot trading pairs. If there is no whitelist, then "[]" |
+|> contractSymbols | array |The whitelist of contract trading pairs <ul><li>If `supportContract`="0", then this is "[]"</li><li>If there is no whitelist, this is "[]"</li></ul> |
+|> supportUSDCContract | string |Whether to support USDC contract. `"0"`:false; `"1"`:true|
+|> supportUSDCOptions | string |Whether to support Option. `"0"`:false; `"1"`:true |
+|> supportMarginTrading | string |Whether to support Spot margin trading. `"0"`:false; `"1"`:true |
 |> USDTPerpetualOpenLine | string |Restrict line to open USDT Perpetual position |
 |> USDCContractOpenLine | string |Restrict line to open USDC Contract position |
 |> USDCOptionsOpenLine | string |Restrict line to open Option position |
-|> USDTPerpetualCloseLine | string |Restrict line to close USDT Perpetual position |
-|> USDCContractCloseLine | string |Restrict line to close USDC Contract position |
-|> USDCOptionsCloseLine | string |Restrict line to close Option position |
+|> USDTPerpetualCloseLine | string |Restrict line to trade USDT Perpetual position |
+|> USDCContractCloseLine | string |Restrict line to trade USDC Contract position |
+|> USDCOptionsCloseLine | string |Restrict line to trade Option position |
 |> USDCContractSymbols | array |The whitelist of USDC contract trading pairs <ul><li>If no whitelist symbols, it is `[]`, and you can trade any</li><li>If supportUSDCContract="0", it is `[]`</li></ul>|
 |> USDCOptionsSymbols | array |The whitelist of Option symbols <ul><li>If no whitelisted, it is `[]`, and you can trade any</li><li>If supportUSDCOptions="0", it is `[]`</li></ul> |
-|> marginLeverage | string |The allowable maximum leverage for spot margin |
+|> marginLeverage | string |The allowable maximum leverage for Spot margin |
 |> USDTPerpetualLeverage | array |Object <ul><li>If supportContract="0", it is `[]`</li><li>If no whitelist USDT perp symbols, it returns all trading symbols and leverage by default</li><li>If there are whitelist symbols, it return those whitelist data</li></ul> |
 |>> symbol | string |Symbol name |
 |>> leverage | string |Maximum leverage |
