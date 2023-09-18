@@ -15,10 +15,10 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> category |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`.</li></ul>|
+|> category |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`.</li></ul>|
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Normal `spot` is not supported, always `0`_|
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Classic `spot` is not supported, always `0`_|
 |> blockTradeId  |string |Block trade ID|
 |> symbol |string |Symbol name |
 |> price |string |Order price |
@@ -27,10 +27,10 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |> [positionIdx](../../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../../enum#orderstatus) |string |Order status |
 |> [cancelType](../../enum#canceltype) |string |Cancel type |
-|> [rejectReason](../../enum#rejectreason) |string |Reject reason. _Normal `spot` is not supported_ |
-|> avgPrice |string |Average filled price. If unfilled, it is `""` <ul><li>For normal account USDT Perp and Inverse derivatives trades, if a partially filled order, and the final orderStatus is Cancelled, then avgPrice is "0"</li><li>For Normal `spot` is not supported, it is always ""</li></ul> |
-|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
-|> leavesValue |string |The remaining value not executed. _Normal `spot` is not supported_ |
+|> [rejectReason](../../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
+|> avgPrice |string |Average filled price. If unfilled, it is `""` <ul><li>For normal account USDT Perp and Inverse derivatives trades, if a partially filled order, and the final orderStatus is Cancelled, then avgPrice is "0"</li><li>For Classic `spot` is not supported, it is always ""</li></ul> |
+|> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
+|> leavesValue |string |The remaining value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
 |> cumExecFee |string |Cumulative executed trading fee. _For normal `spot`, it is the execution fee per single fill_ |
@@ -54,7 +54,7 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |> closeOnTrigger |boolean |Close on trigger. <a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> |
 |> placeType |string |Place type, `option` used. `iv`, `price`|
 |> [smpType](../../enum#smptype) |string |SMP execution type|
-|> smpGroup |integer |Smp group ID. If the uid has no group, it is `0` by default |
+|> smpGroup |integer |Smp group ID. If the UID has no group, it is `0` by default |
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
