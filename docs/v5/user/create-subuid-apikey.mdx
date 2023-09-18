@@ -19,13 +19,13 @@ POST `/v5/user/create-sub-api`
 |subuid |<b>true</b> |integer |Sub user Id|
 |note |false |string |Set a remark |
 |readOnly |<b>true</b> |integer |`0`：Read and Write. `1`：Read only |
-|ips |false |array |Set the IP bind. example: [`"192.168.0.1,192.168.0.2"`]<b>note:</b><ul><li>don't pass ips or pass with ["`*`"] means no bind</li><li>No ip bound api key will be <b>invalid after 90 days</b></li><li>api key will be invalid after <b>7 days</b> once the account password is changed</li></ul>|
+|ips |false |string |Set the IP bind. example: `"192.168.0.1,192.168.0.2"`<b>note:</b><ul><li>don't pass ips or pass with `"*"` means no bind</li><li>No ip bound api key will be <b>invalid after 90 days</b></li><li>api key without IP bound will be invalid after <b>7 days</b> once the account password is changed</li></ul>|
 |permissions |<b>true</b> |Object |Tick the types of permission.<ul><li> one of below types must be passed, otherwise the error is thrown</li></ul>|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
 |> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransferList"]` |
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
-|> Derivatives |false |array |Derivatives v3/v5. `["DerivativesTrade"]` |
+|> Derivatives |false |array |This param is **depreciated** because system will automatically add this permission according to your account is UTA or Classic |
 |> Exchange |false |array |Exchange. `["ExchangeHistory"]` |
 |> CopyTrading |false |array |Copytrade. `["CopyTrading"]`|
 
@@ -42,7 +42,7 @@ POST `/v5/user/create-sub-api`
 |> Spot |array |Permisson of spot |
 |> Wallet |array |Permisson of wallet |
 |> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
-|> Derivatives |array |Permission of derivatives |
+|> Derivatives |array |Permission of Unified account |
 |> CopyTrading |array |Permission of copytrade |
 |> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]` |
 |> Exchange |array |Permission of exchange |
@@ -118,7 +118,6 @@ print(session.create_sub_api_key(
                 "AccountTransfer"
             ],
             "Options": [],
-            "Derivatives": [],
             "CopyTrading": [],
             "BlockTrade": [],
             "Exchange": [],
