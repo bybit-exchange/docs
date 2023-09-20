@@ -59,6 +59,7 @@ GET `/v5/position/list`
 |> [adlRankIndicator](../v5/enum#adlrankindicator) |integer |自動減倉燈. <a href="https://www.bybit.com/zh-TW/help-center/s/article/What-is-Auto-Deleveraging-ADL">什麼是自動減倉機制?</a>|
 |> createdTime| string | 倉位創建時間 |
 |> updatedTime| string | 倉位數據更新時間 |
+|> seq |long |序列號, 用於關聯成交和倉位的更新<ul><li>不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別</li><li>如果該幣對從未被交易過, 查詢時則會返回`"-1"`</li><li>對於更新槓桿、更新風險限額等非交易行為, 將會返回上一次成交時更新的seq</li><li>對於資金費結算、合約交割的行為也會觸發seq的更新</li></ul>|
 |nextPageCursor | string  | 游標，用於翻頁 |
 
 <a href="/api-explorer/v5/position/position-info"><Button>運行實例 >></Button></a>
@@ -158,7 +159,8 @@ client
                 "positionStatus": "Normal",
                 "stopLoss": "",
                 "tradeMode": 0,
-                "adlRankIndicator": 2
+                "adlRankIndicator": 2,
+                "seq": 4688002127
             }
         ]
     },
