@@ -20,10 +20,12 @@ GET `/v5/account/collateral-info`
 |> currency |string |目前所有抵押品的資產幣種|
 |> hourlyBorrowRate |string |每小時藉款利率|
 |> maxBorrowingAmount |string |最大可藉貸額度. 該值由母子帳號共享|
-|> freeBorrowingAmount |string |免息借貸額度|
+|> freeBorrowingLimit |string |免息借款額上限|
+|> freeBorrowAmount |string |借款總額中免息部分的借款金額|
 |> borrowAmount |string |已用借貸額度|
 |> availableToBorrow |string |用戶剩餘可藉額度. 該值由母子帳號共享|
 |> borrowable |boolean |是否是可藉貸的幣種, `true`: 是. `false`: 否|
+|> freeBorrowingAmount |string |廢棄字段, 總是返回空字符串, 請參考`freeBorrowingLimit`|
 |> borrowUsageRate |string |借貸資金使用率: borrowAmount/maxBorrowingAmount. 這是一個真實值, 即區間為 0 到 1|
 |> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <li>當marginCollateral=false時, 則collateralSwitch無意義</li>|
 |> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li>|
@@ -74,16 +76,18 @@ print(session.get_collateral_info(
     "result": {
         "list": [
             {
+                "availableToBorrow": "3",
+                "freeBorrowingAmount": "",
+                "freeBorrowAmount": "0",
+                "maxBorrowingAmount": "3",
+                "hourlyBorrowRate": "0.00000147",
+                "borrowUsageRate": "0",
                 "collateralSwitch": true,
-                "borrowAmount": "1.12849124",
-                "availableToBorrow": "1.87150875",
-                "freeBorrowingAmount": "0",
+                "borrowAmount": "0",
                 "borrowable": true,
                 "currency": "BTC",
-                "maxBorrowingAmount": "3",
-                "hourlyBorrowRate": "0.0000013",
-                "borrowUsageRate": "0.376163",
                 "marginCollateral": true,
+                "freeBorrowingLimit": "0",
                 "collateralRatio": "0.95"
             }
         ]

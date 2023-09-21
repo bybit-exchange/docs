@@ -10,7 +10,14 @@ Subscribe to the execution stream to see your executions in **real-time**.
 You may have multiple executions for one order in a single message.
 :::
 
-**Topic:** `execution`
+**All-In-One Topic:** `execution`<br/>
+**Categorised Topic:** `execution.spot`, `execution.linear`, `execution.inverse`, `execution.option`
+
+:::info
+* All-In-One topic and Categorised topic **cannot** be in the same subscription request
+* All-In-One topic: Allow you to listen to all categories (spot, linear, inverse, option) websocket updates
+* Categorised Topic: Allow you to listen only to specific category websocket updates
+:::
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -46,6 +53,7 @@ You may have multiple executions for one order in a single message.
 |> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
+|> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Funding, Settlement also trigger seq update</li><li>Classic account Spot trade does not have this field</li></ul>|
 
 ### Subscribe Example
 ```json
@@ -108,7 +116,8 @@ while True:
             "side": "Sell",
             "execTime": "1672364174443",
             "isLeverage": "0",
-            "closedSize": ""
+            "closedSize": "",
+            "seq": 4688002127
         }
     ]
 }

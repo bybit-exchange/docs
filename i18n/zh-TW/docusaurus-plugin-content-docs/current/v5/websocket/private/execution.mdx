@@ -10,7 +10,14 @@ sidebar_position: 2
 單筆訂單可能有多次成交
 :::
 
-**Topic:** `execution`
+**All-In-One Topic:** `execution`<br/>
+**Categorised Topic:** `execution.spot`, `execution.linear`, `execution.inverse`, `execution.option`
+
+:::info
+* All-In-One topic 和 Categorised topic **不能**放在同一個訂閱請求裡
+* All-In-One topic: 允許您監聽所有業務線的websocket更新(現貨, 正向合約, 反向合約, 期權)
+* Categorised Topic: 您只能監聽您指定的那個業務的websocket更新
+:::
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -46,6 +53,7 @@ sidebar_position: 2
 |> underlyingPrice |string |成交執行時，該 symbol 當時的底層資產價格，僅期權有效|
 |> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID |
 |> closedSize |string |平倉數量 |
+|> seq |long |序列號, 用於關聯成交和倉位的更新<ul><li>同一時間有多筆成交, seq相同</li><li>不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別</li><li>資金費結算、合約交割的行為會觸發seq更新</li><li>經典帳戶下現貨交易沒有該字段</li></ul>|
 
 ### 訂閱示例
 ```json
@@ -108,7 +116,8 @@ while True:
             "side": "Sell",
             "execTime": "1672364174443",
             "isLeverage": "0",
-            "closedSize": "25"
+            "closedSize": "25",
+            "seq": 4688002127
         }
     ]
 }
