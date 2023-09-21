@@ -42,7 +42,7 @@ GET `/v5/position/list`
 |> positionValue | string  |Position value|
 |> tradeMode | integer |Trade mode <ul><li>Classic & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
 |> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. For UTA, it is meaningful only when UTA enables `ISOLATED_MARGIN` |
-|> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Classic`, `Liq`, `Adl` |
+|> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage. Valid for contract. _Note: for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
 |> markPrice | string  |Last mark price |
 |> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Classic account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
