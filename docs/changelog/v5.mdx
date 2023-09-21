@@ -10,9 +10,9 @@ title: V5
     * Add response field `seq`
 
 * [Get Collateral Info](../v5/account/collateral-info) [UPDATE]
-    * 新增`freeBorrowAmount`字段, 表示借款總額中免息部分的借款金額
-    * 新增`freeBorrowingLimit`字段, 表示免息借款額上限。若未結虧損部分超過該上限，則將全額計息。
-    * 廢棄`freeBorrowingAmount`字段：字段值已遷移到`freeBorrowingLimit`
+    * Added "freeBorrowAmount" field: This field represents the amount of borrowing within your total borrowing amount that is exempt from interest charges
+    * Depreciated "freeBorrowingAmount" field: The value of this field has been migrated to "freeBorrowingLimit", and it keeps empty string.
+    * Added "freeBorrowingLimit" field: This field indicates the maximum limit for interest-free borrowing. If the unrealized loss portion exceeds this limit, all borrowings will be subject to interest.
 
 ### WebSocket API
 * [Position](../v5/websocket/private/position) [UPDATE]
@@ -25,6 +25,14 @@ title: V5
 
 * [Order](../v5/websocket/private/order) [UPDATE]
     * Can subscribe specific category position
+
+## 2023-09-20
+### REST API
+* [Get Order Records](../v5/c2c-lend/order-record) [UPDATE]
+    * response field `status` added a new enumeration field `11`, which indicates that the cancellation of redeem
+
+* [Cancel Redeem](../v5/c2c-lend/cancel-redeem) [UPDATE]
+    * Add a new API endpoint used to cancel the redemption
 
 ## 2023-09-18
 ### REST API
