@@ -1,6 +1,24 @@
 ---
 title: V5
 ---
+## 2023-09-25
+### REST API
+* [查詢實時委託單](../v5/order/open-order) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
+* [查詢歷史訂單](../v5/order/order-list) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
+* [查詢成交紀錄](../v5/position/execution) [推遲到10月17日主網]
+    * `execType`新增枚舉值 `MovePosition`, 用於表示移動倉位時的成交 (僅統一帳戶)
+
+* [交易日誌](../v5/account/transaction-log) [推遲到9月28日主網]
+    * `type`新增枚舉值`TRANSFER_IN_INS_LOAN`, `TRANSFER_OUT_INS_LOAN`, `SPOT_REPAYMENT_SELL`, `SPOT_REPAYMENT_BUY` (僅統一帳戶)
+
+### Websocket API
+* [訂單](../v5/websocket/private/order) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
 ## 2023-09-21
 ### REST API
 * [查詢成交紀錄](../v5/position/execution) [更新]
@@ -73,7 +91,7 @@ title: V5
 * [查詢實時委託單](../v5/order/open-order) [更新]
     * 支持僅category=inverse查詢, `/v5/order/realtime?category=inverse`, 獲取反向合約所有活動單
 
-* [查詢持倉 (實時)](../v5/position) [更新]
+* [查詢持倉 (實時)](../v5/position)
     * 支持僅category=inverse查詢, `/v5/position/list?category=inverse`, 獲取反向合約所有持有倉位
     * `symbol`參數支持傳入多個反向合約幣對
 
