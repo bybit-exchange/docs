@@ -4,9 +4,9 @@ sidebar_label: Get Execution (2 years)
 sidebar_position: 5
 ---
 
-Query users' execution records, sorted by `execTime` in descending order. However, for Normal `spot`, they are sorted by `execId` in descending order.
+Query users' execution records, sorted by `execTime` in descending order. However, for Classic `spot`, they are sorted by `execId` in descending order.
 > **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
-> **Normal account covers: Spot / USDT perpetual / Inverse contract**
+> **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
 * Response items will have sorting issues When 'execTime' is the same. This issue is currently being optimized and will be released at the end of October. 
@@ -21,14 +21,14 @@ GET `/v5/execution/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Normal account: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |Symbol name|
 |orderId |false |string |Order ID |
-|orderLinkId |false |string |User customised order ID. _Normal account does not support this param_ |
-|baseCoin |false |string |Base coin. _Unified account - inverse and Normal account do not support this param_ |
+|orderLinkId |false |string |User customised order ID. _Classic account does not support this param_ |
+|baseCoin |false |string |Base coin. _Unified account - inverse and Classic account do not support this param_ |
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
-|[execType](../enum#exectype) |false |string |Execution type. _Normal `spot` is not supported_|
+|[execType](../enum#exectype) |false |string |Execution type. _Classic `spot` is not supported_|
 |limit |false |integer |Limit for data size per page. [`1`, `100`]. Default: `50`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -39,29 +39,30 @@ GET `/v5/execution/list`
 | list | array | Object |
 |> symbol |string   |Symbol name |
 |> orderId |string |Order ID |
-|> orderLinkId |string |User customized order ID. _Normal `spot` is not supported_|
+|> orderLinkId |string |User customized order ID. _Classic `spot` is not supported_|
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
-|> leavesQty |string |The remaining qty not executed. _Normal `spot` is not supported_ |
+|> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |
-|> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned. _Normal `spot` is not supported_ |
+|> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned. _Classic `spot` is not supported_ |
 |> execFee |string   |Executed trading fee. You can get spot fee currency instruction [here](../enum#spot-fee-currency-instruction) |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
-|> [execType](../enum#exectype) |string |Executed type. _Normal `spot` is not supported_|
-|> execValue |string |Executed order value. _Normal `spot` is not supported_ |
+|> [execType](../enum#exectype) |string |Executed type. _Classic `spot` is not supported_|
+|> execValue |string |Executed order value. _Classic `spot` is not supported_ |
 |> execTime |string |Executed timestamp（ms） |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
-|> feeRate |string |Trading fee rate. _Normal `spot` is not supported_ |
+|> feeRate |string |Trading fee rate. _Classic `spot` is not supported_ |
 |> tradeIv |string |Implied volatility. Valid for `option` |
 |> markIv |string |Implied volatility of mark price. Valid for `option`|
-|> markPrice |string |The mark price of the symbol when executing. _Normal `spot` is not supported_ |
+|> markPrice |string |The mark price of the symbol when executing. _Classic `spot` is not supported_ |
 |> indexPrice |string |The index price of the symbol when executing. _Valid for `option` only_|
 |> underlyingPrice |string |The underlying price of the symbol when executing. _Valid for `option`_|
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
+|> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Classic account Spot trade does not have this field</li></ul>|
 |nextPageCursor |string |Refer to the `cursor` request parameter|
 
 <a href="/api-explorer/v5/position/execution"><Button>RUN >></Button></a>
@@ -162,7 +163,8 @@ client
                 "execValue": "119.015",
                 "execType": "Trade",
                 "execQty": "0.1",
-                "closedSize": ""
+                "closedSize": "",
+                "seq": 4688002127
             }
         ]
     },

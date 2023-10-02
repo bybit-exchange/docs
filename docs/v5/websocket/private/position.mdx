@@ -6,7 +6,14 @@ sidebar_position: 1
 
 Subscribe to the position stream to see changes to your position data in **real-time**.
 
-**Topic:** `position`
+**All-In-One Topic:** `position`<br/>
+**Categorised Topic:** `position.linear`, `position.inverse`, `position.option`
+
+:::info
+* All-In-One topic and Categorised topic **cannot** be in the same subscription request
+* All-In-One topic: Allow you to listen to all categories (linear, inverse, option) websocket updates
+* Categorised Topic: Allow you to listen only to specific category websocket updates
+:::
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -20,7 +27,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> side |string |Position side. `Buy`,`Sell` |
 |> size |string |Position size |
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
-|> tradeMode | integer |Trade mode <ul><li>Normal & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
+|> tradeMode | integer |Trade mode <ul><li>Classic & UTA (inverse): `0`: cross-margin, `1`: isolated margin</li><li>UTA: depreciated, always `0`</li></ul>|
 |> positionValue |string |Position value |
 |> riskId |integer |Risk limit ID. _Note: for portfolio margin mode, it returns 0, which the risk limit value is invalid_|
 |> riskLimitValue |string |Risk limit value corresponding to riskId. _Note: for portfolio margin mode, it returns "", which the risk limit value is invalid_|
@@ -31,7 +38,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> autoAddMargin | integer |Whether to add margin automatically. `0`: false, `1`: true. For UTA, it is meaningful only when UTA enables `ISOLATED_MARGIN` |
 |> positionMM |string |Position maintenance margin. _Note: for portfolio margin mode, it returns ""_|
 |> positionIM |string |Position initial margin. _Note: for portfolio margin mode, it returns ""_|
-|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Normal account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
+|> liqPrice | string  |Position liquidation price <ul><li>UTA (inverse) & UTA (isolated margin enabled) & Classic account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
 |> bustPrice |string |Est.bankruptcy price. `""` for Unified trade(spot/linear/options) |
 |> tpslMode |string |Depreciated, meaningless here, always "Full". Spot does not return this field. Option returns "" |
 |> takeProfit |string |Take profit price |
@@ -43,6 +50,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
 |> createdTime |string |Position created timestamp (ms) |
 |> updatedTime |string |Position data updated timestamp (ms) |
+|> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Returns `"-1"` if the symbol has never been traded</li><li>Returns the seq updated by the last transaction when there are setting like leverage, risk limit</li></ul>|
 
 ### Subscribe Example
 ```json
@@ -105,7 +113,8 @@ while True:
             "bustPrice": "",
             "category": "linear",
             "positionStatus": "Normal",
-            "adlRankIndicator": 2
+            "adlRankIndicator": 2,
+            "seq": 4688002127
         }
     ]
 }

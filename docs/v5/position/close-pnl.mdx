@@ -6,7 +6,7 @@ sidebar_position: 11
 
 Query user's closed profit and loss records. The results are sorted by `createdTime` in descending order.
 > **Unified account covers: USDT perpetual / USDC contract / Inverse contract**<br/>
-> **Normal account covers: USDT perpetual / Inverse contract**
+> **Classic account covers: USDT perpetual / Inverse contract**
 
 ### HTTP Request
 GET `/v5/position/closed-pnl`
@@ -14,7 +14,7 @@ GET `/v5/position/closed-pnl`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Normal account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
 |symbol |false |string |Symbol name|
 |startTime |false |integer |The start timestamp (ms)|
 |endTime |false |integer |The end timestamp (ms)|
@@ -28,7 +28,7 @@ GET `/v5/position/closed-pnl`
 |list |array |Object |
 |> symbol |string |Symbol name |
 |> orderId |string |Order ID |
-|> side |string |`Buy`, `Side` |
+|> side |string |`Buy`, `Sell` |
 |> qty |string |Order qty |
 |> orderPrice |string |Order price |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |

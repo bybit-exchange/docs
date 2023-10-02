@@ -1,6 +1,99 @@
 ---
 title: V5
 ---
+## 2023-09-28
+### REST API
+* [查詢多空比](../v5/market/long-short-ratio) [新增]
+    * 新增行情接口用於查詢多空比
+
+## 2023-09-25
+### REST API
+* [查詢實時委託單](../v5/order/open-order) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
+* [查詢歷史訂單](../v5/order/order-list) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
+* [查詢成交紀錄](../v5/position/execution) [推遲到10月17日主網]
+    * `execType`新增枚舉值 `MovePosition`, 用於表示移動倉位時的成交 (僅統一帳戶)
+
+* [交易日誌](../v5/account/transaction-log) [推遲到10月7日主網]
+    * `type`新增枚舉值`TRANSFER_IN_INS_LOAN`, `TRANSFER_OUT_INS_LOAN` (僅統一帳戶)
+
+* [交易日誌](../v5/account/transaction-log) [更新]
+    * `type`新增枚舉值`SPOT_REPAYMENT_SELL`, `SPOT_REPAYMENT_BUY` (僅統一帳戶)
+
+### Websocket API
+* [訂單](../v5/websocket/private/order) [更新]
+    * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
+
+## 2023-09-21
+### REST API
+* [查詢成交紀錄](../v5/position/execution) [更新]
+    * 新增響應字段 `seq`
+
+* [查詢持倉 (實時)](../v5/position) [更新]
+    * 新增響應字段 `seq`
+
+* [查詢抵押品信息](../v5/account/collateral-info) [更新]
+    * 新增`freeBorrowAmount`字段, 表示借款總額中免息部分的借款金額
+    * 新增`freeBorrowingLimit`字段, 表示免息借款額上限。若未結虧損部分超過該上限，則將全額計息。
+    * 廢棄`freeBorrowingAmount`字段：字段值已遷移到`freeBorrowingLimit`
+
+### WebSocket API
+* [持倉](../v5/websocket/private/position) [更新]
+    * 新增響應字段 `seq`
+    * 能夠訂閱指定業務線
+
+* [個人成交](../v5/websocket/private/execution) [更新]
+    * 新增響應字段 `seq`
+    * 能夠訂閱指定業務線
+
+* [訂單](../v5/websocket/private/order) [更新]
+    * 能夠訂閱指定業務線
+
+## 2023-09-20
+### REST API
+* [查詢訂單歷史](../v5/c2c-lend/order-record) [更新]
+    * 響應字段`status`, 新增枚舉值`11`, 表示撤銷贖回操作
+
+* [撤銷贖回](../v5/c2c-lend/cancel-redeem) [新增]
+    * 新增接口, 用於撤銷贖回操作
+
+## 2023-09-18
+### REST API
+* [新建子帳戶的API Key](../v5/user/create-subuid-apikey) [更新]
+    * 請求參數`ips`字段實際上是字符串類型, 但原有的數組類型依然可以使用.
+    * 請求參數`Derivatives`字段已經廢棄, 系統會自動識別帳戶類型來決定是否添加統一帳戶權限
+
+* [修改母帳戶的API Key設置](../v5/user/modify-master-apikey) [更新]
+    * 請求參數`ips`字段實際上是字符串類型, 但原有的數組類型依然可以使用.
+    * 請求參數`Derivatives`字段已經廢棄, 系統會自動識別帳戶類型來決定是否添加統一帳戶權限
+
+* [修改子帳戶的API Key設置](../v5/user/modify-sub-apikey) [更新]
+    * 新增請求字段`apikey`, 用於母帳戶管理子帳戶的key
+    * 請求參數`ips`字段實際上是字符串類型, 但原有的數組類型依然可以使用.
+    * 請求參數`Derivatives`字段已經廢棄, 系統會自動識別帳戶類型來決定是否添加統一帳戶權限
+
+* [刪除子帳戶的API Key](../v5/user/rm-sub-apikey) [更新]
+    * 新增請求字段`apikey`, 用於母帳戶刪除子帳戶的key
+
+## 2023-09-14
+### REST API
+* [查詢產品信息](../v5/otc/margin-product-info) [更新]
+    * 新增響應字段 `spotMarginTrading`
+    * 可以使用api key和secret來查詢該接口, 如果符合資格, 則會查詢到私有數據
+
+* [查詢保證金幣種信息](../v5/otc/margin-coin-convert-info) [更新]
+    * 可以使用api key和secret來查詢該接口, 如果符合資格, 則會查詢到私有數據
+
+* [查詢借貸訂單信息](../v5/otc/loan-info) [更新]
+    * 新增響應字段 `spotMarginTrading`
+    * `parentUid`的業務含義發生變化. 現在表示綁定了場外借貸產品的uid
+
+* [查詢風險率](../v5/otc/ltv-convert) [更新]
+    * `parentUid`的業務含義發生變化. 現在表示綁定了場外借貸產品的uid
+
 ## 2023-09-07
 ### REST API
 * [查詢實時委託單](../v5/order/open-order) [更新]

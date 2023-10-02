@@ -61,6 +61,7 @@ GET `/v5/execution/list`
 |> underlyingPrice |string |成交執行時，該 symbol 當時的底層資產價格，僅期權有效|
 |> blockTradeId |string |大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID|
 |> closedSize |string |平倉數量 |
+|> seq |long |序列號, 用於關聯成交和倉位的更新<ul><li>同一時間有多筆成交, seq相同</li><li>不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別</li><li>經典帳戶下現貨交易沒有該字段</li></ul>|
 |nextPageCursor |string |游標，用於翻頁|
 
 <a href="/api-explorer/v5/position/execution"><Button>運行實例 >></Button></a>
@@ -161,7 +162,8 @@ client
                 "execValue": "119.015",
                 "execType": "Trade",
                 "execQty": "0.1",
-                "closedSize": "0.1"
+                "closedSize": "0.1",
+                "seq": 4688002127
             }
         ]
     },

@@ -19,10 +19,12 @@ GET `/v5/account/collateral-info`
 |list |array |Object |
 |> currency |string |Currency of all current collateral|
 |> hourlyBorrowRate |string |Hourly borrow rate|
-|> maxBorrowingAmount |string |Max borrow amount. This value is shared across main-sub uids|
-|> freeBorrowingAmount |string |Free borrow amount|
+|> maxBorrowingAmount |string |Max borrow amount. This value is shared across main-sub UIDs|
+|> freeBorrowingAmount |string |Depreciated field, always return `""`, please refer to `freeBorrowingLimit`|
+|> freeBorrowingLimit |string |The maximum limit for interest-free borrowing |
+|> freeBorrowAmount |string |The amount of borrowing within your total borrowing amount that is exempt from interest charges|
 |> borrowAmount |string |Borrow amount|
-|> availableToBorrow |string |Available amount to borrow. This value is shared across main-sub uids|
+|> availableToBorrow |string |Available amount to borrow. This value is shared across main-sub UIDs|
 |> borrowable |boolean |Whether currency can be borrowed|
 |> borrowUsageRate |string |Borrow usage rate: borrowAmount/maxBorrowingAmount. It is an actual value between 0 and 1|
 |> marginCollateral |boolean |Whether it can be used as a margin collateral currency (platform) <li>When marginCollateral=false, then collateralSwitch is meaningless</li> |
@@ -74,16 +76,18 @@ print(session.get_collateral_info(
     "result": {
         "list": [
             {
+                "availableToBorrow": "3",
+                "freeBorrowingAmount": "",
+                "freeBorrowAmount": "0",
+                "maxBorrowingAmount": "3",
+                "hourlyBorrowRate": "0.00000147",
+                "borrowUsageRate": "0",
                 "collateralSwitch": true,
-                "borrowAmount": "1.12849124",
-                "availableToBorrow": "1.87150875",
-                "freeBorrowingAmount": "0",
+                "borrowAmount": "0",
                 "borrowable": true,
                 "currency": "BTC",
-                "maxBorrowingAmount": "3",
-                "hourlyBorrowRate": "0.0000013",
-                "borrowUsageRate": "0.376163",
                 "marginCollateral": true,
+                "freeBorrowingLimit": "0",
                 "collateralRatio": "0.95"
             }
         ]

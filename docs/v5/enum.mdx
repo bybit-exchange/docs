@@ -107,7 +107,7 @@ _Unified Account_
 * `inverse`&emsp;Inverse contract, including Inverse perp, Inverse futures
 * `option`
 
-_Normal Account_
+_Classic Account_
 * `linear`&emsp;USDT perp
 * `inverse`&emsp;Inverse contract, including Inverse perp, Inverse futures
 * `spot`
@@ -138,6 +138,7 @@ _Normal Account_
 * `BustTrade`&emsp;Liquidation
 * `Delivery`&emsp;USDC futures delivery
 * `BlockTrade`
+* `MovePosition`&emsp;"Websocket - execution" does not have this execType
 
 ### orderType
 * `Market`
@@ -152,6 +153,7 @@ _Normal Account_
 * `PartialTakeProfit`
 * `PartialStopLoss`
 * `tpslOrder`&emsp;spot TP/SL order
+* `MmRateClose`&emsp;On web or app can set MMR to close position
 
 ### tickDirection
 * `PlusTick`&emsp;price rise
@@ -205,12 +207,21 @@ _Normal Account_
 * `EC_InvalidSymbolStatus`
 
 ### accountType
-* `CONTRACT`&emsp;Derivatives Account
-* `SPOT`&emsp;Spot Account
-* ~~`INVESTMENT`~~&emsp;ByFi Account (The service has been offline)
-* `OPTION`&emsp;USDC Account
-* `UNIFIED`&emsp;UMA or UTA
+Check the value of <a href="#unifiedmarginstatus">`unifiedMarginStatus`</a> to see if you're on the Unified Trading Account or the classic account.
+
+#### Unified Trading Account (UTA)
+* `CONTRACT`&emsp;Inverse Derivatives Account
+* `UNIFIED`&emsp;Unified Trading Account
 * `FUND`&emsp;Funding Account
+
+#### Classic account
+Also known as the "standard account".
+* `SPOT`&emsp;Spot Account
+* `CONTRACT`&emsp;Derivatives Account
+* `OPTION`&emsp;USDC Derivatives
+* `FUND`&emsp;Funding Account
+* ~~`INVESTMENT`~~&emsp;ByFi Account (this service is now offline)
+
 
 ### transferStatus
 * `SUCCESS`
@@ -316,6 +327,10 @@ _Options:_
 * `AUTO_BUY_LIABILITY_INS_LOAN`
 * `AUTO_PRINCIPLE_REPAYMENT_INS_LOAN`
 * `AUTO_INTEREST_REPAYMENT_INS_LOAN`
+* `TRANSFER_IN_INS_LOAN`&emsp;Transfer In when in the liquidation of OTC loan
+* `TRANSFER_OUT_INS_LOAN`&emsp;Transfer Out when in the liquidation of OTC loan
+* `SPOT_REPAYMENT_SELL`&emsp;One-click repayment currency sell
+* `SPOT_REPAYMENT_BUY`&emsp;One-click repayment currency buy
 
 ### unifiedMarginStatus
 * `1`&emsp;Regular account

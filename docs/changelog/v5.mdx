@@ -1,6 +1,99 @@
 ---
 title: V5
 ---
+## 2023-09-28
+### REST API
+* [Get Long Short Ratio](../v5/market/long-short-ratio) [NEW]
+    * Add a new endpoint to query long short ratio market data
+
+## 2023-09-25
+### REST API
+* [Get Open Orders](../v5/order/open-order) [UPDATE]
+    * `stopOrderType` has new enumeration value: `OcoOrder`, used to indicate the Spot OCO Order (Unified Trading Account)
+
+* [Get Order History](../v5/order/order-list) [UPDATE]
+    * `stopOrderType` has new enumeration value: `OcoOrder`, used to indicate the Spot OCO Order (Unified Trading Account)
+
+* [Get Execution](../v5/position/execution) [Delayed to 17 Oct]
+    * `execType` has new enumeration value: `MovePosition`, used to indicate the position movement execution (Unified Trading Account)
+
+* [Get Transaction Log](../v5/account/transaction-log) [Delayed to 7 Oct]
+    * `type` has new enumeration values: `TRANSFER_IN_INS_LOAN`, `TRANSFER_OUT_INS_LOAN` (Unified Trading Account)
+
+* [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
+    * `type` has new enumeration values: `SPOT_REPAYMENT_SELL`, `SPOT_REPAYMENT_BUY` (Unified Trading Account)
+
+### Websocket API
+* [Order](../v5/websocket/private/order) [UPDATE]
+    * `stopOrderType` has new enumeration value: `OcoOrder`, used to indicate the Spot OCO Order (Unified Trading Account)
+
+## 2023-09-21
+### REST API
+* [Get Execution](../v5/position/execution) [UPDATE]
+    * Add response field `seq`
+
+* [Get Position Info](../v5/position) [UPDATE]
+    * Add response field `seq`
+
+* [Get Collateral Info](../v5/account/collateral-info) [UPDATE]
+    * Added "freeBorrowAmount" field: This field represents the amount of borrowing within your total borrowing amount that is exempt from interest charges
+    * Depreciated "freeBorrowingAmount" field: The value of this field has been migrated to "freeBorrowingLimit", and it keeps empty string.
+    * Added "freeBorrowingLimit" field: This field indicates the maximum limit for interest-free borrowing. If the unrealized loss portion exceeds this limit, all borrowings will be subject to interest.
+
+### WebSocket API
+* [Position](../v5/websocket/private/position) [UPDATE]
+    * Add response field `seq`
+    * Can subscribe specific category position
+
+* [Execution](../v5/websocket/private/execution) [UPDATE]
+    * Add response field `seq`
+    * Can subscribe specific category position
+
+* [Order](../v5/websocket/private/order) [UPDATE]
+    * Can subscribe specific category position
+
+## 2023-09-20
+### REST API
+* [Get Order Records](../v5/c2c-lend/order-record) [UPDATE]
+    * response field `status` added a new enumeration field `11`, which indicates that the cancellation of redeem
+
+* [Cancel Redeem](../v5/c2c-lend/cancel-redeem) [UPDATE]
+    * Add a new API endpoint used to cancel the redemption
+
+## 2023-09-18
+### REST API
+* [Create Sub UID API Key](../v5/user/create-subuid-apikey) [UPDATE]
+    * Request parameter `ips` is actually string type. array can be used, but string is more explicit
+    * Request parameter `Derivatives` has been depreciated due to auto identification by system
+
+* [Modify Master API Key](../v5/user/modify-master-apikey) [UPDATE]
+    * Request parameter `ips` is actually string type. array can be used, but string is more explicit
+    * Request parameter `Derivatives` has been depreciated due to auto identification by system
+
+* [Modify Sub API Key](../v5/user/modify-sub-apikey) [UPDATE]
+    * Add a new request param `apikey`, which can be used for Master account to manage sub account api key
+    * Request parameter `ips` is actually string type. array can be used, but string is more explicit
+    * Request parameter `Derivatives` has been depreciated due to auto identification by system
+
+* [Delete Sub API Key](../v5/user/rm-sub-apikey) [UPDATE]
+    * Add a new request param `apikey`, which can be used for Master account to delete sub account api key
+
+## 2023-09-14
+### REST API
+* [Get Product Info](../v5/otc/margin-product-info) [UPDATE]
+    * Add a new response field `spotMarginTrading`
+    * You can use api key and secret to call this endpoint to get your private data if you are eligible.
+
+* [Get Margin Coin Info](../v5/otc/margin-coin-convert-info) [UPDATE]
+    * You can use api key and secret to call this endpoint to get your private data if you are eligible.
+
+* [Get Loan Orders](../v5/otc/loan-info) [UPDATE]
+    * Add a new response field `spotMarginTrading`
+    * The meaning of `parentUid` is changed. After the change, it represents the uid that bound with OTC loan product
+
+* [Get LTV](../v5/otc/ltv-convert) [NEW]
+    * The meaning of `parentUid` is changed. After the change, it represents the uid that bound with OTC loan product
+
 ## 2023-09-07
 ### REST API
 * [Get Open Orders](../v5/order/open-order) [UPDATE]
@@ -233,7 +326,7 @@ title: V5
 
 * [Get Pre-upgrade USDC Session Settlement](../v5/pre-upgrade/settlement) [NEW]
     * A brand new endpoint to for Unified account to query pre-upgrade USDC Perpetual session settlement
-    
+
 * [Create Sub UID](../v5/user/create-subuid) [UPDATE]
     * Support to create a UTA sub account
 
