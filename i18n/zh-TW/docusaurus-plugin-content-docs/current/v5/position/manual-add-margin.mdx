@@ -14,15 +14,15 @@ POST `/v5/position/add-margin`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>普通帳戶: `linear`, `inverse`</li></ul>|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>普通帳戶: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |合約名稱 |
 |margin |**true** |string |增加或減少的保證金金額. 增加, 則為正數, 比如`10`; 減少, 則為負數, 比如`-10`. 最多支持4位小數 |
-|positionIdx |false |integer |倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向持倉模式</li><li>`2`: 賣側雙向持倉模式</li></ul>|
+|[positionIdx](../enum#positionidx) |false |integer |倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**<ul><li>`0`: 單向持倉模式</li><li>`1`: 買側雙向持倉模式</li><li>`2`: 賣側雙向持倉模式</li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|category |string  |產品類型 |
+|[category](../enum#category) |string  |產品類型 |
 |symbol |string  |合約名称 |
 |[positionIdx](../enum#positionidx) | integer |倉位標識符, 用于在不同仓位模式下标识仓位|
 |riskId |integer |风险限额ID，參見[風險限額](../v5/market/risk-limit#)接口|
