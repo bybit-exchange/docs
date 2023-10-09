@@ -23,7 +23,7 @@ GET `/v5/pre-upgrade/order/history`
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
 |orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單|
-|orderStatus |false |string |訂單狀態 |
+|[orderStatus](../enum#orderstatus) |false |string |訂單狀態. 不支持現貨 |
 |startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime要麼同時傳入，要麼同時不傳</li><li>若不傳，默認查詢過去7天的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒)|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
@@ -32,7 +32,7 @@ GET `/v5/pre-upgrade/order/history`
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|------ |
-|category |string |產品類型 |
+|[category](../enum#category) |string |產品類型 |
 |list |array |Object |
 |> orderId  |string |訂單Id |
 |> orderLinkId |string |用戶自定義Id |
