@@ -40,7 +40,8 @@ REST接口根URL:
 
 * `X-BAPI-API-KEY` - API密鑰
 * `X-BAPI-TIMESTAMP` - UTC毫秒時間戳
-* `X-BAPI-SIGN` - 請求參數簽名<br/>
+* `X-BAPI-SIGN` - 請求參數簽名
+* `X-Referer` or `Referer` - 經紀商用戶專用的頭參數<br/>
 
 另外我們提供可選的`X-BAPI-RECV-WINDOW`參數（單位是毫秒，默認值為`5000`），來指定請求在多長時間內有效，同時用來防止重放攻擊。
 
@@ -120,7 +121,6 @@ Host: api-testnet.bybit.com
 -H 'X-BAPI-API-KEY: XXXXXXXXXX' \
 -H 'X-BAPI-TIMESTAMP: 1658384431891' \
 -H 'X-BAPI-RECV-WINDOW: 5000'
--H 'cdn-request-id: test-001'
 ```
 
 </TabItem>
@@ -130,12 +130,12 @@ Host: api-testnet.bybit.com
 ```http
 POST /v5/order/create HTTP/1.1
 Host: api-testnet.bybit.com
+-H 'X-Referer: XXXXXXXXXX' \ [經紀商用戶專用的頭參數]
 -H 'X-BAPI-SIGN: XXXXXXXXXX' \
 -H 'X-BAPI-API-KEY: XXXXXXXXXX' \
 -H 'X-BAPI-TIMESTAMP: 1658385589135' \
 -H 'X-BAPI-RECV-WINDOW: 5000' \
 -H 'Content-Type: application/json' \
--H 'cdn-request-id: test-002'
 -d '{
 "category": "option"
 }'
