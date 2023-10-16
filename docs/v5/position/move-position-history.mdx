@@ -1,29 +1,19 @@
 ---
-title: Move Position
-sidebar_label: Move Position
-sidebar_position: 12
+title: Get Move Position History
+sidebar_label: Get Move Position History
+sidebar_position: 13
 ---
-You can move positions between sub-master, master-sub, or sub-sub UIDs when necessary
+You can query moved position data by master UID api key
 > **Unified account covers: USDT perpetual / USDC contract / Spot / Option**<br/>
 
-:::info
-* The endpoint can only be called by master UID api key
-* UIDs must be the same master-sub account relationship
-* The trades generated from move-position endpoint will not be displayed in the Recent Trade (Rest API & Websocket)
-* There is no trading fee
-* `fromUid` and `toUid` both should be Unified trading accounts, and they need to be one-way mode when moving the positions
-:::
-
-
 ### HTTP Request
-POST `/v5/position/move-positions`
+POST `/v5/position/move-history`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|fromUid |**true** |string |From UID <ul><li>Must be UTA</li><li>Must be in one-way mode for Futures</li></ul>|
-|toUid |**true** |string |To UID <ul><li>Must be UTA</li><li>Must be in one-way mode for Futures</li></ul>|
-|list |**true** |array |Object|
+|[category](../enum#category) |false |string |Product type. `linear`, `spot`, `option` |
+|list |false |array |Object|
 |> [category](../enum#category) |**true** |string |Product type. `linear`, `spot`, `option` |
 |> symbol |**true** |string |Symbol name|
 |> price |**true** |string |Trade price <ul><li>`linear`: the price needs to be between [95% of mark price, 105% of mark price]</li><li>`spot`&`option`: the price needs to follow the price rule from [Instruments Info](../market/instrument)</li></ul>|
