@@ -12,6 +12,7 @@ You can move positions between sub-master, master-sub, or sub-sub UIDs when nece
 * The trades generated from move-position endpoint will not be displayed in the Recent Trade (Rest API & Websocket)
 * There is no trading fee
 * `fromUid` and `toUid` both should be Unified trading accounts, and they need to be one-way mode when moving the positions
+* Please note that once executed, you will get execType=`MovePosition` entry from [Get Execution](execution#), [Get Closed Pnl](close-pnl#), and stream from [Execution](../websocket/private/execution).
 :::
 
 
@@ -34,13 +35,9 @@ POST `/v5/position/move-positions`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |map |Result object |
-|> blockTradeId |string |Blocktrade ID|
-|> status |string |Statue. `Processing`|
-|> rejectParty |string |The position limit value corresponding to this risk ID |
-
-<a href="/api-explorer/v5/position/set-risk-limit"><Button>RUN >></Button></a>
-
----
+|> blockTradeId |string |Block trade ID|
+|> status |string |Statue. `Processing`, `Rejected`|
+|> rejectParty |string |<ul><li>`""` means initial validation is passed, please check the order status via [Get Move Position History](move-position-history#)</li><li>`Taker`, `Maker` when status=`Rejected`</li><li>`bybit` means error is occurred on the Bybit side</li></ul> |
 
 ### Request Example
 
