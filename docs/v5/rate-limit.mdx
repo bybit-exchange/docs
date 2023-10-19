@@ -46,7 +46,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 
 ### API Rate Limit Table
 #### Trade
-<Tabs groupId="trade">
+<Tabs groupId="account-type">
 <TabItem value="classic" label="Classic account">
 <span class="blocky_table">
 <table border="0.8">
@@ -123,7 +123,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 </Tabs>
 
 #### Position
-<Tabs groupId="position">
+<Tabs groupId="account-type">
 <TabItem value="classic" label="Classic account">
 <span class="blocky_table">
 <table border="0.8">
@@ -170,7 +170,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 </Tabs>
 
 #### Account
-<Tabs groupId="account">
+<Tabs groupId="account-type">
 <TabItem value="classic" label="Classic account">
 <span class="blocky_table">
 <table border="0.8">
@@ -378,7 +378,9 @@ this level will automatically enjoy the corresponding API Rate Limit by default.
 :::
 
 :::tip instructions for batch endpoints 
-The batch order endpoint, which includes operations for creating, amending, and canceling, has its own rate limit and does not share it with single requests
+The batch order endpoint, which includes operations for creating, amending, and canceling, has its own rate limit and
+does not share it with single requests, *e.g., let's say the rate limit of single create order endpoint is 100/s, and batch create order endpoint
+is 100/s, so in this case, I can place 200 linear orders in one second if I use both endpoints to place orders*
 
 #### When category = linear
 - API for batch create/amend/cancel order, the frequency of the API will be consistent with the current configuration,

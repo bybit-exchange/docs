@@ -48,6 +48,8 @@ GET `/v5/user/query-api`
 |rsaPublicKey |string |RSA公鑰 |
 |isMaster |boolean |是否為主帳戶下的api key |
 |parentUid |string |主帳戶uid. 如果是主帳戶本身調用, 則返回`"0"` |
+|kycLevel |string |個人帳戶的kyc等級. `LEVEL_DEFAULT`, `LEVEL_1`， `LEVEL_2` |
+|kycRegion |string |個人帳戶的kyc地區 |
 
 <a href="/api-explorer/v5/user/apikey-info"><Button>運行實例 >></Button></a>
 
@@ -90,43 +92,54 @@ print(session.get_api_key_information())
     "retCode": 0,
     "retMsg": "",
     "result": {
-        "id": "16651472",
-        "note": "testxxx",
-        "apiKey": "opjSlSOzqIeXROT5rq",
+        "id": "13770661",
+        "note": "readwrite api key",
+        "apiKey": "XXXXXX",
         "readOnly": 0,
         "secret": "",
         "permissions": {
-            "ContractTrade": [],
-            "Spot": [],
-            "Wallet": [
-                "AccountTransfer"
+            "ContractTrade": [
+                "Order",
+                "Position"
             ],
-            "Options": [],
+            "Spot": [
+                "SpotTrade"
+            ],
+            "Wallet": [
+                "AccountTransfer",
+                "SubMemberTransfer"
+            ],
+            "Options": [
+                "OptionsTrade"
+            ],
             "Derivatives": [],
             "CopyTrading": [],
             "BlockTrade": [],
             "Exchange": [],
-            "NFT": []
+            "NFT": [],
+            "Affiliate": []
         },
         "ips": [
             "*"
         ],
         "type": 1,
-        "deadlineDay": 88,
-        "expiredAt": "2023-05-15T03:13:24Z",
-        "createdAt": "2023-02-15T03:13:24Z",
+        "deadlineDay": 66,
+        "expiredAt": "2023-12-22T07:20:25Z",
+        "createdAt": "2022-10-16T02:24:40Z",
         "unified": 0,
         "uta": 0,
-        "userID": 53888001,
+        "userID": 24617703,
         "inviterID": 0,
         "vipLevel": "No VIP",
         "mktMakerLevel": "0",
         "affiliateID": 0,
         "rsaPublicKey": "",
-        "isMaster": false,
-        "parentUid": "24617703"
+        "isMaster": true,
+        "parentUid": "0",
+        "kycLevel": "LEVEL_DEFAULT",
+        "kycRegion": ""
     },
     "retExtInfo": {},
-    "time": 1676430843547
+    "time": 1697525990798
 }
 ```

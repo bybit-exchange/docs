@@ -41,7 +41,8 @@ The following parameters must be used for authentication:
 
 * `X-BAPI-API-KEY` - api key
 * `X-BAPI-TIMESTAMP` - UTC timestamp in milliseconds
-* `X-BAPI-SIGN` - a signature derived from the request's parameters<br/>
+* `X-BAPI-SIGN` - a signature derived from the request's parameters
+* `X-Referer` or `Referer` - the header for broker users only<br/>
 
 We also provide `X-BAPI-RECV-WINDOW` (unit in millisecond and default value is 5,000) to specify how long an HTTP request is valid. It is also used to prevent replay attacks.
 
@@ -133,6 +134,7 @@ Host: api-testnet.bybit.com
 ```http
 POST /unified/v3/private/order/cancel-all HTTP/1.1
 Host: api-testnet.bybit.com
+-H 'X-Referer: XXXXXXXXXX' \ [the header for broker users only]
 -H 'X-BAPI-SIGN: XXXXXXXXXX' \
 -H 'X-BAPI-API-KEY: XXXXXXXXXX' \
 -H 'X-BAPI-TIMESTAMP: 1658385589135' \
