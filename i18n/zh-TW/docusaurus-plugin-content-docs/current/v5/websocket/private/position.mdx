@@ -48,6 +48,9 @@ sidebar_position: 1
 |> cumRealisedPnl | string | 累计已结盈亏 <ul><li>期貨: 是從第一次開始有持倉加總的已結盈虧</li><li>期權: 它是本次持倉的加總已結盈虧</li></ul>|
 |> [positionStatus](../../enum#positionstatus) |string |倉位狀態. `Normal`,`Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |自動減倉燈. <a href="https://www.bybit.com/zh-TW/help-center/s/article/What-is-Auto-Deleveraging-ADL">什麼是自動減倉機制?</a>|
+|> isReduceOnly |boolean |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>`true`: 僅允許減倉操作. 您可以考慮一系列的方式, 比如, 主要調整risk limit, 修改當前槓桿, 或者增加保證金</li><li>`false`(默認): 沒有交易限制, 表示您的倉位在系統調整時處於風險水平之下</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> mmrSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改MMR的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了MMR調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> leverageSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改槓桿的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了槓桿調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
 |> createdTime |string |倉位創建時間戳 (毫秒) |
 |> updatedTime |string |倉位數據更新時間戳 (毫秒) |
 |> seq |long |序列號, 用於關聯成交和倉位的更新<ul><li>不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別</li><li>如果該幣對從未被交易過, 查詢時則會返回`"-1"`</li><li>對於更新槓桿、更新風險限額等非交易行為, 將會返回上一次成交時更新的seq</li></ul>|
@@ -82,39 +85,43 @@ while True:
 
 ```json
 {
-    "id": "59232430b58efe-5fc5-4470-9337-4ce293b68edd",
+    "id": "1003076014fb7eedb-c7e6-45d6-a8c1-270f0169171a",
     "topic": "position",
-    "creationTime": 1672364174455,
+    "creationTime": 1697682317044,
     "data": [
         {
-            "positionIdx": 0,
+            "positionIdx": 2,
             "tradeMode": 0,
-            "riskId": 41,
-            "riskLimitValue": "200000",
-            "symbol": "XRPUSDT",
-            "side": "Buy",
-            "size": "75",
-            "entryPrice": "0.3615",
+            "riskId": 1,
+            "riskLimitValue": "2000000",
+            "symbol": "BTCUSDT",
+            "side": "",
+            "size": "0",
+            "entryPrice": "0",
             "leverage": "10",
-            "positionValue": "27.1125",
+            "positionValue": "0",
             "positionBalance": "0",
-            "markPrice": "0.3374",
-            "positionIM": "2.72589075",
-            "positionMM": "0.28576575",
+            "markPrice": "28184.5",
+            "positionIM": "0",
+            "positionMM": "0",
             "takeProfit": "0",
             "stopLoss": "0",
             "trailingStop": "0",
-            "unrealisedPnl": "-1.8075",
-            "cumRealisedPnl": "0.64782276",
-            "createdTime": "1672121182216",
-            "updatedTime": "1672364174449",
+            "unrealisedPnl": "0",
+            "cumRealisedPnl": "-25.06579337",
+            "createdTime": "1694402496913",
+            "updatedTime": "1697682317038",
             "tpslMode": "Full",
-            "liqPrice": "",
+            "liqPrice": "0",
             "bustPrice": "",
             "category": "linear",
             "positionStatus": "Normal",
-            "adlRankIndicator": 2,
-            "seq": 4688002127
+            "adlRankIndicator": 0,
+            "autoAddMargin": 0,
+            "leverageSysUpdatedTime": "",
+            "mmrSysUpdatedTime": "",
+            "seq": 8327597863,
+            "isReduceOnly": false
         }
     ]
 }

@@ -48,6 +48,9 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: it is the realised P&L when you hold that position</li></ul>|
 |> [positionStatus](../../enum#positionstatus) |string |Position status. `Normal`, `Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
+|> isReduceOnly |boolean |Useful when Bybit lower the risk limit <ul><li>`true`: Only allowed to reduce the position. You can consider a series of measures, e.g., adjust the risk limit, modify leverage or add margin</li><li>`false`(default): There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
+|> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
+|> leverageSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
 |> createdTime |string |Position created timestamp (ms) |
 |> updatedTime |string |Position data updated timestamp (ms) |
 |> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Returns `"-1"` if the symbol has never been traded</li><li>Returns the seq updated by the last transaction when there are setting like leverage, risk limit</li></ul>|
@@ -82,39 +85,43 @@ while True:
 
 ```json
 {
-    "id": "59232430b58efe-5fc5-4470-9337-4ce293b68edd",
+    "id": "1003076014fb7eedb-c7e6-45d6-a8c1-270f0169171a",
     "topic": "position",
-    "creationTime": 1672364174455,
+    "creationTime": 1697682317044,
     "data": [
         {
-            "positionIdx": 0,
+            "positionIdx": 2,
             "tradeMode": 0,
-            "riskId": 41,
-            "riskLimitValue": "200000",
-            "symbol": "XRPUSDT",
-            "side": "Buy",
-            "size": "75",
-            "entryPrice": "0.3615",
+            "riskId": 1,
+            "riskLimitValue": "2000000",
+            "symbol": "BTCUSDT",
+            "side": "",
+            "size": "0",
+            "entryPrice": "0",
             "leverage": "10",
-            "positionValue": "27.1125",
+            "positionValue": "0",
             "positionBalance": "0",
-            "markPrice": "0.3374",
-            "positionIM": "2.72589075",
-            "positionMM": "0.28576575",
+            "markPrice": "28184.5",
+            "positionIM": "0",
+            "positionMM": "0",
             "takeProfit": "0",
             "stopLoss": "0",
             "trailingStop": "0",
-            "unrealisedPnl": "-1.8075",
-            "cumRealisedPnl": "0.64782276",
-            "createdTime": "1672121182216",
-            "updatedTime": "1672364174449",
+            "unrealisedPnl": "0",
+            "cumRealisedPnl": "-25.06579337",
+            "createdTime": "1694402496913",
+            "updatedTime": "1697682317038",
             "tpslMode": "Full",
-            "liqPrice": "",
+            "liqPrice": "0",
             "bustPrice": "",
             "category": "linear",
             "positionStatus": "Normal",
-            "adlRankIndicator": 2,
-            "seq": 4688002127
+            "adlRankIndicator": 0,
+            "autoAddMargin": 0,
+            "leverageSysUpdatedTime": "",
+            "mmrSysUpdatedTime": "",
+            "seq": 8327597863,
+            "isReduceOnly": false
         }
     ]
 }

@@ -52,6 +52,9 @@ GET `/contract/v3/private/position/list`
 |> sessionAvgPrice |string |Settlement price |
 |> occClosingFee |string |Pre-occupancy closing fee|
 |> [adlRankIndicator](../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
+|> isReduceOnly |boolean |Useful when Bybit lower the risk limit <ul><li>`true`: Only allowed to reduce the position. You can consider a series of measures, e.g., adjust the risk limit, modify leverage or add margin</li><li>`false`: There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
+|> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
+|> leverageSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
 
 ### Request Example
 
@@ -77,40 +80,43 @@ Content-Type: application/json
                 "positionIdx": 0,
                 "riskId": 236,
                 "symbol": "ETCUSDT",
-                "side": "Sell",
-                "size": "5.0",
-                "positionValue": "101.025",
-                "entryPrice": "20.205",
+                "side": "None",
+                "size": "0.0",
+                "positionValue": "0",
+                "entryPrice": "0",
                 "tradeMode": 0,
                 "autoAddMargin": 0,
                 "leverage": "10",
-                "positionBalance": "10.1691765",
-                "liqPrice": "1606.060",
-                "bustPrice": "1606.260",
+                "positionBalance": "0",
+                "liqPrice": "",
+                "bustPrice": "0.000",
                 "takeProfit": "0.000",
                 "stopLoss": "0.000",
                 "trailingStop": "0.000",
-                "unrealisedPnl": "1.35",
+                "unrealisedPnl": "0",
                 "createdTime": "1672986751942",
-                "updatedTime": "1673419917797",
+                "updatedTime": "1675382400091",
                 "tpSlMode": "Full",
                 "riskLimitValue": "200000",
                 "activePrice": "0.000",
-                "markPrice": "19.935",
-                "cumRealisedPnl": "0.02758243",
-                "positionMM": "",
-                "positionIM": "",
+                "markPrice": "15.126",
+                "cumRealisedPnl": "-10.69094915",
+                "positionMM": "0",
+                "positionIM": "0",
                 "positionStatus": "Normal",
                 "sessionAvgPrice": "0.000",
-                "occClosingFee": "4.81878",
-                "avgPrice": "20.205",
-                "adlRankIndicator": 2
+                "occClosingFee": "0",
+                "avgPrice": "0",
+                "adlRankIndicator": 0,
+                "isReduceOnly": false,
+                "mmrSysUpdatedTime": "",
+                "leverageSysUpdatedTime": ""
             }
         ],
         "category": "",
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1673421076067
+    "time": 1697685149803
 }
 ```

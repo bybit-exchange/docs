@@ -50,6 +50,9 @@ GET `/contract/v3/private/position/list`
 |> sessionAvgPrice |string |結算價格 |
 |> occClosingFee |string |預佔用平倉手續費|
 |> [adlRankIndicator](../enum#adlrankindicator) |integer |自動減倉燈. <a href="https://www.bybit.com/zh-TW/help-center/s/article/What-is-Auto-Deleveraging-ADL">什麼是自動減倉機制?</a>|
+|> isReduceOnly |boolean |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>`true`: 僅允許減倉操作. 您可以考慮一系列的方式, 比如, 主要調整risk limit, 修改當前槓桿, 或者增加保證金</li><li>`false`(默認): 沒有交易限制, 表示您的倉位在系統調整時處於風險水平之下</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> mmrSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改MMR的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了MMR調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> leverageSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改槓桿的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了槓桿調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
 |> createdTime |string |倉位創建時間戳 (毫秒)|
 |> updatedTime |string |倉位數據更新時間 (毫秒) |
 
@@ -77,40 +80,43 @@ Content-Type: application/json
                 "positionIdx": 0,
                 "riskId": 236,
                 "symbol": "ETCUSDT",
-                "side": "Sell",
-                "size": "5.0",
-                "positionValue": "101.025",
-                "entryPrice": "20.205",
+                "side": "None",
+                "size": "0.0",
+                "positionValue": "0",
+                "entryPrice": "0",
                 "tradeMode": 0,
                 "autoAddMargin": 0,
                 "leverage": "10",
-                "positionBalance": "10.1691765",
-                "liqPrice": "1606.060",
-                "bustPrice": "1606.260",
+                "positionBalance": "0",
+                "liqPrice": "",
+                "bustPrice": "0.000",
                 "takeProfit": "0.000",
                 "stopLoss": "0.000",
                 "trailingStop": "0.000",
-                "unrealisedPnl": "1.35",
+                "unrealisedPnl": "0",
                 "createdTime": "1672986751942",
-                "updatedTime": "1673419917797",
+                "updatedTime": "1675382400091",
                 "tpSlMode": "Full",
                 "riskLimitValue": "200000",
                 "activePrice": "0.000",
-                "markPrice": "19.935",
-                "cumRealisedPnl": "0.02758243",
-                "positionMM": "",
-                "positionIM": "",
+                "markPrice": "15.126",
+                "cumRealisedPnl": "-10.69094915",
+                "positionMM": "0",
+                "positionIM": "0",
                 "positionStatus": "Normal",
                 "sessionAvgPrice": "0.000",
-                "occClosingFee": "4.81878",
-                "avgPrice": "20.205",
-                "adlRankIndicator": 2
+                "occClosingFee": "0",
+                "avgPrice": "0",
+                "adlRankIndicator": 0,
+                "isReduceOnly": false,
+                "mmrSysUpdatedTime": "",
+                "leverageSysUpdatedTime": ""
             }
         ],
         "category": "",
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1673421076067
+    "time": 1697685149803
 }
 ```
