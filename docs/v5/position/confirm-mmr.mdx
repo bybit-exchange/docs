@@ -1,10 +1,12 @@
 ---
-title: Confirm Pending MMR
-sidebar_label: Confirm Pending MMR
+title: Confirm New Risk Limit
+sidebar_label: Confirm New Risk Limit
 sidebar_position: 14
 ---
-
-什麼場景下使用這個接口？
+It is only applicable when the user is marked as only reducing positions (please see the isReduceOnly field in
+the [Get Position Info](/v5/position#) interface). After the user actively adjusts the risk level, this interface
+is called to try to calculate the adjusted risk level, and if it passes (retCode=0), the system will remove the position reduceOnly mark.
+You are recommended to call [Get Position Info](/v5/position#) to check `isReduceOnly` field.
 > **Unified account covers: USDT perpetual / USDC contract / Inverse contract**<br/>
 > **Classic account covers: USDT perpetual / Inverse contract**
 

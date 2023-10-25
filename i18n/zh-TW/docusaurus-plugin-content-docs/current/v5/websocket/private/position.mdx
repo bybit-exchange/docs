@@ -48,9 +48,9 @@ sidebar_position: 1
 |> cumRealisedPnl | string | 累计已结盈亏 <ul><li>期貨: 是從第一次開始有持倉加總的已結盈虧</li><li>期權: 它是本次持倉的加總已結盈虧</li></ul>|
 |> [positionStatus](../../enum#positionstatus) |string |倉位狀態. `Normal`,`Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |自動減倉燈. <a href="https://www.bybit.com/zh-TW/help-center/s/article/What-is-Auto-Deleveraging-ADL">什麼是自動減倉機制?</a>|
-|> isReduceOnly |boolean |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>`true`: 僅允許減倉操作. 您可以考慮一系列的方式, 比如, 主要調整risk limit, 修改當前槓桿, 或者增加保證金</li><li>`false`(默認): 沒有交易限制, 表示您的倉位在系統調整時處於風險水平之下</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
-|> mmrSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改MMR的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了MMR調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
-|> leverageSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改槓桿的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了槓桿調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`</li><li>默認為`""`</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> isReduceOnly |boolean |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>`true`: 僅允許減倉操作. 您可以考慮一系列的方式, 比如, 降低risk limit檔位, 或者同檔位修改槓桿或減少倉位, 或者增加保證金, 或者撤單, 這些操作做完後, 可以主動調用[確認新的風險限額](../../position/confirm-mmr#)接口</li><li>`false`(默認): 沒有交易限制, 表示您的倉位在系統調整時處於風險水平之下</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> mmrSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改MMR的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了MMR調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`, 但如果曾經這個symbol有過系統降檔的操作, 那麼這裡會顯示上一次操作的時間</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
+|> leverageSysUpdatedTime |string |僅當Bybit需要降低某個Symbol的風險限額時有用 <ul><li>當isReduceOnly=`true`: 這個時間戳表示系統強制修改槓桿的時間</li>當isReduceOnly=`false`: 若不為空, 則表示系統已經完成了槓桿調整的時間<li>僅當系統調整才會賦值, 對於主動的調整, 不會在這裡展示時間戳</li><li>默認為`""`, 但如果曾經這個symbol有過系統降檔的操作, 那麼這裡會顯示上一次操作的時間</li><li>僅對逐倉和全倉的期貨倉位有意義</li></ul>|
 |> createdTime |string |倉位創建時間戳 (毫秒) |
 |> updatedTime |string |倉位數據更新時間戳 (毫秒) |
 |> seq |long |序列號, 用於關聯成交和倉位的更新<ul><li>不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別</li><li>如果該幣對從未被交易過, 查詢時則會返回`"-1"`</li><li>對於更新槓桿、更新風險限額等非交易行為, 將會返回上一次成交時更新的seq</li></ul>|
