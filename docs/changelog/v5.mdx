@@ -1,6 +1,21 @@
 ---
 title: V5
 ---
+## 2023-10-26
+### REST API
+- [Get Execution](../v5/position/execution) [UPDATE]
+    - UTA Spot: `stopOrderType`, `""` for normal order, `tpslOrder` for TP/SL order, `Stop` for conditional order, `OcoOrder` for OCO order
+
+- [Get Open Orders](../v5/order/open-order) [UPDATE]
+    - UTA Spot: add new response field `ocoTriggerBy`, and the value can be `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
+- [Get Order History](../v5/order/order-list) [UPDATE]
+    - UTA Spot: add new response field `ocoTriggerBy`, and the value can be `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
+### Websocket API
+- [Order](../v5/websocket/private/order) [UPDATE]
+    - UTA Spot: add new response field `ocoTriggerBy`, and the value can be `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
 ## 2023-10-25
 ### REST API
 - [Get Position Info](../v5/position) [UPDATE]
@@ -39,7 +54,7 @@ title: V5
 * [Get Order History](../v5/order/order-list) [UPDATE]
     * `stopOrderType` has new enumeration value: `OcoOrder`, used to indicate the Spot OCO Order (Unified Trading Account)
 
-* [Get Execution](../v5/position/execution) [Delayed to 17 Oct]
+* [Get Execution](../v5/position/execution) [UPDATE]
     * `execType` has new enumeration value: `MovePosition`, used to indicate the position movement execution (Unified Trading Account)
 
 * [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
