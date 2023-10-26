@@ -3,11 +3,17 @@ title: 修改委託單
 sidebar_label: 修改委託單
 sidebar_position: 2
 ---
-> **統一帳戶覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **統一帳戶覆蓋範圍: 現貨 / USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
+> **普通帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::info important
 您只能修改那些**未成交**或者**部分成交**的訂單。
+:::
+
+:::infoWebsocket現貨推送邏輯
+**經典帳戶**: 如果原始訂單是PostOnly訂單, 在修改訂單後, 變成了taker訂單, 那麼您將先收到一條推送orderStatus="New"的消息, 然後是orderStatus="Rejected"的消息<br/>
+
+**統一帳戶**: 如果原始訂單是PostOnly訂單, 在修改訂單後, 變成了taker訂單, 那麼您將直接收到一條推送orderStatus="Rejected"的消息<br/>
 :::
 
 ### HTTP請求
@@ -16,12 +22,12 @@ POST `/v5/order/amend`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul>|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`, `spot`, `option`</li><li>普通帳戶: `linear`, `inverse`, `spot`</li></ul>|
 |symbol |**true** |string |合約名稱|
 |orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
 |orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
 |orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1 |
-|triggerPrice |false |string |觸發價格. 若希望市場趨勢是上漲至觸發條件單, 則確保:<br/> _觸發價格 > 市場價格_<br/>否則,_觸發價格 < 市場價格_|
+|triggerPrice |false |string |<ul><li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li><li>對於現貨, 這是下止盈止損單或者條件單的觸發價格參數</li></ul>|
 |qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
 |price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
 |takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段|
