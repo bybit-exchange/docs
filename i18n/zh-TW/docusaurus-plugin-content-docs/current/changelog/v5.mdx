@@ -1,6 +1,21 @@
 ---
 title: V5
 ---
+## 2023-10-26
+### REST API
+- [查詢成交紀錄](../v5/position/execution) [更新]
+    - 統一帳戶 現貨: `stopOrderType`, `""` 表示普通訂單, `tpslOrder` 表示止盈止損單, `Stop` 表示條件單, `OcoOrder` 表示OCO訂單
+
+- [查詢實時委託單](../v5/order/open-order) [更新]
+    - 統一帳戶 現貨: 新增響應字段 `ocoTriggerBy`, 並且它的值可以是 `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
+* [查詢歷史訂單](../v5/order/order-list) [更新]
+    - 統一帳戶 現貨: 新增響應字段 `ocoTriggerBy`, 並且它的值可以是 `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
+### Websocket API
+- [訂單](../v5/websocket/private/order) [更新]
+    - 統一帳戶 現貨: 新增響應字段 `ocoTriggerBy`, 並且它的值可以是 `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
+
 ## 2023-10-25
 ### REST API
 - [查詢持倉 (實時)](../v5/position) [更新]
@@ -39,7 +54,7 @@ title: V5
 * [查詢歷史訂單](../v5/order/order-list) [更新]
     * `stopOrderType`新增枚舉值 `OcoOrder`, 用於表示現貨OCO訂單 (僅統一帳戶)
 
-* [查詢成交紀錄](../v5/position/execution) [推遲到10月17日主網]
+* [查詢成交紀錄](../v5/position/execution) [更新]
     * `execType`新增枚舉值 `MovePosition`, 用於表示移動倉位時的成交 (僅統一帳戶)
 
 * [交易日誌](../v5/account/transaction-log) [更新]
