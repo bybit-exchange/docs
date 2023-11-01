@@ -24,8 +24,8 @@ GET `/v5/pre-upgrade/order/history`
 |orderLinkId |false |string |用戶自定義訂單ID |
 |orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單|
 |[orderStatus](../enum#orderstatus) |false |string |訂單狀態. 不支持現貨 |
-|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime要麼同時傳入，要麼同時不傳</li><li>若不傳，默認查詢過去7天的數據</li></ul>|
-|endTime |false |integer |結束時間戳 (毫秒)|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若不傳startTime，則查詢startTime和startTime+7天的數據</li><li>若不傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 

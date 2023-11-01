@@ -22,8 +22,8 @@ GET `/contract/v3/private/position/closed-pnl`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |symbol |**true** |string |產品類型 |
-|startTime |false |integer |開始時間戳 (毫秒)|
-|endTime |false |integer |結束時間戳 (毫秒)|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若不傳startTime，則查詢startTime和startTime+7天的數據</li><li>若不傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `200`]. default: `50`|
 |cursor |false |string |游標，用於翻頁|
 

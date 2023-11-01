@@ -24,7 +24,7 @@ GET `/v5/pre-upgrade/order/history`
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
 |[orderStatus](../enum#orderstatus) |false |string |Order status. Not supported for `spot` category |
-|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li></ul>|
+|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7days</li><li>Only endTime is passed, return range between endTime-7days and endTime</li><li>If both are passed,the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|

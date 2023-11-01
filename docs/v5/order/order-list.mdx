@@ -33,8 +33,8 @@ GET `/v5/order/history`
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: UTA spot OCO orders only <ul><li>Classic `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
-|startTime |false |integer |The start timestamp (ms) <ul><li>Classic spot is not supported temporarily</li><li>startTime and endTime must be passed together</li><li>If not passed, query the past 7 days data by default</li><li>For each request, startTime and endTime interval should be less then 7 days</li></ul>|
-|endTime |false |integer |The end timestamp (ms) <ul><li>For each request, startTime and endTime interval should be less then 7 days</li></ul>|
+|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7days</li><li>Only endTime is passed, return range between endTime-7days and endTime</li><li>If both are passed,the rule is endTime - startTime <= 7 days</li><li>Classic account Spot does not support startTime and endTime</li></ul>|
+|endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
