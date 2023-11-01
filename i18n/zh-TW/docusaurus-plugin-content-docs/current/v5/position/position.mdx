@@ -36,7 +36,7 @@ GET `/v5/position/list`
 |> riskId | integer | 风险限额ID，參見[風險限額](../v5/market/risk-limit#)接口. _注意：若賬戶為組合保證金模式(PM)，該字段返回0，風險限額規則失效_|
 |> riskLimitValue | string | 當前風險限額ID對應的持倉限制量. _注意：若賬戶為組合保證金模式(PM)，該字段返回""，風險限額規則失效_|
 |> symbol | string | 合約名称 |
-|> side| string | 持倉方向，Buy：多头；Sell：空头. 注意：_普通帳戶的單向模式，空的仓位返回`None`. UTA帳戶，單向或對沖模式空的仓位返回空字符串均_|
+|> side| string | 持倉方向，Buy：多头；Sell：空头. <ul><li>經典帳戶的單向模式下和統一帳戶的反向合約: 空倉時返回`None`.</li><li>統一帳戶(正向合約): 單向或對沖模式空的仓位返回空字符串</li></ul>|
 |> size| string | 當前倉位的合约數量 |
 |> avgPrice| string | 當前倉位的平均入場價格 <li>對於8小時結算的USDC合約倉位, 該字段表示的是平均開倉價格, 不隨著結算而改變</li> |
 |> positionValue | string |仓位的價值 |
