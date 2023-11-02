@@ -148,8 +148,11 @@ sidebar_label: Error Codes
 |Code |Description |
 |:----:|:-------------------------------|
 | 170001 |Internal error. |
-| 170007 |Timeout waiting for response from backend server. |
 | 170005 |Too many new orders; current limit is %s orders per %s. |
+| 170007 |Timeout waiting for response from backend server. |
+| 170010 |Purchase failed: Exceed the maximum position limit of leveraged tokens, the current available limit is %s USDT |
+| 170011 |"Purchase failed: Exceed the maximum position limit of innovation tokens, |
+| 170019 |the current available limit is ''{{.replaceKey0}}'' USDT" |
 | 170031 |The feature has been suspended |
 | 170032 |Network error. Please try again later |
 | 170033 |margin Insufficient account balance |
@@ -162,6 +165,7 @@ sidebar_label: Error Codes
 | 170116 |Invalid orderType. |
 | 170117 |Invalid side. |
 | 170121 |Invalid symbol. |
+| 170124 |Order amount too large. |
 | 170130 |Data sent for paramter '%s' is not valid. |
 | 170131 |Balance insufficient |
 | 170132 |Order price too high. |
@@ -172,7 +176,6 @@ sidebar_label: Error Codes
 | 170137 |Order volume decimal too long |
 | 170139 |Order has been filled. |
 | 170140 |Transaction amount lower than the minimum. |
-| 170124 |Order amount too large. |
 | 170141 |Duplicate clientOrderId |
 | 170142 |Order has been canceled |
 | 170143 |Cannot be found on order book |
@@ -197,7 +200,21 @@ sidebar_label: Error Codes
 | 170198 |Your order quantity to sell is too large. The filled price may deviate significantly from the market price. Please try again |
 | 170199 |Your order quantity to buy is too large. The filled price may deviate significantly from the nav. Please try again. |
 | 170200 |Your order quantity to sell is too large. The filled price may deviate significantly from the nav. Please try again. |
+| 170201 |Your account has been restricted for trades. If you have any questions, please email us at support@bybit.com |
+| 170202 |Invalid orderFilter parameter. |
+| 170203 |Please enter the TP/SL price. |
+| 170204 |trigger price cannot be higher than 110% price. |
+| 170206 |trigger price cannot be lower than 90% of qty. |
+| 170207 |The loan amount of the platform is not enough. |
+| 170210 |New order rejected. |
 | 170212 |Cancel order request processing|
+| 170213 |Order does not exist. |
+| 170215 |Spot Trading (Buy) Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for buy orders |
+| 170216 |The leverage you select for Spot Trading cannot exceed the maximum leverage allowed by Institutional Lending |
+| 170217 |Only LIMIT-MAKER order is supported for the current pair. |
+| 170218 |The LIMIT-MAKER order is rejected due to invalid price. |
+| 170219 |UID {{xxx}} is not available to this feature |
+| 170220 |Spot Trading Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for Spot trading |
 | 170221 |This coin does not exist. |
 | 170222 |Too many requests in this time frame. |
 | 170223 |Your Spot Account with Institutional Lending triggers an alert or liquidation. |
@@ -206,30 +223,13 @@ sidebar_label: Error Codes
 | 170227 |This feature is not supported. |
 | 170228 |The purchase amount of each order exceeds the estimated maximum purchase amount. |
 | 170229 |The sell quantity per order exceeds the estimated maximum sell quantity. |
-| 170234 |System Error |
-| 170210 |New order rejected. |
-| 170213 |Order does not exist. |
-| 170217 |Only LIMIT-MAKER order is supported for the current pair. |
-| 170218 |The LIMIT-MAKER order is rejected due to invalid price. |
-| 170010 |Purchase failed: Exceed the maximum position limit of leveraged tokens, the current available limit is %s USDT |
-| 170011 |"Purchase failed: Exceed the maximum position limit of innovation tokens, |
-| 170019 |the current available limit is ''{{.replaceKey0}}'' USDT" |
-| 170201 |Your account has been restricted for trades. If you have any questions, please email us at support@bybit.com |
-| 170202 |Invalid orderFilter parameter. |
-| 170203 |Please enter the TP/SL price. |
-| 170204 |trigger price cannot be higher than 110% price. |
-| 170206 |trigger price cannot be lower than 90% of qty. |
-| 170207 |The loan amount of the platform is not enough. |
-| 170215 |Spot Trading (Buy) Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for buy orders |
-| 170216 |The leverage you select for Spot Trading cannot exceed the maximum leverage allowed by Institutional Lending |
-| 170219 |UID {{xxx}} is not available to this feature |
-| 170220 |Spot Trading Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for Spot trading |
-| 170709 |OTC loan: The select trading pair is not in the whitelist pair |
 | 170230 |Operations Restriction: Due to the deactivation of Margin Trading for institutional loan|
+| 170234 |System Error |
 | 170310 |Order modification timeout|
 | 170311 |Order modification failed|
 | 170312 |The current order does not support modification|
 | 170313 |The modified contract quantity cannot be less than to the filled quantity|
+| 170709 |OTC loan: The select trading pair is not in the whitelist pair |
 
 ## Spot Leverage Token
 |Code |Description |
@@ -306,7 +306,36 @@ sidebar_label: Error Codes
 ## Asset
 |Code |Description |
 |:----:|:-------------------------------|
+| 131001 |Service error |
+| 131002 |Parameter error |
+| 131002 |Withdraw address chain or destination tag are not equal |
+| 131003 |Internal error |
+| 131004 |KYC needed |
+| 131075 |InternalAddressCannotBeYourself |
+| 131076 |internal transfer not support sub-accounts |
+| 131077 |receive user not exist |
+| 131078 |receive user deposit has been banned  |
+| 131079 |receive user need kyc |
+| 131080 |User left retry times is zero |
+| 131081 |Do not input memo/tag,please.  |
+| 131082 |Do not repeat the request  |
+| 131083 |Withdraw only allowed from address book |
 | 131084 |Withdraw failed because of Uta Upgrading |
+| 131085 |Withdrawal amount is greater than your availale balance (the deplayed withdrawal is triggered) |
+| 131086 |Withdrawal amount exceeds risk limit (the risk limit of margin trade is triggered) |
+| 131087 |your current account spot risk level is too high, withdrawal is prohibited, please adjust and try again|
+| 131088 |The withdrawal amount exceeds the remaining withdrawal limit of your identity verification level. The current available amount for withdrawal : %s |
+| 131089 |User sensitive operation, withdrawal is prohibited within 24 hours |
+| 131090 |User withdraw has been banned |
+| 131091 |Blocked login status does not allow withdrawals |
+| 131092 |User status is abnormal |
+| 131093 |The withdrawal address is not in the whitelist |
+| 131094 |UserId is not in the whitelist |
+| 131095 |Withdrawl amount exceeds the 24 hour platform limit |
+| 131096 |Withdraw amount does not satify the lower limit or upper limit |
+| 131097 |Withdrawal of this currency has been closed |
+| 131098 |Withdrawal currently is not availble from new address |
+| 131099 |Hot wallet status can cancel the withdraw |
 | 131200 |Service error |
 | 131201 |Internal error |
 | 131202 |Invalid memberId |
@@ -325,29 +354,12 @@ sidebar_label: Error Codes
 | 131215 |Amount error |
 | 131216 |Query balance error |
 | 131217 |Risk check error |
-| 131229 |Due to compliance requirements, the current currency is not allowed to transfer |
-| 131001 |Service error |
-| 131002 |Parameter error |
-| 131003 |Interal error |
-| 131004 |KYC needed |
-| 131085 |Withdrawal amount is greater than your availale balance (the deplayed withdrawal is triggered) |
-| 131086 |Withdrawal amount exceeds risk limit (the risk limit of margin trade is triggered) |
-| 131088 |The withdrawal amount exceeds the remaining withdrawal limit of your identity verification level. The current available amount for withdrawal : %s |
-| 131089 |User sensitive operation, withdrawal is prohibited within 24 hours |
-| 131090 |User withdraw has been banned |
-| 131091 |Blocked login status does not allow withdrawals |
-| 131092 |User status is abnormal |
-| 131093 |The withdrawal address is not in the whitelist |
-| 131094 |UserId is not in the whitelist |
-| 131095 |Withdrawl amount exceeds the 24 hour platform limit |
-| 131096 |Withdraw amount does not satify the lower limit or upper limit |
-| 131097 |Withdrawal of this currency has been closed |
-| 131098 |Withdrawal currently is not availble from new address |
-| 131099 |Hot wallet status can cancel the withdraw |
 | 131227 |Sub-account do not have universal transfer permission |
 | 131228 |your balance is not enough. Please check transfer safe amount |
-| 131087 |Do not input memo/tag,please|
+| 131229 |Due to compliance requirements, the current currency is not allowed to transfer |
 | 131230 |The system is busy, please try again later|
+| 141004 |sub member is not normal|
+| 141025 |This sub-account has assets and cannot be deleted|
 | 181000 |category is null |
 | 181001 |category only support linear or option or spot. |
 | 181002 |symbol is null. |

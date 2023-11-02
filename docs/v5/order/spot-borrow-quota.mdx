@@ -3,8 +3,7 @@ title: Get Borrow Quota (Spot)
 sidebar_label: Get Borrow Quota (Spot)
 sidebar_position: 10
 ---
-
-Query the qty and amount of borrowable coins in spot account.
+Query the available balance for Spot trading and Margin trading
 > **Covers: Spot (Unified Account)**
 
 ### HTTP Request
@@ -22,8 +21,10 @@ GET `/v5/order/spot-borrow-check`
 |:----- |:-----|------ |
 |symbol |string |Symbol name |
 |side |string |Side |
-|maxTradeQty |string |The maximum base coin qty can be traded<ul><li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li>  </ul>|
-|maxTradeAmount |string |The maximum quote coin amount can be traded<ul><li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li> </ul>|
+|maxTradeQty |string |The maximum base coin qty can be traded<ul><li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li><li>up to 4 decimals</li></ul>|
+|maxTradeAmount |string |The maximum quote coin amount can be traded<ul><li>If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount</li><li>Otherwise, it returns actual balance</li><li>up to 8 decimals</li></ul>|
+|spotMaxTradeQty |string |No matter your Spot margin switch on or not, it always returns actual qty of base coin you can trade or you have, up to 4 decimals |
+|spotMaxTradeAmount |string |No matter your Spot margin switch on or not, it always returns actual amount of quote coin you can trade or you have, up to 8 decimals |
 |borrowCoin |string |Borrow coin |
 
 <a href="/api-explorer/v5/trade/query-spot-quota"><Button>RUN >></Button></a>
@@ -94,12 +95,14 @@ client
     "retMsg": "OK",
     "result": {
         "symbol": "BTCUSDT",
-        "maxTradeQty": "2.7646",
+        "maxTradeQty": "6.6065",
         "side": "Buy",
-        "maxTradeAmount": "45321.76354622",
-        "borrowCoin": "USDT"
+        "spotMaxTradeAmount": "9004.75628594",
+        "maxTradeAmount": "218014.01330797",
+        "borrowCoin": "USDT",
+        "spotMaxTradeQty": "0.2728"
     },
     "retExtInfo": {},
-    "time": 1672375804415
+    "time": 1698895841534
 }
 ```
