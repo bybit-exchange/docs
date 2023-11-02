@@ -73,6 +73,42 @@ print(session.cancel_order(
 ))
 ```
 
+```java
+/* Add Maven dependency 
+    <dependency>
+        <groupId>io.github.wuhewuhe</groupId>
+        <artifactId>bybit-java-api</artifactId>
+    </dependency>
+*/
+import com.bybit.api.client.restApi.BybitApiTradeRestClient;
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.trade.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+
+BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
+BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
+
+// Create a CancelOrderRequest
+var cancelOrderRequest = TradeOrderRequest.builder().category(ProductType.SPOT).symbol("XRPUSDT").orderId("1523347543495541248").build();
+var canceledOrder = client.cancelOrder(cancelOrderRequest);
+System.out.println(canceledOrder);
+```
+
+</TabItem>
+<TabItem value="DotNet" label=".Net">
+
+```c#
+/* Add Nuget dependency 
+    dotnet add package bybit.net.api
+*/
+using bybit.net.api.ApiServiceImp;
+using bybit.net.api.Models.Trade;
+
+BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");
+var orderInfoString = await TradeService.CancelOrder(orderId: "1523347543495541248", category: Category.SPOT, symbol: "XRPUSDT");
+Console.WriteLine(orderInfoString);
+```
+
 </TabItem>
 <TabItem value="Node" label="Node.js">
 
