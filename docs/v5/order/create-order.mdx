@@ -162,12 +162,6 @@ print(session.place_order(
 <TabItem value="Java" label="Java">
 
 ```java
-/* Add Maven dependency 
-    <dependency>
-        <groupId>io.github.wuhewuhe</groupId>
-        <artifactId>bybit-java-api</artifactId>
-    </dependency>
-*/
 import com.bybit.api.client.restApi.BybitApiAsyncTradeRestClient;
 import com.bybit.api.client.domain.ProductType;
 import com.bybit.api.client.domain.TradeOrderType;
@@ -177,17 +171,8 @@ import com.bybit.api.client.domain.trade.TimeInForce;
 import com.bybit.api.client.domain.trade.TradeOrderRequest;
 import com.bybit.api.client.service.BybitApiClientFactory;
 import java.util.Map;
-
 BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
 BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
-
-// Place an order
-var newOrderRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).symbol("XRPUSDT")
-                .side(Side.BUY).orderType(TradeOrderType.MARKET).qty("10").timeInForce(TimeInForce.IMMEDIATE_OR_CANCEL)
-                .positionIdx(PositionIdx.ONE_WAY_MODE).build();
-client.createOrder(newOrderRequest, System.out::println);
-
-// Place an order by map
 Map<String, Object> order =Map.of(
                   "category", "option",
                   "symbol", "BTC-29DEC23-10000-P",

@@ -103,21 +103,12 @@ print(session.amend_order(
 <TabItem value="Java" label="Java">
 
 ```java
-/* Add Maven dependency 
-    <dependency>
-        <groupId>io.github.wuhewuhe</groupId>
-        <artifactId>bybit-java-api</artifactId>
-    </dependency>
-*/
 import com.bybit.api.client.restApi.BybitApiTradeRestClient;
 import com.bybit.api.client.domain.*;
 import com.bybit.api.client.domain.trade.*;
 import com.bybit.api.client.service.BybitApiClientFactory;
-
 BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
 BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
-
-// Create an AmendOrderRequest
 var amendOrderRequest = TradeOrderRequest.builder().orderId("1523347543495541248").category(ProductType.LINEAR).symbol("XRPUSDT")
                         .price("0.5")  // setting a new price, for example
                         .qty("15")  // and a new quantity
@@ -130,12 +121,8 @@ System.out.println(amendedOrder);
 <TabItem value="DotNet" label=".Net">
 
 ```c#
-/* Add Nuget dependency 
-    dotnet add package bybit.net.api
-*/
 using bybit.net.api.ApiServiceImp;
 using bybit.net.api.Models.Trade;
-
 BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");
 var orderInfoString = await TradeService.AmendOrder(orderId: "1523347543495541248", category:Category.LINEAR, symbol: "XRPUSDT", price:"0.5", qty:"15");
 Console.WriteLine(orderInfoString);

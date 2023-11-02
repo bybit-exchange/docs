@@ -121,22 +121,14 @@ print(session.amend_batch_order(
 <TabItem value="Java" label="Java">
 
 ```java
-/* Add Maven dependency 
-    <dependency>
-        <groupId>io.github.wuhewuhe</groupId>
-        <artifactId>bybit-java-api</artifactId>
-    </dependency>
-*/
 import com.bybit.api.client.restApi.BybitApiAsyncTradeRestClient;
 import com.bybit.api.client.domain.ProductType;
 import com.bybit.api.client.domain.TradeOrderType;
 import com.bybit.api.client.domain.trade.*;
 import com.bybit.api.client.service.BybitApiClientFactory;
 import java.util.Arrays;
-
 BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
 BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
-
 var amendOrderRequests = Arrays.asList(TradeOrderRequest.builder().symbol("BTC-10FEB23-24000-C").qty("0.1").price("5").orderLinkId("9b381bb1-401").build(),
                 TradeOrderRequest.builder().symbol("BTC-10FEB23-24000-C").qty("0.1").price("5").orderLinkId("82ee86dd-001").build());
 var amendBatchOrders = BatchOrderRequest.builder().category(ProductType.OPTION).request(amendOrderRequests).build();
@@ -147,12 +139,8 @@ client.createBatchOrder(amendBatchOrders, System.out::println);
 <TabItem value="DotNet" label=".Net">
 
 ```c#
-/* Add Nuget dependency 
-    dotnet add package bybit.net.api
-*/
 using bybit.net.api.ApiServiceImp;
 using bybit.net.api.Models.Trade;
-
 var order1 = new OrderRequest { Symbol = "XRPUSDT", OrderId = "xxxxxxxxxx", Qty = "10", Price = "0.6080" };
 var order2 = new OrderRequest { Symbol = "BLZUSDT", OrderId = "xxxxxxxxxx", Qty = "15", Price = "0.6090" };
 var orderInfoString = await TradeService.AmendBatchOrder(category:Category.LINEAR, request: new List<OrderRequest> { order1, order2 });
