@@ -148,8 +148,11 @@ sidebar_label: 錯誤碼
 |錯誤碼 |描述 |
 |:----:|:-------------------------------|
 | 170001 |openapi內部异常、及調用下游异常會拋出次异常 |
+| 170005 |限頻報錯 |
 | 170007 |調用下游超時 |
-| 170005 |限頻爆錯 |
+| 170010 |杠杆代幣申購：超出持倉限額 |
+| 170011 |下單失敗，當前下單金額已超過該幣種可用額度 |
+| 170019 |黑名單用戶 |
 | 170031 |該功能已暫停 |
 | 170032 |下游熔斷錯誤碼 |
 | 170033 |保證金可用額度不足 |
@@ -162,6 +165,7 @@ sidebar_label: 錯誤碼
 | 170116 |無效的訂單類型 |
 | 170117 |無效的買賣方向 |
 | 170121 |下游返回的無效幣對 |
+| 170124 |訂單金額太大 |
 | 170130 |無效入参 |
 | 170131 |餘額不足 |
 | 170132 |下單價格太高 |
@@ -172,7 +176,6 @@ sidebar_label: 錯誤碼
 | 170137 |下單數量精度太大 |
 | 170139 |訂單已經成交 |
 | 170140 |訂單金額太小 |
-| 170124 |訂單金額太大 |
 | 170141 |重複的clientOrderId |
 | 170142 |訂單已經取消 |
 | 170143 |訂單取消時撮合不存在 |
@@ -197,6 +200,21 @@ sidebar_label: 錯誤碼
 | 170198 |市價單賣出偏離值風控 |
 | 170199 |ETP市價單買入偏離值風控 |
 | 170200 |ETP市價單賣出偏離值風控 |
+| 170201 |訂單種類錯誤 |
+| 170202 |請輸入觸發價格 |
+| 170203 |觸發價格大於110% |
+| 170204 |觸發價格小於90% |
+| 170206 |開倉前5分鐘不允許下條件單 |
+| 170207 |平台借貸池額度不足 |
+| 170210 |下單被拒絕 |
+| 170212 |Cancel order request processing 正在處理撤單請求|
+| 170213 |訂單不存在 |
+| 170215 |Spot Trading (Buy) Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for buy orders 限制現貨買入交易, 因您當前機構借貸的LTV已觸發限制現貨買入風控線 |
+| 170216 |The leverage you select for Spot Trading cannot exceed the maximum leverage allowed by Institutional Lending OTC現貨切換槓桿超過機構借貸允許的槓桿上線 |
+| 170217 |openapi禁止成交 |
+| 170218 |limit-maker訂單被拒 |
+| 170219 |UID {{xxx}} is not available to this feature |
+| 170220 |Spot Trading Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for Spot trading 限制現貨交易, 因您當前機構借貸的LTV已觸發限制現貨交易風控線 |
 | 170221 |幣種不存在 |
 | 170222 |請求過快 |
 | 170223 |場外借貸帳戶觸發告警或爆倉 |
@@ -205,31 +223,13 @@ sidebar_label: 錯誤碼
 | 170227 |功能未開放 |
 | 170228 |買入額度超過預估最大買入額 |
 | 170229 |賣出數量超過預估最大賣出量 |
-| 170234 |系統錯誤 |
-| 170210 |下單被拒絕 |
-| 170213 |訂單不存在 |
-| 170217 |openapi禁止成交 |
-| 170218 |limit-maker訂單被拒 |
-| 170010 |杠杆代幣申購：超出持倉限額 |
-| 170011 |下單失敗，當前下單金額已超過該幣種可用額度 |
-| 170019 |黑名單用戶 |
-| 170201 |訂單種類錯誤 |
-| 170202 |請輸入觸發價格 |
-| 170203 |觸發價格大於110% |
-| 170204 |觸發價格小於90% |
-| 170206 |開倉前5分鐘不允許下條件單 |
-| 170207 |平台借貸池額度不足 |
-| 170212 |Cancel order request processing 正在處理撤單請求|
-| 170215 |Spot Trading (Buy) Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for buy orders 限制現貨買入交易, 因您當前機構借貸的LTV已觸發限制現貨買入風控線 |
-| 170216 |The leverage you select for Spot Trading cannot exceed the maximum leverage allowed by Institutional Lending OTC現貨切換槓桿超過機構借貸允許的槓桿上線 |
-| 170219 |UID {{xxx}} is not available to this feature |
-| 170220 |Spot Trading Restriction: The current LTV ratio of your institutional lending has reached the maximum allowable amount for Spot trading 限制現貨交易, 因您當前機構借貸的LTV已觸發限制現貨交易風控線 |
-| 170709 |OTC loan: The select trading pair is not in the whitelist pair 該交易對不在機構借貸現貨交易白名單內 |
 | 170230 |Operations Restriction: Due to the deactivation of Margin Trading for institutional loan 機構借貸產品不支持現貨槓桿交易, 因此無法調用開關接口|
+| 170234 |系統錯誤 |
 | 170310 |Order modification timeout 改單超時|
 | 170311 |Order modification failed 改單失敗|
 | 170312 |The current order does not support modification 該訂單類型不支持修改|
 | 170313 |The modified contract quantity cannot be less than to the filled quantity 修改後訂單數量小於當前已成交數量|
+| 170709 |OTC loan: The select trading pair is not in the whitelist pair 該交易對不在機構借貸現貨交易白名單內 |
 
 ## 現貨槓桿代幣
 |錯誤碼 |描述 |
@@ -307,7 +307,36 @@ sidebar_label: 錯誤碼
 ## 資產服務
 |錯誤碼 |描述 |
 |:----:|:-------------------------------|
-| 131084 |UTA升級中，無法提現 |
+| 131001 |服務錯誤 |
+| 131002 |參數錯誤 |
+| 131002 |Withdraw address chain or destination tag are not equal 需要檢查提幣地址是否添加到網頁端的地址簿中, 以及是否存在tag |
+| 131003 |內部錯誤 |
+| 131004 |需要KYC認證 |
+| 131075 |Internal address cannot be yourself 內部提現時目標UID不能是自身 |
+| 131076 |internal transfer not support sub-accounts  內部提現不支持提幣到子帳戶|
+| 131077 |receive user not exist 接收方UID不再村 |
+| 131078 |receive user deposit has been banned 接收方被禁止入金  |
+| 131079 |receive user need kyc 接收方需要做KYC |
+| 131080 |User left retry times is zero 所剩的重試次數為0 |
+| 131081 |Do not input memo/tag,please. 不要輸入memo/tag  |
+| 131082 |Do not repeat the request 不要重複發送請求  |
+| 131083 |Withdraw only allowed from address book 僅能提幣到地址簿中的地址|
+| 131084 |uta upgrading, and withdraw is prohibited UTA升級中, 無法提現 |
+| 131085 |提幣金額大於可用餘額，觸發延遲提幣 |
+| 131086 |提幣金額超過風控限制，觸發全倉槓桿限制 |
+| 131087 |your current account spot risk level is too high, withdrawal is prohibited, please adjust and try again|
+| 131088 |提幣金額超過當前KYC限額，您目前的可提限額是: %s |
+| 131089 |用戶24小時內進行過銘感操作，提現被禁 |
+| 131090 |用戶提現封禁 |
+| 131091 |用戶登陸封禁，無法提幣 |
+| 131092 |用戶狀態異常 |
+| 131093 |提幣地址不在白名單內 |
+| 131094 |用戶ID不在白名單內 |
+| 131095 |提幣金額超過平台24小時限額 |
+| 131096 |檢查提幣金額是否滿足最小最大可提金額 |
+| 131097 |系統暫停提幣 |
+| 131098 |當前時間禁止從新地址提幣 |
+| 131099 |當前狀態不支持取消提幣請求 |
 | 131200 |服務不可用 |
 | 131201 |業務異常 |
 | 131202 |用戶ID無效 |
@@ -326,29 +355,12 @@ sidebar_label: 錯誤碼
 | 131215 |金額錯誤 |
 | 131216 |查詢余額錯誤 |
 | 131217 |風險檢查失敗 |
-| 131229 |Due to compliance requirements, the current currency is not allowed to transfer 根據合規要求, 該資產不允許劃轉 |
-| 131001 |服務錯誤 |
-| 131002 |參數錯誤 |
-| 131003 |內部錯誤 |
-| 131004 |需要KYC認證 |
-| 131085 |提幣金額大於可用餘額，觸發延遲提幣 |
-| 131086 |提幣金額超過風控限制，觸發全倉槓桿限制 |
-| 131088 |提幣金額超過當前KYC限額，您目前的可提限額是: %s |
-| 131089 |用戶24小時內進行過銘感操作，提現被禁 |
-| 131090 |用戶提現封禁 |
-| 131091 |用戶登陸封禁，無法提幣 |
-| 131092 |用戶狀態異常 |
-| 131093 |提幣地址不在白名單內 |
-| 131094 |用戶ID不在白名單內 |
-| 131095 |提幣金額超過平台24小時限額 |
-| 131096 |檢查提幣金額是否滿足最小最大可提金額 |
-| 131097 |系統暫停提幣 |
-| 131098 |當前時間禁止從新地址提幣 |
-| 131099 |當前狀態不支持取消提幣請求 |
 | 131227 |子帳戶未配置萬能劃轉能力 |
 | 131228 |可劃轉餘額不足. 請確認延遲提幣安全限額 |
-| 131087 |請不要傳入tag/memo|
+| 131229 |Due to compliance requirements, the current currency is not allowed to transfer 根據合規要求, 該資產不允許劃轉 |
 | 131230 |The system is busy, please try again later 系統繁忙, 請重試|
+| 141004 |sub member is not normal 可能是帳戶的母子關係不正確|
+| 141025 |This sub-account has assets and cannot be deleted 該子帳戶存在資產, 無法刪除|
 | 181000 |category不能為空 |
 | 181001 |類別僅支持正向合約，期權或現貨 |
 | 181002 |symbol不能為空. |
