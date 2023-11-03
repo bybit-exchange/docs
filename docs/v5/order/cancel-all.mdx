@@ -106,6 +106,31 @@ print(session.cancel_all_orders(
 ```
 
 </TabItem>
+<TabItem value="Java" label="Java">
+
+```java
+import com.bybit.api.client.restApi.BybitApiTradeRestClient;
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.trade.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
+BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
+var cancelAllOrdersRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).baseCoin("USDT").build();
+client.cancelAllOrder(cancelAllOrdersRequest, System.out::println);
+```
+
+</TabItem>
+<TabItem value="DotNet" label=".Net">
+
+```c#
+using bybit.net.api.ApiServiceImp;
+using bybit.net.api.Models.Trade;
+BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");
+var orderInfoString = await TradeService.CancelAllOrder(category: Category.LINEAR, baseCoin:"USDT");
+Console.WriteLine(orderInfoString);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

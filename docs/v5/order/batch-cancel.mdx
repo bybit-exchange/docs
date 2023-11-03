@@ -100,6 +100,34 @@ print(session.cancel_batch_order(
 ```
 
 </TabItem>
+<TabItem value="Java" label="Java">
+
+```java
+import com.bybit.api.client.restApi.BybitApiTradeRestClient;
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.trade.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");
+BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();
+var cancelOrderRequests = Arrays.asList(TradeOrderRequest.builder().symbol("BTC-10FEB23-24000-C").orderLinkId("9b381bb1-401").build(),
+                TradeOrderRequest.builder().symbol("BTC-10FEB23-24000-C").orderLinkId("82ee86dd-001").build());
+var cancelBatchOrders = BatchOrderRequest.builder().category(ProductType.OPTION).request(cancelOrderRequests).build();
+client.createBatchOrder(cancelBatchOrders, System.out::println);
+```
+
+</TabItem>
+<TabItem value="DotNet" label=".Net">
+
+```c#
+using bybit.net.api.ApiServiceImp;
+using bybit.net.api.Models.Trade;
+var order1 = new OrderRequest { Symbol = "BTC-10FEB23-24000-C", OrderLinkId = "9b381bb1-401" };
+var order2 = new OrderRequest { Symbol = "BTC-10FEB23-24000-C", OrderLinkId = "82ee86dd-001" };
+var orderInfoString = await TradeService.CancelBatchOrder(category: Category.LINEAR, request: new List<OrderRequest> { order1, order2 });
+Console.WriteLine(orderInfoString);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
