@@ -17,14 +17,14 @@ GET `/v5/pre-upgrade/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `inverse`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `spot`, `linear`, `inverse`, `option` |
 |symbol |false |string |Symbol name. <ul><li>If not passed, return settleCoin=USDT by default</li><li>To get USDC perp, please pass symbol</li></ul>|
 |baseCoin |false |string |Base coin. Used for `option` query|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order|
 |[orderStatus](../enum#orderstatus) |false |string |Order status. Not supported for `spot` category |
-|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7days</li><li>Only endTime is passed, return range between endTime-7days and endTime</li><li>If both are passed,the rule is endTime - startTime <= 7 days</li></ul>|
+|startTime |false |integer |The start timestamp (ms) <ul><li>`startTime` and `endTime` must be passed together or both are not passed</li><li>endTime - startTime <= 7 days</li><li>If both are not passed, it returns recent 7 days by default</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
