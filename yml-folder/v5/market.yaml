@@ -729,19 +729,21 @@ paths:
     get:
       tags:
         - market
-      summary: Get Option Delivery Price
-      description: Get delivery price of option
+      summary: Get Delivery Price
+      description: Get delivery price
       operationId: delivery-price
       parameters:
         - name: category
           in: query
-          description: Product type. option only
+          description: Product type. linear, inverse, option
           required: true
           schema:
             type: array
             items:
               type: string
               enum:
+                - linear
+                - inverse
                 - option
         - name: symbol
           in: query
@@ -751,7 +753,7 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: Base coin. Return BTC by default
+          description: Base coin, for option only. Return BTC by default
           required: false
           schema:
             type: string
@@ -769,6 +771,57 @@ paths:
           required: false
           schema:
             type: string
+      responses:
+        "200":
+          description: successful operation
+
+  /v5/market/account-ratio:
+    get:
+      tags:
+        - market
+      summary: Get Long Short Ratio
+      description: Get long short ratio
+      operationId: long-short-ratio
+      parameters:
+        - name: category
+          in: query
+          description: Product type
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - linear
+                - inverse
+        - name: symbol
+          in: query
+          description: Symbol name
+          required: true
+          schema:
+            type: string
+        - name: period
+          in: query
+          description: period
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - 5min
+                - 15min
+                - 30min
+                - 1h
+                - 4h
+                - 1d
+        - name: limit
+          in: query
+          description: Maximum 500
+          required: false
+          schema:
+            type: integer
+            default: 50
       responses:
         "200":
           description: successful operation
