@@ -1,0 +1,60 @@
+---
+title: Bind Or Unbind UID
+sidebar_label: Bind Or Unbind UID
+sidebar_position: 7
+---
+For the OTC loan product, you can bind new UID to risk unit or unbind UID out from risk unit.
+
+:::info
+* Risk unit main UID cannot be unbound
+* This endpoint can only be called by uids in the risk unit list
+* The UID must be upgraded to UTA if you try to bind it.
+:::
+
+### HTTP Request
+POST `/v5/ins-loan/association-uid`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|uid |**true** |string |UID|
+|operate |**true** |string |`0`: bind, `1`: unbind|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|uid |string |UID|
+|operate |string |`0`: bind, `1`: unbind|
+
+### Request Example
+
+```http
+POST /v5/ins-loan/association-uid HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1699257853101
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+Content-Length: 43
+
+{
+    "uid": "592324",
+    "operate": "0"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "uid": "592324",
+        "operate": "0"
+    },
+    "retExtInfo": {},
+    "time": 1699257746135
+}
+```
