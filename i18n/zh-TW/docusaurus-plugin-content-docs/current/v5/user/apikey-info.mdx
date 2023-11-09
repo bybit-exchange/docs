@@ -24,21 +24,22 @@ GET `/v5/user/query-api`
 |readOnly |integer |`0`：可讀可寫. `1`：只讀 |
 |secret |string |總是"" |
 |permissions |Object |權限類型 |
-|> ContractTrade |array |合約交易的權限 |
-|> Spot |array |現貨交易的權限 |
-|> Wallet |array |錢包的權限 |
-|> Options |array |USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 |
-|> Derivatives |array |衍生品v3/v5交易的權限 |
-|> CopyTrading |array |跟單交易的權限. 子帳戶暫不支持, 總是[]|
+|> ContractTrade |array |合約交易的權限 `Order`, `Position` |
+|> Spot |array |現貨交易的權限 `SpotTrade` |
+|> Wallet |array |錢包的權限 `AccountTransfer`, `SubMemberTransfer`(母帳戶), `SubMemberTransferList`(子帳戶), `Withdraw`(母帳戶)|
+|> Options |array |USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 `OptionsTrade` |
+|> Derivatives |array |<li>統一交易帳戶的默認勾選權限</li><li>經典帳戶總是`[]`</li> |
+|> CopyTrading |array |總是`[]`, 因為帶單帳戶現在只需要通過`ContractTrade`權限項來進行API帶單|
 |> BlockTrade |array |大宗交易的權限. 子帳戶暫不支持，總是[]|
-|> Exchange |array |兌換的權限 |
-|> NFT |array |NFT的權限. 子帳戶暫不支持, 總是[]|
+|> Exchange |array |兌換的權限 `ExchangeHistory`|
+|> NFT |array |NFT的權限 `NFTQueryProductList`. 子帳戶暫不支持, 總是[]|
+|> Affiliate |array |代理商權限. 僅代理商可以擁有此權限, 否則總是`[]` |
 |ips |array |綁定的IP|
 |type |integer |Api key類型. `1`：個人使用, `2`：綁定到第三方應用 |
 |deadlineDay |integer |API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶 |
 |expiredAt |datetime |API key的過期日. 針對那些未綁定IP的api key或者修改過密碼的帳戶|
 |createdAt |datetime |API key的創建日 |
-|unified |integer |API Key所屬的帳戶是否為統一保證金帳戶. `0`：普通帳戶; `1`：統一保证金帳戶 |
+|unified |integer |該字段已廢棄|
 |uta |integer |API Key所屬的帳戶是否為統一交易帳戶. `0`：普通帳戶; `1`：統一交易账户 |
 |userID |integer |用戶 ID |
 |inviterID |integer |邀請人 ID（邀請該賬號加入平台的賬號的UID） |

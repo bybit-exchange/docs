@@ -8,6 +8,11 @@ sidebar_position: 11
 > **統一帳戶覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約**<br/>
 > **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
 
+:::info
+* 普通帳戶: 返回結果按照`updatedTime`降序排列.
+* 統一帳戶 (反向合約除外): 結果依`createdTime`降序排列，之後與經典帳戶一致
+:::
+
 ### HTTP 請求
 GET `/v5/position/closed-pnl`
 
@@ -16,8 +21,8 @@ GET `/v5/position/closed-pnl`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |false |string |合約名稱|
-|startTime |false |integer |開始時間戳 (毫秒)|
-|endTime |false |integer |結束時間戳 (毫秒)|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若不傳startTime，則查詢startTime和startTime+7天的數據</li><li>若不傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
 |cursor |false |string |游標，用於翻頁|
 

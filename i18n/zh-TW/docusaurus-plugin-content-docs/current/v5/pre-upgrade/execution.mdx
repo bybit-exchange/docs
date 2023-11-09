@@ -23,8 +23,8 @@ GET `v5/pre-upgrade/execution/list`
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
 |baseCoin |false |string |交易幣種. 僅期權使用 |
-|startTime |false |integer |開始時間戳 (毫秒)|
-|endTime |false |integer |結束時間戳 (毫秒)|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若不傳startTime，則查詢startTime和startTime+7天的數據</li><li>若不傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
 |[execType](../enum#exectype) |false |string |執行類型|
 |limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
 |cursor |false |string |游標，用於翻頁|

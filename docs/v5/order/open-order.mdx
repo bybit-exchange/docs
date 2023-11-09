@@ -30,7 +30,7 @@ GET `/v5/order/realtime`
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |openOnly |false |integer |<ul><li>Unified account & Classic account: `0`(default) - query open orders **only**</li><li>Unified account - spot / linear / option: `1`<br/>Unified account - inverse & Classic account - linear / inverse: `2` <br/>return cancelled, rejected or totally filled orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li><li>Classic `spot`: not supported, return open orders only</li></ul>|
-|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: UTA spot OCO orders only<ul><li>Classic `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
+|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot OCO orders<ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
