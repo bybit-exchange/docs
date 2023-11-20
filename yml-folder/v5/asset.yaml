@@ -69,9 +69,9 @@ paths:
     get:
       tags:
         - asset
-      summary: Get Option Delivery Record
+      summary: Get Delivery Record
       description: Get delivery record
-      operationId: option-delivery
+      operationId: delivery
       parameters:
         - name: apiKey
           in: header
@@ -93,6 +93,7 @@ paths:
             type: string
             enum:
               - option
+              - linear
         - name: symbol
           in: query
           description: Symbol name
@@ -127,8 +128,8 @@ paths:
     get:
       tags:
         - asset
-      summary: Get USDC Perpetual Settlement
-      description: Get Settlement Record.
+      summary: Get USDC Session Settlement
+      description: Get usdc session settlement record.
       operationId: settlement
       parameters:
         - name: apiKey
@@ -153,7 +154,7 @@ paths:
               - linear
         - name: symbol
           in: query
-          description: Symbol name. USDC perp symbol only
+          description: Symbol name. USDC perp or USDC futures
           required: false
           schema:
             type: string
@@ -555,44 +556,6 @@ paths:
         "200":
           description: successful operation
 
-  /v5/asset/transfer/save-transfer-sub-member:
-    post:
-      tags:
-        - asset
-      summary: Enable Universal Transfer For Sub UID
-      description: Enable sub uid for universal transfer
-      operationId: enable-unitransfer-subuid
-      parameters:
-        - name: apiKey
-          in: header
-          description: Use master UID api key
-          required: true
-          schema:
-            type: string
-        - name: secret
-          in: header
-          description: Use master UID api key
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                subMemberIds:
-                  type: array
-                  description: array of sub UIDs
-                  items:
-                    type: string
-                    example: "1234,3213,4321"
-              required:
-                - subMemberIds
-
   /v5/asset/transfer/universal-transfer:
     post:
       tags:
@@ -942,7 +905,7 @@ paths:
     get:
       tags:
         - asset
-      summary: Get Internal Deposit Records (across Bybit)
+      summary: Get Internal Deposit Records (off-chain)
       description: Get deposit records through Bybit platform
       operationId: internal-deposit-record
       parameters:
