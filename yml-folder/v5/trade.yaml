@@ -102,7 +102,8 @@ paths:
                   enum:
                     - Order
                     - tpslOrder
-                  description: Take profit stop loss or ordinary order. Only valid for spot.
+                    - StopOrder
+                  description: Take profit stop loss, normal order or conditional order. Only valid for spot.
                   default: Order
                   example:
                 orderIv:
@@ -391,6 +392,7 @@ paths:
                   enum:
                     - Order
                     - tpslOrder
+                    - StopOrder
                   description: Take profit stop loss or ordinary order. Only valid for spot.
                   default: Order
                   example: Order
@@ -437,7 +439,7 @@ paths:
             type: string
         - name: baseCoin
           in: query
-          description: Base coin. For option only
+          description: Base coin
           required: false
           schema:
             type: string
@@ -695,7 +697,8 @@ paths:
                   required: true
                   enum:
                     - option
-                  description: Product type. option ONLY
+                    - linear
+                  description: Product type. `linear`, `option`
                   example: option
                 request:
                   type: array
@@ -777,6 +780,7 @@ paths:
                       - orderType
                       - qty
                       - orderLinkId
+                      - timeInForce
               required:
                 - category
                 - request
@@ -814,6 +818,7 @@ paths:
                   type: string
                   enum:
                     - option
+                    - linear
                   description: Product type
                   example: option
                 request:
@@ -884,6 +889,7 @@ paths:
                   type: string
                   enum:
                     - option
+                    - linear
                   description: Product type
                   example: option
                 request:
