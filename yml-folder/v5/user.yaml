@@ -39,3 +39,103 @@ paths:
       responses:
         "200":
           description: successful operation
+  /v5/user/sub-apikeys:
+    get:
+      tags:
+        - user
+      summary: Get Sub Account All API Keys
+      description: Get Sub Account All API Keys
+      operationId: list-sub-apikeys
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please use main account API key
+          required: true
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please use main account secret key
+          required: true
+          schema:
+            type: string
+        - name: subMemberId
+          in: query
+          description: Sub UID
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1-20. max 20
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          description: cursor, used for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/user/get-member-type:
+    get:
+      tags:
+        - user
+      summary: Get UID Wallet Type
+      description: Get uid wallet type
+      operationId: wallet-type
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: memberIds
+          in: query
+          description: Main UID or Sub UIDs
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/user/aff-customer-info:
+    get:
+      tags:
+        - user
+      summary: Get Affiliate User Info
+      description: Get affiliate user info
+      operationId: affiliate-info
+      parameters:
+        - name: apiKey
+          in: header
+          description: Please use the key with "Affiliate" permission
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: Please use the key with "Affiliate" permission
+          required: false
+          schema:
+            type: string
+        - name: uid
+          in: query
+          description: The main UID of referral
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation

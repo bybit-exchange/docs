@@ -16,6 +16,43 @@ x-tagGroups:
     tags:
       - normal-margin-trade
 paths:
+  /v5/spot-cross-margin-trade/data:
+    get:
+      tags:
+        - normal-margin-trade
+      summary: Get VIP Margin Data
+      description: Get vip margin data
+      operationId: vip-margin
+      parameters:
+        - name: vipLevel
+          in: query
+          description: VIP level
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - No VIP
+                - VIP-1
+                - VIP-2
+                - VIP-3
+                - VIP-4
+                - VIP-5
+                - PRO-1
+                - PRO-2
+                - PRO-3
+                - PRO-4
+                - PRO-5
+        - name: currency
+          in: query
+          description: Coin name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
   /v5/spot-cross-margin-trade/pledge-token:
     get:
       tags:
