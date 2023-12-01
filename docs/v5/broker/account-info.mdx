@@ -1,0 +1,78 @@
+---
+title: Get Exchange Broker Main Account Info
+sidebar_label: Get Exchange Broker Main Account Info
+sidebar_position: 3
+---
+:::info
+* Use exchange broker master account to query
+:::
+
+> API rate limit: 10 req / sec
+
+### HTTP Request
+GET `/v5/broker/account-info`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|subAcctQty |string |The qty of sub account has been created |
+|maxSubAcctQty |string |The max limit of sub account can be created|
+|baseFeeRebateRate |Object |Base rebase fee rate|
+|> spot |string |Spot trading fee rate, e.g., 10.00% |
+|> derivatives |string |Derivatives trading fee rate, e.g., 10.00%|
+|markupFeeRebateRate |Object |Mark up rebate fee rate|
+|> spot |string |Spot trading fee rate, e.g., 10.00% |
+|> derivatives |string |Derivatives trading fee rate, e.g., 10.00%|
+|ts |string |System timestamp (ms) |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/broker/account-info HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1701399431920
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "subAcctQty": "2",
+        "maxSubAcctQty": "20",
+        "baseFeeRebateRate": {
+            "spot": "10.0%",
+            "derivatives": "10.0%"
+        },
+        "markupFeeRebateRate": {
+            "spot": "6.00%",
+            "derivatives": "9.00%"
+        },
+        "ts": "1701395633402"
+    },
+    "retExtInfo": {},
+    "time": 1701395633403
+}
+```
