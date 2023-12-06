@@ -10,7 +10,7 @@ sidebar_label: 錯誤碼
 |403|Forbidden request. 可能原因: 1. 違反了IP請求速率; 2. 您的GET請求裡帶了空的json體; 3. 您的請求發送自美國IP|
 |[404](../pilot-feature#v5接口支持普通帳戶)|無法找到路由. 可能原因: 1. 請檢查您的路由; 2. 帳戶模式不支持請求的category值|
 
-## UMA & UTA
+## UTA和經典帳戶
 |錯誤碼 |描述 |
 |:----:|:-------------------------------|
 | 0 |OK |
@@ -128,6 +128,7 @@ sidebar_label: 錯誤碼
 | 3200316 |USDC Options Trading Restriction: The current LTV ratio for your Institutional Lending has reached the maximum allowable amount for USDC Options trading. 目前機構借貸風險水平無法進行期權交易|
 | 3200317 |USDC Options Open Position Restriction: The current LTV ratio for your Institutional Lending has reached the maximum allowable amount for opening USDC Options positions.目前機構借貸風險水平無法進行期權買入|
 | 3100326 |BaseCoin is required  baseCoin必須傳|
+| 3100334 |Please Upgrade to UTA to trade 請升級到UTA後再進行交易|
 | 3200403 |逐倉保證金模式下無法進行此產品交易|
 | 3200320 |Operations Restriction: The current LTV ratio of your Institutional Lending has hit the liquidation threshold. Assets in your account are being liquidated. 目前機構借貸帳戶的LTV達到強平閾值 (修改保证金模式或者现货杠杆时) |
 | 3400208 | 您有未關閉的雙向持倉或逐倉模式下的USDT永續倉位|
@@ -143,6 +144,10 @@ sidebar_label: 錯誤碼
 | 3400071 | 您未達到帳戶升級的資產要求，無法完成升級|
 | 3401010 | Cannot switch to PM mode 無法切換到PM模式(帶單帳戶嘗試切換到PM模式)|
 | 3400139 | The total value of your positions and orders has exceeded the risk limit for a Perpetual or Futures contract 當前PM模式下的倉位超過了全倉或者逐倉的最大允許風險限額|
+| 182100 |Compulsory closing of positions, no repayment allowed 強平清算中, 不支持還款 |
+| 182101 |Failed repayment, insufficient collateral balance 試算抵押品餘額不足, 還款失敗 |
+| 182102 |Failed repayment, there are no liabilities in the current currency 該幣種不存在任何負債 |
+| 182103 |Institutional lending users are not supported 機構借貸用戶不支持一鍵還款 |
 
 ## 現貨交易
 |錯誤碼 |描述 |
@@ -422,4 +427,4 @@ sidebar_label: 錯誤碼
 | 3500404 |無效的cursor|
 | ~~3500405~~ |`startTime`和`endTime`必須同時傳入|
 | 3500406 |Out of query time range. 超過了支持的時間範圍|
-| 3500407 |Parameter \"begin\" and \"end\" need to be input in pairs.|
+| 3500407 |Parameter begin and end need to be input in pairs.|
