@@ -24,12 +24,12 @@ POST `/v5/position/move-positions`
 |:----- |:-------|:-----|------ |
 |fromUid |**true** |string |原UID <ul><li>必須是統一交易帳戶</li><li>期貨倉位必須有處於單向持倉模式</li></ul>|
 |toUid |**true** |string |目標UID <ul><li>必須是統一交易帳戶</li><li>期貨倉位必須有處於單向持倉模式</li></ul>|
-|list |**true** |array |Object|
+|list |**true** |array |Object. 單次請求最多支持25腿|
 |> [category](../enum#category) |**true** |string |產品類型. `linear`, `spot`, `option` |
 |> symbol |**true** |string |合約名稱/幣對名|
 |> price |**true** |string |訂單價格 <ul><li>`linear`: 價格需要位於[95% * 標記價格, 105% * 標記價格]之間</li><li>`spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](../market/instrument)的價格上下限和精度</li></ul>|
 |> side |**true** |string |是`fromUid`的交易方向 <ul><li>例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小</li></ul>|
-|> qty |**true** |string |交易數量<ul><li>該數字需要滿足[查詢可交易產品的規格信息](../market/instrument)的qty規則</li></ul>|
+|> qty |**true** |string |交易數量<ul><li>該數字需要滿足[查詢可交易產品的規格信息](../market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`</li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
