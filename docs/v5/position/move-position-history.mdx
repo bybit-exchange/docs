@@ -7,7 +7,7 @@ You can query moved position data by master UID api key
 > **Unified account covers: USDT perpetual / USDC contract / Spot / Option**<br/>
 
 ### HTTP Request
-POST `/v5/position/move-history`
+GET `/v5/position/move-history`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -19,14 +19,14 @@ POST `/v5/position/move-history`
 |status |false |string |Order status. `Processing`, `Filled`, `Rejected`|
 |blockTradeId |false |string |Block trade ID|
 |limit |false |string |Limit for data size per page. [`1`, `50`]. Default: `20`|
-|nextPageCursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array |Object |
 |> blockTradeId |string |Block trade ID|
-|> [category](../enum#category) |false |string |Product type. `linear`, `spot`, `option` |
+|> [category](../enum#category) |string |Product type. `linear`, `spot`, `option` |
 |> orderId |string |Bybit order ID|
 |> userId |integer |User ID|
 |> symbol |string |Symbol name|
@@ -41,6 +41,7 @@ POST `/v5/position/move-history`
 |> createdAt |number |The timestamp (ms) when the order is created|
 |> updatedAt |number |The timestamp (ms) when the order is updated |
 |> rejectParty |string |<ul><li>`""` means the status=`Filled`</li><li>`Taker`, `Maker` when status=`Rejected`</li><li>`bybit` means error is occurred on the Bybit side</li></ul>  |
+|nextPageCursor |string |Used to get the next page data|
 
 ### Request Example
 
@@ -100,7 +101,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "rejectParty": ""
             }
         ],
-        "cursor": "page_token%3D1241742%26"
+        "nextPageCursor": "page_token%3D1241742%26"
     },
     "retExtInfo": {},
     "time": 1697523024386
