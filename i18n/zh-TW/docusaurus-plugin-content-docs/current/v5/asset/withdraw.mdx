@@ -32,6 +32,7 @@ POST `/v5/asset/withdraw/create`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|requestId |false |string |自定義ID, 全局唯一, 用於冪等校驗<li>字母(區分大小寫)數字組合, 可以是純字母或者純數字, 長度在1-32字符之間</li> |
 |coin |**true** |string |幣種 |
 |chain |false |string |<ul><li>鏈名, 當`forceChain`=0 或者 1: 該字段**必填**</li><li>當`forceChain`=2: 該字段可忽略</li></ul> |
 |address |**true** |string |錢包地址或者Bybit UID <ul><li>當`forceChain`=0 或者 1: 請填寫錢包地址, 確保將地址添加到了[網頁地址簿](https://www.bybit.com/user/assets/money-address)中, 注意大小寫，請使用和提幣地址簿中完全一樣的地址</li><li>當`forceChain`=2: 填寫目標Bybit母帳戶UID, 確保將目標UID添加到了[網頁地址簿](https://www.bybit.com/user/assets/money-address)中</li></ul> |

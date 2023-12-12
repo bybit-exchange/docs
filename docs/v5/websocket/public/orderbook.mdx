@@ -50,6 +50,7 @@ Level 100 data, push frequency: **100ms**<br/>
 |>> a[1] |string |Ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
 |> u |integer |Update ID. Is a sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook |
 |> seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li> |
+|cts |number |Matching timestamp (ms) <li>Spot and Option are in greyscale now, Futures will have this field on 14 Dec 2023</li> |
 
 ### Subscribe Example
 
@@ -108,6 +109,7 @@ while True:
     "u": 18521288,
     "seq": 7961638724
     }
+    "cts": 1672304484976
 }
 ```
 
@@ -176,6 +178,7 @@ while True:
         "u": 177400507,
         "seq": 66544703342
     }
+    "cts": 1687940967464
 }
 ```
 
