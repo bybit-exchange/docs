@@ -56,7 +56,7 @@ GET `/v5/order/history`
 |> [createType](../enum#createtype) |string |Order create type <li>Only for category=linear or inverse</li><li>Spot, Option do not have this key</li> |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> [rejectReason](../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
-|> avgPrice |string |Average filled price. If unfilled, it is `""` |
+|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>Classic account: returns `"0"` for those orders without avg price</li>|
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
