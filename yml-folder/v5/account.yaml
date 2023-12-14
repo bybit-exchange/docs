@@ -83,6 +83,50 @@ paths:
           application/json:
             schema:
               type: object
+
+  /v5/account/set-collateral-switch:
+    post:
+      tags:
+        - account
+      summary: Set Collateral Coin
+      description: Set collateral coin
+      operationId: set-collateral
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coin:
+                  type: string
+                  description: coin
+                  example: BTC
+                collateralSwitch:
+                  type: string
+                  description: coin
+                  example: ON
+                  enum:
+                    - ON
+                    - OFF
+              required:
+                - coin
+                - collateralSwitch
   /v5/account/borrow-history:
     get:
       tags:
@@ -408,3 +452,41 @@ paths:
                   example: PORTFOLIO_MARGIN
               required:
                 - setMarginMode
+  /v5/account/set-hedging-mode:
+    post:
+      tags:
+        - account
+      summary: Set Spot Hedging
+      description: Set spot hedging for Portfolio margin
+      operationId: set-spot-hedge
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                setHedgingMode:
+                  type: string
+                  description: on or off spot hedging mode
+                  enum:
+                    - ON
+                    - OFF
+                  example: ON
+              required:
+                - setHedgingMode
