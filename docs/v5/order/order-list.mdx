@@ -16,7 +16,9 @@ real-time order information, you could query this [endpoint](open-order#) or rel
 :::
 
 :::tip
-Classic account spot can get final status orders only
+* Classic account spot can get final status orders only
+* Classic account: market maker can only get recent 3 days order history, please go to web to export
+* Classic account: retail client can get up to 180 days data
 :::
 
 ### HTTP Request
@@ -33,7 +35,7 @@ GET `/v5/order/history`
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot OCO orders <ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
-|startTime |false |integer |The start timestamp (ms) <ul><li>The spot of classic account is not applicable at the moment</li><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|startTime |false |integer |The start timestamp (ms). Classic account Spot trading does not support startTime and endTime <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
@@ -56,7 +58,7 @@ GET `/v5/order/history`
 |> [createType](../enum#createtype) |string |Order create type <li>Only for category=linear or inverse</li><li>Spot, Option do not have this key</li> |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> [rejectReason](../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
-|> avgPrice |string |Average filled price. If unfilled, it is `""` |
+|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>Classic account: returns `"0"` for those orders without avg price</li>|
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |

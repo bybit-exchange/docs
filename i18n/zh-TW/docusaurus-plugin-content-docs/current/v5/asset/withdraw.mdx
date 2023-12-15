@@ -32,7 +32,6 @@ POST `/v5/asset/withdraw/create`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|requestId |false |string |自定義ID, 全局唯一, 用於冪等校驗<li>字母(區分大小寫)數字組合, 可以是純字母或者純數字, 長度在1-32字符之間</li> |
 |coin |**true** |string |幣種 |
 |chain |false |string |<ul><li>鏈名, 當`forceChain`=0 或者 1: 該字段**必填**</li><li>當`forceChain`=2: 該字段可忽略</li></ul> |
 |address |**true** |string |錢包地址或者Bybit UID <ul><li>當`forceChain`=0 或者 1: 請填寫錢包地址, 確保將地址添加到了[網頁地址簿](https://www.bybit.com/user/assets/money-address)中, 注意大小寫，請使用和提幣地址簿中完全一樣的地址</li><li>當`forceChain`=2: 填寫目標Bybit母帳戶UID, 確保將目標UID添加到了[網頁地址簿](https://www.bybit.com/user/assets/money-address)中</li></ul> |
@@ -42,6 +41,7 @@ POST `/v5/asset/withdraw/create`
 |forceChain |false |integer |是否強制走鏈<ul><li>`0`(默認): 若提現地址解析後發現是平台內部地址，則自動轉為走內部平台轉帳</li><li>`1`: 強制走鏈</li><li>`2`: 使用Bybit UID轉帳</li> </ul>|
 |accountType|false|string |設置出金帳戶. <ul><li>`SPOT`：走現貨錢包出金 (默認)</li><li>`FUND`：走資金錢包出金</li></ul>|
 |feeType|false|integer |手續費選項 <ul><li>`0`(默認): 輸入金額即實際收到的金額, 所以您需要額外考慮手續費</li><li>`1`: 輸入金額不是實際收到的金額, 系統將會自動計算所需的手續費</li></ul> |
+|requestId |false |string |自定義ID, 全局唯一, 用於冪等校驗<li>字母(區分大小寫)數字組合, 可以是純字母或者純數字, 長度在1-32字符之間</li> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
