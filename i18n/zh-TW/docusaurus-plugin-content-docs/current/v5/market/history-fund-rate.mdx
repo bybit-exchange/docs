@@ -62,6 +62,19 @@ print(session.get_funding_rate_history(
 ```
 
 </TabItem>
+<TabItem value="java" label="java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();
+client.getFundingHistory(fundingHistoryRequest, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

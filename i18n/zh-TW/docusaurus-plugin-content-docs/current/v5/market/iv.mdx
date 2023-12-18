@@ -63,6 +63,19 @@ print(session.get_historical_volatility(
 ```
 
 </TabItem>
+<TabItem value="java" label="java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();
+client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

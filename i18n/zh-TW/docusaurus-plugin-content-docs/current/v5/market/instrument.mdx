@@ -283,6 +283,19 @@ print(session.get_instruments_info(
 ```
 
 </TabItem>
+<TabItem value="java" label="java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var instrumentInfoRequest = MarketDataRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").instrumentStatus(InstrumentStatus.TRADING).limit(500).build();
+client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

@@ -35,10 +35,28 @@ GET `/v5/announcements/index`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
-GET /v5/announcements/index?locale=zh-TW&limit=1 HTTP/1.1
+GET /v5/announcements/index?locale=en-US&limit=1 HTTP/1.1
 Host: api.bybit.com
 ```
+
+</TabItem>
+<TabItem value="java" label="java">
+
+```java
+import com.bybit.api.client.domain.announcement.LanguageSymbol;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var announcementInfoRequest = MarketDataRequest.builder().locale(LanguageSymbol.EN_US).build();
+client.getAnnouncementInfo(announcementInfoRequest, System.out::println);
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 
