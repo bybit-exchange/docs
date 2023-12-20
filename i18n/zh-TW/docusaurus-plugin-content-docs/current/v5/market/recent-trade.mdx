@@ -62,6 +62,19 @@ print(session.get_public_trade_history(
 ```
 
 </TabItem>
+<TabItem value="java" label="java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var recentTrade = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-30JUN23-2050-C").build();
+client.getRecentTradeData(recentTrade, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
