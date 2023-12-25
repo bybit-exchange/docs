@@ -17,7 +17,7 @@ Subscribe to the liquidation stream
 |topic |string |Topic name |
 |type |string |Data type. `snapshot` |
 |ts |number |The timestamp (ms) that the system generates the data |
-|data |array |Object |
+|data |Object | |
 |> updateTime |number |The updated timestamp (ms) |
 |> symbol |string |Symbol name |
 |> side |string |Position side. `Buy`,`Sell`. When you receive a `Buy` update, this means that a long position has been liquidated |
@@ -47,15 +47,15 @@ while True:
 
 ```json
 {
+    "topic": "liquidation.BTCUSDT",
+    "type": "snapshot",
+    "ts": 1703485237953,
     "data": {
-        "price": "0.03803",
-        "side": "Buy",
-        "size": "1637",
-        "symbol": "GALAUSDT",
-        "updatedTime": 1673251091822
-    },
-    "topic": "liquidation.GALAUSDT",
-    "ts": 1673251091822,
-    "type": "snapshot"
+        "updatedTime": 1703485237953,
+        "symbol": "BTCUSDT",
+        "side": "Sell",
+        "size": "0.003",
+        "price": "43511.70"
+    }
 }
 ```
