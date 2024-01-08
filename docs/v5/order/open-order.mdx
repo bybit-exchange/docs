@@ -8,7 +8,7 @@ Query unfilled or partially filled orders in **real-time**. To query older order
 > **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
-- It also supports querying filled, cancelled, and rejected orders which occurred in last 10 minutes (check the `openOnly` param). At most, 500 orders will be returned.
+- It also supports querying filled, cancelled, and rejected orders, but only latest 500 orders will be returned.
 - You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 - The records are sorted by the `createdTime` from newest to oldest.
 :::
@@ -29,7 +29,7 @@ GET `/v5/order/realtime`
 |settleCoin |false |string |Settle coin <ul><li><b>linear</b>: either `symbol`, `baseCoin` or `settleCoin` is **required**</li><li>`spot`: invalid</li></ul> |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|openOnly |false |integer |<ul><li>Unified account & Classic account: `0`(default) - query open orders **only**</li><li>Unified account - spot / linear / option: `1`<br/>Unified account - inverse & Classic account - linear / inverse: `2` <br/>return cancelled, rejected or totally filled orders by last 10 minutes, A maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li><li>Classic `spot`: not supported, return open orders only</li></ul>|
+|openOnly |false |integer |<ul><li>Unified account & Classic account: `0`(default) - query open orders **only**</li><li>Unified account - spot / linear / option: `1`<br/>Unified account - inverse & Classic account - linear / inverse: `2` <br/>return cancelled, rejected or totally filled orders, a maximum of 500 records are kept under each account. If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</li><li>Classic `spot`: not supported, return open orders only</li></ul>|
 |orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot OCO orders<ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
