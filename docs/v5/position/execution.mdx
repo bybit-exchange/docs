@@ -15,6 +15,11 @@ Query users' execution records, sorted by `execTime` in descending order. Howeve
 * You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
+:::info
+* Classic Spot supports getting the past 180 days historical data
+* Unified account (linear, spot, option) supports getting the past 730 days historical data
+:::
+
 ### HTTP Request
 GET `/v5/execution/list`
 
@@ -54,6 +59,7 @@ GET `/v5/execution/list`
 |> [execType](../enum#exectype) |string |Executed type. _Classic `spot` is not supported_|
 |> execValue |string |Executed order value. _Classic `spot` is not supported_ |
 |> execTime |string |Executed timestamp（ms） |
+|> feeCurrency |string |Spot trading fee currency _Classic `spot` is not supported_  |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
 |> feeRate |string |Trading fee rate. _Classic `spot` is not supported_ |
 |> tradeIv |string |Implied volatility. Valid for `option` |
@@ -150,6 +156,7 @@ client
                 "stopOrderType": "UNKNOWN",
                 "leavesQty": "0",
                 "execTime": "1672282722429",
+                "feeCurrency": "",
                 "isMaker": false,
                 "execFee": "0.071409",
                 "feeRate": "0.0006",
