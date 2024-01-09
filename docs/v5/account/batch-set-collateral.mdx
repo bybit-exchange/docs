@@ -1,0 +1,100 @@
+---
+title: Batch Set Collateral Coin
+sidebar_label: Batch Set Collateral Coin
+sidebar_position: 4.6
+---
+
+### HTTP Request
+POST `/v5/account/set-collateral-switch-batch`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|request |**true** |array |Object|
+|coin |**true** |string |Coin name <ul><li>You can get collateral coin from [here](collateral-info)</li><li>USDT, USDC cannot be switched off</li></ul>|
+|collateralSwitch |**true** |string |`ON`: switch on collateral, `OFF`: switch off collateral|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|------ |
+|list |array |Object|
+|coin |string |Coin name|
+|collateralSwitch |string |`ON`: switch on collateral, `OFF`: switch off collateral|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/set-collateral-switch-batch HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1704782042755
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 371
+
+{
+    "request": [
+        {
+            "coin": "MATIC",
+            "collateralSwitch": "OFF"
+        },
+        {
+            "coin": "BTC",
+            "collateralSwitch": "OFF"
+        },
+        {
+            "coin": "ETH",
+            "collateralSwitch": "OFF"
+        },
+        {
+            "coin": "SOL",
+            "collateralSwitch": "OFF"
+        }
+    ]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "result": {
+        "list": [
+            {
+                "coin": "MATIC",
+                "collateralSwitch": "OFF"
+            },
+            {
+                "coin": "BTC",
+                "collateralSwitch": "OFF"
+            },
+            {
+                "coin": "ETH",
+                "collateralSwitch": "OFF"
+            },
+            {
+                "coin": "SOL",
+                "collateralSwitch": "OFF"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704782042913
+}
+```
