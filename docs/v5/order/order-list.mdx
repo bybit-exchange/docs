@@ -10,15 +10,14 @@ real-time order information, you could query this [endpoint](open-order#) or rel
 > **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
-* The orders in the last 7 days: supports querying all statuses
-* The orders beyond 7 days: supports querying filled orders
+* The orders in the last 7 days: supports querying all status
+* The orders beyond 7 days: supports querying filled orders only
 * You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 :::
 
 :::info
 * Classic Spot: can get final status orders only
-* Classic Spot: market maker can only get recent 3 days order history, please go to web to export
-* Classic Spot: retail client can get up to 180 days data
+* Classic Spot: market maker can only get recent 3 days order history, please go to web to export. Retail client can get up to 180 days data
 * Unified account (linear, spot, option) supports getting the past 730 days historical data
 :::
 
@@ -35,8 +34,8 @@ GET `/v5/order/history`
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot OCO orders <ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
-|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: invalid</li><li>Others: return all status orders if not passed</li></ul> |
-|startTime |false |integer |The start timestamp (ms). Classic account Spot trading does not support startTime and endTime <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: not supported</li><li>Others: return all status orders if not passed</li></ul> |
+|startTime |false |integer |The start timestamp (ms). _Classic `spot` trading does not support startTime and endTime_ <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
