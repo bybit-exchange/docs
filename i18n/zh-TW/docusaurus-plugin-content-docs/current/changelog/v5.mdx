@@ -1,6 +1,29 @@
 ---
 title: V5
 ---
+## 2024-01-15
+### REST API
+- [創建委託單](../v5/order/create-order) [更新]
+    - 統一帳戶現貨交易能夠使用`takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice`, `tpOrderType`, `slOrderType` 給限價單設置止盈止損
+
+- [修改委託單](../v5/order/amend-order) [更新]
+    - 統一帳戶現貨交易支持修改`takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice`如果原始訂單上有相關屬性
+
+- [撤銷所有訂單](../v5/order/cancel-all) [更新]
+    - `orderFilter`字段新增枚舉值"OcoOrder", "BidirectionalTpslOrder". 對於"BidirectionalTpslOrder", 您只能撤銷全部Untriggered狀態的雙向止盈止損訂單
+
+- [查詢實時委託單](../v5/order/open-order) [更新]
+    - `orderFilter`字段新增枚舉值"BidirectionalTpslOrder"
+    - `stopOrderType`字段新增枚舉值"BidirectionalTpslOrder"
+
+- [查詢歷史訂單](../v5/order/order-list) [更新]
+    - `orderFilter`字段新增枚舉值"BidirectionalTpslOrder"
+    - `stopOrderType`字段新增枚舉值"BidirectionalTpslOrder"
+
+### Websocket API
+- [訂單](../v5/websocket/private/order) [更新]
+    - `stopOrderType`字段新增枚舉值"BidirectionalTpslOrder"
+
 ## 2024-01-11
 ### REST API
 - [交易日誌](../v5/account/transaction-log) [更新]

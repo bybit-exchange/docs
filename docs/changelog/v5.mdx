@@ -1,6 +1,29 @@
 ---
 title: V5
 ---
+## 2024-01-15
+### REST API
+- [Place Order](../v5/order/create-order) [UPDATE]
+    - Spot(UTA) can use `takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice`, `tpOrderType`, `slOrderType` to set Market TPSL or Limit TPSL when creating Spot limit order.
+
+- [Amend Order](../v5/order/amend-order) [UPDATE]
+    - Spot(UTA) can amend `takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice` if the original order has related attributes
+
+- [Cancel All Orders](../v5/order/cancel-all) [UPDATE]
+    - Add new enums "OcoOrder", "BidirectionalTpslOrder" for `orderFilter`. You can only cancel all untriggered "BidirectionalTpslOrder"
+
+- [Get Open Orders](../v5/order/open-order) [UPDATE]
+    - Add new enum "BidirectionalTpslOrder" for `orderFilter`
+    - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
+
+- [Get Order History](../v5/order/order-list) [UPDATE]
+    - Add new enum "BidirectionalTpslOrder" for `orderFilter`
+    - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
+
+### Websocket API
+- [Order](../v5/websocket/private/order) [UPDATE]
+    - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
+
 ## 2024-01-11
 ### REST API
 - [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
@@ -10,10 +33,6 @@ title: V5
 ### REST API
 - [Batch Set Collateral Coin](../v5/account/batch-set-collateral) [NEW]
     - Add a new endpoint to batch set collateral coin for Unified account
-
-### Websocket API
-- [Order](../v5/websocket/private/order) [UPDATE]
-    - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
 
 ## 2024-01-08
 ### REST API
