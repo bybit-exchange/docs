@@ -5,7 +5,7 @@ sidebar_position: 2.8
 ---
 該接口支持切換USDT永續和反向交割的持倉模式。如果處於單向持倉模式下，您只能要麼持有多頭要麼空頭倉位；如果處於雙向持倉模式下，您可以同時持倉多頭和空頭的倉位。
 > **統一帳戶覆蓋範圍: USDT永續 / 反向交割**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向交割**
+> **經典帳戶覆蓋範圍: USDT永續 / 反向交割**
 
 :::tip
 * 配置生效優先級: symbol > coin > 系統默認
@@ -57,7 +57,7 @@ sidebar_position: 2.8
 ### 當前合約單雙向持倉切換能力
 <table class="custom_table">
     <tr>
-        <th></th><th>普通帳戶</th><th>統一帳戶</th>
+        <th></th><th>經典帳戶</th><th>統一帳戶</th>
     </tr>
     <tr>
         <td>USDT 永續</td><td><b>支持單雙向持倉</b></td><td>支持單雙向持倉</td>
@@ -79,7 +79,7 @@ POST `/v5/position/switch-mode`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li> 統一帳戶: `linear`: USDT永續; `inverse`: 反向交割</li><li>普通帳戶: `linear`, `inverse`. _這裡`category`字段不參與業務邏輯，僅做路由使用_</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li> 統一帳戶: `linear`: USDT永續; `inverse`: 反向交割</li><li>經典帳戶: `linear`, `inverse`. _這裡`category`字段不參與業務邏輯，僅做路由使用_</li></ul> |
 |symbol |false |string |合約名稱. `symbol`和`coin`**必須**傳其中一個. `symbol`有更高優先級 |
 |coin |false |string |結算幣種 |
 |mode |**true** |integer |倉位模式. `0`: 單向持倉. `3`: 雙向持倉|

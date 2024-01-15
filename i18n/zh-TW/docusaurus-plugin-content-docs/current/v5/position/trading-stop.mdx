@@ -6,7 +6,7 @@ sidebar_position: 4
 
 該接口可以設置止盈、止損和追蹤止損
 > **統一帳戶覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **經典帳戶覆蓋範圍: USDT永續 / 反向合約**
 
 :::tip
 在提交請求後，系統內部將會自動創建對應類型的條件單。若倉位被平，系統將會調整相關條件訂單數量或者取消這些條件單。
@@ -29,7 +29,7 @@ POST `/v5/position/trading-stop`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>普通帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>經典帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
 |symbol |**true** |string |合約名稱|
 |takeProfit |false |string |止盈價格. 等於0表示取消止盈，若不修改，則不要傳遞該參數|
 |stopLoss |false |string |止損價格. 等於0表示取消止損，若不修改，則不要傳遞該參數 |

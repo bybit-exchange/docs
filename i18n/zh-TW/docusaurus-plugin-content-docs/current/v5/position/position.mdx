@@ -6,7 +6,7 @@ sidebar_position: 1
 
 該接口可以獲取用戶的持倉信息，比如持倉數量，累計盈虧等
 > **統一帳戶覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
-> **普通帳戶覆蓋範圍: USDT永續 / 反向合約**
+> **經典帳戶覆蓋範圍: USDT永續 / 反向合約**
 
 :::info
 關於反向合約的額外查詢規則,
@@ -20,7 +20,7 @@ GET `/v5/position/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../v5/enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`,`inverse`, `option`</li><li>普通帳戶: `linear`, `inverse`</li></ul> |
+|[category](../v5/enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`,`inverse`, `option`</li><li>經典帳戶: `linear`, `inverse`</li></ul> |
 |symbol |false |string |合約名稱<ul><li>若傳了`symbol`, 則不管是否有倉位都返回該symbol數據</li><li>若`symbol`不傳但傳了`settleCoin`, 則僅返回有實際倉位的數據</li></ul>|
 |baseCoin |false |string |交易幣種. 僅`option`. 若不傳，則返回期權下所有持倉|
 |settleCoin |false |string |結算幣種. 對於USDT和USDC期貨而言，`symbol`和`settleCon`**必傳**其中一個, 若都傳，則`symbol`有更高的優先級 |
@@ -40,7 +40,7 @@ GET `/v5/position/list`
 |> size| string | 當前倉位的合约數量 |
 |> avgPrice| string | 當前倉位的平均入場價格 <li>對於8小時結算的USDC合約倉位, 該字段表示的是平均開倉價格, 不隨著結算而改變</li> |
 |> positionValue | string |仓位的價值 |
-|> tradeMode| integer | 交易模式。<ul><li>統一帳戶 (反向合約) & 普通帳戶: `0`: 全倉, `1`: 逐倉</li><li>統一帳戶: 廢棄, 總是 `0`</li></ul> |
+|> tradeMode| integer | 交易模式。<ul><li>統一帳戶 (反向合約) & 經典帳戶: `0`: 全倉, `1`: 逐倉</li><li>統一帳戶: 廢棄, 總是 `0`</li></ul> |
 |> autoAddMargin | integer |是否自動追加保證金. `0`: 否, `1`: 是. 僅當統一帳戶(除反向合約)開啟了帳戶維度的逐倉保證金模式, 該字段才有意義 |
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**. _注意：若賬戶為組合保證金模式(PM)，該字段返回空字符串，槓桿規則失效_|

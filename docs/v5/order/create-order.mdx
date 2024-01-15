@@ -4,13 +4,13 @@ sidebar_label: Place Order
 sidebar_position: 1
 ---
 This endpoint supports to create the order for spot, spot margin, USDT perpetual, USDC perpetual, USDC futures, inverse futures and options.
-> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
+> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Option**<br/>
 > **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::info
 - **Supported order type (`orderType`):**<br/>
 Limit order: `orderType`=_Limit_, it is necessary to specify order qty and price.<br/>
-<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>: <code>orderType</code>=<i>Market</i>, execute at the best price in the Bybit market until the transaction is completed. When selecting a market order, the `price` is empty. In the futures trading system, in order to protect the serious slippage of the market order, the Bybit trading system will convert the market order into a limit order for matching. will be cancelled. The slippage threshold refers to the percentage that the order price deviates from the latest transaction price. The current threshold is set to 3% for BTC contracts and 5% for other contracts.
+<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>: <code>orderType</code>=<i>Market</i>, execute at the best price in the Bybit market until the transaction is completed. When selecting a market order, the "price" can be empty. In the futures trading system, in order to protect the serious slippage of the market order, the Bybit trading system will convert the market order into a limit order for matching. will be cancelled. The slippage threshold refers to the percentage that the order price deviates from the latest transaction price. The current threshold is set to 3% for BTC contracts and 5% for other contracts.
 
 - **Supported timeInForce strategy:**<br/>
 `GTC`<br/>
@@ -45,10 +45,6 @@ Bybit will monitor on your API requests. When the total number of orders of a si
 Customers who use API default to acceptance of these terms and have the obligation to cooperate with adjustments.
 :::
 
-:::tip
-To margin trade on spot on a normal account, you need to go [here](../spot-margin-normal/borrow) to borrow margin first.
-:::
-
 :::info Spot Stop Order
 Spot supports TP/SL order, Conditional order, however, the system logic is different between Classic account and Unified account<br/>
 **Classic account:** When the stop order is created, you will get an order ID. After it is triggered, you will get a new order ID<br/>
@@ -77,8 +73,8 @@ POST `/v5/order/create`
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
 |[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required** (USDT perps & Inverse contracts have hedge mode)<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
 |orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures & Perps: orderLinkId rules_:<br/><ul><li>optional param</li><li>always unique</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
-|takeProfit |false |string |Take profit price, valid for `linear` & `inverse`|
-|stopLoss |false |string |Stop loss price, valid for `linear` & `inverse`|
+|takeProfit |false |string |Take profit price <li>`linear` & `inverse`: support UTA and classic account</li><li>`spot(UTA)`: Spot Limit order supports take profit, stop loss or limit take profit, limit stop loss when creating an order</li>|
+|stopLoss |false |string |Stop loss price <li>`linear` & `inverse`: support UTA and classic account</li><li>`spot(UTA)`: Spot Limit order supports take profit, stop loss or limit take profit, limit stop loss when creating an order</li>|
 |[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice`. Valid for `linear` & `inverse` |
 |[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice`. Valid for `linear` & `inverse`|
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. <ul><li>You **must** specify it as `true` when you are about to close/reduce the position</li><li>When reduceOnly is true, take profit/stop loss cannot be set</li></ul>Valid for `linear`, `inverse` & `option` |
@@ -86,10 +82,10 @@ POST `/v5/order/create`
 |[smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
 |mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
 |tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear` & `inverse`|
-|tpLimitPrice |false |string |The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit.<br/>Valid for `linear` & `inverse`|
-|slLimitPrice |false |string |The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit.<br/>Valid for `linear` & `inverse`|
-|tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market.<br/>Valid for `linear` & `inverse`|
-|slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market.<br/>Valid for `linear` & `inverse`|
+|tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear` & `inverse`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot(UTA): it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
+|slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear` & `inverse`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot(UTA): it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
+|tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear` & `inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
+|slOrderType |false |string |The order type when stop loss is triggered <ul><li>`linear` & `inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "stopLoss", <br/>`Limit`: when you set "stopLoss" and "slLimitPrice" </li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -114,6 +110,12 @@ X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1672211928338
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+
+// Spot Limit order with market tp sl
+{"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}
+
+// Spot Limit order with limit tp sl
+{"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}
 
 // Spot PostOnly normal order
 {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}

@@ -7,7 +7,7 @@ sidebar_position: 4.5
 Query for the instrument specification of online trading pairs.
 > **Covers: Spot / USDT perpetual / USDC contract / Inverse contract / Option**
 
-:::caution
+:::info
 * Spot does not support pagination, so `limit`, `cursor` are invalid.
 * When query by `baseCoin`, regardless of category=`linear` or `inverse`, the result will have USDT perpetual, USDC contract and Inverse contract symbols.
 :::
@@ -21,7 +21,7 @@ GET `/v5/market/instruments-info`
 |[category](../enum#category) |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`,`option`|
 |[symbol](../enum#symbol) |false |string |Symbol name|
 |[status](../enum#status) |false |string |Symbol status filter <ul><li>spot/linear/inverse has `Trading` only</li></ul>|
-|baseCoin |false |string |Base coin. _`linear`,`inverse`,`option` **only**_ <li>For option, it returns BTC by default</li> |
+|baseCoin |false |string |Base coin <li>Apply to`linear`,`inverse`,`option` **only**</li><li>`option`: it returns BTC by default</li> |
 |limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: `500`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 

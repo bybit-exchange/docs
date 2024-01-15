@@ -16,8 +16,7 @@ sidebar_position: 6
 
 :::info
 * 經典帳戶現貨僅能查詢終態訂單
-* 經典帳戶現貨: 市商帳戶只能獲取到最近3天訂單歷史, 可以前往網頁端導出更多歷史數據
-* 經典帳戶現貨: 散客用戶支持查詢到最近180天的數據
+* 經典帳戶現貨: 市商帳戶只能獲取到最近3天訂單歷史, 可以前往網頁端導出更多歷史數據; 散客用戶支持查詢到最近180天的數據
 * 統一帳戶 (linear, spot, option) 支持查詢最近730天的歷史訂單紀錄
 :::
 
@@ -27,14 +26,14 @@ GET `/v5/order/history`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>普通帳戶: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |合約名稱|
-|baseCoin |false |string |交易幣種. 統一帳戶（反向）以及普通帳戶不支持該字段的查詢 |
-|settleCoin |false |string |結算幣種. 統一帳戶（反向）以及普通帳戶不支持該字段的查詢 |
+|baseCoin |false |string |交易幣種. 統一帳戶（反向）以及經典帳戶不支持該字段的查詢 |
+|settleCoin |false |string |結算幣種. 統一帳戶（反向）以及經典帳戶不支持該字段的查詢 |
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
-|orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 現貨止盈止損單, `OcoOrder`: OCO訂單 <ul><li>普通帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
-|[orderStatus](../enum#orderstatus) |false |string |訂單狀態 <ul><li>普通帳戶`spot`: 該字段無效</li><li>其他: 不傳則默認查詢所有狀態</li></ul>不傳則默認查詢所有狀態 |
+|orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 現貨止盈止損單, `OcoOrder`: OCO訂單, `BidirectionalTpslOrder`: 現貨(UTA)雙向止盈止損訂單 <ul><li>經典帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |訂單狀態 <ul><li>經典帳戶`spot`: 該字段無效</li><li>其他: 不傳則默認查詢所有狀態</li></ul>不傳則默認查詢所有狀態 |
 |startTime |false |integer |開始時間戳 (毫秒). 經典帳戶現貨不支持使用startTime和endTime <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若不傳startTime，則查詢startTime和startTime+7天的數據</li><li>若不傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
@@ -52,18 +51,18 @@ GET `/v5/order/history`
 |> price |string |訂單價格 |
 |> qty |string |訂單數量 |
 |> side |string |方向. `Buy`,`Sell`|
-|> isLeverage |string |是否借貸. 僅統一帳戶`spot`有效. `0`: 否, `1`: 是. _普通帳戶現貨交易不支持, 總是`0`_|
+|> isLeverage |string |是否借貸. 僅統一帳戶`spot`有效. `0`: 否, `1`: 是. _經典帳戶現貨交易不支持, 總是`0`_|
 |> [positionIdx](../enum#positionidx) |integer |倉位標識。用戶不同倉位模式|
 |> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
 |> [createType](../enum#createtype) |string |訂單創建類型<li>僅作用於category=linear 或 inverse</li><li>現貨、期權不返回該字段</li> |
 |> [cancelType](../enum#canceltype) |string |訂單被取消類型 |
-|> [rejectReason](../enum#rejectreason) |string |拒絕原因. _普通帳戶現貨交易不支持_ |
+|> [rejectReason](../enum#rejectreason) |string |拒絕原因. _經典帳戶現貨交易不支持_ |
 |> avgPrice |string |訂單平均成交價格 <li>統一帳戶: 不存在avg price場景的訂單返回`""`</li><li>經典帳戶: 不存在avg price場景的訂單返回`"0"`</li> |
-|> leavesQty |string |訂單剩餘未成交的數量. _普通帳戶現貨交易不支持_|
-|> leavesValue |string |訂單剩餘未成交的價值. _普通帳戶現貨交易不支持_ |
+|> leavesQty |string |訂單剩餘未成交的數量. _經典帳戶現貨交易不支持_|
+|> leavesValue |string |訂單剩餘未成交的價值. _經典帳戶現貨交易不支持_ |
 |> cumExecQty |string |訂單累計成交數量 |
-|> cumExecValue |string |訂單累計成交價值. _普通帳戶現貨交易不支持_ |
-|> cumExecFee |string |訂單累計成交的手續費. _普通帳戶現貨交易不支持_ |
+|> cumExecValue |string |訂單累計成交價值. _經典帳戶現貨交易不支持_ |
+|> cumExecFee |string |訂單累計成交的手續費. _經典帳戶現貨交易不支持_ |
 |> [timeInForce](../enum#timeinforce) |string |執行策略 |
 |> [orderType](../enum#ordertype) |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型 <li>`Block trade Roll Back`, `Block trade-Limit`: 統一帳戶大宗交易獨有的兩個枚舉值</li> |
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型 |
