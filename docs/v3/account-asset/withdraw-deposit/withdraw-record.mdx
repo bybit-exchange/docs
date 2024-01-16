@@ -17,6 +17,7 @@ GET `/asset/v3/private/withdraw/record/query`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |withdrawID |false |integer |withdrawal id. (withdraw request ID in Response Parameters of Withdrawal endpoint) |
+|txID |false |string |Transaction hash ID |
 |startTime |false |integer |The start time (ms). Default value: 30 days before the current time |
 |endTime |false |integer |The end time (ms). Default value: current time |
 |[coin](enum#coin) |false |string |coin name: for example, BTC. Default value: all |
@@ -31,8 +32,8 @@ GET `/asset/v3/private/withdraw/record/query`
 |> [coin](enum#coin)|string |withdrawal coin |
 |> [chain](enum#chain)|string|chain name|
 |> amount|string|withdrawal quantity|
-|> txID|string|transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled or internal transfer|
-|> status|int|[status](enum#withdrawStatus)|
+|> txID|string|transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled|
+|> status|string|[status](enum#withdrawStatus)|
 |> toAddress|string|withdrawal target address. It shows email or mobile number for internal transfer|
 |> tag|string|tag of withdrawal target address|
 |> withdrawFee|string|withdrawal fee|

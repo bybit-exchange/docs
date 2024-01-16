@@ -18,8 +18,9 @@ GET `/v5/asset/withdraw/query-record`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |withdrawID |false |string |Withdraw ID |
+|txID |false |string |Transaction hash ID |
 |coin |false |string |Coin |
-|withdrawType |false |integer |Withdraw type. `0`(default): on chain. `1`: off chain. `2`: all.|
+|withdrawType |false |integer |Withdraw type. `0`(default): on chain. `1`: off chain. `2`: all|
 |startTime |false |integer |The start timestamp (ms) |
 |endTime |false |integer |The end timestamp (ms) |
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `50`|
@@ -30,8 +31,8 @@ GET `/v5/asset/withdraw/query-record`
 |:----- |:-----|----- |
 |rows |array|Object |
 |> withdrawId |string |Withdraw ID |
-|> txID |string |Transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled or internal transfer |
-|> withdrawType |string |Withdraw type. `0`: on chain. `1`: off chain|
+|> txID |string |Transaction ID. It returns `""` when withdrawal failed, withdrawal cancelled|
+|> withdrawType |integer |Withdraw type. `0`: on chain. `1`: off chain|
 |> coin |string |Coin |
 |> chain |string |Chain |
 |> amount |string |Amount |

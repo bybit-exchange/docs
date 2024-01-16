@@ -16,6 +16,7 @@ GET `/v5/asset/deposit/query-internal-record`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|txID |false |string |內部轉帳交易ID |
 |startTime |false |integer |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
 |endTime |false |integer |結束時間 (精確到毫秒)。 默認為當前時間 |
 |coin |false |string |幣種名：舉例，BTC。默認全部 |
@@ -34,6 +35,7 @@ GET `/v5/asset/deposit/query-internal-record`
 |> status|integer|<ul><li>1=處理中</li><li>2=已完成</li><li>3=充值失敗</li></ul>|
 |> address|string|郵箱地址或者手機號|
 |> createdTime|string|充值創建時間戳|
+|txID |string |內部轉帳交易ID |
 |nextPageCursor|string|游標信息：用來分頁|
 
 <a href="/api-explorer/v5/asset/internal-deposit-record"><Button>運行實例 >></Button></a>
@@ -46,7 +48,7 @@ GET `/v5/asset/deposit/query-internal-record`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/asset/deposit/query-internal-record?startTime=1667260800000&endTime=1667347200000 HTTP/1.1
+GET /v5/asset/deposit/query-internal-record HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -82,18 +84,19 @@ print(session.get_internal_deposit_records(
     "result": {
         "rows": [
             {
-                "id": "19097",
-                "amount": "0.001",
+                "id": "1103",
+                "amount": "0.1",
                 "type": 1,
-                "coin": "BTC",
-                "address": "gas***gmail.com",
+                "coin": "ETH",
+                "address": "xxxx***@gmail.com",
                 "status": 2,
-                "createdTime": "1667319101"
+                "createdTime": "1705393280",
+                "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"
             }
         ],
-        "nextPageCursor": "eyJtaW5JRCI6MTkwOTcsIm1heElEIjoxOTA5N30="
+        "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"
     },
     "retExtInfo": {},
-    "time": 1682099394381
+    "time": 1705395632689
 }
 ```

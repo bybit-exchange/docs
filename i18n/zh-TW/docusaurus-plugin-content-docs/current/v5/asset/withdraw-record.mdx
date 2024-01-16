@@ -16,6 +16,7 @@ GET `/v5/asset/withdraw/query-record`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |withdrawID |false |string |提現Id |
+|txID |false |string |交易哈希ID |
 |coin |false |string |幣種 |
 |withdrawType |false |integer |提現類型. `0`(默認): 鏈上提幣. `1`: 平台內部轉帳. `2`: 所有方式|
 |startTime |false |integer |開始時間戳 (毫秒) |
@@ -28,8 +29,8 @@ GET `/v5/asset/withdraw/query-record`
 |:----- |:-----|----- |
 |rows |array|Object |
 |> withdrawId |string |提現Id |
-|> txID |string |交易Id，提現失敗/提現撤銷/內部轉帳：為空 |
-|> withdrawType |string |提現類型. `0`: 鏈上提幣. `1`: 內部轉帳|
+|> txID |string |交易Id，提現失敗/提現撤銷：為空 |
+|> withdrawType |integer |提現類型. `0`: 鏈上提幣. `1`: 內部轉帳|
 |> coin |string |幣種 |
 |> chain |string |鏈名 |
 |> amount |string |提幣金額 |
