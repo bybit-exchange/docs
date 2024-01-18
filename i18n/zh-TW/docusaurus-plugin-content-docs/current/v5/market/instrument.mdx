@@ -249,6 +249,15 @@ GET `/v5/market/instruments-info`
         <tr>
             <td>>> tickSize</td><td>string</td><td>修改訂單的步長 </td>
         </tr>
+        <tr>
+            <td>> riskParameters</td><td>Object</td><td>價格限制參數</td>
+        </tr>
+        <tr>
+            <td>>> limitParameter</td><td>string</td><td>限價單價格限制. <i>如果預估成交價與最新成交價的偏差大於限定的百分比，則該筆限價單將會被限制下單。舉例說明，接口返回0.1, 則表示限價為10%，您下的限價單的下單價格不能超過最後成交價格（LTP）的110%； 您賣出的限價單不能低於LTP的90%。</i></td>
+        </tr>
+        <tr>
+            <td>>> marketParameter</td><td>string</td><td>市價單價格限制. <i>如果預估成交價與最新成交價的偏差大於限定的百分比，市價單將被部分執行. 舉例說明，接口返回0.05, 則表示限價為5%. 假如當前MNT/USDT限價為5%，用戶下單 10 萬 USDT 市價買入（當前最新成交價為 2 USDT）。凡在2.1 USDT以上成交的部分將被取消。假設只有價值2萬 USDT的MNT可以在2.1 USDT及以下的價格成交，剩餘的8萬 USDT訂單價值將因為偏差超過5%的閾值而被取消。</i></td>
+        </tr>
     </table>
 </TabItem>
 </Tabs>
@@ -479,7 +488,7 @@ print(session.get_instruments_info(
     "result": {
         "category": "spot",
         "list": [
-            {
+                {
                     "symbol": "BTCUSDT",
                     "baseCoin": "BTC",
                     "quoteCoin": "USDT",
@@ -487,19 +496,23 @@ print(session.get_instruments_info(
                     "status": "Trading",
                     "marginTrading": "both",
                     "lotSizeFilter": {
-                    "basePrecision": "0.000001",
-                    "quotePrecision": "0.00000001",
-                    "minOrderQty": "0.000048",
-                    "maxOrderQty": "71.73956243",
-                    "minOrderAmt": "1",
-                    "maxOrderAmt": "2000000"
+                        "basePrecision": "0.000001",
+                        "quotePrecision": "0.00000001",
+                        "minOrderQty": "0.000048",
+                        "maxOrderQty": "71.73956243",
+                        "minOrderAmt": "1",
+                        "maxOrderAmt": "2000000"
                     },
                     "priceFilter": {
-                    "tickSize": "0.01"
+                        "tickSize": "0.01"
+                    }
+                    "riskParameters": {
+                        "limitParameter": "0.05",
+                        "marketParameter": "0.05"
+                    }
                 }
-            }
-        ]
-    },
+            ]
+        },
     "retExtInfo": {},
     "time": 1672712468011
 }
