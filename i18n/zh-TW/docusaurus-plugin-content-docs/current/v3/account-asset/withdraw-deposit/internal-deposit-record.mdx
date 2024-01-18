@@ -17,6 +17,7 @@ GET `/asset/v3/private/deposit/internal-deposit-record/query`
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|txID |false |string |內部轉帳交易ID |
 |startTime |false |integer |開始時間 (精確到毫秒)。 默認為當前時間之前30天 |
 |endTime |false |integer |結束時間 (精確到毫秒)。 默認為當前時間 |
 |[coin](enum#coin) |false |string |幣種名：舉例，BTC。默認全部 |
@@ -41,11 +42,36 @@ GET `/asset/v3/private/deposit/internal-deposit-record/query`
 ### 請求示例
 
 ```http
-
+GET /asset/v3/private/deposit/internal-deposit-record/query HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1705395811647
+X-BAPI-RECV-WINDOW: 50000
 ```
 
 ### 響應示例
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "id": "1103",
+                "amount": "0.1",
+                "type": 1,
+                "coin": "ETH",
+                "address": "xxxxx***@gmail.com",
+                "status": 2,
+                "createdTime": "1705393280",
+                "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"
+    },
+    "retExtInfo": {},
+    "time": 1705395814405
+}
 ```
