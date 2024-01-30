@@ -8,13 +8,14 @@ sidebar_position: 4
 > **經典帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::tip
-- 該接口還支持查詢已成交，取消和拒絕類型的訂單信息，但最多每個UID下提供最近500條數據.
-- 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
+- 此接口也支持查詢已成交，取消和拒絕類型的訂單信息但需要指定orderId或orderLinkId. 對於spot，linear和option類別，相關訂單需位於各類別最新的500筆訂單之中. inverse類別則無此限制.
+- 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢. 如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
 - 返回的結果將以`createdTime`從新到舊排序.
 :::
 
 :::info
 經典帳戶現貨交易僅能查詢活動委託單
+服務器重啓或發佈後請使用[查詢歷史訂單](order-list#)接口去查詢已成交，取消和拒絕類型的訂單信息
 :::
 
 ### HTTP請求
