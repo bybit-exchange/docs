@@ -114,17 +114,18 @@ _經典帳戶_
 * `option`&emsp;期權
 
 ### orderStatus
-* `Created`&emsp;訂單已經被系統接收但還沒有推送到撮合引擎中
+_活動態_
 * `New`&emsp;訂單成功下達
-* `Rejected`
-* `PartiallyFilled`
-* `PartiallyFilledCanceled`&emsp;僅現貨存在該枚舉值
-* `Filled`
+* `PartiallyFilled`&emsp;部分成交
+* `Untriggered`&emsp;條件單未觸發
+
+_終態_
+* `Rejected`&emsp;訂單被拒絕
+* `PartiallyFilledCanceled`&emsp;僅現貨存在該枚舉值, 訂單部分成交且已取消
+* `Filled`&emsp;完全成交
 * `Cancelled`&emsp;期貨交易，當訂單是該狀態時，是可能存在部分成交的; 經典帳戶的現貨盈止損單、條件單、OCO訂單觸發前取消
-* `Untriggered`
-* `Triggered`
+* `Triggered`&emsp;已觸發, 條件單從未觸發到變成New的一個中間態
 * `Deactivated`&emsp;統一帳戶下期貨、現貨的盈止損單、條件單、OCO訂單觸發前取消
-* ~~`Active`&emsp;條件單已經被觸發，並且活動單已經成功創建。該狀態是條件單成功觸發後的終態~~
 
 ### timeInForce
 * `GTC`&emsp;一直有效至取消
