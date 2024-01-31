@@ -126,6 +126,20 @@ print(session.get_order_history(
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.config.BybitApiConfig;
+import com.bybit.api.client.domain.trade.request.TradeOrderRequest;
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.trade.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();
+var orderHistory = TradeOrderRequest.builder().category(CategoryType.LINEAR).limit(10).build();
+System.out.println(client.getHistoryOrderResult(orderHistory));
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
