@@ -73,6 +73,20 @@ print(session.set_dcp(
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.config.BybitApiConfig;
+import com.bybit.api.client.domain.trade.request.TradeOrderRequest;
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.trade.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();
+var setDcpOptionsRequest = TradeOrderRequest.builder().timeWindow(40).build();
+System.out.println(client.setDisconnectCancelAllTime(setDcpOptionsRequest));
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

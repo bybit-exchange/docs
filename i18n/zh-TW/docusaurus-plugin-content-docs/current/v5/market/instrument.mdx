@@ -292,7 +292,7 @@ print(session.get_instruments_info(
 ```
 
 </TabItem>
-<TabItem value="java" label="java">
+<TabItem value="java" label="Java">
 
 ```java
 import com.bybit.api.client.domain.CategoryType;
@@ -379,6 +379,19 @@ print(session.get_instruments_info(
     category="spot",
     symbol="BTCUSDT",
 ))
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var instrumentInfoRequest = MarketDataRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").instrumentStatus(InstrumentStatus.TRADING).limit(500).build();
+client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
 ```
 
 </TabItem>
