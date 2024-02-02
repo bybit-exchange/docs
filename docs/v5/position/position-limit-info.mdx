@@ -1,0 +1,97 @@
+---
+title: Get Open Interest Limit Info
+sidebar_label: Get Open Interest Limit Info
+sidebar_position: 2.2
+---
+In order to prevent excessive market risk concentration on a small number of traders and the risk of market manipulation,
+Bybit limits the ratio of the number of open positions held by each individual trader relative to the open interest of the specific contracts.
+For more details, please refer to [Open Interest Limit (Perpetual and Futures Contracts)](https://www.bybit.com/en/help-center/article/Open-Interest-Limit-Perpetual-Futures-ContractsBybit_Perpetual_Contract_mechanism)
+
+> **Unified account covers: USDT perpetual / USDC contract / Inverse contract**<br/>
+> **Classic account covers: USDT perpetual / Inverse contract**
+
+:::info
+* The endpoint is only supported to be called by **master account**'s api key
+* User group means master account and its all sub accounts
+:::
+
+### HTTP Request
+GET `/v5/position/limit-info`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Symbol name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|currentLimitPcnt |string  |Current open interest limit for user group, "0.05" means 5% |
+|totalBuyPositionSize|string |Buy side position size of user group |
+|totalSellPositionSize|string |Sell side position size of user group |
+|estMaxPositionSize|string |Estimated max position size (single side). The value equals to `maxUserOi` |
+|openInterest|string |The latest open interest through the platform |
+|list|array |object |
+|> userId|string |The user ID from the user group that hold the position |
+|> positionSize|string |Position size of this user ID |
+|> side|string |Position side |
+|updateTime|string |The last update time of data |
+|maxUserOi|string |The max open interest of user group. The value equals to `estMaxPositionSize`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/position/limit-info?symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1706857423903
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "currentLimitPcnt": "0.0500",
+        "totalBuyPositionSize": "0.0300",
+        "totalSellPositionSize": "",
+        "estMaxPositionSize": "7397.8500",
+        "openInterest": "147957.001",
+        "list": [
+            {
+                "userId": "xxxxxx",
+                "positionSize": "0.0300",
+                "side": "Buy"
+            }
+        ],
+        "updateTime": "1706857424373",
+        "maxUserOi": "7397.8500500"
+    },
+    "retExtInfo": {},
+    "time": 1706857424373
+}
+```
