@@ -67,6 +67,19 @@ print(session.set_auto_add_margin(
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.position.*;
+import com.bybit.api.client.domain.position.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();
+client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

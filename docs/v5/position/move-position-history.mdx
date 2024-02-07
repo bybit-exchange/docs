@@ -65,6 +65,19 @@ X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.position.*;
+import com.bybit.api.client.domain.position.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var movePositionsHistoryRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").status(MovePositionStatus.Processing).build();
+System.out.println(client.getMovePositionHistory(movePositionsHistoryRequest));
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
