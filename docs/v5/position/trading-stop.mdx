@@ -116,6 +116,20 @@ print(session.set_trading_stop(
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.position.*;
+import com.bybit.api.client.domain.position.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var setTradingStopRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("XRPUSDT").takeProfit("0.6").stopLoss("0.2").tpTriggerBy(TriggerBy.MARK_PRICE).slTriggerBy(TriggerBy.LAST_PRICE)
+                .tpslMode(TpslMode.PARTIAL).tpOrderType(TradeOrderType.LIMIT).slOrderType(TradeOrderType.LIMIT).tpSize("50").slSize("50").tpLimitPrice("0.57").slLimitPrice("0.21").build();
+client.setTradingStop(setTradingStopRequest, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js

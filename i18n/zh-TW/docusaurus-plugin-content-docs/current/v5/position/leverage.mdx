@@ -68,6 +68,19 @@ print(session.set_leverage(
 ```
 
 </TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.position.*;
+import com.bybit.api.client.domain.position.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();
+client.setPositionLeverage(setLeverageRequest, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
