@@ -16,8 +16,8 @@ POST `/v5/position/set-leverage`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
 |symbol |**true** |string |Symbol name|
-|buyLeverage |**true** |string |[`1`, max leverage of corresponding [risk limit](../market/risk-limit#)] <ul><li>Classic account: under one-way mode, `buyLeverage` must be the same as `sellLeverage`</li><li>Unified account: `buyLeverage` must be the same as `sellLeverage` all the time</li></ul> |
-|sellLeverage |**true** |string |[`1`, max leverage of corresponding risk limit] <ul><li>Classic account: under one-way mode, `buyLeverage` must be the same as `sellLeverage`</li><li>Unified account: `buyLeverage` must be the same as `sellLeverage` all the time</li></ul>|
+|buyLeverage |**true** |string |[`1`, max leverage of corresponding [risk limit](../market/risk-limit#)] <ul><li>one-way mode: `buyLeverage` must be the same as `sellLeverage`</li><li>Hedge mode: <br/>Classic account & UTA (isolated margin): `buyLeverage` and `sellLeverage` can be different; <br/>UTA (cross margin): `buyLeverage` must be the same as `sellLeverage`</li></ul> |
+|sellLeverage |**true** |string |[`1`, max leverage of corresponding risk limit]|
 
 <a href="/api-explorer/v5/position/leverage"><Button>RUN >></Button></a>
 
