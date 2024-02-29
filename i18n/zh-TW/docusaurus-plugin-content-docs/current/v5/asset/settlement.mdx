@@ -1,6 +1,6 @@
 ---
 title: 查詢USDC結算紀錄
-sidebar_label: 查詢USDC結算紀錄
+sidebar_label: 查詢USDC結算紀錄 (2年)
 sidebar_position: 0.025
 ---
 
@@ -15,6 +15,8 @@ GET `/v5/asset/settlement-record`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型. `linear` |
 |symbol |false |string |合約名稱 |
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近30天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天</li><li>若只傳startTime，則查詢startTime和startTime+30天的數據</li><li>若只傳endTime，則查詢endTime-30天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間 (毫秒)|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 

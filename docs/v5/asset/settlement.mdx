@@ -1,6 +1,6 @@
 ---
 title: Get USDC Session Settlement
-sidebar_label: Get USDC Session Settlement
+sidebar_label: Get USDC Session Settlement (2 years)
 sidebar_position: 0.03
 ---
 
@@ -15,6 +15,8 @@ GET `/v5/asset/settlement-record`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `linear` |
 |symbol |false |string |Symbol name |
+|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 30 days by default</li><li>Only startTime is passed, return range between startTime and startTime+30 days</li><li>Only endTime is passed, return range between endTime-30 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 30 days</li></ul> |
+|endTime |false |integer |The end time. timestamp (ms) |
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 

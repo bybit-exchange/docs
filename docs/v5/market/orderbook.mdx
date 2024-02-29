@@ -37,6 +37,7 @@ GET `/v5/market/orderbook`
 |> a[1] |string |Ask size |
 |ts |integer |The timestamp (ms) that the system generates the data |
 |u |integer |Update ID, is always in sequence<ul><li>For contract, it is corresponding to `u` in the wss 200-level orderbook</li><li>For spot, it is corresponding to `u` in the wss 200-level orderbook</li></ul> |
+|seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li><li>Option does not have this field currently</li> |
 
 <a href="/api-explorer/v5/market/orderbook"><Button>RUN >></Button></a>
 
@@ -111,22 +112,23 @@ client
     "retMsg": "OK",
     "result": {
         "s": "BTCUSDT",
-        "a": [
-            [
-                "16638.64",
-                "0.008479"
-            ]
-        ],
         "b": [
             [
-                "16638.27",
-                "0.305749"
+                "62710.2",
+                "5.52"
             ]
         ],
-        "ts": 1672765737733,
-        "u": 5277055
+        "a": [
+            [
+                "62710.3",
+                "0.01"
+            ]
+        ],
+        "ts": 1709199771584,
+        "u": 243781,
+        "seq": 3887177875
     },
     "retExtInfo": {},
-    "time": 1672765737734
+    "time": 1709199771643
 }
 ```
