@@ -139,13 +139,13 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      announcementBar: {
-        id: 'offline_oldAPI',
-        content: 'Bybit has made old versions of the API obsolete. For more information, please refer to our guide to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates">transition from the legacy versions to the V5 API</a>.',
-        backgroundColor: '#20232a',
-        textColor: '#fff',
-        isCloseable: false,
-      },
+      // announcementBar: {
+      //   id: 'offline_oldAPI',
+      //   content: 'Bybit has made old versions of the API obsolete. For more information, please refer to our guide to <a target="_blank" rel="noopener noreferrer" href="https://announcements.bybit.com/en-US/article/bybit-openapi-services-transition-from-legacy-version-to-new-v5-api-blt25b43a5738c00765/?category=product_updates">transition from the legacy versions to the V5 API</a>.',
+      //   backgroundColor: '#20232a',
+      //   textColor: '#fff',
+      //   isCloseable: false,
+      // },
       algolia: {
         appId: '6BDPYQN4N6',
         apiKey: '3945cc0bcfa5510237aa55a2fb83dd20',
