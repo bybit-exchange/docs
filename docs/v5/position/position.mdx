@@ -54,8 +54,14 @@ GET `/v5/position/list`
 |> takeProfit | string  |Take profit price|
 |> stopLoss | string  |Stop loss price|
 |> trailingStop | string  |Trailing stop (The distance from market price)|
+|> sessionAvgPrice | string  |USDC contract session avg price, it is the same figure as avg entry price shown in the web UI |
+|> delta | string  |Delta, unique field for `option`|
+|> gamma | string  |Gamma, unique field for `option`|
+|> vega | string  |Vega, unique field for `option`|
+|> theta | string  |Theta, unique field for `option`|
 |> unrealisedPnl | string  |Unrealised PnL|
-|> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: it is the realised P&L when you hold that position</li></ul>|
+|> curRealisedPnl | string  |The realised PnL for the current holding position|
+|> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: always 0, meaningless</li></ul>|
 |> [adlRankIndicator](../v5/enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
 |> isReduceOnly |boolean |Useful when Bybit lower the risk limit <ul><li>`true`: Only allowed to reduce the position. You can consider a series of measures, e.g., lower the risk limit, decrease leverage or reduce the position, add margin, or cancel orders, after these operations, you can call [confirm new risk limit](../v5/position/confirm-mmr#) endpoint to check if your position can be removed the reduceOnly mark</li><li>`false`: There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
 |> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
@@ -173,11 +179,13 @@ client
                 "stopLoss": "0.00",
                 "trailingStop": "0.00",
                 "unrealisedPnl": "-0.00029413",
+                "curRealisedPnl": "0.00013123",
                 "cumRealisedPnl": "-0.00096902",
                 "seq": 5723621632,
                 "isReduceOnly": false,
                 "mmrSysUpdateTime": "",
                 "leverageSysUpdatedTime": "",
+                "sessionAvgPrice": "",
                 "createdTime": "1676538056258",
                 "updatedTime": "1697673600012"
             }

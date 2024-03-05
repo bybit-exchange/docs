@@ -45,6 +45,12 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> stopLoss |string |Stop loss price |
 |> trailingStop |string |Trailing stop |
 |> unrealisedPnl |string |Unrealised profit and loss |
+|> curRealisedPnl | string  |The realised PnL for the current holding position|
+|> sessionAvgPrice | string  |USDC contract session avg price, it is the same figure as avg entry price shown in the web UI |
+|> delta | string  |Delta, unique field for `option`|
+|> gamma | string  |Gamma, unique field for `option`|
+|> vega | string  |Vega, unique field for `option`|
+|> theta | string  |Theta, unique field for `option`|
 |> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: it is the realised P&L when you hold that position</li></ul>|
 |> [positionStatus](../../enum#positionstatus) |string |Position status. `Normal`, `Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
@@ -108,7 +114,9 @@ while True:
             "stopLoss": "0",
             "trailingStop": "0",
             "unrealisedPnl": "0",
+            "curRealisedPnl": "1.26",
             "cumRealisedPnl": "-25.06579337",
+            "sessionAvgPrice": "0",
             "createdTime": "1694402496913",
             "updatedTime": "1697682317038",
             "tpslMode": "Full",
