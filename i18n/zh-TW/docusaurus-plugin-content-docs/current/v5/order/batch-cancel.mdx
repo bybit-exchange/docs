@@ -4,13 +4,13 @@ sidebar_label: 批量撤銷委託單
 sidebar_position: 9
 ---
 該接口可以批量撤銷多筆訂單
-> **覆蓋範圍: 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
+> **覆蓋範圍: 現貨 (統一帳戶) / 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
 
 :::info 重要
 - 您必須指定`orderId`或者`orderLinkId`.
 - 若`orderId`和`orderLinkId`之間不匹配, 系統將會優先處理`orderId`.
 - 您只能撤銷未成交和部分成交的訂單.
-- 單個請求最多支持撤銷, 期權: 20個訂單, 期貨: 10个訂單.
+- 單個請求最多支持撤銷, 期權: 20個訂單, 期貨: 10个訂單, 現貨: 10個訂單.
 :::
 
 ### HTTP請求
@@ -19,7 +19,7 @@ POST `/v5/order/cancel-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `linear`, `option` |
+|[category](../enum#category) |**true** |string |產品類型. `linear`, `option`, `spot` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱 |
 |> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個 |

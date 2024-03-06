@@ -4,13 +4,13 @@ sidebar_label: Batch Cancel Order
 sidebar_position: 9
 ---
 This endpoint allows you to cancel more than one open order in a single request.
-> **Covers: Option (UTA, UTA Pro) / USDT Perpetual, USDC Perpetual, USDC Futures (UTA Pro)**
+> **Covers: Spot (UTA, UTA Pro) / Option (UTA, UTA Pro) / USDT Perpetual, USDC Perpetual, USDC Futures (UTA Pro)**
 
 :::info important
 - You must specify `orderId` or `orderLinkId`.
 - If `orderId` and `orderLinkId` is not matched, the system will process `orderId` first.
 - You can cancel **unfilled** or **partially filled** orders.
-- A maximum of 20 orders (option) & 10 orders (linear) can be cancelled per request.
+- A maximum of 20 orders (option) & 10 orders (linear) & 10 orders (spot) can be cancelled per request.
 :::
 
 ### HTTP Request
@@ -19,7 +19,7 @@ POST `/v5/order/cancel-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option`, `spot` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name |
 |> orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
