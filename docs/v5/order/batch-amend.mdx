@@ -3,12 +3,12 @@ title: Batch Amend Order
 sidebar_label: Batch Amend Order
 sidebar_position: 8
 ---
-> **Covers: Option (UTA, UTA Pro) / USDT Perpetual, USDC Perpetual, USDC Futures (UTA Pro)**
+> **Covers: Spot (UTA, UTA Pro) / Option (UTA, UTA Pro) / USDT Perpetual, USDC Perpetual, USDC Futures (UTA Pro)**
 
 :::tip
 This endpoint allows you to amend more than one open order in a single request.
 - You can modify **unfilled** or **partially filled** orders. Conditional orders are not supported.
-- A maximum of 20 orders (option) & 10 orders (linear) can be amended per request.
+- A maximum of 20 orders (option), 10 orders (linear) & 10 orders (spot) can be amended per request.
 :::
 
 ### HTTP Request
@@ -17,23 +17,23 @@ POST `/v5/order/amend-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option`, `spot` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name|
 |> orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
 |> orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |
 |> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed |
-|> triggerPrice |false |string |If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_|
+|> triggerPrice |false |string |<ul><li>For Perps & Futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is for tpslOrder or stopOrder trigger price</li></ul>|
 |> qty |false |string |Order quantity after modification. Do not pass it if not modify the qty|
 |> price |false |string |Order price after modification. Do not pass it if not modify the price|
 |> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`|
-|> takeProfit |false |string |Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit |
-|> stopLoss |false |string |Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss |
+|> takeProfit |false |string |Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit. _valid for `spot`, `linear`_|
+|> stopLoss |false |string |Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss. _valid for `spot`, `linear`_|
 |> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. When set a take profit, this param is **required** if no initial value for the order|
 |> [slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. When set a take profit, this param is **required** if no initial value for the order|
 |> [triggerBy](../enum#triggerby) |false |string |Trigger price type|
-|> tpLimitPrice |false |string |Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl|
-|> slLimitPrice |false |string |Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl|
+|> tpLimitPrice |false |string |Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl. _valid for `spot`, `linear`_|
+|> slLimitPrice |false |string |Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl. _valid for `spot`, `linear`_|
 
 ### Response Parameters
 | Parameter | Type | Comments|
