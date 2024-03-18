@@ -28,6 +28,7 @@ POST `/v5/order/create-batch`
 |[category](../enum#category) |**true** |string |產品類型. `linear`, `option`, `spot` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱|
+|> isLeverage |false |integer |是否借貸. 僅**統一帳戶的現貨交易**有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
 |> side |**true** |string |方向. `Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
 |> qty |**true** |string |訂單數量 訂單數量 <ul><li>統一帳戶<ul><li>現貨: 可以通過設置`marketUnit`來表示市價單qty的單位, 市價買單默認是`quoteCoin`, 市價賣單默認是`baseCoin`</li><li>期貨和期權: 總是以base coin作為qty的單位</li></ul></li><li>期貨: 如果傳入`qty`="0"以及`reduceOnly`="true", 則可以全部平掉對應合約的倉位</li></ul>|
