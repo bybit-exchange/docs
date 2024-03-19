@@ -31,6 +31,7 @@ POST `/v5/order/create-batch`
 |[category](../enum#category) |**true** |string |Product type. `linear`, `option`, `spot` |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name|
+|> isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
 |> side |**true** |string |`Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |`Market`, `Limit`|
 |> qty |**true** |string |Order quantity <ul><li>UTA account<ul><li>Spot: set `marketUnit` for market order qty unit, `quoteCoin` for market buy by default, `baseCoin` for market sell by default</li><li>Perps, Futures & Option: always use base coin as unit</li></ul></li><li>Perps & Futures: if you pass `qty`="0" and specify `reduceOnly`=true&`closeOnTrigger`=true, you can close the whole position of current symbol</li></ul>|
@@ -52,7 +53,7 @@ POST `/v5/order/create-batch`
 |> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin.<br/>Valid for `linear`|
 |> [smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
 |> mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
-|> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`|
+|> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl (as there is no size option, so it will create tp/sl orders with the qty you actually fill). Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`|
 |> tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot(UTA): it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
 |> slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot(UTA): it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
 |> tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
