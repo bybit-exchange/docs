@@ -23,7 +23,7 @@ GET `/v5/market/orderbook`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `spot`, `linear`, `inverse`, `option` |
 |symbol |**true** |string |Symbol name|
-|limit |false |integer |Limit size for each bid and ask<ul><li>`spot`: [`1`, `200`]. Default: `1`.</li><li>`linear`&`inverse`: [`1`, `200`]. Default: `25`.</li><li>`option`: [`1`, `25`]. Default: `1`.</li></ul>|
+|limit |false |integer |Limit size for each bid and ask<ul><li>`spot`: [`1`, `200`]. Default: `1`.</li><li>`linear`&`inverse`: [`1`, `500`]. Default: `25`.</li><li>`option`: [`1`, `25`]. Default: `1`.</li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -36,7 +36,7 @@ GET `/v5/market/orderbook`
 |> a[0] |string |Ask price |
 |> a[1] |string |Ask size |
 |ts |integer |The timestamp (ms) that the system generates the data |
-|u |integer |Update ID, is always in sequence<ul><li>For contract, it is corresponding to `u` in the wss 200-level orderbook</li><li>For spot, it is corresponding to `u` in the wss 200-level orderbook</li></ul> |
+|u |integer |Update ID, is always in sequence<ul><li>For contract, it is corresponding to `u` in the wss 500-level orderbook</li><li>For spot, it is corresponding to `u` in the wss 200-level orderbook</li></ul> |
 |seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li><li>Option does not have this field currently</li> |
 
 <a href="/api-explorer/v5/market/orderbook"><Button>RUN >></Button></a>
