@@ -417,6 +417,7 @@ const sidebars = {
     'v5/announcement',
     'v5/smp',
     'v5/copytrade',
+    'v5/demo',
     {
       type: 'category',
       label: 'Market',
