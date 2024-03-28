@@ -58,6 +58,10 @@ sidebar_position: 1
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li>|
+|headers|**true** |object |請求頭|
+|> X-BAPI-TIMESTAMP|**true** |string |當前時間戳|
+|> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
+|> Referer|false |string |API broker用戶返佣標識|
 |op |**true** |string |Op類型 <li>`order.create`: 創建訂單</li> <li>`order.amend`: 修改訂單</li> <li>`order.cancel`: 撤銷訂單</li>|
 |args |false |array&ltobject&gt |參數數組, 目前僅支持一個元素 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
 
@@ -81,6 +85,11 @@ sidebar_position: 1
 ```json
 {
     "reqId": "test-005",
+    "headers": {
+        "X-BAPI-TIMESTAMP": "1711001595207",
+        "X-BAPI-RECV-WINDOW": "8000",
+        "Referer": "bot-001" // for api broker
+    },
     "op": "order.create",
     "args": [
         {
