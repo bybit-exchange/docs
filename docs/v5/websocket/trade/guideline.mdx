@@ -58,6 +58,10 @@ Unified Trading Account
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |reqId|false |string |Used to identify the uniqueness of the request, the response will return it when passed. <li>If passed, it can't be duplicated, otherwise you will get "20006"</li>|
+|headers|**true** |object |Request headers|
+|> X-BAPI-TIMESTAMP|**true** |string |Current timestamp|
+|> X-BAPI-RECV-WINDOW|false |string |5000(ms) by default. Request will be rejected when not satisfy this rule: <i>Bybit_server_time - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit_server_time + 1000</i>|
+|> Referer|false |string |The referer identifier for API broker user|
 |op |**true** |string |Op type <li>`order.create`: create an order</li> <li>`order.amend`: amend an order</li> <li>`order.cancel`: cancel an order</li>|
 |args |false |array&ltobject&gt |Args array, support one item only for now <li>`order.create`: refer to [create order request](../../order/create-order#request-parameters)</li><li>`order.amend`: refer to [amend order request](../../order/amend-order#request-parameters)</li><li>`order.cancel`: refer to [cancel order request](../../order/cancel-order#request-parameters)</li> |
 
@@ -65,7 +69,7 @@ Unified Trading Account
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |reqId |string |<li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li>|
-|retCode |integer |<li>`0`: success</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li>|
+|retCode |integer |<li>`0`: success</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li>|
 |retMsg |string |<li>`OK`</li><li>`""`</li><li>Error message</li> |
 |op |string |Op type |
 |data |object |Business data, keep the same as `result` on rest api response <li>`order.create`: refer to [create order response](../../order/create-order#response-parameters)</li><li>`order.amend`: refer to [amend order response](../../order/amend-order#response-parameters)</li><li>`order.cancel`: refer to [cancel order response](../../order/cancel-order#response-parameters)</li> |
@@ -81,6 +85,11 @@ Unified Trading Account
 ```json
 {
     "reqId": "test-005",
+    "headers": {
+        "X-BAPI-TIMESTAMP": "1711001595207",
+        "X-BAPI-RECV-WINDOW": "8000",
+        "Referer": "bot-001" // for api broker
+    },
     "op": "order.create",
     "args": [
         {
