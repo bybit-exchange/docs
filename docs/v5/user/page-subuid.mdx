@@ -1,9 +1,9 @@
 ---
-title: Get Sub UID List (Limited)
-sidebar_label: Get Sub UID List (Limited)
-sidebar_position: 3
+title: Get Sub UID List (Unlimited)
+sidebar_label: Get Sub UID List (Unlimited)
+sidebar_position: 3.1
 ---
-Get at most 10k sub UID of master account. Use **master user's api key** **only**.
+This API is applicable to the client who has over 10k sub accounts. Use **master user's api key** **only**.
 
 :::tip
 The API key must have one of the below permissions in order to call this endpoint..
@@ -11,10 +11,13 @@ The API key must have one of the below permissions in order to call this endpoin
 :::
 
 ### HTTP Request
-GET `/v5/user/query-sub-members`
+GET `/v5/user/submembers`
 
 ### Request Parameters
-None
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|pageSize |false |string |Data size per page. Return up to 100 records per request|
+|nextCursor |false |string |Cursor. Use the `nextCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -22,10 +25,11 @@ None
 |subMembers |array |Object |
 |> uid |string |Sub user Id |
 |> username |string |Username|
-|> memberType |integer |`1`: normal sub account, `6`: custodial sub account |
+|> memberType |integer |`1`: standard sub account, `6`: custodial sub account |
 |> status |integer |The status of the user account<ul><li>`1`: normal</li><li>`2`: login banned</li><li>`4`: frozen </li></ul>|
-|> accountMode |integer |The account mode of the user account<ul><li>`1`: classic account</li><li>`2`: UMA</li><li>`3`: UTA </li></ul>|
+|> accountMode |integer |The account mode of the user account<ul><li>`1`: Classic Account</li><li>`3`: Unified Trading Account </li></ul>|
 |> remark |string |The remark |
+|nextCursor |string |The next page cursor value. "0" means no more pages|
 
 ### Request Example
 
@@ -33,7 +37,7 @@ None
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/user/query-sub-members HTTP/1.1
+GET /v5/user/submembers?pageSize=1 HTTP/1.1
 Host: api.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -45,13 +49,7 @@ X-BAPI-RECV-WINDOW: 5000
 <TabItem value="python" label="Python">
 
 ```python
-from pybit.unified_trading import HTTP
-session = HTTP(
-    testnet=True,
-    api_key="XXXXX",
-    api_secret="XXXXX",
-)
-print(session.get_sub_uid())
+
 ```
 
 </TabItem>
@@ -66,24 +64,17 @@ print(session.get_sub_uid())
     "result": {
         "subMembers": [
             {
-                "uid": "53888001",
-                "username": "xxx001",
+                "uid": "100475023",
+                "username": "BybitmcYERjAPmMU",
                 "memberType": 1,
-                "status": 1,
-                "remark": "test",
-                "accountMode": 3
-            },
-            {
-                "uid": "53888002",
-                "username": "xxx002",
-                "memberType": 6,
                 "status": 1,
                 "remark": "",
                 "accountMode": 1
             }
-        ]
+        ],
+        "nextCursor": "126671"
     },
     "retExtInfo": {},
-    "time": 1676430319452
+    "time": 1711695552772
 }
 ```
