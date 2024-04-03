@@ -1,22 +1,23 @@
 ---
-title: 查詢子帳號的充值紀錄 (鏈上)
-sidebar_label: 查詢子帳號的充值紀錄 (鏈上)
-sidebar_position: 13
+title: 查詢經紀商的子帳號充值紀錄
+sidebar_label: 查詢經紀商的子帳號充值紀錄
+sidebar_position: 3
 ---
+經紀商僅能通過**主帳號**的API key來查詢子帳號的充值紀錄
 
-僅能通過**主帳號**的API key來查詢子帳號的充值紀錄
+> API頻率: 300次/分
 
 :::tip
-* `endTime` - `startTime` 需要小於等於30天. 默認查詢最近30天的紀錄
+`endTime` - `startTime` 需要小於等於30天. 默認查詢最近30天的紀錄
 :::
 
 ### HTTP 請求
-GET `/v5/asset/deposit/query-sub-member-record`
+GET `/v5/broker/asset/query-sub-member-deposit-record`
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|subMemberId |**true** |string |子帳號 |
+|subMemberId |false |string |子帳號 |
 |coin |false |string |幣種 |
 |startTime |false |integer |開始時間戳 (毫秒) |
 |endTime |false |integer |結束時間戳 (毫秒) |
@@ -43,17 +44,13 @@ GET `/v5/asset/deposit/query-sub-member-record`
 |> depositType|integer|入金類型. `0`: 正常充值, `10`: 充值觸發每日限額, `20`: 異常充值|
 |nextPageCursor |string |游標，用於翻頁|
 
-<a href="/api-explorer/v5/asset/sub-deposit-record"><Button>運行實例 >></Button></a>
-
----
-
 ### 請求示例
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/asset/deposit/query-sub-member-record?coin=USDT&limit=1&subMemberId=592334 HTTP/1.1
+GET /v5/broker/asset/query-sub-member-deposit-record?coin=USDT&limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
@@ -65,17 +62,7 @@ X-BAPI-RECV-WINDOW: 5000
 <TabItem value="python" label="Python">
 
 ```python
-from pybit.unified_trading import HTTP
-session = HTTP(
-    testnet=True,
-    api_key="XXXXX",
-    api_secret="XXXXX",
-)
-print(session.get_sub_deposit_records(
-    coin="USDT",
-    limit=1,
-    subMemberId=592334,
-))
+
 ```
 
 </TabItem>
