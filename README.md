@@ -25,8 +25,6 @@ $ cd docs
 
 ```
 $ yarn  # install the dependencies
-$ yarn add docusaurus-plugin-openapi-docs
-$ yarn add docusaurus-theme-openapi-docs
 ```
 
 
