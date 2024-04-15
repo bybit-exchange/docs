@@ -132,6 +132,13 @@ Websocket : `wss://stream-demo.bybit.com`
 #### HTTP請求
 POST `/v5/account/demo-apply-money`
 
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|utaDemoApplyMoney|false|array ||
+|> coin|false|string|申請的幣種, 支持 `BTC`, `ETH`, `USDT`, `USDC`|
+|> amountStr|false|string|申請的金額, 每次請求最多支持申請如下金額 <li>`BTC`: "15"</li><li>`ETH`: "200"</li><li>`USDT`: "100000"</li><li>`USDC`: "100000"</li>|
+
 #### 請求示例
 ```http
 POST /v5/account/demo-apply-money HTTP/1.1
@@ -141,7 +148,17 @@ X-BAPI-API-KEY: XXXXXXX
 X-BAPI-TIMESTAMP: 1711420489915
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 2
 
-{}
+{
+    "utaDemoApplyMoney": [
+        {
+            "coin": "USDT",
+            "amountStr": "109"
+        },
+        {
+            "coin": "ETH",
+            "amountStr": "1"
+        }
+    ]
+}
 ```
