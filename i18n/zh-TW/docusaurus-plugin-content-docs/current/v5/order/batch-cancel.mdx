@@ -58,15 +58,15 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "category": "option",
+    "category": "spot",
     "request": [
         {
-            "symbol": "ETH-30DEC22-500-C",
-            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+            "symbol": "BTCUSDT",
+            "orderId": "1666800494330512128"
         },
         {
-            "symbol": "ETH-30DEC22-700-C",
-            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+            "symbol": "ATOMUSDT",
+            "orderLinkId": "1666800494330512129"
         }
     ]
 }
@@ -86,14 +86,12 @@ print(session.cancel_batch_order(
     category="option",
     request=[
         {
-            "category": "option",
-            "symbol": "ETH-30DEC22-500-C",
-            "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2"
+            "symbol": "BTCUSDT",
+            "orderId": "1666800494330512128"
         },
         {
-            "category": "option",
-            "symbol": "ETH-30DEC22-700-C",
-            "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52"
+            "symbol": "ATOMUSDT",
+            "orderLinkId": "1666800494330512129"
         }
     ]
 ))
@@ -142,12 +140,12 @@ const client = new RestClientV5({
 client
     .batchCancelOrders('option', [
         {
-            symbol: 'ETH-30DEC22-500-C',
-            orderId: 'b551f227-7059-4fb5-a6a6-699c04dbd2f2',
+            "symbol": "BTCUSDT",
+            "orderId": "1666800494330512128"
         },
         {
-            symbol: 'ETH-30DEC22-700-C',
-            orderId: 'fa6a595f-1a57-483f-b9d3-30e9c8235a52',
+            "symbol": "ATOMUSDT",
+            "orderLinkId": "1666800494330512129"
         },
     ])
     .then((response) => {
@@ -170,16 +168,16 @@ client
     "result": {
         "list": [
             {
-                "category": "option",
-                "symbol": "ETH-30DEC22-500-C",
-                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
-                "orderLinkId": "option-test-001"
+                "category": "spot",
+                "symbol": "BTCUSDT",
+                "orderId": "1666800494330512128",
+                "orderLinkId": "spot-btc-03"
             },
             {
-                "category": "option",
-                "symbol": "ETH-30DEC22-700-C",
-                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
-                "orderLinkId": "option-test-001"
+                "category": "spot",
+                "symbol": "ATOMUSDT",
+                "orderId": "",
+                "orderLinkId": "1666800494330512129"
             }
         ]
     },
@@ -190,11 +188,11 @@ client
                 "msg": "OK"
             },
             {
-                "code": 0,
-                "msg": "OK"
+                "code": 170213,
+                "msg": "Order does not exist."
             }
         ]
     },
-    "time": 1672223357252
+    "time": 1713434299047
 }
 ```

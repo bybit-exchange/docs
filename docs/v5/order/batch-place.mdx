@@ -93,31 +93,27 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "category": "option",
+    "category": "spot",
     "request": [
         {
-            "symbol": "ETH-30DEC22-500-C",
-            "orderType": "Limit",
+            "symbol": "BTCUSDT",
             "side": "Buy",
-            "qty": "1",
-            "price": null,
-            "orderIv": "6",
+            "orderType": "Limit",
+            "isLeverage": 0,
+            "qty": "0.05",
+            "price": "30000",
             "timeInForce": "GTC",
-            "orderLinkId": "option-test-001",
-            "mmp": false,
-            "reduceOnly": false
+            "orderLinkId": "spot-btc-03"
         },
         {
-            "symbol": "ETH-30DEC22-700-C",
-            "orderType": "Limit",
+            "symbol": "ATOMUSDT",
             "side": "Sell",
+            "orderType": "Limit",
+            "isLeverage": 0,
             "qty": "2",
-            "price": "700",
-            "iv": null,
+            "price": "12",
             "timeInForce": "GTC",
-            "orderLinkId": "option-test-001",
-            "mmp": false,
-            "reduceOnly": false
+            "orderLinkId": "spot-atom-03"
         }
     ]
 }
@@ -137,28 +133,24 @@ print(session.place_batch_order(
     category="option",
     request=[
         {
-            "category": "option",
-            "symbol": "ETH-30DEC22-500-C",
-            "orderType": "Limit",
+            "symbol": "BTCUSDT",
             "side": "Buy",
-            "qty": "1",
-            "orderIv": "6",
+            "orderType": "Limit",
+            "isLeverage": 0,
+            "qty": "0.05",
+            "price": "30000",
             "timeInForce": "GTC",
-            "orderLinkId": "option-test-001",
-            "mmp": False,
-            "reduceOnly": False
+            "orderLinkId": "spot-btc-03"
         },
         {
-            "category": "option",
-            "symbol": "ETH-30DEC22-700-C",
-            "orderType": "Limit",
+            "symbol": "ATOMUSDT",
             "side": "Sell",
+            "orderType": "Limit",
+            "isLeverage": 0,
             "qty": "2",
-            "price": "700",
+            "price": "12",
             "timeInForce": "GTC",
-            "orderLinkId": "option-test-001",
-            "mmp": False,
-            "reduceOnly": False
+            "orderLinkId": "spot-atom-03"
         }
     ]
 ))
@@ -259,26 +251,24 @@ const client = new RestClientV5({
 client
     .batchSubmitOrders('option', [
         {
-            symbol: 'ETH-30DEC22-500-C',
-            orderType: 'Limit',
-            side: 'Buy',
-            qty: '1',
-            orderIv: '6',
-            timeInForce: 'GTC',
-            orderLinkId: 'option-test-001',
-            mmp: false,
-            reduceOnly: false,
+            "symbol": "BTCUSDT",
+            "side": "Buy",
+            "orderType": "Limit",
+            "isLeverage": 0,
+            "qty": "0.05",
+            "price": "30000",
+            "timeInForce": "GTC",
+            "orderLinkId": "spot-btc-03"
         },
         {
-            symbol: 'ETH-30DEC22-700-C',
-            orderType: 'Limit',
-            side: 'Sell',
-            qty: '2',
-            price: '700',
-            timeInForce: 'GTC',
-            orderLinkId: 'option-test-001',
-            mmp: false,
-            reduceOnly: false,
+            "symbol": "ATOMUSDT",
+            "side": "Sell",
+            "orderType": "Limit",
+            "isLeverage": 0,
+            "qty": "2",
+            "price": "12",
+            "timeInForce": "GTC",
+            "orderLinkId": "spot-atom-03"
         },
     ])
         .then((response) => {
@@ -301,18 +291,18 @@ client
     "result": {
         "list": [
             {
-                "category": "option",
-                "symbol": "ETH-30DEC22-500-C",
-                "orderId": "b551f227-7059-4fb5-a6a6-699c04dbd2f2",
-                "orderLinkId": "option-test-001",
-                "createAt": "1672222047683"
+                "category": "spot",
+                "symbol": "BTCUSDT",
+                "orderId": "1666800494330512128",
+                "orderLinkId": "spot-btc-03",
+                "createAt": "1713434102752"
             },
             {
-                "category": "option",
-                "symbol": "ETH-30DEC22-500-C",
-                "orderId": "fa6a595f-1a57-483f-b9d3-30e9c8235a52",
-                "orderLinkId": "option-test-001",
-                "createAt": "1672222047683"
+                "category": "spot",
+                "symbol": "ATOMUSDT",
+                "orderId": "1666800494330512129",
+                "orderLinkId": "spot-atom-03",
+                "createAt": "1713434102752"
             }
         ]
     },
@@ -328,6 +318,6 @@ client
             }
         ]
     },
-    "time": 1672222047684
+    "time": 1713434102753
 }
 ```
