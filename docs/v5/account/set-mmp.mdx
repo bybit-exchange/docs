@@ -26,7 +26,13 @@ After processed, the default settings are as below table:
 
 ## Applicable
 Effective for **options** only. When you place an `option` order, set `mmp`=true, which means you mark this order as a mmp order.
+
+## Some points to note
+1. Only maker order qty and delta will be counted into `qtyLimit` and `deltaLimit`.
+2. `qty_limit` is the sum of absolute value of qty of each trade executions. `delta_limit` is the absolute value of the sum of qty*delta. If any of these reaches or exceeds the limit amount, the account's market maker protection will be triggered.
 :::
+
+
 
 ### HTTP Request
 POST `/v5/account/mmp-modify`
