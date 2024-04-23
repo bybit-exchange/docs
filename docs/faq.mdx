@@ -53,3 +53,10 @@ To get testnet funds, just go to master account asset page to request.
 Market orders are (in the backend) just limit orders submitted at a worse price. This is to reduce the chance of a flash crash or a similar event, where a trader might submit a market order which executes at a significantly worse price than they expected it to. The price returned here is that internal limit order price. This "inaccurate" price is returned because the place order endpoint is asynchronous, meaning the response is returned to you before the order is actually executed.
 
 If you want the true execution price (`execPrice`) you should subscribe to the [execution websocket](https://bybit-exchange.github.io/docs/v5/websocket/private/execution).
+
+### How can I process WebSocket `snapshot` and `delta` messages?
+Please refer to the orderbook topic's [documentation](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook).
+
+Note that if you're using pybit, it handles these messages for you and always delivers a complete orderbook. Working code examples:
+* [Python](https://github.com/bybit-exchange/pybit/blob/867ee0f001bf7a2afc17113a434a7b1dad235674/pybit/_websocket_stream.py#L361): `_process_delta_orderbook()` method within pybit (the Python SDK)
+* [Node.js](https://www.npmjs.com/package/orderbooks): `orderbooks`, a library made by the creator of bybit-api (the Node.js SDK)
