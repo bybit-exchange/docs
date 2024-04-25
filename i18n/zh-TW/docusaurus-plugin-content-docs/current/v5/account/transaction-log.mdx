@@ -1,9 +1,9 @@
 ---
 title: 交易日誌
-sidebar_label: 交易日誌 (2年)
+sidebar_label: 交易日誌 (統一帳戶)
 sidebar_position: 9
 ---
-整個賬戶的交易日誌。
+整個賬戶統一錢包裡的交易日誌, 支持最多查詢過去2年的數據
 
 ### HTTP 請求
 GET `/v5/account/transaction-log`
@@ -15,8 +15,8 @@ GET `/v5/account/transaction-log`
 |[category](../enum#category) |false |string |交易產品類型. `spot`：現貨；`linear`：USDT永續, USDC永續, USDC交割；`option`：期權|
 |currency |false |string |貨幣|
 |baseCoin |false |string |交易幣種. 例如： BTCUSDT 的 baseCoin 是 BTC|
-|[type](../enum#type) |false |string |交易日誌的類型 |
-|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|[type](../enum#typeuta-translog) |false |string |交易日誌的類型 |
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &le; 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量, 最大50. 默認每頁20條|
 |cursor	|false |string |游標，用於翻頁|
@@ -31,7 +31,7 @@ GET `/v5/account/transaction-log`
 |> side |string |方向. `Buy`,`Sell`,`None`|
 |> transactionTime	|string |交易時間戳（毫秒）|
 |> [type](../enum#type) |string |類型 |
-|> qty	|string	|數量. 特別地, 對於成交的流水來說, 這裡的qty表示每筆成交的數量, 不帶方向|
+|> qty	|string	|數量. <li>現貨: 正的qty表示該幣數量增加, 負的qty表示該幣數量減少</li><li>期貨: 對於成交的流水來說, 這裡的qty表示每筆成交的數量, 不帶方向</li>|
 |> size |string |倉位. 特別地, 對於成交的流水來說, 這裡的size表示成交後的倉位大小, 帶有方向, 比如空倉, 則有"-"|
 |> currency |string |USDC、USDT、BTC、ETH|
 |> tradePrice |string |交易價格|

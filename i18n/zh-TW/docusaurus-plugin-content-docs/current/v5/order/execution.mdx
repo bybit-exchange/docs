@@ -30,7 +30,7 @@ GET `/v5/execution/list`
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單id. 經典帳戶不支持該字段查詢 |
 |baseCoin |false |string |交易幣種. 統一帳戶(反向)和經典帳戶不支持該字段查詢|
-|startTime |false |integer |開始時間戳 (毫秒) <ul><li>經典帳戶的現貨暫不適用</li><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>經典帳戶的現貨: 支持時間範圍是180天</li><li>其他:<br/>startTime 和 endTime都不傳入, 則默認返回最近7天的數據;<br/>startTime 和 endTime都傳入的話, 則確保endTime - startTime &le; 7天;<br/>若只傳startTime，則查詢startTime和startTime+7天的數據;<br/>若只傳endTime，則查詢endTime-7天和endTime的數據;</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |[execType](../enum#exectype) |false |string |執行類型. _經典帳戶現貨交易無效_|
 |limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|

@@ -1,9 +1,9 @@
 ---
 title: Get Transaction Log
-sidebar_label: Get Transaction Log (2 years)
+sidebar_label: Get Transaction Log (UTA)
 sidebar_position: 9
 ---
-Query transaction logs in Unified account.
+Query transaction logs in Unified account, it supports up to 2 years data
 
 ### HTTP Request
 GET `/v5/account/transaction-log`
@@ -15,7 +15,7 @@ GET `/v5/account/transaction-log`
 |[category](../enum#category) |false |string |Product type. `spot`,`linear`,`option`|
 |currency |false |string |Currency |
 |baseCoin |false |string |BaseCoin. e.g., BTC of BTCPERP|
-|[type](../enum#type) |false |string |Types of transaction logs|
+|[type](../enum#typeuta-translog) |false |string |Types of transaction logs|
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false	|integer |The end timestamp (ms) |
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
@@ -31,7 +31,7 @@ GET `/v5/account/transaction-log`
 |> side |string |Side. `Buy`,`Sell`,`None` |
 |> transactionTime |string |Transaction timestamp (ms)|
 |> [type](../enum#type) |string |Type |
-|> qty	|string	|Quantity. It is the quantity for each trade entry and it does not have direction |
+|> qty	|string	|Quantity <li>Spot: the negative means the qty of this currency is decreased, the positive means the qty of this currency is increased</li><li>Perps & Futures: it is the quantity for each trade entry and it does not have direction</li> |
 |> size |string |Size. The rest position size after the trade is executed, and it has direction, i.e., short with "-"|
 |> currency |string |USDC、USDT、BTC、ETH |
 |> tradePrice |string |Trade price |
