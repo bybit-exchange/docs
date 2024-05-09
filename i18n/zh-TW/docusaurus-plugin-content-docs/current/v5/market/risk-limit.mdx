@@ -11,10 +11,6 @@ sidebar_position: 13
 什麼是風險限額？<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164">風險限額(USDT合約)</a>
 :::
 
-:::info
-當category=`linear`, 每次請求返回30個symbol的風險限額數據, 請通過cursor來實現翻頁查詢下一組30個symbol的數據
-:::
-
 ### HTTP請求
 GET `/v5/market/risk-limit`
 
@@ -23,7 +19,6 @@ GET `/v5/market/risk-limit`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型. `linear`,`inverse` |
 |symbol |false |string |合約名稱|
-|cursor |false |string |游標，用於翻頁|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -37,7 +32,6 @@ GET `/v5/market/risk-limit`
 |> initialMargin |number |初始保證金率 |
 |> isLowestRisk |integer |是否是最低風險限額. `1`: true, `0`: false |
 |> maxLeverage |string |該風險限額允許的最大槓桿 |
-|nextPageCursor |string |下一頁游標, 配合`cursor`使用 |
 
 <a href="/api-explorer/v5/market/risk-limit"><Button>運行實例 >></Button></a>
 
