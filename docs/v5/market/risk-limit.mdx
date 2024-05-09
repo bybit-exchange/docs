@@ -7,6 +7,10 @@ sidebar_position: 13
 Query for the <a href="https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-Futures">risk limit</a>.
 > **Covers: USDT perpetual / USDC contract / Inverse contract**
 
+:::info
+category=`linear` returns data set of 30 symbols each request, please use cursor to get next data set. 
+:::
+
 ### HTTP Request
 GET `/v5/market/risk-limit`
 
@@ -15,6 +19,7 @@ GET `/v5/market/risk-limit`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `linear`,`inverse` |
 |symbol |false |string |Symbol name|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -28,6 +33,7 @@ GET `/v5/market/risk-limit`
 |> initialMargin |number |Initial margin rate |
 |> isLowestRisk |integer |`1`: true, `0`: false |
 |> maxLeverage |string |Allowed max leverage |
+|nextPageCursor |string |Refer to the `cursor` request parameter |
 
 <a href="/api-explorer/v5/market/risk-limit"><Button>RUN >></Button></a>
 
