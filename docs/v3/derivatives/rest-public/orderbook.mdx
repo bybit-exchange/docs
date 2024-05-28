@@ -29,6 +29,8 @@ GET `/derivatives/v3/public/order-book/L2`
 |a |string |Ask. Order by price asc |
 |ts |integer |The timestamp(ms) that system generates the data |
 |u |integer |Update id, is always in sequence |
+|seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li><li>Option does not have this field currently</li> |
+|cts |integer |The timestamp from the match engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) _`linear`, `inverse` have this field_|
 
 ### Request Example
 
@@ -62,32 +64,26 @@ Host: api.bybit.com​
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-    "s": "BTCPERP",
-    "b": [
-        [
-            "16818", // price
-            "0.156" // qty
+        "s": "BTCUSDT",
+        "b": [
+            [
+                "68749.6",
+                "40.381"
+            ]
         ],
-        [
-            "16818.5",
-            "0.183"
-        ]
+        "a": [
+            [
+                "68755.1",
+                "67.505"
+            ]
         ],
-    "a": [
-        [
-            "16819",
-            "0.454"
-        ],
-        [
-            "16819.5",
-            "0.054"
-        ]
-    ],
-    "ts": 1671969122791,
-    "u": 6404345
-},
+        "ts": 1716863768890,
+        "u": 1109539,
+        "seq": 9239580568,
+        "cts": 1716863768873
+    },
     "retExtInfo": {},
-    "time": 1671969122869
+    "time": 1716863769891
 }
 ```
 </TabItem>
