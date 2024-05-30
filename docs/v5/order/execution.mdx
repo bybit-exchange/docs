@@ -27,10 +27,10 @@ GET `/v5/execution/list`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul> |
-|symbol |false |string |Symbol name|
+|symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID. _Classic account does not support this param_ |
-|baseCoin |false |string |Base coin. _Unified account - inverse and Classic account do not support this param_ |
+|baseCoin |false |string |Base coin, uppercase only. _Unified account - inverse and Classic account do not support this param_ |
 |startTime |false |integer |The start timestamp (ms) <ul><li>Classic Spot: supports the interval up to 180 days</li><li>Others:<br/>startTime and endTime are not passed, return 7 days by default;<br/>Only startTime is passed, return range between startTime and startTime+7 days;<br/>Only endTime is passed, return range between endTime-7 days and endTime;<br/>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type. _Classic `spot` is not supported_|
