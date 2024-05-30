@@ -26,9 +26,9 @@ GET `/v5/order/realtime`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul>|
-|symbol |false |string |Symbol name. For **linear**, either `symbol`, `baseCoin`, `settleCoin` is **required** |
-|baseCoin |false |string |Base coin <li>Supports `linear`, `inverse` & `option`</li><li>`option`: it returns all option open orders by default</li>|
-|settleCoin |false |string |Settle coin <ul><li><b>linear</b>: either `symbol`, `baseCoin` or `settleCoin` is **required**</li><li>`spot`: not supported</li></ul> |
+|symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only. For **linear**, either `symbol`, `baseCoin`, `settleCoin` is **required** |
+|baseCoin |false |string |Base coin, uppercase only <li>Supports `linear`, `inverse` & `option`</li><li>`option`: it returns all option open orders by default</li>|
+|settleCoin |false |string |Settle coin, uppercase only <ul><li><b>linear</b>: either `symbol`, `baseCoin` or `settleCoin` is **required**</li><li>`spot`: not supported</li></ul> |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
 |openOnly |false |integer |<ul><li>Unified account & Classic account: `0`(default) - query open orders (e.g., New, PartiallyFilled) **only**</li><li>Unified account (spot / linear / option): `1`, Unified account(inverse) & Classic account(linear / inverse): `2`: return a maximum of recent 500 closed status records are kept under each account (e.g., Cancelled, Rejected, Filled orders). <i>If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</i></li><li>`openOnly` param will be ignored when query by _orderId_ or _orderLinkId_</li><li>Classic `spot`: not supported</li></ul>|
