@@ -80,6 +80,8 @@ This command generates static content into the `build` directory and can be serv
 
 ### Deployment
 
+Ensure you have set the `GIT_USER` environment variable before trying to deploy.
+
 ```shell
 yarn deploy
 ```
