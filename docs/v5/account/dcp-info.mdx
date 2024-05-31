@@ -1,0 +1,77 @@
+---
+title: Get DCP Info
+sidebar_label: Get DCP Info
+sidebar_position: 8.1
+---
+:::info
+Testnet only for now
+:::
+
+Query the DCP configuration. Before calling this API, make sure you have applied configuring dcp for your main account via INS manager. 
+
+* Once the main uid is configured on the backend, all main and its sub accounts will be enabled with DCP feature. And the configuration 
+stays the same across all the accounts
+
+* Only main uid is able to get the configuration info when calling this api if the main account ever apply the configure via INS manager
+
+* Only configured product will return the corresponding params, non-configured product will not return data.
+
+* Please note even you can get dcp info with your classic account, but dcp will not be triggered on the trading side
+
+* Main account that not configured or sub accounts will get empty array when call this API
+
+:::info
+* only applicable to Unified Trading Account
+* only support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options
+:::
+
+### HTTP Request
+GET `/v5/account/query-dcp-info`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|dcpInfos |array&lt;object&gt; |DCP config for each product |
+|> product |string |`SPOT`, `DERIVATIVES`, `OPTIONS`. If your account is not enabled with "SPOT" dcp, then the response will not include this product info|
+|> dcpStatus |string |[Disconnected-CancelAll-Prevention](../order/dcp) status: `ON`|
+|> timeWindow |string |DCP trigger time window which user pre-set. Between [3, 300] seconds, default: 10 sec|
+
+### Request Example
+```http
+GET /v5/account/query-dcp-info HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1717065530867
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+// it means my account enables Spot and Deriviatvies on the backend
+// Options is not enabled with DCP
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "dcpInfos": [
+            {
+                "product": "SPOT",
+                "dcpStatus": "ON",
+                "timeWindow": "10"
+            },
+            {
+                "product": "DERIVATIVES",
+                "dcpStatus": "ON",
+                "timeWindow": "10"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1717065531697
+}
+```
