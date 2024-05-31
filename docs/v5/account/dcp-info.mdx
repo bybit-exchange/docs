@@ -7,21 +7,17 @@ sidebar_position: 8.1
 Testnet only for now
 :::
 
-Query the DCP configuration. Before calling this API, make sure you have applied configuring dcp for your main account via INS manager. 
+Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options. Before calling the interface, please make sure you have applied for the account DCP configuration with your account manager
 
-* Once the main uid is configured on the backend, all main and its sub accounts will be enabled with DCP feature. And the configuration 
-stays the same across all the accounts
+* Only the main account is supported to activate DCP in the backend. Once activated, all accounts of the main and sub will take effect, and the configuration information will be the same.
 
-* Only main uid is able to get the configuration info when calling this api if the main account ever apply the configure via INS manager
+* Only the configured main account can query information from this API. Calling this API by an unconfigured main account or any sub-account always returns empty.
 
-* Only configured product will return the corresponding params, non-configured product will not return data.
+* When configuring, if only some products are selected, such as only spot are enabled, the contract and options data will not be returned.
 
-* Please note even you can get dcp info with your classic account, but dcp will not be triggered on the trading side
-
-* Main account that not configured or sub accounts will get empty array when call this API
+* If the classic account uid is submitted to apply, the configuration can be successful, and the information can be queried, but the dcp on the trading side is invalid for the classic account, that is, the classic account cannot trigger the dcp function when the session is disconnected, but below it The UTA sub-account is still active
 
 :::info
-* only applicable to Unified Trading Account
 * only support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options
 :::
 

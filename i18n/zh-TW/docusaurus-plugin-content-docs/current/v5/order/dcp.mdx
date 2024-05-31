@@ -25,6 +25,13 @@ API請求發送成功後，系統需要一定的時間才能生效。建議10秒
 * 您可以使用該[接口](/v5/account/account-info)來查詢當前DCP配置
 * 您的私有連接**必須**訂閱[斷線保護](../websocket/private/dcp), 才能確保DCP功能被觸發
 
+## 6月4日的變更
+* 僅母帳戶支持調用該接口
+* 新增入参`product`, 可選值是 "DERIVATIVES", "SPOT", "OPTIONS"(默認)
+* 切換到[查詢DCP配置](../account/dcp-info)接口來查詢您帳戶目前的DCP配置信息
+* 一旦母帳戶成功配置, 所有的子帳戶也自動激活DCP功能
+* 僅UTA帳戶在交易側能觸發DCP且僅適用於USDT/USDC永續, USDC交割, 現貨和期權, 經典帳戶無法實際觸發DCP
+
 ### HTTP請求
 POST `/v5/order/disconnected-cancel-all`
 
