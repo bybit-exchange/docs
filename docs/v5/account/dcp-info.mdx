@@ -7,18 +7,15 @@ sidebar_position: 8.1
 Testnet only for now
 :::
 
-Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options. Before calling the interface, please make sure you have applied for the account DCP configuration with your account manager
+Query the DCP configuration of the account's contracts (USDT perpetual, USDC perpetual and USDC Futures) / spot / options. Before calling the interface, please make sure you have applied for the UTA account DCP configuration with your account manager
 
-* Only the main account is supported to activate DCP in the backend. Once activated, all accounts of the main and sub will take effect, and the configuration information will be the same.
+* Only the configured main / sub account can query information from this API. Calling this API by an account always returns empty.
 
-* Only the configured main account can query information from this API. Calling this API by an unconfigured main account or any sub-account always returns empty.
-
-* When configuring, if only some products are selected, such as only spot are enabled, the contract and options data will not be returned.
-
-* If the classic account uid is submitted to apply, the configuration can be successful, and the information can be queried, but the dcp on the trading side is invalid for the classic account, that is, the classic account cannot trigger the dcp function when the session is disconnected, but below it The UTA sub-account is still active
+* If you only request to activate Spot trading for DCP, the contract and options data will not be returned.
 
 :::info
-* only support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options
+* support linear contract (USDT, USDC Perp & USDC Futures) / Spot / Options only
+* Unified account only
 :::
 
 ### HTTP Request
@@ -31,7 +28,7 @@ None
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |dcpInfos |array&lt;object&gt; |DCP config for each product |
-|> product |string |`SPOT`, `DERIVATIVES`, `OPTIONS`. If your account is not enabled with "SPOT" dcp, then the response will not include this product info|
+|> product |string |`SPOT`, `DERIVATIVES`, `OPTIONS`|
 |> dcpStatus |string |[Disconnected-CancelAll-Prevention](../order/dcp) status: `ON`|
 |> timeWindow |string |DCP trigger time window which user pre-set. Between [3, 300] seconds, default: 10 sec|
 
