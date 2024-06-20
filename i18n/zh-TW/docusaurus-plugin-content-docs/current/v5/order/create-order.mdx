@@ -64,7 +64,7 @@ POST `/v5/order/create`
 |side |**true** |string |`Buy`, `Sell`|
 |[orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
 |qty |**true** |string |訂單數量 <ul><li>統一帳戶<ul><li>現貨: 可以通過設置`marketUnit`來表示市價單qty的單位, 市價買單默認是`quoteCoin`, 市價賣單默認是`baseCoin`</li><li>期貨和期權: 總是以base coin作為qty的單位</li></ul></li><li>經典帳戶<ul><li>現貨: 市價買單的qty總是以quote coin為單位, 其他情況下, qty都是以base coin為單位</li><li>期貨: qty總是以base coin為單位</li></ul></li><li>期貨: 如果傳入`qty`="0"以及`reduceOnly`="true", 則可以平掉對應合約可達單個訂單允許的最大qty的倉位, 參照[查詢可交易產品的規格信息](../market/instrument#)接口裡的字段`maxMktOrderQty`或者`maxOrderQty`</li></ul>|
-|marketUnit |false |string |**統一帳戶現貨交易**創建市價單時給入參`qty`指定的單位. 当前不支持止盈/止损和条件单<li>`baseCoin`: 比如, 買BTCUSDT, 則"qty"的單位是BTC</li><li>`quoteCoin`: 比如, 賣BTCUSDT, 則"qty"的單位是USDT</li>|
+|marketUnit |false |string |**統一帳戶現貨交易**創建市價單時給入參`qty`指定的單位, 支持orderFilter=Order, tpslOrder 和 StopOrder<li>`baseCoin`: 比如, 買BTCUSDT, 則"qty"的單位是BTC</li><li>`quoteCoin`: 比如, 賣BTCUSDT, 則"qty"的單位是USDT</li>|
 |price |false |string |訂單價格. <ul><li>市價單將會忽視該字段</li><li>請通過該[接口](../market/instrument#response-parameters)確認最低價格和精度要求</li><li>如果有持倉, 確保價格優於強平價格</li></ul>|
 |triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>對`linear`和`inverse`有效|
 |orderFilter |false |string |指定訂單品種. `Order`: 普通單,`tpslOrder`: 止盈止損單,`StopOrder`: 條件單. 若不傳, 默認`Order`<br/>僅對現貨有效|
