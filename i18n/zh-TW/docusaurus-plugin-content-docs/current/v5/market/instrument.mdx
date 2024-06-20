@@ -23,7 +23,7 @@ GET `/v5/market/instruments-info`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |<b>true</b> |string |產品類型. `spot`,`linear`,`inverse`,`option`|
 |symbol |false |string |合約名稱|
-|[status](../enum#status) |false |string |交易對狀態篩選 <ul><li>現貨/期貨 僅有`Trading`狀態</li></ul>|
+|[status](../enum#status) |false |string |交易對狀態篩選 <ul><li>現貨 僅有`Trading`狀態</li><li>status=PreLaunch&category=linear, 可以查詢到盤前交易的永續合約</li></ul>|
 |baseCoin |false |string |交易貨幣. 僅對期貨/期權有效 <li>對於期權, 默認返回baseCoin為BTC的</li>|
 |limit |false |integer |每頁數量限制. [`1`, `1000`]. 默認: `500`|
 |cursor |false |string |游標，用於翻頁|
@@ -133,6 +133,39 @@ GET `/v5/market/instruments-info`
         </tr>
         <tr>
             <td>> lowerFundingRate</td><td>string</td><td>資金費率下限 </td>
+        </tr>
+        <tr>
+            <td>> isPreListing</td><td>boolean</td><td><li>該合約是否為盤前合約</li><li>當盤前合約轉為正式合約後, 值將變成false</li></td>
+        </tr>
+        <tr>
+            <td>> preListingInfo</td><td>object</td><td><li>如果isPreListing=false, preListingInfo=null</li><li>如果isPreListing=true, preListingInfo是object</li> </td>
+        </tr>
+        <tr>
+            <td>>> <a href="../enum#curauctionphase">curAuctionPhase</a></td><td>string</td><td>當前的盤前階段</td>
+        </tr>
+        <tr>
+            <td>>> phases</td><td>array&lt;object&gt;</td><td>每個階段的時間信息</td>
+        </tr>
+         <tr>
+            <td>>>> <a href="../enum#curauctionphase">phase</a></td><td>string</td><td>盤前交易階段</td>
+        </tr>
+         <tr>
+            <td>>>> startTime</td><td>string</td><td>該階段的開始時間戳(毫秒)</td>
+        </tr>
+        <tr>
+            <td>>>> endTime</td><td>string</td><td>該階段的結束時間戳(毫秒)</td>
+        </tr>
+         <tr>
+            <td>>> auctionFeeInfo</td><td>object</td><td>盤前交易手續費率信息</td>
+        </tr>
+         <tr>
+            <td>>>> auctionFeeRate</td><td>string</td><td>集合競價期間的手續費率 <li>目前, 僅在連續競價期間才會產生手續費</li></td>
+        </tr>
+         <tr>
+            <td>>>> takerFeeRate</td><td>string</td><td>連續競價期間的吃單成交手續費率</td>
+        </tr>
+         <tr>
+            <td>>>> makerFeeRate</td><td>string</td><td>連續競價期間的掛單成交手續費率</td>
         </tr>
     </table>
 </TabItem>

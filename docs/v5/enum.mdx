@@ -238,6 +238,7 @@ _closed status_
 * `EC_CancelReplaceOrder`
 * `EC_InvalidSymbolStatus`
 * `EC_CancelForNoFullFill`
+* `EC_InCallAuctionStatus`&emsp;used for pre-market order operation, e.g., during 2nd phase of call auction, cancel order is not allowed, when the cancel request is failed to be rejected by trading server, the request will be rejected by matching box finally
 
 ### accountType
 Check the value of <a href="#unifiedmarginstatus">`unifiedMarginStatus`</a> to see if you're on the Unified Trading Account or the classic account.
@@ -331,6 +332,26 @@ _Options:_
 * `Trading`
 * `Delivering`
 * `Closed`
+
+### curAuctionPhase
+* `NotStarted`&emsp;Pre-market trading is not started
+* `Finished`&emsp;Pre-market trading is finished
+    * After the auction, if the pre-market contract fails to enter continues trading phase, it will be delisted and phase="Finished"
+    * After the continuous trading, if the pre-market contract fails to be converted to official contract, it will be delisted and phase="Finished"
+* `CallAuction`&emsp;Auction phase of pre-market trading
+    * only timeInForce=GTC, orderType=Limit order is allowed to submit
+    * TP/SL are not supported; Conditional orders are not supported
+    * cannot **modify** the order at this stage
+    * order price range: [[preOpenPrice](../v5/market/tickers) x 0.5, [maxPrice](../v5/market/instrument)]
+* `CallAuctionNoCancel`&emsp;Auction no cancel phase of pre-market trading
+    * only timeInForce=GTC, orderType=Limit order is allowed to submit
+    * TP/SL are not supported; Conditional orders are not supported
+    * cannot **modify and cancel** the order at this stage
+    * order price range: Buy [[lastPrice](../v5/market/tickers) x 0.5, [markPrice](../v5/market/tickers) x 1.1], Sell [[markPrice](../v5/market/tickers) x 0.9, [maxPrice](../v5/market/instrument)]
+* `CrossMatching`&emsp;cross matching phase
+    * cannot **create, modify and cancel** the order at this stage
+* `ContinuousTrading`&emsp;Continuous trading phase
+    * There is no restriction to create, amend, cancel orders
 
 ### marginTrading
 * `none`&emsp;Regardless of normal account or UTA account, this trading pair does not support margin trading
