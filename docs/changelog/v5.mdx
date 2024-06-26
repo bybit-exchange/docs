@@ -1,6 +1,29 @@
 ---
 title: V5
 ---
+## 2024-06-27
+### REST API
+- [Get Instruments Info](../v5/market/instrument) [UPDATE]
+    - Pre-market contract: add new response fields `isPreListing`, `preListingInfo`, `curAuctionPhase`, `phases`, `startTime`, `endTime`, `auctionFeeInfo`, `auctionFeeRate`, `takerFeeRate`, `makerFeeRate`
+    - Request parameter `status` supports `Closed`, `Delivering`, `PreLaunch` for category="inverse" and "linear"
+    - When category=linear&status=PreLaunch, you can get pre-market perpetual
+
+- [Get Tickers](../v5/market/tickers) [UPDATE]
+    - Pre-market contract: add new response fields  `preOpenPrice`, `preQty`, `curPreListingPhase`
+
+- New error codes related to pre-market perpetual trading
+    - `110095`: You cannot create, modify or cancel Pre-Market Perpetual orders during the Call Auction.
+    - `110096`: Pre-Market Perpetual Trading does not support Portfolio Margin mode.
+    - `110097`: Non-UTA users cannot access Pre-Market Perpetual Trading. To place, modify or cancel Pre-Market Perpetual orders, please upgrade your Standard Account to UTA.
+    - `110098`: Only Good-Till-Canceled (GTC) orders are supported during Call Auction.
+    - `110099`: You cannot create TP/SL orders during the Call Auction for Pre-Market Perpetuals.
+    - `110100`: You cannot place, modify, or cancel Pre-Market Perpetual orders when you are in Demo Trading.
+    - `3777029`: You currently have orders for pre-market trading that can’t be bind UIDs
+
+### Websocket API
+- [Tickers](../v5/websocket/public/ticker) [UPDATE]
+    - Pre-market contract: add new response fields  `preOpenPrice`, `preQty`, `curPreListingPhase`
+
 ## 2024-06-20
 ### REST API
 - [Place Order](../v5/order/create-order) [UPDATE]
