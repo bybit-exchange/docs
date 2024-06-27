@@ -233,6 +233,7 @@ _終態_
 * `EC_CancelReplaceOrder`
 * `EC_InvalidSymbolStatus`
 * `EC_CancelForNoFullFill`
+* `EC_InCallAuctionStatus`&emsp;用於市前訂單操作，例如集合競價第二階段不允許撤單，當交易服務沒有成功攔截撤單請求時，該請求最終會被撮合服務拒絕
 
 ### accountType
 #### 經典帳戶
@@ -321,6 +322,27 @@ _期權:_
 * `Trading`&emsp;線上可交易
 * `Delivering`&emsp;交割中
 * `Closed`&emsp;已下架
+
+### curAuctionPhase
+* `NotStarted`&emsp;盤前交易未開始
+* `Finished`&emsp;盤前交易已結束
+    * 當盤前合約最終無法轉為正式合約, 它將會被下架且phase="Finished"
+* `CallAuction`&emsp;集合競價第一階段
+    * 僅支持timeInForce=GTC, orderType=Limit的訂單
+    * 不支持設置止盈止損; 不支持掛條件單
+    * 該階段不支持改單
+    * 訂單價格區間: [[preOpenPrice](../v5/market/tickers) x 0.5, [maxPrice](../v5/market/instrument)]
+* `CallAuctionNoCancel`&emsp;集合競價第二階段
+    * 僅支持timeInForce=GTC, orderType=Limit的訂單
+    * 不支持設置止盈止損; 不支持掛條件單
+    * 該階段不支持改單和撤單
+    * 訂單價格區間: 買單 [[lastPrice](../v5/market/tickers) x 0.5, [markPrice](../v5/market/tickers) x 1.1], 賣單 [[markPrice](../v5/market/tickers) x 0.9, [maxPrice](../v5/market/instrument)]
+* `CrossMatching`&emsp;集合競價第三階段 - 撮合盤前交易
+    * 該階段不支持掛單, 改單和撤單
+    * 該階段會產生k線數據
+* `ContinuousTrading`&emsp;連續競價階段
+    * 該階段對訂單行為沒有限制
+    * 該階段會產生訂單簿、最近成交數據
 
 ### marginTrading
 * `none`&emsp;不管是經典帳戶還是統一帳戶, 該交易對都不支持槓桿交易

@@ -20,7 +20,7 @@ GET `/v5/market/instruments-info`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`,`option`|
 |[symbol](../enum#symbol) |false |string |Symbol name, like `BTCUSDT`, uppercase only|
-|[status](../enum#status) |false |string |Symbol status filter <ul><li>spot/linear/inverse has `Trading` only</li></ul>|
+|[status](../enum#status) |false |string |Symbol status filter <ul><li>spot has `Trading` only</li><li>`PreLaunch`: when category=linear&status=PreLaunch, it returns pre-market perpetual contract</li></ul>|
 |baseCoin |false |string |Base coin, uppercase only <li>Apply to`linear`,`inverse`,`option` **only**</li><li>`option`: it returns BTC by default</li> |
 |limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: `500`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
@@ -130,6 +130,39 @@ GET `/v5/market/instruments-info`
         </tr>
         <tr>
             <td>> lowerFundingRate</td><td>string</td><td>Lower limit of funding date</td>
+        </tr>
+        <tr>
+            <td>> isPreListing</td><td>boolean</td><td><li>Whether the contract is a pre-market contract</li><li>When the pre-market contract is converted to official contract, it will be false</li>  </td>
+        </tr>
+        <tr>
+            <td>> preListingInfo</td><td>object</td><td><li>If isPreListing=false, preListingInfo=null</li><li>If isPreListing=true, preListingInfo is an object</li> </td>
+        </tr>
+        <tr>
+            <td>>> <a href="../enum#curauctionphase">curAuctionPhase</a></td><td>string</td><td>The current auction phase</td>
+        </tr>
+        <tr>
+            <td>>> phases</td><td>array&lt;object&gt;</td><td>Each phase time info</td>
+        </tr>
+         <tr>
+            <td>>>> <a href="../enum#curauctionphase">phase</a></td><td>string</td><td>pre-market trading phase</td>
+        </tr>
+         <tr>
+            <td>>>> startTime</td><td>string</td><td>The start time of the phase, timestamp(ms)</td>
+        </tr>
+        <tr>
+            <td>>>> endTime</td><td>string</td><td>The end time of the phase, timestamp(ms)</td>
+        </tr>
+         <tr>
+            <td>>> auctionFeeInfo</td><td>object</td><td>Action fee info</td>
+        </tr>
+         <tr>
+            <td>>>> auctionFeeRate</td><td>string</td><td>The trading fee rate during auction phase <li>There is no trading fee until entering continues trading phase</li></td>
+        </tr>
+         <tr>
+            <td>>>> takerFeeRate</td><td>string</td><td>The taker fee rate during continues trading phase </td>
+        </tr>
+         <tr>
+            <td>>>> makerFeeRate</td><td>string</td><td>The maker fee rate during continues trading phase</td>
         </tr>
     </table>
 </TabItem>
@@ -415,6 +448,7 @@ client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
 <TabItem value="linear" label="Linear">
 
 ```json
+// official USDT Perpetual instrument structure
 {
     "retCode": 0,
     "retMsg": "OK",
@@ -461,6 +495,86 @@ client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
     },
     "retExtInfo": {},
     "time": 1707186451514
+}
+
+// Pre-market Perpetual instrument structure
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "PRE02ZROUSDT",
+                "contractType": "LinearPerpetual",
+                "status": "PreLaunch",
+                "baseCoin": "PRE02ZRO",
+                "quoteCoin": "USDT",
+                "launchTime": "1718610229000",
+                "deliveryTime": "0",
+                "deliveryFeeRate": "",
+                "priceScale": "3",
+                "leverageFilter": {
+                    "minLeverage": "1",
+                    "maxLeverage": "5.00",
+                    "leverageStep": "0.01"
+                },
+                "priceFilter": {
+                    "minPrice": "0.001",
+                    "maxPrice": "1999.998",
+                    "tickSize": "0.001"
+                },
+                "lotSizeFilter": {
+                    "maxOrderQty": "10000.0",
+                    "minOrderQty": "0.1",
+                    "qtyStep": "0.1",
+                    "postOnlyMaxOrderQty": "10000.0",
+                    "maxMktOrderQty": "2000.0",
+                    "minNotionalValue": "5"
+                },
+                "unifiedMarginTrade": true,
+                "fundingInterval": 480,
+                "settleCoin": "USDT",
+                "copyTrading": "none",
+                "upperFundingRate": "0.03",
+                "lowerFundingRate": "-0.03",
+                "isPreListing": true,
+                "preListingInfo": {
+                    "curAuctionPhase": "ContinuousTrading",
+                    "phases": [
+                        {
+                            "phase": "CallAuction",
+                            "startTime": "1718621400000",
+                            "endTime": "1718707200000"
+                        },
+                        {
+                            "phase": "CallAuctionNoCancel",
+                            "startTime": "1718707200000",
+                            "endTime": "1718707500000"
+                        },
+                        {
+                            "phase": "CrossMatching",
+                            "startTime": "1718707500000",
+                            "endTime": "1718707800000"
+                        },
+                        {
+                            "phase": "ContinuousTrading",
+                            "startTime": "1718707800000",
+                            "endTime": ""
+                        }
+                    ],
+                    "auctionFeeInfo": {
+                        "auctionFeeRate": "0",
+                        "takerFeeRate": "0.001",
+                        "makerFeeRate": "0.0004"
+                    }
+                }
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1719455285151
 }
 ```
 

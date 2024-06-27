@@ -1,6 +1,30 @@
 ---
 title: V5
 ---
+## 2024-06-27
+### REST API
+- [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
+    - 盤前永續交易: 新增響應字段 `isPreListing`, `preListingInfo`, `curAuctionPhase`, `phases`, `startTime`, `endTime`, `auctionFeeInfo`, `auctionFeeRate`, `takerFeeRate`, `makerFeeRate`
+    - 當category="inverse" 或者 "linear", 請求參數 `status` 支援 `Closed`, `Delivering`, `PreLaunch`
+    - 當category=linear&status=PreLaunch, 您可以查詢到盤前永續合約
+
+- [查詢最新行情信息](../v5/market/tickers) [更新]
+    - 盤前永續交易: 新增響應參數 `preOpenPrice`, `preQty`, `curPreListingPhase`
+
+- 針對盤前永續交易, 新增相關錯誤碼
+    - `110095`: You cannot create, modify or cancel Pre-Market Perpetual orders during the Call Auction.
+    - `110096`: Pre-Market Perpetual Trading does not support Portfolio Margin mode.
+    - `110097`: Non-UTA users cannot access Pre-Market Perpetual Trading. To place, modify or cancel Pre-Market Perpetual orders, please upgrade your Standard Account to UTA.
+    - `110098`: Only Good-Till-Canceled (GTC) orders are supported during Call Auction.
+    - `110099`: You cannot create TP/SL orders during the Call Auction for Pre-Market Perpetuals.
+    - `110100`: You cannot place, modify, or cancel Pre-Market Perpetual orders when you are in Demo Trading.
+    - `3777029`: You currently have orders for pre-market trading that can’t be bind UIDs
+    - `3200419`: Unable to switch to Portfolio margin due to active pre-market Perpetual orders and positions
+
+### Websocket API
+- [行情](../v5/websocket/public/ticker) [更新]
+    - 盤前永續交易: 新增響應參數 `preOpenPrice`, `preQty`, `curPreListingPhase`
+
 ## 2024-06-18
 ### REST API
 - [創建委託單](../v5/order/create-order) [更新]
