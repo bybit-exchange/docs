@@ -17,7 +17,7 @@ GET `/v5/broker/earnings-info`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|bizType|false |string |Business type. `SPOT`, `DERIVATIVES`, `OPTIONS` |
+|bizType|false |string |Business type. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT` |
 |begin|false |string |Begin date, in the format of YYYYMMDD, e.g, 20231201, search the data from 1st Dec 2023 00:00:00 UTC (include) |
 |end |false |string |End date, in the format of YYYYMMDD, e.g, 20231201, search the data before 2nd Dec 2023 00:00:00 UTC (exclude) |
 |uid |false |string |<ul><li>To get results for a specific sub-account: Enter the sub-account UID</li><li>To get results for all sub-accounts: Leave the field empty</li></ul>  |
@@ -37,12 +37,15 @@ GET `/v5/broker/earnings-info`
 |> options |array |Object. Earning for Option trading. If do not have any rebate, keep empty array |
 |>> coin |string |Rebate coin name|
 |>> earning |string |Rebate amount of the coin|
+|> convert |array |Object. Earning for Convert trading. If do not have any rebate, keep empty array |
+|>> coin |string |Rebate coin name|
+|>> earning |string |Rebate amount of the coin|
 |> total |array |Object. Sum earnings of all categories. If do not have any rebate, keep empty array |
 |>> coin |string |Rebate coin name|
 |>> earning |string |Rebate amount of the coin|
 |details |array |Object. Detailed trading information for each sub UID and each category |
 |> userId |string |Sub UID |
-|> bizType |string |Business type. `SPOT`, `DERIVATIVES`, `OPTIONS` |
+|> bizType |string |Business type. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT` |
 |> symbol |string |Symbol name |
 |> coin |string |Rebate coin name|
 |> earning  |string |Rebate amount|

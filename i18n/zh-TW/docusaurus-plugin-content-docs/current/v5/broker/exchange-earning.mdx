@@ -17,7 +17,7 @@ GET `/v5/broker/earnings-info`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|bizType|false |string |業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS` |
+|bizType|false |string |業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT` |
 |begin|false |string |開始時間, 格式: YYYYMMDD, 比如, 20231201, 表示搜尋時間是從2023年12月1日 00:00:00 UTC (包含) |
 |end |false |string |結束時間, 格式: YYYYMMDD, 比如, 20231201, 表示搜尋時間是結束於2023年12月2日 00:00:00 UTC (不包含) |
 |uid |false |string |<ul><li>輸入子UID來查詢指定UID的具體數據</li><li>要向獲得所有子UID的數據, 則不傳</li></ul>  |
@@ -37,12 +37,15 @@ GET `/v5/broker/earnings-info`
 |> options |array |Object. 期權交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`|
 |>> coin |string |返佣幣種|
 |>> earning |string |返佣金額|
+|> convert |array |Object. 閃兌交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`|
+|>> coin |string |返佣幣種|
+|>> earning |string |返佣金額|
 |> total |array |Object. 所有業務類型的返佣總和. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`|
 |>> coin |string |返佣幣種|
 |>> earning |string |返佣金額|
 |details |array |Object. 每個子UID以及每個業務類型的交易細節 |
 |> userId |string |子帳戶 |
-|> bizType |string |業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS` |
+|> bizType |string |業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT` |
 |> symbol |string |幣對名 |
 |> coin |string |返佣幣種|
 |> earning  |string |返佣金額|
