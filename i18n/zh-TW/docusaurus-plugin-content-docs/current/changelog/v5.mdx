@@ -1,7 +1,20 @@
 ---
 title: V5
 ---
+## 2024-07-04
+### REST API
+- [查詢兌換幣種列表](../v5/asset/convert/convert-coin-list) [新增]
+
+- [提交報價](../v5/asset/convert/apply-quote) [新增]
+
+- [確認報價](../v5/asset/convert/confirm-quote) [新增]
+
+- [查詢單筆報價單](../v5/asset/convert/get-convert-result) [新增]
+
+- [查詢兌換歷史](../v5/asset/convert/get-convert-history) [新增]
+
 ## 2024-07-03
+### REST API
 - [查詢經紀商返佣信息](../v5/broker/exchange-earning) [更新]
     - 請求參數 `bizType` 新增枚舉值 "CONVERT"
     - 響應參數 `bizType` 新增枚舉值 "CONVERT"
@@ -11,6 +24,7 @@ title: V5
     - 新增響應參數 `convert`
 
 ## 2024-07-01
+### REST API
 - [接入指南](../v5/guide#鑒權認證) [更新]
     - 為了合規, 對於土耳其地區的用戶新增了open api域名
 
@@ -101,13 +115,13 @@ title: V5
 - [提現](../v5/asset/withdraw) [更新]
     - 新增請求參數`beneficiary`, `vaspEntityId`, `beneficiaryName`, 僅用於kyc為韓國的用戶在提現時需要填寫travel rule信息
 
-- [查詢交易所列表](../v5/asset/vasp-list) [新增]
+- [查詢交易所列表](../v5/asset/withdraw/vasp-list) [新增]
     - 新增接口給到kyc=韓國的用戶來查詢提現目標交易所的信息
 
-- [劃轉 (單帳號內)](../v5/asset/create-inter-transfer) [更新]
+- [劃轉 (單帳號內)](../v5/asset/transfer/create-inter-transfer) [更新]
     - 新增響應字段`status`, 如果遇到PENDING, 請調用查詢接口確認最終狀態
 
-- [萬能劃轉](../v5/asset/unitransfer) [更新]
+- [萬能劃轉](../v5/asset/transfer/unitransfer) [更新]
     - 新增響應字段`status`, 如果遇到PENDING, 請調用查詢接口確認最終狀態
 
 ## 2024-05-06
@@ -176,7 +190,7 @@ title: V5
 - [接入指南](../v5/guide#鑒權認證) [更新]
     - 為了合規, 對於荷蘭用戶以及香港用戶分別新增了對應的域名
 
-- [劃轉 (單帳號內)](../v5/asset/create-inter-transfer) [更新]
+- [劃轉 (單帳號內)](../v5/asset/transfer/create-inter-transfer) [更新]
     - 接口頻率從20次/分提升至60次/分
 
 ## 2024-03-21
@@ -186,7 +200,7 @@ title: V5
 
 ## 2024-03-13
 ### REST API
-- [設置充值帳戶](../v5/asset/set-deposit-acct) [更新]
+- [設置充值帳戶](../v5/asset/deposit/set-deposit-acct) [更新]
     - 經典帳戶: `OPTION`(USDC合約錢包) 不再支持被設置為入金錢包
 
 - [查詢公告](../v5/announcement) [更新]
@@ -266,7 +280,7 @@ title: V5
 
 ## 2024-02-28
 ### REST API
-- [查詢提現紀錄](../v5/asset/withdraw-record) [更新]
+- [查詢提現紀錄](../v5/asset/withdraw/withdraw-record) [更新]
     - 新增提現狀態枚舉值 `MoreInformationRequired`
 
 ## 2024-02-21
@@ -293,11 +307,11 @@ title: V5
 
 ## 2024-01-16
 ### REST API
-- [查詢提現紀錄](../v5/asset/withdraw-record) [更新]
+- [查詢提現紀錄](../v5/asset/withdraw/withdraw-record) [更新]
     - 新增查詢參數 `txID`
     - 平台內部轉帳的交易返回 `txID`
 
-- [查詢充值記錄 (平台转账)](../v5/asset/internal-deposit-record) [更新]
+- [查詢充值記錄 (平台转账)](../v5/asset/deposit/internal-deposit-record) [更新]
     - 新增查詢參數 `txID`
     - 新增返回參數 `txID`
 
@@ -649,9 +663,9 @@ title: V5
 - [撤銷所有訂單](../v5/order/cancel-all) [更新]
     - 新增可選請求參數 `stopOrderType`
     - 字段*orderFilter*的枚舉值 `Order` 和 `StopOrder` 支持linear和inverse的產品類型
-- [查詢充值紀錄 (鏈上)](../v5/asset/deposit-record) [更新]
+- [查詢充值紀錄 (鏈上)](../v5/asset/deposit/deposit-record) [更新]
     - 新增響應字段`depositType`, 表示該筆充值的類型, 如觸發了每日充值限額或者充值異常, 可以在網站上處理那些無法充值成功的資產
-- [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/sub-deposit-record) [更新]
+- [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/deposit/sub-deposit-record) [更新]
     - 新增響應字段`depositType`, 表示該筆充值的類型, 如觸發了每日充值限額或者充值異常, 可以在網站上處理那些無法充值成功的資產
 
 ## 2023-08-30
@@ -684,13 +698,13 @@ title: V5
 
 ## 2023-08-17
 ### REST API
-- [查詢充值紀錄 (鏈上)](../v5/asset/deposit-record) [更新]
+- [查詢充值紀錄 (鏈上)](../v5/asset/deposit/deposit-record) [更新]
     - 新增響應字段`batchReleaseLimit`, 表示每日該幣鏈的充值限額, "-1"表示無限制
-- [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/sub-deposit-record) [更新]
+- [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/deposit/sub-deposit-record) [更新]
     - 新增響應字段`batchReleaseLimit`, 表示每日該幣鏈的充值限額, "-1"表示無限制
-- [查詢主帳號充值地址](../v5/asset/master-deposit-addr) [更新]
+- [查詢主帳號充值地址](../v5/asset/deposit/master-deposit-addr) [更新]
     - 新增響應字段`batchReleaseLimit`, 表示每日該幣鏈的充值限額, "-1"表示無限制
-- [查詢子帳號充值地址](../v5/asset/sub-deposit-addr) [更新]
+- [查詢子帳號充值地址](../v5/asset/deposit/sub-deposit-addr) [更新]
     - 新增響應字段`batchReleaseLimit`, 表示每日該幣鏈的充值限額, "-1"表示無限制
 
 ## 2023-08-15
@@ -768,7 +782,7 @@ title: V5
     - 新增響應字段`USDTPerpetualOpenLine`, `USDCContractOpenLine`, `USDCOptionsOpenLine`, `USDTPerpetualCloseLine`,
     `USDCContractCloseLine`, `USDCOptionsCloseLine`, `USDCContractSymbols`, `USDCOptionsSymbols`, `marginLeverage`,
     `USDTPerpetualLeverage`, `symbol`, `leverage`, `USDCContractLeverage`
-- [查詢賬戶單個幣種余額](../v5/asset/account-coin-balance)
+- [查詢賬戶單個幣種余額](../v5/asset/balance/account-coin-balance)
     - 新增請求參數: `toAccountType`, `toMemberId`, `withLtvTransferSafeAmount`
     - 新增響應字段: `ltvTransferSafeAmount`
 - 新增錯誤碼適配UTA帳戶支持場外借貸的交易限制場景
@@ -979,9 +993,9 @@ title: V5
     - 新增返回字段 `accountLTV`
 - [新建子帳戶的API Key](../v5/user/create-subuid-apikey) [更新]
     - 錢包下新增權限項`SubMemberTransferList`
-- [萬能劃轉](../v5/asset/unitransfer) [更新]
+- [萬能劃轉](../v5/asset/transfer/unitransfer) [更新]
     - 支持使用子帳號api key調用
-- [查詢萬能劃轉記錄](../v5/asset/unitransfer-list) [更新]
+- [查詢萬能劃轉記錄](../v5/asset/transfer/unitransfer-list) [更新]
     - 支持使用子帳號api key查詢本帳號下相關劃轉紀錄
 
 
@@ -996,7 +1010,7 @@ title: V5
 
 ## 2023-03-15
 ### REST API
-- [查詢帳戶單個幣種餘額](../v5/asset/account-coin-balance) [更新]
+- [查詢帳戶單個幣種餘額](../v5/asset/balance/account-coin-balance) [更新]
     - 新增請求字段`withTransferSafeAmount` 和響應字段 `transferSafeAmount`
 
 ## 2023-03-10
@@ -1028,9 +1042,9 @@ title: V5
     - 新增請求參數 `password`
 - [查詢API Key相關信息](../v5/user/apikey-info) [更新]
     - 新增響應字段 `isMaster`
-- [查詢延遲提幣凍結金額](../v5/asset/delay-amount) [新增]
+- [查詢延遲提幣凍結金額](../v5/asset/balance/delay-amount) [新增]
     - 全新接口用於查詢由於風險暫時無法提取的金額
-- [查詢充值記錄 (平台转账)](../v5/asset/internal-deposit-record) [新增]
+- [查詢充值記錄 (平台转账)](../v5/asset/deposit/internal-deposit-record) [新增]
     - 全新接口用於查詢Bybit平台內充值紀錄
 
 ### WebSocket API
@@ -1039,13 +1053,13 @@ title: V5
 
 ## 2023-02-20
 ### REST API
-- [設置充值帳戶](../v5/asset/set-deposit-acct) [新增]
+- [設置充值帳戶](../v5/asset/deposit/set-deposit-acct) [新增]
     - 您可以設置充值後自動劃入的帳戶
 - [查詢API Key相關信息](../v5/user/apikey-info) [更新]
     - 新增返回字段: `rsaPublicKey`
-- [創建萬能劃轉](../v5/asset/unitransfer) [更新]
+- [創建萬能劃轉](../v5/asset/transfer/unitransfer) [更新]
     - 修改接口頻率從 20次/分鐘 至 1次/秒
-- [查詢萬能劃轉紀錄](../v5/asset/unitransfer-list) [更新]
+- [查詢萬能劃轉紀錄](../v5/asset/transfer/unitransfer-list) [更新]
     - 修改接口頻率從 60次/分鐘 至 2次/秒
 
 ## 2023-02-15
@@ -1067,7 +1081,7 @@ title: V5
 
 ## 2023-02-09
 ### REST API
-- [查詢賬戶所有幣種余額](../v5/asset/all-balance) [新增]
+- [查詢賬戶所有幣種余額](../v5/asset/balance/all-balance) [新增]
     - 單個請求查詢到指定帳戶的所有幣種餘額
 - [設置斷線保護時間](../v5/order/dcp) [新增]
     - 給期權交易配置斷線保護時間

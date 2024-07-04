@@ -1,6 +1,18 @@
 ---
 title: V5
 ---
+## 2024-07-04
+### REST API
+- [Get Convert Coin List](../v5/asset/convert/convert-coin-list) [UPDATE]
+
+- [Request a Quote ](../v5/asset/convert/apply-quote) [UPDATE]
+
+- [Confirm a Quote ](../v5/asset/convert/confirm-quote) [UPDATE]
+
+- [Get Single Quote Result ](../v5/asset/convert/get-convert-result) [UPDATE]
+
+- [Get Quote history ](../v5/asset/convert/get-convert-history) [UPDATE]
+
 ## 2024-07-03
 - [Get Exchange Broker Earning](../v5/broker/exchange-earning) [UPDATE]
     - Request parameter `bizType` adds a new enum value "CONVERT"
@@ -99,13 +111,13 @@ title: V5
 - [Withdraw](../v5/asset/withdraw) [UPDATE]
     - Add request parameter `beneficiary`, `vaspEntityId`, `beneficiaryName`, they are only used for kyc=KOR (Korean users) to fill travel rule info
 
-- [Get Exchange Entity List](../v5/asset/vasp-list) [NEW]
+- [Get Exchange Entity List](../v5/asset/withdraw/vasp-list) [NEW]
     - Add a new API for kyc=KOR users to query target exchange info when fill travel rule info
 
-- [Create Internal Transfer](../v5/asset/create-inter-transfer) [UPDATE]
+- [Create Internal Transfer](../v5/asset/transfer/create-inter-transfer) [UPDATE]
     - Add new response field `status`. When you get "PENDING", please call query API to check the final status after a while
 
-- [Create Universal Transfer](../v5/asset/unitransfer) [UPDATE]
+- [Create Universal Transfer](../v5/asset/transfer/unitransfer) [UPDATE]
     - Add new response field `status`. When you get "PENDING", please call query API to check the final status after a while
 
 ## 2024-05-06
@@ -126,10 +138,10 @@ title: V5
 
 ## 2024-04-23
 ### REST API
-- [Get Internal Transfer Records](../v5/asset/inter-transfer-list) [UPDATE]
+- [Get Internal Transfer Records](../v5/asset/transfer/inter-transfer-list) [UPDATE]
     - When `startTime` & `endTime` are not passed together, API returns 30 days data by default
 
-- [Get Internal Transfer Records](../v5/asset/inter-transfer-list) [UPDATE]
+- [Get Internal Transfer Records](../v5/asset/transfer/inter-transfer-list) [UPDATE]
     - When `startTime` & `endTime` are not passed together, API returns 30 days data by default
 
 ### Websocket API
@@ -174,7 +186,7 @@ title: V5
 - [Integration Guidance](../v5/guide#authentication) [UPDATE]
     - To obey the compliance rule, two new domains are added for Netherland users and Hong Kong users repectively.
 
-- [Create Internal Transfer](../v5/asset/create-inter-transfer) [UPDATE]
+- [Create Internal Transfer](../v5/asset/transfer/create-inter-transfer) [UPDATE]
     - API rate limit is increase from 20req/min to 60req/min
 
 ## 2024-03-21
@@ -184,7 +196,7 @@ title: V5
 
 ## 2024-03-13
 ### REST API
-- [Set Deposit Account](../v5/asset/set-deposit-acct) [UPDATE]
+- [Set Deposit Account](../v5/asset/deposit/set-deposit-acct) [UPDATE]
     - `OPTION`(USDC Contract wallet) is no longer supported to set for classic account
 
 - [Get Announcement](../v5/announcement) [UPDATE]
@@ -264,7 +276,7 @@ title: V5
 
 ## 2024-02-28
 ### REST API
-- [Get Withdrawal Records](../v5/asset/withdraw-record) [UPDATE]
+- [Get Withdrawal Records](../v5/asset/withdraw/withdraw-record) [UPDATE]
     - New withdraw status enum value `MoreInformationRequired`
 
 ## 2024-02-21
@@ -291,11 +303,11 @@ title: V5
 
 ## 2024-01-16
 ### REST API
-- [Get Withdrawal Records](../v5/asset/withdraw-record) [UPDATE]
+- [Get Withdrawal Records](../v5/asset/withdraw/withdraw-record) [UPDATE]
     - Add a new request param `txID`
     - The withdrawal between Bybit account returns `txID`
 
-- [Get Internal Deposit Records (off-chain)](../v5/asset/internal-deposit-record) [UPDATE]
+- [Get Internal Deposit Records (off-chain)](../v5/asset/transfer/internal-deposit-record) [UPDATE]
     - Add a new request param `txID`
     - Add a new response field `txID`
 
@@ -647,9 +659,9 @@ title: V5
 - [Cancel All Orders](../v5/order/cancel-all) [UPDATE]
     - add new request params `stopOrderType`
     - enumerations `Order` and `StopOrder` for **orderFilter** support linear and inverse product types
-- [Get Deposit Records (on chain)](../v5/asset/deposit-record) [UPDATE]
+- [Get Deposit Records (on chain)](../v5/asset/deposit/deposit-record) [UPDATE]
     - Add a new response field `depositType`. You can process deposit assets when the deposit has daily deposit limit or abnormal deposit issue.
-- [Get Sub Deposit Records (on chain)](../v5/asset/sub-deposit-record) [UPDATE]
+- [Get Sub Deposit Records (on chain)](../v5/asset/deposit/sub-deposit-record) [UPDATE]
     - Add a new response field `depositType`. You can process deposit assets when the deposit has daily deposit limit or abnormal deposit issue.
 
 ## 2023-08-30
@@ -682,13 +694,13 @@ title: V5
 
 ## 2023-08-17
 ### REST API
-- [Get Deposit Records (on chain)](../v5/asset/deposit-record) [UPDATE]
+- [Get Deposit Records (on chain)](../v5/asset/deposit/deposit-record) [UPDATE]
     - Add a new response field `batchReleaseLimit`, which means the daily deposit limit amount
-- [Get Sub Deposit Records (on chain)](../v5/asset/sub-deposit-record) [UPDATE]
+- [Get Sub Deposit Records (on chain)](../v5/asset/deposit/sub-deposit-record) [UPDATE]
     - Add a new response field `batchReleaseLimit`, which means the daily deposit limit amount
-- [Get Master Deposit Address](../v5/asset/master-deposit-addr) [UPDATE]
+- [Get Master Deposit Address](../v5/asset/deposit//master-deposit-addr) [UPDATE]
     - Add a new response field `batchReleaseLimit`, which means the daily deposit limit amount
-- [Get Sub Deposit Address](../v5/asset/sub-deposit-addr) [UPDATE]
+- [Get Sub Deposit Address](../v5/asset/deposit/sub-deposit-addr) [UPDATE]
     - Add a new response field `batchReleaseLimit`, which means the daily deposit limit amount
 
 ## 2023-08-15
@@ -766,7 +778,7 @@ title: V5
     - Add new Response fields: `USDTPerpetualOpenLine`, `USDCContractOpenLine`, `USDCOptionsOpenLine`, `USDTPerpetualCloseLine`,
     `USDCContractCloseLine`, `USDCOptionsCloseLine`, `USDCContractSymbols`, `USDCOptionsSymbols`, `marginLeverage`,
     `USDTPerpetualLeverage`, `symbol`, `leverage`, `USDCContractLeverage`
-- [Get Single Coin Balance](../v5/asset/account-coin-balance)
+- [Get Single Coin Balance](../v5/asset/balance/account-coin-balance)
     - Add new request param: `toAccountType`, `toMemberId`, `withLtvTransferSafeAmount`
     - Add new response field: `ltvTransferSafeAmount`
 - Add error codes for UTA with OTC loan when trade Spot, Futures and Option
@@ -979,9 +991,9 @@ title: V5
     - Add a new response field `accountLTV`
 - [Create Sub UID API Key](../v5/user/create-subuid-apikey) [UPDATE]
     - Add a new permission value `SubMemberTransferList` for Sub account Wallet
-- [Create Universal Transfer](../v5/asset/unitransfer) [UPDATE]
+- [Create Universal Transfer](../v5/asset/transfer/unitransfer) [UPDATE]
     - Support to use Sub acct api key to request
-- [Get Universal Transfer List](../v5/asset/unitransfer-list) [UPDATE]
+- [Get Universal Transfer List](../v5/asset/transfer/unitransfer-list) [UPDATE]
     - Support to use Sub acct api key to request
 
 ### WebSocket API
@@ -995,7 +1007,7 @@ title: V5
 
 ## 2023-03-15
 ### REST API
-- [Get Single Coin Balance](../v5/asset/account-coin-balance) [UPDATE]
+- [Get Single Coin Balance](../v5/asset/balance/account-coin-balance) [UPDATE]
     - Add a new request param `withTransferSafeAmount` and a new response field `transferSafeAmount`
 
 ## 2023-03-10
@@ -1027,9 +1039,9 @@ title: V5
     - Add a new request param `password`
 - [Get API Key Information](../v5/user/apikey-info) [UPDATE]
     - Add a new response field `isMaster`
-- [Get Delay Withdraw Amount](../v5/asset/delay-amount) [NEW]
+- [Get Delay Withdraw Amount](../v5/asset/balance/delay-amount) [NEW]
     - New api to know that how much amount cannot be withdrawn temporarily due to risk
-- [Get Internal Deposit Records (across Bybit)](../v5/asset/internal-deposit-record) [NEW]
+- [Get Internal Deposit Records (across Bybit)](../v5/asset/transfer/internal-deposit-record) [NEW]
     - New api to get internal deposit on Bybit platform
 
 ### WebSocket API
@@ -1038,13 +1050,13 @@ title: V5
 
 ## 2023-02-20
 ### REST API
-- [Set Deposit Account](../v5/asset/set-deposit-acct) [NEW]
+- [Set Deposit Account](../v5/asset/deposit/set-deposit-acct) [NEW]
     - You can set auto-transfer-to account type after deposit
 - [Get API Key Information](../v5/user/apikey-info) [UPDATE]
     - Add a new response filed: `rsaPublicKey`
-- [Create Universal Transfer](../v5/asset/unitransfer) [UPDATE]
+- [Create Universal Transfer](../v5/asset/transfer/unitransfer) [UPDATE]
     - Change rate limit from 20 req/min to 1 req/sec
-- [Get Universal Transfer List](../v5/asset/unitransfer-list) [UPDATE]
+- [Get Universal Transfer List](../v5/asset/transfer/unitransfer-list) [UPDATE]
     - Change rate limit from 60 req/min to 2 req/sec
 
 ## 2023-02-15
@@ -1066,7 +1078,7 @@ title: V5
 
 ## 2023-02-09
 ### REST API
-- [Get All Coins Balance](../v5/asset/all-balance) [NEW]
+- [Get All Coins Balance](../v5/asset/balance/all-balance) [NEW]
     - Get all coins balance of a specified account in one request
 - [Set Disconnect Cancel All](../v5/order/dcp) [NEW]
     - Set DCP for Options trade
