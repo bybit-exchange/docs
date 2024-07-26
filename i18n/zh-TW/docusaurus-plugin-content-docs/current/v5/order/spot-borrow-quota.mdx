@@ -21,8 +21,8 @@ GET `/v5/order/spot-borrow-check`
 |:----- |:-----|------ |
 |symbol |string |交易對名稱 |
 |side |string |方向 |
-|maxTradeQty |string |最大可用於交易的交易幣種數量<ul><li>若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量</li><li>否則, 僅代表現貨可用</li><li>最多支持4位小數</li></ul>|
-|maxTradeAmount |string |最大可用於交易的報價幣種金額<ul><li>若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量</li><li>否則, 僅代表現貨可用</li><li>最多支持8位小數</li> </ul>|
+|maxTradeQty |string |最大可用於交易的交易幣種數量<ul><li>若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度)</li><li>否則, 僅代表現貨可用</li><li>最多支持4位小數</li></ul>|
+|maxTradeAmount |string |最大可用於交易的報價幣種金額<ul><li>若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度) </li><li>否則, 僅代表現貨可用</li><li>最多支持8位小數</li> </ul>|
 |spotMaxTradeQty |string |無論是否開啟了槓桿, 這個字段表示交易幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持4位小數 |
 |spotMaxTradeAmount |string |無論是否開啟了槓桿, 這個字段表示報價幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持8位小數 |
 |borrowCoin |string |借貸幣種 |
