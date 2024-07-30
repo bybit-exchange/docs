@@ -8,10 +8,10 @@ Fast execution stream significantly reduces data latency compared original "exec
 execution type of trades, and fewer data fields.
 
 **All-In-One Topic:** `execution.fast`<br/>
-**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`<br/>
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`<br/>
 
 :::info
-* Supports all Perps and Futures exceution, and do not support Spot and Options for now
+* Supports all Perps, Futures and Spot exceution, and do not support Options for now
 * You can only receive [execType](../../enum#exectype)=Trade update
 :::
 
@@ -24,6 +24,7 @@ execution type of trades, and fewer data fields.
 |> [category](../../enum#category) | string  | Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`.</li></ul>|
 |> symbol |string   |Symbol name |
 |> orderId |string |Order ID |
+|> isMaker |boolean |`true`: Maker, `false`: Taker |
 |> orderLinkId |string |User customized order ID <li>maker trade is always `""`</li><li>If a maker order in the orderbook is converted to taker (by price amend), orderLinkId is also ""</li> |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
@@ -56,6 +57,7 @@ execution type of trades, and fewer data fields.
             "execPrice": "12.015",
             "execQty": "3000",
             "orderId": "443d63fa-b4c3-4297-b7b1-23bca88b04dc",
+            "isMaker": false,
             "orderLinkId": "test-00001",
             "side": "Sell",
             "execTime": "1716800399334",
