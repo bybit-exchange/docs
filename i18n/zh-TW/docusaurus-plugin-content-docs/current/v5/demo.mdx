@@ -133,12 +133,15 @@ Websocket : `wss://stream-demo.bybit.com`
 </span>
 
 ### 獲取模擬資金接口
+> API頻率: 每分鐘1次
+
 #### HTTP請求
 POST `/v5/account/demo-apply-money`
 
-### 請求參數
+#### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|adjustType|false|integer |`0`(默認): 增加模擬資金; `1`: 減少模擬資金|
 |utaDemoApplyMoney|false|array ||
 |> coin|false|string|申請的幣種, 支持 `BTC`, `ETH`, `USDT`, `USDC`|
 |> amountStr|false|string|申請的金額, 每次請求最多支持申請如下金額 <li>`BTC`: "15"</li><li>`ETH`: "200"</li><li>`USDT`: "100000"</li><li>`USDC`: "100000"</li>|
@@ -154,6 +157,7 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
+    "adjustType": 0,
     "utaDemoApplyMoney": [
         {
             "coin": "USDT",
