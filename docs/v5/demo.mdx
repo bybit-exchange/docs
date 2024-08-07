@@ -134,12 +134,15 @@ Websocket : `wss://stream-demo.bybit.com`
 </span>
 
 ### Request Demo Trading Funds
+> API rate limit: 1 req per minute
+
 #### HTTP Request
 POST `/v5/account/demo-apply-money`
 
-### Request Parameters
+#### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|adjustType|false|integer |`0`(default): add demo funds; `1`: reduce demo funds|
 |utaDemoApplyMoney|false|array ||
 |> coin |false|string|Applied coin, supports `BTC`, `ETH`, `USDT`, `USDC`|
 |> amountStr |false|string|Applied amount, the max applied amount in each request <li>`BTC`: "15"</li><li>`ETH`: "200"</li><li>`USDT`: "100000"</li><li>`USDC`: "100000"</li>|
@@ -155,6 +158,7 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
+    "adjustType": 0,
     "utaDemoApplyMoney": [
         {
             "coin": "USDT",
