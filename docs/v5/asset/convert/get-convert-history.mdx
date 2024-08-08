@@ -33,7 +33,9 @@ GET `/v5/asset/exchange/query-convert-history`
 |> fromAmount |string|From coin amount (amount to sell)|
 |> toAmount |string|To coin amount (amount to buy according to exchange rate)|
 |> exchangeStatus |string|Exchange status <li>init</li><li>processing</li><li>success</li><li>failure</li>|
-|> extInfo |object|Reserved field, ignored for now|
+|> extInfo |object||
+|>> paramType |string|This field is published when you send it in the [Request a Quote ](apply-quote#)|
+|>> paramValue |string|This field is published when you send it in the [Request a Quote ](apply-quote#)|
 |> convertRate |string|Exchange rate|
 |> createdAt |string|Quote created time|
 
@@ -103,7 +105,10 @@ client
                 "toCoinType": "crypto",
                 "toAmount": "0.00534882723991",
                 "exchangeStatus": "success",
-                "extInfo": {},
+                "extInfo": {
+                    "paramType": "opFrom",
+                    "paramValue": "broker-id-001"
+                },
                 "convertRate": "0.0534882723991",
                 "createdAt": "1720071899995"
             },
