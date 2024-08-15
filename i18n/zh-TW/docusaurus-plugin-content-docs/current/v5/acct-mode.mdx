@@ -41,10 +41,10 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
         <td rowSpan="7" align="center">交易</td><td><a href="order/open-order#">查詢實施和終態委託單</a></td><td>查詢終態狀態使用openOnly=1, 且僅保留最近500單</td><td>查詢終態狀態使用openOnly=2</td>
     </tr>
     <tr>
-        <td><a href="order/order-list#">查詢歷史訂單</a></td><td>1. orderStatus不傳, 默認查詢所有終態訂單<br/>2. 支援參數baseCoin和settleCoin<br/>3. 不支持活動單查詢, 部分終態訂單有限查詢</td><td>1. orderStatus不傳, 默認查詢活動態和終態訂單<br/>2. 不支持參數baseCoin和settleCoin<br/>3. 總是支持活動單和各種終態單查詢</td>
+        <td><a href="order/order-list#">查詢歷史訂單</a></td><td>1. orderStatus不傳, 默認查詢所有終態訂單<br/>2. 支援參數baseCoin和settleCoin<br/>3. 不支持活動單查詢, 部分終態訂單有限查詢<br/>4. 只能查詢升級後產生的訂單</td><td>1. orderStatus不傳, 默認查詢活動態和終態訂單<br/>2. 不支持參數baseCoin和settleCoin<br/>3. 總是支持活動單和各種終態單查詢</td>
     </tr>
     <tr>
-        <td><a href="order/execution#">查詢成交紀錄</a></td><td>1. 支持baseCoin的查詢; <br/>2. 返回的createType有值</td><td>2. 不支持baseCoin的查詢;<br/>2. 返回的createType總是""</td>
+        <td><a href="order/execution#">查詢成交紀錄</a></td><td>1. 支持baseCoin的查詢; <br/>2. 返回的createType有值<br/>3. 只能查詢升級後產生的成交</td><td>2. 不支持baseCoin的查詢;<br/>2. 返回的createType總是""</td>
     </tr>
     <tr>
         <td><a href="order/batch-place#">批量創建委託單</a></td><td>支持反向合約</td><td>不支持反向合約</td>
@@ -59,19 +59,46 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
         <td><a href="order/dcp#">設置斷線保護時間</a></td><td>支持反向合約</td><td>不支持反向合約</td>
     </tr>
     <tr>
-        <td rowSpan="7" align="center">持倉</td><td><a href="position#">查詢持倉(實時)</a></td><td>1. 不支持symbol傳多個, 不支持僅使用<br/>category=inverse獲得所有持倉倉位; <br/>2. 響應字段中, "tradeMode", "autoAddMargin" <br/>"liqPrice", "bustPrice" 含義有變化</td><td>1. 支持symbol傳多個, 支持僅使用<br/>category=inverse獲得所有持倉倉位; </td>
+        <td rowSpan="3" align="center">升級前相關紀錄</td><td><a href="pre-upgrade/order-list#">查詢升級前訂單紀錄</a></td><td>支持查詢還是經典帳戶或者統一帳戶1.0時產生的訂單 </td><td>-</td>
+    </tr>
+     <tr>
+        <td><a href="pre-upgrade/execution#">查詢升級前成交紀錄</a></td><td>支持查詢還是經典帳戶或者統一帳戶1.0時產生的交易 </td><td>-</td>
+    </tr>
+     <tr>
+        <td><a href="pre-upgrade/close-pnl#">查詢升級前平倉盈虧</a></td><td>支持查詢還是經典帳戶或者統一帳戶1.0時產生的平倉盈虧 </td><td>-</td>
     </tr>
     <tr>
-        <td><a href="position/leverage#">設置槓桿</a></td><td>1.反向永續和反向交割僅支持單倉模式, buy和sell的leverage必須相等</td><td>1. 反向交割支持雙向持倉, buy和sell的leverage可以不相等</td>
+        <td rowSpan="6" align="center">持倉</td><td><a href="position#">查詢持倉(實時)</a></td><td>1. 不支持symbol傳多個, 不支持僅使用<br/>category=inverse獲得所有持倉倉位; <br/>2. 響應字段中, "tradeMode", "autoAddMargin" <br/>"liqPrice", "bustPrice" 使用有變化</td><td>1. 支持symbol傳多個, 支持僅使用<br/>category=inverse獲得所有持倉倉位; </td>
     </tr>
     <tr>
-        <td><a href="position/cross-isolate#">切換全倉/逐倉保證金</a></td><td>保證金模式變成帳戶維度了, 該接口不適用</td><td>反向合約支持使用該接口</td>
+        <td><a href="position/close-pnl#">查詢平倉盈虧</a></td><td>只能查詢升級後產生的平倉盈虧</td><td> - </td>
+    </tr>
+    <tr>
+        <td><a href="position/leverage#">設置槓桿</a></td><td>反向永續和反向交割僅支持單倉模式, buy和sell的leverage必須相等</td><td>反向交割支持雙向持倉, buy和sell的leverage可以不相等</td>
+    </tr>
+    <tr>
+        <td><a href="position/cross-isolate#">切換全倉/逐倉保證金</a></td><td>保證金模式變成帳戶維度了, 該接口不再適用</td><td>反向合約支持使用該接口</td>
     </tr>
     <tr>
         <td><a href="position/position-mode#">切換持倉模式</a></td><td>反向交割不再支持雙向持倉</td><td>反向交割支持雙向持倉</td>
     </tr>
     <tr>
         <td><a href="position/auto-add-margin#">設置自動追加保證金</a></td><td>逐倉模式下, 反向合約也支持開關自動追加保證金功能</td><td>反向合約沒有該功能</td>
+    </tr>
+     <tr>
+        <td rowSpan="3" align="center">帳戶</td><td><a href="account/wallet-balance#">查詢錢包餘額</a></td><td>不支持查詢CONTRACT</td><td>支持查詢CONTRACT</td>
+    </tr>
+    <tr>
+        <td><a href="account/transaction-log#">交易日誌(統一帳戶)</a></td><td>反向合約的交易日誌將會納入進來</td><td>反向合約的交易日誌需要走下方接口</td>
+    </tr>
+    <tr>
+        <td><a href="account/contract-transaction-log#">交易日誌(經典帳戶)</a></td><td>升級到2.0後, 該接口就不適用了</td><td>在1.0或者經典時的數據還能取到</td>
+    </tr>
+    <tr>
+        <td rowSpan="3" align="center">資產</td><td><a href="asset/delivery#">查詢交割紀錄</a></td><td>支持查詢反向交割的交割紀錄</td><td>不支持查詢反向交割的交割紀錄</td>
+    </tr>
+    <tr>
+        <td>該目錄下所有涉及accountType的接口</td><td>不再支持CONTRACT</td><td>支持CONTRACT (反向合約帳戶)</td>
     </tr>
 </table>
 
