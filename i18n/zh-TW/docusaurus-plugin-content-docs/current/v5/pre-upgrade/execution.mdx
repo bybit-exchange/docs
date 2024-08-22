@@ -4,7 +4,7 @@ sidebar_label: 查詢升級前成交紀錄
 sidebar_position: 2
 ---
 
-目前，僅支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約和期權, 返回結果按`execTime`降序排列
+目前，僅支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約, 現貨和期權, 返回結果按`execTime`降序排列
 
 :::tip
 * 儅execTime相同時,返回會有排序問題，此問題已在優化中, 目前建議依照`execId+OrderId+leavesQty`進行排序, 如果您想獲取實時成交信息建議使用[websocket stream](../websocket/private/execution).
@@ -22,7 +22,7 @@ GET `v5/pre-upgrade/execution/list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 `linear`, `inverse`, `option` |
+|[category](../enum#category) |**true** |string |產品類型 `linear`, `inverse`, `option`, `spot`|
 |symbol |false |string |合約名稱 |
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
