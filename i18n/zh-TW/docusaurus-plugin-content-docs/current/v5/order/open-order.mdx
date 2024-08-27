@@ -8,7 +8,8 @@ sidebar_position: 4
 > **經典帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::tip
-- 此接口也支持查詢已成交，取消和拒絕類型的最近500條訂單信息對於spot，linear和option類別. inverse類別則無此限制.
+- 統一帳戶2.0: 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear, inverse和option類別. 
+- 統一帳戶1.0: 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear和option類別. inverse類別則無此限制.
 - 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢. 如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
 - 返回的結果將以`createdTime`從新到舊排序.
 :::
@@ -30,7 +31,7 @@ GET `/v5/order/realtime`
 |settleCoin |false |string |結算幣種 <ul><li><b>linear</b>: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li></ul>|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
-|openOnly |false |integer |<ul><li>統一帳戶 & 經典帳戶`0`(默認): 僅查詢活動委託訂單, 比如New, PartiallyFilled訂單</li><li>統一帳戶(linear, spot, option): `1`,&emsp;統一帳戶(inverse)和經典帳戶: `2` <br/>返回僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶下最多保留500條紀錄，<i>如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</i></li><li>當查詢是按照_orderId_ 或者 _orderLinkId_時, `openOnly`入参將會被忽略</li><li>經典帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>|
+|openOnly |false |integer |<ul><li>`0`(默認): 統一帳戶2.0, 統一帳戶1.0, 經典帳戶: 僅查詢活動委託訂單, 比如New, PartiallyFilled訂單</li><li>`1`: 統一帳戶2.0, 統一帳戶1.0(除了inverse)<br/>`2`: 統一帳戶1.0(inverse)和經典帳戶:  <br/>返回僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶每個category下最多保留500條紀錄. <i>如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</i></li><li>當查詢是按照_orderId_ 或者 _orderLinkId_時, `openOnly`入参將會被忽略</li><li>經典帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>
 |orderFilter |false |string|`Order`: 活動單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 止盈止損單, 僅現貨有效, `OcoOrder`: OCO訂單, `BidirectionalTpslOrder`: 現貨(UTA)雙向止盈止損訂單 <ul><li>經典帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|

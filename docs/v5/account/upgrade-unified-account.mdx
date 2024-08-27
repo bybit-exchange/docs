@@ -3,20 +3,22 @@ title: Upgrade to Unified Account
 sidebar_label: Upgrade to Unified Account
 sidebar_position: 2
 ---
-Upgrade Unified Account
+In the mainnet, you still can use this API to upgrade your classic account to Unified account.
+
+Below part now is appliable to **Testnet**, you can upgrade the account to UTA2.0
 
 :::tip Upgrade Guidance
 Check your current account status by calling this [Get Account Info](account-info)
 
-* if unifiedMarginStatus=1, then it is classic account, you can call below upgrade endpoint to UTA Pro. Check
-[Get Account Info](account-info) after a while and if unifiedMarginStatus=4, then it is successfully upgraded to UTA Pro.
+* For now, classic account is not supported to upgrade, it will be opened afterwards.
 
-* if unifiedMarginStatus=3, then it is UTA, you need to call below upgrade endpoint to UTA Pro. Check
-[Get Account Info](account-info) after a while and if unifiedMarginStatus=4, then it is successfully upgraded to UTA Pro.
-:::
+* if unifiedMarginStatus=3, then it is UTA1.0, you have to head to website to click "upgrade" to UTA2.0 first.
 
-:::note important
-Banned / Express path users cannot upgrade the account to Unified Account for now.
+* if unifiedMarginStatus=4, then it is UTA1.0 Pro, you can call below upgrade endpoint to UTA2.0 Pro. Check
+[Get Account Info](account-info) after a while and if unifiedMarginStatus=6, then it is successfully upgraded to UTA2.0 Pro.
+
+* if unifiedMarginStatus=5, then it is UTA2.0, you can call below upgrade endpoint to UTA2.0 Pro. Check
+[Get Account Info](account-info) after a while and if unifiedMarginStatus=6, then it is successfully upgraded to UTA2.0 Pro.
 :::
 
 :::info
@@ -27,18 +29,16 @@ You can upgrade the normal acct to unified acct without closing positions now, b
 |:----- |:-----|
 |every hour | 50th minute to 5th minute of next hour |
 
-2. Please ensure:
-* No open order and debt in the Spot account
-* No open order in the Derivatives account
-* USDT positions are either isolated or cross mode in the Derivatives account
-* No open order in the USDC Derivatives account
+2. Please ensure: there is no open orders when upgrade from UTA2.0 to UTA2.0 Pro<br/><br/>
+Regaring the conditions that upgrade UTA1.0 Pro to UTA2.0 Pro, please ensure:
+* There is no open orders regardless of order types;
+* All inverse contract positions must keep consistent with the margin mode of Unified account. 
+If it is Portfolio Margin mode, you either close inverse positions or switch unified account margin mode to cross 
+or isolated margin mode.
+* Cannot have hedge mode inverse futures positions, which is not supported in UTA2.0
 * **Cannot have TPSL order either**
 
-3. When the `unifiedUpgradeProcess` = PROCESS, it means that the system needs asynchronous verification processing, and the upgrade
-result cannot be returned in real time. You can check API [Get Account Info](account-info) after 3-5 minutes,
-check whether the upgrade is successful according to the "unifiedMarginStatus" field in the return.
-
-4. During the account upgrade process, the data of **Rest API/Websocket stream** may be inaccurate due to the fact that the account-related
+3. During the account upgrade process, the data of **Rest API/Websocket stream** may be inaccurate due to the fact that the account-related
 asset data is in the processing state. It is recommended to query and use it after the upgrade is completed.
 :::
 

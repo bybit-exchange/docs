@@ -19,7 +19,7 @@ New version of TP/SL function supports both holding entire position TP/SL orders
 :::
 
 :::note
-Under the new version of Tp/SL function, when calling this API to perform one-sided take profit or stop loss modification
+Under the new version of TP/SL function, when calling this API to perform one-sided take profit or stop loss modification
 on existing TP/SL orders on the holding position, it will cause the paired tp/sl orders to lose binding relationship.
 This means that when calling the cancel API through the tp/sl order ID, it will only cancel the corresponding one-sided
 take profit or stop loss order ID.
@@ -31,7 +31,7 @@ POST `/v5/position/trading-stop`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul>|
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only|
 |takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
 |stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
@@ -39,13 +39,13 @@ POST `/v5/position/trading-stop`
 |[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type |
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type|
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only** |
-|tpslMode |true |string |TP/SL mode. `Full`: entire position TP/SL, `Partial`: partial position TP/SL|
-|tpSize |false |string |Take profit size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
-|slSize |false |string |Stop loss size. Valid in TP/SL partial mode. Note: the value of tpSize and slSize must equal |
+|tpslMode |true |string |TP/SL mode<li>`Full`: entire position TP/SL</li><li>`Partial`: partial position TP/SL</li>|
+|tpSize |false |string |Take profit size<br/>valid for TP/SL partial mode, note: the value of tpSize and slSize must equal |
+|slSize |false |string |Stop loss size<br/>valid for TP/SL partial mode, note: the value of tpSize and slSize must equal |
 |tpLimitPrice |false |string |The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
 |slLimitPrice |false |string |The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
-|tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market|
-|slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market|
+|tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`<br/>For tpslMode=Full, it only supports tpOrderType="Market"|
+|slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`<br/>For tpslMode=Full, it only supports slOrderType="Market"|
 |[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters

@@ -9,17 +9,16 @@ sidebar_position: 6
 > **經典帳戶覆蓋範圍: USDT永續 / 反向合約 / 現貨**
 
 :::tip
-* **7天內的訂單**: UTA(spot,linear,option)支持查詢除了"Cancelled"(完全取消), "Rejected", "Deactivated"以外的[終態訂單](../enum#orderstatus), UTA(inverse)和經典帳戶支持查詢活動態+終態的訂單
-* **24小時**: UTA(spot,linear,option): 對於完全取消(Cancelled),以及"Rejected", "Deactivated"的訂單僅支持查詢過去24小時的訂單記錄
-* **7天外**的訂單: 只能查詢到有過成交的訂單, 即完全成交, 部分成交但最終取消的訂單
-* 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
+* **7天內的訂單**: <br/>統一帳戶2.0, 統一帳戶1.0(除了inverse)支持查詢除了"Cancelled"(完全取消), "Rejected", "Deactivated"以外的[終態訂單](../enum#orderstatus) <br/>统一账户1.0(inverse)和經典帳戶支持查詢活動態+終態的訂單
+* **24小時的订单**: <br/>統一帳戶2.0, 統一帳戶1.0(除了inverse): 對於完全取消(Cancelled),以及"Rejected", "Deactivated"的訂單僅支持查詢過去24小時的訂單記錄
+* **7天外的訂單**: 所有账户都只能查詢到有過成交的訂單, 即完全成交, 部分成交但最終取消的訂單
+* 統一帳戶2.0, 統一帳戶1.0(除了inverse) 支持查詢過去2年的數據
 :::
 
 :::info
 * 經典帳戶現貨僅能查詢終態訂單
 * 經典帳戶現貨: 市商帳戶只能獲取到最近3天訂單歷史, 可以前往網頁端導出更多歷史數據; 散客用戶支持查詢到最近180天的數據
 * 經典帳戶現貨: 取消單、拒絕單、未觸發取消單, 最多保留7天
-* 統一帳戶 (linear, spot, option) 支持查詢最近730天的歷史訂單紀錄
 :::
 
 ### HTTP請求
@@ -30,12 +29,12 @@ GET `/v5/order/history`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul> |
 |symbol |false |string |合約名稱|
-|baseCoin |false |string |交易幣種. 統一帳戶（反向）以及經典帳戶不支持該字段的查詢 |
-|settleCoin |false |string |結算幣種. 統一帳戶（反向）以及經典帳戶不支持該字段的查詢 |
+|baseCoin |false |string |交易幣種. 統一帳戶1.0(反向)和經典帳戶不支持該字段的查詢 |
+|settleCoin |false |string |結算幣種. 統一帳戶1.0(反向)和經典帳戶不支持該字段的查詢 |
 |orderId |false |string |訂單ID |
 |orderLinkId |false |string |用戶自定義訂單ID |
 |orderFilter |false |string |`Order`: 普通單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 現貨止盈止損單, `OcoOrder`: OCO訂單, `BidirectionalTpslOrder`: 現貨(UTA)雙向止盈止損訂單 <ul><li>經典帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
-|[orderStatus](../enum#orderstatus) |false |string |訂單狀態 <ul><li>經典帳戶`spot`: 該字段無效</li><li>UTA(spot, linear, option): 不傳則默認查詢所有終態訂單</li><li>UTA(inverse)和經典帳戶: 不傳則默認查詢活動態+終態的訂單</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |訂單狀態 <ul><li>經典帳戶`spot`: 該字段無效</li><li>統一帳戶2.0, 統一帳戶1.0(除了inverse): 不傳則默認查詢所有終態訂單</li><li>統一帳戶1.0(inverse)和經典帳戶: 不傳則默認查詢活動態+終態的訂單</li></ul>|
 |startTime |false |integer |開始時間戳 (毫秒). 經典帳戶現貨不支持使用startTime和endTime <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|

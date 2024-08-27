@@ -9,8 +9,8 @@ Cancel all open orders
 
 :::info
 - Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, the system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
-- **NOTE**: `category`=_option_, you can cancel all option open orders without passing any of those three params. However, for `linear` and `inverse`, you must specify one of those three params.
-- **NOTE**: `category`=_spot_, you can cancel all spot open orders (normal order by default) without passing other params.
+- **NOTE**: category=_option_, you can cancel all option open orders without passing any of those three params. However, for "linear" and "inverse", you must specify one of those three params.
+- **NOTE**: category=_spot_, you can cancel all spot open orders (normal order by default) without passing other params.
 :::
 
 :::info
@@ -26,10 +26,10 @@ POST `/v5/order/cancel-all`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul>|
-|symbol |false|string |Symbol name, like `BTCUSDT`, uppercase only. `linear` & `inverse`: **Required** if not passing baseCoin or settleCoin|
-|baseCoin |false|string |Base coin, uppercase only <ul><li>`linear` & `inverse`(Classic account): If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin</li><li>`linear` & `inverse`(Unified account): If cancel all by baseCoin, it will cancel all corresponding category orders. **Required** if not passing symbol or settleCoin</li><li>Classic `spot`: invalid</li></ul>|
-|settleCoin |false|string |Settle coin, uppercase only <ul><li>`linear` & `inverse`: **Required** if not passing symbol or baseCoin</li><li>Does not support `spot`</li></ul>|
-|orderFilter |false |string |<ul><li>category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`, `OcoOrder`, `BidirectionalTpslOrder`. If not passed, `Order` by default</li><li>category=`linear` or `inverse`, you can pass `Order`, `StopOrder`. If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order</li><li>category=`option`, you can pass `Order`. No matter it is passed or not, always cancel all orders</li></ul>|
+|symbol |false|string |Symbol name, like `BTCUSDT`, uppercase only<br/>`linear`&`inverse`: **Required** if not passing baseCoin or settleCoin|
+|baseCoin |false|string |Base coin, uppercase only <ul><li>`linear` & `inverse`(Classic account): If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin</li><li>`linear` & `inverse`(Unified account): If cancel all by baseCoin, it will cancel all corresponding category orders. **Required** if not passing symbol or settleCoin</li><li>`spot`(Classic account): invalid</li></ul>|
+|settleCoin |false|string |Settle coin, uppercase only <ul><li>`linear` & `inverse`: **Required** if not passing symbol or baseCoin</li><li>Not support `spot`</li></ul>|
+|orderFilter |false |string |<ul><li>category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`, `OcoOrder`, `BidirectionalTpslOrder`<br/>If not passed, `Order` by default</li><li>category=`linear` or `inverse`, you can pass `Order`, `StopOrder`<br/>If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order</li><li>category=`option`, you can pass `Order`<br/> No matter it is passed or not, always cancel all orders</li></ul>|
 |[stopOrderType](../enum#stopordertype) |false |string |Stop order type `Stop` <li>Only used for category=`linear` or `inverse` and orderFilter=`StopOrder`,you can cancel conditional orders except TP/SL order and Trailing stop orders with this param</li> |
 
 :::info
@@ -46,7 +46,7 @@ The ack of cancel-all order request indicates that the request is successfully a
 |list |array |Object|
 |> orderId |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|success |string |"1": success, "0": fail|
+|success |string |"1": success, "0": fail<li>UTA1.0(inverse), classic(linear, inverse) do not return this field</li>|
 
 ### Request Example
 

@@ -3,20 +3,20 @@ title: Batch Place Order
 sidebar_label: Batch Place Order
 sidebar_position: 7
 ---
-> **Covers: Spot (UTA, UTA Pro) / Option (UTA, UTA Pro) / USDT Perpetual, USDC Perpetual, USDC Futures (UTA Pro)**
+> **UTA2.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract, Inverse Contract
+> **UTA1.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract
 
 :::tip
 This endpoint allows you to place more than one order in a single request.
 - Make sure you have sufficient funds in your account when placing an order. Once an order is placed, according to the
 funds required by the order, the funds in your account will be frozen by the corresponding amount during the life cycle
 of the order.
-- A maximum of 20 orders (option) & 10 orders (linear) & 10 orders (spot) can be placed per request. The returned data list is divided into two lists.
+- A maximum of 20 orders (option), 20 orders (inverse), 10 orders (linear), 10 orders (spot) can be placed per request. The returned data list is divided into two lists.
 The first list indicates whether or not the order creation was successful and the second list details the created order information. The structure of the two lists are completely consistent.
 :::
 
 :::info
-- Check the rate limit instruction when category=`linear` or `spot` [here](../rate-limit#api-rate-limit-rules-for-vipspros)
-
+- Check the rate limit instruction when category=`linear`, `spot` or `inverse` [here](../rate-limit#api-rate-limit-rules-for-vipspros)
 - **Risk control limit notice:**<br/>
 Bybit will monitor on your API requests. When the total number of orders of a single user (aggregated the number of orders across main account and sub-accounts) within a day (UTC 0 - UTC 24) exceeds a certain upper limit, the platform will reserve the right to remind, warn, and impose necessary restrictions.
 Customers who use API default to acceptance of these terms and have the obligation to cooperate with adjustments.
@@ -28,7 +28,7 @@ POST `/v5/order/create-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`, `option`, `spot` |
+|[category](../enum#category) |**true** |string |Product type <li>UTA2.0: `linear`, `option`, `spot`, `inverse`</li><li>UTA1.0: `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |> isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
@@ -43,21 +43,21 @@ POST `/v5/order/create-batch`
 |> [triggerBy](../enum#triggerby) |false |string |Conditional order param (Perps & Futures). Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
-|> [positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required** (USDT perps have hedge mode)<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
+|> [positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
 |> orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures, Perps & Spot: orderLinkId rules_:<br/><ul><li>optional param</li><li>always unique</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
-|> takeProfit |false |string |Take profit price, vaild for `linear`, `spot`<li>`spot(UTA)`: Spot Limit order supports take profit, stop loss or limit take profit, limit stop loss when creating an order</li>|
-|> stopLoss |false |string |Stop loss price, vaild for `linear`, `spot` <li>`spot(UTA)`: Spot Limit order supports take profit, stop loss or limit take profit, limit stop loss when creating an order</li>|
-|> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice`.<br/>Valid for `linear` |
-|> [slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice`<br/>Valid for `linear` |
-|> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. <ul><li>You **must** specify it as `true` when you are about to close/reduce the position</li><li>When reduceOnly is true, take profit/stop loss cannot be set</li></ul>Valid for `linear`, & `option` |
-|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin.<br/>Valid for `linear`|
+|> takeProfit |false |string |Take profit price|
+|> stopLoss |false |string |Stop loss price|
+|> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice`.<br/>Valid for `linear`, `inverse` |
+|> [slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. `MarkPrice`, `IndexPrice`, default: `LastPrice`<br/>Valid for `linear`, `inverse`  |
+|> reduceOnly |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001047">What is a reduce-only order?</a> `true` means your position can only reduce in size if this order is triggered. <ul><li>You **must** specify it as `true` when you are about to close/reduce the position</li><li>When reduceOnly is true, take profit/stop loss cannot be set</li></ul>Valid for `linear`, `inverse` & `option` |
+|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001050">What is a close on trigger order?</a> For a closing order. It can only reduce your position, not increase it. If the account has insufficient available balance when the closing order is triggered, then other active orders of similar contracts will be cancelled or reduced. It can be used to ensure your stop loss reduces your position regardless of current available margin.<br/>Valid for `linear`, `inverse`|
 |> [smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
 |> mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
-|> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl (as there is no size option, so it will create tp/sl orders with the qty you actually fill). Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`|
-|> tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot(UTA): it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
-|> slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot(UTA): it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
-|> tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
-|> slOrderType |false |string |The order type when stop loss is triggered <ul><li>`linear`: `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "stopLoss", <br/>`Limit`: when you set "stopLoss" and "slLimitPrice" </li></ul>|
+|> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl (as there is no size option, so it will create tp/sl orders with the qty you actually fill). Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`, `inverse`|
+|> tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear`&`inverse`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot(UTA): it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
+|> slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear`&`inverse`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot(UTA): it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
+|> tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
+|> slOrderType |false |string |The order type when stop loss is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "stopLoss", <br/>`Limit`: when you set "stopLoss" and "slLimitPrice" </li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|

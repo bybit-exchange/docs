@@ -5,13 +5,13 @@ sidebar_position: 11
 ---
 
 Query user's closed profit and loss records
-> **Unified account covers: USDT perpetual / USDC contract / Inverse contract**<br/>
+> **UTA2.0, UTA1.0 cover: USDT perpetual / USDC contract / Inverse contract**<br/>
 > **Classic account covers: USDT perpetual / Inverse contract**
 
 :::info
 * Classic account: the results are sorted by `updatedTime` in descending order.
-* Unified account (except Inverse contract): the results are sorted by `createdTime` in descending order, this will be constant with classic account afterwards
-* Unified account (linear, spot, option) supports getting the past 730 days historical data
+* UTA2.0, UTA1.0(except inverse): the results are sorted by `createdTime` in descending order, this will be constant with classic account afterwards
+* UTA2.0, UTA1.0(except inverse): support getting the past 730 days historical data
 :::
 
 ### HTTP Request
@@ -20,7 +20,7 @@ GET `/v5/position/closed-pnl`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul> |
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
@@ -38,7 +38,7 @@ GET `/v5/position/closed-pnl`
 |> qty |string |Order qty |
 |> orderPrice |string |Order price |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |
-|> execType |string |Exec type. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`, `MovePosition` |
+|> execType |string |Exec type<br/>`Trade`, `BustTrade`<br/>`SessionSettlePnL`<br/>`Settle`, `MovePosition` |
 |> closedSize |string |Closed size |
 |> cumEntryValue |string |Cumulated Position value |
 |> avgEntryPrice |string |Average entry price |

@@ -17,7 +17,7 @@ Query users' execution records, sorted by `execTime` in descending order. Howeve
 
 :::info
 * Classic Spot supports getting the past 180 days historical data
-* Unified account (linear, spot, option) supports getting the past 730 days historical data
+* Unified account supports getting the past 730 days historical trades data
 :::
 
 ### HTTP Request
@@ -30,7 +30,7 @@ GET `/v5/execution/list`
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID. _Classic account does not support this param_ |
-|baseCoin |false |string |Base coin, uppercase only. _Unified account - inverse and Classic account do not support this param_ |
+|baseCoin |false |string |Base coin, uppercase only <li>UTA1.0(category=inverse) and classic account are not supported</li>|
 |startTime |false |integer |The start timestamp (ms) <ul><li>Classic Spot: supports the interval up to 180 days</li><li>Others:<br/>startTime and endTime are not passed, return 7 days by default;<br/>Only startTime is passed, return range between startTime and startTime+7 days;<br/>Only endTime is passed, return range between endTime-7 days and endTime;<br/>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type. _Classic `spot` is not supported_|
@@ -49,7 +49,7 @@ GET `/v5/execution/list`
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
-|> [createType](../enum#createtype) |string |Order create type <li>UTA: Only for category=linear</li><li>Classic & UTA(inverse): always `""`</li><li>Spot, Option do not have this key</li> |
+|> [createType](../enum#createtype) |string |Order create type <li>Classic account & UTA1.0(category=inverse): always `""`</li><li>Spot, Option do not have this key</li> |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, it either returns `UNKNOWN` or `""`. _Classic `spot` is not supported_ |
 |> execFee |string   |Executed trading fee. You can get spot fee currency instruction [here](../enum#spot-fee-currency-instruction) |

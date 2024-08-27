@@ -3,12 +3,7 @@ title: 查詢錢包餘額
 sidebar_label: 查詢錢包餘額
 sidebar_position: 1
 ---
-獲取統一帳戶和經典帳戶錢包餘額, 查詢各個幣種的資產信息，以及統一保證金模式下的帳戶風險率信息。默認不返回資產或負債為0的幣種信息。
-
-:::tip
-* UTA交易反向合約是通過該帳戶下的CONTRACT錢包進行
-* 請使用該[接口](../asset/balance/all-balance)查詢資金帳戶的餘額
-:::
+獲取統一帳戶和經典帳戶錢包餘額, 查詢各個幣種的資產信息. 默認不返回資產或負債為0的幣種信息。
 
 ### HTTP 請求
 GET `/v5/account/wallet-balance`
@@ -16,7 +11,7 @@ GET `/v5/account/wallet-balance`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |帳戶類型. <ul><li>統一帳戶: `UNIFIED`(現貨/USDT和USDC永續/期權), `CONTRACT`(反向)</li><li>經典帳戶: `CONTRACT`(期貨), `SPOT`(現貨)</li></ul>|
+|[accountType](../enum#accounttype) |**true** |string |帳戶類型 <ul><li>統一帳戶2.0: `UNIFIED`</li><li>統一帳戶1.0: `UNIFIED`, `CONTRACT`(反向合約錢包)</li><li>Classic account: `CONTRACT`(合約錢包), `SPOT`(現貨錢包)</li></ul>要查詢資金帳戶餘額, 可以使用這個[接口](../asset/balance/all-balance) |
 |coin |false |string |幣種名稱 <ul><li>不傳則返回非零資產信息</li><li>可以傳多個幣進行查詢，以逗號分隔, `USDT,USDC`</li></ul>|
 
 ### 響應參數
@@ -25,17 +20,17 @@ GET `/v5/account/wallet-balance`
 |list |array |Object |
 |> accountType |string |帳戶類型 |
 |> accountLTV |string |字段廢棄|
-|> accountIMRate |string |帳戶初始保證金率: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. 非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> accountMMRate |string |帳戶維持保證金率: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和。。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalWalletBalance |string |賬戶維度換算成usd的產錢包餘額：∑ Asset Wallet Balance By USD value of each asset。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額：totalWalletBalance + totalPerpUPL。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額：RM：totalMarginBalance - totalInitialMargin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧：∑ Each perp and USDC Futures upl by base coin。非統一保證金模式以及統一帳戶(反向)下，該字段返回為空。|
-|> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金：∑ Asset Total Initial Margin Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
-|> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑ Asset Total Maintenance Margin Base Coin。非統一保證金模式和統一帳戶(反向)以及統一帳戶(逐倉模式)，該字段返回為空。|
+|> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>統一帳戶2.0(逐倉模式), <br/>統一帳戶1.0(逐倉模式), 統一帳戶1.0(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
+|> accountMMRate |string |帳戶維持保證金率|
+|> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD)|
+|> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|
+|> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL|
+|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: 全倉保證金: totalMarginBalance - totalInitialMargin|
+|> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin|
+|> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin|
+|> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin|
 |> coin |arrays |幣種列表|
-|>> coin |string |幣種名稱，例如 BTC，ETH，USDT，USDC|
+|>> coin |string |幣種名稱，例如 BTC, ETH, USDT, USDC|
 |>> equity |string |當前幣種的資產淨值|
 |>> usdValue |string |當前幣種折算成 usd 的價值|
 |>> walletBalance |string |當前幣種的錢包餘額|
@@ -43,7 +38,6 @@ GET `/v5/account/wallet-balance`
 |>> locked |string |現貨掛單凍結金額 |
 |>> spotHedgingQty |string |用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0 _統一帳戶的獨有字段_ |
 |>> borrowAmount |string |當前幣種的已用借貸額度 |
-|>> availableToBorrow |string |由於母子共享借貸限額, 該字段已廢棄, 總是返回`""`. 請通過[查詢抵押品信息](collateral-info)接口查詢`availableToBorrow` |
 |>> availableToWithdraw |string |當前幣種的可劃轉提現金額 |
 |>> accruedInterest	|string	|當前幣種的預計要在下一個利息週期收取的利息金額|
 |>> totalOrderIM |string |以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串|
@@ -54,6 +48,7 @@ GET `/v5/account/wallet-balance`
 |>> bonus |string |體驗金. _UNIFIED帳戶的獨有字段_ |
 |>> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <ul><li>當marginCollateral=false時, 則collateralSwitch無意義</li><li>UNIFIED帳戶的獨有字段</li></ul>|
 |>> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <ul><li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li><li>UNIFIED帳戶的獨有字段</li></ul>|
+|>> availableToBorrow |string |由於母子共享借貸限額, 該字段已廢棄, 總是返回`""`. 請通過[查詢抵押品信息](collateral-info)接口查詢`availableToBorrow` |
 
 <a href="/api-explorer/v5/account/wallet"><Button>運行實例 >></Button></a>
 

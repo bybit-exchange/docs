@@ -8,12 +8,6 @@ Query the balance of a specific coin in a specific [account type](../../enum#acc
 Also, you can check the transferable amount from master to sub account, sub to master account or sub to sub account, especially
 for user who has an institutional loan.
 
-:::info
-* Sub account **cannot** query master account balance
-* Sub account can only check its own balance
-* Master account can check its own and its sub UIDs balance
-:::
-
 ### HTTP Request
 GET `/v5/asset/transfer/query-account-coin-balance`
 
@@ -26,8 +20,8 @@ GET `/v5/asset/transfer/query-account-coin-balance`
 |[toAccountType](../../enum#accounttype) |false |string |To account type. **Required** when querying the transferable balance between different account types|
 |coin |**true** |string |Coin, uppercase only |
 |withBonus |false |integer |`0`(default): not query bonus. `1`: query bonus  |
-|withTransferSafeAmount|false |integer |Whether query delay withdraw/transfer safe amount <ul><li>`0`(default)：false, `1`：true</li><li>What is [delay withdraw amount](delay-amount#)?</li></ul> |
-|withLtvTransferSafeAmount|false |integer |For OTC loan users in particular, you can check the transferable amount under risk level<ul><li>`0`(default)：false, `1`：true</li><li>`toAccountType` is mandatory</li></ul> |
+|withTransferSafeAmount|false |integer |Whether query delay withdraw/transfer safe amount <ul><li>`0`(default): false, `1`: true</li><li>What is [delay withdraw amount](delay-amount#)?</li></ul> |
+|withLtvTransferSafeAmount|false |integer |For OTC loan users in particular, you can check the transferable amount under risk level<ul><li>`0`(default): false, `1`: true</li><li>`toAccountType` is mandatory</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|

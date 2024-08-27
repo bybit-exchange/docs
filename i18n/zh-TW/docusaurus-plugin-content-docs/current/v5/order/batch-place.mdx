@@ -3,16 +3,17 @@ title: 批量創建委託單
 sidebar_label: 批量創建委託單
 sidebar_position: 7
 ---
-> **覆蓋範圍: 現貨 (統一帳戶) / 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
+> **統一帳戶2.0**: 現貨, 期權, USDT永續, USDC合約, 反向合約
+> **統一帳戶1.0**: 現貨, 期權, USDT永續, USDC合約
 
 :::tip
 該接口支持批量創建委託單
 - 下單時需確保帳戶內有足夠的資金。一旦下單，根據訂單所需資金，您的帳戶資金將在訂單生命週期內凍結相應額度，被凍結的資金額度取決於訂單屬性。
-- 每個請求包含的訂單數最大是: 20筆(期权), 10筆(期貨), 10筆(現貨)，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
+- 每個請求包含的訂單數最大是: 20筆(反向合約), 20筆(期权), 10筆(正向合約), 10筆(現貨)，返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
 :::
 
 :::info
-- 當category=`linear` 或者 `spot`時, 請從[這裡](../rate-limit#不同vippro等級的接口限頻規則)查閱其API限頻說明
+- 當category=linear, inverse 或者 spot時, 請從[這裡](../rate-limit#不同vippro等級的接口限頻規則)查閱其API限頻說明
 
 - **風控限制提示:**<br/>
 Bybit 將針對您的 API 請求進行統計監控，當單日 (UTC 0点 - UTC 24点) 單帳號（母帳號和子帳號整體運算）訂單總数超過一定上限，平台將保留提醒、警告，以及進行必要性限制的權利。
@@ -25,7 +26,7 @@ POST `/v5/order/create-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `linear`, `option`, `spot` |
+|[category](../enum#category) |**true** |string |產品類型<li>統一帳戶2.0: `linear`, `option`, `spot`, `inverse`</li><li>統一帳戶1.0: `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱|
 |> isLeverage |false |integer |是否借貸. 僅**統一帳戶的現貨交易**有效. `0`(default): 否，則是幣幣訂單, `1`: 是，則是槓桿訂單|
@@ -40,21 +41,21 @@ POST `/v5/order/create-batch`
 |> [triggerBy](../enum#triggerby) |false |string |條件單參數. 觸發價格類型. `LastPrice`, `IndexPrice`, `MarkPrice`<br/>僅`linear`有效|
 |> orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `orderIv`比`price`有更高的優先級 |
 |> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><ul><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li> </ul>|
-|> [positionIdx](../enum#positionidx) |false |integer |倉位標識, 用戶不同倉位模式. 該字段對於雙向持倉模式(USDT永續支持雙向模式)是**必傳**:<ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li></ul>僅`linear`有效|
+|> [positionIdx](../enum#positionidx) |false |integer |倉位標識, 用戶不同倉位模式. 該字段對於雙向持倉模式是**必傳**:<ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li></ul>|
 |> orderLinkId |false |string |用戶自定義訂單Id. category=`option`時，該參數必傳|
-|> takeProfit |false |string |止盈價格, 对`linear`和`spot`有效 |
-|> stopLoss |false |string |止損價格, 对`linear`和`spot`有效 |
-|> [tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`<br/>僅`linear`有效|
-|> [slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`<br/>僅`linear`有效|
+|> takeProfit |false |string |止盈價格|
+|> stopLoss |false |string |止損價格|
+|> [tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`<br/>`linear`, `inverse`有效|
+|> [slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型. `MarkPrice`, `IndexPrice`, 默認:`LastPrice`<br/>`linear`, `inverse`有效|
 |> reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉 <ul><li>當減倉時, reduceOnly=true**必傳**</li><li>只減倉單的止盈止損不生效</li></ul> |
-|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行.<br/>僅`linear`有效 |
+|> closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行.<br/>`linear`, `inverse`有效 |
 |> [smpType](../enum#smptype) |false |string |Smp執行類型. [什麼是SMP?](../smp)|
 |> mmp |false |boolean |做市商保護. 僅`option`有效. `true` 表示該訂單是做市商保護訂單. [什麼是做市商保護?](../account/set-mmp)|
-|> tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損(下單時沒有size選項, 實際上創建tpsl訂單時, 是按照實際成交的數量來生成止盈止損). 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>僅`linear`有效|
-|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格 <ul><li>`linear`: 僅作用於當tpslMode=Partial以及tpOrderType=Limit時</li><li>`spot`(UTA): 參數必傳當創建訂單時帶了`takeProfit` 和 `tpOrderType=Limit`</li></ul>|
-|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格 <ul><li>`linear`: 僅作用於當tpslMode=Partial以及slOrderType=Limit時</li><li>`spot`(UTA): 參數必傳當創建訂單時帶了`stopLoss` 和 `slOrderType=Limit`</li></ul>|
-|> tpOrderType |false |string |止盈觸發後的訂單類型 <ul><li>`linear`: `Market`(默認), `Limit`. 對於tpslMode=Full, 僅支持tpOrderType=Market</li><li>`spot`(UTA): <br/>`Market`: 當帶了參數"takeProfit", `Limit`: 當帶了參數"takeProfit" 和 "tpLimitPrice" </li></ul>|
-|> slOrderType |false |string |止損觸發後的訂單類型 <ul><li>`linear`: `Market`(默認), `Limit`. 對於tpslMode=Full, 僅支持slOrderType=Market</li><li>`spot`(UTA): <br/>`Market`: 當帶了參數"stopLoss", `Limit`: 當帶了參數"stopLoss" 和 "slLimitPrice" </li></ul>|
+|> tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損(下單時沒有size選項, 實際上創建tpsl訂單時, 是按照實際成交的數量來生成止盈止損). 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>`linear`, `inverse`有效|
+|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格 <ul><li>`linear`, `inverse`: 僅作用於當tpslMode=Partial以及tpOrderType=Limit時</li><li>`spot`(UTA): 參數必傳當創建訂單時帶了`takeProfit` 和 `tpOrderType=Limit`</li></ul>|
+|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格 <ul><li>`linear`, `inverse``: 僅作用於當tpslMode=Partial以及slOrderType=Limit時</li><li>`spot`(UTA): 參數必傳當創建訂單時帶了`stopLoss` 和 `slOrderType=Limit`</li></ul>|
+|> tpOrderType |false |string |止盈觸發後的訂單類型 <ul><li>`linear`, `inverse``: `Market`(默認), `Limit`. 對於tpslMode=Full, 僅支持tpOrderType=Market</li><li>`spot`(UTA): <br/>`Market`: 當帶了參數"takeProfit", `Limit`: 當帶了參數"takeProfit" 和 "tpLimitPrice" </li></ul>|
+|> slOrderType |false |string |止損觸發後的訂單類型 <ul><li>`linear`, `inverse``: `Market`(默認), `Limit`. 對於tpslMode=Full, 僅支持slOrderType=Market</li><li>`spot`(UTA): <br/>`Market`: 當帶了參數"stopLoss", `Limit`: 當帶了參數"stopLoss" 和 "slLimitPrice" </li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
