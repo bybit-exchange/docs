@@ -5,8 +5,6 @@ sidebar_position: 6.1
 ---
 
 Query users' execution records, sorted by `execTime` in descending order. However, for Classic `spot`, they are sorted by `execId` in descending order.
-> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
-> **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
 * Response items will have sorting issues When 'execTime' is the same, it is recommended to sort according to `execId+OrderId+leavesQty`. This issue is currently being optimized and will be released. 
@@ -16,8 +14,7 @@ Query users' execution records, sorted by `execTime` in descending order. Howeve
 :::
 
 :::info
-* Classic Spot supports getting the past 180 days historical data
-* Unified account (linear, spot, option) supports getting the past 730 days historical data
+* Unified account supports getting the past 730 days historical trades data
 :::
 
 ### HTTP Request
@@ -26,12 +23,12 @@ GET `/v5/execution/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID. _Classic account does not support this param_ |
-|baseCoin |false |string |Base coin, uppercase only. _Unified account - inverse and Classic account do not support this param_ |
-|startTime |false |integer |The start timestamp (ms) <ul><li>Classic Spot: supports the interval up to 180 days</li><li>Others:<br/>startTime and endTime are not passed, return 7 days by default;<br/>Only startTime is passed, return range between startTime and startTime+7 days;<br/>Only endTime is passed, return range between endTime-7 days and endTime;<br/>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|baseCoin |false |string |Base coin, uppercase only <li>[UTA1.0](../acct-mode#uta-10)(category=inverse) and classic account are not supported</li>|
+|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default;<br/><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type. _Classic `spot` is not supported_|
 |limit |false |integer |Limit for data size per page. [`1`, `100`]. Default: `50`|
@@ -49,7 +46,7 @@ GET `/v5/execution/list`
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
-|> [createType](../enum#createtype) |string |Order create type <li>UTA: Only for category=linear</li><li>Classic & UTA(inverse): always `""`</li><li>Spot, Option do not have this key</li> |
+|> [createType](../enum#createtype) |string |Order create type <li>classic account & [UTA1.0](../acct-mode#uta-10)(category=inverse): always `""`</li><li>Spot, Option do not have this key</li> |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, it either returns `UNKNOWN` or `""`. _Classic `spot` is not supported_ |
 |> execFee |string   |Executed trading fee. You can get spot fee currency instruction [here](../enum#spot-fee-currency-instruction) |
@@ -69,7 +66,7 @@ GET `/v5/execution/list`
 |> underlyingPrice |string |The underlying price of the symbol when executing. _Valid for `option`_|
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
-|> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Classic account Spot trade does not have this field</li></ul>|
+|> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>classic account Spot trade does not have this field</li></ul>|
 |nextPageCursor |string |Refer to the `cursor` request parameter|
 
 <a href="/api-explorer/v5/position/execution"><Button>RUN >></Button></a>

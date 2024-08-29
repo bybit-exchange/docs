@@ -3,9 +3,6 @@ title: 撤銷委託單
 sidebar_label: 撤銷委託單
 sidebar_position: 3
 ---
-> **統一帳戶覆蓋範圍: 現貨 / USDT永續 / USDC永續 / USDC交割 / 期權**<br/>
-> **經典帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
-
 :::info 重要
 - 您必須指定`orderId`或者`orderLinkId`.
 - 若`orderId`和`orderLinkId`之間不匹配, 系統將會優先處理`orderId`.
@@ -18,11 +15,11 @@ POST `/v5/order/cancel`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul>|
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |合約名稱|
 |orderId |false |string |訂單Id. `orderId`和`orderLinkId`**必傳**其中一個 |
 |orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`**必傳**其中一個 |
-|orderFilter |false |string |僅`spot`有效. `Order`: 普通單,`tpslOrder`: 止盈止損單,`StopOrder`: 條件單. 若不傳, 默認是`Order`|
+|orderFilter |false |string |僅現貨交易有效<li>`Order`: 普通單</li><li>`tpslOrder`: 止盈止損單</li><li>`StopOrder`: 條件單</li>若不傳, 默認是`Order`|
 
 ### 響應參數
 | 參數 | 類型 | 說明|

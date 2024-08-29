@@ -8,11 +8,6 @@ The V5 API brings uniformity and efficiency to Bybit's product lines, unifying S
 set of specifications.
 
 ## Current API Coverage
-:::tip
-If your account is still a Unified Margin Account, you cannot trade spot through the V5 API. We strongly recommend
-upgrading to the Unified Trading Account.
-:::
-
 <span class="blocky_table">
 
 <table class="custom_table">
@@ -94,18 +89,11 @@ Example: api.bybit.com/v5/market/recent-trade
 ### API Rate Limit Adjustment
 The rate limit has been adjusted in V5 to allocate a per-second rate limit quota for each User ID across products, to
 ensure smooth transactions and improve user experience.
-* **V2 Rate Limit:** “User ID + Symbol + API Endpoint” limits the frequency of API requests by a fixed number of counts per minute
 * **V3 Rate Limit:** “User ID + API Endpoint” limits the frequency of API requests by a fixed number of counts per second
 * **V5 Rate Limit:** “User ID + API Endpoint” limits the frequency of API requests by a fixed number of counts per second
 <br/>
 
 _For example:_
-* **In V2 Futures,**
-    * Trader Bob sets the order frequency of BTCUSDT at 400/m, ETHUSDT at 200/m, and other symbols at 100/m
-    * If he places 200 order requests for BTCUSDT, his remaining limit in that one minute is 200 order requests for
-  BTCUSDT, 200 for ETHUSDT and 100 for other symbols
-    * If 100 ETHUSDT order requests are sent in at the same time, the remaining credit in that one minute is 200 order
-  requests for BTCUSDT, 100 for ETHUSDT, and 100 for other symbols
 * **In V3/V5,**
     * The default limit is 10/s for all users
     * Trader Charlie increases his order frequency to 100/s (representing a maximum of 100 requests across all

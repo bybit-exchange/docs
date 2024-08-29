@@ -6,6 +6,17 @@ sidebar_position: 1
 
 After the account is upgraded to a Unified account, you can get the orders which occurred before the upgrade.
 
+* **[UTA2.0](../acct-mode#uta20):** <br/>
+By category=linear, you can query USDT Perps, USDC Perps data occurred during classic account<br/>
+By category=spot, you can query Spot data occurred during classic account<br/>
+By category=option, you can query Options data occurred during classic account<br/>
+By category=inverse, you can query Inverse Contract data occurred during **classic account or [UTA1.0](../acct-mode#uta-10)**
+
+* **[UTA1.0](../acct-mode#uta10):** <br/>
+By category=linear, you can query USDT Perps, USDC Perps data occurred during classic account<br/>
+By category=spot, you can query Spot data occurred during classic account<br/>
+By category=option, you can query Options data occurred during classic account<br/>
+
 :::info
 * can get all status in 7 days
 * can only get filled orders beyond 7 days
@@ -18,7 +29,7 @@ GET `/v5/pre-upgrade/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `spot`, `linear`, `inverse`, `option` |
+|[category](../enum#category) |**true** |string |Product type `linear`, `inverse`, `option`, `spot`|
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only. <ul><li>If not passed, return settleCoin=USDT by default</li><li>To get USDC perp, please pass symbol</li></ul>|
 |baseCoin |false |string |Base coin, uppercase only. Used for `option` query|
 |orderId |false |string |Order ID |

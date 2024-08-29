@@ -26,19 +26,19 @@ You may have multiple executions for one order in a single message.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> [category](../../enum#category) | string  | Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`.</li></ul>|
+|> [category](../../enum#category) | string  | Product type <ul><li>[UTA2.0](../../acct-mode#uta-20), [UTA1.0](../../acct-mode#uta-10): `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`.</li></ul>|
 |> symbol |string   |Symbol name |
-|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true. . _Classic `spot` is not supported, always `0`_|
+|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true<br/>_Classic `spot` is not supported, always `0`_|
 |> orderId |string |Order ID |
 |> orderLinkId |string |User customized order ID |
 |> side |string |Side. `Buy`,`Sell` |
 |> orderPrice |string |Order price. _Classic `spot` is not supported_ |
 |> orderQty |string |Order qty. _Classic `spot` is not supported_ |
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
-|> [createType](../../enum#createtype) |string |Order create type <li>UTA: Only for category=linear or inverse</li><li>Classic: always `""`</li><li>Spot, Option do not have this key</li> |
+|> [createType](../../enum#createtype) |string |Order create type <li>Classic account & [UTA1.0](../../acct-mode#uta-10)(category=inverse): always `""`</li><li>Spot, Option do not have this key</li> |
 |> [orderType](../../enum#ordertype) |string |Order type. `Market`,`Limit`. _Classic `spot` is not supported_ |
 |> [stopOrderType](../../enum#stopordertype) |string |Stop order type. If the order is not stop order, any type is not returned. _Classic `spot` is not supported_ |
-|> execFee |string |Executed trading fee. You can get spot fee currency instruction [here](../../enum#spot-fee-currency-instruction) _Classic `spot` is not supported_ |
+|> execFee |string |Executed trading fee. You can get spot fee currency instruction [here](../../enum#spot-fee-currency-instruction)<br/>_Classic `spot` is not supported_ |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
@@ -47,11 +47,11 @@ You may have multiple executions for one order in a single message.
 |> execTime |string |Executed timestamp（ms） |
 |> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
 |> feeRate |string |Trading fee rate. _Classic `spot` is not supported_ |
-|> tradeIv |string |Implied volatility. Valid for `option` |
-|> markIv |string |Implied volatility of mark price. Valid for `option`|
-|> markPrice |string |The mark price of the symbol when executing. Valid for `option` |
-|> indexPrice |string |The index price of the symbol when executing. Valid for `option` |
-|> underlyingPrice |string |The underlying price of the symbol when executing. Valid for `option`|
+|> tradeIv |string |Implied volatility. valid for `option` |
+|> markIv |string |Implied volatility of mark price. valid for `option`|
+|> markPrice |string |The mark price of the symbol when executing. valid for `option` |
+|> indexPrice |string |The index price of the symbol when executing. valid for `option` |
+|> underlyingPrice |string |The underlying price of the symbol when executing. valid for `option`|
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
 |> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li></ul>|

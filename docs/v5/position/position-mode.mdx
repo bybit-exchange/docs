@@ -4,8 +4,6 @@ sidebar_label: Switch Position Mode
 sidebar_position: 2.8
 ---
 It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
-> **Unified account covers: USDT perpetual / Inverse Futures**<br/>
-> **Classic account covers: USDT perpetual / Inverse Futures**
 
 :::tip
 * Priority for configuration to take effect: symbol > coin > system default
@@ -57,19 +55,22 @@ It supports to switch the position mode for **USDT perpetual** and **Inverse fut
 ### The position-switch ability for each contract
 <table class="custom_table">
     <tr>
-        <th></th><th>Classic account</th><th>Unified account</th>
+        <th></th><th>Classic account</th><th>UTA1.0</th><th>UTA2.0</th>
     </tr>
     <tr>
-        <td>USDT perpetual</td><td><b>Support one-way & hedge-mode</b></td><td><b>Support one-way & hedge-mode</b></td>
+        <td>USDT perpetual</td><td><b>Support one-way & hedge-mode</b></td><td><b>Support one-way & hedge-mode</b></td><td><b>Support one-way & hedge-mode</b></td>
     </tr>
     <tr>
-        <td>USDC perpetual</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
+        <td>USDC perpetual</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
+    </tr>
+     <tr>
+        <td>USDC futures</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
     </tr>
     <tr>
-        <td>Inverse perpetual</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
+        <td>Inverse perpetual</td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td><td>Support one-way <b>only</b></td>
     </tr>
     <tr>
-        <td>Inverse future</td><td><b>Support one-way & hedge-mode</b></td><td><b>Support one-way & hedge-mode</b></td>
+        <td>Inverse futures</td><td><b>Support one-way & hedge-mode</b></td><td><b>Support one-way & hedge-mode</b></td><td>Support one-way <b>only</b></td>
     </tr>
 </table>
 
@@ -79,7 +80,7 @@ POST `/v5/position/switch-mode`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li> Unified account: `linear`, USDT Perp; `inverse`, Inverse Futures</li><li>Classic account: `linear`, USDT Perp; `inverse`, Inverse Futures. _Please note that `category` is **not** involved with business logic_</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li> [UTA2.0](../acct-mode#uta-20): `linear`, USDT Perp</li><li> [UTA1.0](../acct-mode#uta-10): `linear`, USDT Perp; `inverse`, Inverse Futures</li><li>Classic: `linear`, USDT Perp; `inverse`, Inverse Futures</li></ul> |
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only. Either `symbol` or `coin` is **required**. `symbol` has a higher priority |
 |coin |false |string |Coin, uppercase only |
 |mode |**true** |integer |Position mode. `0`: Merged Single. `3`: Both Sides|

@@ -8,12 +8,16 @@ Get users' execution records which occurred before you upgraded the account to a
 
 For now, it supports to query USDT perpetual, USDC perpetual, Inverse perpetual, Inverse futures, Spot and Option.
 
-:::tip
-* Response items will have sorting issues When 'execTime' is the same, it is recommended to sort according to `execId+OrderId+leavesQty`. This issue is currently being optimized and will be released. 
-  If you want to receive real-time execution information, Use the [websocket stream](../websocket/private/execution) (recommended).
-* You may have multiple executions in a single order.
-* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
-:::
+* **[UTA2.0](../acct-mode#uta20):** <br/>
+By category=linear, you can query USDT Perps, USDC Perps data occurred during classic account<br/>
+By category=spot, you can query Spot data occurred during classic account<br/>
+By category=option, you can query Options data occurred during classic account<br/>
+By category=inverse, you can query Inverse Contract data occurred during **classic account or [UTA1.0](../acct-mode#uta-10)**
+
+* **[UTA1.0](../acct-mode#uta10):** <br/>
+By category=linear, you can query USDT Perps, USDC Perps data occurred during classic account<br/>
+By category=spot, you can query Spot data occurred during classic account<br/>
+By category=option, you can query Options data occurred during classic account<br/>
 
 :::info
 USDC Perpeual & Option support the recent 6 months data. Please download older data via GUI
@@ -25,7 +29,7 @@ GET `/v5/pre-upgrade/execution/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type `linear`, `inverse`, `option`, `spot` |
+|[category](../enum#category) |**true** |string |Product type `linear`, `inverse`, `option`, `spot`|
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |

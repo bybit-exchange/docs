@@ -4,13 +4,18 @@ sidebar_label: 查詢升級前成交紀錄
 sidebar_position: 2
 ---
 
-目前，僅支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約, 現貨和期權, 返回結果按`execTime`降序排列
+支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約, 現貨和期權, 返回結果按`execTime`降序排列
 
-:::tip
-* 儅execTime相同時,返回會有排序問題，此問題已在優化中, 目前建議依照`execId+OrderId+leavesQty`進行排序, 如果您想獲取實時成交信息建議使用[websocket stream](../websocket/private/execution).
-* 單筆訂單可能會有多次成交.
-* 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
-:::
+* **[統一帳戶2.0](../acct-mode#統一帳戶20):** <br/>
+通過category=linear, 查詢到在經典帳戶期間產生的USDT永續, USDC永續數據<br/>
+通過category=spot, 查詢到在經典帳戶期間產生的現貨數據<br/>
+通過category=option, 查詢到在經典帳戶期間產生的期權數據<br/>
+通過category=inverse, 查詢到在**經典帳戶或者[統一帳戶1.0](../acct-mode#統一帳戶10)**期間產生的反向合約數據
+
+* **[統一帳戶1.0](../acct-mode#統一帳戶10):** <br/>
+通過category=linear, 查詢到在經典帳戶期間產生的USDT永續, USDC永續數據<br/>
+通過category=spot, 查詢到在經典帳戶期間產生的現貨數據<br/>
+通過category=option, 查詢到在經典帳戶期間產生的期權數據<br/>
 
 :::info
 USDC永續和期權僅支持查詢最近6個月的數據, 對於更老的數據, 請前往網頁端下載

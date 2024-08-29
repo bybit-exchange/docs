@@ -5,8 +5,6 @@ sidebar_position: 4
 ---
 
 該接口可以設置止盈、止損和追蹤止損
-> **統一帳戶覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約**<br/>
-> **經典帳戶覆蓋範圍: USDT永續 / 反向合約**
 
 :::tip
 在提交請求後，系統內部將會自動創建對應類型的條件單。若倉位被平，系統將會調整相關條件訂單數量或者取消這些條件單。
@@ -29,7 +27,7 @@ POST `/v5/position/trading-stop`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>統一帳戶: `linear`, `inverse`</li><li>經典帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `inverse`</li><li>經典帳戶: `linear`, `inverse`</li></ul> |
 |symbol |**true** |string |合約名稱|
 |takeProfit |false |string |止盈價格. 等於0表示取消止盈，若不修改，則不要傳遞該參數|
 |stopLoss |false |string |止損價格. 等於0表示取消止損，若不修改，則不要傳遞該參數 |
@@ -40,10 +38,10 @@ POST `/v5/position/trading-stop`
 |tpslMode |true |string |止盈止損模式. `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損|
 |tpSize |false |string |止盈倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等 |
 |slSize |false |string |止損倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等|
-|tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格. 僅tpslMode=Partial且tpOrderType=Limit時有效|
-|slLimitPrice |false |string |觸發止損後轉換為限價單的價格. 僅tpslMode=Partial且slOrderType=Limit時有效|
-|tpOrderType |false |string |止盈觸發後的訂單類型. `Market`(默認), `Limit`. 對於tpslMode=Full時, 僅支持tpOrderType=Market|
-|slOrderType |false |string |止損觸發後的訂單類型. `Market`(默認), `Limit`. 對於tpslMode=Full時, 僅支持slOrderType=Market|
+|tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格<br/>僅tpslMode=Partial且tpOrderType=Limit時有效|
+|slLimitPrice |false |string |觸發止損後轉換為限價單的價格<br/>僅tpslMode=Partial且slOrderType=Limit時有效|
+|tpOrderType |false |string |止盈觸發後的訂單類型. `Market`(默認), `Limit`<br/>對於tpslMode=Full時, 僅支持tpOrderType=Market|
+|slOrderType |false |string |止損觸發後的訂單類型. `Market`(默認), `Limit`<br/>對於tpslMode=Full時, 僅支持slOrderType=Market|
 |[positionIdx](../enum#positionidx) |**true** |integer |倉位標識，用戶識別倉位. <ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li> </ul>|
 
 <a href="/api-explorer/v5/position/trading-stop"><Button>運行實例 >></Button></a>

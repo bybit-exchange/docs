@@ -6,6 +6,11 @@ sidebar_position: 4
 
 Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 
+:::info
+* There is no snapshot event given at the time when the subscription is successful
+* The unrealised PnL change does not trigger an event
+:::
+
 **Topic:** `wallet`
 
 ### Response Parameters
@@ -15,28 +20,28 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> accountType |string |Account type. <ul><li>Unified account: `UNIFIED` (spot/linear/options), `CONTRACT`(inverse)</li><li>Classic account: `CONTRACT`, `SPOT`</li></ul> |
-|> accountLTV |string |Account LTV: account total borrowed size / (account total equity + account total borrowed size). In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalEquity |string |Equity of account converted to usd：Account Margin Balance Base Coin + Account Option Value Base Coin. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
-|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance By USD value of each asset。In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalMarginBalance |string |Margin Balance of account converted to usd：totalWalletBalance + totalPerpUPL. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string. |
-|> totalAvailableBalance |string |Available Balance of account converted to usd：Regular mode：totalMarginBalance - totalInitialMargin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalPerpUPL |string |Unrealised P&L of Perpetuals and USDC Futures of account converted to usd：∑ Each Perp and USDC Futures upl by base coin. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
-|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
+|> accountType |string |Account type. <ul><li>[UTA2.0](../../acct-mode#uta-20): `UNIFIED`</li><li>[UTA1.0](../../acct-mode#uta-10): `UNIFIED` (spot/linear/options), `CONTRACT`(inverse)</li><li>Classic: `CONTRACT`, `SPOT`</li></ul> |
+|> accountLTV |string |Depreciated field|
+|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All below account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../../acct-mode#uta-10)(isolated margin), [UTA1.0](../../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
+|> accountMMRate |string |Account MM rate|
+|> totalEquity |string |Account total equity (USD)|
+|> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
+|> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
+|> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
+|> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
+|> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
+|> totalMaintenanceMargin |string |Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity of current coin |
-|>> usdValue |string |USD value of current coin. If this coin cannot be collateral, then it is 0|
-|>> walletBalance |string |Wallet balance of current coin |
+|>> equity |string |Equity of coin |
+|>> usdValue |string |USD value of coin. If this coin cannot be collateral, then it is 0|
+|>> walletBalance |string |Wallet balance of coin |
 |>> free |string |Available balance for Spot wallet. _This is a unique field for Classic `SPOT`_ |
 |>> locked |string |Locked balance due to the Spot open order |
 |>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default _This is a unique field for Unified account_ |
-|>> borrowAmount |string |Borrow amount of current coin|
+|>> borrowAmount |string |Borrow amount of coin|
 |>> availableToBorrow |string |Depreciated field, always return `""` due to feature of main-sub UID sharing borrow quota. Please refer to `availableToBorrow` in the [Get Collateral Info](/v5/account/collateral-info)|
-|>> availableToWithdraw |string |Available amount to withdraw of current coin |
+|>> availableToWithdraw |string |Available amount to withdraw of coin |
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order. For portfolio margin mode, it returns ""|
 |>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns "" |

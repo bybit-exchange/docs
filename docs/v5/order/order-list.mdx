@@ -6,21 +6,16 @@ sidebar_position: 6
 
 Query order history. As order creation/cancellation is **asynchronous**, the data returned from this endpoint may delay. If you want to get
 real-time order information, you could query this [endpoint](open-order#) or rely on the [websocket stream](../websocket/private/order) (recommended).
-> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
-> **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
-:::tip
-* The orders in the **last 7 days**: UTA(linear,spot,option) supports querying all [closed status](../enum#orderstatus) except "Cancelled", "Rejected", "Deactivated" status, UTA(inverse) and Classic account supports querying all status
-* **24 hours**: UTA(linear,spot,option) for the orders with "Cancelled" (fully cancelled order), "Rejected", "Deactivated" can query last 24 hours data
-* The orders **beyond 7 days**: supports querying orders which have fills only, i.e., fully filled, partial filled but cancelled finally orders can be queried.
-* You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
+:::tip rule
+* The orders in the **last 7 days**:<br/>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse) support querying all [closed status](../enum#orderstatus) except "Cancelled", "Rejected", "Deactivated" status.<br/>[UTA1.0](../acct-mode#uta-10)(inverse) and classic account support querying all status (open and close status)
+* The orders in the **last 24 hours**:<br/>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse) for the orders with "Cancelled" (fully cancelled order), "Rejected", "Deactivated" can be query
+* The orders **beyond 7 days**: <br/>All account supports querying orders which have fills only, i.e., fully filled, partial filled but cancelled orders
+* [UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse) support querying the past 2 years data.
 :::
 
 :::info
-* Classic Spot: can get closed order status only
-* Classic Spot: market maker can only get recent 3 days order history, please go to web to export. Retail client can get up to 180 days data
-* Classic Spot: Cancelled, Rejected, Deactivated orders save up to 7 days
-* Unified account (linear, spot, option) supports getting the past 730 days historical data
+* Classic Spot can get closed order status only, and Cancelled, Rejected, Deactivated orders save up to 7 days
 :::
 
 ### HTTP Request
@@ -29,15 +24,15 @@ GET `/v5/order/history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
-|baseCoin |false |string |Base coin, uppercase only. _Unified account - inverse & Classic account does **not** support this param_|
-|settleCoin |false |string |Settle coin, uppercase only. _Unified account - inverse & Classic account does **not** support this param_|
+|baseCoin |false |string |Base coin, uppercase only <li>[UTA1.0](../acct-mode#uta-10)(inverse), classic account do **not** support this param</li>|
+|settleCoin |false |string |Settle coin, uppercase only<li>[UTA1.0](../acct-mode#uta-10)(inverse), classic account do **not** support this param</li>|
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|orderFilter |false |string |`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot OCO orders, `BidirectionalTpslOrder`: Bidirectional TPSL order <ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
-|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: not supported</li><li>UTA(linear,spot,option): return all <b>closed</b> status orders if not passed</li><li>UTA(inverse) and classic account: return all status orders if not passed</li></ul> |
-|startTime |false |integer |The start timestamp (ms). _Classic `spot` trading does not support startTime and endTime_ <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|orderFilter |false |string |`Order`: active order<br/>`StopOrder`: conditional order for Futures and Spot<br/>`tpslOrder`: spot TP/SL order<br/>`OcoOrder`: spot OCO orders<br/>`BidirectionalTpslOrder`: Spot bidirectional TPSL order <ul><li>classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
+|[orderStatus](../enum#orderstatus) |false |string |<ul><li>Classic `spot`: not supported</li><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse): return all <b>closed</b> status orders if not passed</li><li>[UTA1.0](../acct-mode#uta-10)(inverse), classic account(linear, inverse): return all status orders if not passed</li></ul> |
+|startTime |false |integer |The start timestamp (ms)<ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
@@ -60,7 +55,7 @@ GET `/v5/order/history`
 |> [createType](../enum#createtype) |string |Order create type <li>Only for category=linear or inverse</li><li>Spot, Option do not have this key</li> |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> [rejectReason](../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
-|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>Classic account: returns `"0"` for those orders without avg price, and also for those orders have partilly filled but cancelled at the end</li>|
+|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>classic account: returns `"0"` for those orders without avg price, and also for those orders have partilly filled but cancelled at the end</li>|
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |

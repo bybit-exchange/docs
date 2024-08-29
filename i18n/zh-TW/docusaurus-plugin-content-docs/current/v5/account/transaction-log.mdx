@@ -11,8 +11,8 @@ GET `/v5/account/transaction-log`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |false	|string	|錢包類型. 目前僅支持`UNIFIED`|
-|[category](../enum#category) |false |string |交易產品類型. `spot`：現貨；`linear`：USDT永續, USDC永續, USDC交割；`option`：期權|
+|[accountType](../enum#accounttype) |false	|string	|錢包類型. 僅支持`UNIFIED`|
+|[category](../enum#category) |false |string |交易產品類型 <li>[統一帳戶2.0](../acct-mode#統一帳戶20): `spot`,`linear`,`option`,`inverse`</li><li>[統一帳戶1.0](../acct-mode#統一帳戶10): `spot`,`linear`,`option`</li>|
 |currency |false |string |貨幣|
 |baseCoin |false |string |交易幣種. 例如： BTCUSDT 的 baseCoin 是 BTC|
 |[type](../enum#typeuta-translog) |false |string |交易日誌的類型 |
@@ -35,8 +35,8 @@ GET `/v5/account/transaction-log`
 |> size |string |倉位. 特別地, 對於成交的流水來說, 這裡的size表示成交後的倉位大小, 帶有方向, 比如空倉, 則有"-"|
 |> currency |string |USDC、USDT、BTC、ETH|
 |> tradePrice |string |交易價格|
-|> funding	|string	|資金費用. 正數表示用戶收取xx資金費，負數表示用戶支出xx資金費 <li>對於USDC永續合約, 由於資金費結算週期和8小時結算的週期一致, 所以您會看到資金費和8小時結算的數據存在於同一條流水中(type=SETTLEMENT), 您可以通過`funding`來確定資金費用, 以及`cashFlow`來確定8小時平倉盈虧</li>|
-|> fee	|string	|手續費，正數表示用戶付出xx手續費，負數表示返佣|
+|> funding	|string	|資金費用. 正數表示用戶收取xx資金費, 負數表示用戶支出xx資金費 <li>對於USDC永續合約, 由於資金費結算週期和8小時結算的週期一致, 所以您會看到資金費和8小時結算的數據存在於同一條流水中(type=SETTLEMENT), 您可以通過`funding`來確定資金費用, 以及`cashFlow`來確定8小時平倉盈虧</li>|
+|> fee	|string	|手續費, 正數表示用戶付出xx手續費, 負數表示返佣|
 |> cashFlow |string |現金流, 比如平倉時的未平盈虧結算, USDC永續和交割合約的8小時結算, 以及劃入劃出等. 該值不包含任何手續費或者資金費|
 |> change |string |變更 = cashFlow + funding - fee|
 |> cashBalance	|string	|餘額（當前幣種）, 資金流發生後的該幣種的錢包餘額|

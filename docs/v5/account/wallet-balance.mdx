@@ -3,13 +3,8 @@ title: Get Wallet Balance
 sidebar_label: Get Wallet Balance
 sidebar_position: 1
 ---
-Obtain wallet balance, query asset information of each currency, and account risk rate information. By default, currency
+Obtain wallet balance, query asset information of each currency. By default, currency
 information with assets or liabilities of 0 is not returned.
-
-:::tip
-* The trading of UTA inverse contracts is conducted through the CONTRACT wallet.
-* To get Funding wallet balance, please go to this [endpoint](../asset/balance/all-balance)
-:::
 
 ### HTTP Request
 GET `/v5/account/wallet-balance`
@@ -17,7 +12,7 @@ GET `/v5/account/wallet-balance`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |Account type <ul><li>Unified account: `UNIFIED` (trade spot/linear/options), `CONTRACT`(trade inverse)</li><li>Classic account: `CONTRACT`, `SPOT`</li></ul> |
+|[accountType](../enum#accounttype) |**true** |string |Account type <ul><li>[UTA2.0](../acct-mode#uta-20): `UNIFIED`</li><li>[UTA1.0](../acct-mode#uta-10): `UNIFIED`, `CONTRACT`(inverse derivatives wallet)</li><li>Classic account: `CONTRACT`, `SPOT`</li></ul>To get Funding wallet balance, please go to this [endpoint](../asset/balance/all-balance) |
 |coin |false |string |Coin name, uppercase only <ul><li>If not passed, it returns non-zero asset info</li><li>You can pass multiple coins to query, separated by comma. `USDT,USDC`</li></ul>|
 
 ### Response Parameters
@@ -25,36 +20,36 @@ GET `/v5/account/wallet-balance`
 |:----- |:-----|----- |
 |list |array |Object |
 |> accountType |string |Account type|
-|> accountLTV |string |This field has been depreciated|
-|> accountIMRate |string |Initial Margin Rate: Account Total Initial Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> accountMMRate |string |Maintenance Margin Rate: Account Total Maintenance Margin Base Coin / Account Margin Balance Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalEquity |string |Total Equity is calculated by adding the fiat currency valuation of the equity of each coin in your account. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
-|> totalWalletBalance |string |Wallet Balance of account converted to usd：∑ Asset Wallet Balance By USD value of each asset。In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalMarginBalance |string |Margin Balance of account converted to usd：totalWalletBalance + totalPerpUPL. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string. |
-|> totalAvailableBalance |string |Available Balance of account converted to usd：Regular mode：totalMarginBalance - totalInitialMargin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalPerpUPL |string |Unrealised P&L of Perpetuals and USDC Futures of account converted to usd：∑ Each Perp and USDC Futures upl by base coin. In non-unified mode & unified (inverse), the field will be returned as an empty string.|
-|> totalInitialMargin |string |Initial Margin of account converted to usd：∑ Asset Total Initial Margin Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
-|> totalMaintenanceMargin |string |Maintenance Margin of account converted to usd: ∑ Asset Total Maintenance Margin Base Coin. In non-unified mode & unified (inverse) & unified (isolated_margin), the field will be returned as an empty string.|
+|> accountLTV |string |Depreciated field|
+|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../acct-mode#uta-10)(isolated margin), [UTA1.0](../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
+|> accountMMRate |string |Account MM rate|
+|> totalEquity |string |Account total equity (USD)|
+|> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
+|> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
+|> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
+|> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
+|> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
+|> totalMaintenanceMargin |string |Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity of current coin |
-|>> usdValue |string |USD value of current coin|
-|>> walletBalance |string |Wallet balance of current coin |
+|>> equity |string |Equity of coin |
+|>> usdValue |string |USD value of coin|
+|>> walletBalance |string |Wallet balance of coin |
 |>> free |string |Available balance for Spot wallet. _This is a unique field for Classic `SPOT`_ |
 |>> locked |string |Locked balance due to the Spot open order |
-|>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default _This is a unique field for Unified account_ |
+|>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default|
 |>> borrowAmount |string |Borrow amount of current coin |
-|>> availableToBorrow |string |Depreciated field, always return `""` due to feature of main-sub UID sharing borrow quota. Please refer to `availableToBorrow` in the [Get Collateral Info](collateral-info) |
-|>> availableToWithdraw |string |Available amount to withdraw of current coin |
+|>> availableToWithdraw |string |Available amount to withdrawable/transferable of coin |
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order. For portfolio margin mode, it returns "" |
 |>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns "" |
 |>> totalPositionMM	|string |Sum of maintenance margin for all positions. For portfolio margin mode, it returns ""|
 |>> unrealisedPnl |string |Unrealised P&L |
 |>> cumRealisedPnl |string |Cumulative Realised P&L |
-|>> bonus |string |Bonus. _This is a unique field for UNIFIED account_ |
+|>> bonus |string |Bonus. _This is a unique field for accounType=UNIFIED_ |
 |>> marginCollateral |boolean |Whether it can be used as a margin collateral currency (platform), `true`: YES, `false`: NO <li>When marginCollateral=false, then collateralSwitch is meaningless</li> |
 |>> collateralSwitch |boolean |Whether the collateral is turned on by user (user), `true`: ON, `false`: OFF <li>When marginCollateral=true, then collateralSwitch is meaningful</li>|
+|>> availableToBorrow |string |Depreciated field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](collateral-info) |
 
 <a href="/api-explorer/v5/account/wallet"><Button>RUN >></Button></a>
 

@@ -3,15 +3,12 @@ title: Amend Order
 sidebar_label: Amend Order
 sidebar_position: 2
 ---
-> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Option**<br/>
-> **Classic account covers: Spot / USDT perpetual / Inverse contract**
-
-:::info important
+:::info info
 You can only modify **unfilled** or **partially filled** orders.
 :::
 
 :::infoWebsocket logic for Spot
-**Classic account**: if the original Spot order is a PostOnly order, and after the modification, the order becomes a taker order, then
+**classic account**: if the original Spot order is a PostOnly order, and after the modification, the order becomes a taker order, then
 you will receive orderStatus="New" ws message first, followed by orderStatus="Rejected" ws message.<br/>
 
 **Unified account**: if the original Spot order is a PostOnly order, and after the modification, the order becomes a taker order, then
@@ -24,7 +21,7 @@ POST `/v5/order/amend`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`, `spot`, `option`</li><li>Classic account: `linear`, `inverse`, `spot`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |

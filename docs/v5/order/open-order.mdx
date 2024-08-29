@@ -5,17 +5,16 @@ sidebar_position: 4
 ---
 Primarily query unfilled or partially filled orders in **real-time**, but also supports querying recent 500 closed status (Cancelled, Filled) orders. Please see the usage of request param `openOnly`.<br/>
 And to query older order records, please use the [order history](order-list#) interface.
-> **Unified account covers: Spot / USDT perpetual / USDC contract / Inverse contract / Options**<br/>
-> **Classic account covers: Spot / USDT perpetual / Inverse contract**
 
 :::tip
-- This endpoint also allows for querying filled, canceled, and rejected orders to the most recent 500 orders for spot, linear, and option categories. The inverse category is not subject to this limitation.
+- [UTA2.0](../acct-mode#uta-20) can query filled, canceled, and rejected orders to the most recent 500 orders for spot, linear, inverse and option categories
+- [UTA1.0](../acct-mode#uta-10) can query filled, canceled, and rejected orders to the most recent 500 orders for spot, linear, and option categories. The inverse category is not subject to this limitation.
 - You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin.
 - The records are sorted by the `createdTime` from newest to oldest.
 :::
 
 :::info
-* Classic account spot can return open orders only
+* classic account spot can return open orders only
 * After a server release or restart, filled, canceled, and rejected orders of Unified account should only be queried through [order history](order-list#).
 :::
 
@@ -25,14 +24,14 @@ GET `/v5/order/realtime`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type <ul><li>Unified account: `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`</li></ul>|
+|category |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only. For **linear**, either `symbol`, `baseCoin`, `settleCoin` is **required** |
 |baseCoin |false |string |Base coin, uppercase only <li>Supports `linear`, `inverse` & `option`</li><li>`option`: it returns all option open orders by default</li>|
 |settleCoin |false |string |Settle coin, uppercase only <ul><li><b>linear</b>: either `symbol`, `baseCoin` or `settleCoin` is **required**</li><li>`spot`: not supported</li></ul> |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
-|openOnly |false |integer |<ul><li>Unified account & Classic account: `0`(default) - query open orders (e.g., New, PartiallyFilled) **only**</li><li>Unified account (spot / linear / option): `1`, Unified account(inverse) & Classic account(linear / inverse): `2`: return a maximum of recent 500 closed status records are kept under each account (e.g., Cancelled, Rejected, Filled orders). <i>If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</i></li><li>`openOnly` param will be ignored when query by _orderId_ or _orderLinkId_</li><li>Classic `spot`: not supported</li></ul>|
-|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot oco order, `BidirectionalTpslOrder`: Spot bidirectional TPSL order<ul><li>Classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
+|openOnly |false |integer |<ul><li>`0`(default): [UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10), classic account query open status orders (e.g., New, PartiallyFilled) **only**</li><li>`1`: [UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse)<br/>`2`: [UTA1.0](../acct-mode#uta-10)(inverse), classic account<br/>Query a maximum of recent 500 closed status records are kept under each account each category (e.g., Cancelled, Rejected, Filled orders).<br/><i>If the Bybit service is restarted due to an update, this part of the data will be cleared and accumulated again, but the order records will still be queried in [order history](order-list#)</i></li><li>`openOnly` param will be ignored when query by _orderId_ or _orderLinkId_</li><li>Classic `spot`: not supported</li></ul>|
+|orderFilter |false |string|`Order`: active order, `StopOrder`: conditional order for Futures and Spot, `tpslOrder`: spot TP/SL order, `OcoOrder`: Spot oco order, `BidirectionalTpslOrder`: Spot bidirectional TPSL order<ul><li>classic account `spot`: return `Order` active order by default</li><li>Others: all kinds of orders by default</li></ul>|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -55,7 +54,7 @@ GET `/v5/order/realtime`
 |> [createType](../enum#createtype) |string |Order create type <li>Only for category=linear or inverse</li><li>Spot, Option do not have this key</li> |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> [rejectReason](../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_   |
-|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>Classic account: returns `"0"` for those orders without avg price, and also for those orders have partilly filled but cancelled at the end</li>|
+|> avgPrice |string |Average filled price <li>UTA: returns `""` for those orders without avg price</li><li>classic account: returns `"0"` for those orders without avg price, and also for those orders have partilly filled but cancelled at the end</li>|
 |> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_  |
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_  |
 |> cumExecQty |string |Cumulative executed order qty |

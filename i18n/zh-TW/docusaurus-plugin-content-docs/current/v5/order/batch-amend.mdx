@@ -3,12 +3,10 @@ title: 批量修改委託單
 sidebar_label: 批量修改委託單
 sidebar_position: 8
 ---
-> **覆蓋範圍: 現貨 (統一帳戶) / 期權 (統一帳戶) / USDT永續、USDC永續、USDC交割 (UTA Pro)**
-
 :::tip
 該接口支持批量修改委託單
 - 您只能修改那些**未成交**或**部分成交**的訂單. 條件單不支持批量修改.
-- 最多支持單個請求中修改, 期權: 20個訂單, 期貨: 10个訂單, 現貨: 10個訂單.
+- 最多支持單個請求中修改, 期權: 20個訂單, 反向合約: 10個訂單, 正向合約: 10个訂單, 現貨: 10個訂單.
 :::
 
 ### HTTP請求
@@ -17,7 +15,7 @@ POST `/v5/order/amend-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型. `linear`, `option`, `spot` |
+|[category](../enum#category) |**true** |string |產品類型<li>[統一帳戶2.0](../acct-mode#統一帳戶20): `linear`, `option`, `spot`, `inverse`</li><li>[統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱|
 |> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
@@ -26,14 +24,14 @@ POST `/v5/order/amend-batch`
 |> triggerPrice |false |string |<ul><li>對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:<br/> _triggerPrice > 市場價格_<br/>否則, _triggerPrice < 市場價格_</li><li>對於現貨, 這是下止盈止損單(tpslOrder)或者條件單(stopOrder)的觸發價格參數</li></ul>|
 |> qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
 |> price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
-|> tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損. 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>僅對`linear`有效|
-|> takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段 _適用於 `spot`, `linear`_|
-|> stopLoss |false |string |修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段 _適用於 `spot`, `linear`_|
+|> tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損. 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>|
+|> takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段|
+|> stopLoss |false |string |修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段|
 |> [tpTriggerBy](../enum#triggerby) |false |string |止盈價格觸發類型. 若下單時未設置該值，則調用該接口修改止盈價格時，該字段**必傳**|
 |> [slTriggerBy](../enum#triggerby) |false |string |止損價格觸發類型. 若下單時未設置該值，則調用該接口修改止損價格時，該字段**必傳**|
 |> [triggerBy](../enum#triggerby) |false |string |觸發價格的觸發類型|
-|> tpLimitPrice |false |string |*觸發止盈後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效 _適用於 `spot`, `linear`_|
-|> slLimitPrice |false |string |*觸發止損後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效 _適用於 `spot`, `linear`_|
+|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
+|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
 
 ### 響應參數
 | 參數 | 類型 | 說明|

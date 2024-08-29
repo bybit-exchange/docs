@@ -3,7 +3,7 @@ title: 查詢賬戶配置
 sidebar_label: 查詢賬戶配置
 sidebar_position: 8
 ---
-該接口可以查詢賬戶下的配置
+該接口可以查詢賬戶的保證金模式(統一帳戶), 當前帳戶模式等配置
 
 ### HTTP 請求
 GET `/v5/account/info`
@@ -15,13 +15,13 @@ GET `/v5/account/info`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |[unifiedMarginStatus](../enum#unifiedmarginstatus) |integer |帳戶狀態類型|
-|marginMode |string |`ISOLATED_MARGIN`(逐倉保證金), `REGULAR_MARGIN`（全倉保證金） `PORTFOLIO_MARGIN`（組合保證金）|
-|dcpStatus |string |廢棄字段, 總是`OFF`. 請使用[查詢DCP配置](dcp-info#)|
-|timeWindow |integer |廢棄字段, 總是`0`. 請使用[查詢DCP配置](dcp-info#)|
-|smpGroup |integer |已廢棄, 總是`0`. 請調用[查詢SMP組ID](smp-group#) |
+|marginMode |string |`ISOLATED_MARGIN`(逐倉保證金)<br/>`REGULAR_MARGIN`（全倉保證金）<br/>`PORTFOLIO_MARGIN`（組合保證金）|
 |isMasterTrader |boolean |是否為帶單帳戶. `true`, `false` |
 |spotHedgingStatus |string |是否開啟現貨對衝. `ON`, `OFF` |
 |updatedTime |string |賬戶數據更新的時間，毫秒時間戳|
+|dcpStatus |string |廢棄字段, 總是`OFF`. 請使用[查詢DCP配置](dcp-info#)|
+|timeWindow |integer |廢棄字段, 總是`0`. 請使用[查詢DCP配置](dcp-info#)|
+|smpGroup |integer |廢棄字段, 總是`0`. 請調用[查詢SMP組ID](smp-group#) |
 
 <a href="/api-explorer/v5/account/account-info"><Button>運行實例 >></Button></a>
 

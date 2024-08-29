@@ -5,8 +5,6 @@ sidebar_position: 4.6
 ---
 
 Manually add or reduce margin for **isolated** margin position
-> **Unified account covers**: USDT perpetual / USDC perpetual / USDC futures / Inverse contract<br/>
-> **Classic account covers**: USDT perpetual / Inverse contract
 
 ### HTTP Request
 POST `/v5/position/add-margin`
@@ -14,7 +12,7 @@ POST `/v5/position/add-margin`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
+|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |margin |**true** |string |Add or reduce. To add, then `10`; To reduce, then `-10`. Support up to 4 decimal |
 |[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. For hedge mode position, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
