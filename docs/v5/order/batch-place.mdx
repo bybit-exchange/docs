@@ -3,15 +3,12 @@ title: Batch Place Order
 sidebar_label: Batch Place Order
 sidebar_position: 7
 ---
-> **UTA2.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract, Inverse Contract
-> **UTA1.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract
-
 :::tip
 This endpoint allows you to place more than one order in a single request.
 - Make sure you have sufficient funds in your account when placing an order. Once an order is placed, according to the
 funds required by the order, the funds in your account will be frozen by the corresponding amount during the life cycle
 of the order.
-- A maximum of 20 orders (option), 20 orders (inverse), 10 orders (linear), 10 orders (spot) can be placed per request. The returned data list is divided into two lists.
+- A maximum of 20 orders (option), 10 orders (inverse), 10 orders (linear), 10 orders (spot) can be placed per request. The returned data list is divided into two lists.
 The first list indicates whether or not the order creation was successful and the second list details the created order information. The structure of the two lists are completely consistent.
 :::
 
@@ -28,7 +25,7 @@ POST `/v5/order/create-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <li>UTA2.0: `linear`, `option`, `spot`, `inverse`</li><li>UTA1.0: `linear`, `option`, `spot`</li> |
+|[category](../enum#category) |**true** |string |Product type <li>[UTA2.0](../acct-mode#uta-20): `linear`, `option`, `spot`, `inverse`</li><li>[UTA1.0](../acct-mode#uta-10): `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |> isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|

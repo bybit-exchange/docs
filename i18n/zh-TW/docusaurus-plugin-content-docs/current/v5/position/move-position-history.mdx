@@ -4,11 +4,9 @@ sidebar_label: 查詢移倉歷史
 sidebar_position: 13
 ---
 您可以通過使用母帳戶的api key查詢過去的移倉歷史紀錄
-> **統一帳戶2.0覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 現貨 / 期權**<br/>
-> **統一帳戶1.0覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 現貨 / 期權**<br/>
 
 :::info
-本期暫不支持統一帳戶2.0 反向合約移倉
+本期暫不支持[統一帳戶2.0](../acct-mode#統一帳戶20) 反向合約移倉
 :::
 
 ### HTTP 請求
@@ -17,7 +15,7 @@ GET `/v5/position/move-history`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |false |string |產品類型. `linear`, `spot`, `option` |
+|[category](../enum#category) |false |string |產品類型<li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `spot`, `option`</li>|
 |symbol |false |string |合約名稱/幣對名|
 |startTime |false |number |創建訂單的開始時間戳 (毫秒), `startTime`和`endTime`的時間範圍是7天|
 |endTime |false |number |創建訂單的結束時間戳 (毫秒), `startTime`和`endTime`的時間範圍是7天|
@@ -31,7 +29,7 @@ GET `/v5/position/move-history`
 |:----- |:-----|----- |
 |list |array |Object |
 |> blockTradeId |string |大宗交易ID|
-|> [category](../enum#category) |string |產品類型. `linear`, `spot`, `option` |
+|> [category](../enum#category) |string |產品類型<li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `spot`, `option`</li>|
 |> orderId |string |Bybit側的訂單ID|
 |> userId |integer |用戶ID|
 |> symbol |string |合約名稱|

@@ -11,7 +11,7 @@ GET `/v5/account/wallet-balance`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |帳戶類型 <ul><li>統一帳戶2.0: `UNIFIED`</li><li>統一帳戶1.0: `UNIFIED`, `CONTRACT`(反向合約錢包)</li><li>Classic account: `CONTRACT`(合約錢包), `SPOT`(現貨錢包)</li></ul>要查詢資金帳戶餘額, 可以使用這個[接口](../asset/balance/all-balance) |
+|[accountType](../enum#accounttype) |**true** |string |帳戶類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20): `UNIFIED`</li><li>[統一帳戶1.0](../acct-mode#統一帳戶10): `UNIFIED`, `CONTRACT`(反向合約錢包)</li><li>經典帳戶: `CONTRACT`(合約錢包), `SPOT`(現貨錢包)</li></ul>要查詢資金帳戶餘額, 可以使用這個[接口](../asset/balance/all-balance) |
 |coin |false |string |幣種名稱 <ul><li>不傳則返回非零資產信息</li><li>可以傳多個幣進行查詢，以逗號分隔, `USDT,USDC`</li></ul>|
 
 ### 響應參數
@@ -20,7 +20,7 @@ GET `/v5/account/wallet-balance`
 |list |array |Object |
 |> accountType |string |帳戶類型 |
 |> accountLTV |string |字段廢棄|
-|> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>統一帳戶2.0(逐倉模式), <br/>統一帳戶1.0(逐倉模式), 統一帳戶1.0(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
+|> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
 |> accountMMRate |string |帳戶維持保證金率|
 |> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD)|
 |> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|

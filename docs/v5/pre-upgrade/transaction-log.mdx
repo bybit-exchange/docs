@@ -6,6 +6,14 @@ sidebar_position: 4
 
 Query transaction logs which occurred in the USDC Derivatives wallet before the account was upgraded to a Unified account.
 
+* **[UTA2.0](../acct-mode#uta20):** <br/>
+By category=linear, you can query USDC Perps transaction logs occurred during classic account
+By category=option, you can query Options transaction logs occurred during classic account
+
+* **[UTA1.0](../acct-mode#uta10):** <br/>
+By category=linear, you can query USDC Perps transaction logs occurred during classic account
+By category=option, you can query Options transaction logs occurred during classic account
+
 You can get USDC Perpetual, Option records.
 
 :::info
@@ -18,7 +26,7 @@ GET `/v5/pre-upgrade/account/transaction-log`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear`,`option`|
+|[category](../enum#category) |**true** |string |Product type `linear`, `option`|
 |baseCoin |false |string |BaseCoin, uppercase only. e.g., BTC of BTCPERP|
 |[type](../enum#type) |false |string |Types of transaction logs|
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|

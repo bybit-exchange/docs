@@ -3,13 +3,10 @@ title: Batch Amend Order
 sidebar_label: Batch Amend Order
 sidebar_position: 8
 ---
-> **UTA2.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract, Inverse Contract
-> **UTA1.0 covers**: Spot, Options, USDT Perpetuals, USDC Contract
-
 :::tip
 This endpoint allows you to amend more than one open order in a single request.
 - You can modify **unfilled** or **partially filled** orders. Conditional orders are not supported.
-- A maximum of 20 orders (option), 20 orders (inverse), 10 orders (linear), 10 orders (spot) can be amended per request.
+- A maximum of 20 orders (option), 10 orders (inverse), 10 orders (linear), 10 orders (spot) can be amended per request.
 :::
 
 ### HTTP Request
@@ -18,7 +15,7 @@ POST `/v5/order/amend-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <li>UTA2.0: `linear`, `option`, `spot`, `inverse`</li><li>UTA1.0: `linear`, `option`, `spot`</li> |
+|[category](../enum#category) |**true** |string |Product type <li>[UTA2.0](../acct-mode#uta-20): `linear`, `option`, `spot`, `inverse`</li><li>[UTA1.0](../acct-mode#uta-10): `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |> orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |

@@ -4,12 +4,10 @@ sidebar_label: 查詢實時和終態委託單
 sidebar_position: 4
 ---
 主要用於實時查詢未成交或部分成交的訂單信息, 但結合入参`openOnly`能夠查詢到最近500條到達終態的訂單. 若需要查詢更久的訂單紀錄，請使用[查詢歷史訂單](order-list#)接口.
-> **統一帳戶覆蓋範圍: 現貨 / USDT永續 / USDC永續 / USDC交割 / 反向合約 / 期權**<br/>
-> **經典帳戶覆蓋範圍: 現貨 / USDT永續 / 反向合約**
 
 :::tip
-- 統一帳戶2.0: 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear, inverse和option類別. 
-- 統一帳戶1.0: 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear和option類別. inverse類別則無此限制.
+- [統一帳戶2.0](../acct-mode#統一帳戶20): 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear, inverse和option類別. 
+- [統一帳戶1.0](../acct-mode#統一帳戶10): 支持查詢已成交, 取消和拒絕類型的最近500條訂單信息對於spot, linear和option類別. inverse類別則無此限制.
 - 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢. 如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin.
 - 返回的結果將以`createdTime`從新到舊排序.
 :::
@@ -25,14 +23,14 @@ GET `/v5/order/realtime`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category |**true** |string |產品類型 <ul><li>統一帳戶: `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul>|
-|symbol |false |string |合約名稱. 對於**linear**, `symbol`, `baseCoin` 和 `settleCoin`**必傳**其中一個|
-|baseCoin |false |string |交易幣種. 支持`linear`, `inverse`和`option`. 對於若不傳，則返回期權下所有活動委託單|
+|category |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul>|
+|symbol |false |string |合約名稱<li>當category=**linear**, `symbol`, `baseCoin` 和 `settleCoin`**必傳**其中一個</li>|
+|baseCoin |false |string |交易幣種<li>支持`linear`, `inverse`和`option`</li><li>對於category=**option**, 若不傳baseCoin, 則返回期權下所有活動委託單</li>|
 |settleCoin |false |string |結算幣種 <ul><li><b>linear</b>: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li></ul>|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
-|openOnly |false |integer |<ul><li>`0`(默認): 統一帳戶2.0, 統一帳戶1.0, 經典帳戶: 僅查詢活動委託訂單, 比如New, PartiallyFilled訂單</li><li>`1`: 統一帳戶2.0, 統一帳戶1.0(除了inverse)<br/>`2`: 統一帳戶1.0(inverse)和經典帳戶:  <br/>返回僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶每個category下最多保留500條紀錄. <i>如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</i></li><li>當查詢是按照_orderId_ 或者 _orderLinkId_時, `openOnly`入参將會被忽略</li><li>經典帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>
-|orderFilter |false |string|`Order`: 活動單, `StopOrder`: 條件單, 支持現貨和期貨, `tpslOrder`: 止盈止損單, 僅現貨有效, `OcoOrder`: OCO訂單, `BidirectionalTpslOrder`: 現貨(UTA)雙向止盈止損訂單 <ul><li>經典帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
+|openOnly |false |integer |<ul><li>`0`(默認): [統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10), 經典帳戶: 僅查詢活動委託訂單, 比如New, PartiallyFilled訂單</li><li>`1`: [統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10)(除了inverse)<br/>`2`: [統一帳戶1.0](../acct-mode#統一帳戶10)(inverse)和經典帳戶:  <br/>返回僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶每個category下最多保留500條紀錄. <i>如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</i></li><li>當查詢是按照_orderId_ 或者 _orderLinkId_時, `openOnly`入参將會被忽略</li><li>經典帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>
+|orderFilter |false |string|`Order`: 活動單<br/>`StopOrder`: 條件單, 支持現貨和期貨<br/>`tpslOrder`: 止盈止損單, 僅現貨有效<br/>`OcoOrder`: OCO訂單<br/>`BidirectionalTpslOrder`: 現貨(UTA)雙向止盈止損訂單 <ul><li>經典帳戶現貨: 默認是`Order`活動單</li><li>其他: 默認是全部類型訂單</li></ul>|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 
@@ -49,7 +47,7 @@ GET `/v5/order/realtime`
 |> price |string |訂單價格 |
 |> qty |string |訂單數量 |
 |> side |string |方向. `Buy`,`Sell`|
-|> isLeverage |string |是否借貸. 僅統一帳戶`spot`有效. `0`: 否, `1`: 是. _經典帳戶現貨交易不支持, 總是`0`_ |
+|> isLeverage |string |是否借貸. 僅統一帳戶`spot`有效<li>`0`: 否</li><li>`1`: 是</li>_經典帳戶現貨交易不支持, 總是`0`_|
 |> [positionIdx](../enum#positionidx) |integer |倉位標識。用戶不同倉位模式 |
 |> [orderStatus](../enum#orderstatus) |string |訂單狀態 |
 |> [createType](../enum#createtype) |string |訂單創建類型<li>僅作用於category=linear 或 inverse</li><li>現貨、期權不返回該字段</li> |
@@ -69,8 +67,8 @@ GET `/v5/order/realtime`
 |> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格|
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
-|> tpslMode |string |止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損. 現貨不返回該字段, 期權總是返回""|
-|> ocoTriggerBy |string |現貨OCO訂單的觸發類型.`OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`. _經典帳戶現貨不支持該字段_|
+|> tpslMode |string |止盈止損模式 `Full`: 全部倉位止盈止損, `Partial`: 部分倉位止盈止損<br/>現貨不返回該字段, 期權總是返回""|
+|> ocoTriggerBy |string |現貨OCO訂單的觸發類型.`OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`<br/>_經典帳戶現貨不支持該字段_|
 |> tpLimitPrice |string |觸發止盈後轉換為限價單的價格 |
 |> slLimitPrice |string |觸發止損後轉換為限價單的價格 |
 |> [tpTriggerBy](../enum#triggerby) |string |觸發止盈的價格類型 |

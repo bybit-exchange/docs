@@ -5,7 +5,6 @@ sidebar_position: 0.03
 ---
 
 Query session settlement records of USDC perpetual and futures
-> **Unified account covers: USDC perpetual / USDC futures**
 
 ### HTTP Request
 GET `/v5/asset/settlement-record`
@@ -13,7 +12,7 @@ GET `/v5/asset/settlement-record`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type. `linear` |
+|[category](../enum#category) |**true** |string |Product type <li>[UTA2.0](../acct-mode#uta-20): `linear`(USDC contract)</li><li>[UTA1.0](../acct-mode#uta-10): `linear`(USDC contract)</li> |
 |symbol |false |string |Symbol name, like `BTCPERP`, uppercase only |
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 30 days by default</li><li>Only startTime is passed, return range between startTime and startTime+30 days</li><li>Only endTime is passed, return range between endTime-30 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 30 days</li></ul> |
 |endTime |false |integer |The end time. timestamp (ms) |

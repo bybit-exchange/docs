@@ -5,6 +5,9 @@ sidebar_label: Different Account Modes
 There are currently three account modes existing on the Bybit platform, namely classic account, unified account 1.0, and unified account 2.0.
 
 ## UTA 2.0
+:::info
+Testnet only at the moment
+:::
 This account mode is the ultimate version of the unified account, integrating inverse contracts, USDT perpetual, USDC perpetual, USDC Futures,
 spot and options into a unified trading system. In cross margin and portifolio margin modes, margin is shared among all trades.
 
@@ -47,10 +50,9 @@ Use the key of the corresponding account to call [Get Account Info](account/acco
     </tr>
     <tr>
         <td><a href="order/open-order#">Get Open & Closed Orders</a></td><td>To query the final status orders, use <code>openOnly</code>=1, and only retain the latest 500 orders.</td><td>To query the final status orders, use <code>openOnly</code>=2</td>
-        
     </tr>
     <tr>
-        <td><a href="order/order-list#">Get Order History</a></td><td>1. <code>orderStatus</code> is not passed, and all final orders are queried by default<br/>2. Parameters <code>baseCoin</code> and <code>settleCoin</code> are supported<br/>3. Active order query is not supported, and some final orders are limited to query<br/>4. Only orders generated after the upgrade can be queried</td><td>1. <code>orderStatus</code> is not passed, and the default query is active and final orders<br/>2. The parameters <code>baseCoin</code> and <code>settleCoin</code> are not supported<br/>3. Active orders and various final orders are always supported</td>
+        <td><a href="order/order-list#">Get Order History</a></td><td>1. <code>orderStatus</code> is not passed, and all final orders are queried by default<br/>2. Parameters <code>baseCoin</code> and <code>settleCoin</code> are supported<br/>3. Active order query is not supported, and some final orders are limited to query<br/>4. Cancelled orders save up to 24 hours<br/>5. Only orders generated after the upgrade can be queried</td><td>1. <code>orderStatus</code> is not passed, and the default query is active and final orders<br/>2. The parameters <code>baseCoin</code> and <code>settleCoin</code> are not supported<br/>3. Active orders and various final orders are always supported<br/>4. No such restriction</td>
     </tr>
     <tr>
         <td><a href="order/execution#">Get Trade History</a></td><td>1. Supports <code>baseCoin</code> query; <br/>2. The returned createType has a value<br/>3. Only transactions generated after the upgrade can be queried</td><td>1. <code>baseCoin</code> query is not supported;<br/ >2. The returned createType is always empty string <code>""</code></td>
@@ -77,7 +79,7 @@ Use the key of the corresponding account to call [Get Account Info](account/acco
         <td><a href="pre-upgrade/close-pnl#">Get Pre-upgrade Closed PnL</a></td><td>Supports querying close pnl generated when it is a classic account or unified account 1.0</td><td align="center">-</td>
     </tr>
     <tr>
-        <td rowSpan="5" align="center">Position</td><td><a href="position#">Get Position Info</a></td><td>1. Passing multiple symbols is not supported<br/>2. In the response, there are changes in the use of "tradeMode", "autoAddMargin", "liqPrice", "bustPrice" fields</td><td>1. Supports passing multiple symbols</td>
+        <td rowSpan="5" align="center">Position</td><td><a href="position#">Get Position Info</a></td><td>1. Passing multiple symbols is not supported<br/>2. In the response, there are changes in the meaning or use of "tradeMode", "liqPrice", "bustPrice" fields</td><td>1. Supports passing multiple symbols</td>
     </tr>
     <tr>
         <td><a href="position/close-pnl#">Get Closed PnL</a></td><td>Only the close pnl generated after the upgrade can be queried.</td><td align="center"> - </td>

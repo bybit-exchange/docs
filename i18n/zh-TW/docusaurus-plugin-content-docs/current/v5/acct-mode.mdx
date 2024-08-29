@@ -2,9 +2,12 @@
 title: 帳戶模式介紹
 sidebar_label: 帳戶模式介紹
 ---
-現在Bybit平台上共有三種帳戶模式並存, 分別是經典帳戶, 統一帳戶1.0, 統一帳戶2.0。其中經典帳戶預計在2024年底前結束服務。
+現在Bybit平台上共有三種帳戶模式並存, 分別是經典帳戶, 統一帳戶1.0, 統一帳戶2.0
 
 ## 統一帳戶2.0
+:::info
+目前僅限測試網環境
+:::
 此帳戶模式是統一帳戶的終極版本, 將反向合約、USDT永續、USDC永續、USDC交割、現貨以及期權都納入到了統一交易體系當中, 
 在全倉保證金和組合保證金模式下, 所有交易都共享保證金。
 
@@ -23,11 +26,12 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
 
 ## 通過API判斷帳戶模式
 使用對應帳戶的key調用[查詢帳戶配置接口](account/account-info#), 看字段`unifiedMarginStatus`
-* 1: 經典帳戶
-* 3: 統一帳戶1.0
-* 4: 統一帳戶1.0 (pro版本)
-* 5: 統一帳戶2.0
-* 6: 統一帳戶2.0 (pro版本)
+* `1`: 經典帳戶
+* `3`: 統一帳戶1.0
+* `4`: 統一帳戶1.0 (pro版本)
+* `5`: 統一帳戶2.0
+* `6`: 統一帳戶2.0 (pro版本)
+<br/><i>P.S. uta 或 uta (pro) 是同一款产品，但 pro 在通过 API 进行交易时具有轻微的性能优势</i>
 
 ## 統一帳戶2.0的API使用變化
 <span class="blocky_table">
@@ -46,7 +50,7 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
         <td><a href="order/open-order#">查詢實施和終態委託單</a></td><td>查詢終態狀態使用<code>openOnly</code>=1, 且僅保留最近500單</td><td>查詢終態狀態使用<code>openOnly</code>=2</td>
     </tr>
     <tr>
-        <td><a href="order/order-list#">查詢歷史訂單</a></td><td>1. <code>orderStatus</code>不傳, 默認查詢所有終態訂單<br/>2. 支援參數<code>baseCoin</code>和<code>settleCoin</code><br/>3. 不支持活動單查詢, 部分終態訂單有限查詢<br/>4. 只能查詢升級後產生的訂單</td><td>1. <code>orderStatus</code>不傳, 默認查詢活動態和終態訂單<br/>2. 不支持參數<code>baseCoin</code>和<code>settleCoin</code><br/>3. 總是支持活動單和各種終態單查詢</td>
+        <td><a href="order/order-list#">查詢歷史訂單</a></td><td>1. <code>orderStatus</code>不傳, 默認查詢所有終態訂單<br/>2. 支援參數<code>baseCoin</code>和<code>settleCoin</code><br/>3. 不支持活動單查詢, 部分終態訂單有限查詢<br/>4. 只保存24小時的取消態訂單<br/>5. 只能查詢升級後產生的訂單</td><td>1. <code>orderStatus</code>不傳, 默認查詢活動態和終態訂單<br/>2. 不支持參數<code>baseCoin</code>和<code>settleCoin</code><br/>3. 總是支持活動單和各種終態單查詢<br/>4. 沒有此限制</td>
     </tr>
     <tr>
         <td><a href="order/execution#">查詢成交紀錄</a></td><td>1. 支持<code>baseCoin</code>的查詢; <br/>2. 返回的createType有值<br/>3. 只能查詢升級後產生的成交</td><td>1. 不支持<code>baseCoin</code>的查詢;<br/>2. 返回的createType總是""</td>
@@ -73,7 +77,7 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
         <td><a href="pre-upgrade/close-pnl#">查詢升級前平倉盈虧</a></td><td>支持查詢還是經典帳戶或者統一帳戶1.0時產生的平倉盈虧 </td><td align="center">-</td>
     </tr>
     <tr>
-        <td rowSpan="5" align="center">持倉</td><td><a href="position#">查詢持倉(實時)</a></td><td>1. 不支持symbol傳多個<br/>2. 響應字段中, "tradeMode", "autoAddMargin", "liqPrice", "bustPrice" 使用有變化</td><td>1. 支持symbol傳多個</td>
+        <td rowSpan="5" align="center">持倉</td><td><a href="position#">查詢持倉(實時)</a></td><td>1. 不支持symbol傳多個<br/>2. 響應字段中, "tradeMode", "liqPrice", "bustPrice" 使用或含義有變化</td><td>1. 支持symbol傳多個</td>
     </tr>
     <tr>
         <td><a href="position/close-pnl#">查詢平倉盈虧</a></td><td>只能查詢升級後產生的平倉盈虧</td><td align="center"> - </td>
@@ -97,13 +101,13 @@ USDT永續、USDC永續、USDC交割、現貨以及期權, 則都在"統一帳�
         <td><a href="account/contract-transaction-log#">交易日誌(經典帳戶)</a></td><td>升級到2.0後, 該接口就不適用了</td><td>在1.0或者經典時的數據還能取到</td>
     </tr>
     <tr>
-        <td rowSpan="3" align="center">資產</td><td><a href="asset/delivery#">查詢交割紀錄</a></td><td>支持查詢反向交割的交割紀錄</td><td>不支持查詢反向交割的交割紀錄</td>
+        <td rowSpan="2" align="center">資產</td><td><a href="asset/delivery#">查詢交割紀錄</a></td><td>支持查詢反向交割的交割紀錄</td><td>不支持查詢反向交割的交割紀錄</td>
     </tr>
     <tr>
         <td>該目錄下所有涉及<code>accountType</code>的接口</td><td>不再支持<code>accountType</code>=CONTRACT</td><td>支持<code>accountType</code>=CONTRACT (反向合約帳戶)</td>
     </tr>
     <tr>
-        <td rowSpan="1" align="center">WebSocket流/交易</td><td><a href="websocket/trade/guideline#">Websocket下單指南</a></td><td>支持反向合約</td><td>不支持反向合約</td>
+        <td align="center">WebSocket流/交易</td><td><a href="websocket/trade/guideline#">Websocket下單指南</a></td><td>支持反向合約</td><td>不支持反向合約</td>
     </tr>
 </table>
 

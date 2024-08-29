@@ -4,11 +4,9 @@ sidebar_label: Move Position
 sidebar_position: 12
 ---
 You can move positions between sub-master, master-sub, or sub-sub UIDs when necessary
-> **UTA2.0 covers: USDT perpetual / USDC contract / Spot / Option**<br/>
-> **UTA1.0 covers: USDT perpetual / USDC contract / Spot / Option**<br/>
 
-:::info
-UTA2.0 inverse contract move position is not supported for now
+:::tip
+[UTA2.0](../acct-mode#uta-20) inverse contract move position is not supported for now
 :::
 
 :::info
@@ -30,7 +28,7 @@ POST `/v5/position/move-positions`
 |fromUid |**true** |string |From UID <ul><li>Must be UTA</li><li>Must be in one-way mode for Futures</li></ul>|
 |toUid |**true** |string |To UID <ul><li>Must be UTA</li><li>Must be in one-way mode for Futures</li></ul>|
 |list |**true** |array |Object. Up to 25 legs per request|
-|> [category](../enum#category) |**true** |string |Product type. `linear`, `spot`, `option` |
+|> [category](../enum#category) |**true** |string |Product type<li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `spot`, `option`</li>|
 |> symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only|
 |> price |**true** |string |Trade price <ul><li>`linear`: the price needs to be between [95% of mark price, 105% of mark price]</li><li>`spot`&`option`: the price needs to follow the price rule from [Instruments Info](../market/instrument)</li></ul>|
 |> side |**true** |string |Trading side of `fromUid` <ul><li>For example, `fromUid` has a long position, when side=`Sell`, then once executed, the position of `fromUid` will be reduced or open a short position depending on `qty` input</li></ul>|

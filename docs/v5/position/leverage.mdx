@@ -4,17 +4,13 @@ sidebar_label: Set Leverage
 sidebar_position: 2
 ---
 
-Set the leverage
-> **Unified account covers: USDT perpetual / USDC contract / Inverse contract**<br/>
-> **Classic account covers: USDT perpetual / Inverse contract**
-
 ### HTTP Request
 POST `/v5/position/set-leverage`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>Unified account: `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
+|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only|
 |buyLeverage |**true** |string |[`1`, max leverage of corresponding [risk limit](../market/risk-limit#)] <ul><li>one-way mode: `buyLeverage` must be the same as `sellLeverage`</li><li>Hedge mode: <br/>Classic account & UTA (isolated margin): `buyLeverage` and `sellLeverage` can be different; <br/>UTA (cross margin): `buyLeverage` must be the same as `sellLeverage`</li></ul> |
 |sellLeverage |**true** |string |[`1`, max leverage of corresponding risk limit]|

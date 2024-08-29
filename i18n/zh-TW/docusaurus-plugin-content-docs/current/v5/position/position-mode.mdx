@@ -4,9 +4,6 @@ sidebar_label: 切換持倉模式
 sidebar_position: 2.8
 ---
 該接口支持切換USDT永續和反向交割的持倉模式。如果處於單向持倉模式下，您只能要麼持有多頭要麼空頭倉位；如果處於雙向持倉模式下，您可以同時持倉多頭和空頭的倉位。
-> **統一帳戶2.0覆蓋範圍: USDT永續**<br/>
-> **統一帳戶1.0覆蓋範圍: USDT永續 / 反向交割**<br/>
-> **經典帳戶覆蓋範圍: USDT永續 / 反向交割**
 
 :::tip
 * 配置生效優先級: symbol > coin > 系統默認
@@ -80,7 +77,7 @@ POST `/v5/position/switch-mode`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li> 统一账户2.0: `linear`, USDT 永续</li><li> 统一账户1.0: `linear`, USDT 永续; `inverse`, 反向交割</li><li>经典账户: `linear`, USDT 永续; `inverse`, 反向交割</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 <ul><li> [統一帳戶2.0](../acct-mode#統一帳戶20): `linear`, USDT 永续</li><li> [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, USDT 永续; `inverse`, 反向交割</li><li>经典账户: `linear`, USDT 永续; `inverse`, 反向交割</li></ul> |
 |symbol |false |string |合約名稱. `symbol`和`coin`**必須**傳其中一個. `symbol`有更高優先級 |
 |coin |false |string |結算幣種 |
 |mode |**true** |integer |倉位模式. `0`: 單向持倉. `3`: 雙向持倉|

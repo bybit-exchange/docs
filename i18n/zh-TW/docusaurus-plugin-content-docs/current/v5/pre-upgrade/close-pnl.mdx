@@ -4,7 +4,14 @@ sidebar_label: 查詢升級前平倉盈虧
 sidebar_position: 3
 ---
 
-僅支持查詢升級到統一帳戶之前發生的USDT永續 / 反向合約, 返回結果按照`updatedTime`降序排列
+支持查詢升級到統一帳戶之前發生的USDT永續 / 反向合約, 返回結果按照`updatedTime`降序排列
+
+* **[統一帳戶2.0](../acct-mode#統一帳戶20):** <br/>
+通過category=linear, 查詢到在經典帳戶期間產生的USDT永續數據<br/>
+通過category=inverse, 查詢到在經典帳戶或者統一帳戶1.0期間產生的反向合約數據
+
+* **[統一帳戶1.0](../acct-mode#統一帳戶10):** <br/>
+通過category=linear, 查詢到在經典帳戶期間產生的USDT永續數據<br/>
 
 ### HTTP 請求
 GET `/v5/pre-upgrade/position/closed-pnl`
@@ -12,7 +19,7 @@ GET `/v5/pre-upgrade/position/closed-pnl`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 `linear`, `inverse`|
+|[category](../enum#category) |**true** |string |產品類型<li>`linear`, `inverse`</li>|
 |symbol |**true** |string |合約名稱 |
 |startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |

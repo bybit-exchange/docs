@@ -3,13 +3,10 @@ title: 批量修改委託單
 sidebar_label: 批量修改委託單
 sidebar_position: 8
 ---
-> **統一帳戶2.0**: 現貨, 期權, USDT永續, USDC合約, 反向合約
-> **統一帳戶1.0**: 現貨, 期權, USDT永續, USDC合約
-
 :::tip
 該接口支持批量修改委託單
 - 您只能修改那些**未成交**或**部分成交**的訂單. 條件單不支持批量修改.
-- 最多支持單個請求中修改, 反向合約: 20個訂單, 期權: 20個訂單, 正向合約: 10个訂單, 現貨: 10個訂單.
+- 最多支持單個請求中修改, 期權: 20個訂單, 反向合約: 10個訂單, 正向合約: 10个訂單, 現貨: 10個訂單.
 :::
 
 ### HTTP請求
@@ -18,7 +15,7 @@ POST `/v5/order/amend-batch`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型<li>統一帳戶2.0: `linear`, `option`, `spot`, `inverse`</li><li>統一帳戶1.0: `linear`, `option`, `spot`</li> |
+|[category](../enum#category) |**true** |string |產品類型<li>[統一帳戶2.0](../acct-mode#統一帳戶20): `linear`, `option`, `spot`, `inverse`</li><li>[統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `option`, `spot`</li> |
 |request |**true** |array |Object |
 |> symbol |**true** |string |合約名稱|
 |> orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
@@ -33,8 +30,8 @@ POST `/v5/order/amend-batch`
 |> [tpTriggerBy](../enum#triggerby) |false |string |止盈價格觸發類型. 若下單時未設置該值，則調用該接口修改止盈價格時，該字段**必傳**|
 |> [slTriggerBy](../enum#triggerby) |false |string |止損價格觸發類型. 若下單時未設置該值，則調用該接口修改止損價格時，該字段**必傳**|
 |> [triggerBy](../enum#triggerby) |false |string |觸發價格的觸發類型|
-|> tpLimitPrice |false |string |*觸發止盈後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
-|> slLimitPrice |false |string |*觸發止損後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
+|> tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
+|> slLimitPrice |false |string |觸發止損後轉換為限價單的價格. 當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
