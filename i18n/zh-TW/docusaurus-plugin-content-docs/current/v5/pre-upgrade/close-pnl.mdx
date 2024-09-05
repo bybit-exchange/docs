@@ -52,6 +52,9 @@ GET `/v5/pre-upgrade/position/closed-pnl`
 
 ### 請求示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/pre-upgrade/position/closed-pnl?category=linear&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
@@ -60,6 +63,34 @@ X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1682580911998
 X-BAPI-RECV-WINDOW: 5000
 ```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+  testnet: true,
+  key: 'apikey',
+  secret: 'apisecret',
+});
+
+client
+  .getPreUpgradeClosedPnl({
+    category: 'linear',
+    symbol: 'BTCUSDT',
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+</TabItem>
+</Tabs>
 
 ### 響應示例
 
