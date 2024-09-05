@@ -2,14 +2,6 @@
 title: 概覽
 sidebar_name: 概覽
 ---
-Bybit V3 Open API 能給讓用戶基於不同的產品構建API模型。
-<!-- - **衍生品 - 統一保證金:** 您能夠通過`unified/v3`接口和V5接口，交易_USDT永續_, _USDC永續_, _期權_。-->
-- **衍生品 - 合約:** 您可以通過`contract/v3`接口交易_USDT永續_, _反向永續_, _反向交割_。
-- **現貨:** 您可以通過`spot/v3`交易現貨。
-<!-- - **跟單交易:** 您必須首先成為**交易員**才能使用該套接口。如果您的老帶單交易帳戶升級到了新版本, 請使用**合約V3**或者**V5**接口.-->
-- **帳戶資產:** 涉及了劃轉、提現、密鑰相關等接口。
-- **稅務:** 您可以通過這部分接口生成稅務相關的報告。
-
 ## 鑒權/認證
 :::info
 請先生成<a href="https://testnet.bybit.com/app/user/api-management"><b>測試網</b></a>或<a href="https://www.bybit.com/app/user/api-management"><b>主網</b></a>API KEY。
@@ -39,17 +31,13 @@ https://api.bytick.com
 
 另外我們提供可選的`X-BAPI-RECV-WINDOW`參數（單位是毫秒，默認值為`5000`），來指定請求在多長時間內有效，同時用來防止重放攻擊。
 
-:::caution
+:::info
 註意，timestamp參數必須符合如下規則:<br/>
 _server_time - recv_window <= timestamp < server_time + 1000_<br/>
 其中server_time是Bybit服務器時間，您可以通過[Bybit服務器時間](server-time#)接口獲取.
 :::
 
 ### 構建請求
-
-:::tip
-為了幫助診斷高級網絡問題，您可以考慮將`cdn-request-id`添加到您的請求頭中。對於每個請求，它的值應該是唯一的。.
-:::
 
 :::info
 <a href="https://github.com/bybit-exchange/api-usage-examples">簽名計算示例</a>
