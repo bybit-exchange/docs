@@ -292,6 +292,20 @@ print(session.get_tickers(
 ```
 
 </TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "inverse", "symbol": "BTCUSD"}
+client.NewUtaBybitServiceWithParams(params).GetMarketTickers(context.Background())
+```
+
+</TabItem>
 <TabItem value="java" label="Java">
 
 ```java
@@ -300,7 +314,7 @@ import com.bybit.api.client.domain.market.*;
 import com.bybit.api.client.domain.market.request.MarketDataRequest;
 import com.bybit.api.client.service.BybitApiClientFactory;
 var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
-var tickerReueqt = MarketDataRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").build();
+var tickerReueqt = MarketDataRequest.builder().category(CategoryType.INVERSE).symbol("BTCUSD").build();
 client.getMarketTickers(tickerReueqt, System.out::println);
 ```
 
@@ -355,7 +369,33 @@ print(session.get_tickers(
 ```
 
 </TabItem>
+<TabItem value="Go" label="Go">
 
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "option", "symbol": "BTC-30DEC22-18000-C"}
+client.NewUtaBybitServiceWithParams(params).GetMarketTickers(context.Background())
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var tickerReueqt = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("BTC-30DEC22-18000-C").build();
+client.getMarketTickers(tickerReueqt, System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
@@ -404,6 +444,21 @@ print(session.get_tickers(
     symbol="BTCUSDT",
 ))
 ```
+
+</TabItem>
+<TabItem value="GO" label="GO">
+
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT"}
+client.NewUtaBybitServiceWithParams(params).GetMarketTickers(context.Background())
+```
+
 
 </TabItem>
 <TabItem value="java" label="Java">

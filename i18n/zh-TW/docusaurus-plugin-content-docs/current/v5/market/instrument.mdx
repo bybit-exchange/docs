@@ -337,6 +337,20 @@ print(session.get_instruments_info(
 ```
 
 </TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}
+client.NewUtaBybitServiceWithParams(params).GetInstrumentInfo(context.Background())
+```
+
+</TabItem>
 <TabItem value="java" label="Java">
 
 ```java
@@ -345,7 +359,7 @@ import com.bybit.api.client.domain.market.*;
 import com.bybit.api.client.domain.market.request.MarketDataRequest;
 import com.bybit.api.client.service.BybitApiClientFactory;
 var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
-var instrumentInfoRequest = MarketDataRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").instrumentStatus(InstrumentStatus.TRADING).limit(500).build();
+var instrumentInfoRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").instrumentStatus(InstrumentStatus.TRADING).limit(500).build();
 client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
 ```
 
@@ -400,7 +414,33 @@ print(session.get_instruments_info(
 ```
 
 </TabItem>
+<TabItem value="Go" label="Go">
 
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "option", "symbol": "ETH-3JAN23-1250-P"}
+client.NewUtaBybitServiceWithParams(params).GetInstrumentInfo(context.Background())
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.CategoryType;
+import com.bybit.api.client.domain.market.*;
+import com.bybit.api.client.domain.market.request.MarketDataRequest;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();
+var instrumentInfoRequest = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-3JAN23-1250-P").instrumentStatus(InstrumentStatus.TRADING).limit(500).build();
+client.getInstrumentsInfo(instrumentInfoRequest,System.out::println);
+```
+
+</TabItem>
 <TabItem value="Node" label="Node.js">
 
 ```n4js
@@ -448,6 +488,20 @@ print(session.get_instruments_info(
     category="spot",
     symbol="BTCUSDT",
 ))
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+import (
+	"context"
+	"fmt"
+	bybit "github.com/wuhewuhe/bybit.go.api"
+)
+client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))
+params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT"}
+client.NewUtaBybitServiceWithParams(params).GetInstrumentInfo(context.Background())
 ```
 
 </TabItem>
