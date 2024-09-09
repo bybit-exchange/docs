@@ -63,7 +63,24 @@ Content-Length: 371
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.batch_set_collateral_coin(
+  request=[
+    {
+      "coin": "BTC",
+      "collateralSwitch": "ON",
+    },
+    {
+      "coin": "ETH",
+      "collateralSwitch": "ON",
+    }
+  ]
+))
 ```
 
 </TabItem>
