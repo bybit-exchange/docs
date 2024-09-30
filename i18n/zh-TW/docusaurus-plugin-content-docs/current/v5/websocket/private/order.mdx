@@ -43,6 +43,7 @@ sidebar_position: 3
 |> cumExecQty |string |訂單累計成交數量 |
 |> cumExecValue |string |訂單累計成交價值 |
 |> cumExecFee |string |訂單累計成交的手續費 <ul><li>經典帳戶`spot`: 表示的是最近一次成交的手續費.</li><li>升級到統一帳戶後, 您可以使用[成交](execution)頻道中的`execFee`字段來獲取每次成交的手續費</li></ul> |
+|> closedPnl |string |平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費. 該數據和[查詢平倉盈虧](../../position/close-pnl)接口裡的"closedPnl"保持一致|
 |> feeCurrency |string |現貨交易的手續費幣種. 可以從[這裡](../../enum#現貨交易手續費幣種說明)了解現貨交易的手續費幣種規則 |
 |> [timeInForce](../../enum#timeinforce) |string |執行策略 |
 |> [orderType](../../enum#ordertype) |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型 |
@@ -122,6 +123,7 @@ while True:
             "leavesValue": "",
             "cumExecQty": "1",
             "cumExecValue": "75",
+            "closedPnl": "0",
             "avgPrice": "75",
             "blockTradeId": "",
             "positionIdx": 0,
