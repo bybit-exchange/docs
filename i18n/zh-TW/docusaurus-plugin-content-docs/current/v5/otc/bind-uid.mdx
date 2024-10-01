@@ -7,9 +7,7 @@ sidebar_position: 7
 
 :::info
 * 風險單元的主UID不能解綁
-* 該接口只能由在風險單元內的UID來請求
 * 綁定的UID必須升級到了UTA Pro
-* 通過風險單元內任一UID的的API Key操作該接口時, 則是在該風險單元內綁定或解綁UID
 :::
 
 ### HTTP 請求
@@ -18,7 +16,7 @@ POST `/v5/ins-loan/association-uid`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|uid |**true** |string |UID|
+|uid |**true** |string |UID<li><b>綁定</b><br/>a) 調用接口的key必須來自風險單元內的任意uid; <br/>b) 目標帳戶不能有機構借貸</li><li><b>解綁</b><br/>a) 調用接口的key必須來自風險單元內的任意uid; <br/>b) 準備解綁的uid不能和調用接口的uid一樣</li>|
 |operate |**true** |string |`0`: 綁定, `1`: 解綁|
 
 ### 響應參數

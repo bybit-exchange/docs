@@ -7,9 +7,7 @@ For the institutional loan product, you can bind new UIDs to the risk unit or un
 
 :::info
 * Risk unit designated UID cannot be unbound
-* This endpoint can only be called by uids in the risk unit list
-* The UID must be upgraded to UTA Pro if you try to bind it.
-* When the API is operated through the API Key of any UID in the risk unit, the UID is bound or unbound in the risk unit.
+* The UID pending to bind must be upgraded to UTA Pro.
 :::
 
 ### HTTP Request
@@ -18,7 +16,7 @@ POST `/v5/ins-loan/association-uid`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|uid |**true** |string |UID|
+|uid |**true** |string |UID <li><b>Bind</b><br/>a) the key used must be from one of uids in the risk unit; <br/>b) input uid must not have ins loan</li><li><b>Unbind</b><br/>a) the key used must be from one of uids in the risk unit; <br/>b) input uid cannot be the same as the uid used to access the API</li>|
 |operate |**true** |string |`0`: bind, `1`: unbind|
 
 ### Response Parameters
