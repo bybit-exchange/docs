@@ -170,3 +170,60 @@ Content-Type: application/json
     ]
 }
 ```
+
+### 創建模擬交易帳戶
+> API 頻率: 5次/秒<br/>
+> 權限: 帳戶劃轉, 母子帳戶劃轉
+
+:::info
+* 使用生產環境的母子帳戶調用該接口, 域名需要是"api.bybit.com"
+* 如果模擬帳戶已經存在, 這個POST接口直接返回存在的模擬帳戶UID
+* 如果使用的母帳戶key調接口, 則創建的模擬帳戶存在於該母帳戶下面
+* 如果使用的子帳戶key調接口, 則創建的模擬帳戶存在於該子帳戶下面
+:::
+
+#### HTTP 請求
+POST `/v5/user/create-demo-member`
+
+#### 請求參數
+無
+
+#### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|subMemberId |string |模擬帳戶UID |
+
+#### 請求實例
+```http
+POST /v5/user/create-demo-member HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+
+{}
+```
+
+### [創建模擬帳戶API Key](/v5/user/create-subuid-apikey)
+:::info
+* 參數填寫模擬帳戶UID
+* 使用**生產環境母帳戶**調用接口, 域名需要是**"api.bybit.com"**
+:::
+
+### [更新模擬帳戶API Key](/v5/user/modify-sub-apikey)
+:::info
+* 使用**生產環境母帳戶**調用接口, 域名需要是**"api.bybit.com"**
+:::
+
+### [查詢模擬帳戶API Key信息](/v5/user/apikey-info)
+:::info
+* 使用**對應的模擬帳戶**調用接口, 域名需要是**"api-demo.bybit.com"**
+:::
+
+### [刪除模擬帳戶API Key](/v5/user/rm-sub-apikey)
+:::info
+* 使用**生產環境母帳戶**調用接口, 域名需要是**"api.bybit.com"**
+:::

@@ -171,3 +171,60 @@ Content-Type: application/json
     ]
 }
 ```
+
+### Create Demo Account
+> API rate limit: 5 req per second<br/>
+> Permission: AccountTransfer, SubMemberTransfer or SubMemberTransferList
+
+:::info
+* Use product main account or sub account key to call the interface, the domain needs to be "api.bybit.com"
+* If demo account is existing, this POST request will return the existing UID directly
+* If using main account key to call, then the generated demo account is under the main account
+* If using sub account key to call, then the generated demo account is under the sub account
+:::
+
+#### HTTP Request
+POST `/v5/user/create-demo-member`
+
+#### Request Parameters
+None
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|subMemberId |string |Demo account ID |
+
+#### Request Example
+```http
+POST /v5/user/create-demo-member HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+
+{}
+```
+
+### [Create Demo Account API Key](/v5/user/create-subuid-apikey)
+:::info
+* Input generated demo account uid
+* Use **production main account key** to call the interface, the domain needs to be **"api.bybit.com"**
+:::
+
+### [Update Demo Account API Key](/v5/user/modify-sub-apikey)
+:::info
+* Use **production main account key** to call the interface, the domain needs to be **"api.bybit.com"**
+:::
+
+### [Get Demo Account API Key Info](/v5/user/apikey-info)
+:::info
+* Use **accordingly demo account key** to call the interface, the domain needs to be **"api-demo.bybit.com"**
+:::
+
+### [Delete Demo Account API Key](/v5/user/rm-sub-apikey)
+:::info
+* Use **production main account key** to call the interface, the domain needs to be **"api.bybit.com"**
+:::
