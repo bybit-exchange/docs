@@ -1,0 +1,99 @@
+---
+title: 查詢還款紀錄
+sidebar_label: 查詢還款紀錄
+sidebar_position: 7
+---
+> 權限: "現貨交易"
+
+:::info
+* 支持查詢過去6個月的還款紀錄
+* 僅返還交易成功的還款紀錄
+:::
+
+### HTTP 請求
+GET `/v5/crypto-loan/repayment-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId|false|string|借貸訂單ID|
+|repayId|false|string|還款交易ID|
+|loanCurrency|false|string|借貸幣種|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> collateralCurrency|string |質押幣種|
+|> collateralReturn|string |因次還款而返還的質押金額. 如果本次還款操作沒有全部還清借貸, 那麼系統不會主動返還質押金|
+|> loanCurrency|string |借貸幣種|
+|> loanTerm|string |借貸期限, `7`, `14`, `30`, `90`, `180`天, 活期總是`""`|
+|> orderId|string |借貸訂單ID|
+|> repayAmount|string |本次還款金額|
+|> repayId|string |還款交易ID|
+|> repayStatus|integer |還款狀態, `1`: 成功; `2`: 進行中|
+|> repayTime|string |還款時間|
+|> repayType|string |還款類型, `1`: 用戶主動還款; `2`: 強平導致的還款|
+|nextPageCursor |string |下一頁游標|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan/repayment-history?repayId=1794271131730737664 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1728633716794
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "list": [
+            {
+                "collateralCurrency": "BTC",
+                "collateralReturn": "0",
+                "loanCurrency": "USDT",
+                "loanTerm": "",
+                "orderId": "1794267532472646144",
+                "repayAmount": "100",
+                "repayId": "1794271131730737664",
+                "repayStatus": 1,
+                "repayTime": "1728629786875",
+                "repayType": "1"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1728633717935
+}
+```

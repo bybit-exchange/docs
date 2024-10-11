@@ -1,0 +1,79 @@
+---
+title: 還款
+sidebar_label: 還款
+sidebar_position: 5
+---
+您可以選擇提前還款, 並且支持部分還款, 如果存在利息, 將優先還利息
+> 權限: "現貨交易"
+
+:::info
+* 還款金額將從資金帳戶扣除
+* 非完全還清操作, 系統將不會主動退還質押金, 但是您可以自行減少質押金
+:::
+
+### HTTP 請求
+POST `/v5/crypto-loan/repay`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId |**true** |string |借貸訂單ID|
+|amount |**true** |string |還款金額|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|repayId |string |還款交易ID|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan/repay HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1728629785224
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 61
+
+{
+    "orderId": "1794267532472646144",
+    "amount": "100"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "repayId": "1794271131730737664"
+    },
+    "retExtInfo": {},
+    "time": 1728629786884
+}
+```

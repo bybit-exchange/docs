@@ -1,0 +1,80 @@
+---
+title: Repay
+sidebar_label: Repay
+sidebar_position: 5
+---
+You can repay partial loan. If there is interest occurred, interest will be repaid in priority
+
+> Permission: "Spot trade"
+
+:::info
+* The repaid amount will be duducted from Funding account
+* The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+:::
+
+### HTTP Request
+POST `/v5/crypto-loan/repay`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId |**true** |string |Loan order ID|
+|amount |**true** |string |Repay amount|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|repayId |string |Repayment transaction ID|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan/repay HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1728629785224
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 61
+
+{
+    "orderId": "1794267532472646144",
+    "amount": "100"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "repayId": "1794271131730737664"
+    },
+    "retExtInfo": {},
+    "time": 1728629786884
+}
+```

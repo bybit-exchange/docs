@@ -1,0 +1,95 @@
+---
+title: 查詢質押金調整歷史
+sidebar_label: 查詢質押金調整歷史
+sidebar_position: 11
+---
+查詢增減質押金的操作歷史
+> 權限: "現貨交易"
+
+:::info
+* 支持查詢過去6個月的操作紀錄
+* 僅返回由用戶主動發起的質押金操作紀錄
+:::
+
+### HTTP 請求
+GET `/v5/crypto-loan/adjustment-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId|false|string|借貸訂單ID|
+|adjustId|false|string|質押金調整操作ID|
+|collateralCurrency|false|string|質押幣種|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> collateralCurrency|string |質押幣種|
+|> orderId|string |借貸訂單ID|
+|> adjustId|string|質押金調整操作ID|
+|> adjustTime|string |調整時間戳|
+|> preLTV|string |调整前LTV|
+|> afterLTV|string |調整後LTV|
+|> direction|integer |調整方向, `0`: 增加; `1`: 減少|
+|nextPageCursor |string |下一頁游標|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan/adjustment-history?adjustId=1794318409405331968 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1728635871668
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "list": [
+            {
+                "adjustId": "1794318409405331968",
+                "adjustTime": "1728635422814",
+                "afterLTV": "0.7164",
+                "amount": "0.001",
+                "collateralCurrency": "BTC",
+                "direction": 1,
+                "orderId": "1794267532472646144",
+                "preLTV": "0.6546"
+            }
+        ],
+        "nextPageCursor": "1844656778923966466"
+    },
+    "retExtInfo": {},
+    "time": 1728635873329
+}
+```

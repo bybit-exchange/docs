@@ -1,0 +1,94 @@
+---
+title: 查詢可借幣種
+sidebar_label: 查詢可借幣種
+sidebar_position: 2
+---
+:::info
+不需要鑒權
+:::
+
+### HTTP 請求
+GET `/v5/crypto-loan/loanable-data`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|vipLevel|false|string|Vip等級 <li>`VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(至尊VIP)</li><li>`PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`</li>|
+|currency|false|string|幣種名稱|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|vipCoinList|array|Object|
+|> list|array |Object |
+|>> borrowingAccuracy|integer |借貸幣種精度|
+|>> currency|string |幣種名稱|
+|>> flexibleHourlyInterestRate|string |活期每小時利率<li>活期質押借幣採用小時浮動利率，按實際借款時長每小時計算利息，可提前還款</li><li>如果借貸幣種不支持活期, 則總是`""`</li>|
+|>> hourlyInterestRate7D|string |7天定期每小時利率<li>利息以實際借款每小時計算利息, 可提前還款, 逾期後每小時將收取3倍小時利息, 逾期超過48小時, 您的抵押資產將被清算以償還貸款和利息</li><li>如果借貸幣種不支持7天定期, 則總是`""`</li>|
+|>> hourlyInterestRate14D|string |14天定期每小時利率<li>利息以實際借款每小時計算利息, 可提前還款, 逾期後每小時將收取3倍小時利息, 逾期超過48小時, 您的抵押資產將被清算以償還貸款和利息</li><li>如果借貸幣種不支持14天定期, 則總是`""`</li>|
+|>> hourlyInterestRate30D|string |30天定期每小時利率<li>利息以實際借款每小時計算利息, 可提前還款, 逾期後每小時將收取3倍小時利息, 逾期超過48小時, 您的抵押資產將被清算以償還貸款和利息</li><li>如果借貸幣種不支持30天定期, 則總是`""`</li>|
+|>> hourlyInterestRate90D|string |90天定期每小時利率<li>利息以實際借款每小時計算利息, 可提前還款, 逾期後每小時將收取3倍小時利息, 逾期超過48小時, 您的抵押資產將被清算以償還貸款和利息</li><li>如果借貸幣種不支持90天定期, 則總是`""`</li>|
+|>> hourlyInterestRate180D|string |180天定期每小時利率<li>利息以實際借款每小時計算利息, 可提前還款, 逾期後每小時將收取3倍小時利息, 逾期超過48小時, 您的抵押資產將被清算以償還貸款和利息</li><li>如果借貸幣種不支持180天定期, 則總是`""`</li>|
+|>> maxBorrowingAmount|string |借幣上限|
+|>> minBorrowingAmount|string |單次最低可借金額|
+|> vipLevel|string |Vip等級 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan/loanable-data?currency=USDT&vipLevel=VIP0 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "vipCoinList": [
+            {
+                "list": [
+                    {
+                        "borrowingAccuracy": 4,
+                        "currency": "USDT",
+                        "flexibleHourlyInterestRate": "0.0000090346",
+                        "hourlyInterestRate14D": "0.0000207796",
+                        "hourlyInterestRate180D": "",
+                        "hourlyInterestRate30D": "0.00002349",
+                        "hourlyInterestRate7D": "0.0000180692",
+                        "hourlyInterestRate90D": "",
+                        "maxBorrowingAmount": "8000000",
+                        "minBorrowingAmount": "20"
+                    }
+                ],
+                "vipLevel": "VIP0"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1728619315868
+}
+```
