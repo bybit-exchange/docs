@@ -1,0 +1,100 @@
+---
+title: Get Repayment Transaction History
+sidebar_label: Get Repayment Transaction History
+sidebar_position: 7
+---
+Query repaid transaction history
+> Permission: "Spot trade"
+
+:::info
+* Support querying last 6 months completed loan orders
+* Only successful repayments can be queried
+:::
+
+### HTTP Request
+GET `/v5/crypto-loan/repayment-history`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId|false|string|Loan order ID|
+|repayId|false|string|Repayment tranaction ID|
+|loanCurrency|false|string|Loan coin name|
+|limit |false |string |Limit for data size per page. [`1`, `100`]. Default: `10`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> collateralCurrency|string |Collateral coin|
+|> collateralReturn|string |Returned collateral amount by this repayment. No collateral returned if this transaction does not fully repay the debt|
+|> loanCurrency|string |Loan coin|
+|> loanTerm|string |Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan|
+|> orderId|string |Loan order ID|
+|> repayAmount|string |Repayment amount|
+|> repayId|string |Repayment transaction ID|
+|> repayStatus|integer |Repayment status, `1`: success; `2`: processing|
+|> repayTime|string |Repay timestamp|
+|> repayType|string |Repayment type, `1`: repay by user; `2`: repay by liquidation|
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan/repayment-history?repayId=1794271131730737664 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1728633716794
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "request.success",
+    "result": {
+        "list": [
+            {
+                "collateralCurrency": "BTC",
+                "collateralReturn": "0",
+                "loanCurrency": "USDT",
+                "loanTerm": "",
+                "orderId": "1794267532472646144",
+                "repayAmount": "100",
+                "repayId": "1794271131730737664",
+                "repayStatus": 1,
+                "repayTime": "1728629786875",
+                "repayType": "1"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1728633717935
+}
+```
