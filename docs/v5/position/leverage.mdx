@@ -3,6 +3,11 @@ title: Set Leverage
 sidebar_label: Set Leverage
 sidebar_position: 2
 ---
+:::info
+According to the risk limit, leverage affects the maximum position value that can be opened, 
+that is, the greater the leverage, the smaller the maximum position value that can be opened, 
+and vice versa. [Learn more](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
+:::
 
 ### HTTP Request
 POST `/v5/position/set-leverage`
@@ -12,8 +17,8 @@ POST `/v5/position/set-leverage`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only|
-|buyLeverage |**true** |string |[`1`, max leverage of corresponding [risk limit](../market/risk-limit#)] <ul><li>one-way mode: `buyLeverage` must be the same as `sellLeverage`</li><li>Hedge mode: <br/>Classic account & UTA (isolated margin): `buyLeverage` and `sellLeverage` can be different; <br/>UTA (cross margin): `buyLeverage` must be the same as `sellLeverage`</li></ul> |
-|sellLeverage |**true** |string |[`1`, max leverage of corresponding risk limit]|
+|buyLeverage |**true** |string |[`1`, max leverage] <ul><li>one-way mode: `buyLeverage` must be the same as `sellLeverage`</li><li>Hedge mode: <br/>Classic account & UTA (isolated margin): `buyLeverage` and `sellLeverage` can be different; <br/>UTA (cross margin): `buyLeverage` must be the same as `sellLeverage`</li></ul> |
+|sellLeverage |**true** |string |[`1`, max leverage]|
 
 <a href="/api-explorer/v5/position/leverage"><Button>RUN >></Button></a>
 
