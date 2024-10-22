@@ -27,7 +27,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> side |string  |Position side. `Buy`: long, `Sell`: short <ul><li>one-way mode: classic & [UTA1.0](../../acct-mode#uta-10)(inverse), an empty position returns `None`.</li><li>[UTA2.0](../../acct-mode#uta-20)(linear, inverse) & [UTA1.0](../../acct-mode#uta-10)(linear): either one-way or hedge mode returns an empty string `""` for an empty position.</li></ul> |
 |> size |string |Position size |
 |> [positionIdx](../../enum#positionidx) |integer |Used to identify positions in different position modes|
-|> tradeMode | integer |Trade mode <ul><li>Classic & [UTA1.0](../../acct-mode#uta-10)(inverse): `0`: cross-margin, `1`: isolated margin</li><li>[UTA2.0](../../acct-mode#uta-20), [UTA1.0](../../acct-mode#uta-10)(execpt inverse): depreciated, always `0`, check [Get Account Info](/v5/account/account-info) to know the margin mode</li></ul>|
+|> tradeMode | integer |Trade mode <ul><li>Classic & [UTA1.0](../../acct-mode#uta-10)(inverse): `0`: cross-margin, `1`: isolated margin</li><li>[UTA2.0](../../acct-mode#uta-20), [UTA1.0](../../acct-mode#uta-10)(execpt inverse): deprecated, always `0`, check [Get Account Info](/v5/account/account-info) to know the margin mode</li></ul>|
 |> positionValue |string |Position value |
 |> riskId |integer |Risk tier ID<br/>_for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_ |
 |> riskLimitValue |string  | Risk limit value<br/>_for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_ |
@@ -40,7 +40,7 @@ Subscribe to the position stream to see changes to your position data in **real-
 |> positionMM | string  |Maintenance margin<li>Classic & [UTA1.0](../../acct-mode#uta-10)(inverse): ignore this field</li><li>UTA portfolio margin mode, it returns ""</li>|
 |> liqPrice | string  |Position liquidation price <ul><li>[UTA1.0](../../acct-mode#uta-10)(inverse) & UTA(isolated margin enabled) & Classic account: it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>UTA (Cross margin mode): it is an estimated price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>However, this field is empty for Portfolio Margin Mode, and no liquidation price will be provided|
 |> bustPrice | string  |Bankruptcy price<br/>_Unified mode returns `""`, no position bankruptcy price (except [UTA1.0](../../acct-mode#uta-10)(inverse))_|
-|> tpslMode | string  |Depreciated, meaningless here, always "Full"|
+|> tpslMode | string  |deprecated, meaningless here, always "Full"|
 |> takeProfit |string |Take profit price |
 |> stopLoss |string |Stop loss price |
 |> trailingStop |string |Trailing stop |
