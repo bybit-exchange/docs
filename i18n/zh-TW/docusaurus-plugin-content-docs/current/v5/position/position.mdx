@@ -48,7 +48,7 @@ GET `/v5/position/list`
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**<br/>_若賬戶為組合保證金模式(PM), 該字段返回空字符串, 槓桿規則失效_|
 |> markPrice| string  | symbol 的最新標記價格  |
-|> liqPrice| string  | 倉位強平價格<ul><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(反向合約), 經典帳戶:<br/>是逐倉和全倉持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(全倉保證金), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(全倉保證金):<br/>是全倉持仓的<b>预估价格</b>(因为统一帳戶模式是按照帳戶維度控制风险率), 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>_對於組合保證金模式, 此字段為空, 不會提供強平價格_ |
+|> liqPrice| string  | 倉位強平價格<ul><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(反向合約), 經典帳戶:<br/>是逐倉和全倉持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(全倉保證金), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(全倉保證金):<br/>請注意, 這是預計強平價格僅供參考。僅當帳戶維持保證金率達到100%時會觸發強平, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>_對於組合保證金模式, 此字段為空, 不會提供強平價格_ |
 |> bustPrice| string  | 倉位破產價格|
 |> positionIM| string  | 倉位起始保證金 <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> positionMM| string  | 倉位維持保證金 <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
