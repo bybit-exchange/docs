@@ -42,7 +42,8 @@ To apply `delta` updates:
 See working code examples of this logic in the [FAQ](https://bybit-exchange.github.io/docs/faq#how-can-i-process-websocket-snapshot-and-delta-messages).
 
 :::info
-Linear & inverse level 1 data: if 3 seconds have elapsed without a change in the orderbook, a `snapshot` message will be pushed again.
+Linear & inverse level 1 data: if 3 seconds have elapsed without a change in the orderbook, a `snapshot` message will be pushed again, and the field `u` will be the 
+same as that in the previous message.
 :::
 
 
@@ -60,7 +61,7 @@ Linear & inverse level 1 data: if 3 seconds have elapsed without a change in the
 |> a |array |Asks. For `snapshot` stream, the element is sorted by price in ascending order  |
 |>> a[0] |string |Ask price |
 |>> a[1] |string |Ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
-|> u |integer |Update ID. Is a sequence. Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook |
+|> u |integer |Update ID<li>Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook</li><li>For level 1 of linear, inverse Perps and Futures, the snapshot data will be pushed again when there is no change in 3 seconds, and the "u" will be the same as that in the previous message</li>|
 |> seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li> |
 |cts |number |The timestamp from the match engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
 
