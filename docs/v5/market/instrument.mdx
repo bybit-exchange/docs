@@ -264,6 +264,9 @@ GET `/v5/market/instruments-info`
         <tr>
             <td>> <a href="../enum#margintrading">marginTrading</a></td><td>string</td><td>Margin trade symbol or not <ul><li>This is to identify if the symbol support margin trading under different account modes</li><li>You may find some symbols not supporting margin buy or margin sell, so you need to go to <a href="/v5/account/collateral-info">Collateral Info (UTA)</a> to check if that coin is borrowable</li></ul></td>
         </tr>
+         <tr>
+            <td>> stTag</td><td>string</td><td>Whether or not it has an <a href="https://www.bybit.com/en/help-center/article/Bybit-Special-Treatment-ST-Label-Management-Rules">special treatment label</a>. <code>0</code>: false, <code>1</code>: true </td>
+        </tr>
         <tr>
             <td>> lotSizeFilter</td><td>Object</td><td>Size attributes </td>
         </tr>
@@ -737,7 +740,8 @@ client
                 "quoteCoin": "USDT",
                 "innovation": "0",
                 "status": "Trading",
-                "marginTrading": "both",
+                "marginTrading": "utaOnly",
+                "stTag": "0",
                 "lotSizeFilter": {
                     "basePrecision": "0.000001",
                     "quotePrecision": "0.00000001",

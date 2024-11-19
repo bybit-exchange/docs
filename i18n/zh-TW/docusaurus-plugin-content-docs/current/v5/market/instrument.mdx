@@ -267,6 +267,9 @@ GET `/v5/market/instruments-info`
         <tr>
             <td>> <a href="../enum#margintrading">marginTrading</a></td><td>string</td><td>該幣對是否支持槓桿交易 <ul><li>該字段僅用於說明不同帳戶類型下某個幣對是否支持槓桿交易</li><li>您可能會遇到某個幣對支持槓桿交易, 但是不支持單邊買入或者賣出, 這種情況下您需要前往<a href="/v5/account/collateral-info">查詢抵押品信息 (UTA)</a>確認目標幣種是否可借貸</li></ul></td>
         </tr>
+         <tr>
+            <td>> stTag</td><td>string</td><td>幣對是否存在<a href="https://www.bybit.com/en/help-center/article/Bybit-Special-Treatment-ST-Label-Management-Rules">特殊處理(ST)標籤</a>. <code>0</code>: 否, <code>1</code>: 是 </td>
+        </tr>
         <tr>
             <td>> lotSizeFilter</td><td>Object</td><td>數量屬性 </td>
         </tr>
@@ -739,7 +742,8 @@ client
                     "quoteCoin": "USDT",
                     "innovation": "0",
                     "status": "Trading",
-                    "marginTrading": "both",
+                    "marginTrading": "utaOnly",
+                    "stTag": "0",
                     "lotSizeFilter": {
                         "basePrecision": "0.000001",
                         "quotePrecision": "0.00000001",
