@@ -1,0 +1,115 @@
+---
+title: 查詢代理用戶列表
+sidebar_label: 查詢代理用戶列表
+sidebar_position: 1
+---
+
+要使用此接口，您应该有一个代理商账户，并且在创建 API 密钥时仅勾选“代理商”权限。<br/>
+代理商网站: https://affiliates.bybit.com
+
+:::tip
+* 僅支持使用母帳戶uid
+* 若要查詢該接口, api key僅能擁有代理商權限, 若擁有任何其他權限想, 請移除
+:::
+
+### HTTP 請求
+GET `/v5/affiliate/aff-user-list`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|size |false |integer |每頁數量限制. [`0`, `1000`]. 默認: `0`|
+|cursor |false |string |游標，用於翻頁|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> userId |string |帳戶uid |
+|> registerTime |string |用戶註冊時間|
+|> source |integer |用戶註冊來源，來自哪个Referrer Code |
+|> remarks |integer |備註|
+|> isKyc |boolean |KYC是否完成|
+|nextPageCursor |string |游標，用於翻頁 |
+
+<a href="/api-explorer/v5/affiliate/aff-user-list"><Button>RUN >></Button></a>
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/affiliate/aff-user-list?cursor=""&size=2 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: uQ61dcX0lSe7ygD2EA
+X-BAPI-TIMESTAMP: 1685596324209
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: xxxxxx
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+  testnet: true,
+  key: 'apikey',
+  secret: 'apisecret',
+});
+
+client
+  .getAffiliateUserInfo({ size: 2 })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "userId": "101527036",
+                "registerTime": "2024-06-21",
+                "source": "1564",
+                "remarks": "test",
+                "isKyc": false
+            },
+            {
+                "userId": "103929118",
+                "registerTime": "2024-11-12",
+                "source": "1564",
+                "remarks": "",
+                "isKyc": false
+            }
+        ],
+        "nextPageCursor": "16197"
+    },
+    "retExtInfo": {},
+    "time": 1733205472513
+}
+```
