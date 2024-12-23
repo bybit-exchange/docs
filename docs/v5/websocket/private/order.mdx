@@ -15,6 +15,12 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 * Categorised Topic: Allow you to listen only to specific category websocket updates
 :::
 
+:::tip
+You may receive two orderStatus=`Filled` messages when the cancel request is accepted but the order is executed at the same time. Generally, one 
+message contains "orderStatus=Filled, rejectReason=EC_NoError", and another message contains "orderStatus=Filled, cancelType=CancelByUser, rejectReason=EC_OrigClOrdIDDoesNotExist".
+The first message tells you the order is executed, and the second message tells you the followed cancel request is rejected due to order is executed.
+:::
+
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |

@@ -15,6 +15,11 @@ sidebar_position: 3
 * Categorised Topic: 您只能監聽您指定的那個業務的websocket更新
 :::
 
+:::tip
+當您提交了撤單請求後, 恰巧此時訂單被撮合了, 那麼您可能會接收到兩條orderStatus=`Filled`的消息推送。常見的情況是, 一條消息裡包含 "orderStatus=Filled, rejectReason=EC_NoError", 然後另一條消息包含"orderStatus=Filled, cancelType=CancelByUser, rejectReason=EC_OrigClOrdIDDoesNotExist"。
+前者表示訂單成交了, 後者表示由於訂單已成交, 導致對應的撤單請求被拒絕了。
+:::
+
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
