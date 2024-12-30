@@ -11,6 +11,46 @@ AWS 新加坡, <a href="https://docs.aws.amazon.com/zh_tw/AWSEC2/latest/UserGuid
 * `reduceOnly` 是平倉時真正重要的一個，我們會在未來改進接口。
 * 將 `closeOnTrigger` 指定為 true 時要小心，因為當 `reduceOnly` 為 false 時可能會導致衝突。
 
+### 為什麼我會拿到10003 API key is invalid錯誤?
+最可能是因為使用的key和域名不匹配:<br/>
+a. 當請求到api.bybit.com或者stream.bybit.com時, 請確保api key創建自[主網](https://www.bybit.com)
+![主網示意圖](/img/prd.png)
+```python
+# pybit示例
+session = HTTP(
+    testnet=False,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+```
+---
+b. 當請求到api-demo.bybit.com或者stream-demo.bybit.com時, 請確保api key創建自[主網](https://www.bybit.com)的"模擬交易"服務
+![主網模擬交易示意圖](/img/prd-demo.png)
+```python
+# pybit示例
+session = HTTP(
+    testnet=False,
+    demo=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+```
+---
+c. 當請求到api-testnet.bybit.com或者stream-testnet.bybit.com時, 請確保api key創建自[測試網](https://testnet.bybit.com)
+![測試網示意圖](/img/test.png)
+```python
+# pybit示例
+session = HTTP(
+    testnet=True,
+    demo=False,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+```
+---
+d. **不要**使用測試網的"模擬交易"服務, 沒有任何意義
+![測試網模擬交易示意圖](/img/test-demo.png)
+
 ### 為什麼網站上沒有顯示我的所有訂單?
 * 擁有下大量階梯訂單的機器人的用戶將受到前端界面的限制，該界面僅在屏幕上顯示最多 50 個訂單。
 * 不用擔心，您的訂單還在系統中，可以通過API查詢，但是前端顯示不會超過50個。
@@ -25,17 +65,19 @@ AWS 新加坡, <a href="https://docs.aws.amazon.com/zh_tw/AWSEC2/latest/UserGuid
     * `1 - (0.0006 * 2)` - 用於計算最大訂單成本（始終假設進入和退出訂單使用吃單費用，而不考慮實際費用）。
 
 ### 我可以用 API 兌換資產嗎?
-* 沒有接口可以交換資產。這只能在<a href="https://www.bybit.com/app/assets/assets-exchange">網站</a>上完成。
-* 但是，可以使用 API 訪問您的[資產交換記錄](/v5/asset/exchange#)。
+[閃兌接口](/v5/asset/convert/guideline), 但目前沒有小額資產兌換MNT的接口
 
-### 我如何獲得測試網的資金?
-要獲得測試網資金，只需到主賬戶資產頁面申請即可。
+### 我可以用 API 質押借貸嗎?
+[質押借貸接口](/v5/crypto-loan/collateral-coin)
+
+### 我如何獲得測試網(testnet)的資金?
+使用母帳戶登錄後, 進入到該[頁面](https://testnet.bybit.com/user/assets/home/overview), 右邊有個"申請測試幣"按鈕
 
 ### 為什麼我的平倉盈虧價格不准確?
 * Closed PNL接口返回的`entryPrice`和`exitPrice`不是訂單的實際執行價格。
 * 它基於訂單的總成本
 (頭寸是否僅由以一個價格執行的一個訂單開倉/平倉 - 如果多個訂單開倉/平倉則更加複雜。)
-* 例如，此接口報告的 entry_price 和 exit_price 受訂單支付/收到的費用的影響。
+* 例如，此接口報告的 entryPrice 和 exitPrice 受訂單支付/收到的費用的影響。
 
 ### 如何確保我使用的是最新數據?
 * REST API 或（甚至不太可能）websocket 有可能（儘管不太可能）返回/推送舊數據。
@@ -54,3 +96,71 @@ AWS 新加坡, <a href="https://docs.aws.amazon.com/zh_tw/AWSEC2/latest/UserGuid
 的價格執行的市價單。這裡返回的價格是內部限價單價格。返回此“不准確”的價格是因為下單接口是異步的，這意味著在實際執行訂單之前將響應返回給您。
 
 如果你想要真正的執行價格 (`execPrice`)，你應該訂閱 [execution websocket](/v5/websocket/private/execution)。
+
+### 為什麼餘額是夠的, 但是提幣或者劃轉時報餘額不足?
+**場景重現:** 母帳戶提幣時遇到131001, Withdrawal amount is greater than your available balance (XXXX USDT), 或者從子帳戶劃轉到母帳戶時遇到131228, your balance is not enough，
+但是調用[查詢賬戶所有幣種余額](/v5/asset/balance/all-balance)看到響應`transferBalance`是足夠的。
+```http
+/v5/asset/transfer/query-account-coins-balance?accountType=FUND
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "memberId": "247200692",
+        "accountType": "FUND",
+        "balance": [
+            {
+                "coin": "BTC",
+                "transferBalance": "0.06",
+                "walletBalance": "0.06",
+                "bonus": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1735189176388
+}
+```
+**原因:** 是由於最近母或子帳戶有新的入金, 導致鎖住對應的USD價值。例如, 5分鐘前母帳戶上帳了1個ETH, 立馬交易成了0.05個BTC, 但由於入金風險未完全釋放, 導致這0.05個BTC不能提出; 如果是充值到子帳戶, 
+則這部分金額不能劃轉到母帳戶。<br/>
+**建議:** 1. 如果只需要確認單個幣種的可提/劃餘額, 可以總是使用[查詢帳戶單個幣種餘額](/v5/asset/balance/account-coin-balance)。另外, 機構借貸帳戶劃出到風險單元外時會受到ltv影響, 也可以使用該
+接口查詢到準確劃轉餘額, 見例4, 例5。
+```json
+//例1, 查詢本帳戶的某个錢包的某個幣種可提現餘額或者可劃出至母帳戶的餘額
+GET /v5/asset/transfer/query-account-coin-balance?accountType=XXX&coin=XXX&withTransferSafeAmount=1
+查看字段`transferSafeAmount`
+
+//例2, 查詢本帳戶可劃出到子帳戶或者帳戶內其他錢包的某個幣種餘額
+GET /v5/asset/transfer/query-account-coin-balance?accountType=XXX&coin=XXX&withTransferSafeAmount=1
+查看字段`transferBalance`
+
+//例3, 用母帳戶查詢指定子帳戶的某個錢包的某個幣種可劃轉餘額
+GET /v5/asset/transfer/query-account-coin-balance?memberId=XXX&accountType=XXX&coin=XXX&withTransferSafeAmount=1
+-> 劃出到其餘子帳戶或者帳戶內其他錢包: 看字段`transferBalance`
+-> 劃出到母帳戶: 看字段`transferSafeAmount`
+
+//例4: 機構借貸風險單元往外劃轉時, 在ltv安全線下允許劃轉的餘額(帳戶內劃轉, 劃轉到資金錢包)
+GET /v5/asset/transfer/query-account-coin-balance?withLtvTransferSafeAmount=1&accountType=UNIFIED&toAccountType=FUND&coin=XXX
+查看字段`ltvTransferSafeAmount`
+
+//例5: 機構借貸風險單元往外劃轉時, 在ltv安全線下允許劃轉的餘額(劃轉到非機構借貸帳戶)
+GET /v5/asset/transfer/query-account-coin-balance?withLtvTransferSafeAmount=1&toMemberId=XXX&accountType=UNIFIED&toAccountType=FUND&coin=XXX&
+查看字段`ltvTransferSafeAmount`
+```
+2. 如果需要一次查詢多個幣種的可劃轉餘額, 可以使用[查詢賬戶所有幣種余額](/v5/asset/balance/all-balance)。但是, 在最近有入金的情況下, 會使得返回字段`transferBalance`小於等於真正可提現或可劃入到母帳戶
+的餘額。另外, 當機構借貸帳戶需要劃到風險單元外時, 也會不準。此時, 應當參考建議1中的例4、例5。
+```json
+//例1, 查詢本帳戶的資金錢包裡的全幣種餘額 (2025年1月9日後, 不再支持查詢全量幣種, coin需要必傳)
+GET /v5/asset/transfer/query-account-coins-balance?accountType=FUND
+
+//例2, 查詢本帳戶的統一錢包裡的部分幣種餘額 (2025年1月9日後, 支持查詢最多10個幣種)
+GET /v5/asset/transfer/query-account-coins-balance?accountType=UNIFIED&coin=USDT,ETH,BTC,USDC
+
+//例3, 查詢指定子帳戶的統一錢包裡的部分幣種餘額
+GET /v5/asset/transfer/query-account-coins-balance?memberId=XXX&accountType=UNIFIED&coin=USDT,ETH,BTC,USDC
+```
+3. 如果是要知道當前母帳戶是否還有入金未完全釋放風險, 可以使用[查詢延遲提幣凍結金額](/v5/asset/balance/delay-amount)
+```json
+GET /v5/asset/withdraw/withdrawable-amount?coin=XXX
+查看字段`limitAmountUsd`, 等於0則表示當前所有入金已經釋放風險; 不等於0則表示還有對應折合成USD的幣沒有完全釋放風險
+```
