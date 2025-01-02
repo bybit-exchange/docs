@@ -132,6 +132,15 @@ GET `/v5/market/instruments-info`
             <td>> lowerFundingRate</td><td>string</td><td>Lower limit of funding date</td>
         </tr>
         <tr>
+            <td>> riskParameters</td><td>object</td><td>Risk parameters for limit order price, refer to <a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">announcement</a></td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioX</td><td>string</td><td>Ratio X</td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioY</td><td>string</td><td>Ratio Y</td>
+        </tr>
+        <tr>
             <td>> isPreListing</td><td>boolean</td><td><li>Whether the contract is a pre-market contract</li><li>When the pre-market contract is converted to official contract, it will be false</li>  </td>
         </tr>
         <tr>
@@ -577,15 +586,15 @@ client
                 },
                 "priceFilter": {
                     "minPrice": "0.10",
-                    "maxPrice": "199999.80",
+                    "maxPrice": "1999999.80",
                     "tickSize": "0.10"
                 },
                 "lotSizeFilter": {
-                    "maxOrderQty": "100.000",
-                    "maxMktOrderQty": "100.000",
+                    "maxOrderQty": "1190.000",
                     "minOrderQty": "0.001",
                     "qtyStep": "0.001",
-                    "postOnlyMaxOrderQty": "1000.000",
+                    "postOnlyMaxOrderQty": "1190.000",
+                    "maxMktOrderQty": "500.000",
                     "minNotionalValue": "5"
                 },
                 "unifiedMarginTrade": true,
@@ -593,13 +602,19 @@ client
                 "settleCoin": "USDT",
                 "copyTrading": "both",
                 "upperFundingRate": "0.00375",
-                "lowerFundingRate": "-0.00375"
+                "lowerFundingRate": "-0.00375",
+                "isPreListing": false,
+                "preListingInfo": null,
+                "riskParameters": {
+                    "priceLimitRatioX": "0.01",
+                    "priceLimitRatioY": "0.02"
+                }
             }
         ],
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1707186451514
+    "time": 1735809771618
 }
 
 // Pre-market Perpetual instrument structure
@@ -610,61 +625,61 @@ client
         "category": "linear",
         "list": [
             {
-                "symbol": "PRE02ZROUSDT",
+                "symbol": "BIOUSDT",
                 "contractType": "LinearPerpetual",
                 "status": "PreLaunch",
-                "baseCoin": "PRE02ZRO",
+                "baseCoin": "BIO",
                 "quoteCoin": "USDT",
-                "launchTime": "1718610229000",
+                "launchTime": "1735032510000",
                 "deliveryTime": "0",
                 "deliveryFeeRate": "",
-                "priceScale": "3",
+                "priceScale": "4",
                 "leverageFilter": {
                     "minLeverage": "1",
                     "maxLeverage": "5.00",
                     "leverageStep": "0.01"
                 },
                 "priceFilter": {
-                    "minPrice": "0.001",
-                    "maxPrice": "1999.998",
-                    "tickSize": "0.001"
+                    "minPrice": "0.0001",
+                    "maxPrice": "1999.9998",
+                    "tickSize": "0.0001"
                 },
                 "lotSizeFilter": {
-                    "maxOrderQty": "10000.0",
-                    "minOrderQty": "0.1",
-                    "qtyStep": "0.1",
-                    "postOnlyMaxOrderQty": "10000.0",
-                    "maxMktOrderQty": "2000.0",
+                    "maxOrderQty": "70000",
+                    "minOrderQty": "1",
+                    "qtyStep": "1",
+                    "postOnlyMaxOrderQty": "70000",
+                    "maxMktOrderQty": "14000",
                     "minNotionalValue": "5"
                 },
                 "unifiedMarginTrade": true,
                 "fundingInterval": 480,
                 "settleCoin": "USDT",
                 "copyTrading": "none",
-                "upperFundingRate": "0.03",
-                "lowerFundingRate": "-0.03",
+                "upperFundingRate": "0.05",
+                "lowerFundingRate": "-0.05",
                 "isPreListing": true,
                 "preListingInfo": {
                     "curAuctionPhase": "ContinuousTrading",
                     "phases": [
                         {
                             "phase": "CallAuction",
-                            "startTime": "1718621400000",
-                            "endTime": "1718707200000"
+                            "startTime": "1735113600000",
+                            "endTime": "1735116600000"
                         },
                         {
                             "phase": "CallAuctionNoCancel",
-                            "startTime": "1718707200000",
-                            "endTime": "1718707500000"
+                            "startTime": "1735116600000",
+                            "endTime": "1735116900000"
                         },
                         {
                             "phase": "CrossMatching",
-                            "startTime": "1718707500000",
-                            "endTime": "1718707800000"
+                            "startTime": "1735116900000",
+                            "endTime": "1735117200000"
                         },
                         {
                             "phase": "ContinuousTrading",
-                            "startTime": "1718707800000",
+                            "startTime": "1735117200000",
                             "endTime": ""
                         }
                     ],
@@ -673,13 +688,17 @@ client
                         "takerFeeRate": "0.001",
                         "makerFeeRate": "0.0004"
                     }
+                },
+                "riskParameters": {
+                    "priceLimitRatioX": "0.05",
+                    "priceLimitRatioY": "0.1"
                 }
             }
         ],
-        "nextPageCursor": ""
+        "nextPageCursor": "first%3DBIOUSDT%26last%3DBIOUSDT"
     },
     "retExtInfo": {},
-    "time": 1719455285151
+    "time": 1735810114435
 }
 ```
 
