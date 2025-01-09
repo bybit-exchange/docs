@@ -32,6 +32,7 @@ GET `/v5/asset/coin/query-info`
 |>> chainDeposit |string |幣鏈是否可充值. `0`: 暫停. `1`: 正常 |
 |>> chainWithdraw |string |幣鏈是否可提幣. `0`: 暫停. `1`: 正常 |
 |>> withdrawPercentageFee|string|提現手續費百分比. 該字段的值是實際數字，即0.022表示為2.2%|
+|>> contractAddress |string |合約地址. `""` 表示沒有合約地址|
 
 <a href="/api-explorer/v5/asset/coin-info"><Button>運行實例 >></Button></a>
 
@@ -97,43 +98,45 @@ client
 ```json
 {
     "retCode": 0,
-    "retMsg": "",
+    "retMsg": "success",
     "result": {
         "rows": [
             {
-                "name": "ETH",
-                "coin": "ETH",
-                "remainAmount": "1020000",
+                "name": "MNT",
+                "coin": "MNT",
+                "remainAmount": "10000000",
                 "chains": [
                     {
-                        "chainType": "ETH",
-                        "confirmation": "10000",
-                        "withdrawFee": "0.005",
-                        "depositMin": "0.01",
-                        "withdrawMin": "0.02",
+                        "chainType": "Ethereum",
+                        "confirmation": "6",
+                        "withdrawFee": "3",
+                        "depositMin": "0",
+                        "withdrawMin": "3",
                         "chain": "ETH",
                         "chainDeposit": "1",
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
-                        "withdrawPercentageFee": "0.022"
+                        "withdrawPercentageFee": "0",
+                        "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354"
                     },
                     {
-                        "chainType": "Arbitrum One",
-                        "confirmation": "10",
-                        "withdrawFee": "0.01",
-                        "depositMin": "0.001",
-                        "withdrawMin": "0.1",
-                        "chain": "ARBI",
+                        "chainType": "Mantle Network",
+                        "confirmation": "100",
+                        "withdrawFee": "0",
+                        "depositMin": "0",
+                        "withdrawMin": "10",
+                        "chain": "MANTLE",
                         "chainDeposit": "1",
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
-                        "withdrawPercentageFee": "0"
+                        "withdrawPercentageFee": "0",
+                        "contractAddress": ""
                     }
                 ]
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1677478088215
+    "time": 1736395486989
 }
 ```
