@@ -304,13 +304,13 @@ GET `/v5/market/instruments-info`
             <td>>> tickSize</td><td>string</td><td>The step to increase/reduce order price </td>
         </tr>
         <tr>
-            <td>> riskParameters</td><td>Object</td><td>Price limit parameters</td>
+            <td>> riskParameters</td><td>Object</td><td>Risk parameters for limit order price, refer to <a href="https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/">announcement</a></td>
         </tr>
         <tr>
-            <td>>> limitParameter</td><td>string</td><td>Price limit on Limit order. <i>For example, "0.05" means 5%, so the order price of your buy order cannot exceed 105% of the Last Traded Price, while the order price of your sell order cannot be lower than 95% of the Last Traded Price</i></td>
+            <td>>> priceLimitRatioX</td><td>string</td><td>Ratio X</td>
         </tr>
         <tr>
-            <td>>> marketParameter</td><td>string</td><td>Price limit on Market order. <i>For example, assuming the market order limit for MNT/USDT is 5%. When the last traded price is at 2 USDT, a trader places a market order for 100,000 USDT. Any portion that could have been filled at above 2.1 USDT will be canceled. Assuming only 80,000 USDT order value can be filled at a price of 2.1 USDT or below, the remaining 20,000 USDT order value will be canceled since the deviation exceeds the 5% threshold.</i></td>
+            <td>>> priceLimitRatioY</td><td>string</td><td>Ratio Y</td>
         </tr>
     </table>
 </TabItem>
@@ -773,8 +773,8 @@ client
                     "tickSize": "0.01"
                 }
                 "riskParameters": {
-                    "limitParameter": "0.05",
-                    "marketParameter": "0.05"
+                    "priceLimitRatioX": "0.01",
+                    "priceLimitRatioY": "0.02"
                 }
             }
         ]
