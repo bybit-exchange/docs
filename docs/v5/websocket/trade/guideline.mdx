@@ -75,7 +75,7 @@ sidebar_position: 1
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |reqId |string |<li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li>|
-|retCode |integer |<li>`0`: success</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li>|
+|retCode |integer |<li>`0`: success</li><li>`10403`: exceed IP rate limit. 3000 requests per second per IP</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li>|
 |retMsg |string |<li>`OK`</li><li>`""`</li><li>Error message</li> |
 |op |string |Op type |
 |data |object |Business data, keep the same as `result` on rest api response <li>`order.create`: refer to [create order response](../../order/create-order#response-parameters)</li><li>`order.amend`: refer to [amend order response](../../order/amend-order#response-parameters)</li><li>`order.cancel`: refer to [cancel order response](../../order/cancel-order#response-parameters)</li> |
