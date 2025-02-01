@@ -56,13 +56,14 @@ d. **Do not** use Testnet - Demo trading service, it is pointless
 * Don't worry, your orders are still in the system and can be queried by the API, but the frontend cannot show more than 50.
 
 ### Calculating order size based on available wallet balance
-* `price * availableBalance * leverage * perc * (1 - (0.0006 * 2))`
+* Your order size is limited by order cost, which should be below or equal to your available balance. You can learn more here: <a href="https://www.bybit.com/en/help-center/article/Order-Cost-USDT-Contract">Order Cost (Perpetuals & Futures Trading)</a>
+* The approximate formula for buy orders: `contract_quantity = available_balance / (order_price * (1 / leverage + taker_fee_rate * (2 - 1 / leverage)))`
+* The approximate formula for sell orders: `contract_quantity = available_balance / (order_price * (1 / leverage + taker_fee_rate * (2 + 1 / leverage)))`
 * Unfortunately this is not a perfectly accurate formula; the real calculation is complex and may be published in the docs at a later date.
-    * `price` - last price (or your entry price) - can be found with the [Tickers](/v5/market/tickers#).
-    * `availableBalance` - can be found with the [Position Info](/v5/position#) endpoint.
+    * `order_price` - price of a limit order, or your entry price with market order (LTP) - can be found with the [Tickers](/v5/market/tickers#).
+    * `available_balance` - can be found with the [Get Wallet Balance](/v5/account/wallet-balance#) endpoint.
     * `leverage` - up to the respective maximum leverage for the market and your risk limit (eg 2, 10, 50).
-    * `perc` - 0.1 for 10%, 0.25 for 25%, etc.
-    * `1 - (0.0006 * 2)` - used to calculate the maximum order cost (always assumes entry & exit orders use taker fee regardless actual fee).
+    * `taker_fee_rate` - real number, representing the fee. It is 0.1 for 10%, 0.001 for 0.1%, 0.0018 for 0.18%, and so on.
 
 ### Can I exchange assets with the API?
 Yes, [convert API](/v5/asset/convert/guideline), but currently there is no API to convert small balances to MNT
