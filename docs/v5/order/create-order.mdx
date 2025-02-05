@@ -8,15 +8,15 @@ This endpoint supports to create the order for Spot, Margin trading, USDT perpet
 :::info
 - **Supported order type (`orderType`):**<br/>
 Limit order: `orderType`=_Limit_, it is necessary to specify order qty and price.<br/>
-<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>: <code>orderType</code>=<i>Market</i>, execute at the best price in the Bybit market until the transaction is completed. When selecting a market order, the "price" can be empty. In the futures trading system, in order to protect the serious slippage of the market order, the Bybit trading system will convert the market order into a limit order for matching. will be cancelled. The slippage threshold refers to the percentage that the order price deviates from the latest transaction price. The current threshold is set to 3% for BTC contracts and 5% for other contracts.
+<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001135">Market order</a>: <code>orderType</code>=<i>Market</i>, execute at the best price in the Bybit market until the transaction is completed. When selecting a market order, the "price" can be empty. In the futures trading system, in order to protect traders against the serious slippage of the Market order, Bybit trading engine will convert the market order into an IOC limit order for matching. If there are no orderbook entries within price slippage limit, the order will not be executed. If there is insufficient liquidity, the order will be cancelled. The slippage threshold refers to the percentage that the order price deviates from the mark price. You can learn more here: <a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">Adjustments to Bybit's Derivative Trading Price Limit Mechanism</a>
 
 - **Supported timeInForce strategy:**<br/>
 `GTC`<br/>
 `IOC`<br/>
 `FOK`<br/>
-`PostOnly`: If the order would be filled immediately when submitted, it will be **cancelled**. The purpose of this is to protect your order during the submission process. If the matching system cannot entrust the order to the order book due to price changes on the market, it will be cancelled. For the PostOnly order type, the quantity that can be submitted in a single order is more than other types of orders, please refer to the parameter `lotSizeFilter > postOnlyMaxOrderQty` in the [instruments-info](../market/instrument#) endpoint.
+`PostOnly`: If the order would be filled immediately when submitted, it will be **cancelled**. The purpose of this is to protect your order during the submission process. If the matching system cannot entrust the order to the order book due to price changes on the market, it will be cancelled.
 
-- **How to create conditional order:**<br/>
+- **How to create a conditional order:**<br/>
 When submitting an order, if `triggerPrice` is set, the order will be automatically converted into a conditional order. In addition, the conditional order does not occupy the margin. If the margin is insufficient after the conditional order is triggered, the order will be cancelled.
 
 - **<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001138">Take profit / Stop loss</a>**: You can set TP/SL while placing orders. Besides, you could modify the position's TP/SL.
@@ -68,7 +68,7 @@ POST `/v5/order/create`
 |triggerPrice |false |string |<ul><li>For Perps & Futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is the TP/SL and Conditional order trigger price</li></ul>|
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type, Conditional order param for Perps & Futures. <li>`LastPrice`</li><li>`IndexPrice`</li><li>`MarkPrice`</li>Valid for `linear` & `inverse`|
 |orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
-|[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
+|[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001044">Time in force</a> <ul><li>Market order will always use `IOC`</li><li>If not passed, `GTC` is used by default</li> </ul>|
 |[positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
 |orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures & Perps: orderLinkId rules_:<br/><ul><li>optional param</li><li>always unique</li>_`option` orderLinkId rules_:<br/><li>**required** param</li><li>always unique</li></ul>|
 |takeProfit |false |string |Take profit price<li>UTA: Spot Limit order supports take profit, stop loss or limit take profit, limit stop loss when creating an order</li>|
@@ -231,30 +231,43 @@ Console.WriteLine(orderInfo);
 const { RestClientV5 } = require('bybit-api');
 
 const client = new RestClientV5({
-    testnet: true,
-    key: 'apikey',
-    secret: 'apisecret',
+  testnet: true,
+  key: 'apikey',
+  secret: 'apisecret',
 });
 
+// Submit a market order
 client
-    .submitOrder({
-        category: 'spot',
-        symbol: 'BTCUSDT',
-        side: 'Buy',
-        orderType: 'Market',
-        qty: '0.1',
-        price: '15600',
-        timeInForce: 'PostOnly',
-        orderLinkId: 'spot-test-postonly',
-        isLeverage: 0,
-        orderFilter: 'Order',
-    })
-    .then((response) => {
-        console.log(response);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+  .submitOrder({
+    category: 'spot',
+    symbol: 'BTCUSDT',
+    side: 'Buy',
+    orderType: 'Market',
+    qty: '1',
+  })
+  .then((response) => {
+    console.log('Market order result', response);
+  })
+  .catch((error) => {
+    console.error('Market order error', error);
+  });
+
+// Submit a limit order
+client
+  .submitOrder({
+    category: 'spot',
+    symbol: 'BTCUSDT',
+    side: 'Buy',
+    orderType: 'Limit',
+    qty: '1',
+    price: '55000',
+  })
+  .then((response) => {
+    console.log('Limit order result', response);
+  })
+  .catch((error) => {
+    console.error('Limit order error', error);
+  });
 ```
 
 </TabItem>
