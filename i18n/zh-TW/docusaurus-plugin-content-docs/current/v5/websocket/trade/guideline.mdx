@@ -74,7 +74,7 @@ sidebar_position: 1
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |reqId |string |<li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li>|
-|retCode |integer |<li>`0`: 成功</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li>|
+|retCode |integer |<li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li>|
 |retMsg |string |<li>`OK`</li><li>`""`</li><li>報錯信息</li> |
 |op |string |Op類型 |
 |data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <li>`order.create`: 請參閱[創建訂單響應參數](../../order/create-order#響應參數)</li><li>`order.amend`: 請參閱[修改訂單響應參數](../../order/amend-order#響應參數)</li><li>`order.cancel`: 請參閱[取消訂單響應參數](../../order/cancel-order#響應參數)</li> |
