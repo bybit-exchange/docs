@@ -26,7 +26,7 @@ GET `/v5/order/realtime`
 |category |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul>|
 |symbol |false |string |合約名稱<li>當category=**linear**, `symbol`, `baseCoin` 和 `settleCoin`**必傳**其中一個</li>|
 |baseCoin |false |string |交易幣種<li>支持`linear`, `inverse`和`option`</li><li>對於category=**option**, 若不傳baseCoin, 則返回期權下所有活動委託單</li>|
-|settleCoin |false |string |結算幣種 <ul><li><b>linear</b>: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li></ul>|
+|settleCoin |false |string |結算幣種 <ul><li><b>linear</b>: `symbol` 和 `settleCoin`**必傳**其中一個</li><li>`spot`: 該字段無效</li><li>`option`: USDT 或 USDC</li></ul>|
 |orderId |false |string |訂單Id |
 |orderLinkId |false |string |用戶自定義訂單Id |
 |openOnly |false |integer |<ul><li>`0`(默認): [統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10), 經典帳戶: 僅查詢活動委託訂單, 比如New, PartiallyFilled訂單</li><li>`1`: [統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10)(除了inverse)<br/>`2`: [統一帳戶1.0](../acct-mode#統一帳戶10)(inverse)和經典帳戶:  <br/>返回僅終態（已取消/拒絕/完全成交）的訂單數據, 每個帳戶每個category下最多保留500條紀錄. <i>如果因Bybit服務更新重啟則該部分數據會情況並重新累計, 但是訂單紀錄仍然可以從[歷史訂單](order-list#)中查詢到</i></li><li>當查詢是按照_orderId_ 或者 _orderLinkId_時, `openOnly`入参將會被忽略</li><li>經典帳戶現貨: 該字段無效, 僅返回活動委託單</li></ul>
