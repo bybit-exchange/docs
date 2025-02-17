@@ -23,11 +23,11 @@ POST `/v5/user/create-sub-api`
 |permissions |<b>true</b> |Object |Tick the types of permission.<ul><li> one of below types must be passed, otherwise the error is thrown</li></ul>|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
-|> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransferList"]` |
+|> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransferList"]`<br/>_Note: Fund Custodial account is not supported_ |
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
 |> Derivatives |false |array |This param is **deprecated** because system will automatically add this permission according to your account is UTA or Classic |
 |> Exchange |false |array |Exchange. `["ExchangeHistory"]` |
-|> CopyTrading |false |array |Copytrade. `["CopyTrading"]`|
+|> CopyTrading |false |array |Copytrade. `["CopyTrading"]` **deprecated** because using signal copy trading now, please refer to [How To Start Copy Trading](/v5/copytrade)|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -35,7 +35,7 @@ POST `/v5/user/create-sub-api`
 |id |string |Unique id. Internal used |
 |note |string |The remark|
 |apiKey |string |Api key |
-|readOnly |integer |`0`：Read and Write. `1`：Read only |
+|readOnly |integer |`0`: Read and Write. `1`: Read only |
 |secret |string |The secret paired with api key.<ul><li>The secret can't be queried by GET api. Please keep it properly</li> </ul>|
 |permissions |Object |The types of permission |
 |> ContractTrade |array |Permisson of contract trade |
