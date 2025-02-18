@@ -11,12 +11,13 @@ GET `/v5/account/withdrawal`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|coinName |**true** |string |Coin name, uppercase only|
+|coinName |false |string |Coin name, uppercase only. Supports up to 20 coins per request, use comma to separate. `BTC,USDC,USDT,SOL`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|availableWithdrawal |string |Transferable amount|
+|availableWithdrawal |string |Transferable amount for the 1st coin in the request|
+|availableWithdrawalMap |Object |Transferable amount map for each requested coin. In the map, key is the requested coin, and value is the accordingly amount(string)<br/>e.g., "availableWithdrawalMap":{"BTC":"4.54549050","SOL":"33.16713007","XRP":"10805.54548970","ETH":"17.76451865"}|
 
 ### Request Example
 
@@ -24,11 +25,11 @@ GET `/v5/account/withdrawal`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/account/withdrawal?coinName=USDT HTTP/1.1
-Host: api.bybit.com
+GET /v5/account/withdrawal?coinName=BTC,SOL,ETH,XRP HTTP/1.1
+Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXXX
 X-BAPI-API-KEY: XXXXXX
-X-BAPI-TIMESTAMP: 1733728105129
+X-BAPI-TIMESTAMP: 1739861239242
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 ```
@@ -57,9 +58,15 @@ Content-Type: application/json
     "retCode": 0,
     "retMsg": "OK",
     "result": {
-        "availableWithdrawal": "408.03641264"
+        "availableWithdrawal": "4.54549050",
+        "availableWithdrawalMap": {
+            "BTC": "4.54549050",
+            "SOL": "33.16713007",
+            "XRP": "10805.54548970",
+            "ETH": "17.76451865"
+        }
     },
     "retExtInfo": {},
-    "time": 1733728105312
+    "time": 1739858984601
 }
 ```
