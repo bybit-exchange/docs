@@ -1,0 +1,86 @@
+---
+title: 查詢階梯價值率
+sidebar_label: 查詢階梯價值率
+sidebar_position: 2
+---
+查詢統一帳戶借貸的階梯價值率
+
+:::info
+不需要鑒權
+:::
+
+### HTTP 請求
+GET `/v5/spot-margin-trade/collateral`
+
+### 請求參數
+| 參數 |是否必需| 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency|false|string|幣種名稱 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> currency|string |幣種名稱 |
+|> collateralRatioList|array |Object |
+|>> maxQty|string |梯度區間上限, 單位是幣種, 如"BTC", `""`表示正無窮|
+|>> minQty|string |梯度區間下限, 單位是幣種, 如"BTC", 最小值是0|
+|>> collateralRatio|string |抵押率|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/collateral?currency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "currency": "BTC",
+                "collateralRatioList": [
+                    {
+                        "minQty": "0",
+                        "maxQty": "1000000",
+                        "collateralRatio": "0.85"
+                    },
+                    {
+                        "minQty": "1000000",
+                        "maxQty": "",
+                        "collateralRatio": "0"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": "{}",
+    "time": 1739848984945
+}
+```
