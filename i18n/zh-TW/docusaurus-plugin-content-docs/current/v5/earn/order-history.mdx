@@ -1,0 +1,91 @@
+---
+title: 查詢質押/贖回訂單歷史
+sidebar_label: 查詢質押/贖回訂單歷史
+sidebar_position: 3
+---
+:::info
+API key需要"理財""權限
+:::
+
+### HTTP 請求
+GET `/v5/crypto-loan/borrow-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|`FlexibleSaving`<br/>**備註**: 本期僅支持活期理財|
+|orderId|false|string|系統生成的訂單ID <li>orderId和orderLinkId二者*必須*傳其一</li><li>如果都傳入, 確保二者是來自同一筆訂單, 否則返回空</li>|
+|orderLinkId|false|string|自定義訂單ID<br/>**備註**: 如果orderLinkId有復用, 則僅用orderLinkId查詢時, 總是返回最近的那筆訂單|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> coin|string |幣種名稱 |
+|> orderValue|string |質押/贖回數量|
+|> orderType|string |`Redeem`, `Stake`|
+|> orderId|string |系統生成的訂單ID|
+|> orderLinkId|string |自定義訂單ID|
+|> status|string |訂單狀態 `Success`, `Fail`, `Pending`|
+|> createdAt|string |訂單創建時間 (毫秒)|
+|> productId|string |產品ID|
+|> updatedAt|string |訂單更新時間 (毫秒)|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/order?orderId=0572b030-6a0b-423f-88c4-b6ce31c0c82d&category=FlexibleSaving HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739937044221
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "coin": "BTC",
+                "orderValue": "0.35",
+                "orderType": "Redeem",
+                "orderId": "0572b030-6a0b-423f-88c4-b6ce31c0c82d",
+                "orderLinkId": "btc-earn-001",
+                "status": "Success",
+                "createdAt": "1739936607000",
+                "productId": "430",
+                "updatedAt": "1739936607000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1739937045520
+}
+```

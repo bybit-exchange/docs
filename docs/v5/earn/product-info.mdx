@@ -1,0 +1,85 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+:::info
+Do not need authentication
+:::
+
+[Bybit Saving FAQ](https://www.bybit.com/en/help-center/article/FAQ-Bybit-Savings)
+
+### HTTP Request
+GET `/v5/earn/product`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|`FlexibleSaving`<br/>**Remarks**: this phase only supports flexible savings|
+|coin|false|string|Coin name, uppercase only |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> category|string |`FlexibleSaving` |
+|> estimateApr|string |Estimated APR, e.g., `3%`, `4.25%`<br/>**Remarks**: 1)The Est. APR provides a dynamic preview of your potential returns, updated every 10 minutes in response to market conditions. <br/>2) Please note that this is an estimate and may differ from the actual APR you will receive.<br/>3) Platform Reward APRs are not shown|
+|> coin|string |Coin name|
+|> minStakeAmount|string |Minimum stake amount |
+|> maxStakeAmount|string |Maximum stake amount |
+|> precision|string |Amount precision |
+|> productId|string |Product ID|
+|> status|string |`Available`, `NotAvailable`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/product?category=FlexibleSaving&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "category": "FlexibleSaving",
+                "estimateApr": "3%",
+                "coin": "BTC",
+                "minStakeAmount": "0.001",
+                "maxStakeAmount": "10",
+                "precision": "8",
+                "productId": "430",
+                "status": "Available"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1739935669110
+}
+```

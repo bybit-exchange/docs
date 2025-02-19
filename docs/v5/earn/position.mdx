@@ -1,0 +1,87 @@
+---
+title: Get Staked Position
+sidebar_label: Get Staked Position
+sidebar_position: 4
+---
+:::info
+API key needs "Earn" permission
+:::
+
+:::note
+Fully redeemed position is also returned in the response
+:::
+
+### HTTP Request
+GET `/v5/earn/position`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|`FlexibleSaving`|
+|productId|false|string|Product ID|
+|coin|false|string|Coin name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> coin|string |Coin name |
+|> productId|string |Product ID|
+|> amount|string |Total staked amount|
+|> totalPnl|string |Total yields|
+|> claimableYield|string |Yield accrues on an hourly basis and is distributed at 00:30 UTC daily. If you unstake your assets before yield distribution, any undistributed yield will be credited to your account along with your principal.|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/position?category=FlexibleSaving&coin=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1739944576277
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "coin": "USDT",
+                "productId": "428",
+                "amount": "3000",
+                "totalPnl": "125.6208",
+                "claimableYield": "0"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1739944577575
+}
+```
