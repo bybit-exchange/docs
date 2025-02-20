@@ -23,10 +23,11 @@ POST `/v5/user/create-sub-api`
 |permissions |<b>true</b> |Object |Tick the types of permission.<ul><li> one of below types must be passed, otherwise the error is thrown</li></ul>|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
-|> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransferList"]`<br/>_Note: Fund Custodial account is not supported_ |
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
+|> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransferList"]`<br/>_Note: Fund Custodial account is not supported_ |
+|> Exchange |false |array |Convert. `["ExchangeHistory"]` |
+|> Earn |false |array |Earn product. `["Earn"]` |
 |> Derivatives |false |array |This param is **deprecated** because system will automatically add this permission according to your account is UTA or Classic |
-|> Exchange |false |array |Exchange. `["ExchangeHistory"]` |
 |> CopyTrading |false |array |Copytrade. `["CopyTrading"]` **deprecated** because using signal copy trading now, please refer to [How To Start Copy Trading](/v5/copytrade)|
 
 ### Response Parameters
@@ -43,9 +44,10 @@ POST `/v5/user/create-sub-api`
 |> Wallet |array |Permisson of wallet |
 |> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
 |> Derivatives |array |Permission of Unified account |
-|> CopyTrading |array |Permission of copytrade |
+|> Exchange |array |Permission of convert |
+|> Earn |array |Permission of earn product |
+|> CopyTrading |array |Permission of copytrade, **deprecated** always `[]`|
 |> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]` |
-|> Exchange |array |Permission of exchange |
 |> NFT |array |Permission of NFT. Not applicable to sub account, always `[]` |
 
 ### Request Example
@@ -151,7 +153,8 @@ client
             "CopyTrading": [],
             "BlockTrade": [],
             "Exchange": [],
-            "NFT": []
+            "NFT": [],
+            "Earn": ["Earn"]
         }
     },
     "retExtInfo": {},
