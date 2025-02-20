@@ -29,11 +29,12 @@ None
 |> Wallet |array |Permission of wallet `AccountTransfer`, `SubMemberTransfer`(master account), `SubMemberTransferList`(sub account), `Withdraw`(master account)|
 |> Options |array |Permission of USDC Contract. It supports trade option and USDC perpetual. `OptionsTrade`|
 |> Derivatives |array |<li>Unified account has this permission by default `DerivativesTrade`</li><li>For classic account, it is always `[]`</li> |
-|> CopyTrading |array |Always `[]` as Master Trader account just use `ContractTrade` to start CopyTrading|
-|> BlockTrade |array |Permission of blocktrade. Not applicable to subaccount, always `[]`|
-|> Exchange |array |Permission of exchange `ExchangeHistory` |
+|> Exchange |array |Permission of convert `ExchangeHistory` |
+|> Earn |array |Permission of earn product `Earn` |
 |> NFT |array |Permission of NFT `NFTQueryProductList`. Not applicable to sub account, always `[]` |
+|> BlockTrade |array |Permission of blocktrade. Not applicable to subaccount, always `[]`|
 |> Affiliate |array |Permission of Affiliate. Only affiliate can have this permission, otherwise always `[]` |
+|> CopyTrading |array |Always `[]` as Master Trader account just use `ContractTrade` to start CopyTrading|
 |ips |array |IP bound|
 |type |integer |The type of api key. `1`：personal, `2`：connected to the third-party app |
 |deadlineDay |integer |The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed |
@@ -141,7 +142,8 @@ client
             "BlockTrade": [],
             "Exchange": [],
             "NFT": [],
-            "Affiliate": []
+            "Affiliate": [],
+            "Earn": []
         },
         "ips": [
             "*"
