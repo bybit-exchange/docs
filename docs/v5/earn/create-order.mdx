@@ -1,0 +1,93 @@
+---
+title: Stake / Redeem
+sidebar_label: Stake / Redeem
+sidebar_position: 2
+---
+:::info
+API key needs "Earn" permission
+:::
+
+:::note
+In times of high demand for loans in the market for a specific cryptocurrency, the redemption of the principal 
+may encounter delays and is expected to be processed within 48 hours. Once the redemption request is initiated, 
+it cannot be canceled, and your principal will continue to earn interest until the process is completed.
+:::
+
+### HTTP Request
+POST `/v5/earn/place-order`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**| string |`FlexibleSaving`<br/>**Remarks**: this phase only supports flexible savings|
+|orderType |**true**| string |`Stake`, `Redeem`|
+|accountType |**true**| string |`FUND`, `UNIFIED`|
+|amount |**true**| string |<li>Stake amount needs to satisfy minStake and maxStake</li><li>Both stake and redeem amount need to satify precision requirement</li>|
+|coin |**true**| string |Coin name|
+|productId |**true**| string |Product ID|
+|orderLinkId |**true**| string |Customised order ID, used to prevent from replay<li>support up to 36 characters</li><li>The same orderLinkId can't be used in 30 mins</li>|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId|string|Order ID|
+|orderLinkId|string |Order link ID|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/earn/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1739936605822
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 190
+
+{
+    "category": "FlexibleSaving",
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "amount": "0.35",
+    "coin": "BTC",
+    "productId": "430",
+    "orderLinkId": "btc-earn-001"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "0572b030-6a0b-423f-88c4-b6ce31c0c82d",
+        "orderLinkId": "btc-earn-001"
+    },
+    "retExtInfo": {},
+    "time": 1739936607117
+}
+```

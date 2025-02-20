@@ -1,0 +1,91 @@
+---
+title: Get Stake/Redeem Order History
+sidebar_label: Get Stake/Redeem Order History
+sidebar_position: 3
+---
+:::info
+API key needs "Earn" permission
+:::
+
+### HTTP Request
+GET `/v5/crypto-loan/borrow-history`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|`FlexibleSaving`<br/>**Remarks**: this phase only supports flexible savings|
+|orderId|false|string|Order ID <li>either orderId or orderLinkId is **required**</li><li>if both are passed, make sure they're matched, otherwise returning empty result</li>|
+|orderLinkId|false|string|Order link ID<br/>**Remarks**: Always return the latest one if order link id is ever reused when querying by orderLinkId only|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> coin|string |Coin name |
+|> orderValue|string |amount|
+|> orderType|string |`Redeem`, `Stake`|
+|> orderId|string |Order ID|
+|> orderLinkId|string |Order link ID|
+|> status|string |Order status `Success`, `Fail`, `Pending`|
+|> createdAt|string |Order created time, in milliseconds|
+|> productId|string |Product ID|
+|> updatedAt|string |Order updated time, in milliseconds|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/order?orderId=0572b030-6a0b-423f-88c4-b6ce31c0c82d&category=FlexibleSaving HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739937044221
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "coin": "BTC",
+                "orderValue": "0.35",
+                "orderType": "Redeem",
+                "orderId": "0572b030-6a0b-423f-88c4-b6ce31c0c82d",
+                "orderLinkId": "btc-earn-001",
+                "status": "Success",
+                "createdAt": "1739936607000",
+                "productId": "430",
+                "updatedAt": "1739936607000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1739937045520
+}
+```

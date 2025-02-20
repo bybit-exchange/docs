@@ -1,0 +1,91 @@
+---
+title: 質押/贖回
+sidebar_label: 質押/贖回
+sidebar_position: 2
+---
+:::info
+API key需要"理財""權限
+:::
+
+:::note
+在極端情況下，當相應代幣的市場需求極高，本金贖回可能會出現延遲，預計需要 48 小時處理完畢。
+:::
+
+### HTTP 請求
+POST `/v5/earn/place-order`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category |**true**| string |`FlexibleSaving`<br/>**備註**: 本期僅支持活期理財|
+|orderType |**true**| string |訂單類型 `Stake`, `Redeem`|
+|accountType |**true**| string |選擇帳戶類型 `FUND`, `UNIFIED`|
+|amount |**true**| string |<li>質押數量需要滿足最小/最大質押額</li><li>質押和贖回需要滿足幣種精度要求</li>|
+|coin |**true**| string |幣種名稱|
+|productId |**true**| string |產品ID|
+|orderLinkId |**true**| string |自定義訂單號, 同時用於冪等校驗<li>支持最長36位字符</li><li>30分鐘內無法使用相同的orderLinkId</li>|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderId|string|Order ID|
+|orderLinkId|string |Order link ID|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/earn/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1739936605822
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 190
+
+{
+    "category": "FlexibleSaving",
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "amount": "0.35",
+    "coin": "BTC",
+    "productId": "430",
+    "orderLinkId": "btc-earn-001"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "0572b030-6a0b-423f-88c4-b6ce31c0c82d",
+        "orderLinkId": "btc-earn-001"
+    },
+    "retExtInfo": {},
+    "time": 1739936607117
+}
+```
