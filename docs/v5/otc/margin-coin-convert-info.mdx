@@ -5,9 +5,9 @@ sidebar_position: 2
 ---
 
 :::tip
-* This endpoint can be queried without api key and secret, then it returns public margin data
-* If your uid is bound with OTC loan product, then you can get your private margin data by calling the endpoint with api key and secret
-* If your uid is not bound with OTC loan product but api key and secret are also passed, it will return public data only
+* When queried without an API key, this endpoint returns public margin data
+* If your UID is bound with an OTC loan, then you can get your private margin data by calling with your API key
+* If your UID is not bound with an OTC loan but you passed your API key, this endpoint returns public margin data
 :::
 
 ### HTTP Request
@@ -16,7 +16,7 @@ GET `/v5/ins-loan/ensure-tokens-convert`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|productId | false | string	| ProductId. If not passed, then return all product margin coin. For spot, it returns coin that convertRation greater than 0. |
+|productId | false | string	| Product ID. If not passed, returns all margin products. For spot, it returns coins with a `convertRatio` greater than 0. |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -35,7 +35,7 @@ GET `/v5/ins-loan/ensure-tokens-convert`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/ins-loan/ensure-tokens HTTP/1.1
+GET /v5/ins-loan/ensure-tokens-convert HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -43,7 +43,13 @@ Host: api-testnet.bybit.com
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_margin_coin_info())
 ```
 
 </TabItem>

@@ -16,7 +16,7 @@ GET `/v5/ins-loan/loan-order`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|orderId | false | string | Loan order id. If not passed, then return all orders, sort by `loanTime` in descend |
+|orderId | false | string | Loan order ID. If not passed, returns all orders sorted by `loanTime` in descending order |
 |startTime | false | integer | The start timestamp (ms) |
 |endTime | false | integer	| The end timestamp (ms) |
 |limit | false | integer | Limit for data size. [`1`, `100`], Default: `10` |
@@ -27,7 +27,7 @@ GET `/v5/ins-loan/loan-order`
 |loanInfo | array | Object |
 |> orderId | string	| Loan order ID |
 |> orderProductId | string | Product ID |
-|> parentUid | string |The designated UID that used to bind INS loan product |
+|> parentUid | string |The designated UID that was used to bind with the INS loan |
 |> loanTime	| string | Loan timestamp, in milliseconds |
 |> loanCoin	| string | Loan coin |
 |> loanAmount | string | Loan amount |
@@ -92,7 +92,13 @@ X-BAPI-SIGN: XXXXX
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_loan_orders())
 ```
 
 </TabItem>
