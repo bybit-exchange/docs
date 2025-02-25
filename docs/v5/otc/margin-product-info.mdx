@@ -5,9 +5,9 @@ sidebar_position: 1
 ---
 
 :::tip
-* This endpoint can be queried without api key and secret, then it returns public product data
-* If your uid is bound with OTC loan product, then you can get your private product data by calling the endpoint with api key and secret
-* If your uid is not bound with OTC loan product but api key and secret are also passed, it will return public data only
+* When queried without an API key, this endpoint returns public product data
+* If your UID is bound with an OTC loan, then you can get your private product data by calling with your API key
+* If your UID is not bound with an OTC loan but you passed your API key, this endpoint returns public product data
 :::
 
 ### HTTP Request
@@ -16,17 +16,17 @@ GET `/v5/ins-loan/product-infos`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|productId | false | string	| Product Id. If not passed, then return all products info|
+|productId | false | string	| Product ID. If not passed, returns all products |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |marginProductInfo|	array |	Object |
-|> productId | string | Product Id |
+|> productId | string | Product ID |
 |> leverage	| string | The maximum leverage for this loan product |
-|> supportSpot | integer | Whether to support Spot. 0:false; 1:true |
-|> supportContract | integer | Whether to support USDT Perpetual. 0:false; 1:true |
-|> supportMarginTrading | integer |Whether to support Spot margin trading. 0:false; 1:true |
+|> supportSpot | integer | Whether or not Spot is supported. 0:false; 1:true |
+|> supportContract | integer | Whether USDT Perpetuals are supported. 0:false; 1:true |
+|> supportMarginTrading | integer |Whether or not Spot margin trading is supported. 0:false; 1:true |
 |> deferredLiquidationLine | string |Line for deferred liquidation |
 |> deferredLiquidationTime | string |Time for deferred liquidation |
 |> withdrawLine	| string | Restrict line for withdrawal |
@@ -40,8 +40,8 @@ GET `/v5/ins-loan/product-infos`
 |> transferRatio | string |The transfer ratio for loan funds to transfer from Spot wallet to Contract wallet |
 |> spotSymbols | array | The whitelist of spot trading pairs <ul><li>If `supportSpot`="0", then it returns "[]"</li><li>If empty array, then you can trade any symbols</li><li>If not empty, then you can only trade listed symbols</li></ul> |
 |> contractSymbols | array | The whitelist of contract trading pairs <ul><li>If `supportContract`="0", then it returns "[]"</li><li>If empty array, then you can trade any symbols</li><li>If not empty, then you can only trade listed symbols</li></ul> |
-|> supportUSDCContract | integer |Whether to support USDC contract. `'0'`:false; `'1'`:true|
-|> supportUSDCOptions | integer |Whether to support Option. `'0'`:false; `'1'`:true |
+|> supportUSDCContract | integer |Whether or not USDC contracts are supported. `'0'`:false; `'1'`:true|
+|> supportUSDCOptions | integer |Whether or not Options are supported. `'0'`:false; `'1'`:true |
 |> USDTPerpetualOpenLine | string |Restrict line to open USDT Perpetual position |
 |> USDCContractOpenLine | string |Restrict line to open USDC Contract position |
 |> USDCOptionsOpenLine | string |Restrict line to open Option position |
@@ -72,7 +72,13 @@ Host: api-testnet.bybit.com
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_product_info(productId="91"))
 ```
 
 </TabItem>

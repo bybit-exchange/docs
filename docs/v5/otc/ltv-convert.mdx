@@ -15,16 +15,16 @@ None
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |ltvInfo | array | Object |
-|> ltv | string	| Risk rate <li>ltv is calculated in real-time</li><li>If you have INS loan, it is highly recommended to query this data per second. The liquidation occurs when it reachs at 0.9 (90%)</li> |
+|> ltv | string	| Risk rate <li>ltv is calculated in real time</li><li>If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)</li> |
 |> rst | string	| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. |
-|> parentUid | string |The designated Risk Unit Id that used to bind INS loan product |
-|> subAccountUids | array | Bound user id |
+|> parentUid | string |The designated Risk Unit ID that was used to bind with the INS loan |
+|> subAccountUids | array | Bound user ID |
 |> unpaidAmount	| string | Total debt(USDT) |
 |> unpaidInfo | array | Debt details |
 |>> token | string | coin |
 |>> unpaidQty | string | Unpaid principle |
 |>> unpaidInterest | string	| Useless field, please ignore this for now |
-|> balance | string	| Total asset. (margin coins converted to USDT). Please read <a href="https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending">here</a> to understand the calculation |
+|> balance | string	| Total asset (margin coins converted to USDT). Please read <a href="https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending">here</a> to understand the calculation |
 |> balanceInfo | array | Asset details |
 |>> token | string | Margin coin |
 |>> price | string | Margin coin price |
@@ -49,7 +49,13 @@ X-BAPI-SIGN: XXXXX
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_ltv())
 ```
 
 </TabItem>

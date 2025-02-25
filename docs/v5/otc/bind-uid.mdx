@@ -6,8 +6,8 @@ sidebar_position: 7
 For the institutional loan product, you can bind new UIDs to the risk unit or unbind UID from the risk unit.
 
 :::info
-* Risk unit designated UID cannot be unbound
-* The UID pending to bind must be upgraded to UTA Pro.
+* The risk unit designated UID cannot be unbound.
+* The UID you want to bind must be upgraded to UTA Pro.
 :::
 
 ### HTTP Request
@@ -16,7 +16,7 @@ POST `/v5/ins-loan/association-uid`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|uid |**true** |string |UID <li><b>Bind</b><br/>a) the key used must be from one of uids in the risk unit; <br/>b) input uid must not have ins loan</li><li><b>Unbind</b><br/>a) the key used must be from one of uids in the risk unit; <br/>b) input uid cannot be the same as the uid used to access the API</li>|
+|uid |**true** |string |UID <li><b>Bind</b><br/>a) the key used must be from one of UIDs in the risk unit; <br/>b) input UID must not have an INS loan</li><li><b>Unbind</b><br/>a) the key used must be from one of UIDs in the risk unit; <br/>b) input UID cannot be the same as the UID used to access the API</li>|
 |operate |**true** |string |`0`: bind, `1`: unbind|
 
 ### Response Parameters
@@ -50,7 +50,13 @@ Content-Length: 43
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.bind_or_unbind_uid(uid="592324", operate="0"))
 ```
 
 </TabItem>
