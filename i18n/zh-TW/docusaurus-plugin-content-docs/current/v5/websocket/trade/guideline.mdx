@@ -68,7 +68,7 @@ sidebar_position: 1
 |> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
 |> Referer|false |string |API broker用戶返佣標識|
 |op |**true** |string |Op類型 <li>`order.create`: 創建訂單</li> <li>`order.amend`: 修改訂單</li> <li>`order.cancel`: 撤銷訂單</li>|
-|args |false |array&ltobject&gt |參數數組, 目前僅支持一個元素 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
+|args |false |array&ltobject&gt |參數數組, 僅支持一個訂單 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -135,6 +135,149 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
         "Timenow": "1711001595209"
     },
     "connId": "cnt5leec0hvan15eukcg-2v"
+}
+```
+
+## 批量下單/改單/撤單
+:::info
+- 每個請求包含的訂單數最大是: 20筆(期权), 20筆(反向合約), 20筆(正向合約), 10筆(現貨), 返回的數據列表中分成兩個list，訂單創建的列表和創建結果的信息返回，兩個list的訂單的序列是完全保持一致的。
+- **期權**批量接口頻率規則: 期權是按照實際發送的請求次數來統計頻率的, 因此如果帳戶頻率是10次/秒, 每次請求發送20筆訂單, 則可以每秒發送200筆訂單;
+- **期貨和現貨**的批量接口頻率規則: 請從[這裡](../../rate-limit#不同vip等級的接口限頻規則)查閱其API限頻說明
+- ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+- websocket和http批量下單共享帳戶頻率
+:::
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li>|
+|header|**true** |object |請求頭|
+|> X-BAPI-TIMESTAMP|**true** |string |當前時間戳|
+|> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
+|> Referer|false |string |API broker用戶返佣標識|
+|op |**true** |string |Op類型 <li>`order.create-batch`: 批量創建訂單</li> <li>`order.amend-batch`: 批量修改訂單</li> <li>`order.cancel-batch`: 批量撤銷訂單</li>|
+|args |false |array&ltobject&gt |參數數組 <li>`order.create-batch`: 請參閱[批量創建訂單請求參數](../../order/batch-place#請求參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單參數](../../order/batch-amend#請求參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單參數](../../order/batch-cancel#請求參數)</li> |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|reqId |string |<li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li>|
+|retCode |integer |<li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li>|
+|retMsg |string |<li>`OK`</li><li>`""`</li><li>報錯信息</li> |
+|op |string |Op類型 |
+|data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <li>`order.create-batch`: 請參閱[批量創建訂單響應參數](../../order/batch-place#響應參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單響應參數](../../order/batch-amend#響應參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單響應參數](../../order/batch-cancel#響應參數)</li> |
+|retExtInfo|object ||
+|> list|array&ltobject&gt ||
+|>> code|number |成功/錯誤碼|
+|>> msg|string |成功/錯誤消息|
+|header |object |響應頭信息 |
+|> TraceId |string |Trace ID, 用於追蹤請求鏈路 (內部使用)|
+|> Timenow |string |當前時間戳 |
+|> X-Bapi-Limit |string |該類型請求的帳戶總頻率 |
+|> X-Bapi-Limit-Status |string |該類型請求的帳戶剩餘可用頻率 |
+|> X-Bapi-Limit-Reset-Timestamp |string |如果您已超過該接口當前窗口頻率限製，該字段表示下個可用時間窗口的時間戳（毫秒）即什麽時候可以恢復訪問；如果您未超過該接口當前窗口頻率限製，該字段表示返回的是當前服務器時間（毫秒).|
+|connId |string |連接的唯一id |
+
+### 請求示例
+```json
+
+{
+    "op": "order.create-batch",
+    "header": {
+        "X-BAPI-TIMESTAMP": "1740453381256",
+        "X-BAPI-RECV-WINDOW": "1000"
+    },
+    "args": [
+        {
+            "category": "linear",
+            "request": [
+                {
+                    "symbol": "SOLUSDT",
+                    "qty": "10",
+                    "price": "500",
+                    "orderType": "Limit",
+                    "timeInForce": "GTC",
+                    "orderLinkId": "-batch-000",
+                    "side": "Buy"
+                },
+                {
+                    "symbol": "SOLUSDT",
+                    "qty": "20",
+                    "price": "1000",
+                    "orderType": "Limit",
+                    "timeInForce": "GTC",
+                    "orderLinkId": "batch-001",
+                    "side": "Buy"
+                },
+                {
+                    "symbol": "SOLUSDT",
+                    "qty": "30",
+                    "price": "1500",
+                    "orderType": "Limit",
+                    "timeInForce": "GTC",
+                    "orderLinkId": "batch-002",
+                    "side": "Buy"
+                }
+            ]
+        }
+    ]
+}
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "op": "order.create-batch",
+    "data": {
+        "list": [
+            {
+                "category": "linear",
+                "symbol": "SOLUSDT",
+                "orderId": "",
+                "orderLinkId": "batch-000",
+                "createAt": ""
+            },
+            {
+                "category": "linear",
+                "symbol": "SOLUSDT",
+                "orderId": "",
+                "orderLinkId": "batch-001",
+                "createAt": ""
+            },
+            {
+                "category": "linear",
+                "symbol": "SOLUSDT",
+                "orderId": "",
+                "orderLinkId": "batch-002",
+                "createAt": ""
+            }
+        ]
+    },
+    "retExtInfo": {
+        "list": [
+            {
+                "code": 10001,
+                "msg": "position idx not match position mode"
+            },
+            {
+                "code": 10001,
+                "msg": "position idx not match position mode"
+            },
+            {
+                "code": 10001,
+                "msg": "position idx not match position mode"
+            }
+        ]
+    },
+    "header": {
+        "Timenow": "1740453408556",
+        "X-Bapi-Limit": "150",
+        "X-Bapi-Limit-Status": "147",
+        "X-Bapi-Limit-Reset-Timestamp": "1740453408555",
+        "Traceid": "0e32b551b3e17aae77651aadf6a5be80"
+    },
+    "connId": "cupviqn88smf24t2kpb0-536o"
 }
 ```
 
