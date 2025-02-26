@@ -25,7 +25,7 @@ sidebar_position: 1
 |:----- |:-------|:-----|------ |
 |reqId|false |string |可選參數, 可用於匹配響應。長度不能超過36個字串。 <li>若不傳, 該字段不會從響應種返回</li>|
 |op |**true** |string |Op類型 `auth`|
-|args |false |string |["api密鑰", 過期時間, "簽名"]. 請參閱[這裡](/v5/ws/connect#鑒權)來生成簽名 |
+|args |**true** |string |["api密鑰", 過期時間, "簽名"]. 請參閱[這裡](/v5/ws/connect#鑒權)來生成簽名 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -68,7 +68,7 @@ sidebar_position: 1
 |> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
 |> Referer|false |string |API broker用戶返佣標識|
 |op |**true** |string |Op類型 <li>`order.create`: 創建訂單</li> <li>`order.amend`: 修改訂單</li> <li>`order.cancel`: 撤銷訂單</li>|
-|args |false |array&ltobject&gt |參數數組, 僅支持一個訂單 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
+|args |**true** |array&ltobject&gt |參數數組, 僅支持一個訂單 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -155,7 +155,7 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
 |> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
 |> Referer|false |string |API broker用戶返佣標識|
 |op |**true** |string |Op類型 <li>`order.create-batch`: 批量創建訂單</li> <li>`order.amend-batch`: 批量修改訂單</li> <li>`order.cancel-batch`: 批量撤銷訂單</li>|
-|args |false |array&ltobject&gt |參數數組 <li>`order.create-batch`: 請參閱[批量創建訂單請求參數](../../order/batch-place#請求參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單參數](../../order/batch-amend#請求參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單參數](../../order/batch-cancel#請求參數)</li> |
+|args |**true** |array&ltobject&gt |參數數組 <li>`order.create-batch`: 請參閱[批量創建訂單請求參數](../../order/batch-place#請求參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單參數](../../order/batch-amend#請求參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單參數](../../order/batch-cancel#請求參數)</li> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
