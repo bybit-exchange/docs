@@ -92,21 +92,51 @@ table tr:last-child {
 
 /* tooltip to provide additional information on mouseover/hover, AKA popup admonitions */
 /* Tooltip container */
-.tooltip {
+[data-theme='dark'] .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: 2px dotted white;
   font-style: italic;
 }
 
+[data-theme='light'] .tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 2px dotted black;
+  font-style: italic;
+}
+
 /* Tooltip text */
-.tooltip .tooltiptext {
+[data-theme='dark'] .tooltip .tooltiptext {
+  box-shadow: var(--ifm-alert-shadow);
+  font-style: normal;
   visibility: hidden;
   width: 25em;
   border-left: solid;
   border-color: var(--ifm-color-info-dark);
   border-left-width: var(--ifm-alert-border-left-width);
   background-color: #193c47;
+  text-align: start;
+  padding: 0.4em 1em 0.6em 1em;
+  border-radius: 5px;
+  /* Fade in */
+  transition: 0.2s;
+  opacity: 0.2;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Tooltip text */
+[data-theme='light'] .tooltip .tooltiptext {
+  box-shadow: var(--ifm-alert-shadow);
+  font-style: normal;
+  visibility: hidden;
+  width: 25em;
+  border-left: solid;
+  border-color: var(--ifm-color-info-dark);
+  border-left-width: var(--ifm-alert-border-left-width);
+  background-color: #eef9fd;
   text-align: start;
   padding: 0.4em 1em 0.6em 1em;
   border-radius: 5px;
