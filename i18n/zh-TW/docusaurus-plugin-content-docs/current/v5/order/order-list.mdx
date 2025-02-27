@@ -65,6 +65,8 @@ GET `/v5/order/history`
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型 |
 |> orderIv |string |隱含波動率 |
 |> marketUnit |string |統一帳戶現貨交易時給入參`qty`選擇的單位. `baseCoin`, `quoteCoin` |
+|> slippageToleranceType |string |市價單滑點容差類型, `TickSize`, `Percent`, `UNKNOWN`(默認值)|
+|> slippageTolerance |string |滑點容差數值|
 |> triggerPrice |string |觸發價格. 若`stopOrderType`=_TrailingStop_, 則這是激活價格. 否則, 它是觸發價格 |
 |> takeProfit |string |止盈價格 |
 |> stopLoss |string |止損價格 |
@@ -212,6 +214,8 @@ client
                 "tpLimitPrice": "",
                 "slLimitPrice": "",
                 "placeType": "",
+                "slippageToleranceType": "UNKNOWN",
+                "slippageTolerance": "",
                 "createdTime": "1684476068369",
                 "updatedTime": "1684476068372"
             }
