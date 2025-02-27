@@ -7,6 +7,10 @@ sidebar_position: 6
 Query for the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours.
 > **Covers: Spot / USDT contract / USDC contract / Inverse contract / Option**
 
+:::info
+If category=_option_, `symbol` or `baseCoin` must be passed.
+:::
+
 ### HTTP Request
 GET `/v5/market/tickers`
 
@@ -14,8 +18,8 @@ GET `/v5/market/tickers`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type. `spot`,`linear`,`inverse`,`option` |
-|[symbol](../enum#symbol) |<div class="tooltip">false<span class="tooltiptext">If `category=option`, then `symbol` or `baseCoin` are required</span></div> |string |Symbol name, like `BTCUSDT`, uppercase only |
-|baseCoin |<div class="tooltip">false<span class="tooltiptext">If `category=option`, then `symbol` or `baseCoin` are required</span></div> |string |Base coin, uppercase only. Apply to `option` **only**|
+|[symbol](../enum#symbol) |false |string |Symbol name, like `BTCUSDT`, uppercase only |
+|baseCoin |false |string |Base coin, uppercase only. Apply to `option` **only**|
 |expDate |false |string |Expiry date. e.g., 25DEC22. Apply to `option` **only**|
 
 ### Response Parameters
