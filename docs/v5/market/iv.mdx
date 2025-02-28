@@ -10,6 +10,7 @@ Query option historical volatility
 :::info
 * The data is hourly.
 * If both `startTime` and `endTime` are not specified, it will return the most recent 1 hours worth of data.
+* `startTime` and `endTime` are a pair of params. Either both are passed or they are not passed at all.
 * This endpoint can query the last 2 years worth of data, but make sure [`endTime` - `startTime`] <= 30 days.
 :::
 
@@ -23,8 +24,8 @@ GET `/v5/market/historical-volatility`
 |baseCoin |false |string |Base coin, uppercase only. Default: return BTC data|
 |quoteCoin |false |string |Quote coin, `USD` or `USDT`. Default: return quoteCoin=USD|
 |[period](../enum#optionperiod) |false |integer |Period. If not specified, it will return data with a 7-day average by default|
-|startTime |<div class="tooltip">false<span class="tooltiptext">`startTime` and `endTime` are a pair. Either both are passed or they are not passed at all.</span></div> |integer |The start timestamp (ms) |
-|endTime |<div class="tooltip">false<span class="tooltiptext">`startTime` and `endTime` are a pair. Either both are passed or they are not passed at all.</span></div> |integer |The end timestamp (ms) |
+|startTime |false |integer |The start timestamp (ms) |
+|endTime |false |integer |The end timestamp (ms) |
 
 ### Response Parameters
 | Parameter | Type | Comments|
