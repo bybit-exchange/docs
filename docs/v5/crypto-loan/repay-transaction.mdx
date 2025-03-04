@@ -1,14 +1,14 @@
 ---
-title: Get Repayment Transaction History
-sidebar_label: Get Repayment Transaction History
+title: Get Loan Repayment History
+sidebar_label: Get Loan Repayment History
 sidebar_position: 7
 ---
-Query repaid transaction history
+Query for loan repayment transactions. A loan may be repaid in multiple repayments.
 > Permission: "Spot trade"
 
 :::info
-* Support querying last 6 months completed loan orders
-* Only successful repayments can be queried
+* Supports querying for the last 6 months worth of completed loan orders.
+* Only successful repayments can be queried for.
 :::
 
 ### HTTP Request
@@ -28,7 +28,7 @@ GET `/v5/crypto-loan/repayment-history`
 |:----- |:-----|----- |
 |list|array|Object|
 |> collateralCurrency|string |Collateral coin|
-|> collateralReturn|string |Returned collateral amount by this repayment. No collateral returned if this transaction does not fully repay the debt|
+|> collateralReturn|string |Amount of collateral returned as a result of this repayment. `"0"` if this isn't the final loan repayment|
 |> loanCurrency|string |Loan coin|
 |> loanTerm|string |Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan|
 |> orderId|string |Loan order ID|
