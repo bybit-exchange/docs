@@ -1,0 +1,115 @@
+---
+title: Create Payment
+sidebar_label: Create Payment
+sidebar_position: 1
+---
+### HTTP Request
+POST `/bybitpay/v5/create_pay`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|merchantId |**true** |string |Onboarding merchant UID|
+|merchantName|false | string|If not filled in, we will show users the name of your company doing KYB on the Bybit platform|
+|clientId |false|string |Merchant client ID|
+|paymentType | **true**|string |Payment type <li>`E_COMMERCE`: Bybit QR Pay for e-commerce</li><li>`E_COMMERCE_REFUND`: Bybit QR Pay refund for e-commerce</li>|
+|customer |false|&lt;[CustomerType](../data-model/customer)&gt; |Customer info|
+|merchantTradeNo |**true**|string |Merchant order number|
+|goods |**true**|array&lt;[GoodType](../data-model/good)&gt; |Product description|
+|orderAmount | **true**|string |Order amount|
+|currency | **true**|string |Order currency (uppercase, e.g., `EUR`, `USD`, `USDT`)|
+|currencyType |**true**|string |Currency type (`fiat` or `crypto`)|
+|successUrl | false|string |URL to return after successful payment (max 256 characters)|
+|failedUrl | false|string |URL to return after failed payment (max 256 characters)|
+|webhookUrl |false|string |API URL to call when order is successful or failed (max 256 characters)|
+|orderExpireTime | false|int64 |Order expiration time in UTC timestamp (second precision), default is 1 hour, max is 1 hour|
+|env | **true**|&lt;[EnvType](../data-model/env)&gt; |Transaction source|
+|riskInfo |false|&lt;[RiskInfoType](../data-model/risk-info)&gt; |Risk info for order pay|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|payId |string |Pay-order ID created successfully|
+|terminalType |string |Transaction source (APP, WEB, WAP, MINIAPP, OTHERS)|
+|expireTime |number |Order expiration time in UTC timestamp (second precision)|
+|checkoutLink |string |Unified checkout link in Bybit, redirect for payment|
+|qrContent |string |QR code content (base64 Image, valid for 1 hour), developers generate QR image|
+|order |&lt;[PayOrderType](../data-model/pay-order)&gt; |Bybit pay order detail|
+|customer |&lt;[CustomerType](../data-model/customer)&gt; |Customer info|
+
+### Request Example
+
+```http
+POST /v5/bybitpay/create_pay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739178959616
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+
+{
+    "currency": "USDT",
+    "currencyType": "crypto",
+    "env": {
+        "browserVersion": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+        "device": "xxde",
+        "ip": "127.0.0.1",
+        "terminalType": "APP"
+    },
+    "failedUrl": "",
+    "customer":{
+        "externalUserId": "test@gmail.com",
+        "userName": "john li",
+        "registerTime": "1739178959",
+        "kycCountry": "AUS"
+    },
+    "goods": [
+        {
+            "shoppingName": "test good",
+            "mccCode": "1520",
+            "goodsName": "test",
+            "goodsDetail": "test"
+        }
+    ],
+    "merchantId": "305142568",
+    "merchantName": "uquid",
+    "merchantTradeNo": "841e4ba2-c7ec-40b1-a071-a2a45de7bd00",
+    "orderAmount": "100",
+    "orderExpireTime": 0,
+    "paymentType": "E_COMMERCE",
+    "successUrl": "",
+    "webhookUrl": ""
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 100000,
+    "retMsg": "success",
+    "result": {
+        "payId": "01JN6AZVEMAC8H9SED6JES3QH8",
+        "terminalType": "APP",
+        "expireTime": 1740751953,
+        "checkoutLink": "",
+        "qrContent": "data:image/png;base64,/9j/2wCEAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UXXXXXXXXQAUUUUAFFFFABRRRQAUUUUAf/Z",
+        "order": {
+            "merchantId": "305142568",
+            "clientId": "",
+            "paymentType": "E_COMMERCE",
+            "merchantTradeNo": "841e4ba2-c7ec-40b1-a071-a2a45de7bd00",
+            "payId": "01JN6AZVEMAC8H9SED6JES3QH8",
+            "status": "INITIAL",
+            "amount": "100",
+            "currency": "USDT",
+            "currencyType": "crypto",
+            "createTime": 1740748353,
+            "paymentTime": 0,
+            "finishTime": 0,
+            "refundOrders": []
+        }
+    }
+}
+```

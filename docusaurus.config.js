@@ -188,6 +188,12 @@ const config = {
           },
           {
             type: 'doc',
+            docId: 'bybit-pay/guide',
+            position: 'left',
+            label: 'Bybit Pay',
+          },
+          {
+            type: 'doc',
             docId: 'v3/intro',
             position: 'left',
             label: 'Tax API V3',
