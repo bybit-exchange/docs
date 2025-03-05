@@ -1,0 +1,106 @@
+---
+title: Get Payment Result
+sidebar_label: Get Payment Result
+sidebar_position: 2
+---
+### HTTP Request
+POST `/bybitpay/v5/pay_result`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|merchantId |**true** |string |Onboarding merchant UID|
+|clientId |false|string |Merchant client ID|
+|paymentType|**true** |string|Payment type <li>`E_COMMERCE`: Bybit QR Pay for e-commerce</li><li>`E_COMMERCE_REFUND`: Bybit QR Pay refund for e-commerce</li>|
+|merchantTradeNo|false |string|<li>"paymentType"=`E_COMMERCE`: it is merchant order number; "paymentType"=`E_COMMERCE_REFUND`: it is merchant refund order number</li><li><b>required</b> if "payId" is not provided</li>|
+|payId|false |string|<li>"paymentType"=`E_COMMERCE`: it is Bybit pay ID; "paymentType"=`E_COMMERCE_REFUND`: it is Bybit refund ID</li><li><b>required</b> if "merchantTradeNo" is not provided</li>|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|order |&lt;[PayOrderType](../data-model/pay-order)&gt; |Bybit PayOrder Detail|
+
+### Request Example
+#### Query Pay Order
+```http
+GET /v5/bybitpay/pay_result?merchantId=305142568&paymentType=E_COMMERCE&merchantTradeNo=fe43f6b0-fb6c-4f17-af07-d069746ec760 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739178959616
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+#### Query Refund Order
+```http
+GET /v5/bybitpay/pay_result?merchantId=305142568&paymentType=E_COMMERCE_REFUND&merchantTradeNo=b4b7c249-3ff1-4a85-9fc9-b95420a3cec0 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739178959616
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### Response Example
+#### Pay Order Response
+```json
+{
+    "retCode": 100000,
+    "retMsg": "success",
+    "result": {
+        "order": {
+            "merchantId": "305142568",
+            "clientId": "",
+            "paymentType": "E_COMMERCE",
+            "merchantTradeNo": "fe43f6b0-fb6c-4f17-af07-d069746ec760",
+            "payId": "01JN5WJNK8ZYK8B7JGKTVNXCPN",
+            "status": "TIMEOUT",
+            "amount": "100",
+            "currency": "USDT",
+            "currencyType": "crypto",
+            "createTime": 1740733241,
+            "paymentTime": 0,
+            "finishTime": 0,
+            "refundOrders": []
+        }
+    }
+}
+```
+
+#### Refund Order Response
+```json
+{
+    "retCode": 100000,
+    "retMsg": "success",
+    "result": {
+        "order": {
+            "merchantId": "305142568",
+            "clientId": "",
+            "paymentType": "E_COMMERCE",
+            "merchantTradeNo": "fe43f6b0-fb6c-4f17-af07-d069746ec760",
+            "payId": "01JN5WJNK8ZYK8B7JGKTVNXCPN",
+            "status": "PAY_SUCCESS",
+            "amount": "100",
+            "currency": "USDT",
+            "currencyType": "crypto",
+            "createTime": 1740733241,
+            "paymentTime": 1740733241,
+            "finishTime": 0,
+            "refundOrders": [
+                {
+                    "refundId": "D41717457E604297B96E1E7E8D238302",
+                    "refundType": "MERCHNT_SELF_REFUND",
+                    "merchantTradeNo": "fe43f6b0-fb6c-4f17-af07-d069746ec760",
+                    "merchantRefundNo": "b4b7c249-3ff1-4a85-9fc9-b95420a3cec0",
+                    "payId": "01JN5WJNK8ZYK8B7JGKTVNXCPN",
+                    "refundStatus": "REFUND_SUCCESS",
+                    "amount": "100",
+                    "createTime": 1740748919
+                }
+            ]
+        }
+    }
+}
+```

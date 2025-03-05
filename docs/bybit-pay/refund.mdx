@@ -1,0 +1,72 @@
+---
+title: Order Refund & Batch Processing
+sidebar_label: Order Refund & Batch Processing
+---
+### HTTP Request
+POST `/bybitpay/v5/refund`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|merchantId |**true** |string |Merchant UID|
+|clientId |false|string |Merchant client ID|
+|list|**true** | array&lt;[RefundOrderItemType](data-model/refund-order-item)&gt;|Refund order request item|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|refundOrders |array&lt;[RefundOrderType](data-model/refund-order)&gt; |Refund order details|
+
+### Request Example
+
+```http
+POST /v5/bybitpay/refund HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739178959616
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+
+{
+    "list": [
+        {
+            "refundType": "MERCHNT_SELF_REFUND",
+            "merchantTradeNo": "fe43f6b0-fb6c-4f17-af07-d069746ec760",
+            "payId": "",
+            "merchantRefundNo": "b4b7c249-3ff1-4a85-9fc9-b95420a3cec0",
+            "refundAmount": "101",
+            "env": {
+                "browserVersion": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+                "device": "xxde",
+                "ip": "127.0.0.1",
+                "terminalType": "APP"
+            }
+        }
+    ],
+    "merchantId": "305142568"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 100000,
+    "retMsg": "success",
+    "result": {
+        "refundOrders":[
+                {
+                    "refundId":"123",
+                    "refundType":"MERCHNT_SELF_REFUND",
+                    "merchantTradeNo":"123456",
+                    "merchantRefundNo":"123456",
+                    "payId":"123456",
+                    "refundStatus":"REFUND_SUCCESS",
+                    "amount":"100",
+                    "createTime":1739178959
+                }
+            ]
+    }
+}
+```
