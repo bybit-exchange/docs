@@ -11,7 +11,6 @@ title: V5
 - [Place Order](../v5/order/create-order) [UPDATE]
     - Add `slippageToleranceType` request parameter, used to select slippage type for Spot and Futures market orders
     - Add `slippageTolerance` request parameter, used to set slippage value based on the type of slippage
-
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Add a new response param `slippageToleranceType`
     - Add a new response param `slippageTolerance`
@@ -38,7 +37,6 @@ title: V5
 ### Websocket API
 - [All Liquidation](../v5/websocket/public/all-liquidation) [NEW]
     - A new topic to get full liquidation occurred in Bybit exchange.
-
 - [Liquidation](../v5/websocket/public/liquidation) [DEPRECATE]
     - The old one only pushes 1 liquidation per second, it can be discarded.
 
@@ -51,36 +49,27 @@ title: V5
 ### REST API
 - [Get Tiered Collateral Ratio](../v5/spot-margin-uta/tier-collateral-ratio) (NEW)
     - A new endpoint introduced to get tiered collateral ratio in UTA loan
-
 - [Get Unified Wallet Transferable Amount](../v5/account/unified-trans-amnt) [UPDATE]
     - `coinName` supports query up to 20 coins per request
     - Add new response field `availableWithdrawalMap` to support mutiple coins
-
 - [Get Historical Volatility](../v5/market/iv) [UPDATE]
     - Add new request parameter `quoteCoin`, the input value can be "USD" or "USDT"
-
 - [Place Order](../v5/order/create-order) [Spot]
     - "timeInForce" request parameter supports `RPI`, refer to [Retail Price Improvement (RPI) Order](https://www.bybit.com/en/help-center/article/Retail-Price-Improvement-RPI-Order) to get more details
-
 - [Batch Place Order](../v5/order/batch-place) [Spot]
     - "timeInForce" request parameter supports `RPI`
-
 - [Get Open & Closed Orders](../v5/order/open-order) [Spot]
     - Response field "timeInForce" supports `RPI`
-
 - [Get Order History](../v5/order/order-list) [Spot]
     - Response field "timeInForce" supports `RPI`
-
 - [Get Public Recent Trading History](../v5/market/recent-trade) [Spot]
     - Add a new response field `isRPITrade`
 
 ### Websocket API
 - [Websocket Trade Service](../v5/websocket/trade/guideline)[Spot]
     - "timeInForce" request parameter supports `RPI` when creating orders
-
 - [Order](../v5/websocket/private/order) [Spot]
     - Response field "timeInForce" supports `RPI`
-
 - [Trade](../v5/websocket/public/trade) [Spot]
     - Four symbols (MASKUSDT, IOUSDT, ZROUSDT, TWTUSDT) now have `RPI` response field, full release will be 20th Feb.
 
@@ -88,13 +77,10 @@ title: V5
 ### REST API
 - [Create Sub UID API Key](../v5/user/create-subuid-apikey) [UPDATE]
     - Support creating the key for Fund Custodial sub acct.
-
 - [Modify Sub API Key](../v5/user/modify-sub-apikey) [UPDATE]
     - Support updating the key of Fund Custodial sub acct by custodial institional account.
-
 - [Delete Sub API Key](../v5/user/rm-sub-apikey) [UPDATE]
     - Support deleting the key of Fund Custodial sub acct by custodial institional account.
-
 - [Get Fund Custodial Sub](../v5/user/fund-subuid-list) [NEW]
     - Provide a new endpoint to get Fund Custodial sub acct list by custodial institional account.
     
@@ -105,10 +91,8 @@ title: V5
 ### REST API
 - [Get Transaction Log (UTA)](../v5/account/transaction-log) [UPDATE]
     - New transaction type value `PEF_TRANSFER_IN`, `PEF_TRANSFER_OUT`, `PEF_PROFIT_SHARE`
-
 - [Get Collateral Info](../v5/account/collateral-info) [UPDATE]
     - The field `collateralRatio` field will be no longer useful due to the transition from a single conversion rate to a tiered collateral value ratio starting from 19 Feb, 2025, refer to [announcement](https://announcements.bybit.com/article/updates-to-collateral-value-ratio-rules-for-uta-borrowing-blteba1497739a08988/)
-
 - [Get VIP Margin Data](../v5/spot-margin-uta/vip-margin) [UPDATE]
     - The field `collateralRatio` field will be no longer useful due to the transition from a single conversion rate to a tiered collateral value ratio starting from 19 Feb, 2025
 
@@ -126,28 +110,20 @@ title: V5
 ### REST API
 - [Get Sub Account Deposit Records (Exchange Broker)](../v5/broker/sub-deposit-record) [UPDATE]
     - Add a new response field `fromAddress`, source address of the deposit
-
 - [Get Deposit Records (on chain)](../v5/asset/deposit/deposit-record) [UPDATE]
     - Add new response field `fromAddress`, source address of the deposit
-
 - [Get Sub Deposit Records (on chain)](../v5/asset/deposit/sub-deposit-record) [UPDATE]
     - Add new response field `fromAddress`, source address of the deposit
-
 - [Get Master Deposit Address](../v5/asset/deposit/master-deposit-addr) [UPDATE]
     - Add a new response field `contractAddress`, show last 6 characters
-
 - [Get Sub Deposit Address](../v5/asset/deposit/sub-deposit-addr) [UPDATE]
     - Add a new response field `contractAddress`, show last 6 characters
-
 - [Get Coin Information](../v5/asset/coin-info) [UPDATE]
     - Add a new response field `contractAddress`, show complete token contract address
-
 - [Get Wallet Balance](../v5/account/wallet-balance) [UPDATE]
     - For accountType=`UNIFIED`, the response field `availableToWithdraw` is deprecated, it always returns `""`
-
 - [Get All Coins Balance](../v5/asset/balance/all-balance) [UPDATE]
     - For accountType=`UNIFIED`, "coin" request parameter becomes **mandatory**, and it supports up to 10 coins in one request
-
 - [Get Exchange Broker Earning](../v5/broker/exchange-earning) [UPDATE]
     - Add a new response field `execId`
 
@@ -164,7 +140,6 @@ title: V5
 ### REST API
 - [Get Risk Limit](../v5/market/risk-limit) [UPDATE]
     - When query category="linear", API returned 30 symbols data set each request before, but now it returns 15.
-
 - [Withdraw](../v5/asset/withdraw) [UPDATE]
     - API rate limit is raised from 1 req to 5 reqs per second
 
@@ -209,7 +184,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### Websocket API
 - [Order](../v5/websocket/private/order) [UPDATE]
     - Add new response field `closedPnl`
-
 - [Execution](../v5/websocket/private/execution) [UPDATE]
     - Add a response field `execPnl`
 
@@ -217,10 +191,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Query Voucher Spec](../v5/broker/reward/voucher) [NEW]
     - Add voucher API for exchange broker clients
-
 - [Issue Voucher](../v5/broker/reward/issue-voucher) [NEW]
     - Add voucher API for exchange broker clients
-
 - [Query Issued Voucher](../v5/broker/reward/get-issue-voucher) [NEW]
     - Add voucher API for exchange broker clients
 
@@ -229,14 +201,11 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Classic account Spot trading supports getting the past 2 years Filled, Triggered orders
     - Support using `startTime` and `endTime`
-
 - [Get Trade History](../v5/order/execution) [UPDATE]
     - Classic account Spot trading supports getting the past 2 years trades
     - Support using `startTime` and `endTime`
-
 - [Get Pre-upgrade Order History](../v5/pre-upgrade/order-list) [UPDATE]
     - Support using `startTime` and `endTime`
-
 - [Get Pre-upgrade Trade History](../v5/pre-upgrade/execution) [UPDATE]
     - Support using `startTime` and `endTime`
 
@@ -249,7 +218,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Request a Quote](../v5/asset/convert/apply-quote) [UPDATE]
     - Add two new request parameter for API broker client, `paramType`, `paramValue`
-
 
 - [Get Convert history](../v5/asset/convert/get-convert-history) [UPDATE]
     - Add two new response `paramType`, `paramValue` in the "extInfo" object
@@ -279,13 +247,9 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - New feature: open api supports the conversion of crypto assets
     - [Get Convert Coin List](../v5/asset/convert/convert-coin-list) [NEW]
-
     - [Request a Quote](../v5/asset/convert/apply-quote) [NEW]
-
     - [Confirm a Quote](../v5/asset/convert/confirm-quote) [NEW]
-
     - [Get Convert Status](../v5/asset/convert/get-convert-result) [NEW]
-
     - [Get Convert history](../v5/asset/convert/get-convert-history) [NEW]
 
 ## 2024-07-03
@@ -293,7 +257,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
     - Request parameter `bizType` adds a new enum value "CONVERT"
     - Response parameter `bizType` adds a new enum value "CONVERT"
     - Add new response fields `convert`
-
 - [Get Exchange Broker Account Info](../v5/broker/account-info) [UPDATE]
     - Add new response fields `convert`
 
@@ -307,10 +270,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
     - Pre-market contract: add new response fields `isPreListing`, `preListingInfo`, `curAuctionPhase`, `phases`, `startTime`, `endTime`, `auctionFeeInfo`, `auctionFeeRate`, `takerFeeRate`, `makerFeeRate`
     - Request parameter `status` supports `Closed`, `Delivering`, `PreLaunch` for category="inverse" and "linear"
     - When category=linear&status=PreLaunch, you can get pre-market perpetual
-
 - [Get Tickers](../v5/market/tickers) [UPDATE]
     - Pre-market contract: add new response fields  `preOpenPrice`, `preQty`, `curPreListingPhase`
-
 - New error codes related to pre-market perpetual trading
     - `110095`: You cannot create, modify or cancel Pre-Market Perpetual orders during the Call Auction.
     - `110096`: Pre-Market Perpetual Trading does not support Portfolio Margin mode.
@@ -336,10 +297,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Set Disconnect Cancel All](../v5/order/dcp) [UPDATE]
     - Add `product` request parameter, support `DERIVATIVES`, `SPOT` and `OPTIONS`
-
 - [Get Account Info](../v5/account/account-info) [UPDATE]
     - Deprecate the fields `dcpStatus`, `timeWindow`
-
 - [Get DCP Info](../v5/account/dcp-info) [NEW]
     - Add a new API used to query dcp config data
 
@@ -382,16 +341,12 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 - [Get Risk Limit](../v5/market/risk-limit) [UPDATE]
     - When query category="linear", API returns 30 symbols data set each request, please add request parameter `cursor` paginate
     - Add new response parameter `nextPageCursor`
-
 - [Withdraw](../v5/asset/withdraw) [UPDATE]
     - Add request parameter `beneficiary`, `vaspEntityId`, `beneficiaryName`, they are only used for kyc=KOR (Korean users) to fill travel rule info
-
 - [Get Exchange Entity List](../v5/asset/withdraw/vasp-list) [NEW]
     - Add a new API for kyc=KOR users to query target exchange info when fill travel rule info
-
 - [Create Internal Transfer](../v5/asset/transfer/create-inter-transfer) [UPDATE]
     - Add new response field `status`. When you get "PENDING", please call query API to check the final status after a while
-
 - [Create Universal Transfer](../v5/asset/transfer/unitransfer) [UPDATE]
     - Add new response field `status`. When you get "PENDING", please call query API to check the final status after a while
 
@@ -404,10 +359,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Transaction Log (UTA)](../v5/account/transaction-log) [UPDATE]
     - New transaction type value `ADL`
-
 - [Get Transaction Log (Classic)](../v5/account/contract-transaction-log) [NEW]
     - New endpoint for Classic account derivatives wallet, and Unified account inverse derivatives wallet
-
 - [Get Insurance](../v5/market/insurance) [UPDATE]
     - Add a new response field `symbols`
 
@@ -415,7 +368,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Internal Transfer Records](../v5/asset/transfer/inter-transfer-list) [UPDATE]
     - When `startTime` & `endTime` are not passed together, API returns 30 days data by default
-
 - [Get Internal Transfer Records](../v5/asset/transfer/inter-transfer-list) [UPDATE]
     - When `startTime` & `endTime` are not passed together, API returns 30 days data by default
 
@@ -437,14 +389,12 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Sub Account Deposit Records](../v5/broker/sub-deposit-record) [NEW]
     - Add a new endpoint for exchange broker user to query sub account deposit records
-
 - [Demo trading supports Open API](../v5/demo)
 
 ## 2024-04-01
 ### REST API
 - [Get Sub UID List (Unlimited)](../v5/user/page-subuid) [NEW]
     - Add a new API to get sub uid entry. This supports pagnation.
-
 - [Get Sub UID List (Limited)](../v5/user/subuid-list) [UPDATE]
     - Return up to 10k sub accounts
 
@@ -460,7 +410,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ## 2024-03-22
 - [Integration Guidance](../v5/guide#authentication) [UPDATE]
     - To obey the compliance rule, two new domains are added for Netherland users and Hong Kong users repectively.
-
 - [Create Internal Transfer](../v5/asset/transfer/create-inter-transfer) [UPDATE]
     - API rate limit is increase from 20req/min to 60req/min
 
@@ -473,7 +422,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Set Deposit Account](../v5/asset/deposit/set-deposit-acct) [UPDATE]
     - `OPTION`(USDC Contract wallet) is no longer supported to set for classic account
-
 - [Get Announcement](../v5/announcement) [UPDATE]
     - Add a new response field `publishTime`
 
@@ -491,10 +439,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Batch Place Order](../v5/order/batch-place) [UPDATE]
     - Support Spot trading (UTA, UTA Pro)
-
 - [Batch Amend Order](../v5/order/batch-amend) [UPDATE]
     - Support Spot trading (UTA, UTA Pro)
-
 - [Batch Cancel Order](../v5/order/batch-cancel) [UPDATE]
     - Support Spot trading (UTA, UTA Pro)
 
@@ -537,15 +483,12 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 - [Get Borrow History](../v5/account/borrow-history) [UPDATE]
     - `startTime` & `endTime` are restricted to 30 days time range
     - Support getting up to 2 years data
-
 - [Get Delivery Record](../v5/asset/delivery) [UPDATE]
     - Add query parameter `startTime` & `endTime`, and 30 days times range per request
     - Support getting up to 2 years data
-
 - [Get USDC Session Settlement](../v5/asset/settlement) [UPDATE]
     - Add query parameter `startTime` & `endTime`, and 30 days times range per request
     - Support getting up to 2 years data
-
 - [Get Orderbook](../v5/market/orderbook) [UPDATE]
     - Add a new response field `seq` for linear, inverse & spot
 
@@ -581,7 +524,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 - [Get Withdrawal Records](../v5/asset/withdraw/withdraw-record) [UPDATE]
     - Add a new request param `txID`
     - The withdrawal between Bybit account returns `txID`
-
 - [Get Internal Deposit Records (off-chain)](../v5/asset/deposit/internal-deposit-record) [UPDATE]
     - Add a new request param `txID`
     - Add a new response field `txID`
@@ -590,17 +532,13 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Place Order](../v5/order/create-order) [UPDATE]
     - Spot(UTA) can use `takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice`, `tpOrderType`, `slOrderType` to set Market TPSL or Limit TPSL when creating Spot limit order.
-
 - [Amend Order](../v5/order/amend-order) [UPDATE]
     - Spot(UTA) can amend `takeProfit`, `stopLoss`, `tpLimitPrice`, `slLimitPrice` if the original order has related attributes
-
 - [Cancel All Orders](../v5/order/cancel-all) [UPDATE]
     - Add new enums "OcoOrder", "BidirectionalTpslOrder" for `orderFilter`. You can only cancel all untriggered "BidirectionalTpslOrder"
-
 - [Get Open Orders](../v5/order/open-order) [UPDATE]
     - Add new enum "BidirectionalTpslOrder" for `orderFilter`
     - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
-
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Add new enum "BidirectionalTpslOrder" for `orderFilter`
     - Add new enum "BidirectionalTpslOrder" for `stopOrderType`
@@ -628,13 +566,10 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Move Position](../v5/position/move-position) [NEW]
     - Add a new endpoint to move your positions between the main-sub, sub-sub accounts
-
 - [Get Move Position History](../v5/position/move-position-history) [NEW]
     - Add a new endpoint to query move position history
-
 - [Get Status And Leverage](../v5/spot-margin-uta/status) [UPDATE]
     - Add a new response param `effectiveLeverage`.
-
 - Add error codes for transfer endpoints:
 
 |New error code |Description|
@@ -646,10 +581,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Loan Orders](../v5/otc/loan-info) [UPDATE]
     - Add a new response param `deferredLiquidationLine`, `deferredLiquidationTime`
-
 - [Get LTV](../v5/otc/ltv-convert) [UPDATE]
     - Add a new response param `rst`.
-
 - [Get Product Info](../v5/otc/margin-product-info) [UPDATE]
     - Add a new response param `deferredLiquidationLine`, `deferredLiquidationTime`
 
@@ -657,10 +590,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Place Order](../v5/order/create-order) [UPDATE]
     - Add a new request param `marketUnit`, the value are `baseCoin`, `quoteCoin`. It can be used to select `qty` unit for Spot market order (Unified account)
-
 - [Get Open Orders](../v5/order/open-order) [UPDATE]
     - Add a new response param `marketUnit`
-
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Add a new response param `marketUnit`
 
@@ -682,20 +613,16 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Add a response field `createType`
-
 - [Get Open Orders](../v5/order/open-order) [UPDATE]
     - Add a response field `createType`
-
 - [Get Trade History](../v5/order/execution) [UPDATE]
     - Add a response field `createType`
-
 - [Get SMP Group ID](../v5/account/smp-group) [NEW]
     - Add a new endpoint to get smp group ID
 
 ### Websocket API
 - [Order](../v5/websocket/private/order) [UPDATE]
     - Add a response field `createType`
-
 - [Execution](../v5/websocket/private/execution) [UPDATE]
     - Add a response field `createType`
 
@@ -708,10 +635,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Broker Earning](../v5/abandon/earning) [deprecated]
     - deprecated, replaced by [Get Exchange Broker Earning](../v5/broker/exchange-earning)
-
 - [Get Exchange Broker Earning](../v5/broker/exchange-earning) [NEW]
     - Add a new endpoint to query exchange broker earning information
-
 - [Get Exchange Broker Account Info](../v5/broker/account-info) [NEW]
     - Add a new endpoint to query exchange broker main account information
 
@@ -719,10 +644,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
  - [Set Spot Hedging](../v5/account/set-spot-hedge) [NEW]
     - Add a new endpoint to enable or disable Spot hedging function for Portfolio margin mode
-
 - [Get Wallet Balance](../v5/account/wallet-balance) [UPDATE]
     - Add a new response field `spotHedgingQty`
-
 - [Get Account Info](../v5/account/account-info) [UPDATE]
     - Add a new response field `spotHedgingStatus`
 
@@ -739,34 +662,25 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Open Orders](../v5/order/open-order) [UPDATE]
     - Classic account Spot can use `orderFilter`="OcoOrder"
-
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
     - Classic account Spot can use `orderFilter`="OcoOrder"
-
 - [Get Trade History](../v5/order/execution) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
-
 - [Get Closed PnL](../v5/position/close-pnl) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
     - Classic account data is sort by `updatedTime`
-
 - [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
-
 - [Get Pre-upgrade Order History](../v5/pre-upgrade/order-list) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
-
 - [Get Pre-upgrade Trade History](../v5/pre-upgrade/execution) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
-
 - [Get Pre-upgrade Closed PnL](../v5/pre-upgrade/close-pnl) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
     - Classic account data is sort by `updatedTime`
-
 - [Get Pre-upgrade Transaction Log](../v5/pre-upgrade/transaction-log) [UPDATE]
     - Add the time range limitation for `startTime` and `endTime` request params
-
 - [Get Sub Account All API Keys](../v5/user/list-sub-apikeys) [NEW]
     - Add new endpoint for master account to query all api keys of a sub UID
 
@@ -779,16 +693,12 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Amend Order](../v5/order/amend-order) [UPDATE]
     - Add `tpslMode` in the request parameter
-
 - [Batch Amend Order](../v5/order/batch-amend) [UPDATE]
     - Add `tpslMode` in the request parameter
-
 - [Get Borrow Quota (Spot)](../v5/order/spot-borrow-quota) [UPDATE]
     - Add new response fields `spotMaxTradeQty`, `spotMaxTradeAmount`
-
 - [Withdraw](../v5/asset/withdraw) [UPDATE]
     - Add new enum value for `forceChain` parameter. You can withdraw between Bybit main accounts via inputting UID
-
 - [Delete Sub UID](../v5/user/rm-subuid) [NEW]
     - Add new endpoint to delete sub account
 
@@ -801,10 +711,8 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Trade History](../v5/order/execution) [UPDATE]
     - UTA Spot: `stopOrderType`, `""` for normal order, `tpslOrder` for TP/SL order, `Stop` for conditional order, `OcoOrder` for OCO order
-
 - [Get Open Orders](../v5/order/open-order) [UPDATE]
     - UTA Spot: add new response field `ocoTriggerBy`, and the value can be `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
-
 - [Get Order History](../v5/order/order-list) [UPDATE]
     - UTA Spot: add new response field `ocoTriggerBy`, and the value can be `OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`
 
@@ -816,7 +724,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get Position Info](../v5/position) [UPDATE]
     - Add response field `isReduceOnly`, `mmrSysUpdatedTime`, `leverageSysUpdatedTime`
-
 - [Confirm New Risk Limit](../v5/position/confirm-mmr) [NEW]
     - Add a new endpoint
 
@@ -828,7 +735,6 @@ you can use this domain to place orders via [websocket trade service](../v5/webs
 ### REST API
 - [Get API Key Information](../v5/user/apikey-info) [UPDATE]
     - Add a new response field `kycLevel`, `kycRegion`
-
 - [Get Borrow History](../v5/account/borrow-history) [UPDATE]
     - Add new response fields `borrowAmount`, `unrealisedLoss`, `freeBorrowedAmount`
 
