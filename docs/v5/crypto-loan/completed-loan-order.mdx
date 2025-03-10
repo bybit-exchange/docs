@@ -1,25 +1,20 @@
 ---
-title: Get Loan Repayment History
-sidebar_label: Get Loan Repayment History
-sidebar_position: 7
+title: Get Completed Loan History
+sidebar_label: Get Completed Loan History
+sidebar_position: 8
 ---
-Query for loan repayment transactions. A loan may be repaid in multiple repayments.
+Query for the last 6 months worth of your completed (fully paid off) loans.
 > Permission: "Spot trade"
 
-:::info
-* Supports querying for the last 6 months worth of completed loan orders.
-* Only successful repayments can be queried for.
-:::
-
 ### HTTP Request
-GET `/v5/crypto-loan/repayment-history`
+GET `/v5/crypto-loan/borrow-history`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |orderId|false|string|Loan order ID|
-|repayId|false|string|Repayment tranaction ID|
 |loanCurrency|false|string|Loan coin name|
+|collateralCurrency|false|string|Collateral coin name|
 |limit |false |string |Limit for data size per page. [`1`, `100`]. Default: `10`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -27,17 +22,20 @@ GET `/v5/crypto-loan/repayment-history`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list|array|Object|
+|> borrowTime|string |The timestamp to borrow |
 |> collateralCurrency|string |Collateral coin|
-|> collateralReturn|string |Amount of collateral returned as a result of this repayment. `"0"` if this isn't the final loan repayment|
+|> expirationTime|string |Loan maturity time, keeps `""` for flexible loan|
+|> hourlyInterestRate|string |Hourly interest rate <li>Flexible loan, it is real-time interest rate</li><li>Fixed term loan: it is fixed term interest rate</li>|
+|> initialCollateralAmount|string |Initial amount to mortgage|
+|> initialLoanAmount|string |Initial loan amount|
 |> loanCurrency|string |Loan coin|
 |> loanTerm|string |Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan|
 |> orderId|string |Loan order ID|
-|> repayAmount|string |Repayment amount|
-|> repayId|string |Repayment transaction ID|
-|> repayStatus|integer |Repayment status, `1`: success; `2`: processing|
-|> repayTime|string |Repay timestamp|
-|> repayType|string |Repayment type, `1`: repay by user; `2`: repay by liquidation|
+|> repaidInterest|string |Total interest repaid|
+|> repaidPenaltyInterest|string |Total penalty interest repaid|
+|> status|integer |Loan order status `1`: fully repaid manually; `2`: fully repaid by liquidation|
 |nextPageCursor |string |Refer to the `cursor` request parameter |
+
 
 ### Request Example
 
@@ -45,11 +43,11 @@ GET `/v5/crypto-loan/repayment-history`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/crypto-loan/repayment-history?repayId=1794271131730737664 HTTP/1.1
+GET /v5/crypto-loan/borrow-history?orderId=1793683005081680384 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXXX
 X-BAPI-API-KEY: XXXXXX
-X-BAPI-TIMESTAMP: 1728633716794
+X-BAPI-TIMESTAMP: 1728630979731
 X-BAPI-RECV-WINDOW: 5000
 ```
 
@@ -74,7 +72,7 @@ const client = new RestClientV5({
 });
 
 client
-  .getRepaymentHistory({ repayId: '1794271131730737664' })
+  .getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })
   .then((response) => {
     console.log(response);
   })
@@ -95,21 +93,23 @@ client
     "result": {
         "list": [
             {
+                "borrowTime": "1728546174028",
                 "collateralCurrency": "BTC",
-                "collateralReturn": "0",
-                "loanCurrency": "USDT",
-                "loanTerm": "",
-                "orderId": "1794267532472646144",
-                "repayAmount": "100",
-                "repayId": "1794271131730737664",
-                "repayStatus": 1,
-                "repayTime": "1728629786875",
-                "repayType": "1"
+                "expirationTime": "1729148399000",
+                "hourlyInterestRate": "0.0000010241",
+                "initialCollateralAmount": "0.0494727",
+                "initialLoanAmount": "1",
+                "loanCurrency": "ETH",
+                "loanTerm": "7",
+                "orderId": "1793569729874260992",
+                "repaidInterest": "0.00000515",
+                "repaidPenaltyInterest": "0",
+                "status": 1
             }
         ],
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1728633717935
+    "time": 1728632014857
 }
 ```

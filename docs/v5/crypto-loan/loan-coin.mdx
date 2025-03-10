@@ -4,7 +4,11 @@ sidebar_label: Get Borrowable Coins
 sidebar_position: 2
 ---
 :::info
-Do not need authentication
+Does not need authentication.
+:::
+
+:::danger
+Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.
 :::
 
 ### HTTP Request
@@ -21,14 +25,14 @@ GET `/v5/crypto-loan/loanable-data`
 |:----- |:-----|----- |
 |vipCoinList|array|Object|
 |> list|array |Object |
-|>> borrowingAccuracy|integer |Valid borrowable coin precision|
+|>> borrowingAccuracy|integer |The number of decimal places (precision) of this coin|
 |>> currency|string |Coin name|
-|>> flexibleHourlyInterestRate|string |Flexible hourly floating interest rate<li>Flexible Crypto Loans offer an hourly floating interest rate, calculated based on the actual borrowing time per hour, with the option for early repayment</li><li>Keeps `""` if the coin does not support flexible loan</li>|
-|>> hourlyInterestRate7D|string |Hourly interest rate for 7 days loan<li>Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.</li><li>Keeps `""` if the coin does not support 7 days loan</li>|
-|>> hourlyInterestRate14D|string |Hourly interest rate for 14 days loan<li>Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.</li><li>Keeps `""` if the coin does not support 14 days loan</li>|
-|>> hourlyInterestRate30D|string |Hourly interest rate for 30 days loan<li>Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.</li><li>Keeps `""` if the coin does not support 30 days loan</li>|
-|>> hourlyInterestRate90D|string |Hourly interest rate for 90 days loan<li>Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.</li><li>Keeps `""` if the coin does not support 90 days loan</li>|
-|>> hourlyInterestRate180D|string |Hourly interest rate for 180 days loan<li>Borrowed coins can be returned at any time before the due date. You'll be charged 3 times the hourly interest during the overdue period. Your collateral will be liquidated to repay a loan and the interest if you fail to make the repayment 48 hours after the due time.</li><li>Keeps `""` if the coin does not support 180 days loan</li>|
+|>> flexibleHourlyInterestRate|string |Flexible hourly floating interest rate <ul><li>Flexible Crypto Loans offer an hourly floating interest rate, calculated based on the actual borrowing time per hour, with the option for early repayment</li><li>Is `""` if the coin does not support flexible loan</li></ul>|
+|>> hourlyInterestRate7D|string |Hourly interest rate for 7 days loan. Is `""` if the coin does not support 7 days loan|
+|>> hourlyInterestRate14D|string |Hourly interest rate for 14 days loan. Is `""` if the coin does not support 14 days loan|
+|>> hourlyInterestRate30D|string |Hourly interest rate for 30 days loan. Is `""` if the coin does not support 30 days loan|
+|>> hourlyInterestRate90D|string |Hourly interest rate for 90 days loan. Is `""` if the coin does not support 90 days loan|
+|>> hourlyInterestRate180D|string |Hourly interest rate for 180 days loan. Is `""` if the coin does not support 180 days loan|
 |>> maxBorrowingAmount|string |Max. amount to borrow|
 |>> minBorrowingAmount|string |Min. amount to borrow|
 |> vipLevel|string |Vip level |
