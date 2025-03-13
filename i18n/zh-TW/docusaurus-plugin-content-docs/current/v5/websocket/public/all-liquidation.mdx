@@ -27,13 +27,18 @@ sidebar_position: 5
 
 ### 訂閱示例
 
-```json
-{
-    "op": "subscribe",
-    "args": [
-        "allLiquidation.SOLUSDT","allLiquidation.ROSEUSDT"
-    ]
-}
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.all_liquidation_stream("ROSEUSDT", handle_message)
+while True:
+    sleep(1)
 ```
 
 ### 消息示例
