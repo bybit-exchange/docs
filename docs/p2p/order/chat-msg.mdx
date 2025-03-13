@@ -5,14 +5,14 @@ sidebar_position: 8
 ---
 
 ### HTTP Request
-POST `/v5/p2p/order/message/list`
+POST `/v5/p2p/order/message/listpage`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |orderId|**true** |string |order Id |
-|startMessageId|false |string |start query message id|
-|size|**true** |string |Rows to query per (max=100) |
+|currentPage|false |string |current page number|
+|size|**true** |string |page size |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -29,14 +29,14 @@ POST `/v5/p2p/order/message/list`
 |nickName |string |Nickname of the person sending the message|
 |fileName |string |image/pdf/video filename|
 |accountId |string |account id |
-|isRead |int |Whether the message is read |
-|roleType |string |role type |
-|onlyForCustomer|int |Whether the message is only for customer |
+|isRead |int |1-read, 0-unread|
+|roleType |string |role type, sys-system message |
+|onlyForCustomer|int |only sent to customer, 1-true 0-false |
 
 ### Request Example
 
 ```http
-POST /v5/p2p/order/message/list HTTP/1.1
+POST /v5/p2p/order/message/listpage HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
