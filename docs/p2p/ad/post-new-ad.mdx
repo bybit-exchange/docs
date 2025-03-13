@@ -1,55 +1,51 @@
 ---
 title: Post New Ad
 sidebar_label: Post New Ad
-sidebar_position: 
+sidebar_position: 2
 ---
-
-
 ### HTTP Request
 POST `/v5/p2p/item/create`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|tokenId|<b>true</b> |string |token id. e.g. USDT,ETH,BTC |
-|currencyId|<b>true</b> |string |currency id e.g HKD,USD,EUR |
-|side|<b>true</b> |string |ad for buying token or for selling token. 0 - buy; 1 - sell |
-|priceType|<b>true</b> |string |Ads Pricing Exchange Rate Model. 0 - Fixed rate; 1 - Floating rate |
-|premium|<b>true</b> |string |Floating ratio with current exchange rate |
-|price|<b>true</b> |string |ads price |
-|minAmount|<b>true</b> |string |Min transaction amount |
-|maxAmount|<b>true</b> |string |Max transaction amount |
-|remark|<b>true</b> |string |Transaction Description(max=900) |
-|tradingPreferenceSet|<b>true</b> |Object |Trading Preferences |
-|> hasUnPostAd |string | Whether the counterparty must not have posted any advertisements： 0：unneed，1：need |
-|> isKyc |string | Is it necessary for the counterparty to complete identity authentication?： 0：unneed，1：need |
-|> isEmail |string | Is it necessary for the counterparty to bind an email address?：0：unneed，1：need |
-|> isMobile |string | Is it necessary for the counterparty to bind an telphone?：0：unneed，1：need |
-|> hasRegisterTime |string | Is the registration time required to be no less than {} days?0：unneed，1：need |
-|> registerTimeThreshold |string | Registration time threshold（Unit: Day）|
+|tokenId|**true** |string |token id. e.g. USDT,ETH,BTC |
+|currencyId|**true** |string |currency id e.g HKD,USD,EUR |
+|side|**true** |string |ad for buying token or for selling token. 0 - buy; 1 - sell |
+|priceType|**true** |string |Ads Pricing Exchange Rate Model. 0 - Fixed rate; 1 - Floating rate |
+|premium|**true** |string |Floating ratio with current exchange rate |
+|price|**true** |string |ads price |
+|minAmount|**true** |string |Min transaction amount |
+|maxAmount|**true** |string |Max transaction amount |
+|remark|**true** |string |Transaction Description(max=900) |
+|tradingPreferenceSet|**true** |Object |Trading Preferences |
+|> hasUnPostAd |string | Whether the counterparty must not have posted any advertisements: 0:unneed,1:need |
+|> isKyc |string | Is it necessary for the counterparty to complete identity authentication?: 0:unneed,1:need |
+|> isEmail |string | Is it necessary for the counterparty to bind an email address?:0:unneed,1:need |
+|> isMobile |string | Is it necessary for the counterparty to bind an telphone?:0:unneed,1:need |
+|> hasRegisterTime |string | Is the registration time required to be no less than {} days?0:unneed,1:need |
+|> registerTimeThreshold |string | Registration time threshold(Unit: Day)|
 |> orderFinishNumberDay30 |string | Limit on number of completed orders in the last 30 days |
 |> completeRateDay30 |string | Completion rate limit in the last 30 days |
 |> nationalLimit |string | Restricted KYC Countries;IOS 3 CODE |
-|> hasOrderFinishNumberDay30 |string | Is it necessary to have no less than {} orders in the last 30 days? 0：unneed，1：need |
-|> hasCompleteRateDay30 |string | Is it necessary to have a completion rate of no less than {} in the last 30 days?：0：unneed，1：need |
-|> hasNationalLimit |string | Are country restrictions required;0：unneed，1：need |
-|paymentIds|<b>true</b> |array[string] |Payment method type id(len<=5) |
-|quantity|<b>true</b> |string |Number of ads |
-|price|<b>true</b> |string |ads price |
-|paymentPeriod|<b>true</b> |string |payment duration |
-|itemType|<b>true</b> |string |ORIGIN - original P2P advertisement, generally refers to non-bulk advertisement; BULK - bulk advertisement |
+|> hasOrderFinishNumberDay30 |string | Is it necessary to have no less than {} orders in the last 30 days? 0:unneed,1:need |
+|> hasCompleteRateDay30 |string | Is it necessary to have a completion rate of no less than {} in the last 30 days?:0:unneed,1:need |
+|> hasNationalLimit |string | Are country restrictions required;0:unneed,1:need |
+|paymentIds|**true** |array[string] |Payment method type id(len<=5) |
+|quantity|**true** |string |Number of ads |
+|price|**true** |string |ads price |
+|paymentPeriod|**true** |string |payment duration |
+|itemType|**true** |string |ORIGIN - original P2P advertisement, generally refers to non-bulk advertisement; BULK - bulk advertisement |
 
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|[accountType](../enum#accounttype) |string |Account type|
-|memberId |string |UserID|
-|balance |array |Object |
-|> coin |string |Currency|
-|> walletBalance |string |Wallet balance|
-|> transferBalance |string |Transferable balance|
-|> bonus |string |Bonus|
+|itemId |string |item Id|
+|securityRiskToken |string |security risk token |
+|riskTokenType |string |risk token type|
+|riskVersion |string |risk version |
+|needSecurityRisk |boolean |Whether security risk is necessary |
 
 ### Request Example
 
