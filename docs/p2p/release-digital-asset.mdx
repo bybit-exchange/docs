@@ -1,7 +1,7 @@
 ---
 title: Release Digital Asset
 sidebar_label: Release Digital Asset
-sidebar_position: 12
+sidebar_position: 11
 ---
 
 
@@ -17,44 +17,31 @@ POST `/v5/p2p/order/finish`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|[accountType](../enum#accounttype) |string |Account type|
-|memberId |string |UserID|
-|balance |array |Object |
-|> coin |string |Currency|
-|> walletBalance |string |Wallet balance|
-|> transferBalance |string |Transferable balance|
-|> bonus |string |Bonus|
 
 ### Request Example
 
 ```http
-POST /v5/asset/transfer/query-account-coins-balance?accountType=FUND&coin=USDC HTTP/1.1
+POST /v5/p2p/order/finish HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1675866354698
 X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "orderId":"1899736339155943424"
+}
 ```
 
 ### Response Example
 
 ```json
 {
-    "retCode": 0,
-    "retMsg": "success",
-    "result": {
-        "memberId": "XXXX",
-        "accountType": "FUND",
-        "balance": [
-            {
-                "coin": "USDC",
-                "transferBalance": "0",
-                "walletBalance": "0",
-                "bonus": ""
-            }
-        ]
-    },
-    "retExtInfo": {},
-    "time": 1675866354913
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": null,
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741763625.212991"
 }
 ```
