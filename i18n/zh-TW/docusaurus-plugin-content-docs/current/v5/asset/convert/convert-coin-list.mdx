@@ -11,9 +11,9 @@ GET `/v5/asset/exchange/query-coin-list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|[accountType](/v5/enum#convertaccounttype) |**true** |string |錢包類型 <li>`eb_convert_funding`</li><li>`eb_convert_uta`</li><li>`eb_convert_spot`</li><li>`eb_convert_contract`</li><li>`eb_convert_inverse`</li>|
 |coin |false |string |兌出幣種<li>當side=0時, 該字段會被忽略</li> |
 |side |false |integer |`0`: 查詢兌出幣種列表, 會返回幣種餘額<br/>`1`: 有傳coin的話, 會根據兌出幣種查詢支持的兌入幣種列表|
-|[accountType](/v5/enum#convertaccounttype) |**true** |string |錢包類型 <li>`eb_convert_funding`</li><li>`eb_convert_uta`</li><li>`eb_convert_spot`</li><li>`eb_convert_contract`</li><li>`eb_convert_inverse`</li>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -57,7 +57,16 @@ X-BAPI-RECV-WINDOW: 5000
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.get_convert_coin_list(
+    side="0",
+    accountType="eb_convert_funding",
+))
 ```
 
 </TabItem>

@@ -10,13 +10,13 @@ POST `/v5/asset/exchange/quote-apply`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|[accountType](/v5/enum#convertaccounttype) |**true** |string |帳戶類型|
 |fromCoin |**true** |string |兌出幣種|
 |toCoin |**true** |string |兌入幣種|
-|fromCoinType |false |string |`crypto`|
-|toCoinType |false |string |`crypto`|
 |requestCoin |**true** |string |請求報價幣種, 和兌出幣種保持一致 <li>未來, 可能會支援requestCoin=兌入幣種</li>|
 |requestAmount |**true** |string |請求報價幣種數量|
-|[accountType](/v5/enum#convertaccounttype) |**true** |string |帳戶類型|
+|fromCoinType |false |string |`crypto`|
+|toCoinType |false |string |`crypto`|
 |paramType |false |string |`opFrom`, 主要用於API broker|
 |paramValue |false |string |Broker ID, 主要用於API broker|
 |requestId |false |string |自定義的請求ID <li>最長不超過36位的字符串</li><li>一般來說該字段無用, 可用於內部追蹤這次報價請求</li>|
@@ -66,7 +66,22 @@ Content-Length: 172
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.request_a_quote(
+    requestId="test-00002",
+    fromCoin="ETH",
+    toCoin="BTC",
+    accountType="eb_convert_funding",
+    requestCoin="ETH",
+    requestAmount="0.1",
+    paramType="opFrom",
+    paramValue="broker-id-001",
+))
 ```
 
 </TabItem>

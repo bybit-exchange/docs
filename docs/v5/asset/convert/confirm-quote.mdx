@@ -4,8 +4,8 @@ sidebar_label: Confirm a Quote
 sidebar_position: 3
 ---
 :::info
-1. The exchange is async, please check the final status by calling query result API.
-2. Make sure you confirm the quote before the quote is expired.
+1. The exchange is async; please check the final status by calling the query result API.
+2. Make sure you confirm the quote before it expires.
 :::
 
 ### HTTP Request
@@ -46,7 +46,15 @@ Content-Length: 52
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.confirm_a_quote(
+    quoteTxId="10100108106409343501030232064",
+))
 ```
 
 </TabItem>

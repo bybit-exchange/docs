@@ -10,13 +10,13 @@ POST `/v5/asset/exchange/quote-apply`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|[accountType](/v5/enum#convertaccounttype) |**true** |string |Wallet type|
 |fromCoin |**true** |string |Convert from coin (coin to sell)|
 |toCoin |**true** |string |Convert to coin (coin to buy)|
-|fromCoinType |false |string |`crypto`|
-|toCoinType |false |string |`crypto`|
 |requestCoin |**true** |string |Request coin, same as fromCoin <li>In the future, we may support requestCoin=toCoin</li>|
 |requestAmount |**true** |string |request coin amount (the amount you want to sell)|
-|[accountType](/v5/enum#convertaccounttype) |**true** |string |Wallet type|
+|fromCoinType |false |string |`crypto`|
+|toCoinType |false |string |`crypto`|
 |paramType |false |string |`opFrom`, mainly used for API broker user|
 |paramValue |false |string |Broker ID, mainly used for API broker user|
 |requestId |false |string |Customised request ID <li>a maximum length of 36</li><li>Generally it is useless, but it is convenient to track the quote request internally if you fill this field</li>|
@@ -66,7 +66,22 @@ Content-Length: 172
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="XXXXX",
+    api_secret="XXXXX",
+)
+print(session.request_a_quote(
+    requestId="test-00002",
+    fromCoin="ETH",
+    toCoin="BTC",
+    accountType="eb_convert_funding",
+    requestCoin="ETH",
+    requestAmount="0.1",
+    paramType="opFrom",
+    paramValue="broker-id-001",
+))
 ```
 
 </TabItem>
