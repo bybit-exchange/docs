@@ -1,0 +1,346 @@
+---
+title: Get Order Detail
+sidebar_label: Get Order Detail
+sidebar_position: 2
+---
+
+### HTTP Request
+POST `/v5/p2p/order/info`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId|**true**|string|Order ID|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id|string|order id|
+|side|int|Order trade type. `0`: Buy,  `1`: Sell|
+|itemId|string|adv id|
+|userId|string|The uid of the current query user|
+|nickName|string|The nickname of the current query user|
+|makerUserId|string|adv owner user|
+|targetUserId|string|Counterparty uid|
+|targetNickName|string|Counterparty nickname|
+|targetConnectInformation|string|Counterparty contact information|
+|sellerRealName|string|seller realName|
+|buyerRealName|string|buyer realName|
+|tokenId|string|token id. e.g. USDT,ETH,BTC|
+|currencyId|string|currency id . e.g. USD,VND|
+|price|string|order price|
+|quantity|string|seller/buyer trade quantity|
+|amount|string|seller/buyer trade amount|
+|paymentType|int|Payment method used|
+|transferDate|string|buyer pay time|
+|status|int|order status `5`: waiting for chain (only web3) `10`: waiting for buy pay `20`: waiting for seller release `30`: Appealing `40`: cancel order `50`: finish order `60`: paying (only pay online) `70`: pay fail (only pay online) `80`: exception canceled ( the coin covert to other coin，only hotswap) `90`: waiting buyer select tokenId 100:objectioning 1`10`: Waiting for the user to raise an objection|
+|createDate|string|order create time|
+|paymentTermList|array&lt;object&gt;|Payment method provided by the seller|
+|> id|string|payment id|
+|> realName|string|realname|
+|> paymentType|int|payment type|
+|> bankName|string|bank name|
+|> branchName|string|branch name|
+|> accountNo|string|account no|
+|> qrcode|string|QR code|
+|remark|string|adv remark info|
+|transferLastSeconds|string|The buyer's remaining transfer time|
+|appealContent|string|appeal content|
+|appealType|int|appeal type|
+|appealNickName|string|appeal user nick name|
+|canAppeal|string|user can appeal|
+|confirmedPayTerm|object|buyer select payment info|
+|> id|string|payment id|
+|> realName|string|realname|
+|> paymentType|int|payment type|
+|> bankName|string|bank name|
+|> branchName|string|branch name|
+|> accountNo|string|account no|
+|> qrcode|string|QR code|
+|makerFee|string|maker fee|
+|takerFee|string|taker fee|
+|extension|object|Order extension information|
+|> isDelayWithdraw|bool|Delayed withdrawal  `true` : delay|
+|> delayTime|string|delay time|
+|> startTime|string|delay start time|
+|orderType|string|order type `ORIGIN`: normal p2p order , `SMALL_COIN`: HotSwap p2p order, `WEB3`: web3 p2p order|
+|appealUserId|string|appealing uid|
+|notifyTokenId|string|buyer revice token|
+|notifyTokenQuantity|string|buyer revise token quantity|
+|cancelReason|string|order cancel reason|
+|usedCoupon|bool|Whether the order uses a coupon `1`: used `2`: not used|
+|couponTokenId|string|coupon tokenId|
+|couponQuantity|string|coupon quantity|
+|targetUserType|string|Counterparty Identity Type `PERSONAL` `ORG`|
+
+### Request Example
+
+```http
+POST /v5/p2p/order/info HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1741832094881
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 40
+
+{
+ "orderId": "1900004704665923584"   
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": {
+        "id": "1900004704665923584",
+        "side": 1,
+        "itemId": "1899659847717838848",
+        "accountId": "1448940",
+        "userId": "1448939",
+        "nickName": "Saaaul",
+        "makerUserId": "290118",
+        "targetAccountId": "290120",
+        "targetUserId": "290118",
+        "targetNickName": "test",
+        "targetFirstName": "",
+        "targetSecondName": "",
+        "targetUserAuthStatus": 2,
+        "targetConnectInformation": "",
+        "payerRealName": "",
+        "sellerRealName": "TEST WOOD",
+        "buyerRealName": "1111 ",
+        "tokenId": "USDT",
+        "tokenName": "USDT",
+        "currencyId": "EUR",
+        "price": "0.920",
+        "quantity": "50.0000",
+        "amount": "46.000",
+        "payCode": "826102",
+        "paymentType": 0,
+        "transferDate": "0",
+        "status": 10,
+        "createDate": "1741831397000",
+        "paymentTermList": [
+            {
+                "id": "-1",
+                "realName": "",
+                "paymentType": 377,
+                "bankName": "",
+                "branchName": "",
+                "accountNo": "",
+                "qrcode": "",
+                "visible": 0,
+                "payMessage": "",
+                "firstName": "",
+                "lastName": "",
+                "secondLastName": "",
+                "clabe": "",
+                "debitCardNumber": "",
+                "mobile": "",
+                "businessName": "",
+                "concept": "",
+                "online": "1",
+                "paymentExt1": "",
+                "paymentExt2": "",
+                "paymentExt3": "",
+                "paymentExt4": "",
+                "paymentExt5": "",
+                "paymentExt6": "",
+                "paymentTemplateVersion": 1,
+                "paymentConfigVo": {
+                    "paymentType": "377",
+                    "checkType": 0,
+                    "sort": 0,
+                    "paymentName": "Balance",
+                    "addTips": "",
+                    "itemTips": "",
+                    "online": 0,
+                    "items": []
+                },
+                "ruPaymentPrompt": false
+            }
+        ],
+        "remark": "test",
+        "transferLastSeconds": "201",
+        "recentOrderNum": 4,
+        "recentExecuteRate": 0,
+        "appealLastSeconds": "0",
+        "appealContent": "",
+        "appealType": 0,
+        "appealNickName": "",
+        "canAppeal": "Y",
+        "totalAppealTimes": "4",
+        "appealedTimes": "0",
+        "paymentTermResult": {
+            "id": "0",
+            "realName": "",
+            "paymentType": 0,
+            "bankName": "",
+            "branchName": "",
+            "accountNo": "",
+            "qrcode": "",
+            "visible": 0,
+            "payMessage": "",
+            "firstName": "",
+            "lastName": "",
+            "secondLastName": "",
+            "clabe": "",
+            "debitCardNumber": "",
+            "mobile": "",
+            "businessName": "",
+            "concept": "",
+            "online": "",
+            "paymentExt1": "",
+            "paymentExt2": "",
+            "paymentExt3": "",
+            "paymentExt4": "",
+            "paymentExt5": "",
+            "paymentExt6": "",
+            "paymentTemplateVersion": 0,
+            "paymentConfigVo": {
+                "paymentType": "0",
+                "checkType": 0,
+                "sort": 0,
+                "paymentName": "",
+                "addTips": "",
+                "itemTips": "",
+                "online": 0,
+                "items": []
+            },
+            "ruPaymentPrompt": false
+        },
+        "orderFinishMinute": 600000,
+        "confirmedPayTerm": {
+            "id": "-1",
+            "realName": "",
+            "paymentType": 377,
+            "bankName": "",
+            "branchName": "",
+            "accountNo": "",
+            "qrcode": "",
+            "visible": 0,
+            "payMessage": "",
+            "firstName": "",
+            "lastName": "",
+            "secondLastName": "",
+            "clabe": "",
+            "debitCardNumber": "",
+            "mobile": "",
+            "businessName": "",
+            "concept": "",
+            "online": "1",
+            "paymentExt1": "",
+            "paymentExt2": "",
+            "paymentExt3": "",
+            "paymentExt4": "",
+            "paymentExt5": "",
+            "paymentExt6": "",
+            "paymentTemplateVersion": 1,
+            "paymentConfigVo": {
+                "paymentType": "377",
+                "checkType": 0,
+                "sort": 0,
+                "paymentName": "Balance",
+                "addTips": "",
+                "itemTips": "",
+                "online": 0,
+                "items": []
+            },
+            "ruPaymentPrompt": false
+        },
+        "makerFee": "",
+        "takerFee": "",
+        "fee": "0",
+        "showContact": false,
+        "contactInfo": [],
+        "tokenBalance": "74241.511206107074308660",
+        "fiatBalance": "4657.780000000000000000",
+        "unreadMsgCount": "0",
+        "updateDate": "1741831397000",
+        "extension": {
+            "isDelayWithdraw": false,
+            "delayTime": "0",
+            "startTime": ""
+        },
+        "selfUnreadMsgCount": "0",
+        "judgeType": "",
+        "canReport": true,
+        "canReportDisagree": false,
+        "canReportType": [
+            "REPORT_SCAM"
+        ],
+        "canReportDisagreeType": [],
+        "appraiseStatus": "CANNOT_APPRAISE",
+        "appraiseInfo": {
+            "anonymous": "",
+            "appraiseContent": "",
+            "appraiseId": "",
+            "appraiseType": "",
+            "modifyFlag": "",
+            "updateDate": ""
+        },
+        "canReportDisagreeTypes": [],
+        "canReportTypes": [
+            "REPORT_SCAM"
+        ],
+        "orderType": "ORIGIN",
+        "middleToken": "USDT",
+        "beforePrice": "",
+        "beforeQuantity": "",
+        "beforeToken": "",
+        "alternative": "",
+        "appealUserId": "0",
+        "notifyTokenId": "USDT",
+        "notifyTokenQuantity": "50.0000",
+        "cancelResponsible": "",
+        "chainType": "",
+        "chainAddress": "",
+        "tradeHashCode": "",
+        "estimatedGasFee": "0.0000",
+        "gasFeeTokenId": "",
+        "tradingFeeTokenId": "",
+        "onChainInfo": "",
+        "transactionId": "0",
+        "displayRefund": "0",
+        "chainWithdrawLastSeconds": "201",
+        "chainTransferLastSeconds": "201",
+        "orderSource": "P2P",
+        "cancelReason": "",
+        "sellerCancelExamineRemainTime": "",
+        "needSellerExamineCancel": false,
+        "couponCurrencyAmount": "0",
+        "totalCurrencyAmount": "46",
+        "usedCoupon": false,
+        "couponTokenId": "",
+        "couponQuantity": "0",
+        "completedOrderAppealCount": 0,
+        "totalCompletedOrderAppealCount": 10,
+        "realOrderStatus": 10,
+        "appealVersion": 0,
+        "judgeInfo": {
+            "autoJudgeUnlockTime": "0",
+            "dissentResult": "",
+            "preDissent": "",
+            "postDissent": ""
+        },
+        "helpType": "NEVER",
+        "appealFlowStatus": "",
+        "appealSubStatus": "",
+        "bulkOrderFlag": false,
+        "targetUserType": "ORG",
+        "targetUserDisplays": [
+            "DISPLAY_MAKER_BULK"
+        ],
+        "appealProcessChangeFlag": false,
+        "appealNegotiationNode": 0
+    },
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741832095.851844"
+}
+```

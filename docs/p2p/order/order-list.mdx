@@ -1,0 +1,120 @@
+---
+title: Get All Orders
+sidebar_label: Get All Orders
+sidebar_position: 1
+---
+
+### HTTP Request
+POST `/v5/p2p/order/simplifyList`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|status|false|integer|order status <li><code>5</code>: waiting for chain (only web3)</li><li><code>10</code>: waiting for buy pay</li><li><code>20</code>: waiting for seller release</li><li><code>30</code>: Appealing</li><li><code>40</code>: cancel order</li><li><code>50</code>: finish order</li><li><code>60</code>: paying (only pay online)</li><li><code>70</code>: pay fail (only pay online)</li><li><code>80</code>:exception canceled ( the coin covert to other coin,only hotswap)</li><li><code>90</code>: waiting buyer select tokenId</li><li><code>100</code>: objectioning</li><li><code>110</code>: Waiting for the user to raise an objection</li>|
+|beginTime|false|string|begin time|
+|endTime|false|string|end time|
+|tokenId|false|string|token id|
+|side|false|array&lt;integer&gt;|side|
+|page|**true**|integer|Page number to query|
+|size|**true**|integer|Rows to query per page|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|count |integer |Total order number |
+|items |Object ||
+|> id|string|order Id|
+|> side|integer|Order trade type. `0`: Buy, `1`: Sell|
+|> tokenId|string|token ID|
+|> orderType|string|order type `ORIGIN`: normal p2p order , `SMALL_COIN`: HotSwap p2p order, `WEB3`: web3 p2p order|
+|> amount|string|seller/buyer trade amount|
+|> currencyId|string|currency ID|
+|> price|string|order price|
+|> fee|string|Tading fee|
+|> targetNickName|string|Counterparty nickname|
+|> targetUserId|string|Counterparty uid|
+|> status|integer|order status `5`: waiting for chain (only web3) `10`: waiting for buy pay `20`: waiting for seller release `30`: Appealing `40`: cancel order `50`: finish order `60`: paying (only pay online) `70`: pay fail (only pay online) `80`: exception canceled ( the coin covert to other coin，only hotswap) `90`: waiting buyer select tokenId 100:objectioning 1`10`: Waiting for the user to raise an objection|
+|> createDate|string|order create time|
+|> transferLastSeconds|string|The buyer's remaining transfer time|
+|> userId|string|The uid of the current query user|
+|> sellerRealName|string|seller realname|
+|> buyerRealName|string|buyer realname|
+|> Extension|Object|Order extension information|
+|>> isDelayWithdraw|boolean|Delayed withdrawal `true` : delay|
+|>> delayTime|string|delay time|
+|>> startTime|string|delay start time|
+
+### Request Example
+
+```http
+POST /v5/p2p/order/simplifyList HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1741774253544
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 135
+
+{
+    "status": null,
+    "beginTime": null,
+    "endTime": null,
+    "tokenId": null,
+    "side": null,
+    "page": 1,
+    "size": 1
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": {
+        "count": 3,
+        "items": [
+            {
+                "id": "1899742990873296896",
+                "side": 1,
+                "tokenId": "USDT",
+                "orderType": "ORIGIN",
+                "amount": "64.400",
+                "currencyId": "EUR",
+                "price": "0.920",
+                "notifyTokenQuantity": "70.0000",
+                "notifyTokenId": "USDT",
+                "fee": "0",
+                "targetNickName": "test",
+                "targetUserId": "290118",
+                "status": 70,
+                "selfUnreadMsgCount": "0",
+                "createDate": "1741769000000",
+                "transferLastSeconds": "0",
+                "appealLastSeconds": "0",
+                "userId": "1448939",
+                "sellerRealName": "TEST",
+                "buyerRealName": "1111 ",
+                "judgeInfo": {
+                    "autoJudgeUnlockTime": "0",
+                    "dissentResult": "",
+                    "preDissent": "",
+                    "postDissent": ""
+                },
+                "unreadMsgCount": "0",
+                "extension": {
+                    "isDelayWithdraw": false,
+                    "delayTime": "0",
+                    "startTime": ""
+                },
+                "bulkOrderFlag": false
+            }
+        ]
+    },
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741774253.840364"
+}
+```

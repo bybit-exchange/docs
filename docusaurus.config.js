@@ -188,6 +188,12 @@ const config = {
           },
           {
             type: 'doc',
+            docId: 'p2p/guide',
+            position: 'left',
+            label: 'P2P Trading',
+          },
+          {
+            type: 'doc',
             docId: 'bybit-pay/guide',
             position: 'left',
             label: 'Bybit Pay',

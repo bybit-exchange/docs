@@ -1,0 +1,111 @@
+---
+title: Post New Ad
+sidebar_label: Post New Ad
+sidebar_position: 2
+---
+### HTTP Request
+POST `/v5/p2p/item/create`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenId|**true** |string |token id. e.g. USDT,ETH,BTC |
+|currencyId|**true** |string |currency id e.g HKD,USD,EUR |
+|side|**true** |string |ad for buying token or for selling token. `0`: buy; `1`: sell|
+|priceType|**true** |string |Ad pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
+|premium|**true** |string |Floating ratio with current exchange rate |
+|price|**true** |string |ads price |
+|minAmount|**true** |string |Min transaction amount |
+|maxAmount|**true** |string |Max transaction amount |
+|remark|**true** |string |Transaction Description(max=900) |
+|tradingPreferenceSet|**true** |Object |Trading Preferences |
+|> hasUnPostAd |false |integer | Whether the counterparty must not have posted any advertisements. `0`: not needed; `1`: need|
+|> isKyc |false |integer | Is it necessary for the counterparty to complete identity authentication? `0`: not needed; `1`: need|
+|> isEmail |false |integer | Is it necessary for the counterparty to bind an email address? `0`: not needed; `1`: need|
+|> isMobile |false |integer | Is it necessary for the counterparty to bind an telphone? `0`: not needed`1`: need|
+|> hasRegisterTime |false |integer | Is the registration time required to be no less than {} days? `0`: not needed; `1`: need|
+|> registerTimeThreshold |false |integer | Registration time threshold(Unit: Day)|
+|> orderFinishNumberDay30 |false |integer | Limit on number of completed orders in the last 30 days |
+|> completeRateDay30 |false |string | Completion rate limit in the last 30 days |
+|> nationalLimit |false |string | Restricted KYC Countries;IOS 3 CODE |
+|> hasOrderFinishNumberDay30 |false |integer | Is it necessary to have no less than {} orders in the last 30 days? `0`: not needed; `1`: need|
+|> hasCompleteRateDay30 |false |integer | Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`: not needed; `1`: need|
+|> hasNationalLimit |false |integer | Are country restrictions required? `0`: not needed; `1`: need|
+|paymentIds|**true** |array[string] |Payment method type id(len<=5) |
+|quantity|**true** |string |Number of ads |
+|price|**true** |string |ads price |
+|paymentPeriod|**true** |string |payment duration |
+|itemType|**true** |string |`ORIGIN`: original P2P advertisement, generally refers to non-bulk advertisement; <br/>`BULK`: bulk advertisement|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|itemId |string |item Id|
+|securityRiskToken |string |security risk token |
+|riskTokenType |string |risk token type|
+|riskVersion |string |risk version |
+|needSecurityRisk |boolean |Whether security risk is necessary |
+
+### Request Example
+
+```http
+POST /v5/p2p/item/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675866354698
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "USDT",
+    "currencyId":"EUR",
+    "side": "0",
+    "priceType":"0",
+    "premium":"",
+    "price":"0.92",
+    "minAmount":"20",
+    "maxAmount":"45000",
+    "paymentIds":["7110"],
+    "remark":"test",
+    "tradingPreferenceSet":{
+        "isKyc": "1",
+        "hasCompleteRateDay30": "1",
+        "completeRateDay30": "95", 
+        "hasOrderFinishNumberDay30": "1",
+        "hasRegisterTime":"0",
+        "hasUnPostAd":"0",
+        "isEmail":"0",
+        "isMobile":"0",
+        "nationalLimit":"",
+        "orderFinishNumberDay30":"60",
+        "registerTimeThreshold": "0",
+        "verificationOrderLabels":[],
+        "verificationOrderSwitch": false
+    },
+    "quantity":"20000",
+    "paymentPeriod":"15",
+    "itemType":"ORIGIN"
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": {
+        "itemId": "1899659847717838848",
+        "securityRiskToken": "",
+        "riskTokenType": "",
+        "riskVersion": "",
+        "needSecurityRisk": false
+    },
+    "ext_code": "",
+    "ext_info": {},
+    "ext_map": {},
+    "time_now": "1741749176.939208"
+}
+```

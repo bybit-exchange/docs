@@ -1,0 +1,50 @@
+---
+title: Send Chat Message
+sidebar_label: Send Chat Message
+sidebar_position: 6
+---
+
+### HTTP Request
+POST `/v5/p2p/order/message/send`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|message|<b>true</b> |string |chat info ;text:msg;image/pdf/video: url |
+|contentType|<b>true</b> |string |chat message. `text`: str; `image`: pic; `pdf`: pdf; `video`: video|
+|orderId|<b>true</b> |string |order id |
+|msgUuid|false |string |Client message UUID |
+|fileName|false |string |image/pdf/video filename |
+
+### Response Parameters
+None
+
+### Request Example
+
+```http
+POST /v5/p2p/item/online HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675866354698
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "message":"hi, test",
+    "contentType":"text",
+    "orderId":"1898976123321221120"
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": null,
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741763625.212991"
+}
+```

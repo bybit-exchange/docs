@@ -1,0 +1,445 @@
+---
+title: Get Market Online Ads list
+sidebar_label: Get Market Online Ads list
+sidebar_position: 1
+---
+
+### HTTP Request
+POST `/v5/p2p/item/online`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenId|**true** |string |Token ID. e.g. USDT, ETH, BTC |
+|currencyId|**true** |string |Currency ID e.g HKD, USD, EUR |
+|side|**true** |string |`0`: buy; `1`: sell |
+|page|false |string |Page number. Default value is 1 |
+|size|false |string |Page size. Default value is 10 |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|count |int |Total count |
+|items |array&lt;object&gt; | |
+|> id |string |Ad id|
+|> nickName |string |Nickname of ad maker|
+|> tokenId |string |Token ID|
+|> currencyId |string |Currency ID|
+|> side |string |`0`: buy; `1`: sell |
+|> price |string |Ad price|
+|> lastQuantity |string |can trade token quantity|
+|> minAmount |string |Min transaction amount|
+|> maxAmount |string |Max transaction amount|
+|> payments |array[string] |Payment method type id|
+|> recentOrderNum |int |maker recent order num|
+|> recentExecuteRate |int |maker recent order execute rate|
+|> isOnline |boolean |maker online|
+|> authTag |array[string] |user tag ; VA, BA|
+|> paymentPeriod |int |Payment time|
+|> accountId |int |Account id|
+|> userId |int |User id|
+|> priceType |int |Ad pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
+|> premium |string |premium |
+|> quantity |string |Quantity |
+|> frozenQuantity |string |Frozen quantity |
+|> executedQuantity |string |Executed quantity |
+|> remark |string |remark |
+|> status |int |Ads Status. `10`: online; `20`: offline; `30`: completed|
+|> createDate |string |created time |
+|> orderNum |string |Order number |
+|> finishNum |string |Finish number |
+|> recentOrderNum |string |Recent order number |
+|> recentExecuteRate |string |Recent execute rate |
+|> fee |string |Fee |
+|> isOnline |boolean |whether is online |
+|> lastLogoutTime |string |last logout time |
+|> blocked |string |whether is blocked |
+|> makerContact |boolean |whether it is a maker contact |
+|> symbolInfo |Object |symbol info |
+|>> id |string |symbol id |
+|>> exchangeId |string |exchange id |
+|>> orgId |string |org Id |
+|>> tokenId |string |token id. e.g. USDT,ETH,BTC |
+|>> currencyId |string |currency id e.g HKD,USD,EUR |
+|>> status |string |symbol status |
+|>> lowerLimitAlarm |int |lower Limit Alarm |
+|>> upperLimitAlarm |int |upper Limit Alarm |
+|>> itemDownRange |string |item down range |
+|>> itemUpRange |string |item up range |
+|>> currencyMinQuote |string |currency min quote |
+|>> currencyMaxQuote |string |currency max quote |
+|>> currencyLowerMaxQuote |string |currency lower max quote |
+|>> tokenMinQuote |string |token min quote |
+|>> tokenMaxQuote |string |token max quote |
+|>> kycCurrencyLimit |string |kyc currency limit |
+|>> itemSideLimit |string |item side limit |
+|>> buyFeeRate |string |buy fee rate |
+|>> sellFeeRate |string |sell fee rate |
+|>> orderAutoCancelMinute |int |order auto cancel minute |
+|>> orderFinishMinute |int |order finish minute |
+|>> tradeSide |int |trade side |
+|>> currency |Object |currency info |
+|>>> id |string |currency Id |
+|>>> exchangeId |string |exchange id |
+|>>> orgId |string |org Id |
+|>>> currencyId |string |currency id |
+|>>> scale |int |scale |
+|>> token |Object |token info |
+|>>> id |string |token Id |
+|>>> exchangeId |string |exchange id |
+|>>> orgId |string |org Id |
+|>>> tokenId |string |token id |
+|>>> scale |int |scale |
+|>>> sequence |int |sequence |
+|>> buyAd |int |sequence |
+|>> sellAd |int |sequence |
+|> tradingPreferenceSet |Object | trading preference |
+|>> hasUnPostAd |int |Whether the counterparty must not have posted any advertisements. `0`:not needed, `1`:need |
+|>> isKyc |int |Is it necessary for the counterparty to complete identity authentication? `0`:not needed, `1`:need |
+|>> isEmail |int |Is it necessary for the counterparty to bind an email address? `0`:not needed, `1`:need |
+|>> isMobile |int |Is it necessary for the counterparty to bind an telphone? `0`:not needed, `1`:need |
+|>> hasRegisterTime |int |Is the registration time required to be no less than {} days? 0`0`:not needed, `1`:need |
+|>> registerTimeThreshold |int |Registration time threshold(Unit: Day)|
+|>> orderFinishNumberDay30 |int |Limit on number of completed orders in the last 30 days |
+|>> completeRateDay30 |int |Completion rate limit in the last 30 days |
+|>> nationalLimit |int |Restricted KYC Countries;IOS 3 CODE |
+|>> hasOrderFinishNumberDay30 |int |Is it necessary to have no less than {} orders in the last 30 days? `0`:not needed, `1`:need |
+|>> hasCompleteRateDay30 |int |Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`:not needed, `1`:need |
+|>> hasNationalLimit |int |Are country restrictions required? `0`:not needed, `1`:need |
+|> version |int |version |
+|> authStatus |int |auth Status |
+|> recommend |boolean |whether is recommended |
+|> recommendTag |string |recommend Tag |
+|> userType |string |user Type |
+|> itemType |string |item Type |
+
+### Request Example
+
+```http
+POST /v5/p2p/item/online HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1675866354698
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+{
+    "tokenId":"USDT",
+    "currencyId":"EUR",
+    "side":"0"
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": {
+        "count": 3,
+        "items": [
+            {
+                "id": "1899658238346616832",
+                "accountId": "290120",
+                "userId": "290118",
+                "nickName": "cjmtest",
+                "tokenId": "USDT",
+                "tokenName": "",
+                "currencyId": "EUR",
+                "side": 0,
+                "priceType": 0,
+                "price": "0.93",
+                "premium": "0",
+                "lastQuantity": "10000",
+                "quantity": "10000",
+                "frozenQuantity": "0",
+                "executedQuantity": "0",
+                "minAmount": "200",
+                "maxAmount": "9300",
+                "remark": "1111121212",
+                "status": 10,
+                "createDate": "1741748793000",
+                "payments": [
+                    "14"
+                ],
+                "orderNum": 0,
+                "finishNum": 0,
+                "recentOrderNum": 0,
+                "recentExecuteRate": 0,
+                "fee": "",
+                "isOnline": true,
+                "lastLogoutTime": "1741749194",
+                "blocked": "N",
+                "makerContact": false,
+                "symbolInfo": {
+                    "id": "13",
+                    "exchangeId": "301",
+                    "orgId": "9001",
+                    "tokenId": "USDT",
+                    "currencyId": "EUR",
+                    "status": 1,
+                    "lowerLimitAlarm": 90,
+                    "upperLimitAlarm": 110,
+                    "itemDownRange": "70",
+                    "itemUpRange": "130",
+                    "currencyMinQuote": "2",
+                    "currencyMaxQuote": "46500",
+                    "currencyLowerMaxQuote": "2",
+                    "tokenMinQuote": "1",
+                    "tokenMaxQuote": "50000",
+                    "kycCurrencyLimit": "900",
+                    "itemSideLimit": 3,
+                    "buyFeeRate": "0",
+                    "sellFeeRate": "0",
+                    "orderAutoCancelMinute": 15,
+                    "orderFinishMinute": 10,
+                    "tradeSide": 9,
+                    "currency": {
+                        "id": "14",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "currencyId": "EUR",
+                        "scale": 3
+                    },
+                    "token": {
+                        "id": "1",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "tokenId": "USDT",
+                        "scale": 4,
+                        "sequence": 1
+                    },
+                    "buyAd": null,
+                    "sellAd": null
+                },
+                "tradingPreferenceSet": {
+                    "hasUnPostAd": 0,
+                    "isKyc": 1,
+                    "isEmail": 0,
+                    "isMobile": 0,
+                    "hasRegisterTime": 0,
+                    "registerTimeThreshold": 0,
+                    "orderFinishNumberDay30": 0,
+                    "completeRateDay30": "0",
+                    "nationalLimit": "",
+                    "hasOrderFinishNumberDay30": 0,
+                    "hasCompleteRateDay30": 0,
+                    "hasNationalLimit": 0
+                },
+                "version": 0,
+                "authStatus": 1,
+                "recommend": false,
+                "recommendTag": "",
+                "authTag": [
+                    "BA"
+                ],
+                "userType": "ORG",
+                "itemType": "ORIGIN",
+                "paymentPeriod": 15
+            },
+            {
+                "id": "1899659847717838848",
+                "accountId": "290120",
+                "userId": "290118",
+                "nickName": "cjmtest",
+                "tokenId": "USDT",
+                "tokenName": "",
+                "currencyId": "EUR",
+                "side": 0,
+                "priceType": 0,
+                "price": "0.92",
+                "premium": "0",
+                "lastQuantity": "20000",
+                "quantity": "20000",
+                "frozenQuantity": "0",
+                "executedQuantity": "0",
+                "minAmount": "20",
+                "maxAmount": "18400",
+                "remark": "test",
+                "status": 10,
+                "createDate": "1741749177000",
+                "payments": [
+                    "377"
+                ],
+                "orderNum": 0,
+                "finishNum": 0,
+                "recentOrderNum": 0,
+                "recentExecuteRate": 0,
+                "fee": "",
+                "isOnline": true,
+                "lastLogoutTime": "1741749194",
+                "blocked": "N",
+                "makerContact": false,
+                "symbolInfo": {
+                    "id": "13",
+                    "exchangeId": "301",
+                    "orgId": "9001",
+                    "tokenId": "USDT",
+                    "currencyId": "EUR",
+                    "status": 1,
+                    "lowerLimitAlarm": 90,
+                    "upperLimitAlarm": 110,
+                    "itemDownRange": "70",
+                    "itemUpRange": "130",
+                    "currencyMinQuote": "2",
+                    "currencyMaxQuote": "46500",
+                    "currencyLowerMaxQuote": "2",
+                    "tokenMinQuote": "1",
+                    "tokenMaxQuote": "50000",
+                    "kycCurrencyLimit": "900",
+                    "itemSideLimit": 3,
+                    "buyFeeRate": "0",
+                    "sellFeeRate": "0",
+                    "orderAutoCancelMinute": 15,
+                    "orderFinishMinute": 10,
+                    "tradeSide": 9,
+                    "currency": {
+                        "id": "14",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "currencyId": "EUR",
+                        "scale": 3
+                    },
+                    "token": {
+                        "id": "1",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "tokenId": "USDT",
+                        "scale": 4,
+                        "sequence": 1
+                    },
+                    "buyAd": null,
+                    "sellAd": null
+                },
+                "tradingPreferenceSet": {
+                    "hasUnPostAd": 0,
+                    "isKyc": 1,
+                    "isEmail": 0,
+                    "isMobile": 0,
+                    "hasRegisterTime": 0,
+                    "registerTimeThreshold": 0,
+                    "orderFinishNumberDay30": 60,
+                    "completeRateDay30": "95",
+                    "nationalLimit": "",
+                    "hasOrderFinishNumberDay30": 1,
+                    "hasCompleteRateDay30": 1,
+                    "hasNationalLimit": 0
+                },
+                "version": 0,
+                "authStatus": 1,
+                "recommend": false,
+                "recommendTag": "",
+                "authTag": [
+                    "BA"
+                ],
+                "userType": "ORG",
+                "itemType": "ORIGIN",
+                "paymentPeriod": 15
+            },
+            {
+                "id": "1898988222063644672",
+                "accountId": "1448940",
+                "userId": "1448939",
+                "nickName": "Saaaul",
+                "tokenId": "USDT",
+                "tokenName": "",
+                "currencyId": "EUR",
+                "side": 0,
+                "priceType": 0,
+                "price": "0.91",
+                "premium": "0",
+                "lastQuantity": "5000",
+                "quantity": "5000",
+                "frozenQuantity": "0",
+                "executedQuantity": "0",
+                "minAmount": "10",
+                "maxAmount": "4550",
+                "remark": "1. 付款賬號名稱應和 Bybit 賬號名稱一致。\n2. 請確保轉賬留言中不要出現 USDT 等幣種名稱,否則轉賬將會失敗。",
+                "status": 10,
+                "createDate": "1741589049000",
+                "payments": [
+                    "377"
+                ],
+                "orderNum": 0,
+                "finishNum": 0,
+                "recentOrderNum": 0,
+                "recentExecuteRate": 0,
+                "fee": "",
+                "isOnline": true,
+                "lastLogoutTime": "1741751952",
+                "blocked": "N",
+                "makerContact": false,
+                "symbolInfo": {
+                    "id": "13",
+                    "exchangeId": "301",
+                    "orgId": "9001",
+                    "tokenId": "USDT",
+                    "currencyId": "EUR",
+                    "status": 1,
+                    "lowerLimitAlarm": 90,
+                    "upperLimitAlarm": 110,
+                    "itemDownRange": "70",
+                    "itemUpRange": "130",
+                    "currencyMinQuote": "2",
+                    "currencyMaxQuote": "46500",
+                    "currencyLowerMaxQuote": "2",
+                    "tokenMinQuote": "1",
+                    "tokenMaxQuote": "50000",
+                    "kycCurrencyLimit": "900",
+                    "itemSideLimit": 3,
+                    "buyFeeRate": "0",
+                    "sellFeeRate": "0",
+                    "orderAutoCancelMinute": 15,
+                    "orderFinishMinute": 10,
+                    "tradeSide": 9,
+                    "currency": {
+                        "id": "14",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "currencyId": "EUR",
+                        "scale": 3
+                    },
+                    "token": {
+                        "id": "1",
+                        "exchangeId": "0",
+                        "orgId": "9001",
+                        "tokenId": "USDT",
+                        "scale": 4,
+                        "sequence": 1
+                    },
+                    "buyAd": null,
+                    "sellAd": null
+                },
+                "tradingPreferenceSet": {
+                    "hasUnPostAd": 1,
+                    "isKyc": 1,
+                    "isEmail": 1,
+                    "isMobile": 0,
+                    "hasRegisterTime": 1,
+                    "registerTimeThreshold": 15,
+                    "orderFinishNumberDay30": 60,
+                    "completeRateDay30": "95",
+                    "nationalLimit": "",
+                    "hasOrderFinishNumberDay30": 1,
+                    "hasCompleteRateDay30": 1,
+                    "hasNationalLimit": 0
+                },
+                "version": 0,
+                "authStatus": 1,
+                "recommend": false,
+                "recommendTag": "",
+                "authTag": [
+                    "BA"
+                ],
+                "userType": "PERSONAL",
+                "itemType": "ORIGIN",
+                "paymentPeriod": 15
+            }
+        ]
+    },
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741761340.014127"
+}
+```

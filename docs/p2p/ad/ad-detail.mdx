@@ -1,0 +1,224 @@
+---
+title: Get My Ad Detail
+sidebar_label: Get My Ad Detail
+sidebar_position: 6
+---
+
+### HTTP Request
+POST `/v5/p2p/item/personal/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|itemId|*true**|string|ad's id|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id|string|Ads id|
+|accountId|string| Account ID|
+|userId|string|User ID|
+|nickName|string|Nick name|
+|tokenId|string|Token ID|
+|currencyId|string|Currency ID|
+|side|integer|ad for buying token or for selling token. `0`: buy; `1`: sell|
+|priceType|integer|Ad pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
+|price|string|Ad price|
+|premium|string|Floating ratio with current exchange rate|
+|lastQuantity|string|Remaining tradable quantity of ads|
+|quantity|string|Quantity|
+|frozenQuantity|string|Forzen quantity for ongoing transactions|
+|executedQuantity|string|Excecuted qty|
+|minAmount|string|Min transaction amount|
+|maxAmount|string|Max transaction amount|
+|remark|string|Transaction description|
+|status|integer|Ads Status. `10`: online; `20`: offline; `30`: completed|
+|createDate|string|creation time(timestamp)|
+|payments|array&lt;string&gt;|Payment method type id|
+|tradingPerferenceSet|object|Trading Preferences|
+|> hasUnPostAd|integer|Whether the counterparty must not have posted any advertisements. `0`: not needed; `1`: need|
+|> isKyc|integer|Is it necessary for the counterparty to complete identity authentication? `0`: not needed; `1`: need|
+|> isEmail|integer|Is it necessary for the counterparty to bind an email address? `0`: not needed; `1`: need|
+|> isMobile|integer|Is it necessary for the counterparty to bind an telphone? `0`: not needed; `1`: need|
+|> hasRegisterTime|integer|Is the registration time required to be no less than {} days? `0`: not needed; `1`: need|
+|> registerTimeThreshold|integer|Registration time threshold(Unit: Day)|
+|> orderFinishNumberDay30|integer|Limit on number of completed orders in the last 30 days|
+|> completeRateDay30|string|Completion rate limit in the last 30 days|
+|> nationalLimit|string|Restricted KYC Countries;IOS 3 CODE|
+|> hasOrderFinishNumberDay30|integer|Is it necessary to have no less than {} orders in the last 30 days? `0`: not needed; `1`: need|
+|> hasCompleteRateDay30|integer|Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`: not needed; `1`: need|
+|> hasNationalLimit|integer|Are country restrictions required; `0`: not needed; `1`: need|
+|updateDate|string|Update time (timestamp)|
+|feeRate|string|Fee Rate|
+|version|integer|Ad version, a way of posting advertisements that existed in the past, is divided integero two types: pre-freezing funds for posting advertisements and not pre-freezing funds for posting advertisements.<br/>`1`: pre-freezing funds; `2`: not pre-freezing funds|
+|paymentPeriod|integer|payment duration|
+|itemType|string|`ORIGIN`: original P2P advertisement, generally refers to non-bulk advertisement; <br/>`BULK`: bulk advertisement|
+|paymentTerms|array&lt;object&gt;|Payment Methods|
+|> id|string|Payment method id|
+|> paymentType|string|Payment method type|
+
+### Request Example
+
+```http
+POST /v5/p2p/item/info HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1741767097117
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 39
+
+{
+    "itemId": "1898988222063644672"
+}
+```
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "SUCCESS",
+    "result": {
+        "id": "1898988222063644672",
+        "accountId": "1448940",
+        "userId": "1448939",
+        "nickName": "",
+        "tokenId": "USDT",
+        "tokenName": "USDT",
+        "currencyId": "EUR",
+        "side": 0,
+        "priceType": 0,
+        "price": "0.91",
+        "premium": "0",
+        "lastQuantity": "5000",
+        "quantity": "5000",
+        "frozenQuantity": "0",
+        "executedQuantity": "0",
+        "minAmount": "10",
+        "maxAmount": "5000",
+        "remark": "1. 付款賬號名稱應和 Bybit 賬號名稱一致。\n2. 請確保轉賬留言中不要出現 USDT 等幣種名稱，否則轉賬將會失敗。",
+        "status": 10,
+        "createDate": "1741589049000",
+        "payments": [
+            "377"
+        ],
+        "orderNum": 0,
+        "finishNum": 0,
+        "recentOrderNum": 0,
+        "recentExecuteRate": 0,
+        "fee": "",
+        "isOnline": false,
+        "lastLogoutTime": "0",
+        "symbolInfo": {
+            "id": "13",
+            "exchangeId": "301",
+            "orgId": "9001",
+            "tokenId": "USDT",
+            "currencyId": "EUR",
+            "status": 1,
+            "lowerLimitAlarm": 90,
+            "upperLimitAlarm": 110,
+            "itemDownRange": "70",
+            "itemUpRange": "130",
+            "currencyMinQuote": "2",
+            "currencyMaxQuote": "46500",
+            "currencyLowerMaxQuote": "2",
+            "tokenMinQuote": "1",
+            "tokenMaxQuote": "50000",
+            "kycCurrencyLimit": "900",
+            "itemSideLimit": 3,
+            "buyFeeRate": "",
+            "sellFeeRate": "",
+            "orderAutoCancelMinute": 15,
+            "orderFinishMinute": 10,
+            "tradeSide": 9,
+            "currency": {
+                "id": "14",
+                "exchangeId": "0",
+                "orgId": "9001",
+                "currencyId": "EUR",
+                "scale": 3
+            },
+            "token": {
+                "id": "1",
+                "exchangeId": "0",
+                "orgId": "9001",
+                "tokenId": "USDT",
+                "scale": 4,
+                "sequence": 1
+            },
+            "buyAd": {
+                "paymentPeriods": [
+                    15,
+                    30
+                ]
+            },
+            "sellAd": {
+                "paymentPeriods": [
+                    15,
+                    30
+                ]
+            }
+        },
+        "tradingPreferenceSet": {
+            "hasUnPostAd": 1,
+            "isKyc": 1,
+            "isEmail": 1,
+            "isMobile": 0,
+            "hasRegisterTime": 1,
+            "registerTimeThreshold": 15,
+            "orderFinishNumberDay30": 60,
+            "completeRateDay30": "95",
+            "nationalLimit": "",
+            "hasOrderFinishNumberDay30": 1,
+            "hasCompleteRateDay30": 1,
+            "hasNationalLimit": 0
+        },
+        "paymentTerms": [
+            {
+                "id": "-1",
+                "realName": "",
+                "paymentType": 377,
+                "bankName": "",
+                "branchName": "",
+                "accountNo": "",
+                "qrcode": "",
+                "visible": 0,
+                "payMessage": "",
+                "firstName": "",
+                "lastName": "",
+                "secondLastName": "",
+                "clabe": "",
+                "debitCardNumber": "",
+                "mobile": "",
+                "businessName": "",
+                "concept": "",
+                "paymentExt1": "",
+                "paymentExt2": "",
+                "paymentExt3": "",
+                "paymentExt4": "",
+                "paymentExt5": "",
+                "paymentExt6": "",
+                "paymentTemplateVersion": 0,
+                "paymentConfig": {
+                    "paymentType": 377,
+                    "paymentName": "Balance",
+                    "paymentDialect": "payment_field_balance",
+                    "paymentTemplateItem": []
+                },
+                "realNameVerified": false
+            }
+        ],
+        "version": 2,
+        "updateDate": "1741753781000",
+        "feeRate": "0",
+        "paymentPeriod": 15,
+        "itemType": "ORIGIN"
+    },
+    "ext_code": "",
+    "ext_info": {},
+    "time_now": "1741767097.388146"
+}
+```
