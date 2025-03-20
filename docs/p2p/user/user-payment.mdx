@@ -17,9 +17,9 @@ None
 |> id |string |id|
 |> realName |string |user real name|
 |> paymentType |string |payment type|
-|> bankname |string |Corresponding Bank Name|
-|> branch_name |string |Corresponding Branch Name|
-|> account_no |string |Account Number|
+|> bankName |string |Corresponding Bank Name|
+|> branchName |string |Corresponding Branch Name|
+|> accountNo |string |Account Number|
 |> qrcode |string |QR Code Image URL|
 |> online |string |Non-Balance Coin Purchase (0 Offline), Balance Coin Purchase (1 Online)|
 |> visible |int |visible |
@@ -54,20 +54,38 @@ None
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
-POST /v5/p2p/item/online HTTP/1.1
+POST /v5/p2p/user/payment/list HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1675866354698
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-{
-    "tokenId":"USDT",
-    "currencyId":"EUR",
-    "side":"0"
-}
+
+{}
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.get_user_payment_types())
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

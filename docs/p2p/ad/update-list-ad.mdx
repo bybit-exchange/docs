@@ -40,6 +40,9 @@ None
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/item/update HTTP/1.1
 Host: api-testnet.bybit.com
@@ -48,7 +51,6 @@ X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1741769463827
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 394
 
 {
     "priceType": "0",
@@ -63,13 +65,41 @@ Content-Length: 394
         "-1"
     ],
     "tradingPreferenceSet": {},
-    "itemType": "ORIGIN",
-    "subsidyAd": false,
     "actionType": "ACTIVE",
-    "id": "1898988222063644672",
-    "securityRiskToken": ""
+    "id": "1898988222063644672"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.update_ad(
+    id="1898988222063644672",
+    priceType=0,
+    premium="",
+    price=0.914,
+    minAmount=25,
+    maxAmount=5000,
+    remark="",
+    tradingPreferenceSet={},
+    paymentIds=["-1"],
+    actionType="ACTIVE",
+    quantity="1000",
+    paymentPeriod="15"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 
