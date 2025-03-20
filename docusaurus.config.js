@@ -191,14 +191,12 @@ const config = {
             docId: 'p2p/guide',
             position: 'left',
             label: 'P2P Trading',
-            className: 'hide_zh_navbar_item',
           },
           {
             type: 'doc',
             docId: 'bybit-pay/guide',
             position: 'left',
             label: 'Bybit Pay',
-            className: 'hide_zh_navbar_item',
           },
           {
             type: 'doc',
