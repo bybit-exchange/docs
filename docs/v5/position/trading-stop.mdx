@@ -31,20 +31,20 @@ POST `/v5/position/trading-stop`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`</li><li>Classic account: `linear`, `inverse`</li></ul>|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only|
+|tpslMode |**true** |string |TP/SL mode<li>`Full`: entire position TP/SL</li><li>`Partial`: partial position TP/SL</li>|
+|[positionIdx](../enum#positionidx) |true |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 |takeProfit |false |string |Cannot be less than 0, 0 means cancel TP |
 |stopLoss |false |string |Cannot be less than 0, 0 means cancel SL |
 |trailingStop |false |string |Trailing stop by price distance. Cannot be less than 0, 0 means cancel TS |
 |[tpTriggerBy](../enum#triggerby) |false |string |Take profit trigger price type |
 |[slTriggerBy](../enum#triggerby) |false |string |Stop loss trigger price type|
 |activePrice |false |string |Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only** |
-|tpslMode |true |string |TP/SL mode<li>`Full`: entire position TP/SL</li><li>`Partial`: partial position TP/SL</li>|
 |tpSize |false |string |Take profit size<br/>valid for TP/SL partial mode, note: the value of tpSize and slSize must equal |
 |slSize |false |string |Stop loss size<br/>valid for TP/SL partial mode, note: the value of tpSize and slSize must equal |
 |tpLimitPrice |false |string |The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit|
 |slLimitPrice |false |string |The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit|
 |tpOrderType |false |string |The order type when take profit is triggered. `Market`(default), `Limit`<br/>For tpslMode=Full, it only supports tpOrderType="Market"|
 |slOrderType |false |string |The order type when stop loss is triggered. `Market`(default), `Limit`<br/>For tpslMode=Full, it only supports slOrderType="Market"|
-|[positionIdx](../enum#positionidx) |**true** |integer |Used to identify positions in different position modes. <ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li> </ul>|
 
 ### Response Parameters
 None
