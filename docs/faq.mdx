@@ -24,7 +24,7 @@ session = HTTP(
 )
 ```
 ---
-b. When request to api-demo.bybit.com or stream-demo.bybit.com, make sure the api key is created from [Production](https://www.bybit.com) - **demo trading**
+b. When request to api-demo.bybit.com or stream-demo.bybit.com, make sure the api key is created from [Production](https://www.bybit.com) - **while in Demo Trading mode**
 ![prod-demo](/img/prd-demo.png)
 ```python
 # pybit example
@@ -36,7 +36,7 @@ session = HTTP(
 )
 ```
 ---
-c. When request to api-testnet.bybit.com or stream-testnet.bybit.com, make sure the api key is created from [Testnet](https://testnet.bybit.com)
+c. When request to api-testnet.bybit.com or stream-testnet.bybit.com, make sure the api key is created from [Testnet](https://testnet.bybit.com) - **while outside of Demo Trading mode**
 ![test](/img/test.png)
 ```python
 # pybit example
@@ -48,7 +48,7 @@ session = HTTP(
 )
 ```
 ---
-d. **Do not** use Testnet - Demo trading service, it is pointless
+d. **Do not** use Demo Trading on Testnet service, it is not recommended and can lead to unexpected outcomes. It also inherets limitations of both Testnet and Demo Trading.
 ![test-demo](/img/test-demo.png)
 
 ### Why aren't all my orders showing on the website?
@@ -89,8 +89,8 @@ To get testnet funds, just go to master account asset page to request.
 * This frees up your rate limits for other requests and also ensures a level of redundancy against the exchange in case of data delays.
 
 ### What is the difference between turnover and volume?
-* `Turnover`: is in the opposite currency to the quantity's currency
-* `Volume`: is in the same currency as the quantity's currency
+* `Turnover`: is in the opposite currency to the quantity's currency (like USDT in BTCUSDT)
+* `Volume`: is in the same currency as the quantity's currency (like BTC in BTCUSDT)
 
 ### Why is the price returned in the place market order response wrong?
 Market orders are (in the backend) just limit orders submitted at a worse price. This is to reduce the chance of a flash crash or a similar event, where a trader might submit a market order which executes at a significantly worse price than they expected it to. The price returned here is that internal limit order price. This "inaccurate" price is returned because the place order endpoint is asynchronous, meaning the response is returned to you before the order is actually executed.
@@ -177,3 +177,12 @@ GET /v5/asset/withdraw/withdrawable-amount?coin=XXX
 -> If it equals 0, it indicates that all deposit risks have been released.
 -> If it is not 0, it indicates that some assets, equivalent to the displayed USD value, still have unresolved risks.
 ```
+## Why can I not buy tokens/open positions/close positions/etc. on Testnet? Why do I encounter `buy/sell: [1900000000000,44543000000] invalid`-sort of errors? Why are my market orders failing?
+
+On cryptoexchanges, liquidity is required for trades to occur. For any purchase you want to conclude, there should be a corresponding seller, and vice versa.
+Market orders internally are IOC limit orders submitted at a much worse price. That internal price is defined as slippage limit.
+Thus, if there are no opposite-sided orders in range `[currentPrice; slippageLimitPrice]` to fulfill your request, then your order placement will fail with an aforementioned error message.
+Additionally, if there is insufficient liquidity in the range, your market order can be partially filled and then cancelled.
+
+There is no guaranteed workaround. You can use GTC (Good Till Cancelled) **limit** orders to mitigate the risk of your order getting cancelled.
+Alternatively, you can use a more liquid environment, like **Demo Trading on Production**
