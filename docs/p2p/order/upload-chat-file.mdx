@@ -14,19 +14,64 @@ POST `/v5/p2p/oss/upload_file`
 
 
 ### Response Parameters
-None
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|url |string |File URL |
+|type |string |File type |
 
 ### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/p2p/oss/upload_file HTTP/1.1
+Host: api-testnet.bybit.com
+Content-Type: multipart/form-data; boundary=boundary-for-file
+X-BAPI-API-KEY: XXXXX
+X-BAPI-SIGN: XXXXX
+X-BAPI-TIMESTAMP: 1742311654006
+X-BAPI-RECV-WINDOW: 5000
+
+--boundary-for-file
+Content-Disposition: form-data; name="upload_file"; filename="grub.png"
+Content-Type: image/png
+
+<binary contents>
+--boundary-for-file--
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.upload_chat_file(
+    upload_file="F:/grub.png"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 
 ```json
 {
-    "ret_code": 0,
-    "ret_msg": "SUCCESS",
-    "result": null,
-    "ext_code": "",
-    "ext_info": {},
-    "time_now": "1741763625.212991"
+  "result": {
+    "uploadId": null,
+    "type": "IMAGE",
+    "url": "/fiat/p2p/oss/showObj/otc/9001/100571889JXxfevzu0QqH93PeleC7F4y89zX2U9Qu-lq5Gt3JJxg.png?e=1742570854&token=HtEBxTu3r4o_eUyf_NTQ-3-S00IDrlT_pP8MhvOqjzI="
+  },
+  "token": null,
+  "ret_code": 0,
+  "ret_msg": "成功"
 }
 ```

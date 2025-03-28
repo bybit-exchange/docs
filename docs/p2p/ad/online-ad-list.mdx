@@ -115,6 +115,9 @@ POST `/v5/p2p/item/online`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/item/online HTTP/1.1
 Host: api-testnet.bybit.com
@@ -123,12 +126,33 @@ X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1675866354698
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+
 {
     "tokenId":"USDT",
     "currencyId":"EUR",
     "side":"0"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+print(api.get_online_ads(
+    tokenId="USDT",
+    currencyId="EUR",
+    side="0"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

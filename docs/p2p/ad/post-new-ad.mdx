@@ -49,6 +49,9 @@ POST `/v5/p2p/item/create`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/item/create HTTP/1.1
 Host: api-testnet.bybit.com
@@ -72,7 +75,7 @@ Content-Type: application/json
     "tradingPreferenceSet":{
         "isKyc": "1",
         "hasCompleteRateDay30": "1",
-        "completeRateDay30": "95", 
+        "completeRateDay30": "95",
         "hasOrderFinishNumberDay30": "1",
         "hasRegisterTime":"0",
         "hasUnPostAd":"0",
@@ -89,6 +92,49 @@ Content-Type: application/json
     "itemType":"ORIGIN"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+print(api.post_new_ad(
+    tokenId="USDT",
+    currencyId="EUR",
+    side="0",
+    priceType=0,
+    premium="",
+    price=0.92,
+    minAmount=20,
+    maxAmount=45000,
+    remark="test",
+    tradingPreferenceSet={
+            "hasUnPostAd": 0,
+            "isKyc": 1,
+            "isEmail": 0,
+            "isMobile": 0,
+            "hasRegisterTime": 0,
+            "registerTimeThreshold": 0,
+            "orderFinishNumberDay30": 60,
+            "completeRateDay30": 95,
+            "nationalLimit": "",
+            "hasOrderFinishNumberDay30": 1,
+            "hasCompleteRateDay30": 1
+        },
+    paymentIds=["7110"],
+    quantity="20000",
+    paymentPeriod="15",
+    itemType="ORIGIN"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

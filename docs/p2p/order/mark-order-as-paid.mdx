@@ -21,6 +21,9 @@ None
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/order/pay HTTP/1.1
 Host: api-testnet.bybit.com
@@ -35,6 +38,28 @@ X-BAPI-RECV-WINDOW: 5000
     "paymentId":"7110"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.mark_as_paid(
+    orderId="1899736339155943424",
+    paymentType="14",
+    paymentId="7110"
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 
