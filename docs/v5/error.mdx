@@ -26,6 +26,7 @@ sidebar_label: Error Codes
 |Code |Description |
 |:----:|:-------------------------------|
 | 0 |OK |
+| -1 |request expired: o@0, now[] diff[]|
 | 429 |The trading service is experiencing a high server load. Please retry if you encounter this issue.|
 | -2015 |(Spot) Your api key has expired |
 | 33004 |(Derivatives) Your api key has expired |
@@ -57,11 +58,11 @@ sidebar_label: Error Codes
 | 110001 |Order does not exist |
 | 110003 |Order price exceeds the <a href="https://www.bybithelp.com/en-US/s/article/Contract-Price-Limits">allowable range</a>. |
 | 110004 |Wallet balance is insufficient |
-| 110005 |position status |
+| 110005 |position status error|
 | 110006 |The assets are estimated to be unable to cover the position margin |
 | 110007 |Available balance is insufficient |
 | 110008 |The order has been completed or cancelled. |
-| 110009 |The number of stop orders exceeds the maximum allowable limit. You can find references in our API doc. |
+| 110009 |The number of stop orders exceeds the maximum allowable limit|
 | 110010 |The order has been cancelled |
 | 110011 |Liquidation will be triggered immediately by this adjustment |
 | 110012 |Insufficient available balance. |
@@ -126,8 +127,8 @@ sidebar_label: Error Codes
 | 110071 |Sorry, we're revamping the Unified Margin Account! Currently, new upgrades are not supported. If you have any questions, please contact our 24/7 customer support. |
 | 110072 |OrderLinkedID is duplicate|
 | 110073 |Set margin mode failed|
-| 110075 |RiskId not modified|
-| ~~110075~~ 182021 |Cannot enable spot margin while in isolated margin mode. Please switch to cross margin mode or portfolio margin mode to trade spot with margin.|
+| 110074 |This contract is not live|
+|~~110075~~ |~~RiskId not modified~~|
 | 110076 |Only isolated mode can set auto-add-margin|
 | 110077 |Pm mode cannot support|
 | 110078 |Added margin more than max can reduce margin|
@@ -157,6 +158,8 @@ sidebar_label: Error Codes
 | 110105 |The LTV for ins Loan has exceeded the limit, and trading inverse contracts is prohibited|
 | 110106 |Restrictions on Ins Loan; inverse contracts are not on the whitelist and are not allowed for trading|
 | 110107 |Restrictions on ins Loan; leverage exceeding the limit for inverse contracts is not allowed.|
+| 110108 |Allowable range: 5 to 2000 tick size|
+| 110109 |Allowable range: 0.05% to 1%|
 | 170346 |Settle coin is not a collateral coin, cannot trade|
 | 181017 |OrderStatus must be final status |
 | 182100 |Compulsory closing of positions, no repayment allowed |
@@ -222,7 +225,7 @@ sidebar_label: Error Codes
 | 170136 |Order quantity lower than the minimum. |
 | 170137 |Order volume decimal too long |
 | 170139 |Order has been filled. |
-| 170140 |Transaction amount lower than the minimum. |
+| 170140 |Order value exceeded lower limit|
 | 170141 |Duplicate clientOrderId |
 | 170142 |Order has been canceled |
 | 170143 |Cannot be found on order book |
@@ -279,6 +282,7 @@ sidebar_label: Error Codes
 | 170313 |The modified contract quantity cannot be less than to the filled quantity|
 | 170341 |Request order quantity exceeds maximum limit|
 | 170344 |Symbol is not supported on Margin Trading|
+| 170348 |Please go to (https://www.bybit-tr.com) to proceed.|
 | 170355 |RPI orders are restricted to approved market makers only |
 | 170709 |OTC loan: The select trading pair is not in the whitelist pair |
 | 170810 |Cannot exceed maximum of 500 conditional, TP/SL and active orders. |
@@ -354,6 +358,7 @@ sidebar_label: Error Codes
 | 176138 |You need to repay all your debts before closing your disabling cross margin account |
 | 176139 |Sorry, you are not eligible to enable cross margin, as you have already enabled OTC lending|
 | 176201 |Account exception. Check if the UID is bound to an institutional loan|
+| 182021 |Cannot enable spot margin while in isolated margin mode. Please switch to cross margin mode or portfolio margin mode to trade spot with margin.|
 | 182104 |This action could not be completed as your Unified Margin Account's IM/MM utilization rate has exceeded the threshold|
 | 182105 |Adjustment failed, user is upgrading|
 | 182106 |Adjustment failed, user forced liquidation in progress.|
