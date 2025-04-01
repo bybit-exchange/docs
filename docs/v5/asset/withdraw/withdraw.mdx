@@ -37,7 +37,7 @@ POST `/v5/asset/withdraw/create`
 |accountType|false|string |Select the wallet to be withdrawn from <ul><li>`SPOT`: spot wallet (default)</li><li>`FUND`: Funding wallet</li></ul>|
 |feeType|false|integer |Handling fee option <ul><li>`0`(default): input amount is the actual amount received, so you have to calculate handling fee manually</li><li>`1`: input amount is not the actual amount you received, the system will help to deduct the handling fee automatically</li></ul> |
 |requestId |false |string |Customised ID, globally unique, it is used for idempotent verification <li>A combination of letters (case sensitive) and numbers, which can be pure letters or pure numbers and the length must be between 1 and 32 digits</li> |
-|beneficiary |false |Object |Travel rule info. It is **required** for kyc=KOR (Korean) users, and users who registered in [Bybit Turkey(TR)](https://www.bybit-tr.com/en-TR/), [Bybit Kazakhstan(KZ)](https://www.bybit.kz/kk-KAZ/)
+|beneficiary |false |Object |Travel rule info. It is **required** for kyc=KOR (Korean) users, and users who registered in [Bybit Turkey(TR)](https://www.bybit-tr.com/en-TR/), [Bybit Kazakhstan(KZ)](https://www.bybit.kz/kk-KAZ/), Bybit Indonesia (ID)
 |> vaspEntityId |false |string |Receiver exchange entity Id. Please call this [endpoint](../asset/withdraw/vasp-list#) to get this ID. <li><b>Required</b> param for Korean users</li><li><b>Ignored by </b> TR, KZ users</li>|
 |> beneficiaryName |false |string |Receiver exchange user KYC name <br/><b>Rules for Korean users</b>:<li>Please refer to target exchange kyc name</li><li>When vaspEntityId="others", this field can be null</li><b>Rules for TR, KZ users</b>: it is a **required** param, fill with individual name or company name|
 |> beneficiaryLegalType |false |string |Beneficiary legal type, `individual`(default), `company`<li><b>Required</b> param for TR, KZ users  </li><li>Korean users can ignore</li>|
@@ -47,6 +47,9 @@ POST `/v5/asset/withdraw/create`
 |> beneficiaryPoiType |false |string |Beneficiary ducument type <li><b>Required</b> param for TR, KZ users: ID card, Passport, driver license, residence permit, Business ID, etc</li><li>Korean users can ignore</li>|
 |> beneficiaryPoiIssuingCountry |false |string |Beneficiary ducument issuing country <li><b>Required</b> param for TR, KZ users: refer to [Alpha-3 country code](https://www.iban.com/country-codes)</li><li>Korean users can ignore</li>|
 |> beneficiaryPoiExpiredDate |false |string |Beneficiary ducument expiry date <li><b>Required</b> param for TR, KZ users: yyyy-mm-dd format, e.g., "1990-02-15"</li><li>Korean users can ignore</li>|
+|> beneficiaryAddressCountry |false |string |Beneficiary country <li><b>Required</b> param for ID users only, e.g.,`IDN`</li>|
+|> beneficiaryAddressState |false |string |Beneficiary state <li><b>Required</b> param for ID users only, e.g., "ABC"</li>|
+|> beneficiaryAddressCity |false |string |Beneficiary city <li><b>Required</b> param for ID users only, e.g., "Jakarta"</li>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
