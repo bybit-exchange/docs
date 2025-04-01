@@ -36,6 +36,9 @@ POST `/v5/p2p/order/message/listpage`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/order/message/listpage HTTP/1.1
 Host: api-testnet.bybit.com
@@ -44,11 +47,33 @@ X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1675866354698
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+
 {
     "orderId":"1898976123321221120",
     "size":"1"
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.get_chat_messages(
+    orderId="1898976123321221120",
+    size=1
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

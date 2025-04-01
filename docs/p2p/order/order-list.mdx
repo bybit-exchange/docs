@@ -46,6 +46,9 @@ POST `/v5/p2p/order/simplifyList`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/p2p/order/simplifyList HTTP/1.1
 Host: api-testnet.bybit.com
@@ -54,7 +57,6 @@ X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1741774253544
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 135
 
 {
     "status": null,
@@ -66,6 +68,27 @@ Content-Length: 135
     "size": 1
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+
+api = P2P(
+    testnet=True,
+    api_key="x",
+    api_secret="x"
+)
+
+print(api.get_orders(
+    page=1,
+    size=1
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 
