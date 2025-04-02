@@ -1,6 +1,6 @@
 ---
-title: Get Market Online Ads list
-sidebar_label: Get Market Online Ads list
+title: Get Ads
+sidebar_label: Get Ads
 sidebar_position: 1
 ---
 
@@ -10,8 +10,8 @@ POST `/v5/p2p/item/online`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|tokenId|**true** |string |Token ID. e.g. USDT, ETH, BTC |
-|currencyId|**true** |string |Currency ID e.g HKD, USD, EUR |
+|tokenId|**true** |string |Token ID. E.g. USDT, ETH, BTC |
+|currencyId|**true** |string |Currency ID. E.g. HKD, USD, EUR |
 |side|**true** |string |`0`: buy; `1`: sell |
 |page|false |string |Page number. Default value is 1 |
 |size|false |string |Page size. Default value is 10 |
@@ -21,7 +21,7 @@ POST `/v5/p2p/item/online`
 |:----- |:-----|----- |
 |count |int |Total count |
 |items |array&lt;object&gt; | |
-|> id |string |Ad id|
+|> id |string |Ad ID|
 |> nickName |string |Nickname of ad maker|
 |> tokenId |string |Token ID|
 |> currencyId |string |Currency ID|
@@ -30,41 +30,41 @@ POST `/v5/p2p/item/online`
 |> lastQuantity |string |can trade token quantity|
 |> minAmount |string |Min transaction amount|
 |> maxAmount |string |Max transaction amount|
-|> payments |array[string] |Payment method type id|
+|> payments |array[string] |Payment method type ID|
 |> recentOrderNum |int |maker recent order num|
 |> recentExecuteRate |int |maker recent order execute rate|
 |> isOnline |boolean |maker online|
 |> authTag |array[string] |user tag ; VA, BA|
 |> paymentPeriod |int |Payment time|
-|> accountId |int |Account id|
-|> userId |int |User id|
+|> accountId |int |Account ID|
+|> userId |int |User ID|
 |> priceType |int |Ad pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
 |> premium |string |premium |
 |> quantity |string |Quantity |
 |> frozenQuantity |string |Frozen quantity |
 |> executedQuantity |string |Executed quantity |
-|> remark |string |remark |
-|> status |int |Ads Status. `10`: online; `20`: offline; `30`: completed|
-|> createDate |string |created time |
+|> remark |string |Remark |
+|> status |int |Ad status. `10`: online; `20`: offline; `30`: completed|
+|> createDate |string |Created time |
 |> orderNum |string |Order number |
 |> finishNum |string |Finish number |
 |> recentOrderNum |string |Recent order number |
 |> recentExecuteRate |string |Recent execute rate |
 |> fee |string |Fee |
-|> isOnline |boolean |whether is online |
-|> lastLogoutTime |string |last logout time |
-|> blocked |string |whether is blocked |
-|> makerContact |boolean |whether it is a maker contact |
+|> isOnline |boolean |Whether or not the user is online |
+|> lastLogoutTime |string |User's last logout time |
+|> blocked |string |Whether or not you blocked the user|
+|> makerContact |boolean |Whether it is a maker contact |
 |> symbolInfo |Object |symbol info |
-|>> id |string |symbol id |
-|>> exchangeId |string |exchange id |
-|>> orgId |string |org Id |
-|>> tokenId |string |token id. e.g. USDT,ETH,BTC |
-|>> currencyId |string |currency id e.g HKD,USD,EUR |
-|>> status |string |symbol status |
-|>> lowerLimitAlarm |int |lower Limit Alarm |
-|>> upperLimitAlarm |int |upper Limit Alarm |
-|>> itemDownRange |string |item down range |
+|>> id |string |symbol ID |
+|>> exchangeId |string |exchange ID |
+|>> orgId |string |Org ID |
+|>> tokenId |string |Token ID. E.g. USDT, ETH, BTC |
+|>> currencyId |string |Currency ID. E.g. HKD, USD, EUR |
+|>> status |string |Symbol status |
+|>> lowerLimitAlarm |int |Lower limit alarm |
+|>> upperLimitAlarm |int |Upper limit alarm |
+|>> itemDownRange |string |Item down range |
 |>> itemUpRange |string |item up range |
 |>> currencyMinQuote |string |currency min quote |
 |>> currencyMaxQuote |string |currency max quote |
@@ -80,29 +80,29 @@ POST `/v5/p2p/item/online`
 |>> tradeSide |int |trade side |
 |>> currency |Object |currency info |
 |>>> id |string |currency Id |
-|>>> exchangeId |string |exchange id |
+|>>> exchangeId |string |exchange ID |
 |>>> orgId |string |org Id |
-|>>> currencyId |string |currency id |
+|>>> currencyId |string |currency ID |
 |>>> scale |int |scale |
 |>> token |Object |token info |
 |>>> id |string |token Id |
-|>>> exchangeId |string |exchange id |
+|>>> exchangeId |string |exchange ID |
 |>>> orgId |string |org Id |
-|>>> tokenId |string |token id |
+|>>> tokenId |string |token ID |
 |>>> scale |int |scale |
 |>>> sequence |int |sequence |
 |>> buyAd |int |sequence |
 |>> sellAd |int |sequence |
 |> tradingPreferenceSet |Object | trading preference |
-|>> hasUnPostAd |int |Whether the counterparty must not have posted any advertisements. `0`:not needed, `1`:need |
-|>> isKyc |int |Is it necessary for the counterparty to complete identity authentication? `0`:not needed, `1`:need |
-|>> isEmail |int |Is it necessary for the counterparty to bind an email address? `0`:not needed, `1`:need |
-|>> isMobile |int |Is it necessary for the counterparty to bind an telphone? `0`:not needed, `1`:need |
+|>> hasUnPostAd|integer|Whether the counterparty has posted any advertisements or not. `0`: not required; `1`: required|
+|>> isKyc|integer|Whether or not the counterparty must complete identity authentication. `0`: not required; `1`: required|
+|>> isEmail|integer|Whether or not the counterparty must bind an email address. `0`: not required; `1`: required|
+|>> isMobile|integer|Whether or not the counterparty must bind a mobile number. `0`: not required; `1`: required|
 |>> hasRegisterTime |int |Is the registration time required to be no less than {} days? 0`0`:not needed, `1`:need |
 |>> registerTimeThreshold |int |Registration time threshold(Unit: Day)|
 |>> orderFinishNumberDay30 |int |Limit on number of completed orders in the last 30 days |
-|>> completeRateDay30 |int |Completion rate limit in the last 30 days |
-|>> nationalLimit |int |Restricted KYC Countries;IOS 3 CODE |
+|>> completeRateDay30 |int |Completion rate in the last 30 days |
+|>> nationalLimit |int |KYC restricted countries. Format: three-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO country code</a> |
 |>> hasOrderFinishNumberDay30 |int |Is it necessary to have no less than {} orders in the last 30 days? `0`:not needed, `1`:need |
 |>> hasCompleteRateDay30 |int |Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`:not needed, `1`:need |
 |>> hasNationalLimit |int |Are country restrictions required? `0`:not needed, `1`:need |
