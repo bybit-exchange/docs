@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocusaurus_docs=self.webpackChunkdocusaurus_docs||[]).push([[62353],{99422:e=>{e.exports=JSON.parse('{"title":"V5 API","slug":"/api-explorer/v5/category/","permalink":"/docs/api-explorer/v5/category/","navigation":{"next":{"title":"Market","permalink":"/docs/api-explorer/v5/market/market"}}}')}}]);
