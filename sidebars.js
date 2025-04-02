@@ -368,7 +368,6 @@ p2pSideBar: [
         require("./docs/api-explorer/v5/user/sidebar.js"),
         require("./docs/api-explorer/v5/lt/sidebar.js"),
         require("./docs/api-explorer/v5/spot-margin-uta/sidebar.js"),
-        require("./docs/api-explorer/v5/spot-margin-normal/sidebar.js"),
       ]
     }
   ],
