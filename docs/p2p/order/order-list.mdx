@@ -10,39 +10,39 @@ POST `/v5/p2p/order/simplifyList`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|status|false|integer|order status <li><code>5</code>: waiting for chain (only web3)</li><li><code>10</code>: waiting for buy pay</li><li><code>20</code>: waiting for seller release</li><li><code>30</code>: Appealing</li><li><code>40</code>: cancel order</li><li><code>50</code>: finish order</li><li><code>60</code>: paying (only pay online)</li><li><code>70</code>: pay fail (only pay online)</li><li><code>80</code>:exception canceled ( the coin covert to other coin,only hotswap)</li><li><code>90</code>: waiting buyer select tokenId</li><li><code>100</code>: objectioning</li><li><code>110</code>: Waiting for the user to raise an objection</li>|
-|beginTime|false|string|begin time|
-|endTime|false|string|end time|
-|tokenId|false|string|token id|
-|side|false|array&lt;integer&gt;|side|
 |page|**true**|integer|Page number to query|
 |size|**true**|integer|Rows to query per page|
+|status|false|integer|Order status <ul><li><code>5</code>: waiting for chain (only web3)</li><li><code>10</code>: waiting for buyer to pay</li><li><code>20</code>: waiting for seller to release</li><li><code>30</code>: appealing</li><li><code>40</code>: order canceled</li><li><code>50</code>: order finished</li><li><code>60</code>: paying (only when paying online)</li><li><code>70</code>: pay fail (only when paying online)</li><li><code>80</code>: exception canceled (the coin convert to other coin, only hotswap)</li><li><code>90</code>: waiting for buyer to select tokenId</li><li><code>100</code>: objectioning</li><li><code>110</code>: waiting for the user to raise an objection</li></ul>|
+|beginTime|false|string|Begin time|
+|endTime|false|string|End time|
+|tokenId|false|string|Token id|
+|side|false|array&lt;integer&gt;|Side|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |count |integer |Total order number |
 |items |Object ||
-|> id|string|order Id|
+|> id|string|Order ID|
 |> side|integer|Order trade type. `0`: Buy, `1`: Sell|
-|> tokenId|string|token ID|
-|> orderType|string|order type `ORIGIN`: normal p2p order , `SMALL_COIN`: HotSwap p2p order, `WEB3`: web3 p2p order|
-|> amount|string|seller/buyer trade amount|
-|> currencyId|string|currency ID|
-|> price|string|order price|
-|> fee|string|Tading fee|
+|> tokenId|string|Token ID|
+|> orderType|string|Order type <ul><li>`ORIGIN`: normal p2p order</li><li>`SMALL_COIN`: HotSwap p2p order</li><li>`WEB3`: web3 p2p order</li></ul>|
+|> amount|string|Seller/buyer trade amount|
+|> currencyId|string|Currency ID|
+|> price|string|Order price|
+|> fee|string|Trading fee|
 |> targetNickName|string|Counterparty nickname|
-|> targetUserId|string|Counterparty uid|
-|> status|integer|order status `5`: waiting for chain (only web3) `10`: waiting for buy pay `20`: waiting for seller release `30`: Appealing `40`: cancel order `50`: finish order `60`: paying (only pay online) `70`: pay fail (only pay online) `80`: exception canceled ( the coin covert to other coin，only hotswap) `90`: waiting buyer select tokenId 100:objectioning 1`10`: Waiting for the user to raise an objection|
-|> createDate|string|order create time|
+|> targetUserId|string|Counterparty UID|
+|> status|integer|Order status|
+|> createDate|string|Order create time|
 |> transferLastSeconds|string|The buyer's remaining transfer time|
-|> userId|string|The uid of the current query user|
-|> sellerRealName|string|seller realname|
-|> buyerRealName|string|buyer realname|
+|> userId|string|The UID of the current query user|
+|> sellerRealName|string|Seller's real name|
+|> buyerRealName|string|Buyer's real name|
 |> Extension|Object|Order extension information|
-|>> isDelayWithdraw|boolean|Delayed withdrawal `true` : delay|
-|>> delayTime|string|delay time|
-|>> startTime|string|delay start time|
+|>> isDelayWithdraw|boolean|Delayed withdrawal |
+|>> delayTime|string|Delay time|
+|>> startTime|string|Delay start time|
 
 ### Request Example
 

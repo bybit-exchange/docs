@@ -22,30 +22,25 @@ POST `/v5/p2p/item/online`
 |count |int |Total count |
 |items |array&lt;object&gt; | |
 |> id |string |Ad ID|
+|> accountId |int |Account ID|
+|> userId |int |User ID|
 |> nickName |string |Nickname of ad maker|
 |> tokenId |string |Token ID|
 |> currencyId |string |Currency ID|
 |> side |string |`0`: buy; `1`: sell |
-|> price |string |Ad price|
-|> lastQuantity |string |can trade token quantity|
-|> minAmount |string |Min transaction amount|
-|> maxAmount |string |Max transaction amount|
-|> payments |array[string] |Payment method type ID|
-|> recentOrderNum |int |maker recent order num|
-|> recentExecuteRate |int |maker recent order execute rate|
-|> isOnline |boolean |maker online|
-|> authTag |array[string] |user tag ; VA, BA|
-|> paymentPeriod |int |Payment time|
-|> accountId |int |Account ID|
-|> userId |int |User ID|
 |> priceType |int |Ad pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
+|> price |string |Ad price|
 |> premium |string |premium |
+|> lastQuantity |string |can trade token quantity|
 |> quantity |string |Quantity |
 |> frozenQuantity |string |Frozen quantity |
 |> executedQuantity |string |Executed quantity |
+|> minAmount |string |Min transaction amount|
+|> maxAmount |string |Max transaction amount|
 |> remark |string |Remark |
 |> status |int |Ad status. `10`: online; `20`: offline; `30`: completed|
 |> createDate |string |Created time |
+|> payments |array[string] |Payment method type ID|
 |> orderNum |string |Order number |
 |> finishNum |string |Finish number |
 |> recentOrderNum |string |Recent order number |
@@ -54,11 +49,8 @@ POST `/v5/p2p/item/online`
 |> isOnline |boolean |Whether or not the user is online |
 |> lastLogoutTime |string |User's last logout time |
 |> blocked |string |Whether or not you blocked the user|
-|> makerContact |boolean |Whether it is a maker contact |
 |> symbolInfo |Object |symbol info |
 |>> id |string |symbol ID |
-|>> exchangeId |string |exchange ID |
-|>> orgId |string |Org ID |
 |>> tokenId |string |Token ID. E.g. USDT, ETH, BTC |
 |>> currencyId |string |Currency ID. E.g. HKD, USD, EUR |
 |>> status |string |Symbol status |
@@ -98,20 +90,20 @@ POST `/v5/p2p/item/online`
 |>> isKyc|integer|Whether or not the counterparty must complete identity authentication. `0`: not required; `1`: required|
 |>> isEmail|integer|Whether or not the counterparty must bind an email address. `0`: not required; `1`: required|
 |>> isMobile|integer|Whether or not the counterparty must bind a mobile number. `0`: not required; `1`: required|
-|>> hasRegisterTime |int |Is the registration time required to be no less than {} days? 0`0`:not needed, `1`:need |
+|>> hasRegisterTime |int |Is the registration time required to be no less than {} days? `0`: not required, `1`: required |
 |>> registerTimeThreshold |int |Registration time threshold(Unit: Day)|
 |>> orderFinishNumberDay30 |int |Limit on number of completed orders in the last 30 days |
 |>> completeRateDay30 |int |Completion rate in the last 30 days |
 |>> nationalLimit |int |KYC restricted countries. Format: three-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO country code</a> |
-|>> hasOrderFinishNumberDay30 |int |Is it necessary to have no less than {} orders in the last 30 days? `0`:not needed, `1`:need |
-|>> hasCompleteRateDay30 |int |Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`:not needed, `1`:need |
-|>> hasNationalLimit |int |Are country restrictions required? `0`:not needed, `1`:need |
-|> version |int |version |
-|> authStatus |int |auth Status |
-|> recommend |boolean |whether is recommended |
-|> recommendTag |string |recommend Tag |
+|>> hasOrderFinishNumberDay30 |int |Is it necessary to have no less than {} orders in the last 30 days? `0`: not required, `1`: required |
+|>> hasCompleteRateDay30 |int |Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`: not required, `1`: required |
+|>> hasNationalLimit |int |Are country restrictions required? `0`: not required, `1`: required|
+|> authTag |array[string] |User tag; CA, VA, BA|
 |> userType |string |user Type |
 |> itemType |string |item Type |
+|> paymentPeriod |int |Payment period (unit: minutes)|
+|> ban |string |You have blocked this user
+|> baned |string |This user has blocked you 
 
 ### Request Example
 
