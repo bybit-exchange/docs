@@ -10,29 +10,28 @@ POST `/v5/p2p/order/message/listpage`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|orderId|**true** |string |order Id |
-|currentPage|false |string |current page number|
-|size|**true** |string |page size |
+|orderId|**true** |string |Order ID |
+|currentPage|false |string |Current page number|
+|size|**true** |string |Page size |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|id |string |message id |
-|message |string |Message content; text or image/pdf/video url |
+|id |string |Message ID |
+|message |string |Message content. Text or image/pdf/video url |
 |userId |string |The person who sent the message|
-|msgType |int |Message type `0`: system message; `1`: text(user); `2`: image(user); `5`:text(admin); `6`:image(admin); `7`:pdf(user); `8`:video(user)|
-|msgCode |int |system message code|
+|msgType |int |Message type <ul><li>`0`: system message</li><li>`1`: text (user)</li><li>`2`: image (user)</li><li>`5`: text (admin)</li><li>`6`: image (admin)</li><li>`7`: pdf (user)</li><li>`8`: video (user)</li></ul>|
+|msgCode |int |System message code|
 |createDate |string |Message sending time|
-|contentType |string |message content type. `str` : text; `pic`: image; `pdf`: pdf; `video`: video|
-|orderId |string |order Id |
+|contentType |string |Message content type <ul><li>`str`: text</li><li>`pic`: image</li><li>`pdf`: pdf</li><li>`video`: video</li></ul>|
+|orderId |string |Order ID |
 |msgUuid |string |Client message UUID|
 |nickName |string |Nickname of the person sending the message|
-|fileName |string |image/pdf/video filename|
-|accountId |string |account id |
+|fileName |string |Image/pdf/video filename|
+|accountId |string |Account ID |
 |isRead |int |`1`: read, `0`: unread|
-|read |int | same as "isRead" |
-|roleType |string |role type, sys-system message |
-|onlyForCustomer|int |only sent to customer, `1`: true; `0`: false |
+|roleType |string |Role type, sys-system message |
+|onlyForCustomer|int |Only sent to customer, `1`: true; `0`: false |
 
 ### Request Example
 
@@ -59,13 +58,11 @@ Content-Type: application/json
 
 ```python
 from bybit_p2p import P2P
-
 api = P2P(
     testnet=True,
     api_key="x",
     api_secret="x"
 )
-
 print(api.get_chat_messages(
     orderId="1898976123321221120",
     size=1
