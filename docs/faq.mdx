@@ -109,7 +109,7 @@ Note that if you're using pybit, it handles these messages for you and always de
 
 ### Why is the balance sufficient but Withdrawal or Transfer reports insufficient balance?
 **Scenario Reproduction:** when the master account encounters error code 131001 (“Withdrawal amount is greater than your available balance (XXXX USDT)”) during withdrawal, or when transferring 
-funds from a sub-account to the master account, encounters 131228 (“Your balance is not enough”), but calling [Get All Coins Balance](/v5/asset/balance/all-balance) shows that `transferBalance` is sufficient.
+funds from a subaccount to the master account, encounters 131228 (“Your balance is not enough”), but calling [Get All Coins Balance](/v5/asset/balance/all-balance) shows that `transferBalance` is sufficient.
 ```http
 /v5/asset/transfer/query-account-coins-balance?accountType=FUND
 {
@@ -131,10 +131,10 @@ funds from a sub-account to the master account, encounters 131228 (“Your balan
     "time": 1735189176388
 }
 ```
-**Reason:** this occurs due to recent deposits to the master or sub-account, which lock the corresponding USD value. 
+**Reason:** this occurs due to recent deposits to the master or subaccount, which lock the corresponding USD value. 
 For example, 1 ETH was deposited into the master account 5 minutes ago and immediately traded into 0.05 BTC. However, 
 due to the deposit risk not being fully released, this 0.05 BTC cannot be withdrawn. Similarly, 
-if the deposit is made to a sub-account, the corresponding amount cannot be transferred to the master account.<br/>
+if the deposit is made to a subaccount, the corresponding amount cannot be transferred to the master account.<br/>
 **Recommendation:** 1. If you need to confirm the available balance for withdrawal or transfer of a single currency, always use 
 [Get Single Coin Balance](/v5/asset/balance/account-coin-balance). Additionally, **institutional loan accounts** transferring out of risk unit
 may be affected by LTV and can use this API to query accurate transferable balances. See examples 4 and 5 below.
@@ -143,13 +143,13 @@ may be affected by LTV and can use this API to query accurate transferable balan
 GET /v5/asset/transfer/query-account-coin-balance?accountType=XXX&coin=XXX&withTransferSafeAmount=1
 see field `transferSafeAmount`
 
-//Example 2: Query the transferable balance of a specific coin to sub-accounts or other wallets within the account.
+//Example 2: Query the transferable balance of a specific coin to subaccounts or other wallets within the account.
 GET /v5/asset/transfer/query-account-coin-balance?accountType=XXX&coin=XXX&withTransferSafeAmount=1
 see field `transferBalance`
 
-//Example 3: Use the master account to query the transferable balance of a specific coin in a specific wallet of a sub-account.
+//Example 3: Use the master account to query the transferable balance of a specific coin in a specific wallet of a subaccount.
 GET /v5/asset/transfer/query-account-coin-balance?memberId=XXX&accountType=XXX&coin=XXX&withTransferSafeAmount=1
--> transfer to other sub-accounts or other wallets within the accounts: see field `transferBalance`
+-> transfer to other subaccounts or other wallets within the accounts: see field `transferBalance`
 -> transfer to master account: see field `transferSafeAmount`
 
 //Example 4: When transferring out of an institutional loan risk unit, the transferable balance under the LTV safety line (transfers within the account to funding wallets).
@@ -171,7 +171,7 @@ GET /v5/asset/transfer/query-account-coins-balance?accountType=FUND
 //Example 2: Query the balance of specific coins in the unified wallet of the current account (after January 9, 2025, up to 10 coins can be queried).
 GET /v5/asset/transfer/query-account-coins-balance?accountType=UNIFIED&coin=USDT,ETH,BTC,USDC
 
-//Example 3: Query the balance of specific coins in the unified wallet of a specified sub-account.
+//Example 3: Query the balance of specific coins in the unified wallet of a specified subaccount.
 GET /v5/asset/transfer/query-account-coins-balance?memberId=XXX&accountType=UNIFIED&coin=USDT,ETH,BTC,USDC
 ```
 3. If you need to know whether the master account has any unresolved deposit risks, use [Get Withdrawable Amount](/v5/asset/balance/delay-amount). Check the `limitAmountUsd` field:
