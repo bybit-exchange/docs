@@ -9,14 +9,14 @@ AWS Singapore, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/usin
 ### What should I be using – WebSocket or REST API?
 If you're not sure what the difference between these two is or you find WebSockets confusing, please read: [REST API vs WebSockets vs WebSocket API](https://github.com/tiagosiebler/awesome-crypto-examples/wiki/REST-API-vs-WebSockets-vs-WebSocket-API)
 
-### `reduceOnly` and `closeOnTrigger` - what's the difference?
+### `reduceOnly` and `closeOnTrigger` – what's the difference?
 * To close your position, submit an order and specify `reduceOnly` to true. `closeOnTrigger` is not strictly applicable here, but you can also set it to true if it's required.
 * reduceOnly is the one that really matters for closing position, and we will improve the interface in the future.
 * Be careful when you specify closeOnTrigger to true as it could cause conflict when reduceOnly is false.
 
 ### Why I get 10003 API key is invalid?
 The most likely cause is that the key used does not match the domain name:<br/>
-a. When request to api.bybit.com or stream.bybit.com, make sure the api key is created from [Prodution](https://www.bybit.com)
+a. When request to api.bybit.com or stream.bybit.com, make sure the API key is created from [Production](https://www.bybit.com)
 ![production](/img/prd.png)
 ```python
 # pybit example
@@ -27,7 +27,7 @@ session = HTTP(
 )
 ```
 ---
-b. When request to api-demo.bybit.com or stream-demo.bybit.com, make sure the api key is created from [Production](https://www.bybit.com) - **while in Demo Trading mode**
+b. When request to `api-demo.bybit.com` or `stream-demo.bybit.com`, make sure the API key is created from [Production](https://www.bybit.com) – **while in Demo Trading mode**
 ![prod-demo](/img/prd-demo.png)
 ```python
 # pybit example
@@ -39,7 +39,7 @@ session = HTTP(
 )
 ```
 ---
-c. When request to api-testnet.bybit.com or stream-testnet.bybit.com, make sure the api key is created from [Testnet](https://testnet.bybit.com) - **while outside of Demo Trading mode**
+c. When request to `api-testnet.bybit.com` or `stream-testnet.bybit.com`, make sure the API key is created from [Testnet](https://testnet.bybit.com) – **while outside of Demo Trading mode**
 ![test](/img/test.png)
 ```python
 # pybit example
@@ -51,22 +51,12 @@ session = HTTP(
 )
 ```
 ---
-d. **Do not** use Demo Trading on Testnet service, it is not recommended and can lead to unexpected outcomes. It also inherets limitations of both Testnet and Demo Trading.
+d. **Do not** use Demo Trading on Testnet. It is not recommended and can lead to unexpected outcomes. It also inherits limitations of both Testnet and Demo Trading.
 ![test-demo](/img/test-demo.png)
 
 ### Why aren't all my orders showing on the website?
 * Users who have bots which place large numbers of laddered orders will be restricted by the frontend interface, which only shows a maximum of 50 orders on-screen.
 * Don't worry, your orders are still in the system and can be queried by the API, but the frontend cannot show more than 50.
-
-### Calculating order size based on available wallet balance
-* Your order size is limited by order cost, which should be below or equal to your available balance. You can learn more here: <a href="https://www.bybit.com/en/help-center/article/Order-Cost-USDT-Contract">Order Cost (Perpetuals & Futures Trading)</a>
-* The approximate formula for buy orders: `contract_quantity = available_balance / (order_price * (1 / leverage + taker_fee_rate * (2 - 1 / leverage)))`
-* The approximate formula for sell orders: `contract_quantity = available_balance / (order_price * (1 / leverage + taker_fee_rate * (2 + 1 / leverage)))`
-* Unfortunately this is not a perfectly accurate formula; the real calculation is complex and may be published in the docs at a later date.
-    * `order_price` - price of a limit order, or your entry price with market order (LTP) - can be found with the [Tickers](/v5/market/tickers#).
-    * `available_balance` - can be found with the [Get Wallet Balance](/v5/account/wallet-balance#) endpoint.
-    * `leverage` - up to the respective maximum leverage for the market and your risk limit (eg 2, 10, 50).
-    * `taker_fee_rate` - real number, representing the fee. It is 0.1 for 10%, 0.001 for 0.1%, 0.0018 for 0.18%, and so on.
 
 ### Can I exchange assets with the API?
 Yes, [convert API](/v5/asset/convert/guideline), but currently there is no API to convert small balances to MNT
@@ -80,14 +70,14 @@ To get testnet funds, just go to master account asset page to request.
 ### Why are my Closed PNL prices inaccurate?
 * The `entryPrice` and `exitPrice` returned by Closed PNL endpoints are not the actual execution prices of the orders.
 * It is based on the total costs of the order
-(whether or not the position was only opened/closed by one order executed at one price - it is more complicated if multiple orders opened/closed a position.)
-* For instance, the entry_price and exit_price reported by this endpoint are influenced by the fee paid/received on the orders.
+(whether or not the position was only opened/closed by one order executed at one price – it is more complicated if multiple orders opened/closed a position.)
+* For instance, the `entryPrice` and `exitPrice` reported by this endpoint are influenced by the fee paid/received on the orders.
 
 ### How can I ensure I am using up-to-date data?
 * It is possible, although unlikely, that the REST API or (even less likely) the websocket could return/push old data.
 * For the greatest level of data resilience, we recommend clients to:
     * firstly, rely on the websocket, which will not only ensure you get the latest data as fast as possible, but will also ensure you get complete data
-    * secondly, query the REST API to fill in any discrepencies in data - or between websocket disconnections.
+    * secondly, query the REST API to fill in any discrepencies in data – or between websocket disconnections.
 * The best practice is to save all of this data locally in your own database or cache.
 * This frees up your rate limits for other requests and also ensures a level of redundancy against the exchange in case of data delays.
 
@@ -107,9 +97,8 @@ Note that if you're using pybit, it handles these messages for you and always de
 * [Python](https://github.com/bybit-exchange/pybit/blob/867ee0f001bf7a2afc17113a434a7b1dad235674/pybit/_websocket_stream.py#L361): `_process_delta_orderbook()` method within pybit (the Python SDK)
 * [Node.js](https://www.npmjs.com/package/orderbooks): `orderbooks`, a library made by the creator of bybit-api (the Node.js SDK)
 
-### Why is the balance sufficient but Withdrawal or Transfer reports insufficient balance?
-**Scenario Reproduction:** when the master account encounters error code 131001 (“Withdrawal amount is greater than your available balance (XXXX USDT)”) during withdrawal, or when transferring 
-funds from a subaccount to the master account, encounters 131228 (“Your balance is not enough”), but calling [Get All Coins Balance](/v5/asset/balance/all-balance) shows that `transferBalance` is sufficient.
+### Why is my balance sufficient but withdrawal or transfer requests report insufficient balance?
+**Scenario Reproduction:** when the master account encounters error code 131001 ("Withdrawal amount is greater than your available balance (XXXX USDT)") during withdrawal, or when transferring funds from a subaccount to the master account, encounters 131228 ("Your balance is not enough"), but calling [Get All Coins Balance](/v5/asset/balance/all-balance) shows that `transferBalance` is sufficient.
 ```http
 /v5/asset/transfer/query-account-coins-balance?accountType=FUND
 {
@@ -131,11 +120,16 @@ funds from a subaccount to the master account, encounters 131228 (“Your balanc
     "time": 1735189176388
 }
 ```
-**Reason:** this occurs due to recent deposits to the master or subaccount, which lock the corresponding USD value. 
+**Reason:**
+
+This occurs due to recent deposits to the master or subaccount, which lock the corresponding USD value. 
 For example, 1 ETH was deposited into the master account 5 minutes ago and immediately traded into 0.05 BTC. However, 
 due to the deposit risk not being fully released, this 0.05 BTC cannot be withdrawn. Similarly, 
-if the deposit is made to a subaccount, the corresponding amount cannot be transferred to the master account.<br/>
-**Recommendation:** 1. If you need to confirm the available balance for withdrawal or transfer of a single currency, always use 
+if the deposit is made to a subaccount, the corresponding amount cannot be transferred to the master account.
+
+**Recommendation:**
+
+1. If you need to confirm the available balance for withdrawal or transfer of a single currency, always use 
 [Get Single Coin Balance](/v5/asset/balance/account-coin-balance). Additionally, **institutional loan accounts** transferring out of risk unit
 may be affected by LTV and can use this API to query accurate transferable balances. See examples 4 and 5 below.
 ```json
@@ -180,12 +174,13 @@ GET /v5/asset/withdraw/withdrawable-amount?coin=XXX
 -> If it equals 0, it indicates that all deposit risks have been released.
 -> If it is not 0, it indicates that some assets, equivalent to the displayed USD value, still have unresolved risks.
 ```
-## Why can I not buy tokens/open positions/close positions/etc. on Testnet? Why do I encounter `buy/sell: [1900000000000,44543000000] invalid`-sort of errors? Why are my market orders failing?
+## Why can I not buy tokens/open positions/close positions/etc. on Testnet? Why do I encounter `buy/sell: [1900000000000,44543000000] invalid` (or similar) errors? Why are my market orders failing?
 
-On cryptoexchanges, liquidity is required for trades to occur. For any purchase you want to conclude, there should be a corresponding seller, and vice versa.
-Market orders internally are IOC limit orders submitted at a much worse price. That internal price is defined as slippage limit.
-Thus, if there are no opposite-sided orders in range `[currentPrice; slippageLimitPrice]` to fulfill your request, then your order placement will fail with an aforementioned error message.
+On cryptoexchanges, liquidity is required for trades to occur. For any purchase you want to conclude, there must be a corresponding seller, and vice versa.
+Market orders internally are IOC limit orders submitted at a much worse price. That internal price is calculated by our slippage limit.
+
+Thus, if there are no opposite-sided orders in range `[currentPrice; slippageLimitPrice]` to fulfill your request, then your order placement will fail with the aforementioned error message.
 Additionally, if there is insufficient liquidity in the range, your market order can be partially filled and then cancelled.
 
 There is no guaranteed workaround. You can use GTC (Good Till Cancelled) **limit** orders to mitigate the risk of your order getting cancelled.
-Alternatively, you can use a more liquid environment, like **Demo Trading on Production**
+Alternatively, you can use a more liquid environment, like **Demo Trading on Production**.
