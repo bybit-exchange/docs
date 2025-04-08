@@ -1,0 +1,77 @@
+---
+title: Payout
+sidebar_label: Payout
+---
+### HTTP Request
+POST `/v5/bybitpay/payout`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|merchantId |**true** |string |Merchant UID|
+|merchantName |false |string |If not filled in, we will show users the name of your company doing KYB on the Bybit platform|
+|clientId |false|string |Merchant client ID|
+|paymentType |**true**|string |Payment Type|
+|merchantTradeNo |**true**|string |Merchant Order Number|
+|amount |**true**|string |Order Amount|
+|currency |**true**|string |Order Currency (uppercase, e.g., EUR, USD, USDT)|
+|currencyType |**true**|string |Currency Type (`fiat` or `crypto`)|
+|webhookUrl |false|string |API URL to call when order is successful or failed (max 256 characters)|
+|payee |**true**|string |Payee Bybit uid|
+|env |**true**|&lt;[EnvType](data-model/env)&gt; |Transaction source|
+|riskInfo |false|&lt;[RiskInfoType](data-model/risk-info)&gt; |Risk info for order pay|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|order |&lt;[PayOrderType](data-model/pay-order)&gt; |Bybit PayOrder Detail|
+
+### Request Example
+
+```http
+POST /v5/bybitpay/refund HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1739178959616
+X-BAPI-RECV-WINDOW: 50000
+Content-Type: application/json
+
+{
+    "currency": "USDT",
+    "currencyType": "crypto",
+    "env": {
+        "browserVersion": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+        "device": "xxde",
+        "ip": "127.0.0.1",
+        "terminalType": "APP"
+    }, 
+    "merchantId": "305142568",
+    "merchantTradeNo": "841e4ba2-c7ec-40b1-a071-a2a45de7bd00",
+    "amount": "100",
+    "webhookUrl": "www.bybit.com/successUrl"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 100000,
+    "retMsg": "success",
+    "result": {
+        "order": {
+            "merchantId": "305142568",
+            "clientId": "",
+            "paymentType": "E_COMMERCE",
+            "merchantTradeNo": "841e4ba2-c7ec-40b1-a071-a2a45de7bd00",
+            "payId": "01JN6AZVEMAC8H9SED6JES3QH8",
+            "status": "INITIAL",
+            "amount": "100",
+            "currency": "USDT",
+            "currencyType": "crypto",
+            "createTime": 1740748353
+        }
+    }
+}
+```
