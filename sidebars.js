@@ -43,6 +43,7 @@ const sidebars = {
     ]
   },
   'bybit-pay/refund',
+  'bybit-pay/payout',
   {
     type: 'category',
     label: 'Data Models',
