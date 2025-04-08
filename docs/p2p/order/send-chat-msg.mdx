@@ -10,11 +10,11 @@ POST `/v5/p2p/order/message/send`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|message|<b>true</b> |string |chat info ;text:msg;image/pdf/video: url |
-|contentType|<b>true</b> |string |chat message. For text messages use: `str`; for images use: `pic`; for PDF files use: `pdf`; for video files use: `video`|
-|orderId|<b>true</b> |string |order id |
-|msgUuid|false |string |Client message UUID |
-|fileName|false |string |image/pdf/video filename |
+|message|**true** |string |Chat message. Is either: the text of the message you send, or the URL of the file you want to send|
+|contentType|**true** |string |Chat message. <ul><li>For text messages use: `str`</li><li>For images use: `pic`</li><li>For PDF files use: `pdf`</li><li>For video files use: `video`</li></ul>|
+|orderId|**true** |string |Order ID |
+|msgUuid|**true** |string |Client message UUID |
+|fileName|false |string |Image/pdf/video filename |
 
 ### Response Parameters
 None
@@ -46,13 +46,11 @@ Content-Type: application/json
 ```python
 from bybit_p2p import P2P
 import uuid
-
 api = P2P(
     testnet=True,
     api_key="x",
     api_secret="x"
 )
-
 print(api.send_chat_message(
     message="hi, test",
     contentType="str",

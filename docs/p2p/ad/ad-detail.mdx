@@ -1,16 +1,16 @@
 ---
-title: Get My Ad Detail
-sidebar_label: Get My Ad Detail
+title: Get My Ad Details
+sidebar_label: Get My Ad Details
 sidebar_position: 6
 ---
 
 ### HTTP Request
-POST `/v5/p2p/item/personal/list`
+POST `/v5/p2p/item/info`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|itemId|*true**|string|Advertisement ID|
+|itemId|**true**|string|Advertisement ID|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -34,27 +34,27 @@ POST `/v5/p2p/item/personal/list`
 |remark|string|Advertisement remarks for the counterparty|
 |status|integer|Ads Status. `10`: online; `20`: offline; `30`: completed|
 |createDate|string|Creation time (timestamp)|
-|payments|array&lt;string&gt;|Payment method type id|
+|payments|array&lt;string&gt;|Payment method type ID|
 |tradingPreferenceSet|object|Trading Preferences|
-|> hasUnPostAd|integer|Whether the counterparty must not have posted any advertisements. `0`: not required; `1`: required|
-|> isKyc|integer|Is it necessary for the counterparty to complete identity authentication? `0`: not required; `1`: required|
-|> isEmail|integer|Is it necessary for the counterparty to bind an email address? `0`: not required; `1`: required|
-|> isMobile|integer|Is it necessary for the counterparty to bind an telphone? `0`: not required; `1`: required|
+|> hasUnPostAd|integer|Whether the counterparty has posted any advertisements or not. `0`: not required; `1`: required|
+|> isKyc|integer|Whether or not the counterparty must complete identity authentication. `0`: not required; `1`: required|
+|> isEmail|integer|Whether or not the counterparty must bind an email address. `0`: not required; `1`: required|
+|> isMobile|integer|Whether or not the counterparty must bind a mobile number. `0`: not required; `1`: required|
 |> hasRegisterTime|integer|Is the registration time required to be no less than {} days? `0`: not required; `1`: required|
-|> registerTimeThreshold|integer|Registration time threshold(Unit: Day)|
+|> registerTimeThreshold|integer|Registration time threshold (unit: number of days)|
 |> orderFinishNumberDay30|integer|Limit on number of completed orders in the last 30 days|
-|> completeRateDay30|string|Completion rate limit in the last 30 days|
-|> nationalLimit|string|Restricted KYC Countries;IOS 3 CODE|
+|> completeRateDay30|string|Completion rate in the last 30 days|
+|> nationalLimit|string|KYC restricted countries. Format: three-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO country code</a>|
 |> hasOrderFinishNumberDay30|integer|Is it necessary to have no less than {} orders in the last 30 days? `0`: not required; `1`: required|
 |> hasCompleteRateDay30|integer|Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`: not required; `1`: required|
 |> hasNationalLimit|integer|Are country restrictions required; `0`: not required; `1`: required|
 |updateDate|string|Update time (timestamp)|
-|feeRate|string|Fee Rate|
-|version|integer|Ad version, a way of posting advertisements that existed in the past, is divided integero two types: pre-freezing funds for posting advertisements and not pre-freezing funds for posting advertisements.<br/>`1`: pre-freezing funds; `2`: not pre-freezing funds|
-|paymentPeriod|integer|Payment duration|
-|itemType|string|`ORIGIN`: original P2P advertisement, generally refers to non-bulk advertisement; <br/>`BULK`: bulk advertisement|
-|paymentTerms|array&lt;object&gt;|Payment Methods|
-|> id|string|Payment method id|
+|feeRate|string|Fee rate|
+|version|integer|Ad version, a way of posting advertisements that existed in the past, is divided into two types: pre-freezing funds for posting advertisements and not pre-freezing funds for posting advertisements.<br/>`1`: pre-freezing funds; `2`: not pre-freezing funds|
+|paymentPeriod|integer|Payment period (unit: minutes)|
+|itemType|string|`ORIGIN`: original P2P advertisement, generally refers to non-bulk advertisements <br/>`BULK`: bulk advertisement|
+|paymentTerms|array&lt;object&gt;|Payment methods|
+|> id|string|Payment method ID|
 |> paymentType|string|Payment method type|
 
 ### Request Example

@@ -12,7 +12,7 @@ GET `/v5/asset/transfer/query-account-coins-balance`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |memberId|false |string |User Id. It is <b>required</b> when you use master api key to check sub account coin balance |
-|[accountType](../v5/enum#accounttype)|<b>true</b> |string |Account type |
+|[accountType](../v5/enum#accounttype)|**true** |string |Account type |
 |coin |false |string |Coin name, uppercase only <ul><li>Query all coins if not passed</li><li>Can query multiple coins, separated by comma. `USDT,USDC,ETH`</li></ul>**Note:** this field is **mandatory** for accountType=`UNIFIED`, and supports up to 10 coins each request|
 |withBonus |false |integer |`0`(default): not query bonus. `1`: query bonus  |
 
@@ -46,13 +46,11 @@ X-BAPI-RECV-WINDOW: 5000
 
 ```python
 from bybit_p2p import P2P
-
 api = P2P(
     testnet=True,
     api_key="x",
     api_secret="x"
 )
-
 print(api.get_current_balance(accountType="FUND", coin="USDC"))
 ```
 

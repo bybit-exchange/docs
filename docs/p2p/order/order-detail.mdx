@@ -15,62 +15,62 @@ POST `/v5/p2p/order/info`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|id|string|order id|
+|id|string|Order ID|
 |side|int|Order trade type. `0`: Buy,  `1`: Sell|
-|itemId|string|adv id|
-|userId|string|The uid of the current query user|
+|itemId|string|Adv id|
+|userId|string|The UID of the current query user|
 |nickName|string|The nickname of the current query user|
-|makerUserId|string|adv owner user|
-|targetUserId|string|Counterparty uid|
+|makerUserId|string|Adv owner user|
+|targetUserId|string|Counterparty UID|
 |targetNickName|string|Counterparty nickname|
 |targetConnectInformation|string|Counterparty contact information|
-|sellerRealName|string|seller realName|
-|buyerRealName|string|buyer realName|
-|tokenId|string|token id. e.g. USDT,ETH,BTC|
-|currencyId|string|currency id . e.g. USD,VND|
-|price|string|order price|
-|quantity|string|seller/buyer trade quantity|
-|amount|string|seller/buyer trade amount|
+|sellerRealName|string|Seller's real name|
+|buyerRealName|string|Buyer's real name|
+|tokenId|string|Token ID. E.g. USDT,ETH,BTC|
+|currencyId|string|Currency ID. E.g. USD,VND|
+|price|string|Order price|
+|quantity|string|Seller/buyer trade quantity|
+|amount|string|Seller/buyer trade amount|
 |paymentType|int|Payment method used|
-|transferDate|string|buyer pay time|
-|status|int|order status `5`: waiting for chain (only web3) `10`: waiting for buy pay `20`: waiting for seller release `30`: Appealing `40`: cancel order `50`: finish order `60`: paying (only pay online) `70`: pay fail (only pay online) `80`: exception canceled ( the coin covert to other coin，only hotswap) `90`: waiting buyer select tokenId 100:objectioning 1`10`: Waiting for the user to raise an objection|
-|createDate|string|order create time|
+|transferDate|string|Buyer pay time|
+|status|int|Order status <ul><li>`5`: waiting for chain (only web3)</li><li>`10`: waiting for buy pay</li><li>`20`: waiting for seller release</li><li>`30`: Appealing</li><li>`90`: waiting buyer select tokenId</li><li>`100`: objectioning</li><li>`110`: Waiting for the user to raise an objection</li></ul>|
+|createDate|string|Order create time|
 |paymentTermList|array&lt;object&gt;|Payment method provided by the seller|
-|> id|string|payment id|
-|> realName|string|realname|
-|> paymentType|int|payment type|
-|> bankName|string|bank name|
-|> branchName|string|branch name|
-|> accountNo|string|account no|
-|> qrcode|string|QR code|
-|remark|string|adv remark info|
+|> id|string|Payment ID|
+|> realName |string |User's real name|
+|> paymentType |int |Payment type|
+|> bankName |string |Bank name|
+|> branchName |string |Branch name|
+|> accountNo |string |Account number|
+|> qrcode |string |QR code image URL|
+|remark|string|Description|
 |transferLastSeconds|string|The buyer's remaining transfer time|
-|appealContent|string|appeal content|
-|appealType|int|appeal type|
-|appealNickName|string|appeal user nick name|
-|canAppeal|string|user can appeal|
-|confirmedPayTerm|object|buyer select payment info|
-|> id|string|payment id|
-|> realName|string|realname|
-|> paymentType|int|payment type|
-|> bankName|string|bank name|
-|> branchName|string|branch name|
-|> accountNo|string|account no|
-|> qrcode|string|QR code|
-|makerFee|string|maker fee|
-|takerFee|string|taker fee|
+|appealContent|string|Appeal content|
+|appealType|int|Appeal type|
+|appealNickName|string|Appeal user nickname|
+|canAppeal|string|User can appeal|
+|confirmedPayTerm|object|Buyer's select payment info|
+|> id|string|Payment ID|
+|> realName |string |User's real name|
+|> paymentType |int |Payment type|
+|> bankName |string |Bank name|
+|> branchName |string |Branch name|
+|> accountNo |string |Account number|
+|> qrcode |string |QR code image URL|
+|makerFee|string|Maker fee|
+|takerFee|string|Taker fee|
 |extension|object|Order extension information|
-|> isDelayWithdraw|bool|Delayed withdrawal  `true` : delay|
-|> delayTime|string|delay time|
-|> startTime|string|delay start time|
-|orderType|string|order type `ORIGIN`: normal p2p order , `SMALL_COIN`: HotSwap p2p order, `WEB3`: web3 p2p order|
-|appealUserId|string|appealing uid|
-|notifyTokenId|string|buyer revice token|
-|notifyTokenQuantity|string|buyer revise token quantity|
-|cancelReason|string|order cancel reason|
+|> isDelayWithdraw|bool|If the withdrawal is delayed|
+|> delayTime|string|Delay time|
+|> startTime|string|Delay start time|
+|orderType|string|Order type <ul><li>`ORIGIN`: normal p2p order</li><li>`SMALL_COIN`: HotSwap p2p order</li><li>`WEB3`: web3 p2p order</li></ul>|
+|appealUserId|string|Appealing UID|
+|notifyTokenId|string|Buyer revice token|
+|notifyTokenQuantity|string|Buyer revise token quantity|
+|cancelReason|string|Order cancel reason|
 |usedCoupon|bool|Whether the order uses a coupon `1`: used `2`: not used|
-|couponTokenId|string|coupon tokenId|
-|couponQuantity|string|coupon quantity|
+|couponTokenId|string|Coupon tokenId|
+|couponQuantity|string|Coupon quantity|
 |targetUserType|string|Counterparty Identity Type `PERSONAL` `ORG`|
 
 ### Request Example
@@ -97,13 +97,11 @@ Content-Type: application/json
 
 ```python
 from bybit_p2p import P2P
-
 api = P2P(
     testnet=True,
     api_key="x",
     api_secret="x"
 )
-
 print(api.get_order_details(
     orderId="1900004704665923584"
 ))
