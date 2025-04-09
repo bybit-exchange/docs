@@ -15,14 +15,14 @@ GET `/v5/earn/product`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|`FlexibleSaving`<br/>**備註**: 本期僅支持活期理財|
+|category|**true**|string|`FlexibleSaving`,`Onchain` <br/>**備註**: 本期僅支持活期理財|
 |coin|false|string|幣種名稱 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array|Object|
-|> category|string |`FlexibleSaving` |
+|> category|string |`FlexibleSaving`,`Onchain` |
 |> estimateApr|string |預估年化利率, e.g., `3%`, `4.25%`<br/>**備註**: 1)預估年化收益率提供潛在收益的動態預覽，根據市場行情每 10 分鐘更新一次. <br/>2) 請注意，該數值僅為估算值，可能會與您獲得的實際年化收益率有所不同.<br/>3) 不展示部分幣種支持的平台獎勵年化收益率|
 |> coin|string |幣種名稱|
 |> minStakeAmount|string |最小質押額 |
@@ -93,13 +93,27 @@ print(session.get_earn_product_info(
         "list": [
             {
                 "category": "FlexibleSaving",
-                "estimateApr": "3%",
+                "estimateApr": "0.3%",
                 "coin": "BTC",
                 "minStakeAmount": "0.001",
-                "maxStakeAmount": "10",
+                "maxStakeAmount": "200",
                 "precision": "8",
-                "productId": "430",
-                "status": "Available"
+                "productId": "3",
+                "status": "Available",
+                "bonusEvents": [],
+                "minRedeemAmount": "",
+                "maxRedeemAmount": "",
+                "duration": "",
+                "term": 0,
+                "swapCoin": "",
+                "swapCoinPrecision": "",
+                "stakeExchangeRate": "",
+                "redeemExchangeRate": "",
+                "rewardDistributionType": "",
+                "rewardIntervalMinute": 0,
+                "redeemProcessingMinute": 0,
+                "stakeTime": "",
+                "interestCalculationTime": ""
             }
         ]
     },
