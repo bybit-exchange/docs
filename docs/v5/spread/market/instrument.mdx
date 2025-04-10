@@ -1,6 +1,6 @@
 ---
-title: Get Instruments Info
-sidebar_label: Get Instruments Info
+title: Get Spread Instruments Info
+sidebar_label: Get Spread Instruments Info
 sidebar_position: 1
 ---
 
@@ -20,23 +20,25 @@ GET `/v5/spread/instrument`
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|symbol|string |Spread combination symbol name|
-|contractType|string |Product type <li>`FundingRateArb`: perpetual & spot combination</li><li>`CarryTrade`: futures & spot combination</li><li>`FutureSpread`: different expiry futures combination</li><li>`PerpBasis`: futures & perpetual</li>|
-|status|string |Spread status, `Trading`, `Settling` |
-|baseCoin|string |Base coin |
-|quoteCoin|string |Quote coin |
-|settleCoin|string |Settle coin |
-|tickSize|string |The step to increase/reduce order price |
-|minPrice|string |Min. order price |
-|maxPrice|string |Max. order price |
-|lotSize|string |Order qty precision |
-|minSize|string |Min. order qty |
-|maxSize|string |Max. order qty |
-|launchTime|string |Launch timestamp (ms) |
-|deliveryTime|string |Delivery timestamp (ms) |
-|legs|array&lt;object&gt; |Legs information |
-|> symbol|string |Legs symbol name |
-|> contractType|string |Legs contract type, `LinearPerpetual`, `LinearFutures`, `Spot`|
+|list|array&lt;object&gt; |instrument info |
+|> symbol|string |Spread combination symbol name|
+|> contractType|string |Product type <li>`FundingRateArb`: perpetual & spot combination</li><li>`CarryTrade`: futures & spot combination</li><li>`FutureSpread`: different expiry futures combination</li><li>`PerpBasis`: futures & perpetual</li>|
+|> status|string |Spread status, `Trading`, `Settling` |
+|> baseCoin|string |Base coin |
+|> quoteCoin|string |Quote coin |
+|> settleCoin|string |Settle coin |
+|> tickSize|string |The step to increase/reduce order price |
+|> minPrice|string |Min. order price |
+|> maxPrice|string |Max. order price |
+|> lotSize|string |Order qty precision |
+|> minSize|string |Min. order qty |
+|> maxSize|string |Max. order qty |
+|> launchTime|string |Launch timestamp (ms) |
+|> deliveryTime|string |Delivery timestamp (ms) |
+|> legs|array&lt;object&gt; |Legs information |
+|>> symbol|string |Legs symbol name |
+|>> contractType|string |Legs contract type, `LinearPerpetual`, `LinearFutures`, `Spot`|
+|nextPageCursor |string |Refer to the `cursor` request parameter |
 
 ### Request Example
 

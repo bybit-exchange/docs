@@ -1,0 +1,61 @@
+---
+title: 平台成交
+sidebar_label: 平台成交
+sidebar_position: 2
+---
+
+訂閱Bybit平台上價差交易最近成交的推送.<br/>
+從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
+
+推送頻率: **real-time**
+
+**Topic:**<br/>
+`publicTrade.{symbol}`<br/>
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`|
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
+|data |array |Object. 如有多條, 則數組中的元素按照匹配時間升序排序 |
+|> T |number |成交時間戳 (毫秒) |
+|> s |array |合約名稱  |
+|> S |string |吃單方向. `Buy`,`Sell` |
+|> v |string |成交數量 |
+|> p |string |成交價格 |
+|> [L](../../enum#tickdirection) |string |價格變化的方向. _期權沒有該字段_ |
+|> i |string |成交Id |
+
+### 訂閱示例
+
+```http
+{
+    "op": "subscribe",
+    "id": "test-001-perp",
+    "args": [
+        "publicTrade.SOLUSDT_SOL/USDT"
+    ]
+}
+```
+
+### 推送示例
+
+```json
+{
+    "topic": "publicTrade.SOLUSDT_SOL/USDT",
+    "ts": 1744170142723,
+    "type": "snapshot",
+    "data": [
+        {
+            "T": 1744170142720,
+            "s": "SOLUSDT_SOL/USDT",
+            "S": "Sell",
+            "v": "2.5",
+            "p": "19.3928",
+            "L": "MinusTick",
+            "i": "31d0fc58-933b-57b3-8378-f73da06da843"
+        }
+    ]
+}
+```

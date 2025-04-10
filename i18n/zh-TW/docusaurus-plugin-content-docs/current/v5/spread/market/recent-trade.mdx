@@ -1,38 +1,36 @@
 ---
-title: Get Spread Public Recent Trades
-sidebar_label: Get Spread Public Recent Trades
+title: 查詢最近公共成交
+sidebar_label: 查詢最近公共成交
 sidebar_position: 4
 ---
 
-Query spread recent public trading data
-
-### HTTP Request
+### HTTP請求
 GET `/v5/spread/recent-trade`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|symbol |**true** |string |Spread combination symbol name|
-|limit |false |integer |Limit for data size per page [1,1000], default: `500`|
+|symbol |**true** |string |價差產品名稱|
+|limit |false |integer |每頁數量限制 [1,1000], 默認: `500`|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|list |array&lt;object&gt; |Public trade info|
-|> execId |string |Execution ID |
-|> symbol |string |Spread combination symbol name|
-|> price |string |Trade price |
-|> size |string |Trade size |
-|> side |string |Side of taker `Buy`, `Sell`|
-|> time |string |Trade time (ms) |
+|list |array&lt;object&gt; |成交信息|
+|> execId |string |成交id |
+|> symbol |string |價差產品名稱|
+|> price |string |成交價格 |
+|> size |string |成交數量 |
+|> side |string |吃單方向 `Buy`, `Sell`|
+|> time |string |成交時間戳 (毫秒) |
 
-### Request Example
+### 請求示例
 ```http
 GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

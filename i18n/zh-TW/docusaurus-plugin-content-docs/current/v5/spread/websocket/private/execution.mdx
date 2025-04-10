@@ -1,44 +1,46 @@
 ---
-title: Spread Execution
-sidebar_label: Spread Execution
+title: 個人成交
+sidebar_label: 成交
 sidebar_position: 2
 ---
+訂閱價差交易發生的成交
+
 **Topic:** `spread.execution`<br/>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|id |string |Message ID|
-|topic |string |Topic name |
-|creationTime |number |Data created timestamp (ms) |
+|id |string |消息ID|
+|topic |string |Topic名|
+|creationTime |number |消息數據創建時間 (ms) |
 |data |array&lt;object&gt; | |
-|> category| string  |Combo or single leg, `combination`, `spot_leg`, `future_leg`|
-|> symbol |string  |Combo or leg symbol name |
-|> isLeverage |string |Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.|
-|> orderId |string |Order ID, leg is ""|
-|> orderLinkId |string |User customized order ID, leg is ""|
-|> side |string |Side. `Buy`,`Sell` |
-|> orderPrice |string |Order price|
-|> orderQty |string |Order qty|
-|> leavesQty |string |The remaining qty not executed|
-|> [createType](../../../enum#createtype)|string |Order create type|
-|> orderType |string |Order type. `Market`,`Limit`|
-|> execFee |string |Executed trading fee|
-|> parentExecId |string |Combo's Execution ID, leg's event has the value|
-|> execId |string |Execution ID |
-|> execPrice |string |Execution price |
-|> execQty |string |Execution qty |
-|> execPnl |string |Profit and Loss for each close position execution|
-|> [execType](../../../enum#exectype) |string |Executed type|
-|> execValue |string |Executed order value|
-|> execTime |string |Executed timestamp（ms） |
-|> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
-|> feeRate |string |Trading fee rate|
-|> markPrice |string |The mark price of the symbol when executing |
-|> closedSize |string |Closed position size |
-|> seq |long |Cross sequence|
+|> category| string  |組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿|
+|> symbol |string  |組合或單腿的合約名稱|
+|> isLeverage |string |帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"|
+|> orderId |string |組合訂單ID, 單腿展示""|
+|> orderLinkId |string |組合訂單IDD, 單腿展示""|
+|> side |string |組合或單腿訂單方向. `Buy`,`Sell` |
+|> orderPrice |string |組合或單腿的訂單價格|
+|> orderQty |string |組合或單腿的訂單數量|
+|> leavesQty |string |剩餘未成交數量|
+|> [createType](../../../enum#createtype)|string |訂單創建類型|
+|> orderType |string |訂單類型. `Market`,`Limit`|
+|> execFee |string |手續費, 組合暫時為""|
+|> parentExecId |string |單腿的母成交ID, 即對應組合的成交ID, 組合暫時""|
+|> execId |string |成交ID |
+|> execPrice |string |成交價格|
+|> execQty |string |成交數量 |
+|> execPnl |string |每筆平倉成交的盈虧, 僅合約單腿成交有效|
+|> [execType](../../../enum#exectype) |string |成交類型, 組合總是`Trade`|
+|> execValue |string |成交價值, 僅適用於單腿成交|
+|> execTime |string |成交時間（ms） |
+|> isMaker |boolean |是否是maker成交. `true`: maker, `false`: taker|
+|> feeRate |string |手續費率, 僅適用於單腿成交|
+|> markPrice |string |成交執行時, 該 symbol 當時的標記價格, markPrice |
+|> closedSize |string |平倉數量, 僅適用於單腿成交|
+|> seq |long |序列號, 用於關聯成交和倉位的更新|
 
-### Subscribe Example
+### 訂閱示例
 ```json
 {
     "op": "subscribe",
@@ -48,7 +50,7 @@ sidebar_position: 2
 }
 ```
 
-### Stream Example
+### 推送示例
 
 ```json
 // Combo execution

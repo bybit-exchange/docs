@@ -1,12 +1,14 @@
 ---
-title: Get Order History
-sidebar_label: Get Order History
+title: Get Spread Order History
+sidebar_label: Get Spread Order History
 sidebar_position: 6
 ---
 :::info
 * orderId & orderLinkId has a higher priority than startTime & endTime
 * Fully canceled orders are stored for up to 24 hours.
 :::
+
+**Single leg orders can also be found with "createType"=`CreateByFutureSpread`  via [Get Order History](../../order/order-list)**
 
 ### HTTP Request
 GET `/v5/spread/order/history`
@@ -31,8 +33,8 @@ GET `/v5/spread/order/history`
 |> orderType|string |Order type, `Market`, `Limit`  |
 |> orderLinkId|string |User customised order ID  |
 |> orderId|string |Spread combination order ID  |
-|> contractType|string |Product type <li>`FundingRateArb`: perpetual & spot combination</li><li>`CarryTrade`: futures & spot combination</li><li>`FutureSpread`: different expiry futures combination</li><li>`PerpBasis`: futures & perpetual</li> |
-|> orderStatus|string |`Filled`, `Cancelled`|
+|> contractType|string |Combo type <li>`FundingRateArb`: perpetual & spot combination</li><li>`CarryTrade`: futures & spot combination</li><li>`FutureSpread`: different expiry futures combination</li><li>`PerpBasis`: futures & perpetual</li> |
+|> [orderStatus](../../enum#orderstatus)|string |Order status, `Rejected`, `Cancelled`, `Filled`|
 |> price|string |Order price |
 |> orderQty|string |Order qty |
 |> orderPrice|string |Redundent field, which will be removed later. DON'T USE |
@@ -46,10 +48,10 @@ GET `/v5/spread/order/history`
 |> cumExecQty|string |Cumulative executed order qty |
 |> qty|string |Order qty |
 |> leg1Symbol|string |Leg1 symbol name |
-|> leg1ProdType|string |leg1 product type |
+|> leg1ProdType|string |leg1 product type, `Futures`, `Spot`|
 |> leg1OrderId|string |Leg1 order ID |
 |> leg1Side|string |Leg1 order side |
-|> leg2ProdType|string |leg2 product type |
+|> leg2ProdType|string |leg2 product type, `Futures`, `Spot` |
 |> leg2OrderId|string |Leg2 order ID |
 |> leg2Symbol|string |Leg2 symbol name |
 |> leg2Side|string |Leg2 orde side |

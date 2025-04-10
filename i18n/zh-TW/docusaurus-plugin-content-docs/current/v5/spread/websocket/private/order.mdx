@@ -1,47 +1,47 @@
 ---
-title: Spread Order
-sidebar_label: Spread Order
+title: 訂單
+sidebar_label: 訂單
 sidebar_position: 1
 ---
 
-Subscribe to the order stream to see changes to your orders in **real-time**.
+訂閱價差交易訂單推送
 
 **Topic:** `spread.order`<br/>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|id |string |Message ID|
-|topic |string |Topic name |
-|creationTime |number |Data created timestamp (ms) |
-|data |array |Object |
-|> category|string |Category name, `combination`, `spot_leg`, `future_leg`|
-|> symbol|string |Combo or leg's symbol name |
-|> parentOrderId|string |Leg's parent order ID |
-|> orderId|string |Combo or leg's order ID |
-|> orderLinkId|string |Combo's user customised order ID |
-|> side|string |Combo or leg's order side, `Buy`, `Sell` |
-|> orderStatus|string |Combo or leg's order status |
-|> [cancelType](../../../enum#canceltype)|string |Cancel type |
-|> [rejectReason](../../../enum#rejectreason)|string |Reject Reason |
-|> timeInForce|string |Time in force, `GTC`, `FOK`, `IOC`, `PostOnly` |
-|> price|string |Order price |
-|> qty|string |Order qty |
-|> avgPrice|string |Average filled price |
-|> leavesQty|string |The remaining qty not executed |
-|> leavesValue|string |The estimated value not executed |
-|> cumExecQty|string |Cumulative executed order qty |
-|> cumExecValue|string |Cumulative executed order value |
-|> cumExecFee|string |Cumulative executed trading fee |
-|> orderType|string |Order type. `Market`,`Limit` |
-|> isLeverage |string |Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.|
-|> createdTime|string |Order created timestamp (ms) |
-|> updatedTime|string |Order updated timestamp (ms) |
-|> feeCurrency|string |Trading fee currency for Spot leg only |
-|> createType|string |Order create type |
-|> closedPnl|string |Closed profit and loss for each close position order |
+|id |string |消息ID|
+|topic |string |Topic名|
+|creationTime |number |消息數據創建時間 (ms) |
+|data |array&lt;object&gt; | |
+|> category| string  |組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿|
+|> symbol |string  |組合或單腿的合約名稱|
+|> parentOrderId|string |單腿訂單的所屬組合訂單ID |
+|> orderId|string |組合或單腿的訂單ID |
+|> orderLinkId|string |組合單的用戶自定義ID |
+|> side|string |組合或單腿的訂單方向, `Buy`, `Sell` |
+|> orderStatus|string |組合或單腿的訂單狀態|
+|> [cancelType](../../../enum#canceltype)|string |訂單被取消類型|
+|> [rejectReason](../../../enum#rejectreason)|string |拒絕原因 |
+|> timeInForce|string |執行策略, `GTC`, `FOK`, `IOC`, `PostOnly` |
+|> price|string |訂單價格|
+|> qty|string |訂單數量 |
+|> avgPrice|string |平均成交價格 |
+|> leavesQty|string |訂單剩餘未成交的數量 |
+|> leavesValue|string |訂單剩餘未成交的價值 |
+|> cumExecQty|string |訂單累計成交數量 |
+|> cumExecValue|string |訂單累計成交價值 |
+|> cumExecFee|string |訂單累計成交的手續費 |
+|> orderType|string |訂單類型. `Market`,`Limit` |
+|> isLeverage |string |帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"|
+|> createdTime|string |創建訂單的時間戳 (毫秒) |
+|> updatedTime|string |訂單更新的時間戳 (毫秒) |
+|> feeCurrency|string |手續費幣種, 僅適用於現貨單腿訂單 |
+|> [createType](../../../enum#createtype)|string | 訂單創建類型|
+|> closedPnl|string |平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費 |
 
-### Subscribe Example
+### 訂閱示例
 ```json
 {
     "op": "subscribe",
@@ -51,7 +51,7 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 }
 ```
 
-### Stream Example
+### 推送示例
 
 ```json
 {

@@ -1,0 +1,62 @@
+---
+title: Spread Ticker
+sidebar_label: Spread Ticker
+sidebar_position: 3
+---
+
+Subscribe to the ticker stream.
+
+Push frequency: **100ms**
+
+**Topic:**<br/>
+`tickers.{symbol}`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot`|
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |map |Object |
+|> symbol|string |Spread combination symbol name |
+|> bidPrice|string |Bid 1 price |
+|> bidSize|string |Bid 1 size |
+|> askPrice|string |Ask 1 price |
+|> askSize|string |Ask 1 size |
+|> lastPrice|string |Last trade price |
+|> highPrice24h|string |The highest price in the last 24 hours |
+|> lowPrice24h|string |The lowest price in the last 24 hours|
+|> prevPrice24h|string |Price 24 hours ago |
+|> volume24h|string |Volume for 24h |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "tickers.SOLUSDT_SOL/USDT"
+    ]
+}
+```
+
+### Event Example
+
+```json
+{
+    "topic": "tickers.SOLUSDT_SOL/USDT",
+    "ts": 1744168585009,
+    "type": "snapshot",
+    "data": {
+        "symbol": "SOLUSDT_SOL/USDT",
+        "bidPrice": "20.3359",
+        "bidSize": "1.7",
+        "askPrice": "",
+        "askSize": "",
+        "lastPrice": "21.8182",
+        "highPrice24h": "24.2356",
+        "lowPrice24h": "-3",
+        "prevPrice24h": "22.1468",
+        "volume24h": "23309.9"
+    }
+}
+```
