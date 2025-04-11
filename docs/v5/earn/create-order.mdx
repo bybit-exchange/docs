@@ -9,8 +9,8 @@ API key needs "Earn" permission
 
 :::note
 In times of high demand for loans in the market for a specific cryptocurrency, the redemption of the principal 
-may encounter delays and is expected to be processed within 48 hours. Once the redemption request is initiated, 
-it cannot be canceled, and your principal will continue to earn interest until the process is completed.
+may encounter delays and is expected to be processed within 48 hours. The redemption of on-chain products may take up to a few days to complete. Once the redemption request is initiated, 
+it cannot be canceled.
 :::
 
 ### HTTP Request
@@ -19,13 +19,14 @@ POST `/v5/earn/place-order`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category |**true**| string |`FlexibleSaving`<br/>**Remarks**: currently, only flexible savings is supported|
+|category |**true**| string |`FlexibleSaving`,`OnChain` <br/>**Remarks**: currently, only flexible savings and on chain is supported|
 |orderType |**true**| string |`Stake`, `Redeem`|
-|accountType |**true**| string |`FUND`, `UNIFIED`|
+|accountType |**true**| string |`FUND`, `UNIFIED`. Onchain only supports FUND|
 |amount |**true**| string |<li>Stake amount needs to satisfy minStake and maxStake</li><li>Both stake and redeem amount need to satify precision requirement</li>|
 |coin |**true**| string |Coin name|
 |productId |**true**| string |Product ID|
 |orderLinkId |**true**| string |Customised order ID, used to prevent from replay<li>support up to 36 characters</li><li>The same orderLinkId can't be used in 30 mins</li>|
+|redeemPositionId|false| string |The position ID that the user needs to redeem. Only is required in Onchain non-LST mode|
 
 ### Response Parameters
 | Parameter | Type | Comments|

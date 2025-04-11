@@ -15,14 +15,14 @@ GET `/v5/earn/product`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|`FlexibleSaving`<br/>**Remarks**: currently, only flexible savings is supported|
+|category|**true**|string|`FlexibleSaving`,`OnChain`<br/>**Remarks**: currently, only flexible savings and on chain is supported|
 |coin|false|string|Coin name, uppercase only |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list|array|Object|
-|> category|string |`FlexibleSaving` |
+|> category|string |`FlexibleSaving`,`OnChain` |
 |> estimateApr|string |Estimated APR, e.g., `3%`, `4.25%`<br/>**Remarks**: 1)The Est. APR provides a dynamic preview of your potential returns, updated every 10 minutes in response to market conditions. <br/>2) Please note that this is an estimate and may differ from the actual APR you will receive.<br/>3) Platform Reward APRs are not shown|
 |> coin|string |Coin name|
 |> minStakeAmount|string |Minimum stake amount |
@@ -30,6 +30,23 @@ GET `/v5/earn/product`
 |> precision|string |Amount precision |
 |> productId|string |Product ID|
 |> status|string |`Available`, `NotAvailable`|
+|> bonusEvents|Array |Bonus |
+|>> apr|string |Yesterday's Rewards APR |
+|>> coin|string |Reward coin |
+|>> announcement|string |Announcement link |
+|> minRedeemAmount|string |Minimum redemption amount. Only has value in Onchain LST mode |
+|> maxRedeemAmount|string |Maximum redemption amount. Only has value in Onchain LST mode |
+|> duration|string |`Fixed`,`Flexible`. Product Type|
+|> term|int |Unit: Day. Only when duration = `Fixed` for OnChain|
+|> swapCoin|string |swap coin. Only has value in Onchain LST mode |
+|> swapCoinPrecision|string |swap coin precision. Only has value in Onchain LST mode |
+|> stakeExchangeRate|string |Estimated stake exchange rate. Only has value in Onchain LST mode |
+|> redeemExchangeRate|string |Estimated redeem exchange rate. Only has value in Onchain LST mode|
+|> rewardDistributionType|string |`Simple`, `Compound`, `LST`. Only has value for Onchain|
+|> rewardIntervalMinute|int |Frequency of reward distribution (minutes) |
+|> redeemProcessingMinute|string |Estimated redemption minutes|
+|> stakeTime|string |Staking on-chain time, in milliseconds|
+|> interestCalculationTime|string |Interest accrual time, in milliseconds|
 
 ### Request Example
 
@@ -82,7 +99,21 @@ print(session.get_earn_product_info(
                 "maxStakeAmount": "10",
                 "precision": "8",
                 "productId": "430",
-                "status": "Available"
+                "status": "Available",
+                "bonusEvents": [],
+                "minRedeemAmount": "",
+                "maxRedeemAmount": "",
+                "duration": "",
+                "term": 0,
+                "swapCoin": "",
+                "swapCoinPrecision": "",
+                "stakeExchangeRate": "",
+                "redeemExchangeRate": "",
+                "rewardDistributionType": "",
+                "rewardIntervalMinute": 0,
+                "redeemProcessingMinute": 0,
+                "stakeTime": "",
+                "interestCalculationTime": ""
             }
         ]
     },

@@ -8,7 +8,8 @@ API key需要"理財""權限
 :::
 
 :::note
-已經完全贖回的質押同樣會顯示在持倉列表中
+對於活期儲蓄，返回訊息裡也返回完全贖回的部分
+對於鏈上賺幣，返回訊息中僅返回當前的部分
 :::
 
 ### HTTP 請求
@@ -17,19 +18,26 @@ GET `/v5/earn/position`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|`FlexibleSaving`|
-|productId|false|string|Product ID|
-|coin|false|string|Coin name|
+|category|**true**|string|產品類別：`FlexibleSaving`,`OnChain`|
+|productId|false|string|持倉對應的產品 ID|
+|coin|false|string|幣種名稱|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array|Object|
-|> coin|string |Coin name |
-|> productId|string |Product ID|
-|> amount|string |Total staked amount|
-|> totalPnl|string |Total yields|
-|> claimableYield|string |Yield accrues on an hourly basis and is distributed at 00:30 UTC daily. If you unstake your assets before yield distribution, any undistributed yield will be credited to your account along with your principal.|
+|> coin|string |幣種名稱 |
+|> productId|string |持倉對應的產品 ID|
+|> amount|string |持倉金額|
+|> totalPnl|string |持倉總收益。僅在 Onchain 非 LST 模式下有價值|
+|> claimableYield|string |收益按小時累計，並於每天 UTC 時間 00:30 分發。如果您在收益分配之前取消質押資產，任何未分配的收益將與您的本金一起記入您的帳戶。|
+|> id|string |持倉ID. 僅適用於 Onchain|
+|> status|string |`Processing`,`Active`. 僅適用於 Onchain|
+|> orderId|string |訂單編號. 僅適用於 Onchain|
+|> estimateRedeemTime|string |預計贖回時間。以毫秒為單位.僅適用於 Onchain|
+|> estimateStakeTime|string |預計質押時間。以毫秒為單位.僅適用於 Onchain|
+|> estimateInterestCalculationTime|string |預計計息時間。以毫秒為單位.僅適用於 Onchain |
+|> settlementTime|string |結算時間。以毫秒為單位.僅對 Onchain `Fixed`產品有價值|
 
 ### 請求示例
 
@@ -82,11 +90,18 @@ print(session.get_staked_position(
     "result": {
         "list": [
             {
-                "coin": "USDT",
-                "productId": "428",
-                "amount": "3000",
-                "totalPnl": "125.6208",
-                "claimableYield": "0"
+                "coin": "BTC",
+                "productId": "8",
+                "amount": "0.1",
+                "totalPnl": "0.000027397260273973",
+                "claimableYield": "0",
+                "id": "326",
+                "status": "Active",
+                "orderId": "1a5a8945-e042-4dd5-a93f-c0f0577377ad",
+                "estimateRedeemTime": "",
+                "estimateStakeTime": "",
+                "estimateInterestCalculationTime": "1744243200000",
+                "settlementTime": "1744675200000"
             }
         ]
     },
