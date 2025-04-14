@@ -1,0 +1,64 @@
+---
+title: 價差-全部撤單
+sidebar_label: 價差-全部撤單
+sidebar_position: 4
+---
+
+### HTTP請求
+POST `/v5/spread/order/cancel-all`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false|string |價差產品名稱 <li>當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.</li><li>當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消</li>|
+|cancelAll |false|boolean |`true`, `false`|
+
+:::info
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+:::
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array&lt;object&gt; ||
+|> orderId |string |價差訂單ID |
+|> orderLinkId |string |用戶自定義訂單ID |
+|success |string |該字段可以忽略, 無實際意義|
+
+### 請求示例
+
+```http
+POST /v5/spread/order/cancel-all HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744090967121
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 49
+
+{
+   
+    "symbol": null,
+    "cancelAll": true
+}
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",
+                "orderLinkId": ""
+            }
+        ],
+        "success": "1"
+    },
+    "retExtInfo": {},
+    "time": 1744090940933
+}
+```

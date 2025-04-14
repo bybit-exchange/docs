@@ -1,0 +1,114 @@
+---
+title: Get Spread Trade History
+sidebar_label: Get Spread Trade History
+sidebar_position: 7
+---
+:::info
+* In self-trade cases, both the maker and taker single-leg trades will be returned in the same request.
+* Single leg executions can also be found with "execType"=`FutureSpread`  via [Get Trade History](../../order/execution)
+:::
+
+
+### HTTP Request
+GET `/v5/spread/execution/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Spread combination symbol name|
+|orderId |false |string |Spread combination order ID |
+|orderLinkId |false |string |User customised order ID |
+|startTime |false |long |The start timestamp (ms)<ul><li>startTime and endTime are not passed, return 7 days by default</li><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|endTime |false |long |The end timestamp (ms)|
+|limit |false |integer |Limit for parent order data size per page. [`1`, `50`]. Default: `20`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array&lt;object&gt; |Trade info |
+|> symbol|string |Spread combination symbol name |
+|> orderLinkId|string |User customised order ID |
+|> side|string |Side, `Buy`, `Sell` |
+|> orderId|string |Spread combination order ID |
+|> execPrice|string |Combo Exec price |
+|> execTime|string |Combo exec timestamp (ms)|
+|> execType|string |Combo exec type, `Trade` |
+|> execQty|string |Combo exec qty |
+|> execId|string |Combo exec ID |
+|> legs|array&lt;object&gt; |Legs execution info |
+|>> symbol|string |Leg symbol name |
+|>> side|string |Leg order side, `Buy`, `Sell` |
+|>> execPrice|string |Leg exec price |
+|>> execTime|string |Leg exec timestamp (ms) |
+|>> execValue|string |Leg exec value |
+|>> [execType](../../enum#exectype)|string |Leg exec type |
+|>> category|string |Leg category, `linear`, `spot` |
+|>> execQty|string |Leg exec qty |
+|>> execFee|string |Leg exec fee |
+|>> execId|string |Leg exec ID |
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+### Request Example
+
+```http
+GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1744105738529
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",
+        "list": [
+            {
+                "symbol": "SOLUSDT_SOL/USDT",
+                "orderLinkId": "",
+                "side": "Buy",
+                "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",
+                "execPrice": "21",
+                "legs": [
+                    {
+                        "symbol": "SOLUSDT",
+                        "side": "Buy",
+                        "execPrice": "124.1",
+                        "execTime": "1744104992224",
+                        "execValue": "248.2",
+                        "execType": "FutureSpread",
+                        "category": "linear",
+                        "execQty": "2",
+                        "execFee": "0.039712",
+                        "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"
+                    },
+                    {
+                        "symbol": "SOLUSDT",
+                        "side": "Sell",
+                        "execPrice": "103.1152",
+                        "execTime": "1744104992224",
+                        "execValue": "206.2304",
+                        "execType": "FutureSpread",
+                        "category": "spot",
+                        "execQty": "2",
+                        "execFee": "0.06186912",
+                        "execId": "2110000000061481958"
+                    }
+                ],
+                "execTime": "1744104992220",
+                "execType": "Trade",
+                "execQty": "2",
+                "execId": "82c82077-0caa-5304-894d-58a50a342bd7"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1744105105169
+}
+```

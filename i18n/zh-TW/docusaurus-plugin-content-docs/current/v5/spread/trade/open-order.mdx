@@ -1,0 +1,81 @@
+---
+title: 查詢價差活動單
+sidebar_label: 查詢價差活動單
+sidebar_position: 5
+---
+
+### HTTP請求
+GET `/v5/spread/order/realtime`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |價差產品名稱|
+|baseCoin |false |string |交易幣種|
+|orderId |false |string |價差訂單ID |
+|orderLinkId |false |string |用戶自定義ID |
+|limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array&lt;object&gt; |訂單信息 |
+|> symbol|string |價差產品名稱 |
+|> orderType|string |訂單類型, `Market`, `Limit` |
+|> updatedTime|string |訂單更新時間 (毫秒) |
+|> orderId|string |價差訂單ID|
+|> orderLinkId|string |用戶自定義ID |
+|> side|string |訂單方向, `Buy`, `Sell` |
+|> leavesQty|string |剩餘未成交數量 |
+|> orderStatus|string |訂單狀態, `New`, `PartiallyFilled` |
+|> cumExecQty|string |累計成交數量 |
+|> price|string |訂單價格 |
+|> qty|string |訂單數量|
+|> createdTime|string |訂單創建時間 (毫秒) |
+|> timeInForce|string |訂單執行策略, `GTC`, `FOK`, `IOC`, `PostOnly` |
+|> baseCoin|string |交易幣種 |
+|nextPageCursor |string |游標，用於翻頁 |
+
+### 請求示例
+
+```http
+GET /v5/spread/order/realtime HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744096099520
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",
+        "list": [
+            {
+                "symbol": "SOLUSDT_SOL/USDT",
+                "orderType": "Limit",
+                "updatedTime": "1744096099771",
+                "orderLinkId": "",
+                "side": "Buy",
+                "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",
+                "leavesQty": "0.1",
+                "orderStatus": "New",
+                "cumExecQty": "0",
+                "price": "-4",
+                "qty": "0.1",
+                "createdTime": "1744096099767",
+                "timeInForce": "PostOnly",
+                "baseCoin": "SOL"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1744096103435
+}
+```

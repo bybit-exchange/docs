@@ -1,0 +1,63 @@
+---
+title: Create Spread Order
+sidebar_label: Create Spread Order
+sidebar_position: 1
+---
+Place a spread combination order, **up to 50 open orders** per account
+
+### HTTP Request
+POST `/v5/spread/order/create`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Spread combination symbol name|
+|side |**true** |string |Order side, `Buy`, `Sell`|
+|orderType |**true** |string |`Limit`, `Market`|
+|qty |**true** |string |Order qty|
+|price |**true** |string |Order price|
+|orderLinkId |**true** |string |User customised order ID, a max of 45 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.|
+|timeInForce |**true** |string |<a href="https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK">Time in force</a> `IOC`, `FOK`, `GTC`, `PostOnly`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |Spread combination order ID |
+|orderLinkId |string |User customised order ID |
+
+### Request Example
+
+```http
+POST /v5/spread/order/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744079410023
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 191
+
+{
+    "symbol": "SOLUSDT_SOL/USDT",
+    "side": "Buy",
+    "orderType": "Limit",
+    "qty": "0.1",
+    "price": "21",
+    "orderLinkId": "1744072052193428479",
+    "timeInForce": "PostOnly"
+}
+```
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",
+        "orderLinkId": "1744072052193428479"
+    },
+    "retExtInfo": {},
+    "time": 1744075839332
+}
+```

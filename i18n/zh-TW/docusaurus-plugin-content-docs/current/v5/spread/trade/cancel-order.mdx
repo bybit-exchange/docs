@@ -1,0 +1,55 @@
+---
+title: 撤銷價差委託單
+sidebar_label: 撤銷價差委託單
+sidebar_position: 3
+---
+
+### HTTP請求
+POST `/v5/spread/order/cancel`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId |false |string |價差訂單ID. `orderId` 和 `orderLinkId` 必傳其中一個 |
+|orderLinkId |false |string |用戶自定義ID. `orderId` 和 `orderLinkId` 必傳其中一個 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderId |string |價差訂單ID |
+|orderLinkId |string |用戶自定義ID|
+
+:::info
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+:::
+
+### 請求示例
+```http
+POST /v5/spread/order/cancel HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1744090699418
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 48
+
+{
+    "orderLinkId": "1744072052193428476"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "4496253b-b55b-4407-8c5c-29629d169caf",
+        "orderLinkId": "1744072052193428476"
+    },
+    "retExtInfo": {},
+    "time": 1744090702715
+}
+```

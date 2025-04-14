@@ -1,0 +1,62 @@
+---
+title: 查詢最新行情信息
+sidebar_label: 查詢最新行情信息
+sidebar_position: 3
+---
+
+可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
+
+### HTTP請求
+GET `/v5/spread/tickers`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |價差產品名稱|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array&lt;object&gt; |行情信息|
+|> symbol|string |價差產品名稱|
+|> bidPrice|string |買1價 |
+|> bidSize|string |買1價的數量 |
+|> askPrice|string |賣1價 |
+|> askSize|string |賣1價的數量 |
+|> lastPrice|string |最新市場成交價|
+|> highPrice24h|string |最近24小時的最高價|
+|> lowPrice24h|string |最近24小時的最低價|
+|> prevPrice24h|string |24小時前的整點市價 |
+|> volume24h|string |最近24小時成交量|
+
+### 請求示例
+```http
+GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "list": [
+            {
+                "symbol": "SOLUSDT_SOL/USDT",
+                "bidPrice": "",
+                "bidSize": "",
+                "askPrice": "",
+                "askSize": "",
+                "lastPrice": "19.444",
+                "highPrice24h": "23.8353",
+                "lowPrice24h": "0",
+                "prevPrice24h": "20",
+                "volume24h": "24694.9"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1744079413254
+}
+```
