@@ -34,10 +34,10 @@ GET `/v5/spread/order/history`
 |> orderLinkId|string |用戶自定義ID  |
 |> orderId|string |價差訂單ID |
 |> contractType|string |價差類型 <li>`FundingRateArb`: 永續 & 現貨組合</li><li>`CarryTrade`: 到期合約& 現貨組合</li><li>`FutureSpread`: 不同到期日合約組合</li><li>`PerpBasis`: 到期合約& 永續組合</li> |
+|> [cxlRejReason](../../enum#rejectreason)|string |拒絕理由 |
 |> [orderStatus](../../enum#orderstatus)|string |訂單狀態`Filled`, `Cancelled`|
 |> price|string |訂單價格 |
 |> orderQty|string |訂單數量 |
-|> orderPrice|string |冗余字段, 後期將移除, 請勿使用|
 |> timeInForce|string |訂單執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  |
 |> baseCoin|string |交易幣種 |
 |> createdAt|string |訂單創建時間 (毫秒) |
@@ -88,7 +88,6 @@ Content-Type: application/json
                 "price": "-4",
                 "leg2Symbol": "SOLUSDT",
                 "orderQty": "0.1",
-                "orderPrice": "-4",
                 "timeInForce": "PostOnly",
                 "baseCoin": "SOL",
                 "updatedAt": "1744098396079",
