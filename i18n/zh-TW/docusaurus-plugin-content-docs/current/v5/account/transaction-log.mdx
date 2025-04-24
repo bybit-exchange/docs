@@ -16,7 +16,7 @@ GET `/v5/account/transaction-log`
 |currency |false |string |貨幣|
 |baseCoin |false |string |交易幣種. 例如： BTCUSDT 的 baseCoin 是 BTC|
 |[type](../enum#typeuta-translog) |false |string |交易日誌的類型 |
-|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &le; 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近24小時的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &le; 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量, 最大50. 默認每頁20條|
 |cursor	|false |string |游標，用於翻頁|
@@ -31,6 +31,7 @@ GET `/v5/account/transaction-log`
 |> side |string |方向. `Buy`,`Sell`,`None`|
 |> transactionTime	|string |交易時間戳（毫秒）|
 |> [type](../enum#typeuta-translog) |string |類型 |
+|> transSubType |string |交易子類型, `movePosition`, 標識移倉產生的流水. 默認`""` |
 |> qty	|string	|數量. <li>現貨: 正的qty表示該幣數量增加, 負的qty表示該幣數量減少</li><li>期貨: 對於成交的流水來說, 這裡的qty表示每筆成交的數量, 不帶方向</li>|
 |> size |string |倉位. 特別地, 對於成交的流水來說, 這裡的size表示成交後的倉位大小, 帶有方向, 比如空倉, 則有"-"|
 |> currency |string |USDC、USDT、BTC、ETH|
@@ -121,6 +122,7 @@ client
         "nextPageCursor": "21963%3A1%2C14954%3A1",
         "list": [
             {
+                "transSubType": "",
                 "id": "592324_XRPUSDT_161440249321",
                 "symbol": "XRPUSDT",
                 "side": "Buy",
@@ -143,6 +145,7 @@ client
                 "tradeId": "534c0003-4bf7-486f-aa02-78cee36825e4"
             },
             {
+                "transSubType": "",
                 "id": "592324_XRPUSDT_161440249321",
                 "symbol": "XRPUSDT",
                 "side": "Buy",
@@ -165,6 +168,7 @@ client
                 "tradeId": "5184f079-88ec-54c7-8774-5173cafd2b4e"
             },
             {
+                "transSubType": "",
                 "id": "592324_XRPUSDT_161407743011",
                 "symbol": "XRPUSDT",
                 "side": "Buy",
