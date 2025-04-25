@@ -15,14 +15,14 @@ GET `/v5/earn/product`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|`FlexibleSaving`,`Onchain` <br/>**備註**: 本期僅支持活期理財|
+|category|**true**|string|`FlexibleSaving`,`OnChain` <br/>**備註**: 本期僅支持活期理財和鏈上賺幣|
 |coin|false|string|幣種名稱 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array|Object|
-|> category|string |`FlexibleSaving`,`Onchain` |
+|> category|string |`FlexibleSaving`,`OnChain` |
 |> estimateApr|string |預估年化利率, e.g., `3%`, `4.25%`<br/>**備註**: 1)預估年化收益率提供潛在收益的動態預覽，根據市場行情每 10 分鐘更新一次. <br/>2) 請注意，該數值僅為估算值，可能會與您獲得的實際年化收益率有所不同.<br/>3) 不展示部分幣種支持的平台獎勵年化收益率|
 |> coin|string |幣種名稱|
 |> minStakeAmount|string |最小質押額 |
@@ -34,15 +34,15 @@ GET `/v5/earn/product`
 |>> apr|string |昨日獎勵 APR |
 |>> coin|string |獎勵幣種 |
 |>> announcement|string |公告連結 |
-|> minRedeemAmount|string |最小贖回額度. 只有 Onchain LST 模式有值 |
-|> maxRedeemAmount|string |最大押額度 （返回可購買金額）. 只有 Onchain LST 模式有值 |
+|> minRedeemAmount|string |最小贖回額度. 只有 OnChain LST 模式有值 |
+|> maxRedeemAmount|string |最大押額度 （返回可購買金額）. 只有 OnChain LST 模式有值 |
 |> duration|string |產品類型：`Fixed`,`Flexible`. |
-|> term|int |單位：天。只有 Onchain 定期產品類型使用|
-|> swapCoin|string |兌換幣種. 只有 Onchain LST 模式有值 |
-|> swapCoinPrecision|string |贖回可支援的精確度. 只有 Onchain LST 模式有值 |
-|> stakeExchangeRate|string |預計質押兌換率. 只有 Onchain LST 模式有值 |
-|> redeemExchangeRate|string |預計赎回兑换率. 只有 Onchain LST 模式有值|
-|> rewardDistributionType|string |收益發放模式：`Simple`, `Compound`, `LST`. 只有 Onchain 模式有值 |
+|> term|int |單位：天。只有 OnChain 定期產品類型使用|
+|> swapCoin|string |兌換幣種. 只有 OnChain LST 模式有值 |
+|> swapCoinPrecision|string |贖回可支援的精確度. 只有 OnChain LST 模式有值 |
+|> stakeExchangeRate|string |預計質押兌換率. 只有 OnChain LST 模式有值 |
+|> redeemExchangeRate|string |預計赎回兑换率. 只有 OnChain LST 模式有值|
+|> rewardDistributionType|string |收益發放模式：`Simple`, `Compound`, `LST`. 只有 OnChain 模式有值 |
 |> rewardIntervalMinute|int |收益發放的頻率（分鐘） |
 |> redeemProcessingMinute|string |預計贖回分鐘|
 |> stakeTime|string |質押上鍊時間. 以毫秒為單位|
