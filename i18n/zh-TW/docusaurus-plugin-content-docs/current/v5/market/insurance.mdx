@@ -4,10 +4,10 @@ sidebar_label: 查詢保險基金
 sidebar_position: 11
 ---
 
-查詢Bybit平台的保險基金的數據，包含所有保險池的數據，數據每24小時更新一次。
+查詢Bybit平台的保險基金的數據，包含所有保險池的數據
 
 :::info
-由於數據24小時更新, 您可能在遭遇自動減倉時, 接口返回的數據還是舊的
+* 保險池的餘額數據1分鐘更新一次
 :::
 
 ### HTTP請求
@@ -24,7 +24,7 @@ GET `/v5/market/insurance`
 |updateTime |string |數據最近更新的時間戳 (ms) |
 |list |array |Object |
 |> coin |string |保險池的幣種 |
-|> symbols |string |<li>對於獨立保險池, 返回的symbols裡可能有多個合約, 比如<code>"BTCUSDT,ETHUSDT,SOLUSDT"</code></li><li>對於非獨立保險池, 將會返回空字符串<code>""</code></li>|
+|> symbols |string |<li>對於共享保險池, 返回的symbols裡會有多個合約, 比如<code>"BTCUSDT,ETHUSDT,SOLUSDT"</code></li><li>對於獨立保險池, 將會返回一個合約</li>|
 |> balance |string |保險基金的幣種數量 |
 |> value |string |保險基金的幣種價值，折合成USD的價值 |
 
@@ -38,7 +38,7 @@ GET `/v5/market/insurance`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/market/insurance?coin=ETH HTTP/1.1
+GET /v5/market/insurance?coin=USDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -49,7 +49,7 @@ Host: api-testnet.bybit.com
 from pybit.unified_trading import HTTP
 session = HTTP(testnet=True)
 print(session.get_insurance(
-    coin="ETH",
+    coin="USDT",
 ))
 ```
 
@@ -90,7 +90,7 @@ const client = new RestClientV5({
 
 client
     .getInsurance({
-        coin: 'ETH',
+        coin: 'USDT',
     })
     .then((response) => {
         console.log(response);
@@ -135,12 +135,6 @@ client
                 "symbols": "AGIUSDT,WIFUSDT",
                 "balance": "10002",
                 "value": "9998.896846613574"
-            },
-            {
-                "coin": "USDT",
-                "symbols": "",
-                "balance": "10148045273.618073",
-                "value": "10144896808.587431"
             }
         ]
     },

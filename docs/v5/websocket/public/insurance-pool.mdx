@@ -1,0 +1,77 @@
+---
+title: Insurance Pool Balance
+sidebar_label: Insurance Pool Balance
+sidebar_position: 4.6
+---
+Subscribe to get the update of insurance pool balance 
+
+Push frequency: **1s**
+
+**Topic:**<br/>
+USDT contracts: `insurance.USDT`<br/>
+USDC contracts: `insurance.USDC`<br/>
+Inverse contracts: `insurance.inverse`
+
+:::info
+* Shared insurance pool data is **not** pushed
+:::
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot`, `delta` |
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |Object | |
+|> coin |string |Insurance pool coin |
+|> symbols |string |Symbol name |
+|> balance |string |Balance |
+|> updateTime |string |Data updated time |
+
+### Subscribe Example
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "insurance.USDT",
+        "insurance.USDC"
+    ]
+}
+```
+
+### Message Example
+
+```json
+{
+    "topic": "insurance.USDT",
+    "type": "delta",
+    "ts": 1747722930000,
+    "data": [
+        {
+            "coin": "USDT",
+            "symbols": "GRIFFAINUSDT",
+            "balance": "25614.92972633",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "CGPTUSDT",
+            "balance": "100000.27064825",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "GOATUSDT",
+            "balance": "20352.32665441",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "XTERUSDT",
+            "balance": "19998.81533291",
+            "updateTime": "1747722930000"
+        }
+    ]
+}
+```
