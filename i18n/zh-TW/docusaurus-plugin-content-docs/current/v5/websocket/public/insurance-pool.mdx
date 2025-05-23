@@ -1,35 +1,35 @@
 ---
-title: Insurance Pool
-sidebar_label: Insurance Pool
+title: 保險池餘額
+sidebar_label: 保險池餘額
 sidebar_position: 4.6
 ---
-Subscribe to get the update of insurance pool balance 
+訂閱來獲取保險池的餘額變動
 
-Push frequency: **1s**
+推送頻率: **1秒**
 
 **Topic:**<br/>
-USDT contracts: `insurance.USDT`<br/>
-USDC contracts: `insurance.USDC` (**note**: all USDC Perpetuals, USDC Futures have their own shared insurance pools)<br/> 
-Inverse contracts: `insurance.inverse`
+USDT合約: `insurance.USDT`<br/>
+USDC合約: `insurance.USDC` (**注意**: 目前所有的USDC永續, USDC交割有各自的共享保險池<br/>
+反向合約: `insurance.inverse`
 
 :::info
-* Shared insurance pool data is **not** pushed, please refer to Rest API [Get Insurance](../../market/insurance) to understand which symbols belong to isolated or shared insurance pools.
-* No event will be published if the balances of all insurance pools remain unchanged.
+* 共享保險池的餘額數據不推送, 可以調用[查詢保險基金](../../market/insurance)接口獲取到每個合約屬於共享還是獨立保險池
+* 如果1秒內沒有任何保險池子的餘額發生變化, 將不會有消息下發
 :::
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|topic |string |Topic name |
-|type |string |Data type. `snapshot`, `delta` |
-|ts |number |The timestamp (ms) that the system generates the data |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`, `delta` |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
 |data |Object | |
-|> coin |string |Insurance pool coin |
-|> symbols |string |Symbol name |
-|> balance |string |Balance |
-|> updateTime |string |Data updated timestamp (ms) |
+|> coin |string |保險池幣種 |
+|> symbols |string |合約名稱 |
+|> balance |string |保險基金的幣種餘額 |
+|> updateTime |string |餘額更新時間戳|
 
-### Subscribe Example
+### 訂閱示例
 
 ```json
 {
@@ -41,7 +41,7 @@ Inverse contracts: `insurance.inverse`
 }
 ```
 
-### Message Example
+### 消息示例
 
 ```json
 {
