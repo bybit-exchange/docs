@@ -4,10 +4,12 @@ sidebar_label: Get Insurance
 sidebar_position: 11
 ---
 
-Query for Bybit <a href="https://www.bybit.com/en/announcement-info/insurance-fund/">insurance pool</a> data (BTC/USDT/USDC etc). The data is updated every 24 hours.
+Query for Bybit <a href="https://www.bybit.com/en/announcement-info/insurance-fund/">insurance pool</a> data (BTC/USDT/USDC etc)
 
 :::info
-Since the insurance pool data is updated every 24 hours, it is possible that you get ADL trade but the insruance pool still has sufficient funds.
+* The insurance pool balance is updated every 1 minute
+* Please note that you may receive data from the previous minute. This is due to multiple backend containers starting
+ at different times, which may cause a slight delay. You can always rely on the latest minute data for accuracy.
 :::
 
 ### HTTP Request
@@ -24,7 +26,7 @@ GET `/v5/market/insurance`
 |updatedTime |string |Data updated time (ms) |
 |list |array |Object |
 |> coin |string |Coin |
-|> symbols |string |<li>For an independent insurance pool, you may see <code>"BTCUSDT,ETHUSDT,SOLUSDT"</code></li><li>For non-independent insurance pool, it returns <code>""</code></li>|
+|> symbols |string |<li>symbols with <code>"BTCUSDT,ETHUSDT,SOLUSDT"</code> mean these contracts are shared with one insurance pool</li><li>For an isolated insurance pool, it returns one contract</li>|
 |> balance |string |Balance |
 |> value |string |USD value |
 
@@ -38,7 +40,7 @@ GET `/v5/market/insurance`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/market/insurance?coin=ETH HTTP/1.1
+GET /v5/market/insurance?coin=USDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -49,7 +51,7 @@ Host: api-testnet.bybit.com
 from pybit.unified_trading import HTTP
 session = HTTP(testnet=True)
 print(session.get_insurance(
-    coin="ETH",
+    coin="USDT",
 ))
 ```
 
@@ -90,7 +92,7 @@ const client = new RestClientV5({
 
 client
     .getInsurance({
-        coin: 'ETH',
+        coin: 'USDT',
     })
     .then((response) => {
         console.log(response);
@@ -135,12 +137,6 @@ client
                 "symbols": "AGIUSDT,WIFUSDT",
                 "balance": "10002",
                 "value": "9998.896846613574"
-            },
-            {
-                "coin": "USDT",
-                "symbols": "",
-                "balance": "10148045273.618073",
-                "value": "10144896808.587431"
             }
         ]
     },

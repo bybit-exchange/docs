@@ -1,0 +1,78 @@
+---
+title: 保險池餘額
+sidebar_label: 保險池餘額
+sidebar_position: 4.6
+---
+訂閱來獲取保險池的餘額變動
+
+推送頻率: **1秒**
+
+**Topic:**<br/>
+USDT合約: `insurance.USDT`<br/>
+USDC合約: `insurance.USDC` (**注意**: 目前所有的USDC永續, USDC交割有各自的共享保險池<br/>
+反向合約: `insurance.inverse`
+
+:::info
+* 共享保險池的餘額數據不推送, 可以調用[查詢保險基金](../../market/insurance)接口獲取到每個合約屬於共享還是獨立保險池
+* 如果1秒內沒有任何保險池子的餘額發生變化, 將不會有消息下發
+:::
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |Topic名 |
+|type |string |數據類型. `snapshot`, `delta` |
+|ts |number |行情服務生成數據的時間戳 (毫秒) |
+|data |Object | |
+|> coin |string |保險池幣種 |
+|> symbols |string |合約名稱 |
+|> balance |string |保險基金的幣種餘額 |
+|> updateTime |string |餘額更新時間戳|
+
+### 訂閱示例
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "insurance.USDT",
+        "insurance.USDC"
+    ]
+}
+```
+
+### 消息示例
+
+```json
+{
+    "topic": "insurance.USDT",
+    "type": "delta",
+    "ts": 1747722930000,
+    "data": [
+        {
+            "coin": "USDT",
+            "symbols": "GRIFFAINUSDT",
+            "balance": "25614.92972633",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "CGPTUSDT",
+            "balance": "100000.27064825",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "GOATUSDT",
+            "balance": "20352.32665441",
+            "updateTime": "1747722930000"
+        },
+        {
+            "coin": "USDT",
+            "symbols": "XTERUSDT",
+            "balance": "19998.81533291",
+            "updateTime": "1747722930000"
+        }
+    ]
+}
+```
