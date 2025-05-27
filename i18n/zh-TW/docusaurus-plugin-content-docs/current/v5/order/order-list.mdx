@@ -88,7 +88,7 @@ GET `/v5/order/history`
 |> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
-|nextPageCursor |string |游標，用於翻頁 |
+|> extraFees |string |交易費率。目前，僅針對在印尼網站的現貨訂單或在歐盟站的現貨法定貨幣訂單返回此數據。在其他情況下，傳回空字串。字段枚舉: [feeType](../enum#extraFees.feeType), [subFeeType](../enum#extraFees.subFeeType)
 
 <a href="/api-explorer/v5/trade/order-list"><Button>運行實例 >></Button></a>
 
@@ -217,7 +217,8 @@ client
                 "slippageToleranceType": "UNKNOWN",
                 "slippageTolerance": "",
                 "createdTime": "1684476068369",
-                "updatedTime": "1684476068372"
+                "updatedTime": "1684476068372",
+                "extraFees":""
             }
         ],
         "nextPageCursor": "page_token%3D39380%26",
