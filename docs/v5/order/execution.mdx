@@ -68,6 +68,7 @@ GET `/v5/execution/list`
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
 |> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>classic account Spot trade does not have this field</li></ul>|
+|> extraFees |string |Trading fee rate information. Currently, this data is returned only for spot orders placed on the Indonesian site or spot fiat currency orders placed on the EU site. In other cases, an empty string is returned. Enum: [feeType](../enum#extraFees.feeType), [subFeeType](../enum#extraFees.subFeeType)
 |nextPageCursor |string |Refer to the `cursor` request parameter|
 
 <a href="/api-explorer/v5/position/execution"><Button>RUN >></Button></a>
@@ -184,6 +185,7 @@ client
                 "execType": "Trade",
                 "execQty": "0.1",
                 "closedSize": "",
+                "extraFees": "",
                 "seq": 4688002127
             }
         ]
