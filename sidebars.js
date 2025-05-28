@@ -32,6 +32,9 @@ const sidebars = {
   ],
   bbyPaySideBar: [
     'bybit-pay/guide',
+    'bybit-pay/flow',
+    'bybit-pay/user-guide',
+    'bybit-pay/order-status',
   {
     type: 'category',
     label: 'Scan Payment',
