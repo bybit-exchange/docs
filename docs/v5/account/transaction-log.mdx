@@ -37,7 +37,7 @@ GET `/v5/account/transaction-log`
 |> size |string |Size. The rest position size after the trade is executed, and it has direction, i.e., short with "-"|
 |> currency |string |e.g., USDC, USDT, BTC, ETH |
 |> tradePrice |string |Trade price |
-|> funding	|string	|Funding fee <ul><li>Positive value means receiving funding fee</li><li>Negative value means deducting funding fee</li><li>For USDC Perp, as funding settlement and session settlement are occurred at the same time, so they are in the same log. Please refer to `funding` to understand funding fee, and `cashFlow` to understand 8-hour P&L</li></ul>|
+|> funding	|string	|Funding fee <ul><li>Positive fee value means an expense; negative fee value means a rebate. This is opposite to the `execFee` from [Get Trade History](https://bybit-exchange.github.io/docs/v5/order/execution).</li><li>For USDC Perp, as funding settlement and session settlement occur at the same time, they are represented in a single record at settlement. Please refer to `funding` to understand funding fee, and `cashFlow` to understand 8-hour P&L.</li></ul>|
 |> fee	|string	|Trading fee <ul><li>Positive fee value means expense</li><li>Negative fee value means rebates</li></ul>|
 |> cashFlow |string |Cash flow, e.g., (1) close the position, and unRPL converts to RPL, (2) 8-hour session settlement for USDC Perp and Futures, (3) transfer in or transfer out. This does not include trading fee, funding fee |
 |> change |string |Change = cashFlow + funding - fee |
