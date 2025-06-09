@@ -10,8 +10,10 @@ is the same UID or belongs to the same specified SMP group, the execution can be
 2. Cancel taker: Cancel the taker order when executed; maker order remains.
 3. Cancel both: Cancel both taker and maker orders when executed.
 
+Once an order is placed in the orderbook, its smpType becomes invalid. This means that, for example, if you place a taker order without an smpType (`smpType=None`) that matches against your existing maker order set with `smpType=CancelMaker`, the taker will execute. This is because the maker order's `smpType=CancelMaker` became invalid once it placed in the orderbook.
+
 ## How to set SMP?
-Check request params of [Place Order](/v5/order/create-order). Specify parameter `smpType` when place the order
+Check request params of [Place Order](/v5/order/create-order). Specify parameter `smpType` when placing the order
 
 ## What is SMP Trade Group?
 * SMP is available for any user by UID level.
