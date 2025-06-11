@@ -205,26 +205,29 @@ const config = {
             label: 'Tax API V3',
           },
           {
-            type: 'doc',
-            docId: 'pilot-feature/pilot',
-            position: 'left',
-            label: 'Pilot Feature',
-          },
-          {
-            type: 'doc',
-            docId: 'changelog/v5',
-            position: 'left',
-            label: 'Changelog',
-          },
-          {
-            to: '/api-explorer/v5/category',
-            position: 'left',
-            label: 'API Explorer',
-          },
-          {
-            to: '/faq',
+            type: 'dropdown',
             position: 'right',
-            label: 'FAQ',
+            label: 'Extras',
+            items: [
+              {
+                type: 'doc',
+                docId: 'pilot-feature/pilot',
+                label: 'Pilot Feature',
+              },
+              {
+                type: 'doc',
+                docId: 'changelog/v5',
+                label: 'Changelog',
+              },
+              {
+                to: '/api-explorer/v5/category',
+                label: 'API Explorer',
+              },
+              {
+                to: '/faq',
+                label: 'FAQ',
+              }
+            ]
           },
           {
             type: 'localeDropdown',
