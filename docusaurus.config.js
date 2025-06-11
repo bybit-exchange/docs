@@ -212,7 +212,7 @@ const config = {
               {
                 type: 'doc',
                 docId: 'pilot-feature/pilot',
-                label: 'Pilot Feature',
+                label: 'Pilot Features',
               },
               {
                 type: 'doc',
