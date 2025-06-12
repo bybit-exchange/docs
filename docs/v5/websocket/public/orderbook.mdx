@@ -59,10 +59,10 @@ same as that in the previous message.
 |ts |number |The timestamp (ms) that the system generates the data |
 |data |map |Object |
 |> s |string |Symbol name |
-|> b |array |Bids. For `snapshot` stream, the element is sorted by price in descending order  |
+|> b |array |Bids. For `snapshot` stream. Sorted by price in descending order  |
 |>> b[0] |string |Bid price |
 |>> b[1] |string |Bid size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li>|
-|> a |array |Asks. For `snapshot` stream, the element is sorted by price in ascending order  |
+|> a |array |Asks. For `snapshot` stream. Sorted by price in ascending order  |
 |>> a[0] |string |Ask price |
 |>> a[1] |string |Ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
 |> u |integer |Update ID<li>Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook</li><li>For level 1 of linear, inverse Perps and Futures, the snapshot data will be pushed again when there is no change in 3 seconds, and the "u" will be the same as that in the previous message</li>|
