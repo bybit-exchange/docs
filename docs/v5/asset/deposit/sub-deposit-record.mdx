@@ -16,6 +16,8 @@ GET `/v5/asset/deposit/query-sub-member-record`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|id |false |string |Internal ID: Can be used to uniquely identify and filter the deposit. When combined with other parameters, this field takes the highest priority|
+|txID |false |string |Transaction ID: Please note that data generated before Jan 1, 2024 cannot be queried using txID|
 |subMemberId |**true** |string |Sub UID |
 |coin |false |string |Coin, uppercase only |
 |startTime |false |integer |The start timestamp (ms) _Note: the query logic is actually effective based on **second** level_|
@@ -27,6 +29,7 @@ GET `/v5/asset/deposit/query-sub-member-record`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows |array|Object |
+|> id |string |Unique ID |
 |> coin |string |Coin |
 |> chain |string|Chain |
 |> amount |string|Amount |

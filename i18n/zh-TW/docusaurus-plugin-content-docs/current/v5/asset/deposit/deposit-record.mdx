@@ -15,6 +15,8 @@ GET `/v5/asset/deposit/query-record`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
+|id |false |string |內部ID: 可用於唯一篩選入金紀錄. 當跟其他參數組合時, 具有最高優先級|
+|txID |false |string |鏈上交易ID: 請注意2024年1月1日之前的入金紀錄, 無法通過txID來篩選|
 |coin |false |string |幣種 |
 |startTime |false |integer |開始時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_ |
 |endTime |false |integer |結束時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_ |
@@ -25,6 +27,7 @@ GET `/v5/asset/deposit/query-record`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |rows |array|Object |
+|> id |string |內部ID, 唯一鍵 |
 |> coin |string |幣種 |
 |> chain |string|鏈名 |
 |> amount |string|充值金額 |
@@ -112,6 +115,7 @@ client
     "result": {
         "rows": [
             {
+                "id": "1319723",
                 "coin": "USDT",
                 "chain": "ETH",
                 "amount": "10000",

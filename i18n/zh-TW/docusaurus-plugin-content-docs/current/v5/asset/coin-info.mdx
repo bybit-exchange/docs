@@ -24,7 +24,7 @@ GET `/v5/asset/coin/query-info`
 |> chains |array |Object |
 |>> chain |string |鏈名 |
 |>> chainType |string |鏈類型 |
-|>> confirmation |string |充值上賬確認數 |
+|>> confirmation |string |充值上賬確認數, 當到達該高度, 資金可用於交易 |
 |>> withdrawFee |string |提現手續費. _如果提現費為空，則表示該幣不支持提現_ |
 |>> depositMin |string |最小充值數量 |
 |>> withdrawMin |string |最小提現數量 |
@@ -33,6 +33,7 @@ GET `/v5/asset/coin/query-info`
 |>> chainWithdraw |string |幣鏈是否可提幣. `0`: 暫停. `1`: 正常 |
 |>> withdrawPercentageFee|string|提現手續費百分比. 該字段的值是實際數字，即0.022表示為2.2%|
 |>> contractAddress |string |合約地址. `""` 表示沒有合約地址|
+|>> safeConfirmNumber |string |風險高度數, 當入金抵達這個高度後, 風險完全解鎖, USD等值的資金允許提走|
 
 <a href="/api-explorer/v5/asset/coin-info"><Button>運行實例 >></Button></a>
 
@@ -117,7 +118,8 @@ client
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
-                        "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354"
+                        "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
+                        "safeConfirmNumber": "65"
                     },
                     {
                         "chainType": "Mantle Network",
@@ -130,7 +132,8 @@ client
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
-                        "contractAddress": ""
+                        "contractAddress": "",
+                         "safeConfirmNumber": "100"
                     }
                 ]
             }
