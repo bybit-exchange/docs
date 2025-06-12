@@ -24,7 +24,7 @@ GET `/v5/asset/coin/query-info`
 |> chains |array |Object |
 |>> chain |string |Chain |
 |>> chainType |string |Chain type |
-|>> confirmation |string |The number of confirmation for deposit |
+|>> confirmation |string |Number of confirmations for deposit: Once this number is reached, your funds will be credited to your account and available for trading|
 |>> withdrawFee |string |withdraw fee. _If withdraw fee is empty, It means that this coin does not support withdrawal_ |
 |>> depositMin |string |Min. deposit |
 |>> withdrawMin |string |Min. withdraw |
@@ -33,6 +33,7 @@ GET `/v5/asset/coin/query-info`
 |>> chainWithdraw |string |The chain status of withdraw. `0`: suspend. `1`: normal |
 |>> withdrawPercentageFee |string |The withdraw fee percentage. It is a real figure, e.g., 0.022 means 2.2%  |
 |>> contractAddress |string |Contract address. `""` means no contract address|
+|>> safeConfirmNumber |string |Number of security confirmations: Once this number is reached, your USD equivalent worth funds will be fully unlocked and available for withdrawal.|
 
 <a href="/api-explorer/v5/asset/coin-info"><Button>RUN >></Button></a>
 
@@ -117,7 +118,8 @@ client
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
-                        "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354"
+                        "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
+                        "safeConfirmNumber": "65"
                     },
                     {
                         "chainType": "Mantle Network",
@@ -130,7 +132,8 @@ client
                         "chainWithdraw": "1",
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
-                        "contractAddress": ""
+                        "contractAddress": "",
+                        "safeConfirmNumber": "100"
                     }
                 ]
             }
