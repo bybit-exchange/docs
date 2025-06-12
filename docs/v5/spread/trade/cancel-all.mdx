@@ -11,6 +11,7 @@ POST `/v5/spread/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|symbol |false|string |Spread combination symbol name <ul><li>When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.</li><li>When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled</li></ul>|
 |cancelAll |false|boolean |`true`, `false`|
 
 :::info
@@ -38,7 +39,6 @@ Content-Type: application/json
 Content-Length: 49
 
 {
-   
     "symbol": null,
     "cancelAll": true
 }
