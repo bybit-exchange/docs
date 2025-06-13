@@ -1,12 +1,12 @@
 ---
-title: Spread Orderbook
-sidebar_label: Spread Orderbook
+title: Orderbook
+sidebar_label: Orderbook
 sidebar_position: 1
 ---
 
-Subscribe to the spread orderbook stream
+Subscribe to the spread orderbook stream.
 ### Depths
-Level 25 data, push frequency: **20ms**<br/>
+Level 25 data, push frequency: **20ms**
 
 **Topic:**<br/>
 `orderbook.{depth}.{symbol}` e.g., orderbook.25.SOLUSDT_SOL/USDT
@@ -33,15 +33,15 @@ See working code examples of this logic in the [FAQ](https://bybit-exchange.gith
 |ts |number |The timestamp (ms) that the system generates the data |
 |data |map |Object |
 |> s |string |Symbol name |
-|> b |array |Bids. For `snapshot` stream, the element is sorted by price in descending order  |
+|> b |array |Bids. For `snapshot` stream. Sorted by price in descending order  |
 |>> b[0] |string |Bid price |
 |>> b[1] |string |Bid size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li>|
-|> a |array |Asks. For `snapshot` stream, the element is sorted by price in ascending order  |
+|> a |array |Asks. For `snapshot` stream. Sorted by price in ascending order  |
 |>> a[0] |string |Ask price |
 |>> a[1] |string |Ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
 |> u |integer |Update ID<li>Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook</li>|
 |> seq |integer |Cross sequence|
-|cts |number |The timestamp from the match engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
+|cts |number |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
 
 ### Subscribe Example
 

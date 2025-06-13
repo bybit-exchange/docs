@@ -1,9 +1,9 @@
 ---
-title: Amend Spread Order
-sidebar_label: Amend Spread Order
+title: Amend Order
+sidebar_label: Amend Order
 sidebar_position: 2
 ---
-:::info info
+:::info
 You can only modify **unfilled** or **partially filled** orders.
 :::
 
@@ -14,13 +14,13 @@ POST `/v5/spread/order/amend`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |symbol |**true** |string |Spread combination symbol name|
-|orderId |false |string |Spread combination order ID. Either `orderId` or `orderLinkId` is required |
-|orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |
-|qty |false |string |Order quantity after modification, either "qty" or "price" is required|
-|price |false |string |Order price after modification<li>either "qty" or "price" is required</li><li>price="" means the price remains unchanged, while price="0" updates the price to 0.</li>|
+|orderId |false |string |Spread combination order ID. Either `orderId` or `orderLinkId` is **required** |
+|orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is **required** |
+|qty |false |string |Order quantity after modification. Either `qty` or `price` is **required**|
+|price |false |string |Order price after modification <ul><li>Either `qty` or `price` is **required**</li><li>price="" means the price remains unchanged, while price="0" updates the price to 0.</li></ul>|
 
 :::info
-The ack of amend order request indicates that the request is successfully accepted. Please use websocket order stream to confirm the order status
+The acknowledgement of an amend order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
 :::
 
 ### Response Parameters
