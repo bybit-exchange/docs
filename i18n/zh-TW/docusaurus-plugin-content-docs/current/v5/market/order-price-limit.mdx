@@ -1,0 +1,85 @@
+---
+title: 查詢訂單價格限制
+sidebar_label: 查詢訂單價格限制
+sidebar_position: 16
+---
+
+衍生性商品交易訂單價格限制，請參考<a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">公告</a><br>
+現貨交易訂單價格限制，請參考<a href="https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/">公告</a><br>
+
+### HTTP請求
+GET `/v5/market/price-limit`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------|
+|[category](../enum#category) |false |string |產品類型. `spot`,`linear`,`inverse` <li>當`category`不指定時, 默認是`linear`</li>|
+|[symbol](../enum#symbol) |<b>true</b> |string |合約名稱|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|symbol |string |合約名稱 |
+|buyLmt |string |最高買價 |
+|sellLmt |string |最低賣價 |
+|ts |string |時間戳（以毫秒為單位） |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/price-limit?category=linear&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "symbol": "BTCUSDT",
+        "buyLmt": "105878.10",
+        "sellLmt": "103781.60",
+        "ts": "1750302284491"
+    },
+    "retExtInfo": {},
+    "time": 1750302285376
+}
+```
