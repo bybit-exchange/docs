@@ -19,7 +19,7 @@ GET `v5/position/get-closed-positions`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |**true** |string |option |
 |symbol |false |string |合約名稱|
-|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+7天的數據</li><li>若只傳endTime，則查詢endTime-7天和endTime的數據</li></ul>|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近1天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+1天的數據</li><li>若只傳endTime，則查詢endTime-1天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
 |cursor |false |string |游標，用於翻頁|
@@ -35,7 +35,7 @@ GET `v5/position/get-closed-positions`
 |> deliveryFee |string |交割费用 |
 |> totalCloseFee |string |平仓费用 |
 |> qty |string |訂單數量 |
-|> closeTime |string |平仓時間 (毫秒) |
+|> closeTime |integer |平仓時間 (毫秒) |
 |> avgExitPrice |string |平均出場價格 |
 |> deliveryPrice |string |交割價格 |
 |> openTime |string |开仓時間 (毫秒) |
