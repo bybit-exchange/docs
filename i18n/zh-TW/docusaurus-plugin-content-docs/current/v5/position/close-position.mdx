@@ -1,0 +1,153 @@
+---
+title: 查詢期权平倉
+sidebar_label: 查詢期权平倉
+sidebar_position: 11
+---
+
+獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
+
+:::info
+* 支持用户查询最近六个月期权平仓数据
+* Fee and price 保留小数点后8位末尾0不省略
+:::
+
+### HTTP 請求
+GET `v5/position/get-closed-positions`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |option |
+|symbol |false |string |合約名稱|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近1天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+1天的數據</li><li>若只傳endTime，則查詢endTime-1天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
+|limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|nextPageCursor |string |游標，用於翻頁 |
+| [category](../enum#category) | string  | 產品類型 |
+|list |array |Object |
+|> symbol |string |合約名稱 |
+|> side |string |買賣方向 `Buy`, `Side` |
+|> totalOpenFee |string |开仓费用 |
+|> deliveryFee |string |交割费用 |
+|> totalCloseFee |string |平仓费用 |
+|> qty |string |訂單數量 |
+|> closeTime |integer |平仓時間 (毫秒) |
+|> avgExitPrice |string |平均出場價格 |
+|> deliveryPrice |string |交割價格 |
+|> openTime |integer |开仓時間 (毫秒) |
+|> avgExitPrice |string |平均出場價格 |
+|> totalPnl |string |被平倉位的盈虧 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672284128523
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_closed_pnl(
+    category="linear",
+    limit=1,
+))
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+import com.bybit.api.client.domain.*;
+import com.bybit.api.client.domain.position.*;
+import com.bybit.api.client.domain.position.request.*;
+import com.bybit.api.client.service.BybitApiClientFactory;
+var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();
+var closPnlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).build();
+client.getClosePnlList(closPnlRequest, System.out::println);
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+    testnet: true,
+    key: 'xxxxxxxxxxxxxxxxxx',
+    secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+});
+
+client
+    .getClosedPnL({
+        category: 'linear',
+        limit: 1,
+    })
+    .then((response) => {
+        console.log(response);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "ETHPERP",
+                "orderType": "Market",
+                "leverage": "3",
+                "updatedTime": "1672214887236",
+                "side": "Sell",
+                "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",
+                "closedPnl": "-47.4065323",
+                "avgEntryPrice": "1194.97516667",
+                "qty": "3",
+                "cumEntryValue": "3584.9255",
+                "createdTime": "1672214887231",
+                "orderPrice": "1122.95",
+                "closedSize": "3",
+                "avgExitPrice": "1180.59833333",
+                "execType": "Trade",
+                "fillCount": "4",
+                "cumExitValue": "3541.795"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672284129153
+}
+```
