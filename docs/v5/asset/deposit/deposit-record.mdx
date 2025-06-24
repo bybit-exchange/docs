@@ -29,7 +29,6 @@ GET `/v5/asset/deposit/query-record`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |rows |array|Object |
-|> id |string |Unique ID |
 |> coin |string |Coin |
 |> chain |string|Chain |
 |> amount |string|Amount |
@@ -45,8 +44,9 @@ GET `/v5/asset/deposit/query-record`
 |> batchReleaseLimit|string|The deposit limit for this coin in this chain. `"-1"` means no limit|
 |> depositType|string|The deposit type. `0`: normal deposit, `10`: the deposit reaches daily deposit limit, `20`: abnormal deposit|
 |> fromAddress|string|From address of deposit, only shown when the deposit comes from on-chain and from address is unique, otherwise gives `""`|
-|> taxStatus|string|This field is used for tax purposes by Bybit EU (Austria) users|
-|> taxStatus|string|This field is used for tax purposes by Bybit EU (Austria) users <li>0: No reporting required</li><li>1: Reporting pending</li><li>2: Reporting completed</li>|
+|> taxDepositRecordsId|string|This field is used for tax purposes by Bybit EU (Austria) users， declare tax id|
+|> taxStatus|integer|This field is used for tax purposes by Bybit EU (Austria) users <li>0: No reporting required</li><li>1: Reporting pending</li><li>2: Reporting completed</li>|
+|> id |string |Unique ID |
 |nextPageCursor |string |Refer to the `cursor` request parameter|
 
 <a href="/api-explorer/v5/asset/deposit-record"><Button>RUN >></Button></a>
@@ -119,27 +119,29 @@ client
     "result": {
         "rows": [
             {
-                "id": "1319723",
                 "coin": "USDT",
-                "chain": "ETH",
-                "amount": "10000",
-                "txID": "skip-notification-scene-test-amount-202212270944-533285-USDT",
+                "chain": "TRX",
+                "amount": "999.0496",
+                "txID": "04bf3fbad2fc85b107a42cfdc5ff83110092b606ca754efa0f032f8b94b3262e",
                 "status": 3,
-                "toAddress": "test-amount-address",
+                "toAddress": "TDGYpm5zPacnEqKV34TJPuhJhHom9hcXAy",
                 "tag": "",
                 "depositFee": "",
-                "successAt": "1672134274000",
-                "confirmations": "10000",
-                "txIndex": "",
-                "blockHash": "",
+                "successAt": "1742728163000",
+                "confirmations": "50",
+                "txIndex": "0",
+                "blockHash": "000000000436ab4dabc8a4a87beb2262d2d87f6761a825494c4f1d5ae11b27e8",
                 "batchReleaseLimit": "-1",
                 "depositType": "0",
-                "fromAddress": ""
+                "fromAddress": "TJ7hhYhVhaxNx6BPyq7yFpqZrQULL3JSdb",
+                "taxDepositRecordsId": "0",
+                "taxStatus": 0,
+                "id": "160237231"
             }
         ],
-        "nextPageCursor": "eyJtaW5JRCI6MTA0NjA0MywibWF4SUQiOjEwNDYwNDN9"
+        "nextPageCursor": "eyJtaW5JRCI6MTYwMjM3MjMxLCJtYXhJRCI6MTYwMjM3MjMxfQ=="
     },
     "retExtInfo": {},
-    "time": 1672191992512
+    "time": 1750798211884
 }
 ```
