@@ -27,7 +27,6 @@ GET `/v5/asset/deposit/query-record`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |rows |array|Object |
-|> id |string |內部ID, 唯一鍵 |
 |> coin |string |幣種 |
 |> chain |string|鏈名 |
 |> amount |string|充值金額 |
@@ -43,6 +42,9 @@ GET `/v5/asset/deposit/query-record`
 |> batchReleaseLimit|string|當前幣鏈每日充值限額. `"-1"`表示無限制|
 |> depositType|string|入金類型. `0`: 正常充值, `10`: 充值觸發每日限額, `20`: 異常充值|
 |> fromAddress|string|入金來源地址, 僅當入金來自鏈上且來源地址唯一時返回地址, 其餘則返回`""`|
+|> taxDepositRecordsId|string|Bybit EU（奧地利）用戶用於稅務目的, 保稅記錄id |
+|> taxStatus|integer|Bybit EU（奧地利）用戶用於稅務目的 <li>0: No reporting required</li><li>1: Reporting pending</li><li>2: Reporting completed</li>|
+|> id |string |內部ID, 唯一鍵 |
 |nextPageCursor |string |游標，用於翻頁|
 
 <a href="/api-explorer/v5/asset/deposit-record"><Button>運行實例 >></Button></a>
@@ -115,27 +117,29 @@ client
     "result": {
         "rows": [
             {
-                "id": "1319723",
                 "coin": "USDT",
-                "chain": "ETH",
-                "amount": "10000",
-                "txID": "skip-notification-scene-test-amount-202212270944-533285-USDT",
+                "chain": "TRX",
+                "amount": "999.0496",
+                "txID": "04bf3fbad2fc85b107a42cfdc5ff83110092b606ca754efa0f032f8b94b3262e",
                 "status": 3,
-                "toAddress": "test-amount-address",
+                "toAddress": "TDGYpm5zPacnEqKV34TJPuhJhHom9hcXAy",
                 "tag": "",
                 "depositFee": "",
-                "successAt": "1672134274000",
-                "confirmations": "10000",
-                "txIndex": "",
-                "blockHash": "",
+                "successAt": "1742728163000",
+                "confirmations": "50",
+                "txIndex": "0",
+                "blockHash": "000000000436ab4dabc8a4a87beb2262d2d87f6761a825494c4f1d5ae11b27e8",
                 "batchReleaseLimit": "-1",
                 "depositType": "0",
-                "fromAddress": ""
+                "fromAddress": "TJ7hhYhVhaxNx6BPyq7yFpqZrQULL3JSdb",
+                "taxDepositRecordsId": "0",
+                "taxStatus": 0,
+                "id": "160237231"
             }
         ],
-        "nextPageCursor": "eyJtaW5JRCI6MTA0NjA0MywibWF4SUQiOjEwNDYwNDN9"
+        "nextPageCursor": "eyJtaW5JRCI6MTYwMjM3MjMxLCJtYXhJRCI6MTYwMjM3MjMxfQ=="
     },
     "retExtInfo": {},
-    "time": 1672191992512
+    "time": 1750798211884
 }
 ```
