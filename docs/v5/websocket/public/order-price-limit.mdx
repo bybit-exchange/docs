@@ -1,0 +1,46 @@
+---
+title: Order Price Limit
+sidebar_label: Order Price Limit
+sidebar_position: 10
+---
+
+Subscribe to Get Order Price Limit.
+
+For derivative trading order price limit, refer to <a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">announcement</a><br/>
+For spot trading order price limit, refer to <a href="https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/">announcement</a><br/>
+
+
+Push frequency: **300ms**
+
+**Topic:**<br/>
+`priceLimit.{symbol}`<br/>
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |array |Object. |
+|> symbol |string |Symbol name |
+|> buyLmt |string |Highest Bid Price |
+|> sellLmt |string |Lowest Ask Price |
+
+### Subscribe Example
+
+```python
+{"op": "subscribe", "args": ["priceLimit.BTCUSDT"]}
+```
+
+### Response Example
+
+```json
+{
+    "topic": "priceLimit.BTCUSDT",
+    "data": {
+        "symbol": "BTCUSDT",
+        "buyLmt": "114450.00",
+        "sellLmt": "103550.00"
+    },
+    "ts": 1750059683782
+}
+```

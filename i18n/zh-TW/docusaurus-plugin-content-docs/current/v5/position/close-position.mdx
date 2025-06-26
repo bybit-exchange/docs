@@ -1,0 +1,102 @@
+---
+title: 查詢期权平倉
+sidebar_label: 查詢期权平倉
+sidebar_position: 11
+---
+
+獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
+
+:::info
+* 支持用户查询最近六个月期权平仓数据
+* Fee and price 保留小数点后8位末尾0不省略
+:::
+
+### HTTP 請求
+GET `v5/position/get-closed-positions`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |option |
+|symbol |false |string |合約名稱|
+|startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近1天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+1天的數據</li><li>若只傳endTime，則查詢endTime-1天和endTime的數據</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒) |
+|limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|nextPageCursor |string |游標，用於翻頁 |
+| [category](../enum#category) | string  | 產品類型 |
+|list |array |Object |
+|> symbol |string |合約名稱 |
+|> side |string |買賣方向 `Buy`, `Side` |
+|> totalOpenFee |string |开仓费用 |
+|> deliveryFee |string |交割费用 |
+|> totalCloseFee |string |平仓费用 |
+|> qty |string |訂單數量 |
+|> closeTime |integer |平仓時間 (毫秒) |
+|> avgExitPrice |string |平均出場價格 |
+|> deliveryPrice |string |交割價格 |
+|> openTime |integer |开仓時間 (毫秒) |
+|> avgExitPrice |string |平均出場價格 |
+|> totalPnl |string |被平倉位的盈虧 |
+
+### 請求示例
+
+```http
+GET v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672284128523
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",
+        "category": "option",
+        "list": [
+            {
+                "symbol": "BTC-12JUN25-104019-C-USDT",
+                "side": "Sell",
+                "totalOpenFee": "0.94506647",
+                "deliveryFee": "0.32184533",
+                "totalCloseFee": "0.00000000",
+                "qty": "0.02",
+                "closeTime": 1749726002161,
+                "avgExitPrice": "107281.77405000",
+                "deliveryPrice": "107281.77405031",
+                "openTime": 1749722990063,
+                "avgEntryPrice": "3371.50000000",
+                "totalPnl": "0.90760719"
+            },
+            {
+                "symbol": "BTC-12JUN25-104000-C-USDT",
+                "side": "Buy",
+                "totalOpenFee": "0.86379999",
+                "deliveryFee": "0.32287622",
+                "totalCloseFee": "0.00000000",
+                "qty": "0.02",
+                "closeTime": 1749715220240,
+                "avgExitPrice": "107625.40470150",
+                "deliveryPrice": "107625.40470159",
+                "openTime": 1749710568608,
+                "avgEntryPrice": "3946.50000000",
+                "totalPnl": "-7.60858218"
+            }
+        ]
+    },
+    "retExtInfo": {
+
+    },
+    "time": 1749736532193
+}
+```
