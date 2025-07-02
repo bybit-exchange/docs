@@ -51,7 +51,9 @@ GET `/v5/position/list`
 |> liqPrice| string  | 倉位強平價格<ul><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(逐倉), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(反向合約), 經典帳戶:<br/>是逐倉和全倉持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>對於[統一帳戶2.0](/v5/acct-mode#統一帳戶20)(全倉保證金), [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(全倉保證金):<br/>請注意, 這是預計強平價格僅供參考。僅當帳戶維持保證金率達到100%時會觸發強平, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>_對於組合保證金模式, 此字段為空, 不會提供強平價格_ |
 |> bustPrice| string  | 倉位破產價格|
 |> positionIM| string  | 倉位起始保證金 <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
+|> positionIMByMp| string  | 倉位起始保證金(用mark price計算) <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse) : 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> positionMM| string  | 倉位維持保證金 <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
+|> positionMMByMp| string  | 倉位維持保證金(用mark price計算) <li>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> positionBalance | string  |倉位保證金<br/>經典帳戶 & [統一帳戶1.0](/v5/acct-mode#統一帳戶10)(inverse)可以根據這個字段了解倉位初始保證金+平倉手續費|
 |> takeProfit| string  | 止盈價格 |
 |> stopLoss| string  | 止損價格|
@@ -176,7 +178,9 @@ client
                 "liqPrice": "",
                 "bustPrice": "999999.00",
                 "positionMM": "0.0000015",
+                "positionMMByMp": "0.0000015",
                 "positionIM": "0.00010923",
+                "positionIMByMp": "0.00010923",
                 "tpslMode": "Full",
                 "takeProfit": "0.00",
                 "stopLoss": "0.00",

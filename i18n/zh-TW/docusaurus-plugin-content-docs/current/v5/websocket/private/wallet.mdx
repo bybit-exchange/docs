@@ -23,14 +23,18 @@ sidebar_position: 4
 |> accountType |string |帳戶類型. <ul><li>[統一帳戶2.0](../../acct-mode#統一帳戶20): `UNIFIED`</li><li>[統一帳戶1.0](../../acct-mode#統一帳戶10): `UNIFIED`, `CONTRACT`(反向合約錢包)</li><li>經典帳戶: `CONTRACT`(合約錢包), `SPOT`(現貨錢包)</li></ul> |
 |> accountLTV |string |字段廢棄|
 |> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
+|> accountIMRateByMp |string |帳戶初始保證金率(用mark price計算) <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
 |> accountMMRate |string |帳戶維持保證金率|
+|> accountMMRateByMp |string |帳戶維持保證金率(用mark price計算)|
 |> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD)|
 |> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL|
 |> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: 全倉保證金: totalMarginBalance - totalInitialMargin|
 |> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin|
+|> totalInitialMarginByMp |string |賬戶維度換算成usd的總初始保證金(用mark price計算): ∑Asset Total Initial Margin Base Coin (用mark price計算)|
 |> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin|
+|> totalMaintenanceMarginByMp |string |賬戶維度換算成usd的總維持保證金(用mark price計算): ∑Asset Total Maintenance Margin Base Coin(用mark price計算)|
 |> coin |array |Object. 幣種列表|
 |>> coin |string |幣種名稱，例如 BTC, ETH, USDT, USDC|
 |>> equity |string |當前幣種的資產淨值|
@@ -88,14 +92,18 @@ while True:
     "data": [
         {
             "accountIMRate": "0",
+            "accountIMRateByMp": "0",
             "accountMMRate": "0",
+            "accountMMRateByMp": "0",
             "totalEquity": "10262.91335023",
             "totalWalletBalance": "9684.46297164",
             "totalMarginBalance": "9684.46297164",
             "totalAvailableBalance": "9556.6056555",
             "totalPerpUPL": "0",
             "totalInitialMargin": "0",
+            "totalInitialMarginByMp": "0",
             "totalMaintenanceMargin": "0",
+            "totalMaintenanceMarginByMp": "0",
             "coin": [
                 {
                     "coin": "BTC",
