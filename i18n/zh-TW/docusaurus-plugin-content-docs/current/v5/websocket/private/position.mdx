@@ -41,7 +41,9 @@ sidebar_position: 1
 |> positionBalance | string  |倉位保證金<br/>經典帳戶 & [統一帳戶1.0](../../acct-mode#統一帳戶10)(inverse)可以根據這個字段了解倉位初始保證金+平倉手續費|
 |> autoAddMargin | integer |是否自動追加保證金, _反向合約不支持設置自動追加保證金_ <li>`0`: 否</li><li>`1`: 是</li>|
 |> positionIM| string  | 倉位起始保證金 <li>經典帳戶 & [統一帳戶1.0](../../acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
+|> positionIMByMp| string  | 倉位起始保證金(用mark price計算) <li>經典帳戶 & [統一帳戶1.0](../../acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> positionMM| string  | 倉位維持保證金 <li>經典帳戶 & [統一帳戶1.0](../../acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
+|> positionMMByMp| string  | 倉位維持保證金(用mark price計算) <li>經典帳戶 & [統一帳戶1.0](../../acct-mode#統一帳戶10)(inverse): 忽略該字段</li><li>統一帳戶組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> liqPrice| string  | 倉位強平價格，<ul><li>UTA(反向合約) & 普通账户 & UTA(開啟逐倉保證金模式)：是逐倉和全倉持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>統一帳戶(全倉保證金)：是全倉持仓的预估价格（因为统一帳戶模式是按照帳戶維度控制风险率), 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>但是對於組合保證金模式，此字段為空，不會提供強平價格 |
 |> bustPrice |string |預估破產價. 統一帳戶(現貨/USDT和USDC永續/期權)為空 |
 |> tpslMode |string |該字段廢棄, 無意義, 總是返回"Full". 期權總是返回"" |
@@ -113,7 +115,9 @@ while True:
             "positionBalance": "0",
             "markPrice": "28184.5",
             "positionIM": "0",
+            "positionIMByMp": "0",
             "positionMM": "0",
+            "positionMMByMp": "0",
             "takeProfit": "0",
             "stopLoss": "0",
             "trailingStop": "0",
