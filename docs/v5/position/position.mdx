@@ -51,7 +51,9 @@ GET `/v5/position/list`
 |> liqPrice | string  |Position liquidation price <ul><li>[UTA2.0](/v5/acct-mode#uta-20)(isolated margin), [UTA1.0](/v5/acct-mode#uta-10)(isolated margin), [UTA1.0](/v5/acct-mode#uta-10)(inverse), Classic account: <br/>it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>[UTA2.0](/v5/acct-mode#uta-20)(Cross margin), [UTA1.0](/v5/acct-mode#uta-10)(Cross margin):<br/>it is an <b>estimated</b> price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>_this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_|
 |> bustPrice | string  |Bankruptcy price|
 |> positionIM | string  |Initial margin<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse): ignore this field</li><li>UTA portfolio margin mode, it returns ""</li> |
+|> positionIMByMp | string  |Initial margin calculated by mark price<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) : ignore this field</li><li>UTA portfolio margin mode, it returns ""</li> |
 |> positionMM | string  |Maintenance margin<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse): ignore this field</li><li>UTA portfolio margin mode, it returns ""</li>|
+|> positionMMByMp | string  |Maintenance margin calculated by mark price<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) : ignore this field</li><li>UTA portfolio margin mode, it returns ""</li>|
 |> positionBalance | string  |Position margin <li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) can refer to this field to get the position initial margin plus position closing fee</li> |
 |> takeProfit | string  |Take profit price|
 |> stopLoss | string  |Stop loss price|
@@ -175,7 +177,9 @@ client
                 "liqPrice": "",
                 "bustPrice": "999999.00",
                 "positionMM": "0.0000015",
+                "positionMMByMp": "0.0000015",
                 "positionIM": "0.00010923",
+                "positionIMByMp": "0.00010923",
                 "tpslMode": "Full",
                 "takeProfit": "0.00",
                 "stopLoss": "0.00",

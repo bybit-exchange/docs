@@ -23,13 +23,16 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |> accountType |string |Account type. <ul><li>[UTA2.0](../../acct-mode#uta-20): `UNIFIED`</li><li>[UTA1.0](../../acct-mode#uta-10): `UNIFIED` (spot/linear/options), `CONTRACT`(inverse)</li><li>Classic: `CONTRACT`, `SPOT`</li></ul> |
 |> accountLTV |string |deprecated field|
 |> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All below account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../../acct-mode#uta-10)(isolated margin), [UTA1.0](../../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
+|> accountIMRateByMp |string |Account IM rate calculated by mark price <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All below account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../../acct-mode#uta-10)(isolated margin), [UTA1.0](../../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
 |> accountMMRate |string |Account MM rate|
+|> accountMMRateByMp |string |Account MM rate calculated by mark price|
 |> totalEquity |string |Account total equity (USD)|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
 |> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
 |> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
+|> totalInitialMarginByMp |string |Account initial margin (USD) calculated by mark price: ∑Asset Total Initial Margin Base Coin calculated by mark price|
 |> totalMaintenanceMargin |string |Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
@@ -88,13 +91,16 @@ while True:
     "data": [
         {
             "accountIMRate": "0",
+            "accountIMRateByMp": "0",
             "accountMMRate": "0",
+            "accountMMRateByMp": "0",
             "totalEquity": "10262.91335023",
             "totalWalletBalance": "9684.46297164",
             "totalMarginBalance": "9684.46297164",
             "totalAvailableBalance": "9556.6056555",
             "totalPerpUPL": "0",
             "totalInitialMargin": "0",
+            "totalInitialMarginByMp": "0",
             "totalMaintenanceMargin": "0",
             "coin": [
                 {
