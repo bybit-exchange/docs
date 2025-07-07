@@ -1,0 +1,199 @@
+---
+title: 取得系統狀態
+sidebar_label: 取得系統狀態
+---
+## 介紹
+我們新增了一個**GET 端點**來檢查系統狀態。這有助於我們更快地通知您系統是否因維護或故障而停機。它不涵蓋常規更新。
+
+### HTTP 請求
+GET `/v5/system/status`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|id |false |string |Id, 唯一標識 |
+|[state](enum#state) |false |string |系統的狀態|
+
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> id |string |Id, 唯一標識 |
+|> title |string |系統維​​護說明的標題 |
+|> [state](enum#state) |string |系統的狀態 |
+|> begin |string |系統維​​護的開始時間，Unix時間戳記的毫秒數格式 |
+|> end |string |交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間 |
+|> href |string |系統維​​護詳情的超級連結,若無回傳值，預設值為空 |
+|> [serviceTypes](enum#servicetypes) |array&lt;int&gt; |服務類型 |
+|> [product](enum#product) |array&lt;int&gt; |產品 |
+|> uidSuffix|array&lt;int&gt; |維護期間受影響的UID尾號 |
+|> [maintainType](enum#maintaintype) |string |維護類型 |
+|> [env](enum#env) |string |環境 |
+
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/system/status HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",
+                "title": "t06",
+                "state": "completed",
+                "begin": "1751596902000",
+                "end": "1751597011000",
+                "href": "",
+                "serviceTypes": [
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "product": [
+                    1,
+                    2
+                ],
+                "uidSuffix": [],
+                "maintainType": 1,
+                "env": 1
+            },
+            {
+                "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",
+                "title": "t05",
+                "state": "completed",
+                "begin": "1751254200000",
+                "end": "1751254500000",
+                "href": "",
+                "serviceTypes": [
+                    1,
+                    4
+                ],
+                "product": [
+                    1
+                ],
+                "uidSuffix": [],
+                "maintainType": 3,
+                "env": 1
+            },
+            {
+                "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",
+                "title": "t04",
+                "state": "completed",
+                "begin": "1751017967000",
+                "end": "1751018096000",
+                "href": "",
+                "serviceTypes": [
+                    2
+                ],
+                "product": [
+                    2
+                ],
+                "uidSuffix": [],
+                "maintainType": 1,
+                "env": 1
+            },
+            {
+                "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",
+                "title": "t03",
+                "state": "completed",
+                "begin": "1751017532000",
+                "end": "1751017658000",
+                "href": "",
+                "serviceTypes": [
+                    5,
+                    4
+                ],
+                "product": [
+                    1,
+                    2
+                ],
+                "uidSuffix": [],
+                "maintainType": 2,
+                "env": 1
+            },
+            {
+                "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",
+                "title": "t02",
+                "state": "completed",
+                "begin": "1751013817000",
+                "end": "1751013890000",
+                "href": "",
+                "serviceTypes": [
+                    5,
+                    4,
+                    3,
+                    2,
+                    1
+                ],
+                "product": [
+                    4,
+                    3,
+                    2,
+                    1
+                ],
+                "uidSuffix": [],
+                "maintainType": 2,
+                "env": 1
+            },
+            {
+                "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",
+                "title": "t01",
+                "state": "completed",
+                "begin": "1751012688000",
+                "end": "1751012760000",
+                "href": "",
+                "serviceTypes": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "product": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "uidSuffix": [],
+                "maintainType": 3,
+                "env": 2
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1751858399649
+}
+```

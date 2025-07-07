@@ -1,0 +1,79 @@
+---
+title: Websocket取得系統狀態
+sidebar_label: Websocket取得系統狀態
+sidebar_position: 1
+---
+
+## 簡介
+我們新增了一個 websocket 主題來檢查系統狀態。這有助於我們更快地通知您系統是否因維護或故障而停機。它不涵蓋常規更新。
+
+## 路徑
+- **主網:**<br/>
+`wss://stream.bybit.com/v5/public/proxy`
+
+:::info
+* 從"www.bybit-tr.com"註冊的土耳其用戶，請使用 `wss://stream.bybit-tr.com/v5/public/proxy`
+* 從"www.bybit.kz"註冊的哈薩克用戶，請使用 `wss://stream.bybit.kz/v5/public/proxy`
+:::
+
+- **測試網:**<br/>
+`wss://stream-testnet.bybit.com/v5/public/proxy`
+
+**Topic:**<br/>
+`system.status`
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |主題名稱  |
+|ts |number |系統產生的時間戳記（毫秒） |
+|data |array |Object |
+|> id |string |Id, 唯一標識 |
+|> title |string |系統維​​護說明的標題 |
+|> [state](../../enum#state) |string |系統的狀態 |
+|> begin |string |系統維​​護的開始時間，Unix時間戳記的毫秒數格式 |
+|> end |string |交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間 |
+|> href |string |系統維​​護詳情的超級連結,若無回傳值，預設值為空 |
+|> [serviceTypes](../../enum#servicetypes) |array&lt;int&gt; |服務類型 |
+|> [product](../../enum#product) |array&lt;int&gt; |產品 |
+|> uidSuffix|array&lt;int&gt; |維護期間受影響的UID尾號 |
+|> [maintainType](../../enum#maintaintype) |string |維護類型 |
+|> [env](../../enum#env) |string |環境 |
+
+### 訂閱範例
+
+```python
+{"op": "subscribe", "args":["system.status"]}
+```
+
+### 響應示例
+
+```json
+{
+    "topic": "system.status",
+    "ts": 1751858399649,
+    "data": [
+        {
+            "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",
+            "title": "t06",
+            "state": "completed",
+            "begin": "1751596902000",
+            "end": "1751597011000",
+            "href": "",
+            "serviceTypes": [
+                2,
+                3,
+                4,
+                5
+            ],
+            "product": [
+                1,
+                2
+            ],
+            "uidSuffix": [],
+            "maintainType": 1,
+            "env": 1
+        }
+    ]
+}
+```
