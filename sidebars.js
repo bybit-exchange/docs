@@ -58,6 +58,7 @@ const sidebars = {
     ]
   },
   'bybit-pay/mcc-codes',
+  'bybit-pay/sign-algo',
   'bybit-pay/error',
 ],
 p2pSideBar: [

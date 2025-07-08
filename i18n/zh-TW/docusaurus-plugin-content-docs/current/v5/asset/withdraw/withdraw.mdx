@@ -40,6 +40,13 @@ POST `/v5/asset/withdraw/create`
 |beneficiary |false |Object |提現目標方基本信息, 僅kyc=KOR(韓國個人用戶)必須傳遞此字段|
 |> vaspEntityId |**true** |string |接收方交易所id. 請調用該[接口](../asset/withdraw/vasp-list#)來查詢對應的id|
 |> beneficiaryName |false |string |接收方交易所用戶kyc姓名, 比如`John Wilson` 或者 `Wilson John` <li>請依據目標交易所kyc姓名</li><li>僅當vaspEntityId="others"時, 該字段可不傳</li>|
+|> beneficiaryLegalType |false |string |受益人法律類型, `individual`(默認), `company` <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryWalletType |false |string |受益人錢包類型, `0`: 托管錢包 (默認), `1`: 非托管錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryUnhostedWalletType |false |string |受益人未托管錢包類型, `0`: 私有錢包, `1`: 其他類型錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryPoiNumber |false |string |受益人POI號碼 <li>TR和KZ用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryPoiType |false |string |受益人POI簽發類型 <li>TR和KZ用戶需要傳入: ID card, Passport, driver license, residence permit, Business ID.....</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryPoiIssuingCountry |false |string |受益人POI簽發國家 <li>TR和KZ用戶需要傳入: 請參考 [Alpha-3 country code](https://www.iban.com/country-codes)</li> <li>韓國用戶可忽略</li>|
+|> beneficiaryPoiExpiredDate |false |string |受益人POI到期日 <li>TR和KZ用戶需要傳入: yyyy-mm-dd 格式, e.g., "1990-02-15"</li> <li>韓國用戶可忽略</li>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
