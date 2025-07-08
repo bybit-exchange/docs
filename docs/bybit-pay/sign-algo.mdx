@@ -1,0 +1,109 @@
+---
+title: Signature Algorithm
+sidebar_label: Signature Algorithm
+---
+## Encrypt
+1. Get the current timestamp `${timestamp}`
+2. Combine`${timestamp}` and request body (if the http method is `POST`, the request body is `json` text, if the http method is `GET`, the request body is unescape `query` string, like `name=foo&age=18` is valid, `name%3dfoo%26age%3d18` is invalid) into a new string `$content`
+3. Sign `$content` with `sha256` and  `PKCS1V15, 1024`
+4. Encode the signed bytes content to `base64`
+
+### Example
+We sign the following data. The timestamp is `1751441054`, the RSA key is
+
+```shell
+-----The following key pairs are for testing only-----
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAOFSnhqtuXXXXXXXXXXXXXXXXXXXXXXXX4Yih6hViOdSGd7imWmCSZyP
+psl3TmLhUoB+rTzYDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXUM0f+AxlKYMj8OQ
+AgDPmZG1a5ydFrje4PLytC7sUw3GP4TTk8xg6iMHmYPdRDv7AEWdAgMBAAE=
+-----END RSA PUBLIC KEY-----
+
+-----BEGIN RSA PRIVATE KEY-----
+MIICXwIBAAKBgQDhUp4arbuNEzraJPsl3gfju+j12/1QCVOGIoeoVYjnUhne4plp
+gkmcj6bJd05i4VKAfq082A3WK5WGJ4OnFZ+slIcY6TFg+EKeSuBs471DNH/gMZSm
+DI/DkAIAz5mRtWuXXXXXXXXXXXXXXXXXxj+E05PMYOojB5mD3UQ7+wBFnQIDAQAB
+AoGBAIqpeCi83516xw32EiSEleBdBIlA34vAoYj7ePZr5PtN+CPE2Von1rslYCO9
+axzIwyfWTTATWbiCS9sqOAe78+1t3shU0ryXelWQ95LOdiMp0ZvU3ya6MzSVuiuL
+6gOQYu8kzRqCzqvyMNdAHFMmP0XXXXXXXXXXXXXXXXXXZAtVAkEA/N6gl4tYJBef
+e/Gxi7qhuIKz0mvfA/yieRuiVhXXXXXXXXXXXXXXXXXXbs45hh+n4bw8AA9k0bvi
+3IBIdV/CbwJBAOQcsOPf+lrs4PXXXXXXXXXXXXXXXXXXxuerfPYMAzvJ7EU1u72o
+/5V9zdim+hPq+9cvsqO7dkJx+cXXXXXXXXXXXXXXXXXXXXXXXXXXXaiIxOdCbbtc
+MY4uV8noiqDRf/pvAkyMMM+nm5pXXXXXXXXXXXXXXXXXXXXXXXXXIUx1sZ85AkEA
+15eWR4jEoXMIFkd7Onc6tKuJ8kokqfXXXXXXXXXXXXXXXXXXXXXBRxSjnIQUDwck
+Bnj6KW1fk+UM29dUDjmTqQJBAITyP16XXXXXXXXXXXXXXXXXXXXXvgCxCzRRi5ph
+IavMyjrhDKyBGZ0mI6eoREaC4bxl31RRkYtg9mNeU3TxsBM=
+-----END RSA PRIVATE KEY-----
+```
+
+json request body:
+```json
+{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+1. Get the current timestamp 1751441054
+2. Combine${timestamp} and request body (if the http method is POST, the request body is json text, if the http method is GET, the request body is unescape query string, like name=foo&age=18 is valid, name%3dfoo%26age%3d18 is invalid) into a new string $content
+
+```json
+1751441054{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+
+3. Sign $contentwith sha256 and PKCS1V15, 1024
+4. Encode the encrypted bytes in base64
+
+```json
+vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=
+```
+
+## Decrypt
+1. Get `timestamp`, `signature` from request header.
+2. Get request body (if the http method is `POST`, the request body is `json` text, if the http method is `GET`, the request body is `unescape query` string)
+3. Combine `${timestamp}` and response body into a new string `$content`
+4. decode the signature bytes from base64.
+5. Encrypt string content with sha256 and verify signature base PKCS1V15,1024.
+### Example
+We provided the following data.
+```json
+vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=
+```
+ The timestamp is 1751441054, the RSA key is
+
+```shell
+-----The following key pairs are for testing only-----
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAOFSnhqtuXXXXXXXXXXXXXXXXXXXXXXXX4Yih6hViOdSGd7imWmCSZyP
+psl3TmLhUoB+rTzYDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXUM0f+AxlKYMj8OQ
+AgDPmZG1a5ydFrje4PLytC7sUw3GP4TTk8xg6iMHmYPdRDv7AEWdAgMBAAE=
+-----END RSA PUBLIC KEY-----
+
+-----BEGIN RSA PRIVATE KEY-----
+MIICXwIBAAKBgQDhUp4arbuNEzraJPsl3gfju+j12/1QCVOGIoeoVYjnUhne4plp
+gkmcj6bJd05i4VKAfq082A3WK5WGJ4OnFZ+slIcY6TFg+EKeSuBs471DNH/gMZSm
+DI/DkAIAz5mRtWuXXXXXXXXXXXXXXXXXxj+E05PMYOojB5mD3UQ7+wBFnQIDAQAB
+AoGBAIqpeCi83516xw32EiSEleBdBIlA34vAoYj7ePZr5PtN+CPE2Von1rslYCO9
+axzIwyfWTTATWbiCS9sqOAe78+1t3shU0ryXelWQ95LOdiMp0ZvU3ya6MzSVuiuL
+6gOQYu8kzRqCzqvyMNdAHFMmP0XXXXXXXXXXXXXXXXXXZAtVAkEA/N6gl4tYJBef
+e/Gxi7qhuIKz0mvfA/yieRuiVhXXXXXXXXXXXXXXXXXXbs45hh+n4bw8AA9k0bvi
+3IBIdV/CbwJBAOQcsOPf+lrs4PXXXXXXXXXXXXXXXXXXxuerfPYMAzvJ7EU1u72o
+/5V9zdim+hPq+9cvsqO7dkJx+cXXXXXXXXXXXXXXXXXXXXXXXXXXXaiIxOdCbbtc
+MY4uV8noiqDRf/pvAkyMMM+nm5pXXXXXXXXXXXXXXXXXXXXXXXXXIUx1sZ85AkEA
+15eWR4jEoXMIFkd7Onc6tKuJ8kokqfXXXXXXXXXXXXXXXXXXXXXBRxSjnIQUDwck
+Bnj6KW1fk+UM29dUDjmTqQJBAITyP16XXXXXXXXXXXXXXXXXXXXXvgCxCzRRi5ph
+IavMyjrhDKyBGZ0mI6eoREaC4bxl31RRkYtg9mNeU3TxsBM=
+-----END RSA PRIVATE KEY-----
+```
+
+1. Get `timestamp`, `signature` from request header.
+`timestamp`=`1751441054`
+`signature`=`vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=`
+2. Get request body (if the http method is `POST`, the request body is json text, if the http method is `GET`, the request body is `unescape query` string)
+
+```json
+{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+3. Combine `${timestamp}` and response body into a new string `$content`
+```json
+1751441054{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+
+4. Decode the signature bytes from base64
+5. Encrypt string content with sha256 and verify signature  base PKCS1V15,1024
