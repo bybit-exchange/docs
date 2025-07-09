@@ -55,7 +55,7 @@ You may have multiple executions for one order in a single message.
 |> underlyingPrice |string |The underlying price of the symbol when executing. valid for `option`|
 |> blockTradeId |string |Paradigm block trade ID|
 |> closedSize |string |Closed position size |
-|> extraFees |string |Extra trading fee information. Currently, this data is returned only for kyc=Indian user or spot orders placed on the Indonesian site or spot fiat currency orders placed on the EU site. In other cases, an empty string is returned. Enum: [feeType](../../enum#extrafeesfeetype), [subFeeType](../../enum#extrafeessubfeetype)
+|> extraFees |List<Json> |Extra trading fee information. Currently, this data is returned only for kyc=Indian user or spot orders placed on the Indonesian site or spot fiat currency orders placed on the EU site. In other cases, an empty string is returned. Enum: [feeType](../../enum#extrafeesfeetype), [subFeeType](../../enum#extrafeessubfeetype)
 |> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>The seq will be the same when conclude multiple transactions at the same time</li><li>Different symbols may have the same seq, please use seq + symbol to check unique</li></ul>|
 
 ### Subscribe Example
@@ -124,7 +124,7 @@ while True:
             "marketUnit": "",
             "execPnl": "0.05",
             "createType": "CreateByUser",
-            "extraFees": [{'feeCoin': 'USDT', 'feeType': 'GST', 'subFeeType': 'IND_GST', 'feeRate': '0.0000675', 'fee': '0.006919695'}]
+            "extraFees":[{"feeCoin":"USDT","feeType":"GST","subFeeType":"IND_GST","feeRate":"0.0000675","fee":"0.006403779"}]
         }
     ]
 }
