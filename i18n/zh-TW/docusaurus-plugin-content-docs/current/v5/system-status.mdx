@@ -2,8 +2,11 @@
 title: 取得系統狀態
 sidebar_label: 取得系統狀態
 ---
-## 介紹
-我們新增了一個**GET 端點**來檢查系統狀態。這有助於我們更快地通知您系統是否因維護或故障而停機。它不涵蓋常規更新。
+大型平台維護或服務故障時取得系統狀態
+
+:::info
+請注意，目前有些系護發佈導致短暫停頓（持續時間少於 10 秒）或 WebSocket 中斷（使用者可立即重連），此類不會通知。
+:::
 
 ### HTTP 請求
 GET `/v5/system/status`
@@ -13,7 +16,6 @@ GET `/v5/system/status`
 |:----- |:-------|:-----|------ |
 |id |false |string |Id, 唯一標識 |
 |[state](enum#state) |false |string |系統的狀態|
-
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -31,34 +33,12 @@ GET `/v5/system/status`
 |> [maintainType](enum#maintaintype) |string |維護類型 |
 |> [env](enum#env) |string |環境 |
 
-
----
-
 ### 請求示例
-
-<Tabs groupId="programming-languages">
-<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/system/status HTTP/1.1
 Host: api.bybit.com
 ```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-
-```
-
-</TabItem>
-<TabItem value="java" label="Java">
-
-```java
-```
-
-</TabItem>
-</Tabs>
 
 ### 響應示例
 
