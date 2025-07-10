@@ -2,8 +2,11 @@
 title: Get System Status
 sidebar_label: Get System Status
 ---
-## Introduction
-We added a **GET endpoint** to check the system status. This helps us tell you faster if the system is down for maintenance or broken. It doesn't cover normal updates.
+Get the system status when there is a platform maintenance or service incident.
+
+:::info
+Please not currently system maintenance that may result in short interruption (lasting less than 10 seconds) or websocket disconnection (users can immediately reconnect) will not be announced.
+:::
 
 ### HTTP Request
 GET `/v5/system/status`
@@ -13,7 +16,6 @@ GET `/v5/system/status`
 |:----- |:-------|:-----|------ |
 |id |false |string |id. Unique identifier|
 |[state](enum#state) |false |string |system state|
-
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -31,34 +33,12 @@ GET `/v5/system/status`
 |> [maintainType](enum#maintaintype) |string |Maintenance type |
 |> [env](enum#env) |string |Environment |
 
-
----
-
 ### Request Example
-
-<Tabs groupId="programming-languages">
-<TabItem value="http" label="HTTP">
 
 ```http
 GET /v5/system/status HTTP/1.1
 Host: api.bybit.com
 ```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-
-```
-
-</TabItem>
-<TabItem value="java" label="Java">
-
-```java
-```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 
