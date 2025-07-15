@@ -1,0 +1,106 @@
+---
+title: RPI Orderbook
+sidebar_label: RPI Orderbook
+sidebar_position: 1.1
+---
+
+Subscribe to the orderbook stream including RPI quote
+
+### Depths
+
+**Spot:**<br/>
+Level 50 data, push frequency: **100ms**<br/>
+
+**Topic:**<br/>
+`orderbook.rpi.{symbol}` e.g., orderbook.rpi.BTCUSDT
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. `snapshot`,`delta` |
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |map |Object |
+|> s |string |Symbol name |
+|> b |array |Bids. For `snapshot` stream. Sorted by price in descending order  |
+|>> b[0] |string |Bid price |
+|>> b[1] |string |None RPI bid size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li>|
+|>> b[2] |string |RPI bid size <li>When a bid RPI order crosses with a non-RPI ask price, the quantity of the bid RPI becomes invalid and is hidden</li>|
+|> a |array |Asks. For `snapshot` stream. Sorted by price in ascending order  |
+|>> a[0] |string |Ask price |
+|>> a[1] |string |None RPI ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
+|>> a[2] |string |RPI ask size  <li>When an ask RPI order crosses with a non-RPI bid price, the quantity of the ask RPI becomes invalid and is hidden</li>|
+|> u |integer |Update ID<li>Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook</li>|
+|> seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li> |
+|cts |number |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
+
+### Subscribe Example
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "orderbook.rpi.BTCUSDT"
+    ]
+}
+```
+
+### Subscribe Success Response
+```json
+{
+    "success": true,
+    "ret_msg": "subscribe",
+    "conn_id": "f6b17b77-48b6-4c5c-b5ec-4a1c733f5763",
+    "op": "subscribe"
+}
+```
+
+### Response Example
+
+```json
+{
+    "topic": "orderbook.rpi.BTCUSDT",
+    "ts": 1752472188075,
+    "type": "delta",
+    "data": {
+        "s": "BTCUSDT",
+        "b": [
+            [
+                "121975.1",
+                "0.114259",
+                "0"
+            ],
+            [
+                "121969.9",
+                "0",
+                "0"
+            ],
+            [
+                "121960.5",
+                "0",
+                "0.163986"
+            ]
+        ],
+        "a": [
+            [
+                "121990.8",
+                "0.441585",
+                "0.78821"
+            ],
+            [
+                "121996.1",
+                "0.016393",
+                "0"
+            ],
+            [
+                "122018.5",
+                "0",
+                "0"
+            ]
+        ],
+        "u": 2258980,
+        "seq": 79683241099
+    },
+    "cts": 1752472188067
+}
+```
