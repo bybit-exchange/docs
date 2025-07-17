@@ -1,0 +1,81 @@
+---
+title: Repay
+sidebar_label: Repay
+sidebar_position: 2
+---
+Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+
+> Permission: "Spot trade"<br/>
+> UID rate limit: 1 req / second
+
+:::info
+* The repaid amount will be deducted from the Funding wallet.
+* The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+:::
+
+### HTTP Request
+POST `/v5/crypto-loan-flexible/repay`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|loanCurrency |**true** |string |Loan currency|
+|amount |**true** |string |Repay amount|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|repayId |string |Repayment transaction ID|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-flexible/repay HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752569628364
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 52
+
+{
+    "loanCurrency": "BTC",
+    "amount": "0.005"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "repayId": "1771"
+    },
+    "retExtInfo": {},
+    "time": 1752569614549
+}
+```

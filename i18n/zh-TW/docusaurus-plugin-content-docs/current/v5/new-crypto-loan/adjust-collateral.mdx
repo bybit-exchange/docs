@@ -1,0 +1,81 @@
+---
+title: 調整質押金額
+sidebar_label: 調整質押金額
+sidebar_position: 4
+---
+您可以增加或減少質押金額. 選擇減少時, 請先確認[允許減少的最大質押數量](reduce-max-collateral-amt#)
+> 權限: "現貨"<br/>
+> 頻率: 1次/秒
+
+:::info
+* 調整的質押數量會在資金帳戶進行返還或者扣減
+:::
+
+### HTTP 請求
+POST `/v5/crypto-loan-common/adjust-ltv`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |質押幣種|
+|amount |**true** |string |調整金額|
+|direction |**true** |string |`0`: 增加質押金; `1`: 減少質押金|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|adjustId |long |質押金調整交易ID|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-common/adjust-ltv HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752627997649
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 69
+
+{
+    "currency": "BTC",
+    "amount": "0.08",
+    "direction": "1"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "adjustId": 27511
+    },
+    "retExtInfo": {},
+    "time": 1752627997915
+}
+```

@@ -1,0 +1,102 @@
+---
+title: Get Repayment Orders History
+sidebar_label: Get Repayment Orders History
+sidebar_position: 5
+---
+> Permission: "Spot trade"<br/>
+> UID rate limit: 5 req / second
+
+### HTTP Request
+GET `/v5/crypto-loan-flexible/repayment-history`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|repayId|false|string|Repayment tranaction ID|
+|loanCurrency|false|string|Loan coin name|
+|limit |false |string |Limit for data size per page. [`1`, `100`]. Default: `10`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> loanCurrency|string |Loan coin|
+|> repayAmount|string |Repayment amount|
+|> repayId|string |Repayment transaction ID|
+|> repayStatus|integer |Repayment status, `1`: success; `2`: processing; `3`: fail|
+|> repayTime|long |Repay timestamp|
+|> repayType|integer |Repayment type, `1`: repay by user; `2`: repay by liquidation; `5`: repay by delisting; `6`: repay by delay liquidation|
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752570746227
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.007",
+                "repayId": "1773",
+                "repayStatus": 1,
+                "repayTime": 1752570731274,
+                "repayType": 1
+            },
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.006",
+                "repayId": "1772",
+                "repayStatus": 1,
+                "repayTime": 1752570726038,
+                "repayType": 1
+            },
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.005",
+                "repayId": "1771",
+                "repayStatus": 1,
+                "repayTime": 1752569614528,
+                "repayType": 1
+            }
+        ],
+        "nextPageCursor": "1769"
+    },
+    "retExtInfo": {},
+    "time": 1752570745493
+}
+```

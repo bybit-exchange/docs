@@ -1,0 +1,103 @@
+---
+title: 查詢質押幣種
+sidebar_label: 查詢質押幣種
+sidebar_position: 2
+---
+:::info
+不需要鑒權
+:::
+
+### HTTP 請求
+GET `/v5/crypto-loan-common/collateral-data`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency|false|string|幣種名稱 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|collateralRatioConfigList|array|Object|
+|> collateralRatioList|array|Object|
+|>> collateralRatio|string |抵押率|
+|>> maxValue|string |最大數量|
+|>> minValue|string |最小數量|
+|> currencies|string|具有相同抵押率的幣種，例如：`BTC,ETH,XRP`|
+|currencyLiquidationList|array|Object|
+|> currency|string|幣種名稱|
+|> liquidationOrder|integer|清算順序|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "collateralRatioConfigList": [
+            {
+                "collateralRatioList": [
+                    {
+                        "collateralRatio": "0.8",
+                        "maxValue": "10000",
+                        "minValue": "0"
+                    },
+                    {
+                        "collateralRatio": "0.7",
+                        "maxValue": "20000",
+                        "minValue": "10000"
+                    },
+                    {
+                        "collateralRatio": "0.5",
+                        "maxValue": "30000",
+                        "minValue": "20000"
+                    },
+                    {
+                        "collateralRatio": "0.4",
+                        "maxValue": "99999999999",
+                        "minValue": "30000"
+                    }
+                ],
+                "currencies": "ATOM,AAVE,BTC,BOB"
+            }
+        ],
+        "currencyLiquidationList": [
+            {
+                "currency": "BTC",
+                "liquidationOrder": 1
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752627381571
+}
+```

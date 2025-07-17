@@ -1,0 +1,132 @@
+---
+title: 查詢質押借幣持倉
+sidebar_label: 查詢質押借幣持倉
+sidebar_position: 6
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-common/position`
+
+### 請求參數
+None
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|borrowList|array|Object|
+|> fixedTotalDebt|string |定期借款總負債（幣）|
+|> fixedTotalDebtUSD|string |定期借款總負債（美元）|
+|> flexibleHourlyInterestRate|string|活期借款每小時利率|
+|> flexibleTotalDebt|string |活期借款總負債（幣）|
+|> flexibleTotalDebtUSD|string |活期借款總負債（美元）|
+|> loanCurrency|string |借款幣種|
+|collateralList|array|Object|
+|> amount|string |抵押金額（幣）|
+|> amountUSD|string |抵押金額（USD，經分層抵押率計算後）|
+|> currency|string |抵押幣種|
+|ltv|string|質押率（LTV）|
+|supplyList|array|Object|
+|> amount|string |出借金額（幣）|
+|> amountUSD|string |出借金額（USD）|
+|> currency|string |出借幣種|
+|totalCollateral|string|抵押總金額（USD）|
+|totalDebt|string|總負債金額（定期 + 活期，USD）|
+|totalSupply|string|出借總金額（USD）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/position HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752628288472
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "borrowList": [
+            {
+                "fixedTotalDebt": "0",
+                "fixedTotalDebtUSD": "0",
+                "flexibleHourlyInterestRate": "0.0000001361462",
+                "flexibleTotalDebt": "0.08800022",
+                "flexibleTotalDebtUSD": "9355.37",
+                "loanCurrency": "BTC"
+            },
+            {
+                "fixedTotalDebt": "0.1",
+                "fixedTotalDebtUSD": "282.8",
+                "flexibleHourlyInterestRate": "0.00000188498892",
+                "flexibleTotalDebt": "0",
+                "flexibleTotalDebtUSD": "0",
+                "loanCurrency": "ETH"
+            }
+        ],
+        "collateralList": [
+            {
+                "amount": "0.12",
+                "amountUSD": "9930.11",
+                "currency": "BTC"
+            },
+            {
+                "amount": "2",
+                "amountUSD": "4524.81",
+                "currency": "ETH"
+            },
+            {
+                "amount": "4002.12",
+                "amountUSD": "3201.69",
+                "currency": "USDT"
+            },
+            {
+                "amount": "1000",
+                "amountUSD": "724.8",
+                "currency": "USDC"
+            }
+        ],
+        "ltv": "0.524344",
+        "supplyList": [
+            {
+                "amount": "800.13041095890410959",
+                "amountUSD": "800.13",
+                "currency": "USDT"
+            }
+        ],
+        "totalCollateral": "18381.41",
+        "totalDebt": "9638.17",
+        "totalSupply": "800.13"
+    },
+    "retExtInfo": {},
+    "time": 1752627962000
+}
+```

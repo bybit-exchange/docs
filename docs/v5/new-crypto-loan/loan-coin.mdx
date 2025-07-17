@@ -1,0 +1,85 @@
+---
+title: Get Borrowable Coins
+sidebar_label: Get Borrowable Coins
+sidebar_position: 1
+---
+:::info
+Does not need authentication.
+:::
+
+### HTTP Request
+GET `/v5/crypto-loan-common/loanable-data`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|vipLevel|false|string|Vip level <li>`VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)</li><li>`PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`</li>|
+|currency|false|string|Coin name, uppercase only |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array |Object |
+|> currency|string |Coin name|
+|> fixedBorrowable|boolean |Whether support fixed loan|
+|> fixedBorrowingAccuracy|integer |Coin precision for fixed loan|
+|> flexibleBorrowable|boolean |Whether support flexible loan|
+|> flexibleBorrowingAccuracy|integer |Coin precision for flexible loan|
+|> maxBorrowingAmount|string |Max borrow limit|
+|> minFixedBorrowingAmount|string |Minimum amount for each fixed loan order|
+|> minFlexibleBorrowingAmount|string |Minimum amount for each flexible loan order|
+|> vipLevel|string |Vip level |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "currency": "ETH",
+                "fixedBorrowable": true,
+                "fixedBorrowingAccuracy": 6,
+                "flexibleBorrowable": true,
+                "flexibleBorrowingAccuracy": 4,
+                "maxBorrowingAmount": "1100",
+                "minFixedBorrowingAmount": "0.1",
+                "minFlexibleBorrowingAmount": "0.001",
+                "vipLevel": "VIP5"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752573126653
+}
+```
