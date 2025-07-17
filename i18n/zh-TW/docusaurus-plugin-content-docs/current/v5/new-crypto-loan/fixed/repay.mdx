@@ -1,0 +1,74 @@
+---
+title: 還款
+sidebar_label: 還款
+sidebar_position: 11
+---
+> 權限: "現貨"<br/>
+> 頻率: 1次/秒
+
+### HTTP 請求
+POST `/v5/crypto-loan-fixed/fully-repay`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|loanId |false |string |借款合同ID. `loanId` 和 `loanCurrency`必須傳其中一個|
+|loanCurrency |false |string |Loan coin. Either `loanId` 和 `loanCurrency`必須傳其中一個|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|repayId |string |還款訂單ID|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-fixed/fully-repay HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752656296791
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 50
+
+{
+    "loanId": "570",
+    "loanCurrency": "ETH"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "repayId": "1771"
+    },
+    "retExtInfo": {},
+    "time": 1752569614549
+}
+```

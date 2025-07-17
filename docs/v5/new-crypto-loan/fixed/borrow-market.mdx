@@ -1,0 +1,80 @@
+---
+title: Get Borrowing Market
+sidebar_label: Get Borrowing Market
+sidebar_position: 2
+---
+:::info
+Does not need authentication.
+:::
+
+If you want to borrow, you can use this endpoint to check whether there are any suitable counterparty supply orders available.
+
+### HTTP Request
+GET `/v5/crypto-loan-fixed/borrow-order-quote`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderCurrency|**true**|string|Coin name|
+|term |false|string |Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days|
+|orderBy |**true**|string |Order by, `apy`: annual rate; `term`; `quantity`|
+|sort |false |integer|`0`: ascend, default; `1`: descend|
+|limit |false |integer|Limit for data size per page. [`1`, `100`]. Default: `10`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array |Object |
+|> orderCurrency|string |Coin name|
+|> term|integer |Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days|
+|> annualRate|string |Annual rate|
+|> qty|string |Quantity|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "annualRate": "0.04",
+                "orderCurrency": "USDT",
+                "qty": "988.78",
+                "term": 14
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752719158890
+}
+```

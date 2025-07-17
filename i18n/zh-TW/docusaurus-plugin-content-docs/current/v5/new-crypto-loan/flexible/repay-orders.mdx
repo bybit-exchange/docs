@@ -1,0 +1,102 @@
+---
+title: 查詢還款歷史
+sidebar_label: 查詢還款歷史
+sidebar_position: 5
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-flexible/repayment-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|repayId|false|string|還款訂單ID|
+|loanCurrency|false|string|借款幣種|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> loanCurrency|string |借款幣種|
+|> repayAmount|string |還款金額|
+|> repayId|string |還款交易 ID|
+|> repayStatus|integer |還款狀態，`1`: 成功；`2`: 處理中；`3`: 失敗|
+|> repayTime|long |還款時間戳|
+|> repayType|integer |還款類型，`1`: 用戶還款；`2`: 強制平倉還款；`5`: 下架還款；`6`: 延期強平還款|
+|nextPageCursor |string |下一頁游標|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752570746227
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.007",
+                "repayId": "1773",
+                "repayStatus": 1,
+                "repayTime": 1752570731274,
+                "repayType": 1
+            },
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.006",
+                "repayId": "1772",
+                "repayStatus": 1,
+                "repayTime": 1752570726038,
+                "repayType": 1
+            },
+            {
+                "loanCurrency": "BTC",
+                "repayAmount": "0.005",
+                "repayId": "1771",
+                "repayStatus": 1,
+                "repayTime": 1752569614528,
+                "repayType": 1
+            }
+        ],
+        "nextPageCursor": "1769"
+    },
+    "retExtInfo": {},
+    "time": 1752570745493
+}
+```

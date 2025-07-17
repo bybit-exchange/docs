@@ -1,0 +1,92 @@
+---
+title: 查詢借款歷史
+sidebar_label: 查詢借款歷史
+sidebar_position: 4
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-flexible/borrow-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId|false|string|借款單ID|
+|loanCurrency|false|string|借款幣種|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> borrowTime|long |借款時間戳|
+|> initialLoanAmount|string |借款金額|
+|> loanCurrency|string |借款幣種|
+|> orderId|string |借款訂單ID|
+|> status|integer |借款訂單狀態 `1`: 成功；`2`: 處理中；`3`: 失敗|
+|nextPageCursor |string |下一頁游標|
+
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/borrow-history?limit=2 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752570519918
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "borrowTime": 1752569950643,
+                "initialLoanAmount": "0.006",
+                "loanCurrency": "BTC",
+                "orderId": "1364",
+                "status": 1
+            },
+            {
+                "borrowTime": 1752569209643,
+                "initialLoanAmount": "0.1",
+                "loanCurrency": "BTC",
+                "orderId": "1363",
+                "status": 1
+            }
+        ],
+        "nextPageCursor": "1363"
+    },
+    "retExtInfo": {},
+    "time": 1752570519414
+}
+```

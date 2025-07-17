@@ -1,0 +1,101 @@
+---
+title: Get Collateral Adjustment History
+sidebar_label: Get Collateral Adjustment History
+sidebar_position: 5
+---
+Query for your LTV adjustment history.
+> Permission: "Spot trade"<br/>
+> UID rate limit: 5 req / second
+
+### HTTP Request
+GET `/v5/crypto-loan-common/adjustment-history`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|adjustId|false|string|Collateral adjustment transaction ID|
+|collateralCurrency|false|string|Collateral coin name|
+|limit |false |string |Limit for data size per page. [`1`, `100`]. Default: `10`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> collateralCurrency|string |Collateral coin|
+|> amount|string |amount|
+|> adjustId|long|Collateral adjustment transaction ID|
+|> adjustTime|long |Adjust timestamp|
+|> preLTV|string |LTV before the adjustment|
+|> afterLTV|string |LTV after the adjustment|
+|> direction|integer |The direction of adjustment, `0`: add collateral; `1`: reduce collateral|
+|> status|integer |The status of adjustment, `1`: success; `2`: processing; `3`: fail|
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752628288472
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "adjustId": 27511,
+                "adjustTime": 1752627997907,
+                "afterLTV": "0.813743",
+                "amount": "0.08",
+                "collateralCurrency": "BTC",
+                "direction": 1,
+                "preLTV": "0.524602",
+                "status": 1
+            },
+            {
+                "adjustId": 27491,
+                "adjustTime": 1752218558913,
+                "afterLTV": "0.41983",
+                "amount": "0.03",
+                "collateralCurrency": "BTC",
+                "direction": 1,
+                "preLTV": "0.372314",
+                "status": 1
+            }
+        ],
+        "nextPageCursor": "27491"
+    },
+    "retExtInfo": {},
+    "time": 1752628288732
+}
+```

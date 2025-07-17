@@ -1,0 +1,80 @@
+---
+title: 查詢可借市場
+sidebar_label: 查詢可借市場
+sidebar_position: 2
+---
+:::info
+公共接口, 無需鑒權
+:::
+
+如果您是借款方, 可通過該接口查詢到市場上可匹配的存款單報價
+
+### HTTP 請求
+GET `/v5/crypto-loan-fixed/borrow-order-quote`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderCurrency|**true**|string|幣種名稱|
+|term |false|string |固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天|
+|orderBy |**true**|string |排序依據，`apy`: 年化利率；`term`: 期限；`quantity`: 數量|
+|sort |false |integer|`0`: 升序，預設；`1`: 降序|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array |Object |
+|> orderCurrency|string |幣種名稱|
+|> term|integer |固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天|
+|> annualRate|string |年化利率|
+|> qty|string |數量|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "annualRate": "0.04",
+                "orderCurrency": "USDT",
+                "qty": "988.78",
+                "term": 14
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752719158890
+}
+```

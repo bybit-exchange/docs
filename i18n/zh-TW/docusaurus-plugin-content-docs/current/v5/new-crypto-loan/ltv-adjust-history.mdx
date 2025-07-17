@@ -1,0 +1,101 @@
+---
+title: 查詢質押金調整歷史
+sidebar_label: 查詢質押金調整歷史
+sidebar_position: 5
+---
+查詢增減質押金的操作歷史
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-common/adjustment-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|adjustId|false|string|質押金調整操作ID|
+|collateralCurrency|false|string|質押幣種|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> collateralCurrency|string |抵押幣種|
+|> amount|string |金額|
+|> adjustId|long|抵押調整交易 ID|
+|> adjustTime|long |調整時間戳|
+|> preLTV|string |調整前質押率（LTV）|
+|> afterLTV|string |調整後質押率（LTV）|
+|> direction|integer |調整方向，`0`: 增加抵押；`1`: 減少抵押|
+|> status|integer |調整狀態，`1`: 成功；`2`: 處理中；`3`: 失敗|
+|nextPageCursor |string |下一頁游標|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752628288472
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "adjustId": 27511,
+                "adjustTime": 1752627997907,
+                "afterLTV": "0.813743",
+                "amount": "0.08",
+                "collateralCurrency": "BTC",
+                "direction": 1,
+                "preLTV": "0.524602",
+                "status": 1
+            },
+            {
+                "adjustId": 27491,
+                "adjustTime": 1752218558913,
+                "afterLTV": "0.41983",
+                "amount": "0.03",
+                "collateralCurrency": "BTC",
+                "direction": 1,
+                "preLTV": "0.372314",
+                "status": 1
+            }
+        ],
+        "nextPageCursor": "27491"
+    },
+    "retExtInfo": {},
+    "time": 1752628288732
+}
+```

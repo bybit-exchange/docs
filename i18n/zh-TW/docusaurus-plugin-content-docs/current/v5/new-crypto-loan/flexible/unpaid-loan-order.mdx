@@ -1,0 +1,75 @@
+---
+title: 查詢借款中信息
+sidebar_label: 查詢借款中信息
+sidebar_position: 3
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-flexible/ongoing-coin`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|loanCurrency|false|string|借款幣種|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> hourlyInterestRate|string |最新每小時彈性利率|
+|> loanCurrency|string |借款幣種|
+|> totalDebt|string |未償還本金與利息總額|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752570124973
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "hourlyInterestRate": "0.00000013597784",
+                "loanCurrency": "BTC",
+                "totalDebt": "0.10100003"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752570124242
+}
+```

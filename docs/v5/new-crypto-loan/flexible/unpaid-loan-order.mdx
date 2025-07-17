@@ -1,0 +1,76 @@
+---
+title: Get Flexible loans
+sidebar_label: Get Flexible loans
+sidebar_position: 3
+---
+Query for your ongoing loans
+> Permission: "Spot trade"<br/>
+> UID rate limit: 5 req / second
+
+### HTTP Request
+GET `/v5/crypto-loan-flexible/ongoing-coin`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|loanCurrency|false|string|Loan coin name|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> hourlyInterestRate|string |Latest hourly flexible interest rate|
+|> loanCurrency|string |Loan coin|
+|> totalDebt|string |Unpaid principal and interest|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752570124973
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "hourlyInterestRate": "0.00000013597784",
+                "loanCurrency": "BTC",
+                "totalDebt": "0.10100003"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752570124242
+}
+```

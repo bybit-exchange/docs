@@ -1,0 +1,103 @@
+---
+title: Get Collateral Coins
+sidebar_label: Get Collateral Coins
+sidebar_position: 2
+---
+:::info
+Does not need authentication.
+:::
+
+### HTTP Request
+GET `/v5/crypto-loan-common/collateral-data`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency|false|string|Coin name, uppercase only |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|collateralRatioConfigList|array|Object|
+|> collateralRatioList|array|Object|
+|>> collateralRatio|string |Collateral ratio|
+|>> maxValue|string |Max qty|
+|>> minValue|string |Min qty|
+|> currencies|string|Currenies with the same collateral ratio, e.g., `BTC,ETH,XRP`|
+|currencyLiquidationList|array|Object|
+|> currency|string|Coin name|
+|> liquidationOrder|integer|Liquidation order|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "collateralRatioConfigList": [
+            {
+                "collateralRatioList": [
+                    {
+                        "collateralRatio": "0.8",
+                        "maxValue": "10000",
+                        "minValue": "0"
+                    },
+                    {
+                        "collateralRatio": "0.7",
+                        "maxValue": "20000",
+                        "minValue": "10000"
+                    },
+                    {
+                        "collateralRatio": "0.5",
+                        "maxValue": "30000",
+                        "minValue": "20000"
+                    },
+                    {
+                        "collateralRatio": "0.4",
+                        "maxValue": "99999999999",
+                        "minValue": "30000"
+                    }
+                ],
+                "currencies": "ATOM,AAVE,BTC,BOB"
+            }
+        ],
+        "currencyLiquidationList": [
+            {
+                "currency": "BTC",
+                "liquidationOrder": 1
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1752627381571
+}
+```
