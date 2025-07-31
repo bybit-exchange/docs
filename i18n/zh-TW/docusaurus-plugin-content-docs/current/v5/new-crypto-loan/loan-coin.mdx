@@ -20,12 +20,6 @@ GET `/v5/crypto-loan-common/loanable-data`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array |Object |
-|> annualizedInterestRate14D|string |14天定期年利率|
-|> annualizedInterestRate180D|string |180天定期年利率|
-|> annualizedInterestRate30D|string |30天定期年利率|
-|> annualizedInterestRate60D|string |60天定期年利率|
-|> annualizedInterestRate7D|string |7天定期年利率|
-|> annualizedInterestRate90D|string |90天定期年利率|
 |> currency|string |幣種名稱|
 |> fixedBorrowable|boolean |是否支持定期借款|
 |> fixedBorrowingAccuracy|integer |定期借款的幣種精度|
@@ -35,6 +29,14 @@ GET `/v5/crypto-loan-common/loanable-data`
 |> minFixedBorrowingAmount|string |每筆定期借款訂單的最低金額|
 |> minFlexibleBorrowingAmount|string |每筆活期借款訂單的最低金額|
 |> vipLevel|string |VIP 等級|
+|> flexibleAnnualizedInterestRate|integer |活期年化借款利率。如果借貸幣種不支持活期, 則總是空字符串|
+|> annualizedInterestRate7D|string |市場目前可提供的7天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+|> annualizedInterestRate14D|string |市場目前可提供的14天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+|> annualizedInterestRate30D|string |市場目前可提供的30天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+|> annualizedInterestRate60D|string |市場目前可提供的60天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+|> annualizedInterestRate90D|string |市場目前可提供的90天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+|> annualizedInterestRate180D|string |市場目前可提供的180天最低借款年化利率。如果當前市場無存款單，則是空字符串|
+
 
 ### 請求示例
 
@@ -73,26 +75,26 @@ Host: api-testnet.bybit.com
     "result": {
         "list": [
             {
-                "annualizedInterestRate14D": "0.05",
-                "annualizedInterestRate180D": "",
-                "annualizedInterestRate30D": "0.045",
-                "annualizedInterestRate60D": "",
-                "annualizedInterestRate7D": "0.024",
-                "annualizedInterestRate90D": "",
                 "currency": "ETH",
                 "fixedBorrowable": true,
-                "fixedBorrowingAccuracy": 8,
-                "flexibleAnnualizedInterestRate": "0.018867182004",
+                "fixedBorrowingAccuracy": 6,
                 "flexibleBorrowable": true,
                 "flexibleBorrowingAccuracy": 4,
-                "maxBorrowingAmount": "5000",
-                "minFixedBorrowingAmount": "0.25",
-                "minFlexibleBorrowingAmount": "0.016",
-                "vipLevel": "VIP5"
+                "maxBorrowingAmount": "1100",
+                "minFixedBorrowingAmount": "0.1",
+                "minFlexibleBorrowingAmount": "0.001",
+                "vipLevel": "VIP5",
+                "annualizedInterestRate14D": "0.08",
+                "annualizedInterestRate180D": "",
+                "annualizedInterestRate30D": "",
+                "annualizedInterestRate60D": "",
+                "annualizedInterestRate7D": "",
+                "annualizedInterestRate90D": "",
+                "flexibleAnnualizedInterestRate": "0.001429799316"
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1753685093300
+    "time": 1752573126653
 }
 ```
