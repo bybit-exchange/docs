@@ -34,7 +34,7 @@ POST `/v5/asset/withdraw/create`
 |amount |**true** |string |Withdraw amount |
 |timestamp |**true** |integer |Current timestamp (ms). Used for preventing from withdraw replay |
 |forceChain |false |integer |Whether or not to force an on-chain withdrawal<ul><li>`0`(default): If the address is parsed out to be an internal address, then internal transfer (**Bybit main account only**)</li><li>`1`: Force the withdrawal to occur on-chain</li><li>`2`: Use UID to withdraw</li></ul>|
-|accountType|false|string |Select the wallet to be withdrawn from <ul><li>`FUND`: Funding wallet</li></ul>|
+|accountType|**true**|string |Select the wallet to be withdrawn from <ul><li>`FUND`: Funding wallet</li></ul>|
 |feeType|false|integer |Handling fee option <ul><li>`0`(default): input amount is the actual amount received, so you have to calculate handling fee manually</li><li>`1`: input amount is not the actual amount you received, the system will help to deduct the handling fee automatically</li></ul> |
 |requestId |false |string |Customised ID, globally unique, it is used for idempotent verification <li>A combination of letters (case sensitive) and numbers, which can be pure letters or pure numbers and the length must be between 1 and 32 digits</li> |
 |beneficiary |false |Object |Travel rule info. It is **required** for kyc/kyb=KOR (Korean), kyc=IND (India) users, and users who registered in [Bybit Turkey(TR)](https://www.bybit-tr.com/en-TR/), [Bybit Kazakhstan(KZ)](https://www.bybit.kz/kk-KAZ/), Bybit Indonesia (ID)
