@@ -14,6 +14,10 @@ Push frequency: **real-time**
 `publicTrade.{symbol}`<br/>
 **Note**: option uses baseCoin, e.g., publicTrade.BTC
 
+:::note
+For Futures and Spot, a single message has up to 1024 trades. So it may have mutiple messages for the same cross.
+:::
+
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
@@ -31,6 +35,7 @@ Push frequency: **real-time**
 |> i |string |Trade ID |
 |> BT |boolean |Whether it is a block trade order or not|
 |> RPI |boolean |Whether it is a RPI trade or not|
+|> seq |long |cross sequence|
 |> mP |string |Mark price, unique field for `option`|
 |> iP |string |Index price, unique field for `option`|
 |> mIv |string |Mark iv, unique field for `option`|
@@ -71,7 +76,8 @@ while True:
             "p": "16578.50",
             "L": "PlusTick",
             "i": "20f43950-d8dd-5b31-9112-a178eb6023af",
-            "BT": false
+            "BT": false,
+            "seq": 1783284617
         }
     ]
 }
