@@ -9,11 +9,11 @@ Query for the instrument specification of online trading pairs.
 
 :::info
 * Spot does not support pagination, so `limit`, `cursor` are invalid.
-* When query by `baseCoin`, regardless of category=`linear` or `inverse`, the result will have USDT contract, USDC contract and Inverse contract symbols.
+* When querying by `baseCoin`, regardless of if category=`linear` or `inverse`, the result will contain USDT contract, USDC contract and Inverse contract symbols.
 :::
 
 :::caution
-The endpoint returns 500 entries by default, which doesn't represent all `linear` symbols on the platform since recently. Use `cursor` for pagination or `limit` to get all entries.
+This endpoint returns 500 entries by default. There are now more than 500 `linear` symbols on the platform. As a result, you will need to use `cursor` for pagination or `limit` to get all entries.
 :::
 
 ### HTTP Request
@@ -24,8 +24,8 @@ GET `/v5/market/instruments-info`
 |:----- |:-------|:-----|------ |
 |[category](../enum#category) |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`,`option`|
 |[symbol](../enum#symbol) |false |string |Symbol name, like `BTCUSDT`, uppercase only|
-|[status](../enum#status) |false |string |Symbol status filter <ul><li>By defualt return only `Trading` symbols</li><li>spot has `Trading` only</li><li>`linear` & `inverse`: when status=PreLaunch, it returns pre-market contract</li></ul>|
-|baseCoin |false |string |Base coin, uppercase only <li>Apply to`linear`,`inverse`,`option` **only**</li><li>`option`: it returns BTC by default</li> |
+|[status](../enum#status) |false |string |Symbol status filter <ul><li>By default returns only `Trading` symbols</li><li>Spot has `Trading` only</li><li>`linear` & `inverse`: when status=PreLaunch, it returns <a href="https://www.bybit.com/help-center/article/Introduction-to-Pre-Market-Perpetual">Pre-Market contracts</a></li></ul>|
+|baseCoin |false |string |Base coin, uppercase only <ul><li>Applies to `linear`,`inverse`,`option` **only**</li><li>`option`: returns BTC by default</li></ul> |
 |limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: `500`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -139,7 +139,7 @@ GET `/v5/market/instruments-info`
             <td>> displayName</td><td>string</td><td>The USDC futures & perpetual name displayed in the Web or App</td>
         </tr>
         <tr>
-            <td>> riskParameters</td><td>object</td><td>Risk parameters for limit order price, refer to <a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">announcement</a></td>
+            <td>> riskParameters</td><td>object</td><td>Risk parameters for limit order price. Note that the <a href="https://announcements.bybit.com/en/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">formula changed</a> in Jan 2025</td>
         </tr>
         <tr>
             <td>>> priceLimitRatioX</td><td>string</td><td>Ratio X</td>

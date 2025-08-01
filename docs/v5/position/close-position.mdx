@@ -3,15 +3,15 @@ title: Get Closed Options Positions
 sidebar_label: Get Closed Options Positions (6 months)
 sidebar_position: 11
 ---
-Query user's closed options positions, sorted by `closeTime` in descend order
+Query user's closed options positions, sorted by `closeTime` in descending order.
 
 :::info
-* Only supports users to query closed options positions in recently 6 months
-* Fee and price retain 8 decimal places and do not omit the last 0
+* Only supports users to query closed options positions in the last 6 months.
+* Fee and price are displayed with trailing zeroes up to 8 decimal places.
 :::
 
 ### HTTP Request
-GET `v5/position/get-closed-positions`
+GET `/v5/position/get-closed-positions`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -31,7 +31,7 @@ GET `v5/position/get-closed-positions`
 |list |array |Object |
 |> symbol |string |Symbol name |
 |> side |string |`Buy`, `Sell` |
-|> totalOpenFee |string |Total Open Fee |
+|> totalOpenFee |string |Total open fee |
 |> deliveryFee |string |Delivery fee |
 |> totalCloseFee |string |Total close fee |
 |> qty |string |Order qty |
@@ -50,7 +50,7 @@ GET `v5/position/get-closed-positions`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1
+GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -63,10 +63,10 @@ X-BAPI-RECV-WINDOW: 5000
 
 ### Response Example
 
-```JSON
+```json
 {
     "retCode": 0,
-    "retMsg": "Success",
+    "retMsg": "OK",
     "result": {
         "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",
         "category": "option",
@@ -101,9 +101,7 @@ X-BAPI-RECV-WINDOW: 5000
             }
         ]
     },
-    "retExtInfo": {
-
-    },
+    "retExtInfo": {},
     "time": 1749736532193
 }
 ```
