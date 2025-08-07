@@ -10,13 +10,13 @@ POST `/v5/p2p/item/update`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|id|**true**|string|adv id|
+|id|**true**|string|Advertisement ID|
 |priceType|**true**|string|Pricing exchange rate model. `0`: fixed rate; `1`: floating rate|
 |premium|**true**|string|Floating ratio with current exchange rate|
-|price|**true**|string|ads price|
-|minAmount|**true**|string|Min transaction amount|
-|maxAmount|**true**|string|Max transaction amount|
-|remark|**true**|string|Transaction Description(max=900)|
+|price|**true**|string|Price per token, in currency|
+|minAmount|**true**|string|Min transaction amount in currency|
+|maxAmount|**true**|string|Max transaction amount in currency|
+|remark|**true**|string|Advertisement description (max length: 900)|
 |tradingPreferenceSet|**true**|Object|Trading Preferences|
 |> hasUnPostAd|false|string|Whether the counterparty must not have posted any advertisements. `0`: not required, `1`: required |
 |> isKyc|false|string|Is it necessary for the counterparty to complete identity authentication? `0`: not required, `1`: required |
@@ -30,9 +30,9 @@ POST `/v5/p2p/item/update`
 |> hasOrderFinishNumberDay30|false|string|Is it necessary to have no less than {} orders in the last 30 days? `0`: not required, `1`: required |
 |> hasCompleteRateDay30|false|string|Is it necessary to have a completion rate of no less than {} in the last 30 days? `0`: not required, `1`: required |
 |> hasNationalLimit|false|string|Are country restrictions required? `0`: not required, `1`: required |
-|paymentIds|**true**|array[string]|Payment method type ID (len<=5)|
+|paymentIds|**true**|array[string]|Payment method type ID (len<=5). Please use `Get User Payment` to get `id` of a payment method added to your account.|
 |actionType|**true**|string|Operation type: `MODIFY`: modify ad; `ACTIVE`: reonline adv|
-|quantity|**true**|string|Number of ads|
+|quantity|**true**|string|Number of tokens in an advertisement|
 |paymentPeriod|**true**|string|Payment period (unit: minutes)|
 
 ### Response Parameters
