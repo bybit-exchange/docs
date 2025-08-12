@@ -505,12 +505,7 @@ containing 8 orders is placed at this time, then the first 5 orders will be succ
 will report an error exceeding the limit, and these orders will fail.
 :::
 
-:::info UPCOMING CHANGES FOR PRO ACCOUNT
-Starting **August 13, 2025**, Bybit will roll out a new institutional API rate limit 
-framework designed to enhance performance for high-frequency trading clients. The 
-new system introduces a centralized institution-level rate cap with flexible per-UID 
-configurations, enabling greater efficiency and scalability. Refer to [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
-:::
+
 
 <span class="blocky_table">
 
@@ -542,24 +537,196 @@ configurations, enabling greater efficiency and scalability. Refer to [announcem
     <tr>
         <td>VIP Supreme</td><td>60/s</td><td>60/s</td><td>40/s</td>
     </tr>
+</table>
+</span>
+
+
+## API Rate Limit Rules For PROs
+
+:::info UPCOMING CHANGES FOR PRO ACCOUNT
+Starting **August 13, 2025**, Bybit will roll out a new institutional API rate limit 
+framework designed to enhance performance for high-frequency trading clients. The 
+new system introduces a centralized institution-level rate cap with flexible per-UID 
+configurations, enabling greater efficiency and scalability. Refer to [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
+:::
+
+### UID level: 
+<span class="blocky_table">
+<table class="custom_table">
     <tr>
-        <td>PRO1</td><td>150/s</td><td>150/s</td><td>150/s</td>
+        <th></th><th colSpan="3" align="center">Unified Account</th>
     </tr>
     <tr>
-        <td>PRO2</td><td>200/s</td><td>200/s</td><td>200/s</td>
+        <td>Level\Product</td><td><b>Futures</b></td><td><b>Option</b></td><td><b>Spot</b></td>
     </tr>
     <tr>
-        <td>PRO3</td><td>250/s</td><td>250/s</td><td>250/s</td>
+        <td>PRO1</td><td>200/s</td><td>200/s</td><td>200/s</td>
     </tr>
     <tr>
-        <td>PRO4</td><td>300/s</td><td>300/s</td><td>300/s</td>
+        <td>PRO2</td><td>400/s</td><td>400/s</td><td>400/s</td>
     </tr>
     <tr>
-        <td>PRO5</td><td>300/s</td><td>300/s</td><td>300/s</td>
+        <td>PRO3</td><td>600/s</td><td>600/s</td><td>600/s</td>
     </tr>
     <tr>
-        <td>PRO6</td><td>300/s</td><td>300/s</td><td>300/s</td>
+        <td>PRO4</td><td>800/s</td><td>800/s</td><td>800/s</td>
+    </tr>
+    <tr>
+        <td>PRO5</td><td>1000/s</td><td>1000/s</td><td>1000/s</td>
+    </tr>
+    <tr>
+        <td>PRO6</td><td>1200/s</td><td>1200/s</td><td>1200/s</td>
     </tr>
 </table>
-
 </span>
+
+
+### Master and subaccounts level: 
+<span class="blocky_table">
+<table class="custom_table">
+    <tr>
+        <th></th><th colSpan="3" align="center">Unified Account</th>
+    </tr>
+    <tr>
+        <td>Level\Product</td><td><b>Futures</b></td><td><b>Option</b></td><td><b>Spot</b></td>
+    </tr>
+    <tr>
+        <td>PRO1</td><td>10000/s</td><td>10000/s</td><td>10000/s</td>
+    </tr>
+    <tr>
+        <td>PRO2</td><td>20000/s</td><td>20000/s</td><td>20000/s</td>
+    </tr>
+    <tr>
+        <td>PRO3</td><td>30000/s</td><td>30000/s</td><td>30000/s</td>
+    </tr>
+    <tr>
+        <td>PRO4</td><td>40000/s</td><td>40000/s</td><td>40000/s</td>
+    </tr>
+    <tr>
+        <td>PRO5</td><td>50000/s</td><td>50000/s</td><td>50000/s</td>
+    </tr>
+    <tr>
+        <td>PRO6</td><td>60000/s</td><td>60000/s</td><td>60000/s</td>
+    </tr>
+</table>
+</span>
+
+
+### Set api rate limit
+> API rate limit: 50 req per second
+
+:::info
+* If UID requesting this endpoint is a master account, uids in the input parameter must be subaccounts of the master account.
+* If UID requesting this endpoint is not a master account, uids in the input parameter must be the UID requesting this endpoint
+* UID requesting this endpoint must be an institutional user.
+* up to 10 uids can be submitted in each request
+:::
+
+#### HTTP Request
+POST `/v5/apilimit/set`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|list |true|array |Object|
+|> uids |true|string|Multiple UIDs, separated by commas |
+|> [bizType](./enum#biztype) |true|string|Business type |
+|> limit |true|integer|api rate limit per second |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object|
+|> uids |string|Multiple UIDs, separated by commas |
+|> [bizType](./enum#biztype) |string|Business type |
+|> limit |integer|api rate limit per second |
+|> success |boolean| success or not|
+|> [msg](./enum#msg) |string|result message |
+
+#### Request Example
+```http
+POST /v5/apilimit/set HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1711420489915
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "result": [
+            {
+                "uids": "290118",
+                "bizType": "SPOT",
+                "limit": 600,
+                "success": true,
+                "msg": "API limit updated successfully"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1754894296913
+}
+```
+
+### Query api rate limit
+> API rate limit: 50 req per second<br/>
+
+:::info
+* A master account can query api rate limit of its own and subaccounts.
+* A subaccount can only query its own api rate limit.
+:::
+
+#### HTTP Request
+GET `/v5/apilimit/query`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|list |true|array |Object|
+|> uids |true|string|Multiple UIDs, separated by commas |
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object|
+|> uids |string|Multiple UIDs, separated by commas |
+|> [bizType](./enum#biztype) |string|Business type |
+|> limit |integer|api rate limit per second |
+
+#### Request Example
+```http
+GET /v5/apilimit/query?uids=290118 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "uids": "290118",
+                "bizType": "SPOT",
+                "limit": 600
+            },
+            {
+                "uids": "290118",
+                "bizType": "DERIVATIVES",
+                "limit": 400
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1754894341984
+}
+```
+
