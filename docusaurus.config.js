@@ -193,8 +193,8 @@ const config = {
             label: 'P2P Trading',
           },
           {
-            type: 'doc',
-            docId: 'bybit-pay/guide',
+            docId: 'bybit_pay',
+            href: 'https://bybit-exchange.github.io/pay-docs',
             position: 'left',
             label: 'Bybit Pay',
           },
