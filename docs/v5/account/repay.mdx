@@ -1,0 +1,75 @@
+---
+title: Manual Repay
+sidebar_label: Manual Repay
+sidebar_position: 15
+---
+
+:::info
+* If neither `coin` nor `amount` is passed in input parameter, then repay all the liabilities.
+* If `coin` is passed in input parameter and `amount` is not, the coin will be repaid in full.
+:::
+
+### HTTP Request
+GET `/v5/account/repay`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |false |string |coin name, uppercase only|
+|amount |false |string |Repay amount. If `coin` is not passed in input parameter, `amount` can not be passed in input parameter|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Object |
+|> coin |string |coin name, uppercase only|
+|> amount |string |Repay amount|
+
+### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1675842997277
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin":"BTC",
+    "amount":"0.01"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "coin": "BTC",
+        "amount": "0.01"
+    },
+    "retExtInfo": {},
+    "time": 1756197991955
+}
+```
