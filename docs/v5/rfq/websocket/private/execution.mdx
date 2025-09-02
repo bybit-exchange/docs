@@ -1,0 +1,127 @@
+---
+title: Execution
+sidebar_label: Execution
+sidebar_position: 2
+---
+**Topic:** `spread.execution`<br/>
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array&lt;object&gt; | |
+|> category| string  |Combo or single leg, `combination`, `spot_leg`, `future_leg`|
+|> symbol |string  |Combo or leg symbol name |
+|> isLeverage |string |Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.|
+|> orderId |string |Order ID, leg is ""|
+|> orderLinkId |string |User customized order ID, leg is ""|
+|> side |string |Side. `Buy`,`Sell` |
+|> orderPrice |string |Order price|
+|> orderQty |string |Order qty|
+|> leavesQty |string |The remaining qty not executed|
+|> [createType](../../../enum#createtype)|string |Order create type|
+|> orderType |string |Order type. `Market`,`Limit`|
+|> execFee |string |Leg exec fee, deprecated for Spot leg|
+|> execFeeV2 |string |Leg exec fee, used for Spot leg only|
+|> feeCurrency|string |Leg fee currency |
+|> parentExecId |string |Combo's Execution ID, leg's event has the value|
+|> execId |string |Execution ID |
+|> execPrice |string |Execution price |
+|> execQty |string |Execution qty |
+|> execPnl |string |Profit and Loss for each close position execution|
+|> [execType](../../../enum#exectype) |string |Executed type|
+|> execValue |string |Executed order value|
+|> execTime |string |Executed timestamp (ms)  |
+|> isMaker |boolean |Is maker order. `true`: maker, `false`: taker|
+|> feeRate |string |Trading fee rate|
+|> markPrice |string |The mark price of the symbol when executing |
+|> closedSize |string |Closed position size |
+|> seq |long |Cross sequence|
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "spread.execution"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+// Combo execution
+{
+     "topic": "spread.execution",
+     "id": "cvqes8141ilt347i9l20",
+     "creationTime": 1744104992226,
+     "data": [
+          {
+               "category": "combination",
+               "symbol": "SOLUSDT_SOL/USDT",
+               "closedSize": "",
+               "execFee": "",
+               "execId": "82c82077-0caa-5304-894d-58a50a342bd7",
+               "parentExecId": "",
+               "execPrice": "20.9848",
+               "execQty": "2",
+               "execType": "Trade",
+               "execValue": "",
+               "feeRate": "",
+               "markPrice": "",
+               "leavesQty": "0",
+               "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",
+               "orderLinkId": "",
+               "orderPrice": "21",
+               "orderQty": "2",
+               "orderType": "Limit",
+               "side": "Buy",
+               "execTime": "1744104992220",
+               "isLeverage": "",
+               "isMaker": false,
+               "seq": 241321,
+               "createType": "CreateByUser",
+               "execPnl": ""
+          }
+     ]
+}
+
+//Future leg execution
+{
+     "topic": "spread.execution",
+     "id": "1448939_SOLUSDT_28731107101",
+     "creationTime": 1744104992229,
+     "data": [
+          {
+               "category": "future_leg",
+               "symbol": "SOLUSDT",
+               "closedSize": "0",
+               "execFee": "0.039712",
+               "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc",
+               "parentExecId": "82c82077-0caa-5304-894d-58a50a342bd7",
+               "execPrice": "124.1",
+               "execQty": "2",
+               "execType": "FutureSpread",
+               "execValue": "248.2",
+               "feeRate": "0.00016",
+               "markPrice": "119",
+               "leavesQty": "0",
+               "orderId": "",
+               "orderLinkId": "",
+               "orderPrice": "124.1",
+               "orderQty": "2",
+               "orderType": "Limit",
+               "side": "Buy",
+               "execTime": "1744104992224",
+               "isLeverage": "0",
+               "isMaker": false,
+               "seq": 28731107101,
+               "createType": "CreateByFutureSpread",
+               "execPnl": "0"
+          }
+     ]
+}
+```

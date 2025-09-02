@@ -1,0 +1,118 @@
+---
+title: Order
+sidebar_label: Order
+sidebar_position: 1
+---
+
+Subscribe to the order stream to see changes to your orders in **real-time**.
+
+**Topic:** `spread.order`<br/>
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic |string |Topic name |
+|creationTime |number |Data created timestamp (ms) |
+|data |array |Object |
+|> category|string |Category name, `combination`, `spot_leg`, `future_leg`|
+|> symbol|string |Combo or leg's symbol name |
+|> parentOrderId|string |Leg's parent order ID |
+|> orderId|string |Combo or leg's order ID |
+|> orderLinkId|string |Combo's user customised order ID |
+|> side|string |Combo or leg's order side, `Buy`, `Sell` |
+|> orderStatus|string |Combo or leg's order status |
+|> [cancelType](../../../enum#canceltype)|string |Cancel type |
+|> [rejectReason](../../../enum#rejectreason)|string |Reject reason |
+|> timeInForce|string |Time in force, `GTC`, `FOK`, `IOC`, `PostOnly` |
+|> price|string |Order price |
+|> qty|string |Order qty |
+|> avgPrice|string |Average filled price |
+|> leavesQty|string |The remaining qty not executed |
+|> leavesValue|string |The estimated value not executed |
+|> cumExecQty|string |Cumulative executed order qty |
+|> cumExecValue|string |Cumulative executed order value |
+|> cumExecFee|string |Cumulative executed trading fee |
+|> orderType|string |Order type. `Market`,`Limit` |
+|> isLeverage |string |Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.|
+|> createdTime|string |Order created timestamp (ms) |
+|> updatedTime|string |Order updated timestamp (ms) |
+|> feeCurrency|string |Trading fee currency for Spot leg only |
+|> createType|string |Order create type |
+|> closedPnl|string |Closed profit and loss for each close position order |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "spread.order"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+    "topic": "spread.order",
+    "id": "1448939_SOLUSDT_28732003549",
+    "creationTime": 1744170555912,
+    "data": [
+        {
+            "category": "combination",
+            "symbol": "SOLUSDT_SOL/USDT",
+            "parentOrderId": "",
+            "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",
+            "orderLinkId": "",
+            "side": "Buy",
+            "orderStatus": "Filled",
+            "cancelType": "UNKNOWN",
+            "rejectReason": "EC_NoError",
+            "timeInForce": "GTC",
+            "price": "14",
+            "qty": "2",
+            "avgPrice": "",
+            "leavesQty": "0",
+            "leavesValue": "",
+            "cumExecQty": "2",
+            "cumExecValue": "",
+            "cumExecFee": "",
+            "orderType": "Limit",
+            "isLeverage": "",
+            "createdTime": "1744170534447",
+            "updatedTime": "1744170555905",
+            "feeCurrency": "",
+            "createType": "CreateByUser",
+            "closedPnl": ""
+        },
+        {
+            "category": "future_leg",
+            "symbol": "SOLUSDT",
+            "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",
+            "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",
+            "orderLinkId": "",
+            "side": "Buy",
+            "orderStatus": "Filled",
+            "cancelType": "UNKNOWN",
+            "rejectReason": "EC_NoError",
+            "timeInForce": "GTC",
+            "price": "118.2",
+            "qty": "2",
+            "avgPrice": "118.2",
+            "leavesQty": "0",
+            "leavesValue": "0",
+            "cumExecQty": "2",
+            "cumExecValue": "236.4",
+            "cumExecFee": "0.01182",
+            "orderType": "Limit",
+            "isLeverage": "",
+            "createdTime": "1744170534447",
+            "updatedTime": "1744170555910",
+            "feeCurrency": "",
+            "createType": "CreateByFutureSpread",
+            "closedPnl": "0"
+        }
+    ]
+}
+```

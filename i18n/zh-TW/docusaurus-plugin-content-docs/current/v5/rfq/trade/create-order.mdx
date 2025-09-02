@@ -1,0 +1,63 @@
+---
+title: 創建價差委托單
+sidebar_label: 創建價差委托單
+sidebar_position: 1
+---
+每個帳戶最多支持50個活動單
+
+### HTTP請求
+POST `/v5/spread/order/create`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |價差產品名稱|
+|side |**true** |string |訂單方向, `Buy`, `Sell`|
+|orderType |**true** |string |訂單類型 `Limit`, `Market`|
+|qty |**true** |string |訂單數量|
+|price |**true** |string |訂單價格|
+|orderLinkId |**true** |string |用戶自定義訂單ID, 最多 45 個字元。支援數字、字母（大寫和小寫）、破折號和底線的組合|
+|timeInForce |**true** |string |[訂單執行策略](https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK) `IOC`, `FOK`, `GTC`, `PostOnly`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderId |string |價差訂單ID|
+|orderLinkId |string |用戶自定義訂單ID|
+
+### 請求示例
+
+```http
+POST /v5/spread/order/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744079410023
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 191
+
+{
+    "symbol": "SOLUSDT_SOL/USDT",
+    "side": "Buy",
+    "orderType": "Limit",
+    "qty": "0.1",
+    "price": "21",
+    "orderLinkId": "1744072052193428479",
+    "timeInForce": "PostOnly"
+}
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",
+        "orderLinkId": "1744072052193428479"
+    },
+    "retExtInfo": {},
+    "time": 1744075839332
+}
+```
