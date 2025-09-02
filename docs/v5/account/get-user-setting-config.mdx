@@ -1,0 +1,86 @@
+---
+title: Get Limit Price Behaviour
+sidebar_label: Get Limit Price Behaviour
+sidebar_position: 10.3
+---
+You can get configuration how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+
+Spot
+* **Maximum Buy Price**: *Min[Max(Index, Index × (1 + y%) + 2-Minute Average Premium), Index × (1 + z%)]*
+* **Lowest price for Sell**: *Max[Min(Index, Index × (1 – y%) + 2-Minute Average Premium), Index × (1 – z%)]*
+
+Futures
+* **Maximum Buy Price**: *min( max( index , markprice * ( 1 + x% ）), markprice *( 1 + y%) )*
+* **Lowest price for Sell**: *max ( min( index , markprice * ( 1 - x% )) , markprice ( 1 - y%) )
+
+:::info Default Setting
+*	Spot:
+If the order price exceeds the boundary, the system rejects the request.
+
+*	Futures:
+If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).
+:::
+
+### HTTP Request
+GET `/v5/account/user-setting-config`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Object |
+|> lpaPerp |boolean |Limit price switch for futures|
+|> lpaSpot |boolean |Limit price switch for spot|
+
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/user-setting-config HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1753255927950
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 52
+
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "lpaSpot": true,
+        "lpaPerp": false
+    },
+    "retExtInfo": {},
+    "time": 1756794317787
+}
+```
