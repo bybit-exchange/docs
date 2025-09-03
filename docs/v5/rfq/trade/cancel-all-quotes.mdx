@@ -1,0 +1,50 @@
+---
+title: Cancel All Quotes
+sidebar_label: Cancel All Quotes
+sidebar_position: 8
+---
+Cancel all quotations. **Up to 50 requests per second ** 
+
+
+### HTTP Request
+POST `/v5/rfq/cancel-all-quotes`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object ||
+|> data |Array of object ||
+|>> rfqId |string |Inquiry ID |
+|>> quoteId |string |Quotation ID |
+|>> quoteLinkId |string |Quotation Custom ID |
+|>> code |string |Cancel success or failure, 0 cancel success |
+|>> msg |string |Cancellation failure reason |
+
+### Request Example
+
+```http
+POST /v5/rfq/cancel-all-quotes HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [],
+    "retExtInfo": {},
+    "time": 1756879527923
+}
+```

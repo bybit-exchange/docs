@@ -1,0 +1,96 @@
+---
+title: Create RFQ
+sidebar_label: Create RFQ
+sidebar_position: 1
+---
+Create RFQ. **Up to 50 requests** per second.
+:::info
+<li>Only support uta2.0 accounts</li><li> Not supported by demo users</li>
+:::
+
+### HTTP Request
+POST `/v5/rfq/create-rfq`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|counterparties |**true** |Ayyay of deskCode |Spread combination symbol name|
+|rfqLinkId |false |string |Custom ID for inquiry form: <li>The length should be between 1-32 bits </li> <li>The combination of letters (case sensitive) and numbers can be pure letters or pure numbers </li> <li>Specify rfqLinkId to only check the last 3 months </li><li>Non-terminal states can only guarantee the uniqueness of idempotence within 24 hours, while terminal states do not guarantee uniqueness </li>|
+|anonymous |false |boolean |Whether it is anonymous inquiry, `true` means anonymous inquiry, `false` means public inquiry, the default value is `false` , when it is `true` , even after the transaction execution, the identity will not be revealed to the quoting party.|
+|strategyType |false |string |Strategy type, if it is a custom inquiry, strategyType is `custom`, if it is a product combination provided by the system, it is the combination type; the default is `custom`; non-custom combinations have rate optimization, currently 50%; the transaction rate between LPs is currently 30%|
+|list |true |array of objects |Combination transaction list, /v5/rfq/config confirm the maximum length of the combination according to the maxLegs field issued by the interface, the basecoin and settleCoin of all combinations must be the same, and the symbols under the same category must be unique|
+|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
+|> symbol |true |string |Name of the transaction contract, 30 minutes before contract settlement, no inquiry allowed |
+|> side |true |string |Inquiry transaction direction: `Buy` , `Sell` |
+|> qty |true |string |If the number of transactions exceeds the positioning Size, the position will be opened in reverse |
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Order ID |
+|list |array&lt;object&gt; ||
+|> rfqId |string |Inquiry ID |
+|> rfqLinkId |string |Inquiry Custom ID |
+|> status |string |Status of the inquiry form: `Active` `Canceled` `Filled` `Expired` `Failed` |
+|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
+|> deskCode |string |Inquiry party unique identification code |
+
+### Request Example
+
+```http
+POST /v5/rfq/create-rfq HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+{
+    "counterparties": ["LP4","LP5"],
+    "rfqLinkId":"rfq00993",
+    "anonymous": false,
+    "strategyType": "custom",
+    "list": [
+        {
+            "category": "linear",
+            "symbol": "BTCUSDT",
+            "side":"buy",
+            "qty":"2"
+        },
+        {
+            "category": "spot",
+            "symbol": "BTCUSDT",
+            "side":"buy",
+            "qty":"2"
+        },
+        {
+            "category": "option",
+            "symbol": "BTCUSDT",
+            "side":"sell",
+            "qty":"2"
+        }
+    ]
+}
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rfqId": "17526315514105706281",
+        "rfqLinkId": "rfq00993",
+        "status": "Active",
+        "expiresAt": "1752632151414",
+        "deskCode": "LP2"
+    },
+    "retExtInfo": {},
+    "time": 1752631551419
+}
+```
