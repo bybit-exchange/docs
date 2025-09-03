@@ -1,0 +1,188 @@
+---
+title: Get Historical Quotation
+sidebar_label: Get Historical Quotation
+sidebar_position: 12
+---
+Obtain historical quotation information. **Up to 50 requests per second ** 
+:::info
+<li>Obtain quotation information sent or received by the user, query from the database, there is a delay</li><li>Pass quoteId and quoteLinkId, quoteId shall prevail</li><li>Pass both rfqId and rfqLinkId, rfqId shall prevail</li><li>Sort in reverse order according to the creation time of the quotation</li>
+:::
+
+
+### HTTP Request
+GET `/v5/rfq/quote-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |**false** |string|Inquiry ID|
+|quoteId |**false** |string|Quotation ID|
+|quoteLinkId |**false**  |string |Quotation custom ID, traderType is `request` , this field is invalid|
+|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, check the quotation received by oneself</li><li>`Quote` : Quoters, check their own published quotations</li>|
+|status |string |Status of the inquiry form:`Active` `Canceled` `PendingFill` `Filled` `Expired` `Failed` |
+|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
+|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |Object ||
+|> cursor |string |page turning mark|
+|> list |Array |the array of quote|
+|>> rfqId |string |Inquiry ID|
+|>> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
+|>> quoteId |string |Quotation ID|
+|>> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
+|>> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
+|>> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
+|>> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|>> execQuoteSide |string |Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
+|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
+|>> quoteBuyList |array of objects |Quotation `Buy` Direction |
+|>>> category |string |Product type: `spot`,`linear`,`option` |
+|>>> symbol |string |The unique instrument ID|
+|>>> price |string |Order price in the quote currency of the instrument.|
+|>>> qty |string |Order quantity of the instrument. |
+|>> quoteSellList |array of objects |Quotation `Sell` Direction |
+|>>> category |string |Product type: `spot`,`linear`,`option` |
+|>>> symbol |string |The unique instrument ID|
+|>>> price |string |Order price in the quote currency of the instrument.|
+|>>> qty |string |Order quantity of the instrument. |
+
+### Request Example
+
+```http
+GET /v5/rfq/quote-list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "cursor": "",
+        "list": [
+            {
+                "rfqLinkId": "",
+                "rfqId": "175518024039865431159171403262636",
+                "quoteId": "1755180467929421050144511861089859",
+                "quoteLinkId": "jflsakd544644525111",
+                "expiresAt": "1755180587930",
+                "status": "Expired",
+                "deskCode": "1nu9d1",
+                "execQuoteSide": "",
+                "quoteBuyList": [
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-100000-P-USDT",
+                        "price": "80005",
+                        "qty": "4"
+                    },
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-105000-C-USDT",
+                        "price": "90005",
+                        "qty": "4"
+                    }
+                ],
+                "quoteSellList": [
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-100000-P-USDT",
+                        "price": "110005",
+                        "qty": "4"
+                    },
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-105000-C-USDT",
+                        "price": "120005",
+                        "qty": "4"
+                    }
+                ],
+                "createdAt": "1755180467930",
+                "updatedAt": "1755180589784"
+            },
+            {
+                "rfqLinkId": "",
+                "rfqId": "175518024039865431159171403262636",
+                "quoteId": "1755180327173408365183052765528275",
+                "quoteLinkId": "jflsakd54464452511",
+                "expiresAt": "1755180447174",
+                "status": "Expired",
+                "deskCode": "1nu9d1",
+                "execQuoteSide": "",
+                "quoteBuyList": [
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-100000-P-USDT",
+                        "price": "80005",
+                        "qty": "4"
+                    },
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-105000-C-USDT",
+                        "price": "90005",
+                        "qty": "4"
+                    }
+                ],
+                "quoteSellList": [
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-100000-P-USDT",
+                        "price": "110005",
+                        "qty": "4"
+                    },
+                    {
+                        "category": "option",
+                        "symbol": "BTC-15AUG25-105000-C-USDT",
+                        "price": "120005",
+                        "qty": "4"
+                    }
+                ],
+                "createdAt": "1755180327174",
+                "updatedAt": "1755180449784"
+            },
+            {
+                "rfqLinkId": "",
+                "rfqId": "1754635242693201086269152867412228",
+                "quoteId": "175463530848165416332963880234906",
+                "quoteLinkId": "",
+                "expiresAt": "1754635368482",
+                "status": "Filled",
+                "deskCode": "1nu9d1",
+                "execQuoteSide": "Buy",
+                "quoteBuyList": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "price": "116900",
+                        "qty": "1"
+                    }
+                ],
+                "quoteSellList": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "price": "124000",
+                        "qty": "1"
+                    }
+                ],
+                "createdAt": "1754635308482",
+                "updatedAt": "1754635369057"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756888977810
+}
+
+```
