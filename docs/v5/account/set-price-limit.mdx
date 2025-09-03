@@ -4,6 +4,7 @@ sidebar_label: Set Limit Price Behaviour
 sidebar_position: 10.2
 ---
 You can configure how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
+You can query configuration by <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>
 
 Spot
 * **Maximum Buy Price**: *Min[Max(Index, Index × (1 + y%) + 2-Minute Average Premium), Index × (1 + z%)]*
@@ -15,10 +16,12 @@ Futures
 
 :::info Default Setting
 *	Spot:
-If the order price exceeds the boundary, the system rejects the request.
+**modifyEnable = false.** If the order price exceeds the boundary, the system rejects the request. <br/>
+Corresponding to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a> that **lpaSpot = false , lpaPerp = true**
 
 *	Futures:
-If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).
+**modifyEnable = true.** If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).<br/>
+Corresponding to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a> that **lpaSpot = true , lpaPerp = false**
 :::
 
 ### HTTP Request

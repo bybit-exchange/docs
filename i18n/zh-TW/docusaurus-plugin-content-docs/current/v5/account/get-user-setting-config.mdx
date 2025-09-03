@@ -15,10 +15,10 @@ sidebar_position: 10.3
 
 :::info 預設設定
 *	現貨:
-若下單價格超出限制範圍，系統將拒絕該請求
+**lpaSpot = false.** 若下單價格超出限制範圍，系統將拒絕該請求
 
 *	合約:
-若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界（即最高買價或最低賣價）。
+**lpaPerp = false.** 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界（即最高買價或最低賣價）。
 :::
 
 ### HTTP 請求
@@ -31,8 +31,8 @@ GET `/v5/account/user-setting-config`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |result |array |Object |
-|> lpaPerp |boolean |期貨限價交易開關|
-|> lpaSpot |boolean |現貨限價交易開關|
+|> lpaSpot |boolean |<ul><li>`true`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界</li><li>`false`: 若下單價格超出限制範圍，系統將拒絕該請求</li></ul>|
+|> lpaPerp |boolean |<ul><li>`true`: 若下單價格超出限制範圍，系統將拒絕該請求 </li><li>`false`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界</li></ul>|
 
 
 ### 請求示例

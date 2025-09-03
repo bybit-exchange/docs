@@ -15,10 +15,10 @@ Futures
 
 :::info Default Setting
 *	Spot:
-If the order price exceeds the boundary, the system rejects the request.
+**lpaSpot = false.** If the order price exceeds the boundary, the system rejects the request.
 
 *	Futures:
-If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).
+**lpaPerp = false.** If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).
 :::
 
 ### HTTP Request
@@ -31,8 +31,8 @@ None
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |array |Object |
-|> lpaPerp |boolean |Limit price switch for futures|
-|> lpaSpot |boolean |Limit price switch for spot|
+|> lpaSpot |boolean |<ul><li>`true`: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary</li><li>`false`: If the order price exceeds the boundary, the system rejects the request.</li></ul>|
+|> lpaPerp |boolean |<ul><li>`true`: If the order price exceeds the boundary, the system rejects the request.</li><li>`false`: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary</li></ul>|
 
 
 ### Request Example

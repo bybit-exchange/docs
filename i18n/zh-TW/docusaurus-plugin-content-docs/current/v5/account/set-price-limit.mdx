@@ -4,6 +4,7 @@ sidebar_label: 設置限價單行為
 sidebar_position: 10.2
 ---
 您可以設定當限價單價格超過最高買價或最低賣價時，系統的行為方式。
+您可以使用<a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>接口查詢限價單行為
 
 現貨
 * **最高買入價格**: *Min[Max(指數價格, 指數價格 × (1 + y%) + 2分鐘平均溢價), 指數價格 × (1 + z%)]*
@@ -15,10 +16,12 @@ sidebar_position: 10.2
 
 :::info 預設設定
 *	現貨:
-若下單價格超出限制範圍，系統將拒絕該請求
+**modifyEnable = false.** 若下單價格超出限制範圍，系統將拒絕該請求 <br/>
+對應<a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>接口返回值：**lpaSpot = false , lpaPerp = true**
 
 *	合約:
-若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界（即最高買價或最低賣價）。
+**modifyEnable = true.** 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界（即最高買價或最低賣價）。 <br/>
+對應<a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>接口返回值：**lpaSpot = true , lpaPerp = false**
 :::
 
 ### HTTP 請求
