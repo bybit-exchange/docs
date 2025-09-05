@@ -1,0 +1,80 @@
+---
+title: 抵押品還款
+sidebar_label: 抵押品還款
+sidebar_position: 12
+---
+> 權限: "現貨"<br/>
+> 頻率: 1次/秒
+
+:::info
+** 定期幣種沖銷邏輯**
+* 1. 幣種緯度 <ul><li>按到期日由近及遠的借款訂單.</li><li> 如果到期日相同，則優先還借款利率高的訂單.</li><li> 如果借款利率相同，則隨機處理。依訂單逐步處理，訂單內，優先還利息，再還本金.</li></ul>
+* 2. 訂單緯度 <ul><li> 優先還款利息，再還款本金.</li></ul>
+:::
+
+
+### HTTP 請求
+POST `/v5/crypto-loan-fixed/repay-collateral`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|loanId |false |string |借款合同ID.如果不輸入，則按定期幣種沖銷邏輯來|
+|loanCurrency |**true** |string |Loan currency|
+|collateralCoin |**true** |string |抵押品幣種: 多個抵押品幣種使用英文逗號分開|
+|amount |**true** |string |還款數量|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+無
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-fixed/repay-collateral HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752656296791
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 50
+{
+  "loanCurrency": "ETH",
+  "amount": "0.1",
+  "collateralCoin":"USDT"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1756973819393
+}
+```

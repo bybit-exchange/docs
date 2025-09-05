@@ -1,0 +1,79 @@
+---
+title: Collateral Repayment
+sidebar_label: Collateral Repayment
+sidebar_position: 3
+---
+
+> Permission: "Spot trade"<br/>
+> UID rate limit: 1 req / second
+
+:::info
+* Pay interest first, then repay the principal.
+:::
+
+### HTTP Request
+POST `/v5/crypto-loan-flexible/repay-collateral`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|loanCurrency |**true** |string |Loan currency|
+|collateralCoin |**true** |string |Collateral currencies: Use commas to separate multiple collateral currencies|
+|amount |**true** |string |Repay amount|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+None
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-flexible/repay-collateral HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752569628364
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 52
+
+{
+  "loanCurrency": "USDT",
+  "amount": "500",
+  "collateralCoin":"BTC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1756971550401
+}
+
+```
