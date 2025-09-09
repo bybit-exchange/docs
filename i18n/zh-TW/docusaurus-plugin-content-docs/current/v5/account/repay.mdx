@@ -1,0 +1,73 @@
+---
+title: 手工還款
+sidebar_label: 手工還款
+sidebar_position: 15
+---
+
+:::info
+* 如果輸入參數中未傳遞 `coin` 或 `amount`，則償還所有債務。
+* 如果輸入參數中傳遞了 `coin`，而未傳遞 `amount`，則將全額償還該幣。
+:::
+
+### HTTP 請求
+GET `/v5/account/repay`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |幣名稱，僅限大寫|
+|amount |false |string |還款金額，若未使用 `coin` 作為輸入參數，則 `amount` 不作為輸入參數|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |array |Object |
+|> resultStatus |string |<ul><li>`P`: 處理中</li></ul>|
+
+### 請求示例
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1675842997277
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin":"BTC",
+    "amount":"0.01"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "resultStatus": "P"
+    },
+    "retExtInfo": {},
+    "time": 1756295680801
+}
+```
