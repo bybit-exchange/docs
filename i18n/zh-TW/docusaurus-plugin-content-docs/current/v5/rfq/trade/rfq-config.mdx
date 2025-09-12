@@ -1,40 +1,40 @@
 ---
-title: Rfq Config
-sidebar_label: Rfq Config
+title: rfq配寘資訊
+sidebar_label: rfq配寘資訊
 sidebar_position: 2
 ---
-Create RFQ. **Up to 50 requests** per second.
+査詢rfq配寘資訊 **每秒最多 50 次請求**  
 :::info
-Query the information of the quoting party that can participate in the transaction and your own deskCode and other configuration information
+查詢可參與交易的報價方資訊，以及自己的 deskCode 和其他配置資訊。
 :::
 
-### HTTP Request
+### HTTP 請求
 GET `/v5/rfq/config`
 
-### Request Parameters
-None
+### 請求參數
+無
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|result |array |Order ID |
+|result |array |訂單 ID |
 |list |Object ||
-|> deskCode |string |Own deskCode, unique identification code |
-|> maxLegs |integer |Maximum number of legs |
-|> maxLP |integer |The maximum number of LPs selected in the inquiry form |
-|> maxActiveRfq |integer |The maximum number of unfinished inquiry orders allowed by a user |
-|> rfqExpireTime |integer |Inquiry expiration time, minutes |
-|> minLimitQtySpotOrder |integer |Spot minimum order quantity multiplier |
-|>minLimitQtyContractOrder |integer |Contract minimum order quantity multiplier |
-|> minLimitQtyOptionOrder |integer |Option minimum order multiplier |
-|> strategyTypes |array |Product strategy |
-|>> strategyName |string |Policy name |
-|> strategyTypes |array |Information on the bidder who can participate in the transaction |
-|>> traderName |string |Name of the bidder |
-|>> deskCode |string |The unique identification code of the quotation party is publicly visible; the relevant interfaces of quotation and inquiry use this code to represent the quotation party |
-|>> type |string |Quoter type. `LP` is an automated market maker connected via API, null means a normal quote party |
+|> deskCode |string |自己的 deskCode，唯一識別代碼 |
+|> maxLegs |integer |最大腿數 |
+|> maxLP |integer |詢價單中可選的最大 LP 數量 |
+|> maxActiveRfq |integer |使用者允許的未完成詢價單最大數量 |
+|> rfqExpireTime |integer |詢價過期時間，分鐘 |
+|> minLimitQtySpotOrder |integer |現貨最小下單量乘數 |
+|> minLimitQtyContractOrder |integer |合約最小下單量乘數 |
+|> minLimitQtyOptionOrder |integer |期權最小下單量乘數 |
+|> strategyTypes |array |產品策略 |
+|>> strategyName |string |策略名稱 |
+|> strategyTypes |array |可參與交易的報價方資訊 |
+|>> traderName |string |報價方名稱 |
+|>> deskCode |string |報價方的唯一識別代碼，公開可見；報價和詢價的相關介面使用此代碼表示報價方 |
+|>> type |string |報價方類型:`LP`指通過API連接的自動做市商，為空表示普通報價方 |
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/rfq/create-rfq HTTP/1.1
@@ -46,7 +46,7 @@ X-BAPI-SIGN: XXXXXX
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

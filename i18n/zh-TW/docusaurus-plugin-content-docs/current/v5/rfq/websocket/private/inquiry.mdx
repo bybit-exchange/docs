@@ -1,35 +1,35 @@
 ---
-title: Inquiry Channel
-sidebar_label: Inquiry Channel
+title: 詢價頻道
+sidebar_label: 詢價頻道
 sidebar_position: 2
 ---
-Obtain the inquiry information sent or received by the user themselves. Whenever the user sends or receives an inquiry themselves, the data will be pushed.
+獲取用戶自己發送或接收的詢價信息。每當用戶自己發送或接收詢價時，數據將被推送。
 
-**Topic:** `rfq.open.rfqs`<br/>
+**主題：** `rfq.open.rfqs`<br/>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|id |string |Message ID|
-| topic             | string              | Topic name                                                                                                                             |
-| creationTime      | int                 | Data created timestamp (ms)                                                                                                             |
-| data              | array&lt;object&gt; | RFQ data: Return and obtain real-time inquiry information Open consistent                                                              |
-| > rfqId           | string              | Inquiry ID                                                                                                                            |
-| > rfqLinkId       | string              | Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "" to the quoting party.               |
-| >counterparties  | Array of strings    | List of bidders                                                                                                                       |
-| > expiresAt       | string              | The expiration time of the inquiry form, in milliseconds format of Unix timestamp                                                     |
-| > strategyType    | string              | Inquiry label                                                                                                                         |
-| > status          | string              | Status of the inquiry form: `Active`, `Canceled`, `PendingFill`, `Filled`, `Expired`, `Failed`                                              |
-| > deskCode        | string              | The unique identification code of the inquiry party, which is not visible when anonymous is set to true during inquiry                |
-| > createdAt       | string              | Time(ms) when the trade is created in epoch, such as 1650380963                                                                        |
-| > updatedAt       | string              | Time(ms) when the trade is updated in epoch, such as 1650380964                                                                        |
-| > legs            | Array of objects    | Combination transaction                                                                                                               |
-| >> category       | string              | Category. Valid values include: `linear`, `option` and `spot`                                                                         |
-| >> symbol         | string              | symbol name                                                                                                              |
-| >> side           | string              | Inquiry direction. Valid values are `buy` and `sell`                                                                                      |
-| >> qty            | string              | Order quantity of the instrument                                                                                                      |
+|id |string |消息 ID|
+| topic             | string              | 主題名稱                                                                                                                             |
+| creationTime      | int                 | 數據創建時間戳（毫秒）                                                                                                             |
+| data              | array&lt;object&gt; | 詢價數據：返回並獲取實時詢價信息，與打開的詢價保持一致                                                              |
+| > rfqId           | string              | 詢價單 ID                                                                                                                            |
+| > rfqLinkId       | string              | 詢價單的自定義 ID，客戶的敏感信息，不會向報價方披露，返回 ""。               |
+| >counterparties  | Array of strings    | 投標方列表                                                                                                                       |
+| > expiresAt       | string              | 詢價單到期時間，Unix 時間戳的毫秒格式                                                     |
+| > strategyType    | string              | 詢價標籤                                                                                                                         |
+| > status          | string              | 詢價單狀態：`Active`（活躍）、`Canceled`（已取消）、`PendingFill`（待成交）、`Filled`（已成交）、`Expired`（已過期）、`Failed`（失敗）                                              |
+| > deskCode        | string              | 詢價方的唯一識別碼，如果在詢價期間設置為匿名，則不可見                |
+| > createdAt       | string              | 交易創建的時間（毫秒），例如 1650380963                                                                        |
+| > updatedAt       | string              | 交易更新的時間（毫秒），例如 1650380964                                                                        |
+| > legs            | Array of objects    | 組合交易                                                                                                               |
+| >> category       | string              | 類別。有效值包括：`linear`（線性）、`option`（期權） 和 `spot`（現貨）                                                                         |
+| >> symbol         | string              | 交易對名稱                                                                                                              |
+| >> side           | string              | 詢價方向。有效值為 `buy`（買入） 和 `sell`（賣出）                                                                                      |
+| >> qty            | string              | 合約的訂單數量                                                                                                      |
 
-### Subscribe Example
+### 訂閱示例
 ```json
 {
     "op": "subscribe",
@@ -39,7 +39,7 @@ Obtain the inquiry information sent or received by the user themselves. Whenever
 }
 ```
 
-### Stream Example
+### 資料流示例
 
 ```json
 {
@@ -69,5 +69,4 @@ Obtain the inquiry information sent or received by the user themselves. Whenever
     }
   ]
 }
-
 ```

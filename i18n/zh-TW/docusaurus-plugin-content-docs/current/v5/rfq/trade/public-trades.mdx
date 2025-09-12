@@ -1,42 +1,40 @@
 ---
-title: Get Rfq Public Trade List
-sidebar_label: Get Rfq Public Trade List
+title: 獲取rfq公共成交數據
+sidebar_label: 獲取rfq公共成交數據
 sidebar_position: 14
 ---
-Get the recently executed rfq successfully. **Up to 50 requests per second ** 
+獲取最近成功執行的 RFQ。**每秒最多 50 次請求**
 
-
-
-### HTTP Request
+### HTTP 請求
 GET `/v5/rfq/public-trades`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|startTime |**false** |integer|The timestamp (milliseconds), `startTime` and `endTime` of the order transaction are 7 days|
-|endTime |**false** |integer|The closing timestamp (milliseconds), `startTime` and `endTime` of the order are 7 days|
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|startTime |**false** |integer |訂單交易的開始時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 7 天|
+|endTime |**false** |integer |訂單交易的結束時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 7 天|
+|limit |**false** |integer |返回的項目數量，最多 100 項，默認為 50 項|
+|cursor |**false** |string |翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of rfq|
-|>> rfqId |string |Inquiry ID|
-|>> strategyType |string |Policy type |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> legs |Array of objects |Combination transaction |
-|>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
-|>>> symbol |string |The unique instrument ID|
-|>>> side |string |Direction, valid values are `Buy` and `Sell`|
-|>>> price |string |Execution price|
-|>>> qty |string |Number of executions|
-|>>> markPrice |string |The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.|
+|> cursor |string |翻頁標記|
+|> list |Array |RFQ 數據陣列|
+|>> rfqId |string |詢價單 ID|
+|>> strategyType |string |策略類型 |
+|>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
+|>> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
+|>> legs |Array of objects |組合交易 |
+|>>> category |string |類型。有效值包括：`linear`、`option` 和 `spot` |
+|>>> symbol |string |唯一的交易品種 ID|
+|>>> side |string |方向，有效值包括 `Buy` 和 `Sell`|
+|>>> price |string |執行價格|
+|>>> qty |string |執行數量|
+|>>> markPrice |string |交易時期貨的標記價格，現貨為指數價格，期權為標的價格的標記價格|
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/rfq/public-trades HTTP/1.1
@@ -48,7 +46,7 @@ X-BAPI-SIGN: XXXXXX
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {
