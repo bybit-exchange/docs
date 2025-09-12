@@ -1,47 +1,47 @@
 ---
-title: Trading Channel
-sidebar_label: Trading Channel
+title: 交易頻道
+sidebar_label: 交易頻道
 sidebar_position: 1
 ---
 
-Obtain the user's own block trade information. All legs in the same block trade are included in the same update. As long as the user performs block trade as a counterparty, the data will be pushed.
+獲取用戶自己的大宗交易信息。同一大宗交易中的所有 legs 都包含在同一更新中。只要用戶作為交易對手方進行大宗交易，數據將被推送。
 
-**Topic:** `rfq.open.trades`<br/>
+**主題：** `rfq.open.trades`<br/>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|id |string |Message ID|
-|topic | string  | Topic name                                                                                                                              |
-|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|id |string |消息 ID|
+|topic | string  | 主題名稱                                                                                                                              |
+|creationTime | int   | 數據創建時間戳（毫秒）                                                                                                              |
 |data |array |Object |
 | data              | array               |                                                                               |
-| > rfqId           | string              | Inquiry ID                                                                                                                            |
-| > rfqLinkId       | string              | Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party.                 |
-| > quoteId         | string              | Quotation ID                                                                      |
-| > quoteLinkId     | string              | Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party.                      |
-| > quoteSide       | string              | Return of completed inquiry, executed quotation direction, `buy` or `sell`                                                                |
-| > strategyType    | string              | Inquiry label                                                                                                                         |
-| > status          | string              | Status: `Filled` , `Failed`                                                                                                               |
-| > rfqDeskCode     | string              | The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry                |
-| > quoteDestCode   | string              | The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation            |
-| > createdAt       | string              | Time(ms) when the trade is created in epoch, such as 1650380963                                                                        |
-| > updatedAt       | string              | Time(ms) when the trade is updated in epoch, such as 1650380964                                                                        |
-| > legs            | Array of objects    | Combination transaction                                                                                                               |
-| >> category       | string              | category. Valid values include: `linear`, `option` and `spot`                                                                         |
-| >> orderId        | string              | bybit order id                                                                                                                        |
-| >> symbol         | string              | symbol name                                                                                                              |
-| >> side           | string              | Direction, valid values are `buy` and `sell`                                                                                              |
-| >> price          | string              | Execution price                                                                                                                       |
-| >> qty            | string              | Number of executions                                                                                                                  |
-| >> markPrice      | string              | The markPrice (contract) at the time of transaction, and the spot price is indexPrice                                                 |
-| >> execFee        | string              | The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.                                        |
-| >> execId         | string              | The unique exec(trade) ID from the exchange                                                                                           |
-| >> resultCode     | integer             | The status code of the this order. "0" means success                                                                                  |
-| >>resultMessage  | string              | Error message about resultCode. If resultCode is "0", resultMessage is "".                                                            |
-| >> rejectParty    | string              | Empty if status is `Filled`. Valid values: `Taker` or `Maker` if status is `Rejected`，"rejectParty=`bybit`" to indicate errors that occur on the Bybit side. |
+| > rfqId           | string              | 詢價單 ID                                                                                                                            |
+| > rfqLinkId       | string              | 詢價單的自定義 ID，客戶的敏感信息，不會向報價方披露，返回 ""。                 |
+| > quoteId         | string              | 報價單 ID                                                                      |
+| > quoteLinkId     | string              | 報價單自定義 ID，客戶的敏感信息，不會向詢價方披露，返回 ""。                      |
+| > quoteSide       | string              | 已完成詢價的返回，執行的報價方向，`buy`（買入） 或 `sell`（賣出）                                                                |
+| > strategyType    | string              | 詢價標籤                                                                                                                         |
+| > status          | string              | 狀態：`Filled`（已成交）、`Failed`（失敗）                                                                                                               |
+| > rfqDeskCode     | string              | 詢價方的唯一識別碼，如果在詢價期間設置為匿名，則不可見                |
+| > quoteDestCode   | string              | 報價方的唯一識別碼，如果在報價期間設置為匿名，則不可見            |
+| > createdAt       | string              | 交易創建的時間（毫秒），例如 1650380963                                                                        |
+| > updatedAt       | string              | 交易更新的時間（毫秒），例如 1650380964                                                                        |
+| > legs            | Array of objects    | 組合交易                                                                                                               |
+| >> category       | string              | 類別。有效值包括：`linear`（線性）、`option`（期權） 和 `spot`（現貨）                                                                         |
+| >> orderId        | string              | Bybit 訂單 ID                                                                                                                        |
+| >> symbol         | string              | 交易對名稱                                                                                                              |
+| >> side           | string              | 方向，有效值為 `buy`（買入） 和 `sell`（賣出）                                                                                              |
+| >> price          | string              | 執行價格                                                                                                                       |
+| >> qty            | string              | 執行數量                                                                                                                  |
+| >> markPrice      | string              | 交易時的標記價格（合約），現貨的標記價格為 indexPrice                                                 |
+| >> execFee        | string              | Taker 或 Maker 支付給交易所的大宗交易手續費（以基礎貨幣計算）。                                        |
+| >> execId         | string              | 交易所生成的唯一交易 ID                                                                                           |
+| >> resultCode     | integer             | 該訂單的狀態碼。"0" 表示成功                                                                                  |
+| >>resultMessage  | string              | 關於 resultCode 的錯誤信息。如果 resultCode 為 "0"，則 resultMessage 為 ""。                                                            |
+| >> rejectParty    | string              | 如果狀態為 `Filled` 則為空。有效值為：`Taker` 或 `Maker`（如果狀態為 `Rejected`）；"rejectParty=`bybit`" 表示錯誤發生於 Bybit 端。 |
 
-### Subscribe Example
+### 訂閱示例
 ```json
 {
     "op": "subscribe",
@@ -51,7 +51,7 @@ Obtain the user's own block trade information. All legs in the same block trade 
 }
 ```
 
-### Stream Example
+### 資料流示例
 
 ```json
 {
@@ -89,5 +89,4 @@ Obtain the user's own block trade information. All legs in the same block trade 
     }
   ]
 }
-
 ```

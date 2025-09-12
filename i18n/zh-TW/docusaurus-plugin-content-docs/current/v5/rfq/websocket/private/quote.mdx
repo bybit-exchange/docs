@@ -1,42 +1,42 @@
 ---
-title: Quote Channel
-sidebar_label: Quote Channel
+title: 報價頻道
+sidebar_label: 報價頻道
 sidebar_position: 1
 ---
 
-Obtain the quotation information sent or received by the user themselves. Whenever the user sends or receives a quotation themselves, the data will be pushed.
+獲取用戶自己發送或接收的報價信息。每當用戶自己發送或接收報價時，數據將被推送。
 
-**Topic:** `rfq.open.quotes`<br/>
+**主題：** `rfq.open.quotes`<br/>
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|id |string |Message ID|
-|topic | string  | Topic name                                                                                                                              |
-|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|id |string |消息 ID|
+|topic | string  | 主題名稱                                                                                                                              |
+|creationTime | int   | 數據創建時間戳（毫秒）                                                                                                              |
 |data |array |Object |
-| > rfqId         | string           | Inquiry ID                                                                                                                             |
-| > rfqLinkId     | string           | Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "" to the quoting party.                |
-| > quoteId       | string           | Quotation ID                                                                                                                           |
-| > quoteLinkId   | string           | Quotation custom ID, sensitive information for customers, will not be disclosed, return "" to the inquiring party.                     |
-| > expiresAt     | string           | The expiration time of the quotation, in milliseconds format of the Unix timestamp                                                     |
-| > deskCode      | string           | The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation             |
-| > status        | string           | Status of quotation: `Active`, `Canceled`, `PendingFill`, `Filled`, `Expired`, `Failed`                                                           |
-| >execQuoteSide | string           | Execute the quote direction, `buy` or `sell`. When the quote direction is 'buy', for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
-| > createdAt     | string           | Time(ms) when the trade is created in epoch, such as 1650380963                                                                         |
-| > updatedAt     | string           | Time(ms) when the trade is updated in epoch, such as 1650380964                                                                         |
-| > quoteBuyList  | array of objects | Quotation buy direction                                                                                                                |
-| >> category     | string           | Product type: `spot`, `linear`, `option`                                                                                                   |
-| >> symbol       | string           | symbol name                                                                                                               |
-| >> price        | string           | Quote price                                                                                    |
-| >> qty          | string           | Quantity                                                                                                                               |
-| > quoteSellList | array of objects | Quotation sell direction                                                                                                               |
-| >> category     | string           | Product type: `spot`, `linear`, `option`                                                                                                 |
-| >> symbol       | string           | symbol name                                                                                                           |
-| >> price        | string           | Quote price                                                                                                                            |
-| >> qty          | string           | Quantity                                                                                                                               |
+| > rfqId         | string           | 詢價單 ID                                                                                                                             |
+| > rfqLinkId     | string           | 詢價單的自定義 ID，客戶的敏感信息，不會向報價方披露，返回 ""。                |
+| > quoteId       | string           | 報價單 ID                                                                                                                           |
+| > quoteLinkId   | string           | 報價單自定義 ID，客戶的敏感信息，不會向詢價方披露，返回 ""。                     |
+| > expiresAt     | string           | 報價單到期時間，Unix 時間戳的毫秒格式                                                     |
+| > deskCode      | string           | 報價方的唯一識別碼，如果在報價期間設置為匿名，則不可見             |
+| > status        | string           | 報價單狀態：`Active`（活躍）、`Canceled`（已取消）、`PendingFill`（待成交）、`Filled`（已成交）、`Expired`（已過期）、`Failed`（失敗）                                                           |
+| >execQuoteSide | string           | 執行報價方向，`buy`（買入） 或 `sell`（賣出）。當報價方向為 "buy" 時，對於 maker（做市方），執行方向與 legs 中的方向一致；對於 taker（接單方），執行方向相反。反之亦然。 |
+| > createdAt     | string           | 交易創建的時間（毫秒），例如 1650380963                                                                         |
+| > updatedAt     | string           | 交易更新的時間（毫秒），例如 1650380964                                                                         |
+| > quoteBuyList  | array of objects | 報價買入方向                                                                                                                |
+| >> category     | string           | 產品類型：`spot`（現貨）、`linear`（線性）、`option`（期權）                                                                                                   |
+| >> symbol       | string           | 交易對名稱                                                                                                               |
+| >> price        | string           | 報價價格                                                                                    |
+| >> qty          | string           | 數量                                                                                                                               |
+| > quoteSellList | array of objects | 報價賣出方向                                                                                                               |
+| >> category     | string           | 產品類型：`spot`（現貨）、`linear`（線性）、`option`（期權）                                                                                                 |
+| >> symbol       | string           | 交易對名稱                                                                                                           |
+| >> price        | string           | 報價價格                                                                                                                            |
+| >> qty          | string           | 數量                                                                                                                               |
 
-### Subscribe Example
+### 訂閱示例
 ```json
 {
     "op": "subscribe",
@@ -46,7 +46,7 @@ Obtain the quotation information sent or received by the user themselves. Whenev
 }
 ```
 
-### Stream Example
+### 資料流示例
 
 ```json
 {
@@ -83,5 +83,4 @@ Obtain the quotation information sent or received by the user themselves. Whenev
     }
   ]
 }
-
 ```

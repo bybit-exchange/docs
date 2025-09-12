@@ -1,44 +1,44 @@
 ---
-title: Create Quote
-sidebar_label: Create Quote
+title: 報價
+sidebar_label: 報價
 sidebar_position: 5
 ---
-Create Quote. **Up to 50 requests** per second.
+建立報價。**每秒最多 50 次請求**
 :::info
-<li>One request reports in two directions</li><li> Pass at least one quoteBuyList and quoteSellList</li>
+<li>一個請求報價包含兩個方向</li><li>至少需傳遞 quoteBuyList 或 quoteSellList</li>
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/rfq/create-quote`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|rfqId |**true** |string |Inquiry ID|
-|quoteLinkId |false |string |Quotation custom ID: <li>The length should be between 1-32 bits </li> <li>The combination of letters (case sensitive) and numbers can be pure letters or pure numbers </li> <li>Specify quoteLinkId to only check the last 3 months </li><li>Non-terminal states can only guarantee the uniqueness of idempotence within 24 hours, while terminal states do not guarantee uniqueness </li>|
-|anonymous |false |boolean |Whether it is anonymous inquiry, `true` means anonymous inquiry, `false` means public inquiry, the default value is `false` , when it is `true` , even after the transaction execution, the identity will not be revealed to the quoting party.|
-|expireIn |false |integer |The effective duration of the quotation (in seconds), any integer between 10 and 120, the default value is 60|
-|quoteBuyList |false |array of objects |Bid direction, quotation `Buy` direction, for maker (quotation party), the execution direction is the same as the direction in legs, for taker (inquiry party) it is opposite|
-|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
-|> symbol |true |string |Name of the trading contract |
-|> price |true |string |Quote price |
-|quoteSellList |false |array of objects |Ask direction, `Sell` direction in the quotation, for maker (quotation party), the execution direction is opposite to the direction in legs, and the same for taker (inquiry party)|
-|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
-|> symbol |true |string |Name of the trading contract |
-|> price |true |string |Quote price |
+|rfqId |**true** |string |詢價單 ID|
+|quoteLinkId |false |string |報價自定義 ID： <li>長度應介於 1-32 位 </li> <li>字母（區分大小寫）與數字的組合，可以是純字母或純數字 </li> <li>指定 quoteLinkId 僅檢查最近 3 個月的資料 </li><li>非終端狀態僅能保證在 24 小時內的唯一性，而終端狀態不保證唯一性 </li>|
+|anonymous |false |boolean |是否為匿名報價，`true` 表示匿名報價，`false` 表示公開報價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給詢價方。|
+|expireIn |false |integer |報價的有效持續時間（以秒為單位），任何介於 10 到 120 的整數，預設值為 60|
+|quoteBuyList |false |array of objects |買入方向，報價方向為 `Buy`，對於 maker（報價方），執行方向與 legs 中的方向一致，對於 taker（詢價方）則相反|
+|> category |true |string |產品類型：統一帳戶：`spot`, `linear`, `option` |
+|> symbol |true |string |交易合約名稱 |
+|> price |true |string |報價價格 |
+|quoteSellList |false |array of objects |賣出方向，報價方向為 `Sell`，對於 maker（報價方），執行方向與 legs 中的方向相反，對於 taker（詢價方）則一致|
+|> category |true |string |產品類型：統一帳戶：`spot`, `linear`, `option` |
+|> symbol |true |string |交易合約名稱 |
+|> price |true |string |報價價格 |
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |object ||
-|> rfqId |string |Inquiry ID |
-|> quoteId |string |Quotation ID |
-|> quoteLinkId |string |Quotation Custom ID |
-|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
-|> deskCode |string |Quoter's unique identification code |
-|> status |string |Status of quotation: `Active` `Canceled` `Filled` `Expired` `Failed` |
+|> rfqId |string |詢價單 ID |
+|> quoteId |string |報價單 ID |
+|> quoteLinkId |string |報價自定義 ID |
+|> expiresAt |string |報價單的到期時間，為 Unix 時間戳的毫秒格式 |
+|> deskCode |string |報價方唯一識別碼 |
+|> status |string |報價單狀態：`Active` `Canceled` `Filled` `Expired` `Failed` |
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/rfq/create-quote HTTP/1.1
@@ -70,7 +70,7 @@ Content-Length: 115
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

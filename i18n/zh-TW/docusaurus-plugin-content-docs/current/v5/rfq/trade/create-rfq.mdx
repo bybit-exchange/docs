@@ -1,42 +1,41 @@
 ---
-title: Create RFQ
-sidebar_label: Create RFQ
+title: 詢價
+sidebar_label: 詢價
 sidebar_position: 1
 ---
-Create RFQ. **Up to 50 requests** per second.
+創建詢價單 **每秒最多 50 次請求**
 :::info
-<li>Only support uta2.0 accounts</li><li>Only support full position and combined margin mode</li><li> Not supported by demo users</li><li>Cannot choose oneself as the bidder</li>
+<li>僅支援 uta2.0 帳戶</li><li>僅支援全倉與組合保證金模式</li><li>不支援模擬用戶</li><li>不能選擇自己作為報價方</li>
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/rfq/create-rfq`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|counterparties |**true** |Ayyay of deskCode |Spread combination symbol name|
-|rfqLinkId |false |string |Custom ID for inquiry form: <li>The length should be between 1-32 bits </li> <li>The combination of letters (case sensitive) and numbers can be pure letters or pure numbers </li> <li>Specify rfqLinkId to only check the last 3 months </li><li>Non-terminal states can only guarantee the uniqueness of idempotence within 24 hours, while terminal states do not guarantee uniqueness </li>|
-|anonymous |false |boolean |Whether it is anonymous inquiry, `true` means anonymous inquiry, `false` means public inquiry, the default value is `false` , when it is `true` , even after the transaction execution, the identity will not be revealed to the quoting party.|
-|strategyType |false |string |Strategy type, if it is a custom inquiry, strategyType is `custom`, if it is a product combination provided by the system, it is the combination type; the default is `custom`; non-custom combinations have rate optimization, currently 50%; the transaction rate between LPs is currently 30%|
-|list |true |array of objects |Combination transaction list, /v5/rfq/config confirm the maximum length of the combination according to the maxLegs field issued by the interface, the basecoin and settleCoin of all combinations must be the same, and the symbols under the same category must be unique|
-|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
-|> symbol |true |string |Name of the transaction contract, 30 minutes before contract settlement, no inquiry allowed |
-|> side |true |string |Inquiry transaction direction: `Buy` , `Sell` |
-|> qty |true |string |If the number of transactions exceeds the positioning Size, the position will be opened in reverse |
+|counterparties |**true** |Array of deskCode |希望接收詢價的報價方列表,可透過 `/v5/rfq/config`獲取|
+|rfqLinkId |false |string |自定義詢價單 ID： <li>長度應介於 1-32 位 </li> <li>字母（區分大小寫）與數字的組合，可以是純字母或純數字 </li> <li>指定 rfqLinkId 僅檢查最近 3 個月的資料 </li><li>非終端狀態僅能保證在 24 小時內的唯一性，而終端狀態不保證唯一性 </li>|
+|anonymous |false |boolean |是否為匿名詢價，`true` 表示匿名詢價，`false` 表示公開詢價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給報價方。|
+|strategyType |false |string |策略類型，若為自定義詢價，strategyType 為 `custom`，若為系統提供的產品，則為組合類型；預設為 `custom`；非自定義組合具有費率優化，目前為 50%；LP 之間的交易費率目前為 30%|
+|list |true |array of objects |組合交易清單，通過 /v5/rfq/config 確認介面 maxLegs 欄位所提供的最大組合長度，所有組合的 basecoin 和 settleCoin 必須相同，且同類型下的 symbol 必須唯一|
+|> category |true |string |產品類型：統一帳戶：`spot`, `linear`, `option` |
+|> symbol |true |string |交易合約名稱，合約結算前 30 分鐘不允許詢價 |
+|> side |true |string |詢價交易方向：`Buy` , `Sell` |
+|> qty |true |string |交易數量，超過倉位的Size，則反向開倉 |
 
-
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|result |array |Order ID |
+|result |array |訂單 ID |
 |list |array&lt;object&gt; ||
-|> rfqId |string |Inquiry ID |
-|> rfqLinkId |string |Inquiry Custom ID |
-|> status |string |Status of the inquiry form: `Active` `Canceled` `Filled` `Expired` `Failed` |
-|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
-|> deskCode |string |Inquiry party unique identification code |
+|> rfqId |string |詢價單 ID |
+|> rfqLinkId |string |自定義詢價單 ID |
+|> status |string |詢價單狀態： `Active` `Canceled` `Filled` `Expired` `Failed` |
+|> expiresAt |string |詢價單的到期時間，為 Unix 時間戳的毫秒格式 |
+|> deskCode |string |詢價方唯一識別碼 |
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/rfq/create-rfq HTTP/1.1
@@ -77,7 +76,7 @@ Content-Length: 115
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

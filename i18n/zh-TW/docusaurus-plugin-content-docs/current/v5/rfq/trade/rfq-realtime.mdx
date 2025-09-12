@@ -1,45 +1,45 @@
 ---
-title: Get Rfq Realtime Info
-sidebar_label: Get Rfq Realtime Info
+title: 獲取實时的詢價單資訊
+sidebar_label: 獲取實时的詢價單資訊
 sidebar_position: 9
 ---
-Obtain real-time inquiry information. **Up to 50 requests per second ** 
+獲取實时的詢價單資訊。**每秒最多 50 次請求**  
 :::info
-<li>Obtain the inquiry information sent or received by the user, query from rfq-engine without delay</li><li> Pass both rfqId and rfqLinkId, rfqId shall prevail</li><li>Sort in reverse order according to the creation time of rfq and return it.</li>
+<li>獲取使用者發送或接收的詢價資訊，從 rfq-engine 即時查詢，無延遲</li>
+<li>同時傳遞 rfqId 和 rfqLinkId 時，以 rfqId 為準</li>
+<li>根據詢價單的創建時間倒序排列並返回。</li>
 :::
 
-
-### HTTP Request
+### HTTP 請求
 GET `/v5/rfq/rfq-realtime`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|rfqLinkId |**false** |string|Inquiry custom ID, traderType is quote, this field is invalid|
-|traderType |**false**  |string |Trader type, `quote` , `request` , default `request`<li>`Request` : Inquirer, to inquire about the inquiry they have issued</li><li>`Quote` : Quoters, check the inquiry they have received</li>|
+|rfqId |**false** |string|詢價單 ID|
+|rfqLinkId |**false** |string|詢價單自定義 ID，當 traderType 為 quote 時，此字段無效|
+|traderType |**false** |string |交易者類型，`quote` 或 `request`，默認為 `request`<li>`Request`：詢價方，查詢自己發出的詢價單</li><li>`Quote`：報價方，查詢自己接收到的詢價單</li>|
 
-
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|list |Array |the array of rfq|
-|> rfqId |string |Inquiry ID|
-|> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
-|>counterparties |Array of srings |List of bidders |
-|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
-|> strategyType |string |Inquiry label |
-|> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
-|> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
-|> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|> legs |Array of objects |Combination transaction |
-|>> category |string |category. Valid values include: "linear", "option" and "spot" |
-|>> symbol |string |The unique instrument ID|
-|>> side |string |Inquiry direction: Valid values are `Buy` and `Sell` . |
-|>> qty |string |Order quantity of the instrument. |
+|list |Array |詢價單數據陣列|
+|> rfqId |string |詢價單 ID|
+|> rfqLinkId |string |自定義詢價單 ID，客戶敏感資訊不會公開，僅返回給報價方。|
+|> counterparties |Array of strings |報價方列表 |
+|> expiresAt |string |詢價單的過期時間，Unix 時間戳的毫秒格式 |
+|> strategyType |string |詢價標籤 |
+|> status |string |詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed` |
+|> deskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見 |
+|> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
+|> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
+|> legs |Array of objects |組合交易 |
+|>> category |string |類型，有效值包括：`linear`、`option` 和 `spot` |
+|>> symbol |string |唯一的交易品種 ID|
+|>> side |string |詢價方向，有效值包括 `Buy` 和 `Sell` |
+|>> qty |string |交易品種的訂單數量|
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/rfq/rfq-realtime HTTP/1.1
@@ -51,7 +51,7 @@ X-BAPI-SIGN: XXXXXX
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

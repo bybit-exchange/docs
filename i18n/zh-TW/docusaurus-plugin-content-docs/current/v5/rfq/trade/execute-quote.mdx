@@ -1,33 +1,33 @@
 ---
-title: Execute Quote
-sidebar_label: Execute Quote
+title: 執行報價
+sidebar_label: 執行報價
 sidebar_position: 5
 ---
-Execute quotes, only for the creator of the inquiry form. **Up to 50 requests** per second.
+執行報價，僅限詢價單的創建者使用。**每秒最多 50 次請求**
 :::info
-<li>Successful execution, but has sent matching, does not mean that the order has been completed, the user needs to query the interface or listen toipic: rfq.open /v5/rfq/trade-list to get the execution result</li>
+<li>執行成功，只是已經發送撮合，並不能說明訂單已經成交，用戶需要通過査詢介面/v5/rfq/trade-list或監聽toipic:rfq.open.trades來獲取執行結果</li>
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/rfq/execute-quote`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|rfqId |**true** |string |Inquiry ID|
-|quoteId |**true** |string |Quotation ID|
-|quoteSide |**true** |string |The direction of the quotation is `Buy` or `Sell` . When the direction of the quotation is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies|
+|rfqId |**true** |string |詢價單 ID|
+|quoteId |**true** |string |報價單 ID|
+|quoteSide |**true** |string |報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |object ||
-|> rfqId |string |Inquiry ID |
-|>rfqLinkId |string ||
-|> quoteId |string |Quotation ID |
-|> status |string |Order status: <li>`PendingFill`:Matching has been sent, pending execution, and the execution result needs to be obtained through query /v5/rfq/trade-list or listening rfq.open</li><li>`Failed`:verification failed</li> |
+|> rfqId |string |詢價單 ID |
+|> rfqLinkId |string |自定義詢價單 ID |
+|> quoteId |string |報價單 ID |
+|> status |string |訂單狀態： <li>`PendingFill`：已經發送撮合，待執行，執行結果需要通過査詢/v5/rfq/trade-list獲取或者監聽rfq.open.trades獲取</li><li>`Failed`：驗證失敗</li> |
 
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/rfq/execute-quote HTTP/1.1
@@ -47,7 +47,7 @@ Content-Length: 115
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

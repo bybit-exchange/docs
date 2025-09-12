@@ -1,56 +1,58 @@
 ---
-title: Get Historical Quotation
-sidebar_label: Get Historical Quotation
+title: 獲取歷史報價
+sidebar_label: 獲取歷史報價
 sidebar_position: 12
 ---
-Obtain historical quotation information. **Up to 50 requests per second ** 
+獲取歷史報價資訊。**每秒最多 50 次請求**  
 :::info
-<li>Obtain quotation information sent or received by the user, query from the database, there is a delay</li><li>Pass quoteId and quoteLinkId, quoteId shall prevail</li><li>Pass both rfqId and rfqLinkId, rfqId shall prevail</li><li>Sort in reverse order according to the creation time of the quotation</li>
+<li>獲取使用者發送或接收的報價資訊，從資料庫查詢，有延遲</li>
+<li>同時傳遞 quoteId 和 quoteLinkId 時，以 quoteId 為準</li>
+<li>同時傳遞 rfqId 和 rfqLinkId 時，以 rfqId 為準</li>
+<li>根據報價的創建時間倒序排列</li>
 :::
 
-
-### HTTP Request
+### HTTP 請求
 GET `/v5/rfq/quote-list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|quoteId |**false** |string|Quotation ID|
-|quoteLinkId |**false**  |string |Quotation custom ID, traderType is `request` , this field is invalid|
-|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, check the quotation received by oneself</li><li>`Quote` : Quoters, check their own published quotations</li>|
-|status |string |Status of the inquiry form:`Active` `Canceled` `PendingFill` `Filled` `Expired` `Failed` |
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|rfqId |**false** |string|詢價單 ID|
+|quoteId |**false** |string|報價單 ID|
+|quoteLinkId |**false**  |string |報價單自定義 ID；當 traderType 為 `request` 時，此字段無效|
+|traderType |**false**  |string |交易者類型，`quote` 或 `request`，默認為 `quote`<li>`Request`：詢價方，查詢自己接收到的報價</li><li>`Quote`：報價方，查詢自己發布的報價</li>|
+|status |string |詢價單狀態：`Active`、`Canceled`、`PendingFill`、`Filled`、`Expired`、`Failed` |
+|limit |**false** |integer|返回的項目數量，最多 100 項，默認 50 項|
+|cursor |**false** |string|翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of quote|
-|>> rfqId |string |Inquiry ID|
-|>> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
-|>> quoteId |string |Quotation ID|
-|>> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
-|>> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
-|>> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
-|>> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
-|>> execQuoteSide |string |Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> quoteBuyList |array of objects |Quotation `Buy` Direction |
-|>>> category |string |Product type: `spot`,`linear`,`option` |
-|>>> symbol |string |The unique instrument ID|
-|>>> price |string |Order price in the quote currency of the instrument.|
-|>>> qty |string |Order quantity of the instrument. |
-|>> quoteSellList |array of objects |Quotation `Sell` Direction |
-|>>> category |string |Product type: `spot`,`linear`,`option` |
-|>>> symbol |string |The unique instrument ID|
-|>>> price |string |Order price in the quote currency of the instrument.|
-|>>> qty |string |Order quantity of the instrument. |
+|> cursor |string |翻頁標記|
+|> list |Array |報價數據陣列|
+|>> rfqId |string |詢價單 ID|
+|>> rfqLinkId |string |自定義詢價單 ID，客戶敏感資訊不會公開，僅返回給報價方 |
+|>> quoteId |string |報價單 ID|
+|>> quoteLinkId |string |自定義報價單 ID，客戶敏感資訊不會公開，僅返回給詢價方 |
+|>> expiresAt |string |詢價單的過期時間，Unix 時間戳的毫秒格式 |
+|>> deskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見 |
+|>> status |string |詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed` |
+|>> execQuoteSide |string |執行報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然 |
+|>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
+|>> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
+|>> quoteBuyList |array of objects |報價 `Buy` 方向 |
+|>>> category |string |產品類型：`spot`、`linear`、`option` |
+|>>> symbol |string |唯一的交易品種 ID|
+|>>> price |string |報價貨幣中的訂單價格|
+|>>> qty |string |交易品種的訂單數量 |
+|>> quoteSellList |array of objects |報價 `Sell` 方向 |
+|>>> category |string |產品類型：`spot`、`linear`、`option` |
+|>>> symbol |string |唯一的交易品種 ID|
+|>>> price |string |報價貨幣中的訂單價格|
+|>>> qty |string |交易品種的訂單數量 |
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/rfq/quote-list HTTP/1.1
@@ -62,7 +64,7 @@ X-BAPI-SIGN: XXXXXX
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

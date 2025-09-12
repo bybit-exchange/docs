@@ -1,61 +1,60 @@
 ---
-title: Get Rfq Trade List
-sidebar_label: Get Rfq Trade List
+title: 獲取交易資訊
+sidebar_label: 獲取交易資訊
 sidebar_position: 13
 ---
-Obtain transaction information. **Up to 50 requests per second ** 
+獲取交易資訊。**每秒最多 50 次請求**  
 :::info
-<li>Field query priority: rfqId > rfqLinkId  quoteId > quoteLinkId</li>
+<li>字段查詢優先級：rfqId > rfqLinkId > quoteId > quoteLinkId</li>
 :::
 
-
-### HTTP Request
+### HTTP 請求
 GET `/v5/rfq/trade-list`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|rfqLinkId |**false**  |string |Custom ID for inquiry form; specify rfqLinkId to only check the last 3 months|
-|quoteId |**false** |string|Quotation ID|
-|quoteLinkId |**false**  |string |Quotation custom ID; specifying quoteLinkId can only check the last 3 months|
-|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, inquire about the successful transaction of their own inquiry </li><li>`Quote` : Quoters, check their own quotes for successful transactions</li>|
-|status |string |Status : `Filled` `Failed` |
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|rfqId |**false** |string|詢價單 ID|
+|rfqLinkId |**false** |string |自定義詢價單 ID；指定 rfqLinkId 僅能查詢最近 3 個月的數據|
+|quoteId |**false** |string|報價單 ID|
+|quoteLinkId |**false** |string |自定義報價單 ID；指定 quoteLinkId 僅能查詢最近 3 個月的數據|
+|traderType |**false** |string |交易者類型，`quote` 或 `request`，默認為 `quote`<li>`Request`：詢價方，查詢自己詢價單的成功交易</li><li>`Quote`：報價方，查詢自己報價單的成功交易</li>|
+|status |string |狀態：`Filled` 或 `Failed`|
+|limit |**false** |integer|返回的項目數量，最多 100 項，默認 50 項|
+|cursor |**false** |string|分頁標記，請使用返回的 cursor，簽名時使用返回的原始數據，發送請求時進行 URLEncode|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of rfq|
-|>> rfqId |string |Inquiry ID|
-|>> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
-|>> quoteId |string |Return the completed inquiry form and the executed quotation id.|
-|>> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
-|>> quoteSide |string |Return of completed inquiry, execution of quotation direction, `Buy` or `Sell`|
-|>> strategyType |string |Inquiry label|
-|>>status |string |Status : `Filled` `Failed`|
-|>> rfqDeskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
-|>> quoteDestCode |string |The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> legs |Array of objects |Combination transaction |
-|>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
-|>>> orderId |string |bybit order id |
-|>>> symbol |string |The unique instrument ID|
-|>>> side |string |Direction, valid values are `Buy` and `Sell`|
-|>>> price |string |Execution price|
-|>>> qty |string |Number of executions|
-|>>> markPrice |string |The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.|
-|>>> execFee |string |The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.|
-|>>> execId |string |The unique exec(trade) ID from the exchange|
-|>>> resultCode |integer |The status code of the this order. "0" means success|
-|>>> resultMessage |string |Error message about resultCode. If resultCode is "0", resultMessage is "".|
-|>>> rejectParty |string |Empty if status is `Filled`.Valid values: `Taker` or `Maker` if status is `Rejected`，"rejectParty='bybit'" to indicate errors that occur on the Bybit side.|
+|> cursor |string |分頁標記|
+|> list |Array |詢價單數據陣列|
+|>> rfqId |string |詢價單 ID|
+|>> rfqLinkId |string |自定義詢價單 ID，客戶敏感資訊不會公開，僅返回給報價方。|
+|>> quoteId |string |返回已完成的詢價單及執行的報價單 ID|
+|>> quoteLinkId |string |自定義報價單 ID，客戶敏感資訊不會公開，僅返回給詢價方。|
+|>> quoteSide |string |返回已完成詢價單的執行方向，`Buy` 或 `Sell`|
+|>> strategyType |string |詢價標籤|
+|>> status |string |狀態：`Filled` 或 `Failed`|
+|>> rfqDeskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見|
+|>> quoteDestCode |string |報價方的唯一識別代碼，若報價時設置匿名為 `true` 則不可見|
+|>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
+|>> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
+|>> legs |Array of objects |組合交易 |
+|>>> category |string |類型，有效值包括：`linear`、`option` 和 `spot` |
+|>>> orderId |string |Bybit 訂單 ID |
+|>>> symbol |string |唯一的交易品種 ID|
+|>>> side |string |方向，有效值包括 `Buy` 和 `Sell`|
+|>>> price |string |執行價格|
+|>>> qty |string |執行數量|
+|>>> markPrice |string |交易時的期貨標記價格，現貨為指數價格，期權為標的價格的標記價格|
+|>>> execFee |string |支付給執行該交易的交易所的基礎貨幣的 taker 或 maker 費用|
+|>>> execId |string |交易所唯一的執行交易 ID|
+|>>> resultCode |integer |該訂單的狀態碼，"0" 表示成功|
+|>>> resultMessage |string |關於 resultCode 的錯誤信息。如果 resultCode 為 "0"，則 resultMessage 為空字符串|
+|>>> rejectParty |string |若狀態為 `Filled` 則為空。若狀態為 `Rejected`，有效值包括 `Taker` 或 `Maker`，"rejectParty='bybit'" 表示錯誤發生在 Bybit 端。|
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/rfq/trade-list HTTP/1.1
@@ -67,7 +66,7 @@ X-BAPI-SIGN: XXXXXX
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {
@@ -117,14 +116,9 @@ X-BAPI-SIGN: XXXXXX
                 "createdAt": "1755159541421",
                 "updatedAt": "1755159654501"
             }
-                ],
-                "createdAt": "1755159395732",
-                "updatedAt": "1755159507315"
-            }
         ]
     },
     "retExtInfo": {},
     "time": 1756891941267
 }
-
 ```

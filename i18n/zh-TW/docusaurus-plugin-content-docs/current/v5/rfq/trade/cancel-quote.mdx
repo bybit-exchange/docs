@@ -1,33 +1,32 @@
 ---
-title: Cancel Quote
-sidebar_label: Cancel Quote
+title: 取消報價單
+sidebar_label: 取消報價單
 sidebar_position: 7
 ---
-Cancel a quotation. **Up to 50 requests per second ** 
+取消報價單。**每秒最多 50 次請求**
 :::info
-<li>Pass at least one quoteId, rfqId, and quoteLinkId.</li><li> 2. If quoteId, rfqId, and quoteLinkId are passed in at the same time, and quoteId takes precedence, the priority is judged to be quoteId > quoteLinkId > rfqId.</li>
+<li>至少需傳遞 quoteId、rfqId 或 quoteLinkId。</li><li>若同時傳遞 quoteId、rfqId 和 quoteLinkId，則優先以 quoteId 為準，優先順序判斷為：quoteId > quoteLinkId > rfqId。</li>
 :::
 
-### HTTP Request
+### HTTP 請求
 POST `/v5/rfq/cancel-quote`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|quoteId |**false** |string|Quotation ID|
-|rfqId |**false** |string|Inquiry ID|
-|quoteLinkId |**false**  |string |Quotation Custom ID|
+|quoteId |**false** |string |報價單 ID|
+|rfqId |**false** |string |詢價單 ID|
+|quoteLinkId |**false** |string |報價單自定義 ID|
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |result |object ||
-|rfqId |string|Inquiry ID|
-|quoteId |string|Quotation ID|
-|quoteLinkId|string |Quotation Custom ID|
+|rfqId |string |詢價單 ID|
+|quoteId |string |報價單 ID|
+|quoteLinkId |string |報價單自定義 ID|
 
-
-### Request Example
+### 請求示例
 
 ```http
 POST /v5/rfq/cancel-quote HTTP/1.1
@@ -45,7 +44,7 @@ Content-Length: 115
 
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {
