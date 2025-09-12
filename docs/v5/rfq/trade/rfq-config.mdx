@@ -1,0 +1,214 @@
+---
+title: Rfq Config
+sidebar_label: Rfq Config
+sidebar_position: 2
+---
+Create RFQ. **Up to 50 requests** per second.
+:::info
+Query the information of the quoting party that can participate in the transaction and your own deskCode and other configuration information
+:::
+
+### HTTP Request
+GET `/v5/rfq/config`
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Order ID |
+|list |Object ||
+|> deskCode |string |Own deskCode, unique identification code |
+|> maxLegs |integer |Maximum number of legs |
+|> maxLP |integer |The maximum number of LPs selected in the inquiry form |
+|> maxActiveRfq |integer |The maximum number of unfinished inquiry orders allowed by a user |
+|> rfqExpireTime |integer |Inquiry expiration time, minutes |
+|> minLimitQtySpotOrder |integer |Spot minimum order quantity multiplier |
+|>minLimitQtyContractOrder |integer |Contract minimum order quantity multiplier |
+|> minLimitQtyOptionOrder |integer |Option minimum order multiplier |
+|> strategyTypes |array |Product strategy |
+|>> strategyName |string |Policy name |
+|> strategyTypes |array |Information on the bidder who can participate in the transaction |
+|>> traderName |string |Name of the bidder |
+|>> deskCode |string |The unique identification code of the quotation party is publicly visible; the relevant interfaces of quotation and inquiry use this code to represent the quotation party |
+|>> type |string |Quoter type. `LP` is an automated market maker connected via API, null means a normal quote party |
+
+### Request Example
+
+```http
+GET /v5/rfq/create-rfq HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "deskCode": "1nu9d1",
+        "maxLegs": 25,
+        "maxLP": 50,
+        "rfqExpireTime": 10,
+        "maxActiveRfq": 10,
+        "minLimitQtySpotOrder": 10,
+        "minLimitQtyContractOrder": 10,
+        "minLimitQtyOptionOrder": 1,
+        "strategyTypes": [
+            {
+                "strategyName": "custom"
+            },
+            {
+                "strategyName": "FundingRate"
+            },
+            {
+                "strategyName": "CarryTrade"
+            },
+            {
+                "strategyName": "PerpBasis"
+            },
+            {
+                "strategyName": "FutureSpread"
+            },
+            {
+                "strategyName": "OptionSpread"
+            },
+            {
+                "strategyName": "RiskReversal"
+            },
+            {
+                "strategyName": "CalendarSpread"
+            },
+            {
+                "strategyName": "Straddle"
+            },
+            {
+                "strategyName": "Strangle"
+            },
+            {
+                "strategyName": "Butterfly"
+            },
+            {
+                "strategyName": "IronCondor"
+            },
+            {
+                "strategyName": "CoveredCall"
+            },
+            {
+                "strategyName": "ProtectivePut"
+            }
+        ],
+        "counterparties": [
+            {
+                "traderName": "1zQkH0y7Y3acALM",
+                "deskCode": "gIMhjitYqE9WG5F",
+                "type": "LP"
+            },
+            {
+                "traderName": "Bernie LP",
+                "deskCode": "Bernie",
+                "type": "LP"
+            },
+            {
+                "traderName": "LeeTestLP",
+                "deskCode": "LeeTestLP109",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP1",
+                "deskCode": "arvin106236660",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP10",
+                "deskCode": "cia1504977",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP12",
+                "deskCode": "sub104181946",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP3",
+                "deskCode": "arvin1504782",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP4",
+                "deskCode": "carson106250207",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP5",
+                "deskCode": "carson106250212",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP6",
+                "deskCode": "kiwi1504803",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP7",
+                "deskCode": "kiwi100001821",
+                "type": "LP"
+            },
+            {
+                "traderName": "RFQLP9",
+                "deskCode": "lines100412673",
+                "type": "LP"
+            },
+            {
+                "traderName": "SignalPlus1",
+                "deskCode": "LP1411957",
+                "type": "LP"
+            },
+            {
+                "traderName": "SignalPlus2",
+                "deskCode": "LP1412200",
+                "type": "LP"
+            },
+            {
+                "traderName": "SignalPlus3",
+                "deskCode": "LP591031",
+                "type": "LP"
+            },
+            {
+                "traderName": "SignalPlus5",
+                "deskCode": "LP420185",
+                "type": "LP"
+            },
+            {
+                "traderName": "TRrest",
+                "deskCode": "TRrest",
+                "type": "LP"
+            },
+            {
+                "traderName": "TRrest1",
+                "deskCode": "TRrest101457098",
+                "type": "LP"
+            },
+            {
+                "traderName": "hashwave1",
+                "deskCode": "hashwave1",
+                "type": "LP"
+            },
+            {
+                "traderName": "hashwave2",
+                "deskCode": "hashwave2",
+                "type": "LP"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756870672013
+}
+```
