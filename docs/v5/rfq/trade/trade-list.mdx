@@ -37,11 +37,12 @@ GET `/v5/rfq/trade-list`
 |>> quoteSide |string |Return of completed inquiry, execution of quotation direction, `Buy` or `Sell`|
 |>> strategyType |string |Inquiry label|
 |>>status |string |Status : `Filled` `Failed`|
-|>> rfqDeskCode |string |The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation |
+|>> rfqDeskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
+|>> quoteDestCode |string |The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation |
 |>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
 |>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
 |>> legs |Array of objects |Combination transaction |
-|>>> category |string |category. Valid values include: "linear", "option" and "spot" |
+|>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
 |>>> orderId |string |bybit order id |
 |>>> symbol |string |The unique instrument ID|
 |>>> side |string |Direction, valid values are `Buy` and `Sell`|
@@ -52,7 +53,7 @@ GET `/v5/rfq/trade-list`
 |>>> execId |string |The unique exec(trade) ID from the exchange|
 |>>> resultCode |integer |The status code of the this order. "0" means success|
 |>>> resultMessage |string |Error message about resultCode. If resultCode is "0", resultMessage is "".|
-|>>> rejectParty |string |Empty if status is “Filled”.Valid values: “Taker” or “Maker” if status is “Rejected”，"rejectParty='bybit'" to indicate errors that occur on the Bybit side.|
+|>>> rejectParty |string |Empty if status is `Filled`.Valid values: `Taker` or `Maker` if status is `Rejected`，"rejectParty='bybit'" to indicate errors that occur on the Bybit side.|
 
 ### Request Example
 
