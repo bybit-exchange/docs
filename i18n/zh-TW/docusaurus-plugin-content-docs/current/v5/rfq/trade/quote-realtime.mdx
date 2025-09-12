@@ -1,0 +1,100 @@
+---
+title: Get Realtime Quotation
+sidebar_label: Get Realtime Quotation
+sidebar_position: 11
+---
+Get real-time quotation information. **Up to 50 requests per second ** 
+:::info
+<li>Obtain quotation information sent or received by users, query from rfq-egine, without delay</li><li> Pass both quoteId and quoteLinkId, with quoteId as the standard and priority: quoteId > quoteLinkId > rfqId</li><li>Sort in reverse order according to the creation time of the quotation</li><li>Return all non-final quotes</li>
+:::
+
+
+### HTTP Request
+GET `/v5/rfq/quote-realtime`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |**false** |string|Inquiry ID|
+|quoteId |**false** |string|Quotation ID|
+|quoteLinkId |**false**  |string |Quotation custom ID, traderType is `request` , this field is invalid|
+|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, check the quotation received by oneself</li><li>`Quote` : Quoters, check their own published quotations</li>|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |Array |the array of quote|
+|> rfqId |string |Inquiry ID|
+|> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
+|> quoteId |string |Quotation ID|
+|> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
+|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
+|> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
+|>> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|>> execQuoteSide |string |Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
+|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
+|>> quoteBuyList |array of objects |Quotation `Buy` Direction |
+|>>> category |string |Product type: `spot`,`linear`,`option` |
+|>>> symbol |string |The unique instrument ID|
+|>>> qty |string |Order quantity of the instrument. |
+|>> quoteSellList |array of objects |Quotation `Sell` Direction |
+|>>> category |string |Product type: `spot`,`linear`,`option` |
+|>>> symbol |string |The unique instrument ID|
+|>>> qty |string |Order quantity of the instrument. |
+
+### Request Example
+
+```http
+GET /v5/rfq/quote-realtime HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "rfqLinkId": "",
+                "rfqId": "175740578143743543930777169307022",
+                "quoteId": "1757405933130044334361923221559805",
+                "quoteLinkId": "",
+                "expiresAt": "1757405993126",
+                "status": "Active",
+                "deskCode": "test0904",
+                "execQuoteSide": "",
+                "quoteBuyList": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "price": "113790",
+                        "qty": "0.5"
+                    }
+                ],
+                "quoteSellList": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "price": "110500",
+                        "qty": "0.5"
+                    }
+                ],
+                "createdAt": "1757405933126",
+                "updatedAt": "1757405933126"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1757405978376
+}
+
+```
