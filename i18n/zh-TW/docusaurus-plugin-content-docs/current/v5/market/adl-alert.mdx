@@ -1,0 +1,101 @@
+---
+title: 查詢保險池ADL信息
+sidebar_label: 查詢保險池ADL信息
+sidebar_position: 18
+---
+
+查詢按組劃分保險池ADL相關信息。
+> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+
+### HTTP請求
+GET `/v5/market/adlAlert`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------|
+|symbol |false |string |合約名稱，如 `BTCUSDT`, 僅限大寫|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|updateTime |string |數據最近更新的時間戳 (ms) |
+|list |array |Object |
+|> coin |string |保險池的幣種 |
+|> symbol |string |交易对名称 |
+|> balance |string |保險基金的幣種數量 |
+|> maxBalance |string |8h保险池余额最大值 |
+|> symbolPnl |string |8h内symbol的Pnl |
+|> insurancePnlRatio |string |觸發ADL時的回撤閾值 <li>當symbol在8h內的盈虧回撤比例大於該值時，觸發ADL</li>|
+|> pnlRatio |string |symbol在8h內的回撤比例 |
+|> adlTriggerThreshold |string |ADL的觸發閾值 <li>只有保險池大於該值時，8h內回撤n%的觸發條件才會啟用</li>|
+|> adlStopRatio |string |ADL的停止回撤比例 <li>當symbol在8H的回撤比例小於該值時，停止ADL</li>|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "updatedTime": "1757733960000",
+        "list": [
+            {
+                "coin": "USDT",
+                "symbol": "BTCUSDT",
+                "balance": "92203504694.99632",
+                "maxBalance": "92231510324.75948",
+                "symbolPnl": "-51739421527.7752",
+                "insurancePnlRatio": "-0.3",
+                "pnlRatio": "-0.560973",
+                "adlTriggerThreshold": "10000",
+                "adlStopRatio": "-0.25"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1757734022014
+}
+```
