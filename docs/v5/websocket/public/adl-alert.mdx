@@ -1,0 +1,77 @@
+---
+title: ADL Alert
+sidebar_label: ADL Alert
+sidebar_position: 11
+---
+
+Query for grouped insurance pool ADL information.
+> **Covers: USDT contract / USDC contract  / Inverse contract**
+
+**Topic:**<br/>
+`adlAlert.{coin}` e.g., adlAlert.USDT, adlAlert.USDC for linear, adlAlert.inverse for inverse
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> c |string |Insurance pool currency |
+|> s |string |Symbol name |
+|> b |string |Insurance pool balance |
+|> mb |string |Max 8h insurance pool balance |
+|> pnl |string |Symbol 8h Pnl |
+|> i_pr |string |ADL trigger drawdown threshold <li>When the Pnl drawdown ratio of a symbol within 8 hours exceeds this value, ADL will be triggered</li>|
+|> pr |string |Symbol 8h drawdown ratio |
+|> adl_tt |string |ADL trigger threshold <li>The trigger condition (an n% drawdown within 8 hours) is activated only when the insurance pool balance exceeds this threshold</li>|
+|> adl_sr |string |ADL stop drawdown ratio <li>When a symbol’s 8-hour drawdown ratio falls below this value, ADL will stop</li>|
+
+### Subscribe Example
+
+```python
+{"op": "subscribe", "args": ["adlAlert.USDT"]}
+```
+
+### Response Example
+
+```json
+{
+  "topic": "adlAlert.USDT",
+  "type": "snapshot",
+  "ts": 1757736794000,
+  "data": [
+    {
+      "c": "USDT",
+      "s": "FWOGUSDT",
+      "b": -5421.29889888,
+      "mb": -5421.29889888,
+      "pnl": 57.10123704,
+      "i_pr": -0.3,
+      "pr": 0,
+      "adl_tt": 10000,
+      "adl_sr": -0.25
+    },
+    {
+      "c": "USDT",
+      "s": "ZORAUSDT",
+      "b": 19873.46255153,
+      "mb": 19874.97612833,
+      "pnl": 3.4779456,
+      "i_pr": -0.3,
+      "pr": 0.000174,
+      "adl_tt": 10000,
+      "adl_sr": -0.25
+    },
+    {
+      "c": "USDT",
+      "s": "BERAUSDT",
+      "b": 453.36427074,
+      "mb": 453.36427074,
+      "pnl": 111.41880696,
+      "i_pr": -0.3,
+      "pr": 0.24576,
+      "adl_tt": 10000,
+      "adl_sr": -0.25
+    },
+    ...,
+  ]
+}
+```
