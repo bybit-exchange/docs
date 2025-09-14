@@ -1,0 +1,101 @@
+---
+title: Get ADL Alert
+sidebar_label: Get ADL Alert
+sidebar_position: 18
+---
+
+Query for grouped insurance pool ADL information.
+> **Covers: USDT contract / USDC contract  / Inverse contract**
+
+### HTTP Request
+GET `/v5/market/adlAlert`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------|
+|symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|updateTime |string |Data updated timestamp (ms) |
+|list |array |Object |
+|> coin |string |Insurance pool currency |
+|> symbol |string |Symbol name |
+|> balance |string |Insurance pool balance |
+|> maxBalance |string |Max 8h insurance pool balance |
+|> symbolPnl |string |Symbol 8h Pnl |
+|> insurancePnlRatio |string |ADL trigger drawdown threshold <li>When the Pnl drawdown ratio of a symbol within 8 hours exceeds this value, ADL will be triggered</li>|
+|> pnlRatio |string |Symbol 8h drawdown ratio |
+|> adlTriggerThreshold |string |ADL trigger threshold <li>The trigger condition (an n% drawdown within 8 hours) is activated only when the insurance pool balance exceeds this threshold</li>|
+|> adlStopRatio |string |ADL stop drawdown ratio <li>When a symbol’s 8-hour drawdown ratio falls below this value, ADL will stop</li>|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "updatedTime": "1757733960000",
+        "list": [
+            {
+                "coin": "USDT",
+                "symbol": "BTCUSDT",
+                "balance": "92203504694.99632",
+                "maxBalance": "92231510324.75948",
+                "symbolPnl": "-51739421527.7752",
+                "insurancePnlRatio": "-0.3",
+                "pnlRatio": "-0.560973",
+                "adlTriggerThreshold": "10000",
+                "adlStopRatio": "-0.25"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1757734022014
+}
+```
