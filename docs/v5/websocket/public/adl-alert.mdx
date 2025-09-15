@@ -4,25 +4,25 @@ sidebar_label: ADL Alert
 sidebar_position: 11
 ---
 
-Query for grouped insurance pool ADL information.
-> **Covers: USDT contract / USDC contract  / Inverse contract**
+Subscribe to ADL Alerts and Related Information by Grouped Insurance Pool  
+> **Coverage: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
 **Topic:**<br/>
-`adlAlert.{coin}` e.g., adlAlert.USDT, adlAlert.USDC for linear, adlAlert.inverse for inverse
+`adlAlert.{coin}`  
+For example: use `adlAlert.USDT` for USDT Perpetual/Delivery, `adlAlert.USDC` for USDC Perpetual/Delivery, and `adlAlert.inverse` for Inverse contracts.
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|list |array |Object |
-|> c |string |Insurance pool currency |
-|> s |string |Symbol name |
-|> b |string |Insurance pool balance |
-|> mb |string |Max 8h insurance pool balance |
-|> pnl |string |Symbol 8h Pnl |
-|> i_pr |string |ADL trigger drawdown threshold <li>When the Pnl drawdown ratio of a symbol within 8 hours exceeds this value, ADL will be triggered</li>|
-|> pr |string |Symbol 8h drawdown ratio |
-|> adl_tt |string |ADL trigger threshold <li>The trigger condition (an n% drawdown within 8 hours) is activated only when the insurance pool balance exceeds this threshold</li>|
-|> adl_sr |string |ADL stop drawdown ratio <li>When a symbol’s 8-hour drawdown ratio falls below this value, ADL will stop</li>|
+| Parameter | Type   | Description |
+|:----------|:------ |-------------|
+|list       | array  | Object |
+|> c        | string | Token of the insurance pool |
+|> s        | string | Trading pair name |
+|> b        | string | Balance of the insurance fund, used to determine if ADL is triggered |
+|> mb       | string | Maximum balance of the insurance pool within the last 8h |
+|> i_pr     | string | PnL ratio threshold for triggering **Contract PnL Drawdown ADL** <li>ADL is triggered when the symbol's PnL drawdown ratio within 8h exceeds this value</li> |
+|> pr       | string | Symbol's PnL drawdown ratio within 8h, used to determine whether ADL is triggered or stopped |
+|> adl_tt   | string | Trigger threshold for **Contract PnL Drawdown ADL** <li>This condition is only effective when the insurance pool balance is greater than this value; if so, an 8h drawdown exceeding n% may trigger ADL</li> |
+|> adl_sr   | string | Stop ratio threshold for **Contract PnL Drawdown ADL** <li>ADL stops when the symbol’s 8h drawdown ratio falls below this value</li> |
 
 ### Subscribe Example
 
@@ -43,7 +43,6 @@ Query for grouped insurance pool ADL information.
       "s": "FWOGUSDT",
       "b": -5421.29889888,
       "mb": -5421.29889888,
-      "pnl": 57.10123704,
       "i_pr": -0.3,
       "pr": 0,
       "adl_tt": 10000,
@@ -54,7 +53,6 @@ Query for grouped insurance pool ADL information.
       "s": "ZORAUSDT",
       "b": 19873.46255153,
       "mb": 19874.97612833,
-      "pnl": 3.4779456,
       "i_pr": -0.3,
       "pr": 0.000174,
       "adl_tt": 10000,
@@ -65,7 +63,6 @@ Query for grouped insurance pool ADL information.
       "s": "BERAUSDT",
       "b": 453.36427074,
       "mb": 453.36427074,
-      "pnl": 111.41880696,
       "i_pr": -0.3,
       "pr": 0.24576,
       "adl_tt": 10000,

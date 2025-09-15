@@ -4,25 +4,25 @@ sidebar_label: ADL告警
 sidebar_position: 11
 ---
 
-查詢按組劃分保險池ADL相關信息。
-> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+訂閱按組劃分保險池 ADL 告警及相關資訊  
+> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
 **Topic:**<br/>
-`adlAlert.{coin}` e.g., USDT永續、交割使用adlAlert.USDT, USDC永續、交割使用adlAlert.USDC, 反向合約使用adlAlert.inverse
+`adlAlert.{coin}`  
+例如：USDT 永續、交割使用 `adlAlert.USDT`，USDC 永續、交割使用 `adlAlert.USDC`，反向合約使用 `adlAlert.inverse`
 
 ### 響應參數
-| 參數 | 類型 | 說明|
-|:----- |:-----|----- |
-|list |array |Object |
-|> c |string |保險池的幣種 |
-|> s |string |交易对名称 |
-|> b |string |保險基金的幣種數量 |
-|> mb |string |8h保险池余额最大值 |
-|> pnl |string |8h内symbol的Pnl |
-|> i_pr |string |觸發ADL時的回撤閾值 <li>當symbol在8h內的盈虧回撤比例大於該值時，觸發ADL</li>|
-|> pr |string |symbol在8h內的回撤比例 |
-|> adl_tt |string |ADL的觸發閾值 <li>只有保險池大於該值時，8h內回撤n%的觸發條件才會啟用</li>|
-|> adl_sr |string |ADL的停止回撤比例 <li>當symbol在8H的回撤比例小於該值時，停止ADL</li>|
+| 參數   | 類型 | 說明 |
+|:-------|:-----|----- |
+|list    | array | Object |
+|> c     | string | 保險池所屬幣種 |
+|> s     | string | 交易對名稱 |
+|> b     | string | 保險基金餘額，用於判斷是否觸發 ADL |
+|> mb    | string | 最近 8 小時內的保險池最大餘額 |
+|> i_pr  | string | 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 <li>當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL</li> |
+|> pr    | string | `symbol` 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止 |
+|> adl_tt | string | **合約盈虧回撤 ADL** 的觸發閾值 <li>僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效</li> |
+|> adl_sr | string | **合約盈虧回撤 ADL** 的停止比例閾值 <li>當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止</li> |
 
 ### 訂閱示例
 
@@ -43,7 +43,6 @@ sidebar_position: 11
       "s": "FWOGUSDT",
       "b": -5421.29889888,
       "mb": -5421.29889888,
-      "pnl": 57.10123704,
       "i_pr": -0.3,
       "pr": 0,
       "adl_tt": 10000,
@@ -54,7 +53,6 @@ sidebar_position: 11
       "s": "ZORAUSDT",
       "b": 19873.46255153,
       "mb": 19874.97612833,
-      "pnl": 3.4779456,
       "i_pr": -0.3,
       "pr": 0.000174,
       "adl_tt": 10000,
@@ -65,7 +63,6 @@ sidebar_position: 11
       "s": "BERAUSDT",
       "b": 453.36427074,
       "mb": 453.36427074,
-      "pnl": 111.41880696,
       "i_pr": -0.3,
       "pr": 0.24576,
       "adl_tt": 10000,

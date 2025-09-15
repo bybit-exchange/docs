@@ -1,34 +1,56 @@
 ---
-title: 查詢保險池ADL信息
-sidebar_label: 查詢保險池ADL信息
+title: 查詢ADL告警
+sidebar_label: 查詢ADL告警
 sidebar_position: 18
 ---
 
-查詢按組劃分保險池ADL相關信息。
-> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+查詢按組劃分保險池 ADL 告警及相關資訊  
+> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
-### HTTP請求
+:::info
+- **ADL 觸發與停止條件基於以下三種情況：**
+
+1. **合約盈虧回撤 ADL**  
+   - **觸發條件**:  
+     `balance` 保險基金餘額 > `adlTriggerThreshold`（合約盈虧回撤 ADL 的觸發閾值），且 `pnlRatio`（symbol 在 8 小時內的回撤比例） < `insurancePnlRatio`（觸發 ADL 的盈虧比例閾值）  
+   - **停止條件**:  
+     `pnlRatio`（symbol 在 8 小時內的回撤比例） > `adlStopRatio`（ADL 停止回撤比例閾值）  
+
+2. **保險池整體淨值 (equity)**  
+   - **觸發條件**:  
+     `balance` 保險基金餘額 ≤ 0  
+   - **停止條件**:  
+     `balance` 保險基金餘額 > 0  
+
+3. **`symbol` 交易對在分組資金池中出現過於劇烈的保證金虧損**  
+   - 為確保資金池整體安全性，風控團隊可將該幣對自分組資金池中移出，並臨時設立為獨立保險池  
+   - **觸發條件**:  
+     `balance` 保險基金餘額 ≤ 0  
+   - **停止條件**:  
+     `balance` 保險基金餘額 > 0  
+:::
+
+### HTTP 請求
 GET `/v5/market/adlAlert`
 
 ### 請求參數
-| 參數 | 是否必需 | 類型 | 說明|
-|:----- |:-------|:-----|------|
-|symbol |false |string |合約名稱，如 `BTCUSDT`, 僅限大寫|
+| 參數   | 是否必需 | 類型   | 說明 |
+|:-------|:---------|:-------|------|
+|symbol  | false    | string | 合約名稱，例如 `BTCUSDT`，僅限大寫 |
 
 ### 響應參數
-| 參數 | 類型 | 說明|
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|updateTime |string |數據最近更新的時間戳 (ms) |
-|list |array |Object |
-|> coin |string |保險池的幣種 |
-|> symbol |string |交易对名称 |
-|> balance |string |保險基金的幣種數量 |
-|> maxBalance |string |8h保险池余额最大值 |
-|> symbolPnl |string |8h内symbol的Pnl |
-|> insurancePnlRatio |string |觸發ADL時的回撤閾值 <li>當symbol在8h內的盈虧回撤比例大於該值時，觸發ADL</li>|
-|> pnlRatio |string |symbol在8h內的回撤比例 |
-|> adlTriggerThreshold |string |ADL的觸發閾值 <li>只有保險池大於該值時，8h內回撤n%的觸發條件才會啟用</li>|
-|> adlStopRatio |string |ADL的停止回撤比例 <li>當symbol在8H的回撤比例小於該值時，停止ADL</li>|
+|updateTime | string | 數據最近更新的時間戳 (毫秒) |
+|list | array | Object |
+|> coin | string | 保險池所屬幣種 |
+|> symbol | string | 交易對名稱 |
+|> balance | string | 保險基金餘額，用於判斷是否觸發 ADL |
+|> maxBalance | string | 最近 8 小時內的保險池最大餘額 |
+|> insurancePnlRatio | string | 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 <li>當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL</li> |
+|> pnlRatio | string | `symbol` 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止 |
+|> adlTriggerThreshold | string | **合約盈虧回撤 ADL** 的觸發閾值 <li>僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效</li> |
+|> adlStopRatio | string | **合約盈虧回撤 ADL** 的停止比例閾值 <li>當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止</li> |
 
 ---
 
@@ -87,7 +109,6 @@ Host: api-testnet.bybit.com
                 "symbol": "BTCUSDT",
                 "balance": "92203504694.99632",
                 "maxBalance": "92231510324.75948",
-                "symbolPnl": "-51739421527.7752",
                 "insurancePnlRatio": "-0.3",
                 "pnlRatio": "-0.560973",
                 "adlTriggerThreshold": "10000",
