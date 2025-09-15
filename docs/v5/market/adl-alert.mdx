@@ -4,31 +4,51 @@ sidebar_label: Get ADL Alert
 sidebar_position: 18
 ---
 
-Query for grouped insurance pool ADL information.
-> **Covers: USDT contract / USDC contract  / Inverse contract**
+Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-ADL) (auto-deleveraging mechanism) alerts and insurance pool information.
+> **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
+
+:::info
+- **ADL trigger and stop conditions are based on the following three scenarios:**
+
+1. **Contract PnL drawdown**
+   - **Trigger condition**:
+     `balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for Contract PnL Drawdown ADL), and `pnlRatio` (8 hour drawdown ratio of the symbol) < `insurancePnlRatio` (PnL ratio threshold for triggering ADL).
+   - **Stop condition**:
+     `pnlRatio` (8 hour drawdown ratio of the symbol) > `adlStopRatio` (stop ratio threshold for ADL).
+
+2. **Insurance pool balance**
+   - **Trigger condition**:
+     `balance` (insurance fund balance) ≤ 0
+   - **Stop condition**:
+     `balance` (insurance fund balance) > 0
+
+3. **Severe margin loss of a symbol within a grouped pool**
+   - To ensure overall pool safety, the risk team may remove the affected symbol from the grouped insurance pool and temporarily assign it to a separate insurance pool. This can happen manually or follow the automatic conditions described in point 2.
+:::
+
+Subscribe to the [ADL WebSocket topic](/docs/v5/websocket/public/adl-alert) for faster updates.
 
 ### HTTP Request
 GET `/v5/market/adlAlert`
 
 ### Request Parameters
-| Parameter | Required | Type | Comments|
-|:----- |:-------|:-----|------|
-|symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
+| Parameter | Required | Type   | Description |
+|:----------|:---------|:-------|-------------|
+|symbol     | false    | string | Contract name, e.g. `BTCUSDT`. Uppercase only |
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
-|updateTime |string |Data updated timestamp (ms) |
-|list |array |Object |
-|> coin |string |Insurance pool currency |
-|> symbol |string |Symbol name |
-|> balance |string |Insurance pool balance |
-|> maxBalance |string |Max 8h insurance pool balance |
-|> symbolPnl |string |Symbol 8h Pnl |
-|> insurancePnlRatio |string |ADL trigger drawdown threshold <li>When the Pnl drawdown ratio of a symbol within 8 hours exceeds this value, ADL will be triggered</li>|
-|> pnlRatio |string |Symbol 8h drawdown ratio |
-|> adlTriggerThreshold |string |ADL trigger threshold <li>The trigger condition (an n% drawdown within 8 hours) is activated only when the insurance pool balance exceeds this threshold</li>|
-|> adlStopRatio |string |ADL stop drawdown ratio <li>When a symbol’s 8-hour drawdown ratio falls below this value, ADL will stop</li>|
+| Parameter | Type   | Description |
+|:----------|:------ |-------------|
+|updateTime | string | Latest data update timestamp (ms) |
+|list       | array  | Object |
+|> coin     | string | Token of the insurance pool |
+|> symbol   | string | Trading pair name |
+|> balance  | string | Balance of the insurance fund. Used to determine if ADL is triggered |
+|> maxBalance | string | Maximum balance of the insurance pool in the last 8 hours |
+|> insurancePnlRatio | string | PnL ratio threshold for triggering **contract PnL drawdown ADL** <li>ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value</li> |
+|> pnlRatio | string | Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped |
+|> adlTriggerThreshold | string | Trigger threshold for **contract PnL drawdown ADL** <li>This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL</li> |
+|> adlStopRatio | string | Stop ratio threshold for **contract PnL drawdown ADL** <li>ADL stops when the symbol's 8 hours drawdown ratio falls below this value</li> |
 
 ---
 
@@ -87,7 +107,6 @@ Host: api-testnet.bybit.com
                 "symbol": "BTCUSDT",
                 "balance": "92203504694.99632",
                 "maxBalance": "92231510324.75948",
-                "symbolPnl": "-51739421527.7752",
                 "insurancePnlRatio": "-0.3",
                 "pnlRatio": "-0.560973",
                 "adlTriggerThreshold": "10000",
