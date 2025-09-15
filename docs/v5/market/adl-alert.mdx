@@ -10,20 +10,20 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
 :::info
 - **ADL trigger and stop conditions are based on the following three scenarios:**
 
-1. **Contract PnL drawdown**  
-   - **Trigger condition**:  
-     `balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for Contract PnL Drawdown ADL), and `pnlRatio` (8 hour drawdown ratio of the symbol) < `insurancePnlRatio` (PnL ratio threshold for triggering ADL).  
-   - **Stop condition**:  
-     `pnlRatio` (8 hour drawdown ratio of the symbol) > `adlStopRatio` (stop ratio threshold for ADL).  
+1. **Contract PnL drawdown**
+   - **Trigger condition**:
+     `balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for Contract PnL Drawdown ADL), and `pnlRatio` (8 hour drawdown ratio of the symbol) < `insurancePnlRatio` (PnL ratio threshold for triggering ADL).
+   - **Stop condition**:
+     `pnlRatio` (8 hour drawdown ratio of the symbol) > `adlStopRatio` (stop ratio threshold for ADL).
 
-2. **Insurance pool balance**  
-   - **Trigger condition**:  
-     `balance` (insurance fund balance) ≤ 0  
-   - **Stop condition**:  
-     `balance` (insurance fund balance) > 0  
+2. **Insurance pool balance**
+   - **Trigger condition**:
+     `balance` (insurance fund balance) ≤ 0
+   - **Stop condition**:
+     `balance` (insurance fund balance) > 0
 
-3. **Severe margin loss of a symbol within a grouped pool**  
-   - To ensure overall pool safety, the risk team may remove the affected symbol from the grouped insurance pool and temporarily assign it to a separate insurance pool. This can happen manually or follow the automatic conditions described in point 2.  
+3. **Severe margin loss of a symbol within a grouped pool**
+   - To ensure overall pool safety, the risk team may remove the affected symbol from the grouped insurance pool and temporarily assign it to a separate insurance pool. This can happen manually or follow the automatic conditions described in point 2.
 :::
 
 Subscribe to the [ADL WebSocket topic](/docs/v5/websocket/public/adl-alert) for faster updates.
