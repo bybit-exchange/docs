@@ -485,7 +485,6 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 
 </span>
 
-## API Rate Limit Rules For VIPs
 :::tip instructions for batch endpoints 
 The batch order endpoint, which includes operations for creating, amending, and canceling, has its own rate limit and
 does not share it with single requests, *e.g., let's say the rate limit of single create order endpoint is 100/s, and batch create order endpoint
@@ -505,7 +504,7 @@ containing 8 orders is placed at this time, then the first 5 orders will be succ
 will report an error exceeding the limit, and these orders will fail.
 :::
 
-
+## API Rate Limit Rules For VIPs
 
 <span class="blocky_table">
 
@@ -581,7 +580,7 @@ configurations, enabling greater efficiency and scalability. Refer to [announcem
 </span>
 
 
-### Master and subaccounts level: 
+### Master and subaccounts level (Institutional API rate limit Quota): 
 <span class="blocky_table">
 <table class="custom_table">
     <tr>
@@ -611,6 +610,12 @@ configurations, enabling greater efficiency and scalability. Refer to [announcem
 </table>
 </span>
 
+:::tip instructions for API rate limit
+- All of the existing subaccounts still have those original API rate limits
+- The default API rate limit for a new sub-account is not counted in the total Institutional API rate limit quota. 
+- The default API rate limit for a new sub is: 10/s for futures , 10/s for options, 20/s for spot
+- If the Institutional API rate limit total quota is exceeded, you can only reduce the account's API rate limit first. After the total API rate limit is less than the total Institutional API rate limit quota, you can increase the API rate limit of an account.
+:::
 
 ### Set api rate limit
 > API rate limit: 50 req per second
