@@ -8,22 +8,89 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
 > **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
 :::info
-- **ADL trigger and stop conditions are based on the following three scenarios:**
+- **ADL trigger and stop conditions are based on the following three cases:**
 
-1. **Contract PnL drawdown**
-   - **Trigger condition**:
-     `balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for Contract PnL Drawdown ADL), and `pnlRatio` (8 hour drawdown ratio of the symbol) < `insurancePnlRatio` (PnL ratio threshold for triggering ADL).
-   - **Stop condition**:
-     `pnlRatio` (8 hour drawdown ratio of the symbol) > `adlStopRatio` (stop ratio threshold for ADL).
+1. **Contract PnL drawdown ADL (based on the new grouped insurance pool mechanism, see Examples 1 and 2)**  
+   - **Trigger condition**:  
+     `balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for contract PnL drawdown ADL, config parameter, positive value)  
+     and `pnlRatio` < `insurancePnlRatio` (PnL ratio threshold for triggering ADL, config parameter, negative value)  
 
-2. **Insurance pool balance**
-   - **Trigger condition**:
-     `balance` (insurance fund balance) ≤ 0
-   - **Stop condition**:
-     `balance` (insurance fund balance) > 0
+     Where:  
+     - **pnlRatio**: drawdown ratio of the symbol within 8 hours  
+       Formula: `pnlRatio = (8h Max PnL - Current PnL) / Insurance pool 8h Max Balance`  
+       *Note: 8h Max PnL and Current PnL values are not directly provided by the API*  
+     - **Insurance pool 8h Max Balance**: the maximum balance of the grouped insurance pool within the last 8 hours  
 
-3. **Severe margin loss of a symbol within a grouped pool**
-   - To ensure overall pool safety, the risk team may remove the affected symbol from the grouped insurance pool and temporarily assign it to a separate insurance pool. This can happen manually or follow the automatic conditions described in point 2.
+   - **Stop condition**:  
+     `pnlRatio` > `adlStopRatio` (stop ratio threshold for ADL, config parameter, negative value)  
+
+2. **Insurance pool equity drawdown ADL (legacy mechanism, see Example 3)**  
+   - **Trigger condition**:  
+     `balance` (insurance fund balance) ≤ 0  
+   - **Stop condition**:  
+     `balance` (insurance fund balance) > 0  
+
+3. **Excessive margin loss of a `symbol` in a grouped insurance pool (can be regarded as a special case of pool equity drawdown ADL)**  
+   - To ensure pool safety, the risk control team may remove the symbol from the grouped pool and temporarily establish it as an independent insurance pool  
+   - **Trigger condition**:  
+     When the losing `symbol` is removed from its pool and causes `balance` (insurance fund balance) ≤ 0, ADL is triggered  
+   - **Stop condition**:  
+     `balance` (insurance fund balance) > 0  
+:::
+
+:::info ADL Examples: Triggered by PnL Drawdown and Insurance Pool Balance
+
+1. **Example 1: Pool has no significant profit within 8 hours, `symbol` loss triggers ADL**  
+   - Assume A, B, C share the same pool, initial 8h `balance` = **1M USDT**  
+   - A incurs a loss of **350K**  
+   - Calculation:  
+     - `pnlRatio` = -35%  
+     - `balance` = 1M  
+     - `adlTriggerThreshold` = 1 (config parameter)  
+     - `insurancePnlRatio` = -0.3 (config parameter, negative value)  
+   - Condition check:  
+     - `balance` (1M) > `adlTriggerThreshold` (1)   
+     - `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3)   
+   - → Contract PnL drawdown ADL is triggered  
+   - The system calculates the bankruptcy price at **-30% drawdown**, user supplements **50K** to keep A’s `pnlRatio` at -30%  
+   - **Stop condition**: ADL stops if A’s `pnlRatio` > `adlStopRatio` (e.g., -0.25, config parameter)  
+
+   **Recovery methods**:  
+   1. Platform injects funds into the pool and adjusts A’s PnL  
+   2. Pool continues to take A’s positions and earns maintenance margin through liquidation on the market  
+
+---
+
+2. **Example 2: Pool has significant profit within 8 hours, `symbol` loss triggers ADL**  
+   - Assume A, B, C share the same pool, initial `balance` = **1M USDT**  
+   - A gains profit through liquidation, pool 8h Max Balance = **2M USDT** (A’s PnL = +1M)  
+   - Later A incurs a loss of **600K**  
+   - Calculation:  
+     - `pnlRatio` = -30%  
+     - `balance` = 2M  
+     - `adlTriggerThreshold` = 1 (config parameter)  
+     - `insurancePnlRatio` = -0.3 (config parameter, negative value)  
+   - Condition check:  
+     - `balance` (2M) > `adlTriggerThreshold` (1)   
+     - `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)   
+   - → Contract PnL drawdown ADL is triggered  
+   - The system calculates the bankruptcy price at **-30% drawdown**  
+   - **Stop condition**: ADL stops if A’s `pnlRatio` > `adlStopRatio` (e.g., -0.25, config parameter)  
+
+   **Recovery methods**:  
+   1. Platform injects funds into the pool and adjusts A’s PnL  
+   2. Pool continues to take A’s positions and earns maintenance margin through liquidation on the market  
+
+---
+
+3. **Example 3: Pool balance reaches zero triggers ADL**  
+   - Assume A, B, C, D share the same pool, initial `balance` = **1M USDT**  
+   - Although none of the `pnlRatio` values for the symbols reach -30%, the pool `balance` drops to 0  
+   - Condition check:  
+     - `balance` (0) ≤ 0   
+   - → Insurance pool equity ADL is triggered  
+   - The system redistributes bankruptcy loss across symbols based on their PnL when pool balance = 0  
+   - **Stop condition**: ADL stops if `balance` > 0  
 :::
 
 Subscribe to the [ADL WebSocket topic](/docs/v5/websocket/public/adl-alert) for faster updates.
