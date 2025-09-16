@@ -55,6 +55,7 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |>> bonus |string |Bonus. _This is a unique field for UNIFIED account_ |
 |>> collateralSwitch |boolean |Whether it can be used as a margin collateral currency (platform) <ul><li>When marginCollateral=false, then collateralSwitch is meaningless</li><li>This is a unique field for UNIFIED account</li></ul> |
 |>> marginCollateral |boolean |Whether the collateral is turned on by user (user) <ul><li>When marginCollateral=true, then collateralSwitch is meaningful</li><li>This is a unique field for UNIFIED account</li></ul> |
+|>> spotBorrow |string |Borrow amount by spot margin trade (does not include borrow amount by spot margin active order). This business scenario is not yet online, currently returns `0`. |
 
 ### Subscribe Example
 ```json
@@ -123,7 +124,8 @@ while True:
                     "collateralSwitch": true,
                     "marginCollateral": true,
                     "locked": "0",
-                    "spotHedgingQty": "0.01592413"
+                    "spotHedgingQty": "0.01592413",
+                    "spotBorrow": "0"
                 }
             ],
             "accountLTV": "0",
