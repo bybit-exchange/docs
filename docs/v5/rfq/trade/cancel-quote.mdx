@@ -1,0 +1,62 @@
+---
+title: Cancel Quote
+sidebar_label: Cancel Quote
+sidebar_position: 7
+---
+Cancel a quotation. **Up to 50 requests per second ** 
+:::info
+<li>Pass at least one quoteId, rfqId, and quoteLinkId.</li><li> 2. If quoteId, rfqId, and quoteLinkId are passed in at the same time, and quoteId takes precedence, the priority is judged to be quoteId > quoteLinkId > rfqId.</li>
+:::
+
+### HTTP Request
+POST `/v5/rfq/cancel-quote`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|quoteId |**false** |string|Quotation ID|
+|rfqId |**false** |string|Inquiry ID|
+|quoteLinkId |**false**  |string |Quotation Custom ID|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object ||
+|rfqId |string|Inquiry ID|
+|quoteId |string|Quotation ID|
+|quoteLinkId|string |Quotation Custom ID|
+
+
+### Request Example
+
+```http
+POST /v5/rfq/cancel-quote HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+{
+    "quoteId":"1754364447601610516653123084412812"  
+}
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rfqId": "175740723913299909861293671607573",
+        "quoteId": "1757407443083427576602342578477746",
+        "quoteLinkId": ""
+    },
+    "retExtInfo": {},
+    "time": 1757407457635
+}
+```
