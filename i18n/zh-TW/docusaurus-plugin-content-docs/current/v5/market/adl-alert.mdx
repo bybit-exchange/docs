@@ -12,19 +12,19 @@ sidebar_position: 18
 
 1. **合約盈虧回撤 ADL (基於分組保險池的新機制, 詳見用例 1, 2)**  
    - **觸發條件**:  
-     `balance` (保險基金餘額) > `adlTriggerThreshold` (合約盈虧回撤 ADL 的觸發閾值, 配置參數, 正值)  
-     且 `pnlRatio` < `insurancePnlRatio` (觸發 ADL 的盈虧比例閾值, 配置參數, 負值)  
+     `balance` (保險基金餘額) > `adlTriggerThreshold` (合約盈虧回撤 ADL 的觸發閾值)  
+     且 `pnlRatio` < `insurancePnlRatio` (觸發 ADL 的盈虧比例閾值)  
 
      其中:  
-     - **pnlRatio**: symbol 在 8 小時內的回撤比例  
-       計算公式: `pnlRatio = (8h 最大 PnL - 當前 PnL) / 保險池 8h 最大餘額`  
-       *8h 最大 PnL 與 當前 PnL 的具體數值未在 API 中直接提供*  
-     - **保險池 8h 最大餘額**: 最近 8 小時內, 該分組保險池的最大餘額  
+     - **pnlRatio**: `symbol` 在 8 小時內的回撤比例  
+       計算公式: `pnlRatio` = (symbol 當前 PnL - symbol 8h 最大 PnL) / 保險池 8h 最大餘額(`maxBalance`)  
+       *symbol 當前 PnL 與 symbol 8h 最大 PnL 的具體數值未在 API 中直接提供*  
+     - **保險池 8h 最大餘額(`maxBalance`)**: 最近 8 小時內, 該分組保險池的最大餘額  
 
    - **停止條件**:  
-     `pnlRatio` > `adlStopRatio` (ADL 停止回撤比例閾值, 配置參數, 負值)  
+     `pnlRatio` > `adlStopRatio` (ADL 停止回撤比例閾值)  
 
-2. **保險池整體淨值 (equity) 虧損觸發 ADL (舊機制, 詳見用例 3)**  
+2. **保險池整體淨值 (equity) 虧損觸發 ADL (原有機制, 詳見用例 3)**  
    - **觸發條件**:  
      `balance` (保險基金餘額) ≤ 0  
    - **停止條件**:  
@@ -40,20 +40,20 @@ sidebar_position: 18
 
 :::info ADL 示例: 按百分比回撤及保險池餘額觸發
 
-1. **場景 1: 保險池在 8 小時內未產生大額盈利, `symbol` 虧損觸發 ADL**  
+1. **場景 1: 保險池在 8 小時內未產生大額盈利, 當`symbol` 虧損超過盈虧比閾值(`insurancePnlRatio`)時，將觸發 ADL**  
    - 假設 A、B、C 三個 `symbol` 共用保險池, 8h 初始 `balance` (保險基金餘額) = **1M USDT**  
    - A 持倉發生虧損, 虧損金額 = **350K**  
    - 此時計算:  
      - `pnlRatio` = -35%  
      - `balance` = 1M  
-     - `adlTriggerThreshold` = 1 (配置參數)  
-     - `insurancePnlRatio` = -0.3 (配置參數, 負值)  
+     - `adlTriggerThreshold` = 1 (Bybit配置常數)  
+     - `insurancePnlRatio` = -0.3 (Bybit配置常數)  
    - 條件判斷:  
      - `balance` (1M) > `adlTriggerThreshold` (1)   
      - `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3)   
    - → 觸發合約盈虧回撤 ADL  
    - 系統依據 **-30% 回撤比例**計算破產價格, 用戶需補貼 **50K**, 使 A 的 `pnlRatio` 控制在 -30%  
-   - **停止條件**: 若 A 的 `pnlRatio` > `adlStopRatio` (如 -0.25, 配置參數), 則停止 ADL  
+   - **停止條件**: 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL  
 
    **恢復方式**:  
    1. 平台向保險池注資並調整 A 的盈虧值  
@@ -61,21 +61,21 @@ sidebar_position: 18
 
 ---
 
-2. **場景 2: 保險池在 8 小時內產生大額盈利, `symbol` 虧損觸發 ADL**  
+2. **場景 2: 保險池在 8 小時內產生大額盈利, 但`symbol` 虧損超過盈虧比閾值(`insurancePnlRatio`)時，仍將觸發 ADL**  
    - 假設 A、B、C 三個 `symbol` 共用保險池, 初始 `balance` = **1M USDT**  
    - A 持倉甩賣獲得利潤, 使保險池 8h 最大餘額 = **2M USDT** (A 的 PnL = +1M)  
    - 隨後 A 發生虧損, 虧損金額 = **600K**  
    - 此時計算:  
      - `pnlRatio` = -30%  
      - `balance` = 2M  
-     - `adlTriggerThreshold` = 1 (配置參數)  
-     - `insurancePnlRatio` = -0.3 (配置參數, 負值)  
+     - `adlTriggerThreshold` = 1 (Bybit配置常數)  
+     - `insurancePnlRatio` = -0.3 (Bybit配置常數)  
    - 條件判斷:  
      - `balance` (2M) > `adlTriggerThreshold` (1)   
      - `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)   
    - → 觸發合約盈虧回撤 ADL  
    - 系統依據 **-30% 回撤比例**計算破產價格  
-   - **停止條件**: 若 A 的 `pnlRatio` > `adlStopRatio` (如 -0.25, 配置參數), 則停止 ADL  
+   - **停止條件**: 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL  
 
    **恢復方式**:  
    1. 平台向保險池注資並調整 A 的盈虧值  

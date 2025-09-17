@@ -16,10 +16,10 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
      and `pnlRatio` < `insurancePnlRatio` (PnL ratio threshold for triggering ADL)  
 
      Where:  
-     - **pnlRatio**: drawdown ratio of the symbol in the last 8 hours  
-       Formula: `pnlRatio = (8h Max PnL - Current PnL) / Insurance pool 8h max balance`  
-       *Note: 8h Max PnL and Current PnL values are not provided by the API*.
-     - **Insurance pool 8h max balance**: the maximum balance of the grouped insurance pool in the last 8 hours   
+     - **pnlRatio**: drawdown ratio of the `symbol` in the last 8 hours  
+       Formula: `pnlRatio` = (symbol Current PnL - symbol 8h Max PnL) / Insurance pool 8h max balance(`maxBalance`)  
+       *Note: symbol Current PnL and symbol 8h Max PnL values are not provided by the API*.
+     - **Insurance pool 8h max balance(`maxBalance`)**: the maximum balance of the grouped insurance pool in the last 8 hours   
 
    - **Stop condition**:  
      `pnlRatio` > `adlStopRatio` (stop ratio threshold for ADL)  
@@ -30,7 +30,7 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
    - **Stop condition**:  
      `balance` (insurance fund balance) > 0  
 
-3. **Excessive margin loss of a symbol after removing it from a grouped insurance pool (can be regarded as a special case of pool equity drawdown ADL)**  
+3. **Excessive margin loss of a `symbol` after removing it from a grouped insurance pool (can be regarded as a special case of pool equity drawdown ADL)**  
    - To ensure pool safety, the risk control team may remove a symbol from its grouped pool and temporarily establish it as a new independent insurance pool.  
    - **Trigger condition**:  
      `balance` (insurance fund balance) ≤ 0  
@@ -40,7 +40,7 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
 
 :::info ADL examples: Triggered by PnL Drawdown and Insurance Pool Balance
 
-1. **Example 1: Pool has no significant profit in the last 8 hours, then symbol loss triggers ADL**  
+1. **Example 1: Pool has no significant profit in the last 8 hours, then `symbol` loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will be triggered**  
    - Assume symbols A, B, and C share the same pool with an initial 8h `balance` of **1M USDT**  
    - A incurs a loss of **350K**  
    - Calculation:  
@@ -61,8 +61,8 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
 
 ---
 
-2. **Example 2: Pool has significant profit in the last 8 hours, but symbol loss still triggers ADL**  
-   - Assume A, B, C share the same pool, initial `balance` = **1M USDT**  
+2. **Example 2: Pool has significant profit in the last 8 hours, but `symbol` loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will still be triggered**  
+   - Assume symbols A, B, C share the same pool, initial `balance` = **1M USDT**  
    - A gains profit through liquidation, pool 8h Max Balance = **2M USDT** (A's PnL = +1M)  
    - Later A incurs a loss of **600K**  
    - Calculation:  
@@ -84,7 +84,7 @@ Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-A
 ---
 
 3. **Example 3: Pool balance reaches zero which triggers ADL**  
-   - Assume A, B, C, D share the same pool, initial `balance` = **1M USDT**  
+   - Assume symbols A, B, C, D share the same pool, initial `balance` = **1M USDT**  
    - Although none of the `pnlRatio` values for the symbols reach -30%, the pool `balance` drops to 0  
    - Condition check:  
      - `balance` (0) ≤ 0   
