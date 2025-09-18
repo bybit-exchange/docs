@@ -59,7 +59,7 @@ GET `/v5/order/history`
 |> leavesValue |string |訂單剩餘未成交的價值. _經典帳戶現貨交易不支持_ |
 |> cumExecQty |string |訂單累計成交數量 |
 |> cumExecValue |string |訂單累計成交價值. _經典帳戶現貨交易不支持_ |
-|> cumExecFee |string |訂單累計成交的手續費. _經典帳戶現貨交易不支持_ |
+|> cumExecFee |string |已棄用。訂單累計成交的手續費. _經典帳戶現貨交易不支持_ |
 |> [timeInForce](../enum#timeinforce) |string |執行策略 |
 |> [orderType](../enum#ordertype) |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型 <li>`Block trade Roll Back`, `Block trade-Limit`: 統一帳戶大宗交易獨有的兩個枚舉值</li> |
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型 |
@@ -89,6 +89,7 @@ GET `/v5/order/history`
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
 |> extraFees |string |交易費率。目前，僅針對kyc=Indian用戶或在印尼網站的現貨訂單或在歐盟站的現貨法定貨幣訂單返回此數據。在其他情況下，傳回空字串。字段枚舉: [feeType](../enum#extrafeesfeetype), [subFeeType](../enum#extrafeessubfeetype)
+|> cumFeeDetail |json |累積交易費詳情, 替代`cumExecFee`
 
 <a href="/api-explorer/v5/trade/order-list"><Button>運行實例 >></Button></a>
 
@@ -218,7 +219,10 @@ client
                 "slippageTolerance": "",
                 "createdTime": "1684476068369",
                 "updatedTime": "1684476068372",
-                "extraFees":""
+                "extraFees":"",
+                "cumFeeDetail": {
+                    "MNT": "0.00242968"
+                }
             }
         ],
         "nextPageCursor": "page_token%3D39380%26",

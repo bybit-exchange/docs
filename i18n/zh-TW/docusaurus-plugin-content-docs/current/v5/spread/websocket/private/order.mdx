@@ -32,14 +32,15 @@ sidebar_position: 1
 |> leavesValue|string |訂單剩餘未成交的價值 |
 |> cumExecQty|string |訂單累計成交數量 |
 |> cumExecValue|string |訂單累計成交價值 |
-|> cumExecFee|string |訂單累計成交的手續費 |
+|> cumExecFee|string |已棄用. 訂單累計成交的手續費 |
 |> orderType|string |訂單類型. `Market`,`Limit` |
 |> isLeverage |string |帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"|
 |> createdTime|string |創建訂單的時間戳 (毫秒) |
 |> updatedTime|string |訂單更新的時間戳 (毫秒) |
-|> feeCurrency|string |手續費幣種, 僅適用於現貨單腿訂單 |
+|> feeCurrency|string |已棄用. 手續費幣種, 僅適用於現貨單腿訂單 |
 |> [createType](../../../enum#createtype)|string | 訂單創建類型|
 |> closedPnl|string |平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費 |
+|> cumFeeDetail |json |累積交易費詳情, 替代`cumExecFee`和`feeCurrency`
 
 ### 訂閱示例
 ```json
@@ -84,7 +85,10 @@ sidebar_position: 1
             "updatedTime": "1744170555905",
             "feeCurrency": "",
             "createType": "CreateByUser",
-            "closedPnl": ""
+            "closedPnl": "",
+            "cumFeeDetail": {
+                "MNT": "0.00242968"
+            }
         },
         {
             "category": "future_leg",
@@ -111,7 +115,10 @@ sidebar_position: 1
             "updatedTime": "1744170555910",
             "feeCurrency": "",
             "createType": "CreateByFutureSpread",
-            "closedPnl": "0"
+            "closedPnl": "0",
+            "cumFeeDetail": {
+                "MNT": "0.00242968"
+            }
         }
     ]
 }

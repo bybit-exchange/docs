@@ -59,7 +59,7 @@ GET `/v5/order/realtime`
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_  |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value. _Classic `spot` is not supported_  |
-|> cumExecFee |string |Cumulative executed trading fee. _Classic `spot` is not supported_  |
+|> cumExecFee |string |Deprecated. Cumulative executed trading fee. _Classic `spot` is not supported_  |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL order, it means the order type after triggered |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |
@@ -86,6 +86,7 @@ GET `/v5/order/realtime`
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
+|> cumFeeDetail |json |Cumulative trading fee details instead of `cumExecFee`
 
 <a href="/api-explorer/v5/trade/open-order"><Button>RUN >></Button></a>
 
@@ -217,7 +218,10 @@ client
                 "slLimitPrice": "",
                 "placeType": "",
                 "createdTime": "1684738540559",
-                "updatedTime": "1684738540561"
+                "updatedTime": "1684738540561",
+                "cumFeeDetail": {
+                    "MNT": "0.00242968"
+                }
             }
         ],
         "nextPageCursor": "page_args%3Dfd4300ae-7847-404e-b947-b46980a4d140%26symbol%3D6%26",
