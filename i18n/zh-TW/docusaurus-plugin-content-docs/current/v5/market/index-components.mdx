@@ -1,0 +1,138 @@
+---
+
+title: 獲取指數價格組成 
+sidebar_label: 獲取指數價格組成  
+sidebar_position: 17  
+
+---
+
+### HTTP 請求  
+GET `/v5/market/index-price-components`  
+
+### 請求參數  
+| 參數 | 是否必需 | 類型 | 說明|
+|:-------------|:----------|:-------|:------------------------------|  
+| indexName    | <b>true</b> | string | 指數名稱，例如 `BTCUSDT`       |  
+
+### 響應參數
+| 參數 | 類型 | 說明| 
+|:------------------|:-------|:-------------------------------------------------------|  
+| indexName         | string | 指數名稱（例如 BTCUSDT）                              |  
+| lastPrice         | string | 指數的最新價格                                        |  
+| updateTime        | string | 最近更新的時間戳，單位為毫秒                         |  
+| components        | array  | 構成指數價格的組成部分列表                             |  
+|> exchange         | string | 交易所名稱                            |  
+|> spotPair         | string | 交易所的現貨交易對（例如 BTCUSDT）                    |  
+|> equivalentPrice  | string | 等效價格                                    |  
+|> multiplier       | string | 用於計算價格的乘數                                    |  
+|> price            | string | 實際價格                                    |  
+|> weight           | string | 指數計算中的權重                            |  
+
+---
+
+### 請求示例  
+
+<Tabs groupId="programming-languages">  
+<TabItem value="http" label="HTTP">  
+
+```http  
+GET /v5/market/index-price-components?indexName=1000BTTUSDT HTTP/1.1  
+Host: api-testnet.bybit.com  
+```  
+
+</TabItem>  
+<TabItem value="python" label="Python">  
+
+```python  
+
+```  
+
+</TabItem>  
+<TabItem value="Go" label="Go">  
+
+```go  
+
+```  
+
+</TabItem>  
+<TabItem value="java" label="Java">  
+
+```java  
+
+```  
+
+</TabItem>  
+<TabItem value="Node" label="Node.js">  
+
+```n4js  
+
+```  
+
+</TabItem>  
+</Tabs>  
+
+### 響應示例
+
+```json  
+{  
+  "retCode": 0,  
+  "retMsg": "",  
+  "result": {  
+    "indexName": "1000BTTUSDT",  
+    "lastPrice": "0.0006496",  
+    "updateTime": "1758182745072",  
+    "components": [  
+      {  
+        "exchange": "GateIO",  
+        "spotPair": "BTT_USDT",  
+        "equivalentPrice": "0.0006485",  
+        "multiplier": "1000",  
+        "price": "0.0006485",  
+        "weight": "0.1383220862762299"  
+      },  
+      {  
+        "exchange": "Bybit",  
+        "spotPair": "BTTUSDT",  
+        "equivalentPrice": "0.0006502",  
+        "multiplier": "1000",  
+        "price": "0.0006502",  
+        "weight": "0.0407528429737999"  
+      },  
+      {  
+        "exchange": "Bitget",  
+        "spotPair": "BTTUSDT",  
+        "equivalentPrice": "0.000648",  
+        "multiplier": "1000",  
+        "price": "0.000648",  
+        "weight": "0.1629044859431618"  
+      },  
+      {  
+        "exchange": "BitMart",  
+        "spotPair": "BTT_USDT",  
+        "equivalentPrice": "0.000649",  
+        "multiplier": "1000",  
+        "price": "0.000649",  
+        "weight": "0.0432327388538453"  
+      },  
+      {  
+        "exchange": "Binance",  
+        "spotPair": "BTTCUSDT",  
+        "equivalentPrice": "0.00065",  
+        "multiplier": "1000",  
+        "price": "0.00065",  
+        "weight": "0.5322401401714303"  
+      },  
+      {  
+        "exchange": "Mexc",  
+        "spotPair": "BTTUSDT",  
+        "equivalentPrice": "0.0006517",  
+        "multiplier": "1000",  
+        "price": "0.0006517",  
+        "weight": "0.0825477057815328"  
+      }  
+    ]  
+  },  
+  "retExtInfo": {},  
+  "time": 1758182745621  
+}  
+```
