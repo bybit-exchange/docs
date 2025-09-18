@@ -48,9 +48,9 @@ The first message tells you the order is executed, and the second message tells 
 |> leavesValue |string |The remaining value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |Cumulative executed trading fee. <ul><li>Classic `spot`: it is the latest execution fee for order.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li></ul> |
+|> cumExecFee |string |Deprecated. Cumulative executed trading fee. <ul><li>Classic `spot`: it is the latest execution fee for order.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li></ul> |
 |> closedPnl |string |Closed profit and loss for each close position order. The figure is the same as "closedPnl" from [Get Closed PnL](../../position/close-pnl)|
-|> feeCurrency |string |Trading fee currency for Spot only. Please understand Spot trading fee currency [here](../../enum#spot-fee-currency-instruction) |
+|> feeCurrency |string |Deprecated. Trading fee currency for Spot only. Please understand Spot trading fee currency [here](../../enum#spot-fee-currency-instruction) |
 |> [timeInForce](../../enum#timeinforce) |string |Time in force |
 |> [orderType](../../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL order, it means the order type after triggered |
 |> [stopOrderType](../../enum#stopordertype) |string |Stop order type |
@@ -78,6 +78,7 @@ The first message tells you the order is executed, and the second message tells 
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
+|> cumFeeDetail |json |Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`
 
 ### Subscribe Example
 ```json
@@ -156,7 +157,10 @@ while True:
             "smpType": "None",
             "smpGroup": 0,
             "smpOrderId": "",
-            "feeCurrency": ""
+            "feeCurrency": "",
+            "cumFeeDetail": {
+                "MNT": "0.00242968"
+            }
         }
     ]
 }
