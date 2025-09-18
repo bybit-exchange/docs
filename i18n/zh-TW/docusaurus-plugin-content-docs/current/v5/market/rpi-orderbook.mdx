@@ -1,0 +1,113 @@
+---
+title: RPI Orderbook (深度)
+sidebar_label: RPI Orderbook (深度)
+sidebar_position: 5.5
+---
+
+獲取深度數據
+> **覆蓋範圍: 現貨 / USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 **
+
+* 期貨: 最多返回50檔的數據.
+* 現貨: 最多返回50檔的數據.
+
+:::tip
+響應是當前時間的切片數據
+:::
+
+### HTTP請求
+GET `/v5/market/rpi_orderbook`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |false |string |產品類型. `spot`, `linear`, `inverse`|
+|symbol |**true** |string |合約名稱，例如“BTCUSDT”，僅限大寫|
+|limit |**true** |integer |深度限制: [1, 50]|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|s |string |合約名稱 |
+|> b |array |Bid, 買方. `snapshot`數據，是按照價格從大到小 |
+|>> b[0] |string |買方報價 |
+|>> b[1] |string |買方非RPI數量 <li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li>|
+|>> b[2] |string |買方RPI數量 <li>當買方RPI與賣方非RPI價格交叉，買方RPI數量失效隱藏</li>|
+|> a |array |Ask, 賣方. `snapshot`數據，是按照價格從小到大 |
+|>> a[0] |string |賣方報價 |
+|>> a[1] |string |賣方非RPI數量 <li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li> |
+|>> a[2] |string |賣方RPI數量 <li>當賣方RPI與買方非RPI價格交叉，賣方RPI數量失效隱藏</li>｜
+|ts |integer |行情服務生成數據的時間戳 (毫秒) |
+|u |integer |更新id, 對應[RPI 深度](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook-rpi) 中的 `u`|
+|seq |integer |撮合版本號 <li>該字段可以用於關聯不同檔位的orderbook, 如果值越小, 則說明數據生成越早</li>|
+|cts |integer |產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](../websocket/public/trade#)頻道中的`T`進行關聯|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/rpi_orderbook?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "s": "BTCUSDT",
+        "a": [
+            [
+                "116600.00",
+                "4.428",
+                "0.000"
+            ]
+        ],
+        "b": [
+            [
+                "116599.90",
+                "3.721",
+                "0.000"
+            ]
+        ],
+        "ts": 1758078286128,
+        "u": 28419362,
+        "seq": 454803359210,
+        "cts": 1758078286118
+    },
+    "retExtInfo": {},
+    "time": 1758078286162
+}
+```
