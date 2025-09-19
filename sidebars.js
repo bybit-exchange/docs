@@ -264,7 +264,7 @@ p2pSideBar: [
         },
         {
           type: 'category',
-          label: 'Websocket Stream',
+          label: 'WebSocket Stream',
           items: [
             'v5/websocket/wss-authentication',
             {
