@@ -24,7 +24,7 @@ GET `/v5/crypto-loan-fixed/borrow-contract-info`
 |:----- |:-----|----- |
 |list|array|Object|
 |> annualRate|string |借款年化利率|
-|> autoRepay|string |`"true"`: 開啟自動還款; `"false"`: 關閉自動還款|
+|> autoRepay|string |已廢棄。`"true"`: 開啟自動還款; `"false"`: 關閉自動還款|
 |> borrowCurrency|string |借款幣種|
 |> borrowTime|string |借款時間|
 |> interestPaid|string |已支付利息|
@@ -35,6 +35,7 @@ GET `/v5/crypto-loan-fixed/borrow-contract-info`
 |> residualPrincipal|string |未繳本金|
 |> status|integer |借款訂單狀態 `1`: 未償還；`2`: 已全額償還；`3`: 逾期|
 |> term|string |固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天|
+|> repayType |string |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
 |nextPageCursor |string |下一頁游標|
 
 ### 請求示例
@@ -85,6 +86,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "interestPaid": "0.002531506849315069",
                 "loanId": "571",
                 "orderId": "13007",
+                "repayType": "1",
                 "repaymentTime": "1755225756068",
                 "residualPenaltyInterest": "0",
                 "residualPrincipal": "1.4",
@@ -99,6 +101,7 @@ X-BAPI-RECV-WINDOW: 5000
                 "interestPaid": "0.00018082191780822",
                 "loanId": "570",
                 "orderId": "13007",
+                "repayType": "1",
                 "repaymentTime": "1755225696068",
                 "residualPenaltyInterest": "0",
                 "residualPrincipal": "0.1",
