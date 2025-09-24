@@ -4,16 +4,37 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2025-10-09
+### REST API
+- [創建委託單](../v5/order/create-order) [更新]
+    - 請求參數 `slippageTolerance`數值範圍調整，其中,TickSize 從 [5, 2000] 變更為 [1, 10000],Percent 從 [0.05, 1] 變更為 [0.01%, 10%]
+
 ## 2025-09-25
 ### REST API
+- [查詢分組手續費结构](../v5/market/fee-group-info) [新增]
+    - 新增分組手續費结构及相關信息接口
 - [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
     - category=`option`,`linear`,`spot` 添加新的響應字段 `symbolType`
     - `innovation` 字段廢棄, 總是返回`0`
+
+## 2025-09-24
+### REST API
+- [創建借款單](../v5/new-crypto-loan/fixed/borrow) [更新]
+    - 新增新的輸入參數 `repayType`
+- [查詢借款合同](../v5/new-crypto-loan/fixed/borrow-contract) [更新]
+    - 添加新的響應字段 `repayType`
+- [查詢個人借款訂單](../v5/new-crypto-loan/fixed/borrow-order) [更新]
+    - 添加新的響應字段 `repayType`
+- [查詢還款紀錄](../v5/new-crypto-loan/fixed/repay-history) [更新]
+    - 給`repayType`新增新的枚舉`8`（轉為活期貸款）`repayType`
 
 ## 2025-09-23
 ### REST API
 - [查詢ADL告警](../v5/market/adl-alert) [新增]
     - 新增按組劃分保險池ADL告警及相關信息接口
+
+- [指數價格組成](../v5/market/index-components) [新增]
+    - 新增接口以查詢指數價格組成 
 
 ### WebSocket API
 - [ADL告警](../v5/websocket/public/adl-alert) [新增]
@@ -21,6 +42,8 @@ import '/src/css/changelog.css';
 
 ## 2025-09-18
 ### REST API
+- [RPI Orderbook (深度)](../v5/market/rpi-orderbook) [新增]
+    - 新增接口以查詢 RPI 訂單簿
 - [查詢實時和終態委託單](../v5/order/open-order) [更新]
     - 添加新的響應字段`cumFeeDetail`以返回交易費用詳細信息替代`cumExecFee`
 - [查詢歷史訂單](../v5/order/order-list) [更新]
@@ -36,11 +59,6 @@ import '/src/css/changelog.css';
 - [訂單](../v5/spread/websocket/private/order) [更新]
     - 添加新的響應字段`cumFeeDetail`以返回交易費用詳細信息替代`cumExecFee`和`feeCurrency`
 
-## 2025-09-18
-### REST API
-- [RPI Orderbook (深度)](../v5/market/rpi-orderbook) [新增]
-    - 新增接口以查詢 RPI 訂單簿
-
 ## 2025-09-16
 ### REST API
 - [查詢錢包餘額](../v5/account/wallet-balance) [更新]
@@ -54,7 +72,6 @@ import '/src/css/changelog.css';
 ### REST API
 - [交易日誌](../v5/account/transaction-log) [更新]
     -  交易日誌type新增枚舉值 `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`, `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`
-
 
 ## 2025-09-09
 ### REST API

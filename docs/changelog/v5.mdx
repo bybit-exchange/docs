@@ -4,16 +4,37 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2025-10-09
+### REST API
+- [Place Order](../v5/order/create-order) [UPDATE]
+    - The value range of `slippageTolerance` has been adjusted, where: `TickSize` has changed from [5, 2000] to [1, 10000],`Percent` has changed from [0.05, 1] to [0.01%, 10%]
+
 ## 2025-09-25
 ### REST API
+- [Get Fee Group Structure](../v5/market/fee-group-info) [NEW]
+    - Add group fee structure and information endpoint
 - [Get Instruments Info](../v5/market/instrument) [UPDATE]
     - category=`option`,`linear`,`spot` adds a new response field `symbolType`
     - `innovation` field is deprecated, always `0`
+
+## 2025-09-24
+### REST API
+- [Create Borrow Order](../v5/new-crypto-loan/fixed/borrow) [UPDATE]
+    - Add a new input parameter `repayType`
+- [Get Borrow Contract Info](../v5/new-crypto-loan/fixed/borrow-contract) [UPDATE]
+    - Add a new response field `repayType`
+- [Get Borrow Order Info](../v5/new-crypto-loan/fixed/borrow-order) [UPDATE]
+    - Add a new response field `repayType`
+- [Get Repayment History](../v5/new-crypto-loan/fixed/repay-history) [UPDATE]
+    - Add a new enum `8`(transfer to flexible loan) for field `repayType`
 
 ## 2025-09-23
 ### REST API
 - [Get ADL Alert](../v5/market/adl-alert) [NEW]
     - Add grouped insurance pool ADL alert and information endpoint
+
+- [Get Index Price Components](../v5/market/index-components) [NEW]
+    - Add new endpoint to query index price components
 
 ### WebSocket API
 - [ADL Alert](../v5/websocket/public/adl-alert) [NEW]
@@ -21,6 +42,8 @@ import '/src/css/changelog.css';
 
 ## 2025-09-18
 ### REST API
+- [Get RPI Orderbook](../v5/market/rpi-orderbook) [NEW]
+    - Add new endpoint to query RPI orderbook
 - [Get Open & Closed Orders](../v5/order/open-order) [UPDATE]
     - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee`
 - [Get Order History](../v5/order/order-list) [UPDATE]
@@ -35,11 +58,6 @@ import '/src/css/changelog.css';
     - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee` and `feeCurrency`
 - [Order](../v5/spread/websocket/private/order) [UPDATE]
     - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee` and `feeCurrency`
-
-## 2025-09-18
-### REST API
-- [Get RPI Orderbook](../v5/market/rpi-orderbook) [NEW]
-    - Add new endpoint to query RPI orderbook
 
 ## 2025-09-16
 ### REST API
