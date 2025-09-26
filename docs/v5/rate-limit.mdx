@@ -642,7 +642,7 @@ POST `/v5/apilimit/set`
 |list |true|array |Object|
 |> uids |true|string|Multiple UIDs, separated by commas |
 |> [bizType](./enum#biztype) |true|string|Business type |
-|> limit |true|integer|api rate limit per second |
+|> rate |true|integer|api rate limit per second |
 
 #### Response Parameters
 | Parameter | Type | Comments|
@@ -650,7 +650,7 @@ POST `/v5/apilimit/set`
 |list |array |Object|
 |> uids |string|Multiple UIDs, separated by commas |
 |> [bizType](./enum#biztype) |string|Business type |
-|> limit |integer|api rate limit per second |
+|> rate |integer|api rate limit per second |
 |> success |boolean| success or not|
 |> [msg](./enum#msg) |string|result message |
 
@@ -669,7 +669,7 @@ Content-Type: application/json
         {
             "uids": "106293838",
             "bizType": "DERIVATIVES",
-            "limit": 50
+            "rate": 50
         }
     ]
 }
@@ -685,7 +685,7 @@ Content-Type: application/json
             {
                 "uids": "290118",
                 "bizType": "SPOT",
-                "limit": 600,
+                "rate": 600,
                 "success": true,
                 "msg": "API limit updated successfully"
             }
@@ -718,7 +718,7 @@ GET `/v5/apilimit/query`
 |list |array |Object|
 |> uids |string|Multiple UIDs, separated by commas |
 |> [bizType](./enum#biztype) |string|Business type |
-|> limit |integer|api rate limit per second |
+|> rate |integer|api rate limit per second |
 
 #### Request Example
 ```http
@@ -742,12 +742,12 @@ Content-Length: 2
             {
                 "uids": "290118",
                 "bizType": "SPOT",
-                "limit": 600
+                "rate": 600
             },
             {
                 "uids": "290118",
                 "bizType": "DERIVATIVES",
-                "limit": 400
+                "rate": 400
             }
         ]
     },
@@ -756,3 +756,138 @@ Content-Length: 2
 }
 ```
 
+### Query api rate limit usage and cap
+> API rate limit: 50 req per second<br/>
+
+:::info
+* Query ins level full picture rate limit usage and cap
+* Only queries from one of the main UIDs or a subaccount UID from sub-INS API key are allowed.
+:::
+
+#### HTTP Request
+GET `/v5/apilimit/query-cap`
+
+#### Request Parameters
+None
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object|
+|> [bizType](./enum#biztype) |string|Business type |
+|> totalRate |integer|Total api rate limit usage accross all subaccounts and master account |
+|> insCap |integer|Ins level api rate limit per second,depends on your ins level |
+|> uidCap |integer|Uid level api rate limit per second,depends on your uid level|
+
+#### Request Example
+```http
+GET /v5/apilimit/query-cap HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### Response Example
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "SPOT"
+            },
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "OPTIONS"
+            },
+            {
+                "insCap": "40000",
+                "uidCap": "800",
+                "totalRate": "39932",
+                "bizType": "DERIVATIVES"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1758857589872
+}
+```
+
+### Query all api rate limit
+> API rate limit: 50 req per second<br/>
+
+:::info
+* Query all of uid level rate limits including all master account and subaccounts
+* Only queries from one of the main UIDs or a subaccount UID from sub-INS API key are allowed.
+:::
+
+#### HTTP Request
+GET `/v5/apilimit/query-all`
+
+#### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|limit |false |string |Limit for data size per page. [`1`, `1000`]. Default: `1000`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+|uids |false|string|Multiple UIDs accross different master account, separated by commas. Returns all master accounts and subaccounts ratelimit by default|
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextPageCursor |string |Used to get the next page data|
+|list |array |Object|
+|> uids |string|Multiple UIDs , separated by commas.|
+|> [bizType](./enum#biztype) |string|Business type |
+|> rate |integer|Api rate limit per second |
+
+#### Request Example
+```http
+GET /v5/apilimit/query-all HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### Response Example
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "uids": "104270393,1674166,1190923,101446030",
+                "bizType": "SPOT",
+                "rate": 223
+            },
+            {
+                "uids": "104074050,104394193,104126066",
+                "bizType": "OPTIONS",
+                "rate": 223
+            },
+            {
+                "uids": "104154966,103803484,103995540,100445068",
+                "bizType": "DERIVATIVES",
+                "rate": 298
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1758857701702
+}
+```
