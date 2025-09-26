@@ -627,7 +627,7 @@ POST `/v5/apilimit/set`
 |list |true|array |Object|
 |> uids |true|string|uid列表，多個以逗號隔開 |
 |> [bizType](./enum#biztype) |true|string|業務類型 |
-|> limit |true|integer|api rate limit 每秒頻率 |
+|> rate |true|integer|api rate limit 每秒頻率 |
 
 #### 響應參數
 | 參數 | 類型 | 說明|
@@ -635,7 +635,7 @@ POST `/v5/apilimit/set`
 |list |array |Object|
 |> uids |string|uid列表，多個以逗號隔開 |
 |> [bizType](./enum#biztype) |string|業務類型 |
-|> limit |integer|api rate limit 每秒頻率 |
+|> rate |integer|api rate limit 每秒頻率 |
 |> success |boolean| 是否成功|
 |> [msg](./enum#msg) |string| 結果訊息 |
 
@@ -654,7 +654,7 @@ Content-Type: application/json
         {
             "uids": "106293838",
             "bizType": "DERIVATIVES",
-            "limit": 50
+            "rate": 50
         }
     ]
 }
@@ -670,7 +670,7 @@ Content-Type: application/json
             {
                 "uids": "290118",
                 "bizType": "SPOT",
-                "limit": 600,
+                "rate": 600,
                 "success": true,
                 "msg": "API limit updated successfully"
             }
@@ -703,7 +703,7 @@ GET `/v5/apilimit/query`
 |list |array |Object|
 |> uids |string|uid列表，多個以逗號隔開 |
 |> [bizType](./enum#biztype) |string|業務類型 |
-|> limit |integer|api rate limit 每秒頻率 |
+|> rate |integer|api rate limit 每秒頻率 |
 
 #### 響應參數
 ```http
@@ -727,12 +727,12 @@ Content-Length: 2
             {
                 "uids": "290118",
                 "bizType": "SPOT",
-                "limit": 600
+                "rate": 600
             },
             {
                 "uids": "290118",
                 "bizType": "DERIVATIVES",
-                "limit": 400
+                "rate": 400
             }
         ]
     },
@@ -740,4 +740,141 @@ Content-Length: 2
     "time": 1754894341984
 }
 ```
+### 查詢 Ins level的速率限制上限和使用量
+> API 限速：每秒 50 次請求<br/>
 
+:::info
+* 查詢 Ins 等級的速率限制上限和使用量
+* 僅允許透過main UID或來自sub-INS的子帳戶 UID 的API key進行查詢
+:::
+
+#### HTTP 請求
+GET `/v5/apilimit/query-cap`
+
+#### 請求參數
+無
+
+#### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list |array |Object|
+|> [bizType](./enum#biztype) |string|業務類型 |
+|> totalRate |integer|所有子帳號與主帳號的 API 速率限制總使用量 |
+|> insCap |integer|基於 Ins 等級的每秒 API 限速 |
+|> uidCap |integer|基於 UID 等級的每秒 API 限速 |
+
+#### 請求範例
+```http
+GET /v5/apilimit/query-cap HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### 響應範例
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "SPOT"
+            },
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "OPTIONS"
+            },
+            {
+                "insCap": "40000",
+                "uidCap": "800",
+                "totalRate": "39932",
+                "bizType": "DERIVATIVES"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1758857589872
+}
+```
+
+---
+
+### 查詢所有 API 限速
+> API 限速：每秒 50 次請求<br/>
+
+:::info
+* 查詢所有 UID 等級的限速，包括主帳戶及所有子帳戶。
+* 僅允許透過main UID或來自sub-INS API key的子帳戶 UID 進行查詢
+:::
+
+#### HTTP 請求
+GET `/v5/apilimit/query-all`
+
+#### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|limit |false |string |每頁資料大小限制。[`1`, `1000`]。預設值：`1000`|
+|cursor |false |string |游標。使用回應中的 `nextPageCursor` 令牌以取得下一頁結果集|
+|uids |false|string|跨主帳戶的多個 UID，以逗號分隔。預設返回所有主帳戶及子帳戶的限速|
+
+#### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|nextPageCursor |string |用於取得下一頁資料|
+|list |array |Object|
+|> uids |string|多個 UID，以逗號分隔。|
+|> [bizType](./enum#biztype) |string|業務類型 |
+|> rate |integer|每秒 API 限速 |
+
+#### 請求範例
+```http
+GET /v5/apilimit/query-all HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### 響應範例
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "uids": "104270393,1674166,1190923,101446030",
+                "bizType": "SPOT",
+                "rate": 223
+            },
+            {
+                "uids": "104074050,104394193,104126066",
+                "bizType": "OPTIONS",
+                "rate": 223
+            },
+            {
+                "uids": "104154966,103803484,103995540,100445068",
+                "bizType": "DERIVATIVES",
+                "rate": 298
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1758857701702
+}
+
+```
