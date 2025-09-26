@@ -32,14 +32,15 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
 |> leavesValue|string |The estimated value not executed |
 |> cumExecQty|string |Cumulative executed order qty |
 |> cumExecValue|string |Cumulative executed order value |
-|> cumExecFee|string |Cumulative executed trading fee |
+|> cumExecFee|string |Deprecated. Cumulative executed trading fee |
 |> orderType|string |Order type. `Market`,`Limit` |
 |> isLeverage |string |Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.|
 |> createdTime|string |Order created timestamp (ms) |
 |> updatedTime|string |Order updated timestamp (ms) |
-|> feeCurrency|string |Trading fee currency for Spot leg only |
+|> feeCurrency|string |Deprecated. Trading fee currency for Spot leg only |
 |> createType|string |Order create type |
 |> closedPnl|string |Closed profit and loss for each close position order |
+|> cumFeeDetail |json |Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`
 
 ### Subscribe Example
 ```json
@@ -84,7 +85,10 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
             "updatedTime": "1744170555905",
             "feeCurrency": "",
             "createType": "CreateByUser",
-            "closedPnl": ""
+            "closedPnl": "",
+            "cumFeeDetail": {
+                "MNT": "0.00242968"
+            }
         },
         {
             "category": "future_leg",
@@ -111,7 +115,10 @@ Subscribe to the order stream to see changes to your orders in **real-time**.
             "updatedTime": "1744170555910",
             "feeCurrency": "",
             "createType": "CreateByFutureSpread",
-            "closedPnl": "0"
+            "closedPnl": "0",
+            "cumFeeDetail": {
+                "MNT": "0.00242968"
+            }
         }
     ]
 }

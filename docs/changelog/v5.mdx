@@ -4,19 +4,69 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2025-10-09
+### REST API
+- [Place Order](../v5/order/create-order) [UPDATE]
+    - The value range of `slippageTolerance` has been adjusted, where: `TickSize` has changed from [5, 2000] to [1, 10000],`Percent` has changed from [0.05, 1] to [0.01%, 10%]
+
+## 2025-09-29
+### REST API
+- [RFQ Open API](../v5/rfq/basic-workflow) [NEW]
+    - We have launched a new RFQ feature, please refer to the [link](../v5/rfq/basic-workflow) for details .
+
+## 2025-09-25
+### REST API
+- [Get Fee Group Structure](../v5/market/fee-group-info) [NEW]
+- [Get Instruments Info](../v5/market/instrument) [UPDATE]
+    - category=`option`,`linear`,`spot` adds a new response field `symbolType`
+    - `innovation` field is deprecated, always `0`
+
+## 2025-09-24
+### REST API
+- [Create Borrow Order](../v5/new-crypto-loan/fixed/borrow) [UPDATE]
+    - Add a new input parameter `repayType`
+- [Get Borrow Contract Info](../v5/new-crypto-loan/fixed/borrow-contract) [UPDATE]
+    - Add a new response field `repayType`
+- [Get Borrow Order Info](../v5/new-crypto-loan/fixed/borrow-order) [UPDATE]
+    - Add a new response field `repayType`
+- [Get Repayment History](../v5/new-crypto-loan/fixed/repay-history) [UPDATE]
+    - Add a new enum `8`(transfer to flexible loan) for field `repayType`
+
 ## 2025-09-23
 ### REST API
 - [Get ADL Alert](../v5/market/adl-alert) [NEW]
-    - Add grouped insurance pool ADL alert and information endpoint
+- [Get Index Price Components](../v5/market/index-components) [NEW]
 
 ### WebSocket API
 - [ADL Alert](../v5/websocket/public/adl-alert) [NEW]
     - Add new topic to push grouped insurance pool ADL alert and information
 
-## 2025-09-19
+## 2025-09-18
 ### REST API
-- [RFQ Open API](../v5/rfq/basic-workflow) [NEW]
-    - We have launched a new RFQ feature, please refer to the [link](../v5/rfq/basic-workflow) for details .
+- [Get RPI Orderbook](../v5/market/rpi-orderbook) [NEW]
+- [Get Open & Closed Orders](../v5/order/open-order) [UPDATE]
+    - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee`
+- [Get Order History](../v5/order/order-list) [UPDATE]
+    - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee`
+- [Get Trade History](../v5/order/execution) [UPDATE]
+    - Response field `feeCurrency` supports derivatives trading
+
+### WebSocket API
+- [Execution](../v5/websocket/private/execution) [UPDATE]
+    - Add `feeCurrency` to return trading fee currency
+- [Order](../v5/websocket/private/order) [UPDATE]
+    - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee` and `feeCurrency`
+- [Order](../v5/spread/websocket/private/order) [UPDATE]
+    - Add a new response field `cumFeeDetail` to return trading fee details instead of `cumExecFee` and `feeCurrency`
+
+## 2025-09-16
+### REST API
+- [Get Wallet Balance](../v5/account/wallet-balance) [UPDATE]
+    - Add new response fields: `spotBorrow`
+
+### WebSocket API
+- [Wallet](../v5/websocket/private/wallet) [UPDATE]
+    - Add new response fields: `spotBorrow`
 
 ## 2025-09-15
 ### REST API
@@ -81,7 +131,7 @@ import '/src/css/changelog.css';
 ## 2025-08-06
 ### REST API
 - [Withdraw](../v5/asset/withdraw) [UPDATE]
-    - Request parameter `accountType` becomes mandatory, and supports withdrawing from mutiple wallets.
+    - Request parameter `accountType` becomes mandatory, and supports withdrawing from multiple wallets.
 
 - [Get Delay Withdraw Amount](../v5/asset/balance/delay-amount)
     - Support returning UTA wallet balance
@@ -90,11 +140,11 @@ import '/src/css/changelog.css';
 ### Websocket API
 - [Trade](../v5/websocket/public/trade) [UPDATE]
     - Add `seq`
-    - Futures and Spot public trade message will be splited into mutiple when it exceeds 1024 trades
+    - Futures and Spot public trade message will be split into multiple messages when it exceeds 1024 trades
 
 - [Trade](../v5/spread/websocket/public/trade) [UPDATE]
     - Add `seq` in spread trading
-    - Futures and Spot public trade message will be splited into mutiple when it exceeds 1024 trades
+    - Futures and Spot public trade message will be split into multiple messages when it exceeds 1024 trades
 
 ## 2025-07-31
 ### REST API
@@ -390,7 +440,7 @@ import '/src/css/changelog.css';
     - A new endpoint introduced to get tiered collateral ratio in UTA loan
 - [Get Unified Wallet Transferable Amount](../v5/account/unified-trans-amnt) [UPDATE]
     - `coinName` supports query up to 20 coins per request
-    - Add new response field `availableWithdrawalMap` to support mutiple coins
+    - Add new response field `availableWithdrawalMap` to support multiple coins
 - [Get Historical Volatility](../v5/market/iv) [UPDATE]
     - Add new request parameter `quoteCoin`, the input value can be "USD" or "USDT"
 - [Place Order](../v5/order/create-order) [Spot]
