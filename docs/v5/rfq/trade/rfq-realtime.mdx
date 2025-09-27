@@ -1,0 +1,88 @@
+---
+title: Get Rfq Realtime Info
+sidebar_label: Get Rfq Realtime Info
+sidebar_position: 9
+---
+Obtain real-time inquiry information. **Up to 50 requests per second ** 
+:::info
+<li>Obtain the inquiry information sent or received by the user, query from rfq-engine without delay</li><li> Pass both rfqId and rfqLinkId, rfqId shall prevail</li><li>Sort in reverse order according to the creation time of rfq and return it.</li>
+:::
+
+
+### HTTP Request
+GET `/v5/rfq/rfq-realtime`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |**false** |string|Inquiry ID|
+|rfqLinkId |**false** |string|Inquiry custom ID, traderType is quote, this field is invalid|
+|traderType |**false**  |string |Trader type, `quote` , `request` , default `request`<li>`Request` : Inquirer, to inquire about the inquiry they have issued</li><li>`Quote` : Quoters, check the inquiry they have received</li>|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |Array |the array of rfq|
+|> rfqId |string |Inquiry ID|
+|> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
+|>counterparties |Array of srings |List of bidders |
+|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
+|> strategyType |string |Inquiry label |
+|> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
+|> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
+|> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
+|> legs |Array of objects |Combination transaction |
+|>> category |string |category. Valid values include: "linear", "option" and "spot" |
+|>> symbol |string |The unique instrument ID|
+|>> side |string |Inquiry direction: Valid values are `Buy` and `Sell` . |
+|>> qty |string |Order quantity of the instrument. |
+
+### Request Example
+
+```http
+GET /v5/rfq/rfq-realtime HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "rfqLinkId": "",
+                "rfqId": "1756885055799241492396882271696580",
+                "counterparties": [
+                    "hashwave2"
+                ],
+                "strategyType": "custom",
+                "expiresAt": "1756885655801",
+                "status": "Active",
+                "deskCode": "1nu9d1",
+                "createdAt": "1756885055801",
+                "updatedAt": "1756885055801",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "qty": "1"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756885059062
+}
+```
