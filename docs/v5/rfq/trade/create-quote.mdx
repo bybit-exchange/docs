@@ -3,10 +3,13 @@ title: Create Quote
 sidebar_label: Create Quote
 sidebar_position: 5
 ---
-Create Quote. **Up to 50 requests** per second.
-Allow the quotation party specified in the inquiry form to quote, and the quotation for the entire inquiry form is required.
+Create a quote. **Up to 50 requests** per second. The quoting party sends a quote in response to the inquirier.
+
 :::info
-<li>Only support uta2.0 accounts</li><li>Cannot submit your own inquiry</li><li>One request reports in two directions</li><li> Pass at least one quoteBuyList and quoteSellList</li>
+- Only support UTA2.0 accounts
+- Cannot quote for your own inquiry
+- One request reports in two directions
+- You must pass at least one quoteBuyList and quoteSellList
 :::
 
 ### HTTP Request
@@ -16,26 +19,26 @@ POST `/v5/rfq/create-quote`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |rfqId |**true** |string |Inquiry ID|
-|quoteLinkId |false |string |Quotation custom ID: <li>The length should be between 1-32 bits </li> <li>The combination of letters (case sensitive) and numbers can be pure letters or pure numbers </li> <li>Specify quoteLinkId to only check the last 3 months </li><li>Non-terminal states can only guarantee the uniqueness of idempotence within 24 hours, while terminal states do not guarantee uniqueness </li>|
-|anonymous |false |boolean |Whether it is anonymous inquiry, `true` means anonymous inquiry, `false` means public inquiry, the default value is `false` , when it is `true` , even after the transaction execution, the identity will not be revealed to the quoting party.|
-|expireIn |false |integer |The effective duration of the quotation (in seconds), any integer between 10 and 120, the default value is 60|
-|quoteBuyList |false |array of objects |Bid direction, quotation `Buy` direction, for maker (quotation party), the execution direction is the same as the direction in legs, for taker (inquiry party) it is opposite|
-|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
-|> symbol |true |string |Name of the trading contract |
-|> price |true |string |Quote price |
-|quoteSellList |false |array of objects |Ask direction, `Sell` direction in the quotation, for maker (quotation party), the execution direction is opposite to the direction in legs, and the same for taker (inquiry party)|
-|> category |true |string |Product type：Unified account:  `spot`, `linear`,`option` |
-|> symbol |true |string |Name of the trading contract |
-|> price |true |string |Quote price |
+|quoteLinkId |false |string |Custom quote ID: <li>The length should be between 1-32 bits </li> <li>Combination of letters (case sensitive) and numbers</li> <li>An rfqLinkId expires after three months – after which it can be reused</li><li>Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. </li>|
+|anonymous |false |boolean |Whether or not it is anonymous quote. The default value is `false`. When it is `true` the identity of the quoting party will not be revealed even after the transaction is concluded.|
+|expireIn |false |integer |Duration of the quote (in secs). [`10`, `120`]. Default: `60`|
+|quoteBuyList |false |array of objects |Quote direction <li>In the `Buy` direction, for the maker (the quoting party), the execution direction is the same as the direction of the legs</li><li>For the taker (the inquiring party) it is opposite direction</li>|
+|> category |**true** |string |Product type: Unified account:  `spot`, `linear`,`option` |
+|> symbol |**true** |string |Name of the trading contract |
+|> price |**true** |string |Quote price |
+|quoteSellList |false |array of objects |Ask direction <li>In the `Sell` direction, for the maker (the quoting party), the execution direction is opposite to the direction of the legs</li><li>For the taker (the inquiring party) it is the same direction</li>|
+|> category |**true** |string |Product type: Unified account:  `spot`, `linear`,`option` |
+|> symbol |**true** |string |Name of the trading contract |
+|> price |**true** |string |Quote price |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |object ||
 |> rfqId |string |Inquiry ID |
-|> quoteId |string |Quotation ID |
-|> quoteLinkId |string |Quotation Custom ID |
-|> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
+|> quoteId |string |Quote ID |
+|> quoteLinkId |string |Custom quote ID |
+|> expiresAt |string |The quote's expiration time (ms) |
 |> deskCode |string |Quoter's unique identification code |
 |> status |string |Status of quotation: `Active` `Canceled` `Filled` `Expired` `Failed` |
 

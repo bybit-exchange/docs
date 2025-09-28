@@ -5,7 +5,7 @@ sidebar_position: 2
 ---
 RFQ Config. **Up to 50 requests** per second.
 :::info
-Query the information of the quoting party that can participate in the transaction and your own deskCode and other configuration information
+Query for information on the quoting party that can participate in your transaction, your own deskCode and other configuration information.
 :::
 
 ### HTTP Request
@@ -19,20 +19,20 @@ None
 |:----- |:-----|----- |
 |result |array |Order ID |
 |list |Object ||
-|> deskCode |string |Own deskCode, unique identification code |
+|> deskCode |string |Your deskCode, a unique identification code |
 |> maxLegs |integer |Maximum number of legs |
-|> maxLP |integer |The maximum number of LPs selected in the inquiry form |
+|> maxLP |integer |The maximum number of LPs (liquidity providers) selected in the inquiry |
 |> maxActiveRfq |integer |The maximum number of unfinished inquiry orders allowed by a user |
-|> rfqExpireTime |integer |Inquiry expiration time, minutes |
-|> minLimitQtySpotOrder |integer |Spot minimum order quantity multiplier |
-|>minLimitQtyContractOrder |integer |Contract minimum order quantity multiplier |
-|> minLimitQtyOptionOrder |integer |Option minimum order multiplier |
+|> rfqExpireTime |integer |Inquiry expiration time (mins) |
+|> minLimitQtySpotOrder |integer |Spot minimum order quantity |
+|>minLimitQtyContractOrder |integer |Contract minimum order quantity |
+|> minLimitQtyOptionOrder |integer |Option minimum order |
 |> strategyTypes |array |Product strategy |
-|>> strategyName |string |Policy name |
-|> strategyTypes |array |Information on the bidder who can participate in the transaction |
-|>> traderName |string |Name of the bidder |
-|>> deskCode |string |The unique identification code of the quotation party is publicly visible; the relevant interfaces of quotation and inquiry use this code to represent the quotation party |
-|>> type |string |Quoter type. `LP` is an automated market maker connected via API, null means a normal quote party |
+|>> strategyName |string |Strategy name |
+|> counterparties |array |Information on the quoters who can participate in the transaction |
+|>> traderName |string |Name of the quoter|
+|>> deskCode |string |The unique identification code of the quoting party |
+|>> type |string |Quoter type. `LP` is an automated market maker connected via API, null means a normal quoting party |
 
 ### Request Example
 

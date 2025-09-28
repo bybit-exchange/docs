@@ -3,9 +3,11 @@ title: Cancel All RFQs
 sidebar_label: Cancel All RFQs
 sidebar_position: 4
 ---
-Cancel all your inquiry. **Up to 50 requests per second ** 
+Cancel all active RFQs. **Up to 50 requests per second ** 
+
 :::info
-<li>Inquirer cancels order:Cancel the inquiry form, all quotations are invalid</li><li> Quoter cancels the order:The inquiry form is not affected, and the quotation form is invalid</li>
+- Inquirer cancels order: Cancel the inquiry, all its corresponding quotes becoming invalid
+- Quoter cancels the order: The inquiry is not affected, but the quote becomes invalid
 :::
 
 ### HTTP Request
@@ -17,12 +19,11 @@ None
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|result |object ||
-|> data |Array of object |Inquiry ID |
-|>> rfqId |string |Inquiry ID |
-|>> rfqLinkId |string |Inquiry Custom ID |
-|>> code |string |Cancel success or failure, 0 cancel success |
-|>> msg |string |Cancellation failure reason |
+|result|array of objects ||
+|> rfqId |string |Inquiry ID |
+|> rfqLinkId |string |Custom inquiry ID |
+|> code |string |Whether or not the cancellations were a success, `0`: success |
+|> msg |string |Cancellation failure reason |
 
 ### Request Example
 

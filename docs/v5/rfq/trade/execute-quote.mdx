@@ -3,9 +3,9 @@ title: Execute Quote
 sidebar_label: Execute Quote
 sidebar_position: 5
 ---
-Execute quotes, only for the creator of the inquiry form. **Up to 50 requests** per second.
+Execute quote – only for the creator of the RFQ. **Up to 50 requests** per second.
 :::info
-<li>Successful execution, but has sent matching, does not mean that the order has been completed, the user needs to query the interface or listen toipic: rfq.open /v5/rfq/trade-list to get the execution result</li>
+This endpoint is asynchronous. You must check the <a href="/docs/v5/rfq/trade/trade-list">Get Trade History</a> endpoint or listen to the <a href="/docs/v5/rfq/websocket/private/transaction">Execution</a> WebSocket topic to confirm if the execution was successful.
 :::
 
 ### HTTP Request
@@ -15,8 +15,8 @@ POST `/v5/rfq/execute-quote`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |rfqId |**true** |string |Inquiry ID|
-|quoteId |**true** |string |Quotation ID|
-|quoteSide |**true** |string |The direction of the quotation is `Buy` or `Sell` . When the direction of the quotation is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies|
+|quoteId |**true** |string |Quote ID|
+|quoteSide |**true** |string |The direction of the quote is `Buy` or `Sell` . When the direction of the quote is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -24,8 +24,8 @@ POST `/v5/rfq/execute-quote`
 |result |object ||
 |> rfqId |string |Inquiry ID |
 |>rfqLinkId |string ||
-|> quoteId |string |Quotation ID |
-|> status |string |Order status: <li>`PendingFill`:Matching has been sent, pending execution, and the execution result needs to be obtained through query /v5/rfq/trade-list or listening rfq.open</li><li>`Failed`:verification failed</li> |
+|> quoteId |string |Quote ID |
+|> status |string |Order status: <li>`PendingFill`: Order has been sent to the matching engine but not yet filled.</li><li>`Failed`: Order failed</li> |
 
 ### Request Example
 

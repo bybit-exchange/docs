@@ -1,9 +1,9 @@
 ---
-title: Inquiry Channel
-sidebar_label: Inquiry Channel
+title: RFQ
+sidebar_label: RFQ
 sidebar_position: 2
 ---
-Obtain the inquiry information sent or received by the user themselves. Whenever the user sends or receives an inquiry themselves, the data will be pushed.
+Obtain the inquiries (requests for quotes) information sent or received by the user themselves. Whenever the user sends or receives an inquiry themselves, the data will be pushed.
 
 **Topic:** `rfq.open.rfqs`
 
@@ -13,17 +13,17 @@ Obtain the inquiry information sent or received by the user themselves. Whenever
 |id |string |Message ID|
 | topic             | string              | Topic name                                                                                                                             |
 | creationTime      | int                 | Data created timestamp (ms)                                                                                                             |
-| data              | array&lt;object&gt; | RFQ data: Return and obtain real-time inquiry information Open consistent                                                              |
+| data              | array of objects | RFQ data: Return and obtain real-time inquiry information Open consistent                                                              |
 | > rfqId           | string              | Inquiry ID                                                                                                                            |
-| > rfqLinkId       | string              | Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "" to the quoting party.               |
+| > rfqLinkId       | string              | The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created               |
 | >counterparties  | Array of strings    | List of bidders                                                                                                                       |
-| > expiresAt       | string              | The expiration time of the inquiry form, in milliseconds format of Unix timestamp                                                     |
+| > expiresAt       | string              | The quote's expiration time (ms)                                                     |
 | > strategyType    | string              | Inquiry label                                                                                                                         |
 | > status          | string              | Status of the inquiry form: `Active`, `Canceled`, `PendingFill`, `Filled`, `Expired`, `Failed`                                              |
-| > deskCode        | string              | The unique identification code of the inquiry party, which is not visible when anonymous is set to true during inquiry                |
-| > createdAt       | string              | Time(ms) when the trade is created in epoch, such as 1650380963                                                                        |
-| > updatedAt       | string              | Time(ms) when the trade is updated in epoch, such as 1650380964                                                                        |
-| > legs            | Array of objects    | Combination transaction                                                                                                               |
+| > deskCode        | string              | The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created                |
+| > createdAt       | string              | Time (ms) when the trade is created in epoch, such as 1650380963                                                                        |
+| > updatedAt       | string              | Time (ms) when the trade is updated in epoch, such as 1650380964                                                                        |
+| > legs            | array of objects    | Combination transaction                                                                                                               |
 | >> category       | string              | Category. Valid values include: `linear`, `option` and `spot`                                                                         |
 | >> symbol         | string              | symbol name                                                                                                              |
 | >> side           | string              | Inquiry direction. Valid values are `buy` and `sell`                                                                                      |
