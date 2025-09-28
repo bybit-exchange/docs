@@ -5,7 +5,7 @@ sidebar_position: 13
 ---
 Obtain transaction information. **Up to 50 requests per second ** 
 :::info
-<li>Field query priority: rfqId > rfqLinkId  quoteId > quoteLinkId</li>
+- Field query priority: rfqId > rfqLinkId  quoteId > quoteLinkId
 :::
 
 
@@ -15,33 +15,33 @@ GET `/v5/rfq/trade-list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|rfqLinkId |**false**  |string |Custom ID for inquiry form; specify rfqLinkId to only check the last 3 months|
-|quoteId |**false** |string|Quotation ID|
-|quoteLinkId |**false**  |string |Quotation custom ID; specifying quoteLinkId can only check the last 3 months|
-|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, inquire about the successful transaction of their own inquiry </li><li>`Quote` : Quoters, check their own quotes for successful transactions</li>|
-|status |string |Status : `Filled` `Failed` |
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|rfqId |false |string|Inquiry ID|
+|rfqLinkId |false  |string |Custom ID for RFQ; specify rfqLinkId to only check the last 3 months|
+|quoteId |false |string|Quote ID|
+|quoteLinkId |false  |string |quote custom ID; specifying quoteLinkId can only check the last 3 months|
+|traderType |false  |string |Trader type, `quote` , `request` , default `quote`|
+|status |false |string |Status : `Filled` `Failed` |
+|limit |false |integer|Return the number of items. [`1`, `100`]. Default: `50`|
+|cursor |false |string|Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of rfq|
+|> cursor |string |Refer to the `cursor` request parameter|
+|> list |array |An array of RFQs|
 |>> rfqId |string |Inquiry ID|
-|>> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
-|>> quoteId |string |Return the completed inquiry form and the executed quotation id.|
-|>> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
-|>> quoteSide |string |Return of completed inquiry, execution of quotation direction, `Buy` or `Sell`|
+|>> rfqLinkId |string |Custom RFQ ID. Not publicly disclosed. |
+|>> quoteId |string |Return the completed RFQ and the executed quote id.|
+|>> quoteLinkId |string |Custom quote ID. Not publicly disclosed. |
+|>> quoteSide |string |Return of completed inquiry, execution of quote direction, `Buy` or `Sell`|
 |>> strategyType |string |Inquiry label|
 |>>status |string |Status : `Filled` `Failed`|
-|>> rfqDeskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
-|>> quoteDeskCode |string |The unique identification code of the quotation party, which is not visible when anonymous is set to `true` during quotation |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> legs |Array of objects |Combination transaction |
+|>> rfqDeskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created |
+|>> quoteDeskCode |string |The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation |
+|>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
+|>> legs |array of objects |Combination transaction |
 |>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
 |>>> orderId |string |bybit order id |
 |>>> symbol |string |The unique instrument ID|

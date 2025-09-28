@@ -4,8 +4,10 @@ sidebar_label: Cancel RFQ
 sidebar_position: 3
 ---
 Cancel RFQ. **Up to 50 requests per second ** 
+
 :::info
-<li>Pass at least one rfqId and rfqLinkId.</li><li> If both rfqId and rfqLinkId are passed in, rfqId shall prevail.</li>
+- You must pass either rfqId or rfqLinkId.
+- If both rfqId and rfqLinkId are passed, only rfqId is considered.
 :::
 
 ### HTTP Request
@@ -14,15 +16,14 @@ POST `/v5/rfq/cancel-rfq`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|rfqLinkId |**false**  |string |Inquiry Custom ID|
+|rfqId |*false* |string|Inquiry ID|
+|rfqLinkId |*false*  |string |Custom inquiry ID|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|result |object ||
-|> rfqId |string |Inquiry ID |
-|> rfqLinkId |string |Inquiry Custom ID |
+|rfqId |string |Inquiry ID |
+|rfqLinkId |string |Custom inquiry ID |
 
 ### Request Example
 

@@ -13,22 +13,22 @@ GET `/v5/rfq/public-trades`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|startTime |**false** |integer|The timestamp (milliseconds), `startTime` and `endTime` of the order transaction are 7 days|
-|endTime |**false** |integer|The closing timestamp (milliseconds), `startTime` and `endTime` of the order are 7 days|
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|startTime |false |integer|The timestamp (ms), `startTime` and `endTime` of the order transaction are 7 days|
+|endTime |false |integer|The closing timestamp (ms), `startTime` and `endTime` of the order are 7 days|
+|limit |false |integer|Return the number of items. [`1`, `100`]. Default: `50`|
+|cursor |false |string|Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of rfq|
+|> cursor |string |Refer to the `cursor` request parameter|
+|> list |array |An array of RFQs|
 |>> rfqId |string |Inquiry ID|
 |>> strategyType |string |Policy type |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> legs |Array of objects |Combination transaction |
+|>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
+|>> legs |array of objects |Combination transaction |
 |>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
 |>>> symbol |string |The unique instrument ID|
 |>>> side |string |Direction, valid values are `Buy` and `Sell`|

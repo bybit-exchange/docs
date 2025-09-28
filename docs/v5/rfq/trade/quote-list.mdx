@@ -3,9 +3,12 @@ title: Get Quotes
 sidebar_label: Get Quotes
 sidebar_position: 12
 ---
-Obtain historical quotation information. **Up to 50 requests per second ** 
+Obtain historical quote information. **Up to 50 requests per second ** 
 :::info
-<li>Obtain quotation information sent or received by the user, query from the database, there is a delay</li><li>Pass quoteId and quoteLinkId, quoteId shall prevail</li><li>Pass both rfqId and rfqLinkId, rfqId shall prevail</li><li>Sort in reverse order according to the creation time of the quotation</li>
+- Obtain historical quotes. This data is not real-time. Please see Get RFQs (real-time).
+- If both quoteId and quoteLinkId are passed, only both is considered.
+- If both rfqId and rfqLinkId are passed, only rfqId is considered.
+- Sorted in descending order by createdAt.
 :::
 
 
@@ -15,36 +18,36 @@ GET `/v5/rfq/quote-list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|rfqId |**false** |string|Inquiry ID|
-|quoteId |**false** |string|Quotation ID|
-|quoteLinkId |**false**  |string |Quotation custom ID, traderType is `request` , this field is invalid|
-|traderType |**false**  |string |Trader type, `quote` , `request` , default `quote`<li>`Request` : Inquirer, check the quotation received by oneself</li><li>`Quote` : Quoters, check their own published quotations</li>|
-|status |string |Status of the inquiry form:`Active` `Canceled` `PendingFill` `Filled` `Expired` `Failed` |
-|limit |**false** |integer|Return the number of items, maximum 100 items, default 50 items|
-|cursor |**false** |string|For page turning mark, please use the returned cursor, use the returned original data when signing, and carry out URLEncode when sending request|
+|rfqId |*false* |string|Inquiry ID|
+|quoteId |*false* |string|Quote ID|
+|quoteLinkId |*false*  |string |Custom quote ID. If traderType is `request` this field is invalid|
+|traderType |false  |string |Trader type, `quote` , `request`. Default: `quote`|
+|status |false |string |Status of the RFQ: `Active` `Canceled` `PendingFill` `Filled` `Expired` `Failed` |
+|limit |false |integer|Return the number of items. [`1`, `100`]. Default: `50`|
+|cursor |false |string|Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |Object ||
-|> cursor |string |page turning mark|
-|> list |Array |the array of quote|
+|> cursor |string |Refer to the `cursor` request parameter|
+|> list |array |An array of quotes|
 |>> rfqId |string |Inquiry ID|
-|>> rfqLinkId |string |Custom ID for inquiry form, sensitive information for customers, will not be disclosed, return "to the quoting party. |
-|>> quoteId |string |Quotation ID|
-|>> quoteLinkId |string |Quotation custom ID, sensitive information for customers, will not be disclosed, return "to the inquiring party. |
-|>> expiresAt |string |The expiration time of the inquiry form, in milliseconds format of Unix timestamp |
-|>> deskCode |string |The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry |
-|>> status |string |Status of the inquiry form:`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|>> rfqLinkId |string |Custom RFQ ID. Not publicly disclosed. |
+|>> quoteId |string |Quote ID|
+|>> quoteLinkId |string |Custom quote ID. Not publicly disclosed. |
+|>> expiresAt |string |The quote's expiration time (ms) |
+|>> deskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the quote was created|
+|>> status |string |Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
 |>> execQuoteSide |string |Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
-|>> createdAt |string |Time(ms) when the trade is created in epoch, such as 1650380963 |
-|>> updatedAt |string |Time(ms) when the trade is updated in epoch, such as 1650380964 |
-|>> quoteBuyList |array of objects |Quotation `Buy` Direction |
+|>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
+|>> quoteBuyList |array of objects |Quote `Buy` Direction |
 |>>> category |string |Product type: `spot`,`linear`,`option` |
 |>>> symbol |string |The unique instrument ID|
 |>>> price |string |Order price in the quote currency of the instrument.|
 |>>> qty |string |Order quantity of the instrument. |
-|>> quoteSellList |array of objects |Quotation `Sell` Direction |
+|>> quoteSellList |array of objects |Quote `Sell` Direction |
 |>>> category |string |Product type: `spot`,`linear`,`option` |
 |>>> symbol |string |The unique instrument ID|
 |>>> price |string |Order price in the quote currency of the instrument.|

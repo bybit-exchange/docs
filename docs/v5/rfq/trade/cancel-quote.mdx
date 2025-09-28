@@ -3,9 +3,11 @@ title: Cancel Quote
 sidebar_label: Cancel Quote
 sidebar_position: 7
 ---
-Cancel a quotation. **Up to 50 requests per second ** 
+Cancel a quote. **Up to 50 requests per second ** 
+
 :::info
-<li>Pass at least one quoteId, rfqId, and quoteLinkId.</li><li> 2. If quoteId, rfqId, and quoteLinkId are passed in at the same time, and quoteId takes precedence, the priority is judged to be quoteId > quoteLinkId > rfqId.</li>
+- You must pass one of the following params: quoteId, rfqId, and quoteLinkId.
+- If quoteId, rfqId, and quoteLinkId are all passed, they are read in this priority: quoteId > quoteLinkId > rfqId.
 :::
 
 ### HTTP Request
@@ -14,17 +16,17 @@ POST `/v5/rfq/cancel-quote`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|quoteId |**false** |string|Quotation ID|
-|rfqId |**false** |string|Inquiry ID|
-|quoteLinkId |**false**  |string |Quotation Custom ID|
+|quoteId |*false* |string|Quote ID|
+|rfqId |*false* |string|Inquiry ID|
+|quoteLinkId |*false*  |string |Custom quote ID|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |object ||
 |rfqId |string|Inquiry ID|
-|quoteId |string|Quotation ID|
-|quoteLinkId|string |Quotation Custom ID|
+|quoteId |string|Quote ID|
+|quoteLinkId|string |Custom quote ID|
 
 
 ### Request Example
