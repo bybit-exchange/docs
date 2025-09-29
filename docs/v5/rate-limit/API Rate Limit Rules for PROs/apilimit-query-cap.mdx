@@ -1,0 +1,72 @@
+---
+title: Query Rate Limit Usage and Cap
+sidebar_label: Query Rate Limit Usage and Cap
+sidebar_position: 4
+---
+### Query api rate limit usage and cap
+> API rate limit: 50 req per second<br/>
+
+:::info
+* Query ins level full picture rate limit usage and cap
+* Only queries from one of the main UIDs or a subaccount UID from sub-INS API key are allowed.
+:::
+
+#### HTTP Request
+GET `/v5/apilimit/query-cap`
+
+#### Request Parameters
+None
+
+#### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object|
+|> [bizType](./enum#biztype) |string|Business type |
+|> totalRate |integer|Total api rate limit usage accross all subaccounts and master account |
+|> insCap |integer|Ins level api rate limit per second,depends on your ins level |
+|> uidCap |integer|Uid level api rate limit per second,depends on your uid level|
+
+#### Request Example
+```http
+GET /v5/apilimit/query-cap HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### Response Example
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "SPOT"
+            },
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "OPTIONS"
+            },
+            {
+                "insCap": "40000",
+                "uidCap": "800",
+                "totalRate": "39932",
+                "bizType": "DERIVATIVES"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1758857589872
+}
+```
+

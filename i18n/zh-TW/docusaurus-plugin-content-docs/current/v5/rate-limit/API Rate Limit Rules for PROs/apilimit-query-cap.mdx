@@ -1,0 +1,72 @@
+---
+title:  查詢 Ins level的速率限制上限和使用量
+sidebar_label:  查詢 Ins level的速率限制上限和使用量
+sidebar_position: 4
+---
+### 查詢 Ins level的速率限制上限和使用量
+> API 限速：每秒 50 次請求<br/>
+
+:::info
+* 查詢 Ins 等級的速率限制上限和使用量
+* 僅允許透過main UID或來自sub-INS的子帳戶 UID 的API key進行查詢
+:::
+
+#### HTTP 請求
+GET `/v5/apilimit/query-cap`
+
+#### 請求參數
+無
+
+#### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list |array |Object|
+|> [bizType](./enum#biztype) |string|業務類型 |
+|> totalRate |integer|所有子帳號與主帳號的 API 速率限制總使用量 |
+|> insCap |integer|基於 Ins 等級的每秒 API 限速 |
+|> uidCap |integer|基於 UID 等級的每秒 API 限速 |
+
+#### 請求範例
+```http
+GET /v5/apilimit/query-cap HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+#### 響應範例
+```http
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "SPOT"
+            },
+            {
+                "insCap": "30000",
+                "uidCap": "600",
+                "totalRate": "29882",
+                "bizType": "OPTIONS"
+            },
+            {
+                "insCap": "40000",
+                "uidCap": "800",
+                "totalRate": "39932",
+                "bizType": "DERIVATIVES"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1758857589872
+}
+```
+
