@@ -1,33 +1,33 @@
 ---
-title: 查詢 API 速率限制
-sidebar_label: 查詢 API 速率限制
+title: Get Rate Limit
+sidebar_label: Get Rate Limit
 sidebar_position: 3
 ---
-### 查詢 API 速率限制
-> API 速率限制：每秒 50 個請求
+
+> API rate limit: 50 req per second
 
 :::info
-* 母帳戶能查詢自己和子帳戶的頻率
-* 子帳戶只能查詢自己的頻率
+* A master account can query its own and its subaccounts' API rate limit.
+* A subaccount can only query its own API rate limit.
 :::
 
-#### HTTP 請求
+### HTTP Request
 GET `/v5/apilimit/query`
 
-#### 請求參數
-| 參數 | 是否必需 | 類型 | 說明|
+### Request Parameters
+| Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|uids |true|string|uid列表，多個以逗號隔開 |
+|uids |**true**|string|Multiple UIDs separated by commas|
 
-#### 響應參數
-| 參數 | 類型 | 說明|
+### Response Parameters
+| Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array |Object|
-|> uids |string|uid列表，多個以逗號隔開 |
-|> [bizType](./enum#biztype) |string|業務類型 |
-|> rate |integer|api rate limit 每秒頻率 |
+|> uids |string|Multiple UIDs separated by commas|
+|> [bizType](/docs/v5/enum#biztype) |string|Business type |
+|> rate |integer|API rate limit per second |
 
-#### 響應參數
+### Request Example
 ```http
 GET /v5/apilimit/query?uids=290118 HTTP/1.1
 Host: api.bybit.com
@@ -39,8 +39,8 @@ Content-Type: application/json
 Content-Length: 2
 ```
 
-#### 響應示例
-```http
+### Response Example
+```json
 {
     "retCode": 0,
     "retMsg": "success",
@@ -62,3 +62,4 @@ Content-Length: 2
     "time": 1754894341984
 }
 ```
+
