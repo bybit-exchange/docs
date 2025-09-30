@@ -1,34 +1,33 @@
 ---
-title: Query Rate Limit
-sidebar_label: Query Rate Limit
+title: Get Rate Limit
+sidebar_label: Get Rate Limit
 sidebar_position: 3
 ---
 
-### Query api rate limit
-> API rate limit: 50 req per second<br/>
+> API rate limit: 50 req per second
 
 :::info
-* A master account can query api rate limit of its own and subaccounts.
-* A subaccount can only query its own api rate limit.
+* A master account can query its own and its subaccounts' API rate limit.
+* A subaccount can only query its own API rate limit.
 :::
 
-#### HTTP Request
+### HTTP Request
 GET `/v5/apilimit/query`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|uids |true|string|Multiple UIDs, separated by commas |
+|uids |**true**|string|Multiple UIDs separated by commas|
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array |Object|
-|> uids |string|Multiple UIDs, separated by commas |
-|> [bizType](./enum#biztype) |string|Business type |
-|> rate |integer|api rate limit per second |
+|> uids |string|Multiple UIDs separated by commas|
+|> [bizType](/docs/v5/enum#biztype) |string|Business type |
+|> rate |integer|API rate limit per second |
 
-#### Request Example
+### Request Example
 ```http
 GET /v5/apilimit/query?uids=290118 HTTP/1.1
 Host: api.bybit.com
@@ -40,8 +39,8 @@ Content-Type: application/json
 Content-Length: 2
 ```
 
-#### Response Example
-```http
+### Response Example
+```json
 {
     "retCode": 0,
     "retMsg": "success",

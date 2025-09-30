@@ -3,37 +3,37 @@ title: Set Rate Limit
 sidebar_label: Set Rate Limit
 sidebar_position: 2
 ---
-### Set api rate limit
+
 > API rate limit: 50 req per second
 
 :::info
-* If UID requesting this endpoint is a master account, uids in the input parameter must be subaccounts of the master account.
-* If UID requesting this endpoint is not a master account, uids in the input parameter must be the UID requesting this endpoint
-* UID requesting this endpoint must be an institutional user.
+* If the UID requesting this endpoint is a master account, UIDs passed to the `uids` parameter must be subaccounts of the master account.
+* If the UID requesting this endpoint is not a master account, the UID passed to the `uids` parameter must be the UID of the subaccount requesting this endpoint.
+* Only institutional users can request this endpoint.
 :::
 
-#### HTTP Request
+### HTTP Request
 POST `/v5/apilimit/set`
 
-#### Request Parameters
+### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|list |true|array |Object|
-|> uids |true|string|Multiple UIDs, separated by commas |
-|> [bizType](./enum#biztype) |true|string|Business type |
-|> rate |true|integer|api rate limit per second |
+|list |**true**|array |Object|
+|> uids |**true**|string|Multiple UIDs separated by commas|
+|> [bizType](/docs/v5/enum#biztype) |**true**|string|Business type |
+|> rate |**true**|integer|API rate limit per second |
 
-#### Response Parameters
+### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array |Object|
-|> uids |string|Multiple UIDs, separated by commas |
-|> [bizType](./enum#biztype) |string|Business type |
-|> rate |integer|api rate limit per second |
-|> success |boolean| success or not|
-|> [msg](./enum#msg) |string|result message |
+|> uids |string|Multiple UIDs separated by commas|
+|> [bizType](/docs/v5/enum#biztype) |string|Business type |
+|> rate |integer|API rate limit per second |
+|> success |boolean| Whether or not the request was successful|
+|> [msg](/docs/v5/enum#msg) |string|Result message |
 
-#### Request Example
+### Request Example
 ```http
 POST /v5/apilimit/set HTTP/1.1
 Host: api.bybit.com
@@ -54,8 +54,8 @@ Content-Type: application/json
 }
 ```
 
-#### Response Example
-```http
+### Response Example
+```json
 {
     "retCode": 0,
     "retMsg": "success",
