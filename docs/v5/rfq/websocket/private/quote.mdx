@@ -1,0 +1,87 @@
+---
+title: Quote
+sidebar_label: Quote
+sidebar_position: 1
+---
+
+Obtain the quote information sent or received by the user themselves. Whenever the user sends or receives a quote themselves, the data will be pushed.
+
+**Topic:** `rfq.open.quotes`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic | string  | Topic name                                                                                                                              |
+|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|data |array |Object |
+| > rfqId         | string           | Inquiry ID                                                                                                                             |
+| > rfqLinkId     | string           | The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created                |
+| > quoteId       | string           | Quote ID                                                                                                                           |
+| > quoteLinkId   | string           | The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the quote was created                     |
+| > expiresAt     | string           | The quote's expiration time (ms)
+| > deskCode      | string           | The unique identification code of the quote party, which is not visible when anonymous is set to `true` during quotation             |
+| > status        | string           | Status of quote: `Active`, `Canceled`, `PendingFill`, `Filled`, `Expired`, `Failed`                                                           |
+| >execQuoteSide | string           | Execute the quote direction, `buy` or `sell`. When the quote direction is 'buy', for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
+| > createdAt     | string           | Time (ms) when the trade is created in epoch, such as 1650380963                                                                         |
+| > updatedAt     | string           | Time (ms) when the trade is updated in epoch, such as 1650380964                                                                         |
+| > quoteBuyList  | array of objects | Quote buy direction                                                                                                                |
+| >> category     | string           | Product type: `spot`, `linear`, `option`                                                                                                   |
+| >> symbol       | string           | symbol name                                                                                                               |
+| >> price        | string           | Quote price                                                                                    |
+| >> qty          | string           | Quantity                                                                                                                               |
+| > quoteSellList | array of objects | Quote sell direction                                                                                                               |
+| >> category     | string           | Product type: `spot`, `linear`, `option`                                                                                                 |
+| >> symbol       | string           | symbol name                                                                                                           |
+| >> price        | string           | Quote price                                                                                                                            |
+| >> qty          | string           | Quantity                                                                                                                               |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "rfq.open.quotes"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+  "topic": "rfq.open.quotes",
+  "creationTime": 1757578449562,
+  "data": [
+    {
+      "rfqLinkId": "",
+      "rfqId": "1757578410512325974246073709371267",
+      "quoteId": "1757578449553042047579782748460520",
+      "quoteLinkId": "",
+      "expiresAt": "1757578509556",
+      "status": "Active",
+      "deskCode": "test0904",
+      "execQuoteSide": "",
+      "quoteBuyList": [
+        {
+          "category": "linear",
+          "symbol": "BTCUSDT",
+          "price": "95800",
+          "qty": "1"
+        }
+      ],
+      "quoteSellList": [
+        {
+          "category": "linear",
+          "symbol": "BTCUSDT",
+          "price": "95000",
+          "qty": "1"
+        }
+      ],
+      "createdAt": "1757578449556",
+      "updatedAt": "1757578449556"
+    }
+  ]
+}
+
+```

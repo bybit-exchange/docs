@@ -1,0 +1,124 @@
+---
+title: Get Trade History 
+sidebar_label: Get Trade History
+sidebar_position: 13
+---
+Obtain transaction information. **Up to 50 requests per second ** 
+:::info
+- Field query priority: rfqId > rfqLinkId  quoteId > quoteLinkId
+:::
+
+
+### HTTP Request
+GET `/v5/rfq/trade-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |false |string|Inquiry ID|
+|rfqLinkId |false  |string |Custom ID for RFQ; specify rfqLinkId to only check the last 3 months|
+|quoteId |false |string|Quote ID|
+|quoteLinkId |false  |string |quote custom ID; specifying quoteLinkId can only check the last 3 months|
+|traderType |false  |string |Trader type, `quote` , `request` , default `quote`|
+|status |false |string |Status : `Filled` `Failed` |
+|limit |false |integer|Return the number of items. [`1`, `100`]. Default: `50`|
+|cursor |false |string|Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |Object ||
+|> cursor |string |Refer to the `cursor` request parameter|
+|> list |array |An array of RFQs|
+|>> rfqId |string |Inquiry ID|
+|>> rfqLinkId |string |Custom RFQ ID. Not publicly disclosed. |
+|>> quoteId |string |Return the completed RFQ and the executed quote id.|
+|>> quoteLinkId |string |Custom quote ID. Not publicly disclosed. |
+|>> quoteSide |string |Return of completed inquiry, execution of quote direction, `Buy` or `Sell`|
+|>> strategyType |string |Inquiry label|
+|>>status |string |Status : `Filled` `Failed`|
+|>> rfqDeskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created |
+|>> quoteDeskCode |string |The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation |
+|>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
+|>> legs |array of objects |Combination transaction |
+|>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
+|>>> orderId |string |bybit order id |
+|>>> symbol |string |The unique instrument ID|
+|>>> side |string |Direction, valid values are `Buy` and `Sell`|
+|>>> price |string |Execution price|
+|>>> qty |string |Number of executions|
+|>>> markPrice |string |The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.|
+|>>> execFee |string |The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.|
+|>>> execId |string |The unique exec(trade) ID from the exchange|
+|>>> resultCode |integer |The status code of the this order. "0" means success|
+|>>> resultMessage |string |Error message about resultCode. If resultCode is "0", resultMessage is "".|
+|>>> rejectParty |string |Empty if status is `Filled`.Valid values: `Taker` or `Maker` if status is `Rejected`，"rejectParty='bybit'" to indicate errors that occur on the Bybit side.|
+
+### Request Example
+
+```http
+GET /v5/rfq/trade-list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "cursor": "",
+        "list": [
+            {
+                "rfqId": "1755159541420049734454484077021786",
+                "quoteId": "175515955714692291558309160384918",
+                "quoteSide": "Buy",
+                "strategyType": "PerpBasis",
+                "status": "Failed",
+                "rfqDeskCode": "1nu9d1",
+                "quoteDeskCode": "lines100412673",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT-15AUG25",
+                        "side": "Sell",
+                        "price": "108887",
+                        "qty": "1",
+                        "orderId": "db852bcd-052e-49b7-ba10-059622e1219b",
+                        "markPrice": "",
+                        "execFee": "0",
+                        "execId": "",
+                        "resultCode": 111002,
+                        "resultMessage": "Rejected caused by another legs",
+                        "rejectParty": ""
+                    },
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "price": "132038",
+                        "qty": "1",
+                        "orderId": "69667acb-7048-48d7-90b9-ccbdfd423130",
+                        "markPrice": "",
+                        "execFee": "0",
+                        "execId": "",
+                        "resultCode": 110007,
+                        "resultMessage": "Insufficient available balance",
+                        "rejectParty": "taker"
+                    }
+                ],
+                "createdAt": "1755159541421",
+                "updatedAt": "1755159654501"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756891941267
+}
+```

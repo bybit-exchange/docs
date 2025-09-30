@@ -1,0 +1,110 @@
+---
+title: 獲取rfq公共成交數據
+sidebar_label: 獲取rfq公共成交數據
+sidebar_position: 14
+---
+獲取最近成功執行的 RFQ。**每秒最多 50 次請求**
+
+### HTTP 請求
+GET `/v5/rfq/public-trades`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|startTime |**false** |integer |訂單交易的開始時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 7 天|
+|endTime |**false** |integer |訂單交易的結束時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 7 天|
+|limit |**false** |integer |返回的項目數量，最多 100 項，默認為 50 項|
+|cursor |**false** |string |翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|result |Object ||
+|> cursor |string |翻頁標記|
+|> list |Array |RFQ 數據陣列|
+|>> rfqId |string |詢價單 ID|
+|>> strategyType |string |策略類型 |
+|>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
+|>> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
+|>> legs |Array of objects |組合交易 |
+|>>> category |string |類型。有效值包括：`linear`、`option` 和 `spot` |
+|>>> symbol |string |唯一的交易品種 ID|
+|>>> side |string |方向，有效值包括 `Buy` 和 `Sell`|
+|>>> price |string |執行價格|
+|>>> qty |string |執行數量|
+|>>> markPrice |string |交易時期貨的標記價格，現貨為指數價格，期權為標的價格的標記價格|
+
+### 請求示例
+
+```http
+GET /v5/rfq/public-trades HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "cursor": "page_token%3D14912%26last_time%3D1756826273947000000%26",
+        "list": [
+            {
+                "rfqId": "1756892210565322771637442724834278",
+                "strategyType": "custom",
+                "legs": [
+                    {
+                        "category": "spot",
+                        "symbol": "BTCUSDT",
+                        "side": "Sell",
+                        "price": "100000",
+                        "qty": "0.5",
+                        "markPrice": "110320"
+                    }
+                ],
+                "createdAt": "1756892210567",
+                "updatedAt": "1756892215712"
+            },
+            {
+                "rfqId": "1756891080435210075162963643082323",
+                "strategyType": "custom",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "price": "143843.9",
+                        "qty": "0.01",
+                        "markPrice": "143843"
+                    }
+                ],
+                "createdAt": "1756891080437",
+                "updatedAt": "1756891081550"
+            },
+            {
+                "rfqId": "1756826272870633375460463539530377",
+                "strategyType": "custom",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "price": "107600.9",
+                        "qty": "1",
+                        "markPrice": "108481.73"
+                    }
+                ],
+                "createdAt": "1756826272871",
+                "updatedAt": "1756826273947"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756892357602
+}
+```

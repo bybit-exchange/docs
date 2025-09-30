@@ -1,0 +1,60 @@
+---
+title: 取消報價單
+sidebar_label: 取消報價單
+sidebar_position: 7
+---
+取消報價單。**每秒最多 50 次請求**
+:::info
+<li>至少需傳遞 quoteId、rfqId 或 quoteLinkId。</li><li>若同時傳遞 quoteId、rfqId 和 quoteLinkId，則優先以 quoteId 為準，優先順序判斷為：quoteId > quoteLinkId > rfqId。</li>
+:::
+
+### HTTP 請求
+POST `/v5/rfq/cancel-quote`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|quoteId |**false** |string |報價單 ID|
+|rfqId |**false** |string |詢價單 ID|
+|quoteLinkId |**false** |string |報價單自定義 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|result |object ||
+|rfqId |string |詢價單 ID|
+|quoteId |string |報價單 ID|
+|quoteLinkId |string |報價單自定義 ID|
+
+### 請求示例
+
+```http
+POST /v5/rfq/cancel-quote HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+{
+    "quoteId":"1754364447601610516653123084412812"  
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rfqId": "175740723913299909861293671607573",
+        "quoteId": "1757407443083427576602342578477746",
+        "quoteLinkId": ""
+    },
+    "retExtInfo": {},
+    "time": 1757407457635
+}
+```

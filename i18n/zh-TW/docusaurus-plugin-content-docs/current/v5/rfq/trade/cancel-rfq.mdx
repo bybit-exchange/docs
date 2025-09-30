@@ -1,0 +1,56 @@
+---
+title: 取消詢價單
+sidebar_label: 取消詢價單
+sidebar_position: 3
+---
+取消詢價單。**每秒最多 50 次請求**
+:::info
+<li>至少需傳遞 rfqId 或 rfqLinkId。</li><li>若同時傳遞 rfqId 和 rfqLinkId，則以 rfqId 為準。</li>
+:::
+
+### HTTP 請求
+POST `/v5/rfq/cancel-rfq`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|rfqId |**false** |string |詢價單 ID|
+|rfqLinkId |**false** |string |詢價單自定義 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|rfqId |string |詢價單 ID |
+|rfqLinkId |string |詢價單自定義 ID |
+
+### 請求示例
+
+```http
+POST /v5/rfq/cancel-rfq HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+{
+    "rfqId": "1756871488168105512459181956436945"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rfqId": "1756871488168105512459181956436945",
+        "rfqLinkId": ""
+    },
+    "retExtInfo": {},
+    "time": 1756871494507
+}
+```

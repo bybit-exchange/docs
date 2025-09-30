@@ -1,0 +1,93 @@
+---
+title: Execution
+sidebar_label: Execution
+sidebar_position: 1
+---
+
+Obtain the user's own block trade information. All legs in the same block trade are included in the same update. As long as the user performs block trade as a counterparty, the data will be pushed.
+
+**Topic:** `rfq.open.trades`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic | string  | Topic name                                                                                                                              |
+|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|data |array |Object |
+| data              | array               |                                                                               |
+| > rfqId           | string              | Inquiry ID                                                                                                                            |
+| > rfqLinkId       | string              | Custom RFQ ID. Not publicly disclosed.                 |
+| > quoteId         | string              | Quote ID                                                                      |
+| > quoteLinkId     | string              | Custom quote ID. Not publicly disclosed.                      |
+| > quoteSide       | string              | Return of completed inquiry, executed quote direction, `buy` or `sell`                                                                |
+| > strategyType    | string              | Inquiry label                                                                                                                         |
+| > status          | string              | Status: `Filled` , `Failed`                                                                                                               |
+| > rfqDeskCode     | string              | The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry                |
+| > quoteDeskCode   | string              | The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation            |
+| > createdAt       | string              | Time (ms) when the trade is created in epoch, such as 1650380963                                                                        |
+| > updatedAt       | string              | Time (ms) when the trade is updated in epoch, such as 1650380964                                                                        |
+| > legs            | array of objects    | Combination transaction                                                                                                               |
+| >> category       | string              | category. Valid values include: `linear`, `option` and `spot`                                                                         |
+| >> orderId        | string              | bybit order id                                                                                                                        |
+| >> symbol         | string              | symbol name                                                                                                              |
+| >> side           | string              | Direction, valid values are `buy` and `sell`                                                                                              |
+| >> price          | string              | Execution price                                                                                                                       |
+| >> qty            | string              | Number of executions                                                                                                                  |
+| >> markPrice      | string              | The markPrice (contract) at the time of transaction, and the spot price is indexPrice                                                 |
+| >> execFee        | string              | The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.                                        |
+| >> execId         | string              | The unique exec(trade) ID from the exchange                                                                                           |
+| >> resultCode     | integer             | The status code of the this order. "0" means success                                                                                  |
+| >>resultMessage  | string              | Error message about resultCode. If resultCode is "0", resultMessage is "".                                                            |
+| >> rejectParty    | string              | Empty if status is `Filled`. Valid values: `Taker` or `Maker` if status is `Rejected`，"rejectParty=`bybit`" to indicate errors that occur on the Bybit side. |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "rfq.open.trades"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+  "topic": "rfq.open.trades",
+  "creationTime": 1757578749474,
+  "data": [
+    {
+      "rfqId": "1757578410512325974246073709371267",
+      "rfqLinkId": "",
+      "quoteId": "1757578719388835162295211364781592",
+      "quoteLinkId": "",
+      "quoteSide": "Buy",
+      "strategyType": "custom",
+      "status": "Filled",
+      "rfqDeskCode": "1nu9d1",
+      "quoteDeskCode": "test0904",
+      "legs": [
+        {
+          "category": "linear",
+          "symbol": "BTCUSDT",
+          "side": "Buy",
+          "price": "91600",
+          "qty": "1",
+          "orderId": "64fe4108-555e-4361-ae2d-3a8d0c292859",
+          "markPrice": "91741.11",
+          "execFee": "-1.374",
+          "execId": "42b8be1e-36cf-4aba-bb75-4602cc11df37",
+          "resultCode": 0,
+          "resultMessage": "",
+          "rejectParty": ""
+        }
+      ],
+      "createdAt": "1757578749361",
+      "updatedAt": "1757578749464"
+    }
+  ]
+}
+
+```

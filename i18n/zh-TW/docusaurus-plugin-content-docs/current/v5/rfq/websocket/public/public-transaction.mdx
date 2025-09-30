@@ -1,0 +1,64 @@
+---
+title: 公共交易頻道
+sidebar_label: 公共交易頻道
+sidebar_position: 1
+---
+
+最新的大宗交易資訊。所有屬於同一大宗交易的明細都會包含在同一次更新中。每當發生大宗交易時，數據將被推送。
+
+**主題:** `rfq.open.public.trades`
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|id |string |消息 ID|
+|topic |string |主題名稱|
+|creationTime |int |數據創建時間戳（毫秒）|
+|data |array |對象 |
+| > rfqId |string |詢價單 ID|
+| > strategyType |string |策略類型|
+| > createdAt |string |交易創建時間（毫秒），例如 1650380963|
+| > updatedAt |string |交易更新時間（毫秒），例如 1650380964|
+| > legs |array of objects |組合交易明細|
+| >> category |string |產品類型：`spot`（現貨）、`linear`（線性合約）、`option`（期權）|
+| >> symbol |string |交易對名稱|
+| >> side |string |詢價方向：有效值為 `buy`（買入）和 `sell`（賣出）|
+| >> price |string |成交價格|
+| >> qty |string |成交數量|
+| >> markPrice |string |成交時的標記價格（合約）；對於現貨，為指數價格|
+
+### 訂閱示例
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "rfq.open.public.trades"
+    ]
+}
+```
+
+### 響應示例
+```json
+{
+  "topic": "rfq.open.public.trades",
+  "creationTime": 1757579314358,
+  "data": [
+    {
+      "rfqId": "1757579281847749169219132657134900",
+      "strategyType": "custom",
+      "legs": [
+        {
+          "category": "linear",
+          "symbol": "BTCUSDT",
+          "side": "Sell",
+          "price": "91600",
+          "qty": "1",
+          "markPrice": "90216.29"
+        }
+      ],
+      "createdAt": "1757579314213",
+      "updatedAt": "1757579314347"
+    }
+  ]
+}
+```

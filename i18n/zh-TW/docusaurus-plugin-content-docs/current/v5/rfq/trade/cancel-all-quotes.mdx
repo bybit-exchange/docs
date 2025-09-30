@@ -1,0 +1,56 @@
+---
+title: 取消所有報價單
+sidebar_label: 取消所有報價單
+sidebar_position: 8
+---
+取消所有報價單。**每秒最多 50 次請求**
+
+### HTTP 請求
+POST `/v5/rfq/cancel-all-quotes`
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|result |object ||
+|> data |Array of object ||
+|>> rfqId |string |詢價單 ID |
+|>> quoteId |string |報價單 ID |
+|>> quoteLinkId |string |報價單自定義 ID |
+|>> code |string |取消成功或失敗，0 表示取消成功 |
+|>> msg |string |取消失敗原因 |
+
+### 請求示例
+
+```http
+POST /v5/rfq/cancel-all-quotes HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "rfqId": "175740723913299909861293671607573",
+            "quoteLinkId": "",
+            "quoteId": "1757407497684679708210572531298710",
+            "code": 0,
+            "msg": ""
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1757407503982
+}
+```

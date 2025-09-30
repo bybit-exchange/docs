@@ -1,0 +1,66 @@
+---
+title: Trade
+sidebar_label: Trade
+sidebar_position: 1
+---
+
+Latest block trade information. All legs in the same block trade are included in the same update. Data will be pushed whenever there is a block trade.
+
+**Topic:** `rfq.open.public.trades`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic | string  | Topic name                                                                                                                              |
+|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|data |array |Object |
+| > rfqId         | string           | Inquiry ID                                                                                                                             |
+| >strategyType  | string           | Policy type                |
+| > createdAt     | string           | Time (ms) when the trade is created in epoch, such as 1650380963                                                                         |
+| > updatedAt     | string           | Time (ms) when the trade is updated in epoch, such as 1650380964                                                                         |
+| > legs  | array of objects | Combination transaction                                                                                                               |
+| >> category     | string           | Product type: `spot`, `linear`, `option`                                                                                                     |
+| >> symbol       | string           | symbol name                                                                                                               |
+| >> side | string           | Inquiry direction: Valid values are `buy` and `sell`    |
+| >> price        | string           | Execution price                                                                                    |
+| >> qty          | string           | Number of executions                                                                                                                               |
+| >> markPrice   | string             | The markPrice (contract) at the time of transaction, and the spot price is indexPrice                                                                                                                |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "rfq.open.public.trades"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+  "topic": "rfq.open.public.trades",
+  "creationTime": 1757579314358,
+  "data": [
+    {
+      "rfqId": "1757579281847749169219132657134900",
+      "strategyType": "custom",
+      "legs": [
+        {
+          "category": "linear",
+          "symbol": "BTCUSDT",
+          "side": "Sell",
+          "price": "91600",
+          "qty": "1",
+          "markPrice": "90216.29"
+        }
+      ],
+      "createdAt": "1757579314213",
+      "updatedAt": "1757579314347"
+    }
+  ]
+}
+
+```

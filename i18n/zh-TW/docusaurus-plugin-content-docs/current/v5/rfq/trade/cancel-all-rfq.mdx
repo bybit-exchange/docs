@@ -1,0 +1,56 @@
+---
+title: 取消所有詢價單
+sidebar_label: 取消所有詢價單
+sidebar_position: 4
+---
+取消所有您的詢價單。**每秒最多 50 次請求**
+:::info
+<li>詢價方取消訂單：取消詢價單，所有報價均失效。</li><li>報價方取消訂單：詢價單不受影響，報價單失效。</li>
+:::
+
+### HTTP 請求
+POST `/v5/rfq/cancel-all-rfq`
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|result|array of objects |詢價單資料 |
+|> rfqId |string |詢價單 ID |
+|> rfqLinkId |string |詢價單自定義 ID |
+|> code |string |取消成功或失敗，0 表示取消成功 |
+|> msg |string |取消失敗原因 |
+
+### 請求示例
+
+```http
+POST /v5/rfq/cancel-all-rfq HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "rfqId": "175766967076315412093641573648082",
+            "rfqLinkId": "",
+            "code": 0,
+            "msg": ""
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1757669676581
+}
+```

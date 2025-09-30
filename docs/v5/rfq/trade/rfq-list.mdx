@@ -1,0 +1,136 @@
+---
+title: Get RFQs
+sidebar_label: Get RFQs
+sidebar_position: 10
+---
+Obtain historical inquiry information. **Up to 50 requests per second ** 
+:::info
+- Obtain historical RFQs. This data is not real-time. Please see [Get RFQs (real-time)](/docs/v5/rfq/trade/rfq-realtime).
+- If both rfqId and rfqLinkId are passed, only rfqId is considered.
+- Sort in reverse order according to the creation time of rfq and return it.
+:::
+
+
+### HTTP Request
+GET `/v5/rfq/rfq-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |false** |string|Inquiry ID|
+|rfqLinkId |false |string|Custom ID for RFQ; specify rfqLinkId to only check the last 3 months, traderType is quote, this field is invalid|
+|traderType |false  |string |Trader type, `quote` , `request`. Default: `quote`|
+|status |false |string |Status of the RFQ: `Active` `Canceled` `Filled` `Expired` `Failed` |
+|limit |false |integer|Return the number of items. [`1`, `100`]. Default: `50` |
+|cursor |false |string|Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Object|
+|> cursor |string |Refer to the `cursor` request parameter|
+|> list |array |An array of RFQs|
+|>> rfqId |string |Inquiry ID|
+|>> rfqLinkId |string |Custom RFQ ID. Not publicly disclosed. |
+|>> counterparties |array of srings |List of bidders |
+|>> expiresAt |string |The inquiry's expiration time (ms) |
+|>> strategyType |string |Inquiry label |
+|>> status |string |Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|>> deskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created|
+|>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
+|>> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
+|>> legs |array of objects |Combination transaction |
+|>>> category |string |category. Valid values include: `linear`, `option` and `spot` |
+|>>> symbol |string |The unique instrument ID|
+|>>> side |string |Inquiry direction: Valid values are `Buy` and `Sell`. |
+|>>> qty |string |Order quantity of the instrument. |
+
+### Request Example
+
+```http
+GET /v5/rfq/rfq-list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1676430842094
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "cursor": "",
+        "list": [
+            {
+                "rfqLinkId": "",
+                "rfqId": "1756885055799241492396882271696580",
+                "counterparties": [
+                    "hashwave2"
+                ],
+                "strategyType": "custom",
+                "expiresAt": "1756885655801",
+                "status": "Active",
+                "deskCode": "1nu9d1",
+                "createdAt": "1756885055801",
+                "updatedAt": "1756885055801",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "qty": "1"
+                    }
+                ]
+            },
+            {
+                "rfqLinkId": "",
+                "rfqId": "1756874158983736854420161904593980",
+                "counterparties": [
+                    "hashwave2"
+                ],
+                "strategyType": "custom",
+                "expiresAt": "1756874758985",
+                "status": "Expired",
+                "deskCode": "1nu9d1",
+                "createdAt": "1756874158985",
+                "updatedAt": "1756874764046",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "qty": "1"
+                    }
+                ]
+            },
+            {
+                "rfqLinkId": "",
+                "rfqId": "1756871488168105512459181956436945",
+                "counterparties": [
+                    "hashwave2"
+                ],
+                "strategyType": "custom",
+                "expiresAt": "1756872088171",
+                "status": "Canceled",
+                "deskCode": "1nu9d1",
+                "createdAt": "1756871488171",
+                "updatedAt": "1756871494505",
+                "legs": [
+                    {
+                        "category": "linear",
+                        "symbol": "BTCUSDT",
+                        "side": "Buy",
+                        "qty": "1"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1756885352116
+}
+```
