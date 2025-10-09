@@ -16,10 +16,15 @@ GET `/v5/earn/order`
 |category|**true**|string|`FlexibleSaving`,`OnChain` <br/>**備註**: 本期僅支持活期理財和鏈上賺幣|
 |orderId|false|string|系統生成的訂單ID <li>orderId和orderLinkId二者*必須*傳其一</li><li>如果都傳入, 確保二者是來自同一筆訂單, 否則返回空</li>|
 |orderLinkId|false|string|自定義訂單ID<br/>**備註**: 如果orderLinkId有復用, 則僅用orderLinkId查詢時, 總是返回最近的那筆訂單|
-
+| productId   | false    | string    | 產品ID                                                                                                                      |
+|startTime |false |integer |開始時間戳 (毫秒)<ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &lt;= 7天</li></ul>|
+|endTime |false |integer |結束時間戳 (毫秒)|
+|limit |false |integer |每頁數量限制. [`1`, `100`]. 默認: `50`|
+|cursor |false |string |游標，用於翻頁|
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
+|nextPageCursor |string |游標，用於翻頁 |
 |list|array|Object|
 |> coin|string |幣種名稱 |
 |> orderValue|string |質押/贖回數量|
@@ -85,22 +90,23 @@ print(session.get_stake_or_redemption_history(
     "result": {
         "list": [
             {
-                "coin": "BTC",
-                "orderValue": "1",
+                "coin": "USDT",
+                "orderValue": "1000",
                 "orderType": "Stake",
-                "orderId": "9640dc23-df1a-448a-ad24-e1a48028a51f",
-                "orderLinkId": "cjm2",
+                "orderId": "ad98d473-4e17-46da-ab30-5563f62a97fa",
+                "orderLinkId": "",
                 "status": "Success",
-                "createdAt": "1744166831000",
-                "productId": "8",
-                "updatedAt": "1744166832000",
+                "createdAt": "1759983689000",
+                "productId": "428",
+                "updatedAt": "1759983689000",
                 "swapOrderValue": "",
                 "estimateRedeemTime": "",
                 "estimateStakeTime": ""
             }
-        ]
+        ],
+        "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1739937045520
+    "time": 1759983796197
 }
 ```
