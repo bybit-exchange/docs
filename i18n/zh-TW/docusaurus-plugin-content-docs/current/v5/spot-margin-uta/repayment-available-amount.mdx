@@ -1,0 +1,66 @@
+---
+title: 查詢負債幣種可還款金額
+sidebar_label: 查詢負債幣種可還款金額
+sidebar_position: 10
+---
+
+### HTTP 請求
+GET `/v5/spot-margin-trade/repayment-available-amount`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency|**true**|string|幣名稱，僅限大寫 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency |string |幣名稱，僅限大寫 |
+|lossLessRepaymentAmount |string |還款金額=min(現貨幣可用餘額，借幣金額)|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/repayment-available-amount?currency=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1692696840996
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "lossLessRepaymentAmount": "0.02000000",
+        "currency": "BTC"
+    },
+    "retExtInfo": {},
+    "time": 1756273388821
+}
+```
