@@ -118,6 +118,15 @@ Push frequency: Derivatives & Options - **100ms**, Spot - **real-time**
         <tr>
             <td>> <a href="../../enum#curauctionphase">curPreListingPhase</a></td><td>string</td><td>The current pre-market contract phase <li>USDC Futures and Inverse Futures do not have this field</li></td>
         </tr>
+        <tr>
+            <td>> fundingIntervalHour</td><td>string</td><td>Funding interval hour<li>This value currently only supports whole hours</li><li>Only for Perpetual,For Futures,this field will not return</li></td>
+        </tr>
+        <tr>
+            <td>> fundingCap</td><td>string</td><td>Funding rate upper and lower limits<li>Only for Perpetual,For Futures,this field will not return</li></td>
+        </tr>
+        <tr>
+            <td>> basisRateYear</td><td>string</td><td>Annual basis rate<li>Only for Futures,For Perpetual,this field will not return</li></td>
+        </tr>
     </table>
 </TabItem>
 
@@ -344,33 +353,74 @@ while True:
 <TabItem value="linear" label="Linear">
 
 ```json
+LinearPerpetual
 {
-    "topic": "tickers.BTCUSDT",
-    "type": "snapshot",
-    "data": {
-        "symbol": "BTCUSDT",
-        "tickDirection": "PlusTick",
-        "price24hPcnt": "0.017103",
-        "lastPrice": "17216.00",
-        "prevPrice24h": "16926.50",
-        "highPrice24h": "17281.50",
-        "lowPrice24h": "16915.00",
-        "prevPrice1h": "17238.00",
-        "markPrice": "17217.33",
-        "indexPrice": "17227.36",
-        "openInterest": "68744.761",
-        "openInterestValue": "1183601235.91",
-        "turnover24h": "1570383121.943499",
-        "volume24h": "91705.276",
-        "nextFundingTime": "1673280000000",
-        "fundingRate": "-0.000212",
-        "bid1Price": "17215.50",
-        "bid1Size": "84.489",
-        "ask1Price": "17216.00",
-        "ask1Size": "83.020"
-    },
-    "cs": 24987956059,
-    "ts": 1673272861686
+  "topic": "tickers.BTCUSDT",
+  "type": "snapshot",
+  "data": {
+    "symbol": "BTCUSDT",
+    "tickDirection": "MinusTick",
+    "price24hPcnt": "-0.158315",
+    "lastPrice": "66666.60",
+    "prevPrice24h": "79206.20",
+    "highPrice24h": "79266.30",
+    "lowPrice24h": "65076.90",
+    "prevPrice1h": "66666.60",
+    "markPrice": "66666.60",
+    "indexPrice": "115418.19",
+    "openInterest": "492373.72",
+    "openInterestValue": "32824881841.75",
+    "turnover24h": "4936790807.6521",
+    "volume24h": "73191.3870",
+    "fundingIntervalHour": "8",
+    "fundingCap": "0.005",
+    "nextFundingTime": "1760342400000",
+    "fundingRate": "-0.005",
+    "bid1Price": "66666.60",
+    "bid1Size": "23789.165",
+    "ask1Price": "66666.70",
+    "ask1Size": "23775.469",
+    "preOpenPrice": "",
+    "preQty": "",
+    "curPreListingPhase": ""
+  },
+  "cs": 9532239429,
+  "ts": 1760325052630
+}
+LinearFutures
+{
+  "topic": "tickers.BTC-26DEC25",
+  "type": "snapshot",
+  "data": {
+    "symbol": "BTC-26DEC25",
+    "tickDirection": "ZeroMinusTick",
+    "price24hPcnt": "0",
+    "lastPrice": "109401.50",
+    "prevPrice24h": "109401.50",
+    "highPrice24h": "109401.50",
+    "lowPrice24h": "109401.50",
+    "prevPrice1h": "109401.50",
+    "markPrice": "121144.63",
+    "indexPrice": "114132.51",
+    "openInterest": "6.622",
+    "openInterestValue": "802219.74",
+    "turnover24h": "0.0000",
+    "volume24h": "0.0000",
+    "deliveryTime": "2025-12-26T08:00:00Z",
+    "basisRate": "0.06129209",
+    "deliveryFeeRate": "0",
+    "predictedDeliveryPrice": "0.00",
+    "basis": "-4730.84",
+    "basisRateYear": "0.30655351",
+    "nextFundingTime": "",
+    "fundingRate": "",
+    "bid1Price": "111254.50",
+    "bid1Size": "0.176",
+    "ask1Price": "131001.00",
+    "ask1Size": "0.580"
+  },
+  "cs": 31337927919,
+  "ts": 1760409119857
 }
 ```
 
