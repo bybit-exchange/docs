@@ -5,10 +5,10 @@ sidebar_position: 4.5
 ---
 
 查詢用户全站可交易產品的基礎配置規則信息
-> **覆蓋範圍: 現貨 / USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+> **覆蓋範圍:  USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
 
 :::caution
-* 現貨不支持翻頁，因此`limit`, `cusor`無效.
+<!---* 現貨不支持翻頁，因此`limit`, `cusor`無效. -->
 * 托管子账户不支持查询
 :::
 
@@ -21,7 +21,7 @@ GET `/v5/account/instruments-info`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |<b>true</b> |string |產品類型. `spot`,`linear`,`inverse`|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`,`inverse`|
 |symbol |false |string |合約名稱|
 |limit |false |integer |每頁數量限制. [`1`, `200`]. 默認: `200`|
 |cursor |false |string |游標，用於翻頁|
@@ -181,13 +181,16 @@ GET `/v5/account/instruments-info`
             <td>>>> makerFeeRate</td><td>string</td><td>連續競價期間的掛單成交手續費率</td>
         </tr>
         <tr>
-            <td>> rpiAccess </td><td>string</td><td>是否是可交易的RPI<li> true: RPI 可交易</li> <li>false: RPI 不可交易</li> </td>
+            <td>> isPublicRpi </td><td>string</td><td>是否公開給做市商進行 RPI<li> true: 公開給做市商進行 RPI</li> <li>false: 没有公開給做市商進行 RPI</li> </td>
+        </tr>
+        <tr>
+            <td>> myRpiPermission </td><td>string</td><td>當前使用者是否有RPI權限<li> true: 有RPI權限</li> <li>false: 没有有RPI權限</li> </td>
         </tr>
     </table>
 </TabItem>
 
 
-<TabItem value="spot" label="Spot">
+<!--- <TabItem value="spot" label="Spot">
     <table border="0.8">
         <tr>
             <th>參數</th><th>類型</th><th>說明</th>
@@ -268,7 +271,7 @@ GET `/v5/account/instruments-info`
             <td>> rpiAccess </td><td>string</td><td>是否是可交易的RPI<li> true: RPI 可交易</li> <li>false: RPI 不可交易</li> </td>
         </tr>
     </table>
-</TabItem>
+</TabItem> -->
 </Tabs>
 
 
@@ -283,7 +286,7 @@ GET `/v5/account/instruments-info`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/account/instruments-info?category=linear&symbol=BTCUSDT HTTP/1.1
+GET /v5/account/instruments-info?category=linear&symbol=1000000BABYDOGEUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -295,7 +298,7 @@ Host: api-testnet.bybit.com
 
 
 
-<TabItem value="spot" label="Spot">
+<!--- <TabItem value="spot" label="Spot">
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
@@ -305,10 +308,10 @@ GET /v5/account/instruments-info?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
-</TabItem>
+</TabItem> 
 </Tabs>
 
-</TabItem>
+</TabItem>-->
 </Tabs>
 
 ### 響應示例
@@ -366,104 +369,21 @@ Host: api-testnet.bybit.com
                 },
                 "displayName": "",
                 "symbolType": "innovation",
-                "rpiAccess": true
+                "myRpiPermission": true,
+                "isPublicRpi": true
             }
         ],
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1760344993360
+    "time": 1760510800094
 }
 
-// Pre-market Perpetual instrument structure
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-        "category": "linear",
-        "list": [
-            {
-                "symbol": "BIOUSDT",
-                "contractType": "LinearPerpetual",
-                "status": "PreLaunch",
-                "baseCoin": "BIO",
-                "quoteCoin": "USDT",
-                "launchTime": "1735032510000",
-                "deliveryTime": "0",
-                "deliveryFeeRate": "",
-                "priceScale": "4",
-                "leverageFilter": {
-                    "minLeverage": "1",
-                    "maxLeverage": "5.00",
-                    "leverageStep": "0.01"
-                },
-                "priceFilter": {
-                    "minPrice": "0.0001",
-                    "maxPrice": "1999.9998",
-                    "tickSize": "0.0001"
-                },
-                "lotSizeFilter": {
-                    "maxOrderQty": "70000",
-                    "minOrderQty": "1",
-                    "qtyStep": "1",
-                    "postOnlyMaxOrderQty": "70000",
-                    "maxMktOrderQty": "14000",
-                    "minNotionalValue": "5"
-                },
-                "unifiedMarginTrade": true,
-                "fundingInterval": 480,
-                "settleCoin": "USDT",
-                "copyTrading": "none",
-                "upperFundingRate": "0.05",
-                "lowerFundingRate": "-0.05",
-                "isPreListing": true,
-                "preListingInfo": {
-                    "curAuctionPhase": "ContinuousTrading",
-                    "phases": [
-                        {
-                            "phase": "CallAuction",
-                            "startTime": "1735113600000",
-                            "endTime": "1735116600000"
-                        },
-                        {
-                            "phase": "CallAuctionNoCancel",
-                            "startTime": "1735116600000",
-                            "endTime": "1735116900000"
-                        },
-                        {
-                            "phase": "CrossMatching",
-                            "startTime": "1735116900000",
-                            "endTime": "1735117200000"
-                        },
-                        {
-                            "phase": "ContinuousTrading",
-                            "startTime": "1735117200000",
-                            "endTime": ""
-                        }
-                    ],
-                    "auctionFeeInfo": {
-                        "auctionFeeRate": "0",
-                        "takerFeeRate": "0.001",
-                        "makerFeeRate": "0.0004"
-                    }
-                },
-                "riskParameters": {
-                    "priceLimitRatioX": "0.05",
-                    "priceLimitRatioY": "0.1"
-                },
-                "symbolType": ""
-            }
-        ],
-        "nextPageCursor": "first%3DBIOUSDT%26last%3DBIOUSDT"
-    },
-    "retExtInfo": {},
-    "time": 1735810114435
-}
 ```
 
 </TabItem>
 
-<TabItem value="spot" label="Spot">
+<!---<TabItem value="spot" label="Spot">
 
 ```json
 {
@@ -507,5 +427,5 @@ Host: api-testnet.bybit.com
 }
 ```
 
-</TabItem>
+</TabItem> -->
 </Tabs>
