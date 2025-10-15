@@ -1,0 +1,153 @@
+---
+title: Get Withdrawal Address List
+sidebar_label: Get Withdrawal Address List
+sidebar_position: 14
+---
+
+Query withdrawal Address List.
+
+:::tip
+* `endTime` - `startTime` should be less than 30 days. Query last 30 days records by default.
+* Can query by the master UID's api key **only**
+:::
+
+### HTTP Request
+GET `/v5/asset/withdraw/address/list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |false |string |Coin, uppercase only |
+|chain |false |string |Chain name |
+|addressType |false |integer |Address type. `0`: Regular Address Type. `1`: General Address Type (Invalid "coin" Parameter) `2`: Internal Transfer Address Type (Invalid "coin" & "chain" Parameters)|
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `50`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> coin |string |Coin |
+|> chain |string |Chain |
+|> address |string |Address Type:`0`: Regular Address Type. `1`: General Address Type. `2`: Internal Transfer Address Type|
+|> memo/tag |string |Address_memo |
+|> remark |string |remark |
+|> status|integer |Address status:`0`: Normal. `1`: New Addresses Are Prohibited from Withdrawing Coins for 24 Hours.|
+|> addressType|integer |Address type. `0`: Regular Address Type. `1`: General Address Type. `2`: Internal Transfer Address Type.|
+|> verified |integer |Whether the Address Has Been Verified or not: `0`: Unverified Address. `1`: Verification-Exempt Address.|
+|nextPageCursor |string|Cursor. Used for pagination |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/withdraw/query-record?coin=USDT&withdrawType=2&limit=2 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672194949557
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_withdrawal_records(
+    coin="USDT",
+    withdrawType=2,
+    limit=2,
+))
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+  testnet: true,
+  key: 'xxxxxxxxxxxxxxxxxx',
+  secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+});
+
+client
+  .getWithdrawalRecords({
+    coin: 'USDT',
+    withdrawType: 2,
+    limit: 2,
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "coin": "USDC",
+                "chain": "ETH",
+                "amount": "41.43008",
+                "txID": "0x3d7bddb797f0e86420c982c0723653b8b728fd0ec9953b6b354445848d83a185",
+                "status": "success",
+                "toAddress": "0xE3De6d711e0951d34777b5Cd93c827F822ee8514",
+                "tag": "",
+                "withdrawFee": "5",
+                "createTime": "1742738305000",
+                "updateTime": "1742738340000",
+                "withdrawId": "131629076",
+                "withdrawType": 0,
+                "fee": "",
+                "tax": "",
+                "taxRate": "",
+                "taxType": ""
+            },
+            {
+                "coin": "USDT",
+                "chain": "SOL",
+                "amount": "951",
+                "txID": "53j7mUftUboJ2TVb1q3zjwNi9gNGWyQ8xhEpkFovzqaTf8LzuZKzr83XjbG62TZWBkWbn27km7SD6Sc9e1BuWUfJ",
+                "status": "success",
+                "toAddress": "DhTEGye1vq2PPr8DPWit4HTDprnvnDiqpVHnHSY1Y82p",
+                "tag": "",
+                "withdrawFee": "1",
+                "createTime": "1742729329000",
+                "updateTime": "1742729437000",
+                "withdrawId": "131603458",
+                "withdrawType": 0,
+                "fee": "",
+                "tax": "",
+                "taxRate": "",
+                "taxType": ""
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTMxNjAzNDU4LCJtYXhJRCI6MTMxNjI5MDc2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1750777316807
+}
+```
