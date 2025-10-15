@@ -43,8 +43,8 @@ Please refer to [rate limit table](../rate-limit#trade). If you need to raise th
 Bybit will monitor on your API requests. When the total number of orders of a single user (aggregated the number of orders across main account and subaccounts) within a day (UTC 0 - UTC 24) exceeds a certain upper limit, the platform will reserve the right to remind, warn, and impose necessary restrictions.
 Customers who use API default to acceptance of these terms and have the obligation to cooperate with adjustments.
 
-- **Reduce Only order:**<br/>
-If reduceOnly=true, order qty > max order qty, it will automatically be split to multiple orders
+- **Reduce only orders:**<br/>
+If reduceOnly=true and order qty > max order qty, the order will automatically be split up into multiple orders.
 :::
 
 :::info Spot Stop Order
@@ -67,7 +67,7 @@ POST `/v5/order/create`
 |qty |**true** |string |Order quantity <ul><li>UTA account<ul><li>Spot: Market Buy order by value by default, you can set `marketUnit` field to choose order by value or qty for market orders</li><li>Perps, Futures & Option: always order by qty</li></ul></li><li>classic account<ul><li>Spot: Market Buy order by value by default</li><li>Perps, Futures: always order by qty</li></ul></li><li>Perps & Futures: if you pass `qty`="0" and specify `reduceOnly`=true&`closeOnTrigger`=true, you can close the position up to `maxMktOrderQty` or `maxOrderQty` shown on [Get Instruments Info](../market/instrument#) of current symbol</li></ul>|
 |marketUnit |false |string |Select the unit for `qty` when create **Spot market** orders for **UTA account**<li>`baseCoin`: for example, buy BTCUSDT, then "qty" unit is BTC</li><li>`quoteCoin`: for example, sell BTCUSDT, then "qty" unit is USDT</li>|
 |slippageToleranceType |false |string |Slippage tolerance Type for **market order**, `TickSize`, `Percent`<ul><li>Support linear, inverse, spot trading, but take profit, stoploss, conditional orders are not supported</li><li><b>TickSize</b>: <br/>the highest price of Buy order = ask1 + <code>slippageTolerance</code> x tickSize; <br/>the lowest price of Sell order = bid1 - <code>slippageTolerance</code> x tickSize</li><li><b>Percent</b>: <br/>the highest price of Buy order = ask1 x (1 + <code>slippageTolerance</code> x 0.01); <br/>the lowest price of Sell order = bid1 x (1 - `slippageTolerance` x 0.01)</li></ul>|
-|slippageTolerance |false |string |Slippage tolerance value <li>`TickSize`: range is [1, 10000], integer only</li><li>`Percent`: range is [0.01%, 10%], up to 2 decimals</li>|
+|slippageTolerance |false |string |Slippage tolerance value <li>`TickSize`: range is [1, 10000], integer only</li><li>`Percent`: range is [0.01, 10], up to 2 decimals</li>|
 |price |false |string |Order price <ul><li>Market order will ignore this field</li><li>Please check the min price and price precision from [instrument info](../market/instrument#response-parameters) endpoint</li><li>If you have position, price needs to be better than liquidation price</li></ul> |
 |triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>Valid for `linear` & `inverse`|
 |orderFilter |false |string |If it is not passed, `Order` by default. <ul><li>`Order`</li><li>`tpslOrder`: Spot TP/SL order, the assets are occupied even before the order is triggered</li><li>`StopOrder`: Spot conditional order, the assets will not be occupied until the price of the underlying asset reaches the trigger price, and the required assets will be occupied after the Conditional order is triggered</li></ul>Valid for `spot` **only**|
