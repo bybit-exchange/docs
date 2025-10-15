@@ -4,6 +4,51 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2025-10-23
+### REST API
+- [手工借款](../v5/account/borrow) [新增]
+    - 新增UTA手動借幣接口
+
+- [手工還款](../v5/account/repay) [新增]
+    - 新增UTA手動還幣接口
+
+- [查詢最大可藉數](../v5/spot-margin-uta/max-borrowable) [新增]
+    - 新增查詢最大可藉數接口
+
+- [查詢借貸倉位風險訊息](../v5/spot-margin-uta/position-tiers) [新增]
+    - 新增查詢借貸倉位風險訊息接口
+
+- [全倉槓桿設置](../v5/spot-margin-uta/set-leverage) [更新]
+    - 新增新的輸入參數`currency`，透過`currency`設定槓桿
+
+- [查詢幣種槓桿](../v5/spot-margin-uta/coinstate) [新增]
+    - 新增查詢幣種槓桿接口
+
+- [查詢負債幣種可還款金額](../v5/spot-margin-uta/repayment-available-amount) [新增]
+    - 新增查詢負債幣種可還款金額接口
+
+- [查詢錢包餘額](../v5/account/wallet-balance) [更新]
+    - 新增`spotBorrow`字段，用於指示現貨全倉槓桿和手工借幣借入金額
+
+- [交易日誌](../v5/account/transaction-log) [更新]
+    -  新增 `type` 枚舉，`MANUAL_LOANS_BORROW`, `MANUAL_LOANS_REPAY`, `AUTO_LOANS_BORROW`, `AUTO_LOANS_REPAY`
+
+### WebSocket API
+- [Wallet](../v5/account/wallet-balance) [更新]
+    - 新增`spotBorrow`字段，用於指示現貨全倉槓桿和手工借幣借入金額
+
+## 2025-10-16
+### REST API
+- [查詢借款中信息](../v5/new-crypto-loan/flexible/unpaid-loan-order) [更新]
+    - 更新響應參數`unpaidAmount`, `unpaidInterest`, 以區分`totalDebt`中的未償還本金與未償還利息
+
+## 2025-10-14
+### REST API
+- [查詢子帳戶UID列表 (限制)](../v5/user/subuid-list) [更新]
+    - 更新響應參數`accountMode`, 目前支持區分經典賬戶, UTA1.0 帳戶, UTA1.0 Pro 帳戶, UTA2.0 帳戶, UTA2.0 Pro 帳戶
+- [查詢子帳戶UID列表 (無限制)](../v5/user/page-subuid) [更新]
+    - 更新響應參數`accountMode`, 目前支持區分經典賬戶, UTA1.0 帳戶, UTA1.0 Pro 帳戶, UTA2.0 帳戶, UTA2.0 Pro 帳戶
+
 ## 2025-10-10
 ### REST API
 - [RFQ Open API](../v5/rfq/basic-workflow) [新增]
@@ -18,7 +63,7 @@ import '/src/css/changelog.css';
 ## 2025-10-09
 ### REST API
 - [創建委託單](../v5/order/create-order) [更新]
-    - 請求參數 `slippageTolerance`數值範圍調整，其中,TickSize 從 [5, 2000] 變更為 [1, 10000],Percent 從 [0.05, 1] 變更為 [0.01%, 10%]
+    - 請求參數 `slippageTolerance`數值範圍調整，其中,TickSize 從 [5, 2000] 變更為 [1, 10000],Percent 從 [0.05, 1] 變更為 [0.01, 10]
 - [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
     - 新增請求參數 `symbolType`,用於指定篩選交易產品紀錄,目前僅对`linear`,`inverse`有效
 - [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
@@ -125,6 +170,28 @@ import '/src/css/changelog.css';
 ### REST API
 - [查詢合約風險限額](../v5/market/risk-limit) [更新]
     - 新增對盤前交易合約交易對的風險限額表查詢功能支持
+
+- [手工借款](../v5/account/borrow) [新增]
+    - 新增一個接口手工借款
+
+- [手工還款](../v5/account/repay) [新增]
+    - 新增一個接口手工還款
+
+- [查詢最大可藉數](../v5/spot-margin-uta/max-borrowable) [新增]
+    - 新增一個接口查詢最大可藉數
+
+- [查詢借貸倉位風險訊息](../v5/spot-margin-uta/position-tiers) [新增]
+    - 新增一個接口查詢借貸倉位風險訊息
+
+- [全倉槓桿設置](../v5/spot-margin-uta/set-leverage) [更新]
+    - 新增新的輸入參數`currency` 根據幣種設定槓桿
+
+- [查詢幣種槓桿](../v5/spot-margin-uta/coinstate) [新增]
+    - 新增一個接口查詢幣種槓桿
+
+- [查詢負債幣種可還款金額](../v5/spot-margin-uta/repayment-available-amount) [新增]
+    - 新增一個接口查詢負債幣種可還款金額
+
 
 ## 2025-08-26
 ### REST API
