@@ -1,0 +1,431 @@
+---
+title: 查詢用户可交易產品的規格信息
+sidebar_label: 查詢用户可交易產品的規格信息
+sidebar_position: 4.5
+---
+
+查詢用户全站可交易產品的基礎配置規則信息
+> **覆蓋範圍:  USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+
+:::caution
+<!---* 現貨不支持翻頁，因此`limit`, `cusor`無效. -->
+* 托管子账户不支持查询
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### HTTP請求
+GET `/v5/account/instruments-info`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`,`inverse`|
+|symbol |false |string |合約名稱|
+|limit |false |integer |每頁數量限制. [`1`, `200`]. 默認: `200`|
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear/Inverse" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>產品類型</td>
+        </tr>
+        <tr>
+            <td>nextPageCursor</td><td>string</td><td>游標，用於翻頁</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#contracttype">contractType</a></td><td>string</td><td>合約類型</td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#status">status</a></td><td>string</td><td>合約狀態 </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>交易幣種 </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>報價幣種 </td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#symboltype">symbolType</a></td><td>string</td><td> 交易對所屬區域</td>
+        </tr>
+        <tr>
+            <td>> launchTime</td><td>string</td><td>發佈時間 (ms) </td>
+        </tr>
+        <tr>
+            <td>> deliveryTime</td><td>string</td><td>交割時間 (ms)<li>交割合約交割時間</li><li>永續合約下架時間</li></td>
+        </tr>
+        <tr>
+            <td>> deliveryFeeRate</td><td>string</td><td>交割費率. 僅對交割合約有效</td>
+        </tr>
+        <tr>
+            <td>> priceScale</td><td>string</td><td>價格精度 </td>
+        </tr>
+        <tr>
+            <td>> leverageFilter</td><td>Object</td><td>槓桿屬性 </td>
+        </tr>
+        <tr>
+            <td>>> minLeverage</td><td>string</td><td>最小槓桿 </td>
+        </tr>
+        <tr>
+            <td>>> maxLeverage</td><td>string</td><td>最大槓桿 </td>
+        </tr>
+        <tr>
+            <td>>> leverageStep</td><td>string</td><td>修改槓桿的步長 </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>價格屬性 </td>
+        </tr>
+        <tr>
+            <td>>> minPrice</td><td>string</td><td>訂單最小價格 </td>
+        </tr>
+        <tr>
+            <td>>> maxPrice</td><td>string</td><td>訂單最大價格 </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>修改價格的步長 </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>訂單數量屬性 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>單筆限價或PostOnly單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> maxMktOrderQty</td><td>string</td><td>單筆市價單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>單筆訂單最小下單量 </td>
+        </tr>
+        <tr>
+            <td>>> qtyStep</td><td>string</td><td>修改下單量的步長 </td>
+        </tr>
+        <tr>
+            <td>>> postOnlyMaxOrderQty</td><td>string</td><td>廢棄, 請參照<code>maxOrderQty</code> </td>
+        </tr>
+        <tr>
+            <td>>> minNotionalValue</td><td>string</td><td>訂單最小名義價值</td>
+        </tr>
+        <tr>
+            <td>> unifiedMarginTrade</td><td>boolean</td><td>是否支持統一保證金交易 </td>
+        </tr>
+        <tr>
+            <td>> fundingInterval</td><td>integer</td><td>資金費率結算週期 (分鐘) </td>
+        </tr>
+        <tr>
+            <td>> settleCoin</td><td>string</td><td>結算幣種 </td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#copytrading">copyTrading</a></td><td>string</td><td>當前交易對是否支持帶單交易 </td>
+        </tr>
+        <tr>
+            <td>> upperFundingRate</td><td>string</td><td>資金費率上限 </td>
+        </tr>
+        <tr>
+            <td>> lowerFundingRate</td><td>string</td><td>資金費率下限 </td>
+        </tr>
+        <tr>
+            <td>> displayName</td><td>string</td><td>網頁或APP端展示的USDC永續和交割合約的名稱</td>
+        </tr>
+        <tr>
+            <td>> riskParameters</td><td>object</td><td>限價單價格風控參數, 參讀該<a href="https://announcements.bybit.com/zh-TW/article/adjustments-to-bybit-s-derivative-trading-limit-order-mechanism-blt469228de1902fff6/">公告內容</a></td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioX</td><td>string</td><td>參數X</td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioY</td><td>string</td><td>參數Y</td>
+        </tr>
+        <tr>
+            <td>> isPreListing</td><td>boolean</td><td><li>該合約是否為盤前合約</li><li>當盤前合約轉為正式合約後, 值將變成false</li></td>
+        </tr>
+        <tr>
+            <td>> preListingInfo</td><td>object</td><td><li>如果isPreListing=false, preListingInfo=null</li><li>如果isPreListing=true, preListingInfo是object</li> </td>
+        </tr>
+        <tr>
+            <td>>> <a href="../enum#curauctionphase">curAuctionPhase</a></td><td>string</td><td>當前的盤前階段</td>
+        </tr>
+        <tr>
+            <td>>> phases</td><td>array&lt;object&gt;</td><td>每個階段的時間信息</td>
+        </tr>
+         <tr>
+            <td>>>> <a href="../enum#curauctionphase">phase</a></td><td>string</td><td>盤前交易階段</td>
+        </tr>
+         <tr>
+            <td>>>> startTime</td><td>string</td><td>該階段的開始時間戳(毫秒)</td>
+        </tr>
+        <tr>
+            <td>>>> endTime</td><td>string</td><td>該階段的結束時間戳(毫秒)</td>
+        </tr>
+         <tr>
+            <td>>> auctionFeeInfo</td><td>object</td><td>盤前交易手續費率信息</td>
+        </tr>
+         <tr>
+            <td>>>> auctionFeeRate</td><td>string</td><td>集合競價期間的手續費率 <li>目前, 僅在連續競價期間才會產生手續費</li></td>
+        </tr>
+         <tr>
+            <td>>>> takerFeeRate</td><td>string</td><td>連續競價期間的吃單成交手續費率</td>
+        </tr>
+         <tr>
+            <td>>>> makerFeeRate</td><td>string</td><td>連續競價期間的掛單成交手續費率</td>
+        </tr>
+        <tr>
+            <td>> isPublicRpi </td><td>boolean</td><td>是否公開給做市商進行 RPI<li> true: 公開給做市商進行 RPI</li> <li>false: 没有公開給做市商進行 RPI</li> </td>
+        </tr>
+        <tr>
+            <td>> myRpiPermission </td><td>boolean</td><td>當前使用者是否有RPI權限<li> true: 有RPI權限</li> <li>false: 没有有RPI權限</li> </td>
+        </tr>
+    </table>
+</TabItem>
+
+
+<!--- <TabItem value="spot" label="Spot">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td>string</td><td>產品類型</td>
+        </tr>
+        <tr>
+            <td>list</td><td>array</td><td>Object</td>
+        </tr>
+        <tr>
+            <td>> symbol</td><td>string</td><td>合約名稱 </td>
+        </tr>
+        <tr>
+            <td>> baseCoin</td><td>string</td><td>交易幣種 </td>
+        </tr>
+        <tr>
+            <td>> quoteCoin</td><td>string</td><td>報價幣種 </td>
+        </tr>
+        <tr>
+            <td>> innovation</td><td>string</td><td>廢棄, 請參照<code>symbolType</code></td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#symboltype">symbolType</a></td><td>string</td><td> 交易對所屬區域</td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#status">status</a></td><td>string</td><td>合約狀態 </td>
+        </tr>
+        <tr>
+            <td>> <a href="../enum#margintrading">marginTrading</a></td><td>string</td><td>該幣對是否支持槓桿交易 <ul><li>該字段僅用於說明不同帳戶類型下某個幣對是否支持槓桿交易</li><li>您可能會遇到某個幣對支持槓桿交易, 但是不支持單邊買入或者賣出, 這種情況下您需要前往<a href="/v5/account/collateral-info">查詢抵押品信息 (UTA)</a>確認目標幣種是否可借貸</li></ul></td>
+        </tr>
+         <tr>
+            <td>> stTag</td><td>string</td><td>幣對是否存在<a href="https://www.bybit.com/en/help-center/article/Bybit-Special-Treatment-ST-Label-Management-Rules">特殊處理(ST)標籤</a>. <code>0</code>: 否, <code>1</code>: 是 </td>
+        </tr>
+        <tr>
+            <td>> lotSizeFilter</td><td>Object</td><td>數量屬性 </td>
+        </tr>
+        <tr>
+            <td>>> basePrecision</td><td>string</td><td>交易幣種精度 </td>
+        </tr>
+        <tr>
+            <td>>> quotePrecision</td><td>string</td><td>報價幣種精度 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderQty</td><td>string</td><td>單筆訂單最小下單量 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderQty</td><td>string</td><td>單筆訂單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>>> minOrderAmt</td><td>string</td><td>單筆訂單最小訂單額 </td>
+        </tr>
+        <tr>
+            <td>>> maxOrderAmt</td><td>string</td><td>單筆訂單最大訂單額 </td>
+        </tr>
+         <tr>
+            <td>>> maxLimitOrderQty</td><td>string</td><td>單筆限價訂單最大下單量 </td>
+        </tr>
+         <tr>
+            <td><nobr>>> maxMarketOrderQty</nobr></td><td>string</td><td>單筆市價訂單最大下單量 </td>
+        </tr>
+        <tr>
+            <td>> priceFilter</td><td>Object</td><td>價格屬性 </td>
+        </tr>
+        <tr>
+            <td>>> tickSize</td><td>string</td><td>修改訂單的步長 </td>
+        </tr>
+        <tr>
+            <td>> riskParameters</td><td>Object</td><td>限價單價格風控參數, 參讀該<a href="https://announcements.bybit.com/zh-TW/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/">公告內容</a></td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioX</td><td>string</td><td>參數 X</td>
+        </tr>
+        <tr>
+            <td>>> priceLimitRatioY</td><td>string</td><td>參數 Y</td>
+        </tr>
+        <tr>
+            <td>> rpiAccess </td><td>string</td><td>是否是可交易的RPI<li> true: RPI 可交易</li> <li>false: RPI 不可交易</li> </td>
+        </tr>
+    </table>
+</TabItem> -->
+</Tabs>
+
+
+---
+
+### 請求示例
+
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/instruments-info?category=linear&symbol=1000000BABYDOGEUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+</Tabs>
+
+</TabItem>
+
+
+
+<!--- <TabItem value="spot" label="Spot">
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/instruments-info?category=spot&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem> 
+</Tabs>
+
+</TabItem>-->
+</Tabs>
+
+### 響應示例
+
+<Tabs groupId="market-category">
+<TabItem value="linear" label="Linear">
+
+```json
+// official USDT Perpetual instrument structure
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "1000000BABYDOGEUSDT",
+                "contractType": "LinearPerpetual",
+                "status": "Trading",
+                "baseCoin": "1000000BABYDOGE",
+                "quoteCoin": "USDT",
+                "launchTime": "1718098044000",
+                "deliveryTime": "0",
+                "deliveryFeeRate": "",
+                "priceScale": "7",
+                "leverageFilter": {
+                    "minLeverage": "1",
+                    "maxLeverage": "25.00",
+                    "leverageStep": "0.01"
+                },
+                "priceFilter": {
+                    "minPrice": "0.0000001",
+                    "maxPrice": "1.9999998",
+                    "tickSize": "0.0000001"
+                },
+                "lotSizeFilter": {
+                    "maxOrderQty": "60000000",
+                    "minOrderQty": "100",
+                    "qtyStep": "100",
+                    "postOnlyMaxOrderQty": "60000000",
+                    "maxMktOrderQty": "12000000",
+                    "minNotionalValue": "5"
+                },
+                "unifiedMarginTrade": true,
+                "fundingInterval": 240,
+                "settleCoin": "USDT",
+                "copyTrading": "none",
+                "upperFundingRate": "0.02",
+                "lowerFundingRate": "-0.02",
+                "isPreListing": false,
+                "preListingInfo": null,
+                "riskParameters": {
+                    "priceLimitRatioX": "0.15",
+                    "priceLimitRatioY": "0.3"
+                },
+                "displayName": "",
+                "symbolType": "innovation",
+                "myRpiPermission": true,
+                "isPublicRpi": true
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1760510800094
+}
+
+```
+
+</TabItem>
+
+<!---<TabItem value="spot" label="Spot">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "spot",
+        "list": [
+            {
+                "symbol": "BTCUSDT",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "innovation": "0",
+                "status": "Trading",
+                "marginTrading": "utaOnly",
+                "stTag": "0",
+                "lotSizeFilter": {
+                    "basePrecision": "0.000001",
+                    "quotePrecision": "0.0000001",
+                    "minOrderQty": "0.000011",
+                    "maxOrderQty": "83",
+                    "minOrderAmt": "5",
+                    "maxOrderAmt": "8000000",
+                    "maxLimitOrderQty": "83",
+                    "maxMarketOrderQty": "41.5"
+                },
+                "priceFilter": {
+                    "tickSize": "0.1"
+                },
+                "riskParameters": {
+                    "priceLimitRatioX": "0.005",
+                    "priceLimitRatioY": "0.01"
+                },
+                "symbolType": "",
+                "rpiAccess": false
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1760027412300
+}
+```
+
+</TabItem> -->
+</Tabs>
