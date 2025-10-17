@@ -5,7 +5,7 @@ sidebar_position: 4.5
 ---
 
 Query for the instrument specification of online trading pairs that available to users.
-> **Covers: USDT contract / USDC contract / Inverse contract**
+> **Covers: SPOT / USDT contract / USDC contract / Inverse contract**
 
 <!-- :::info
 # * Spot does not support pagination, so `limit`, `cursor` are invalid.
@@ -23,7 +23,7 @@ GET `/v5/account/instruments-info`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |<b>true</b> |string |Product type. `linear`,`inverse`|
+|[category](../enum#category) |<b>true</b> |string |Product type. `spot`,`linear`,`inverse`|
 |[symbol](../enum#symbol) |false |string |Symbol name, like `BTCUSDT`, uppercase only|
 |limit |false |integer |Limit for data size per page. [`1`, `200`]. Default: `200`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
@@ -192,7 +192,7 @@ GET `/v5/account/instruments-info`
 </TabItem>
 
 
-<!-- <TabItem value="spot" label="Spot">
+<TabItem value="spot" label="Spot">
     <table border="0.8">
         <tr>
             <th>Parameter</th><th>Type</th><th>Comments</th>
@@ -270,10 +270,13 @@ GET `/v5/account/instruments-info`
             <td>>> priceLimitRatioY</td><td>string</td><td>Ratio Y</td>
         </tr>
         <tr>
-            <td>> rpiAccess </td><td>string</td><td>whether it is a tradable RPI or not, `true`: RPI tradable</td>
+            <td>> isPublicRpi </td><td>boolean</td><td>Whether RPI Is Openly Provided to Market Makers or not.<li> true: RPI Is Openly Provided to Market Makers</li> <li>false: RPI Is Not Openly Provided to Market Makers</li> </td>
+        </tr>
+        <tr>
+            <td>> myRpiPermission </td><td>boolean</td><td>Whether the Current User Has RPI Permissions or not<li> true: Has RPI Permissions</li> <li>false: Does Not Have RPI Permissions</li> </td>
         </tr>
     </table>
-</TabItem> -->
+</TabItem>
 </Tabs>
 
 
@@ -300,7 +303,7 @@ Host: api-testnet.bybit.com
 
 
 
-<!--<TabItem value="spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
@@ -313,7 +316,7 @@ Host: api-testnet.bybit.com
 </TabItem>
 </Tabs>
 
-</TabItem> -->
+</TabItem> 
 </Tabs>
 
 ### Response Example
@@ -385,7 +388,7 @@ Host: api-testnet.bybit.com
 
 </TabItem>
 
-<!--<TabItem value="spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 ```json
 {
@@ -404,30 +407,31 @@ Host: api-testnet.bybit.com
                 "stTag": "0",
                 "lotSizeFilter": {
                     "basePrecision": "0.000001",
-                    "quotePrecision": "0.0000001",
-                    "minOrderQty": "0.000011",
-                    "maxOrderQty": "83",
+                    "quotePrecision": "0.00000001",
+                    "minOrderQty": "0.000001",
+                    "maxOrderQty": "17000",
                     "minOrderAmt": "5",
-                    "maxOrderAmt": "8000000",
-                    "maxLimitOrderQty": "83",
-                    "maxMarketOrderQty": "41.5"
+                    "maxOrderAmt": "1999999999",
+                    "maxLimitOrderQty": "17000",
+                    "maxMarketOrderQty": "8500"
                 },
                 "priceFilter": {
-                    "tickSize": "0.1"
+                    "tickSize": "0.01"
                 },
                 "riskParameters": {
-                    "priceLimitRatioX": "0.005",
-                    "priceLimitRatioY": "0.01"
+                    "priceLimitRatioX": "0.05",
+                    "priceLimitRatioY": "0.05"
                 },
                 "symbolType": "",
-                "rpiAccess": false
+                "isPublicRpi": true,
+                "myRpiPermission": true
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1760027412300
+    "time": 1760682563907
 }
 ```
 
-</TabItem> -->
+</TabItem> 
 </Tabs>
