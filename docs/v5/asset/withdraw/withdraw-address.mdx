@@ -4,22 +4,18 @@ sidebar_label: Get Withdrawal Address List
 sidebar_position: 14
 ---
 
-Query withdrawal Address List.
+Query the withdrawal addresses in the address book.
 
-:::tip
-* `endTime` - `startTime` should be less than 30 days. Query last 30 days records by default.
-* Can query by the master UID's api key **only**
-:::
 
 ### HTTP Request
-GET `/v5/asset/withdraw/address/list`
+GET `/v5/asset/withdraw/query-address`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|coin |false |string |Coin, uppercase only |
-|chain |false |string |Chain name |
-|addressType |false |integer |Address type. `0`: Regular Address Type. `1`: General Address Type (Invalid "coin" Parameter) `2`: Internal Transfer Address Type (Invalid "coin" & "chain" Parameters)|
+|coin |false |string |Coin: <li> When passing 'baseCoin', it refers to the universal addresses.</li><li>When passing a coin name, it refers to the regular address on the chain.</li> |
+|chain |false |string |Chain name:<li>When only passing the chain name, it returns both regular addresses and universal addresses.</li><li>When passing the chain name + coin = 'baseCoin', it only returns the universal address corresponding to the chain.</li> |
+|addressType |false |integer |Address type. `0`: OnChain Address Type(Regular Address Type And Universal Address Type). `1`: Internal Transfer Address Type(Invalid "coin" & "chain" Parameters) `2`: OnChain Address And Internal Transfer Address Type (Invalid "coin" & "chain" Parameters)|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `50`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -28,13 +24,14 @@ GET `/v5/asset/withdraw/address/list`
 |:----- |:-----|----- |
 |rows |array|Object |
 |> coin |string |Coin |
-|> chain |string |Chain |
-|> address |string |Address Type:`0`: Regular Address Type. `1`: General Address Type. `2`: Internal Transfer Address Type|
-|> memo/tag |string |Address_memo |
+|> chain |string |Chain name |
+|> address |string |Address|
+|> tag |string |Address tag |
 |> remark |string |remark |
 |> status|integer |Address status:`0`: Normal. `1`: New Addresses Are Prohibited from Withdrawing Coins for 24 Hours.|
-|> addressType|integer |Address type. `0`: Regular Address Type. `1`: General Address Type. `2`: Internal Transfer Address Type.|
-|> verified |integer |Whether the Address Has Been Verified or not: `0`: Unverified Address. `1`: Verification-Exempt Address.|
+|> addressType|integer |Address type. `0`: OnChain Address Type(Regular Address Type And Universal Address Type) `1`: Internal Transfer Address Type. `2`: Internal Transfer Address Type And OnChain Address Type|
+|> verified |integer |Whether the Address Has Been Verified or not: `0`: Unverified Address. `1`: Verified Address.|
+|> createAt |string |Address create time|
 |nextPageCursor |string|Cursor. Used for pagination |
 
 ---
@@ -45,7 +42,7 @@ GET `/v5/asset/withdraw/address/list`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/asset/withdraw/query-record?coin=USDT&withdrawType=2&limit=2 HTTP/1.1
+GET /v5/asset/withdraw/query-address HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -54,50 +51,7 @@ X-BAPI-RECV-WINDOW: 5000
 ```
 
 </TabItem>
-<TabItem value="python" label="Python">
 
-```python
-from pybit.unified_trading import HTTP
-session = HTTP(
-    testnet=True,
-    api_key="xxxxxxxxxxxxxxxxxx",
-    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-)
-print(session.get_withdrawal_records(
-    coin="USDT",
-    withdrawType=2,
-    limit=2,
-))
-```
-
-</TabItem>
-
-<TabItem value="Node" label="Node.js">
-
-```n4js
-const { RestClientV5 } = require('bybit-api');
-
-const client = new RestClientV5({
-  testnet: true,
-  key: 'xxxxxxxxxxxxxxxxxx',
-  secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-});
-
-client
-  .getWithdrawalRecords({
-    coin: 'USDT',
-    withdrawType: 2,
-    limit: 2,
-  })
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-```
-
-</TabItem>
 </Tabs>
 
 ### Response Example
@@ -109,45 +63,31 @@ client
     "result": {
         "rows": [
             {
-                "coin": "USDC",
+                "coin": "USDT",
                 "chain": "ETH",
-                "amount": "41.43008",
-                "txID": "0x3d7bddb797f0e86420c982c0723653b8b728fd0ec9953b6b354445848d83a185",
-                "status": "success",
-                "toAddress": "0xE3De6d711e0951d34777b5Cd93c827F822ee8514",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
                 "tag": "",
-                "withdrawFee": "5",
-                "createTime": "1742738305000",
-                "updateTime": "1742738340000",
-                "withdrawId": "131629076",
-                "withdrawType": 0,
-                "fee": "",
-                "tax": "",
-                "taxRate": "",
-                "taxType": ""
+                "remark": "",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951195"
             },
             {
-                "coin": "USDT",
-                "chain": "SOL",
-                "amount": "951",
-                "txID": "53j7mUftUboJ2TVb1q3zjwNi9gNGWyQ8xhEpkFovzqaTf8LzuZKzr83XjbG62TZWBkWbn27km7SD6Sc9e1BuWUfJ",
-                "status": "success",
-                "toAddress": "DhTEGye1vq2PPr8DPWit4HTDprnvnDiqpVHnHSY1Y82p",
+                "coin": "baseCoin",
+                "chain": "ETH",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
                 "tag": "",
-                "withdrawFee": "1",
-                "createTime": "1742729329000",
-                "updateTime": "1742729437000",
-                "withdrawId": "131603458",
-                "withdrawType": 0,
-                "fee": "",
-                "tax": "",
-                "taxRate": "",
-                "taxType": ""
+                "remark": "Universal Address",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951332"
             }
         ],
-        "nextPageCursor": "eyJtaW5JRCI6MTMxNjAzNDU4LCJtYXhJRCI6MTMxNjI5MDc2fQ=="
+        "nextPageCursor": "eyJtaW5JRCI6MTA1MDgsIm1heElEIjoxMDUwOX0="
     },
     "retExtInfo": {},
-    "time": 1750777316807
+    "time": 1760960379395
 }
 ```
