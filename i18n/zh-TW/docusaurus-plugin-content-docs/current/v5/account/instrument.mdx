@@ -5,7 +5,7 @@ sidebar_position: 4.5
 ---
 
 查詢用户全站可交易產品的基礎配置規則信息
-> **覆蓋範圍:  USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+> **覆蓋範圍:  SPOT / USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
 
 :::caution
 <!---* 現貨不支持翻頁，因此`limit`, `cusor`無效. -->
@@ -21,7 +21,7 @@ GET `/v5/account/instruments-info`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |<b>true</b> |string |產品類型. `linear`,`inverse`|
+|[category](../enum#category) |<b>true</b> |string |產品類型. `spot`,`linear`,`inverse`|
 |symbol |false |string |合約名稱|
 |limit |false |integer |每頁數量限制. [`1`, `200`]. 默認: `200`|
 |cursor |false |string |游標，用於翻頁|
@@ -190,7 +190,7 @@ GET `/v5/account/instruments-info`
 </TabItem>
 
 
-<!--- <TabItem value="spot" label="Spot">
+ <TabItem value="spot" label="Spot">
     <table border="0.8">
         <tr>
             <th>參數</th><th>類型</th><th>說明</th>
@@ -267,11 +267,14 @@ GET `/v5/account/instruments-info`
         <tr>
             <td>>> priceLimitRatioY</td><td>string</td><td>參數 Y</td>
         </tr>
+       <tr>
+            <td>> isPublicRpi </td><td>boolean</td><td>是否公開給做市商進行 RPI<li> true: 公開給做市商進行 RPI</li> <li>false: 没有公開給做市商進行 RPI</li> </td>
+        </tr>
         <tr>
-            <td>> rpiAccess </td><td>string</td><td>是否是可交易的RPI<li> true: RPI 可交易</li> <li>false: RPI 不可交易</li> </td>
+            <td>> myRpiPermission </td><td>boolean</td><td>當前使用者是否有RPI權限<li> true: 有RPI權限</li> <li>false: 没有有RPI權限</li> </td>
         </tr>
     </table>
-</TabItem> -->
+</TabItem> 
 </Tabs>
 
 
@@ -298,7 +301,7 @@ Host: api-testnet.bybit.com
 
 
 
-<!--- <TabItem value="spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
@@ -311,7 +314,7 @@ Host: api-testnet.bybit.com
 </TabItem> 
 </Tabs>
 
-</TabItem>-->
+</TabItem>
 </Tabs>
 
 ### 響應示例
@@ -383,7 +386,7 @@ Host: api-testnet.bybit.com
 
 </TabItem>
 
-<!---<TabItem value="spot" label="Spot">
+<TabItem value="spot" label="Spot">
 
 ```json
 {
@@ -402,30 +405,31 @@ Host: api-testnet.bybit.com
                 "stTag": "0",
                 "lotSizeFilter": {
                     "basePrecision": "0.000001",
-                    "quotePrecision": "0.0000001",
-                    "minOrderQty": "0.000011",
-                    "maxOrderQty": "83",
+                    "quotePrecision": "0.00000001",
+                    "minOrderQty": "0.000001",
+                    "maxOrderQty": "17000",
                     "minOrderAmt": "5",
-                    "maxOrderAmt": "8000000",
-                    "maxLimitOrderQty": "83",
-                    "maxMarketOrderQty": "41.5"
+                    "maxOrderAmt": "1999999999",
+                    "maxLimitOrderQty": "17000",
+                    "maxMarketOrderQty": "8500"
                 },
                 "priceFilter": {
-                    "tickSize": "0.1"
+                    "tickSize": "0.01"
                 },
                 "riskParameters": {
-                    "priceLimitRatioX": "0.005",
-                    "priceLimitRatioY": "0.01"
+                    "priceLimitRatioX": "0.05",
+                    "priceLimitRatioY": "0.05"
                 },
                 "symbolType": "",
-                "rpiAccess": false
+                "isPublicRpi": true,
+                "myRpiPermission": true
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1760027412300
+    "time": 1760682563907
 }
 ```
 
-</TabItem> -->
+</TabItem>
 </Tabs>
