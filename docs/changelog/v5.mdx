@@ -9,9 +9,6 @@ import '/src/css/changelog.css';
 - [Manual Borrow](../v5/account/borrow) [NEW]
     - Add a new endpoint for UTA manual borrow
 
-- [Manual Repay](../v5/account/repay) [NEW]
-    - Add a new endpoint for UTA manual repay
-
 - [Get Max Borrowable Amount](../v5/spot-margin-uta/max-borrowable) [NEW]
     - Add a new endpoint to get max borrowable amount
 
@@ -41,11 +38,46 @@ import '/src/css/changelog.css';
 ### REST API
 - [Get Withdrawal Address List](../v5/asset/withdraw/withdraw-address) [NEW]
     - We have launched a new endpoint to query the withdrawal addresses in the address book.
+-  [Get Tickers](../v5/market/tickers) [UPDATE]
+    - Add new response fields  `basisRateYear`, `fundingIntervalHour`, `fundingCap`
+
+- [Place Order](../v5/order/create-order) [UPDATE]
+    - Add new input parameters `bboSideType`, `bboLevel` to suppot to place a BBO order
+- [Get Open Orders](../v5/order/open-order) [UPDATE]
+    - `createType` has new enumeration value: `CreateByBboOrder`, used to indicate BBO Order
+- [Get Order History](../v5/order/order-list) [UPDATE]
+    - `createType` has new enumeration value: `CreateByBboOrder`, used to indicate BBO Order
+
+### WebSocket API
+- [Order](../v5/websocket/private/order) [UPDATE]
+    - `createType` has new enumeration value: `CreateByBboOrder`, used to indicate BBO Order
+- [Execution](../v5/websocket/private/execution) [UPDATE]
+    - `createType` has new enumeration value: `CreateByBboOrder`, used to indicate BBO Order
+
+## 2025-10-16
+### REST API
+- [Get Account Instruments Info](../v5/account/instrument) [NEW]
+<!--- [Get Instruments Info](../v5/market/instrument) [UPDATE]
+    - Add `symbolType` request parameter to filter instrument records for`spot`-->
+- [Get Flexible Loans](../v5/new-crypto-loan/flexible/unpaid-loan-order) [UPDATE]
+    - Add response parameters `unpaidAmount`, `unpaidInterest`, to distinguish unpaid principal and unpaid interest from `totalDebt`
+- [Manual Repay](../v5/account/repay) [NEW]
+    - Add a new endpoint for UTA manual repay
+### WebSocket API
+- [Ticker](../v5/websocket/public/ticker) [UPDATE]
+    -  Add new response fields  `basisRateYear`, `fundingIntervalHour`, `fundingCap`
+
+## 2025-10-14
+### REST API
+- [Get Sub UID List (Limited)](../v5/user/subuid-list) [UPDATE]
+    - Update response parameter `accountMode`, now support distinguish to Classic Account, UTA1.0, UTA1.0 Pro, UTA2.0, UTA2.0 Pro
+- [Get Sub UID List (Unlimited)](../v5/user/page-subuid) [UPDATE]
+    - Update response parameter `accountMode`, now support distinguish to Classic Account, UTA1.0, UTA1.0 Pro, UTA2.0, UTA2.0 Pro
 
 ## 2025-10-10
 ### REST API
 - [RFQ APIs and WebSockets](../v5/rfq/basic-workflow) [NEW]
-    - We have launched a Bybit RFQ (Request for Quote). Please see our [basic workflow](../v5/rfq/basic-workflow) and the [help centre](https://www.bybit.com/en/help-center/article/Introduction-to-RFQ) for details.
+    - We have launched Bybit RFQ (Request for Quote). Please see our [basic workflow](../v5/rfq/basic-workflow) and the [help centre](https://www.bybit.com/en/help-center/article/Introduction-to-RFQ) for details.
 - Earn API [NEW]
     - [Get Yield History](../v5/earn/yield-history)
     - [Get Hourly Yield History](../v5/earn/hourly-yield)
@@ -58,9 +90,9 @@ import '/src/css/changelog.css';
 - [Place Order](../v5/order/create-order) [UPDATE]
     - The value range of `slippageTolerance` has been adjusted, where: `TickSize` has changed from [5, 2000] to [1, 10000],`Percent` has changed from [0.05, 1] to [0.01, 10]
 - [Get Instruments Info](../v5/market/instrument) [UPDATE]
-    - Add `symbolType` request parameter to filter instrument records,only for`linear`,`inverse`
+    - Add `symbolType` request parameter to filter instrument records, only for `linear`,`inverse`
 - [Get Instruments Info](../v5/market/instrument) [UPDATE]
-    - category=`spot` adds a new response fields `maxLimitOrderQty`, `maxMarketOrderQty`, will becomes effective on 16th Oct, refer to [Changes to maximum order size for limit and market orders](https://announcements.bybit.com/article/changes-to-maximum-order-size-for-limit-and-market-orders-blt6ac479804a794c46/) to get more details
+    - category=`spot` adds new response fields `maxLimitOrderQty`, `maxMarketOrderQty`, will becomes effective on Oct 16th, refer to the [announcement](https://announcements.bybit.com/article/changes-to-maximum-order-size-for-limit-and-market-orders-blt6ac479804a794c46/) to get more details
 
 ## 2025-09-28
 ### REST API
@@ -129,7 +161,7 @@ import '/src/css/changelog.css';
 ## 2025-09-15
 ### REST API
 - [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
-    - Add new type Enums `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`, `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`
+    - Add new type enums `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`, `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`
 
 ## 2025-09-09
 ### REST API
