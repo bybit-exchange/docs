@@ -1,0 +1,98 @@
+---
+title: 查詢地址簿提幣地址
+sidebar_label: 查詢地址簿提幣地址
+sidebar_position: 14
+---
+
+查詢地址簿中的提幣地址
+
+:::tip
+* 查詢此端點的apikey必須具備提幣權限.
+:::
+
+
+
+
+### HTTP 請求
+GET `/v5/asset/withdraw/query-address`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |幣種：<li>當傳入 'baseCoin' 時，表示通用地址</li><li>當傳入幣種名稱時，表示鏈上的普通地址</li> |  
+|chain |false |string |鏈名稱：<li>僅傳入鏈名稱時，返回普通地址和通用地址</li><li>傳入鏈名稱 + coin = 'baseCoin' 時，僅返回該鏈對應的通用地址</li> |  
+|addressType |false |integer |地址類型:`0`:鏈上地址類型（普通地址類型和通用地址類型）`1`:內部轉賬地址類型（"coin" 和 "chain" 參數無效）`2`:鏈上地址和內部轉賬地址類型（"coin" 和 "chain" 參數無效）|  
+|limit |false |integer |每頁數據大小的限制。範圍:[`1`, `50`]。默認值:`50`|  
+|cursor |false |string |游標，用於翻頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|rows |array|Object |  
+|> coin |string |幣種 |  
+|> chain |string |鏈名稱 |  
+|> address |string |地址 |  
+|> tag |string |地址標籤 |  
+|> remark |string |備註 |  
+|> status |integer |地址狀態：`0`:正常`1`:新地址禁止提幣 24 小時|  
+|> addressType |integer |地址類型:`0`:鏈上地址類型（普通地址類型和通用地址類型）`1`:內部轉賬地址類型`2`:內部轉賬地址類型和鏈上地址類型|  
+|> verified |integer |地址是否已驗證:`0`:未驗證地址`1`:已驗證地址|  
+|> createAt |string |地址創建時間 |  
+|nextPageCursor |string |游標，用於分頁 |
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/withdraw/query-address HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672194949557
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
+                "tag": "",
+                "remark": "",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951195"
+            },
+            {
+                "coin": "baseCoin",
+                "chain": "ETH",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
+                "tag": "",
+                "remark": "Universal Address",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951332"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTA1MDgsIm1heElEIjoxMDUwOX0="
+    },
+    "retExtInfo": {},
+    "time": 1760960379395
+}
+```

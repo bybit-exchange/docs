@@ -1,0 +1,97 @@
+---
+title: Get Withdrawal Address List
+sidebar_label: Get Withdrawal Address List
+sidebar_position: 14
+---
+
+Query the withdrawal addresses in the address book.
+
+:::tip
+* The API key for querying this endpoint must have withdrawal permissions.
+:::
+
+
+### HTTP Request
+GET `/v5/asset/withdraw/query-address`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |false |string |Coin: <li> When passing 'baseCoin', it refers to the universal addresses.</li><li>When passing a coin name, it refers to the regular address on the chain.</li> |
+|chain |false |string |Chain name:<li>When only passing the chain name, it returns both regular addresses and universal addresses.</li><li>When passing the chain name + coin = 'baseCoin', it only returns the universal address corresponding to the chain.</li> |
+|addressType |false |integer |Address type. `0`: OnChain Address Type(Regular Address Type And Universal Address Type). `1`: Internal Transfer Address Type(Invalid "coin" & "chain" Parameters) `2`: OnChain Address And Internal Transfer Address Type (Invalid "coin" & "chain" Parameters)|
+|limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `50`|
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|rows |array|Object |
+|> coin |string |Coin |
+|> chain |string |Chain name |
+|> address |string |Address|
+|> tag |string |Address tag |
+|> remark |string |remark |
+|> status|integer |Address status:`0`: Normal. `1`: New Addresses Are Prohibited from Withdrawing Coins for 24 Hours.|
+|> addressType|integer |Address type. `0`: OnChain Address Type(Regular Address Type And Universal Address Type) `1`: Internal Transfer Address Type. `2`: Internal Transfer Address Type And OnChain Address Type|
+|> verified |integer |Whether the Address Has Been Verified or not: `0`: Unverified Address. `1`: Verified Address.|
+|> createAt |string |Address create time|
+|nextPageCursor |string|Cursor. Used for pagination |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/withdraw/query-address HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672194949557
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "rows": [
+            {
+                "coin": "USDT",
+                "chain": "ETH",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
+                "tag": "",
+                "remark": "",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951195"
+            },
+            {
+                "coin": "baseCoin",
+                "chain": "ETH",
+                "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",
+                "tag": "",
+                "remark": "Universal Address",
+                "status": 0,
+                "addressType": 0,
+                "verified": 0,
+                "createdAt": "1760951332"
+            }
+        ],
+        "nextPageCursor": "eyJtaW5JRCI6MTA1MDgsIm1heElEIjoxMDUwOX0="
+    },
+    "retExtInfo": {},
+    "time": 1760960379395
+}
+```
