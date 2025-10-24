@@ -23,6 +23,8 @@ GET `/v5/affiliate/aff-user-list`
 |needDeposit |false |boolean |`true`: return deposit info; `false`(default): does not return deposit info|
 |need30 |false |boolean |`true`: return 30 days trading info; `false`(default): does not return 30 days trading info|
 |need365 |false |boolean |`true`: return 365 days trading info; `false`(default): does not return 365 days trading info|
+|startDate |false |string |Start date of the query period, format `YYYY-MM-DD`|
+|endDate |false |string |End date of the query period, format `YYYY-MM-DD`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -41,6 +43,11 @@ GET `/v5/affiliate/aff-user-list`
 |> makerVol365Day |string |Maker volume in the past year (USDT), update at T + 1|
 |> tradeVol365Day |string |Total trading volume in the past year (USDT), update at T + 1|
 |> depositAmount365Day |string |Total deposit amount in the past year (USDT)|
+|> takerVol |string |Taker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume|
+|> makerVol |string |Maker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume|
+|> tradeVol |string |Total trading volume in [`startDate`, `endDate`]  (USDT), update at T + 1, includes Derivatives, Option, Spot volume|
+|> startDate |string |Start date of the query period|
+|> endDate |string |End date of the query period|
 |nextPageCursor |string | Refer to the `cursor` request parameter
 
 ---
@@ -51,7 +58,7 @@ GET `/v5/affiliate/aff-user-list`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/affiliate/aff-user-list?cursor=""&size=2 HTTP/1.1
+GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1685596324209
@@ -102,34 +109,44 @@ client
     "result": {
         "list": [
             {
-                "userId": "101527036",
-                "registerTime": "2024-06-21",
-                "source": "1564",
-                "remarks": "test",
+                "userId": "1001699821",
+                "registerTime": "0001-01-01",
+                "source": "aff_14650_10087",
+                "remarks": "front_hub_robot",
                 "isKyc": false,
-                "takerVol30Day": "10",
-                "makerVol30Day": "20",
-                "tradeVol30Day": "30",
-                "depositAmount30Day": "90",
-                "takerVol365Day": "100",
-                "makerVol365Day": "500",
-                "tradeVol365Day": "600",
-                "depositAmount365Day": "1300",
+                "takerVol30Day": "",
+                "makerVol30Day": "",
+                "tradeVol30Day": "",
+                "depositAmount30Day": "",
+                "takerVol365Day": "",
+                "makerVol365Day": "",
+                "tradeVol365Day": "",
+                "depositAmount365Day": "",
+                "takerVol": "",
+                "makerVol": "",
+                "tradeVol": "",
+                "startDate": "2025-09-21",
+                "endDate": "2025-10-21"
             },
             {
-                "userId": "103929118",
-                "registerTime": "2024-11-12",
-                "source": "1564",
-                "remarks": "",
+                "userId": "1001625535",
+                "registerTime": "0001-01-01",
+                "source": "aff_14650_10087",
+                "remarks": "front_hub_robot",
                 "isKyc": false,
-                "takerVol30Day": "10",
-                "makerVol30Day": "20",
-                "tradeVol30Day": "30",
-                "depositAmount30Day": "90",
-                "takerVol365Day": "100",
-                "makerVol365Day": "500",
-                "tradeVol365Day": "600",
-                "depositAmount365Day": "1300",
+                "takerVol30Day": "",
+                "makerVol30Day": "",
+                "tradeVol30Day": "",
+                "depositAmount30Day": "",
+                "takerVol365Day": "",
+                "makerVol365Day": "",
+                "tradeVol365Day": "",
+                "depositAmount365Day": "",
+                "takerVol": "",
+                "makerVol": "",
+                "tradeVol": "",
+                "startDate": "2025-09-21",
+                "endDate": "2025-10-21"
             }
         ],
         "nextPageCursor": "16197"

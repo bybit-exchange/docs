@@ -23,6 +23,8 @@ GET `/v5/affiliate/aff-user-list`
 |needDeposit |false |boolean |`true`: 返回入金信息; `false`(默認): 不返回入金信息|
 |need30 |false |boolean |`true`: 返回最近30天交易信息; `false`(default): 不返回最近30天交易信息|
 |need365 |false |boolean |`true`: 返回最近365天交易信息; `false`(default): 不返回最近365天交易信息|
+|startDate |false |string | 查詢時段開始日期，格式為 `YYYY-MM-DD`|
+|endDate |false |string | 查詢時段結束日期，格式為 `YYYY-MM-DD`|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -41,6 +43,11 @@ GET `/v5/affiliate/aff-user-list`
 |> makerVol365Day |string |過去一年的掛單交易量, T+1更新. 單位: USDT |
 |> tradeVol365Day |string |過去一年的總交易量, T+1更新. 單位: USDT |
 |> depositAmount365Day |string |過去一年的總入金金額. 單位: USDT |
+|> takerVol |string |在 [`startDate`, `endDate`] 區間內的吃單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量 |
+|> makerVol |string |在 [`startDate`, `endDate`] 區間內的掛單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量 |
+|> tradeVol |string |在 [`startDate`, `endDate`] 區間內的總成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量 |
+|> startDate |string |查詢時段開始日期 |
+|> endDate |string |查詢時段結束日期 |
 |nextPageCursor |string |游標，用於翻頁 |
 
 ---
@@ -51,7 +58,7 @@ GET `/v5/affiliate/aff-user-list`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/affiliate/aff-user-list?cursor=""&size=2 HTTP/1.1
+GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1685596324209
@@ -102,34 +109,44 @@ client
     "result": {
         "list": [
             {
-                "userId": "101527036",
-                "registerTime": "2024-06-21",
-                "source": "1564",
-                "remarks": "test",
+                "userId": "1001699821",
+                "registerTime": "0001-01-01",
+                "source": "aff_14650_10087",
+                "remarks": "front_hub_robot",
                 "isKyc": false,
-                "takerVol30Day": "10",
-                "makerVol30Day": "20",
-                "tradeVol30Day": "30",
-                "depositAmount30Day": "90",
-                "takerVol365Day": "100",
-                "makerVol365Day": "500",
-                "tradeVol365Day": "600",
-                "depositAmount365Day": "1300",
+                "takerVol30Day": "",
+                "makerVol30Day": "",
+                "tradeVol30Day": "",
+                "depositAmount30Day": "",
+                "takerVol365Day": "",
+                "makerVol365Day": "",
+                "tradeVol365Day": "",
+                "depositAmount365Day": "",
+                "takerVol": "",
+                "makerVol": "",
+                "tradeVol": "",
+                "startDate": "2025-09-21",
+                "endDate": "2025-10-21"
             },
             {
-                "userId": "103929118",
-                "registerTime": "2024-11-12",
-                "source": "1564",
-                "remarks": "",
+                "userId": "1001625535",
+                "registerTime": "0001-01-01",
+                "source": "aff_14650_10087",
+                "remarks": "front_hub_robot",
                 "isKyc": false,
-                "takerVol30Day": "10",
-                "makerVol30Day": "20",
-                "tradeVol30Day": "30",
-                "depositAmount30Day": "90",
-                "takerVol365Day": "100",
-                "makerVol365Day": "500",
-                "tradeVol365Day": "600",
-                "depositAmount365Day": "1300",
+                "takerVol30Day": "",
+                "makerVol30Day": "",
+                "tradeVol30Day": "",
+                "depositAmount30Day": "",
+                "takerVol365Day": "",
+                "makerVol365Day": "",
+                "tradeVol365Day": "",
+                "depositAmount365Day": "",
+                "takerVol": "",
+                "makerVol": "",
+                "tradeVol": "",
+                "startDate": "2025-09-21",
+                "endDate": "2025-10-21"
             }
         ],
         "nextPageCursor": "16197"
