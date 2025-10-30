@@ -59,7 +59,7 @@ GET `/v5/order/realtime`
 |> leavesValue |string |The estimated value not executed. _Classic `spot` is not supported_  |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value. _Classic `spot` is not supported_  |
-|> cumExecFee |string |Deprecated. Cumulative executed trading fee. _Classic `spot` is not supported_  |
+|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li> _Classic `spot` is not supported_  |
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL orders, is the order type after the order was triggered|
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |
@@ -86,7 +86,7 @@ GET `/v5/order/realtime`
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
-|> cumFeeDetail |json |Cumulative trading fee details instead of `cumExecFee`
+|> cumFeeDetail |json |<li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li> | 
 
 <a href="/api-explorer/v5/trade/open-order"><Button>RUN >></Button></a>
 

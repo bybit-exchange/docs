@@ -58,7 +58,7 @@ GET `/v5/order/realtime`
 |> leavesValue |string |訂單剩餘未成交的價值. _經典帳戶現貨交易不支持_ |
 |> cumExecQty |string |訂單累計成交數量 |
 |> cumExecValue |string |訂單累計成交價值. _經典帳戶現貨交易不支持_  |
-|> cumExecFee |string |已棄用. 訂單累計成交的手續費. _經典帳戶現貨交易不支持_  |
+|> cumExecFee |string |<li>`inverse`, `option`: 訂單累計成交的手續費.</li><li>`linear`, `spot`: 已棄用. 用`cumFeeDetail`替代.</li>.  _經典帳戶現貨交易不支持_  |
 |> [timeInForce](../enum#timeinforce) |string |執行策略 |
 |> [orderType](../enum#ordertype) |string |訂單類型. `Market`,`Limit`. 對於止盈止損單, 則表示為觸發後的訂單類型 |
 |> [stopOrderType](../enum#stopordertype) |string |條件單類型 |
@@ -85,7 +85,7 @@ GET `/v5/order/realtime`
 |> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
-|> cumFeeDetail |json |累積交易費詳情, 替代`cumExecFee`
+|> cumFeeDetail |json |<li>`linear`, `spot`: 累積交易費詳情, 替代`cumExecFee`</li>`
 
 <a href="/api-explorer/v5/trade/open-order"><Button>運行實例 >></Button></a>
 

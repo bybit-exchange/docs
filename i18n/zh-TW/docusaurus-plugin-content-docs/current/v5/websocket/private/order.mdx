@@ -47,7 +47,7 @@ sidebar_position: 3
 |> leavesValue |string |訂單剩餘未成交的價值, _經典帳戶現貨交易不支持_ |
 |> cumExecQty |string |訂單累計成交數量 |
 |> cumExecValue |string |訂單累計成交價值 |
-|> cumExecFee |string |已棄用. 訂單累計成交的手續費 <ul><li>經典帳戶`spot`: 表示的是最近一次成交的手續費.</li><li>升級到統一帳戶後, 您可以使用[成交](execution)頻道中的`execFee`字段來獲取每次成交的手續費</li></ul> |
+|> cumExecFee |string |<li>`inverse`, `option`: 訂單累計成交的手續費.</li><li>`linear`, `spot`: 已棄用. 用`cumFeeDetail`替代.</li><li>經典帳戶`spot`: 表示的是最近一次成交的手續費.</li><li>升級到統一帳戶後, 您可以使用[成交](execution)頻道中的`execFee`字段來獲取每次成交的手續費</li> |
 |> closedPnl |string |平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費. 該數據和[查詢平倉盈虧](../../position/close-pnl)接口裡的"closedPnl"保持一致|
 |> feeCurrency |string |已棄用. 現貨交易的手續費幣種. 可以從[這裡](../../enum#現貨交易手續費幣種說明)了解現貨交易的手續費幣種規則 |
 |> [timeInForce](../../enum#timeinforce) |string |執行策略 |
@@ -77,7 +77,7 @@ sidebar_position: 3
 |> smpOrderId |string |觸發此SMP執行的交易對手的 orderID|
 |> createdTime |string |創建訂單的時間戳 (毫秒) |
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
-|> cumFeeDetail |json |累計交易費用詳情，替换`cumExecFee`和`feeCurrency`
+|> cumFeeDetail |json |<li>`linear`, `spot`: 累積交易費詳情, 替代`cumExecFee`</li>` |
 
 ### 訂閱示例
 ```json
