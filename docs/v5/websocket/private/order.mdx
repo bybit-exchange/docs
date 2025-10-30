@@ -48,7 +48,7 @@ The first message tells you the order is executed, and the second message tells 
 |> leavesValue |string |The remaining value not executed. _Classic `spot` is not supported_ |
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |Deprecated. Cumulative executed trading fee. <ul><li>Classic `spot`: it is the latest execution fee for order.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li></ul> |
+|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li><li>Classic `spot`: it is the latest execution fee for order.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li> |
 |> closedPnl |string |Closed profit and loss for each close position order. The figure is the same as "closedPnl" from [Get Closed PnL](../../position/close-pnl)|
 |> feeCurrency |string |Deprecated. Trading fee currency for Spot only. Please understand Spot trading fee currency [here](../../enum#spot-fee-currency-instruction) |
 |> [timeInForce](../../enum#timeinforce) |string |Time in force |
@@ -78,7 +78,7 @@ The first message tells you the order is executed, and the second message tells 
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
-|> cumFeeDetail |json |Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`
+|> cumFeeDetail |json |<li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li> |
 
 ### Subscribe Example
 ```json
