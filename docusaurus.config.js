@@ -265,12 +265,28 @@ const config = {
                 href: 'https://github.com/bybit-exchange/api-usage-examples',
               },
               {
-                label: 'Official python SDK – pybit',
+                label: 'Postman collection',
+                href: 'https://github.com/bybit-exchange/QuickStartWithPostman',
+              },
+              {
+                label: 'Official Python SDK – pybit',
                 href: 'https://github.com/bybit-exchange/pybit',
               },
               {
-                label: 'Community nodeJS SDK – bybit-api',
+                label: 'Community Node.js SDK – bybit-api',
                 href: 'https://www.npmjs.com/package/bybit-api',
+              },
+              {
+                label: 'Official Go SDK – bybit-go-api',
+                href: 'https://github.com/bybit-exchange/bybit.go.api',
+              },
+              {
+                label: 'Official Java SDK – bybit-java-api',
+                href: 'https://github.com/bybit-exchange/bybit-java-api',
+              },
+              {
+                label: 'Official .Net SDK – bybit.net.api',
+                href: 'https://github.com/bybit-exchange/bybit.net.api',
               },
             ],
           },
