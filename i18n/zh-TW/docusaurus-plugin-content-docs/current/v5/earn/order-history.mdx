@@ -14,7 +14,7 @@ GET `/v5/earn/order`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |category|**true**|string|`FlexibleSaving`,`OnChain` <br/>**備註**: 本期僅支持活期理財和鏈上賺幣|
-|orderId|false|string|系統生成的訂單ID <li>orderId和orderLinkId二者*必須*傳其一</li><li>如果都傳入, 確保二者是來自同一筆訂單, 否則返回空</li>|
+|orderId|false|string|系統生成的訂單ID <li>對於category = `OnChain`, orderId和orderLinkId二者*必須*傳其一</li><li>如果都傳入, 確保二者是來自同一筆訂單, 否則返回空</li>|
 |orderLinkId|false|string|自定義訂單ID<br/>**備註**: 如果orderLinkId有復用, 則僅用orderLinkId查詢時, 總是返回最近的那筆訂單|
 | productId   | false    | string    | 產品ID                                                                                                                      |
 |startTime |false |integer |開始時間戳 (毫秒)<ul><li>startTime 和 endTime都不傳入, 則默認返回最近7天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &lt;= 7天</li></ul>|
