@@ -4,7 +4,6 @@ sidebar_label: Get Transaction Log (UTA)
 sidebar_position: 9
 ---
 Query for transaction logs in your Unified account. It supports up to 2 years worth of data.
-> **Apply to**: [UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10)(except inverse)
 
 ### HTTP Request
 GET `/v5/account/transaction-log`
@@ -13,10 +12,11 @@ GET `/v5/account/transaction-log`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |[accountType](../enum#accounttype) |false |string |Account Type. `UNIFIED`|
-|[category](../enum#category) |false |string |Product type <li>[UTA2.0](../acct-mode#uta-20): `spot`,`linear`,`option`,`inverse`</li><li>[UTA1.0](../acct-mode#uta-10): `spot`,`linear`,`option`</li>|
+|[category](../enum#category) |false |string |Product type `spot`,`linear`,`option`,`inverse`|
 |currency |false |string |Currency, uppercase only |
 |baseCoin |false |string |BaseCoin, uppercase only. e.g., BTC of BTCPERP|
 |[type](../enum#typeuta-translog) |false |string |Types of transaction logs|
+|transSubType|false |string |`movePosition`, used to filter trans logs of Move Position only|
 |startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 24 hours by default</li><li>Only startTime is passed, return range between startTime and startTime+24 hours</li><li>Only endTime is passed, return range between endTime-24 hours and endTime</li><li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false	|integer |The end timestamp (ms) |
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
