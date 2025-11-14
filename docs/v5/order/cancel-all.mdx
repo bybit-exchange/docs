@@ -12,9 +12,9 @@ Cancel all open orders
 :::
 
 :::info
-**Spot**: classic account - cancel up to 500 orders; Unified account - no limit<br/>
-**Futures**: classic account - cancel up to 500 orders; Unified account - cancel up to 500 orders (System **picks up 500 orders randomly to cancel** when you have over 500 orders)<br/>
-**Options**: Unified account - no limit
+**Spot**: no limit<br/>
+**Futures**: cancel up to 500 orders (System **picks up 500 orders randomly to cancel** when you have over 500 orders)<br/>
+**Options**: no limit
 :::
 
 ### HTTP Request
@@ -23,9 +23,9 @@ POST `/v5/order/cancel-all`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type `linear`, `inverse`, `spot`, `option`|
 |symbol |false|string |Symbol name, like `BTCUSDT`, uppercase only<br/>`linear`&`inverse`: **Required** if not passing baseCoin or settleCoin|
-|baseCoin |false|string |Base coin, uppercase only <ul><li>`linear` & `inverse`(classic account): If cancel all by baseCoin, it will cancel all linear & inverse orders. **Required** if not passing symbol or settleCoin</li><li>`linear` & `inverse`(Unified account): If cancel all by baseCoin, it will cancel all corresponding category orders. **Required** if not passing symbol or settleCoin</li><li>`spot`(classic account): invalid</li></ul>|
+|baseCoin |false|string |Base coin, uppercase only <ul><li>`linear` & `inverse`: If cancel all by baseCoin, it will cancel all corresponding category orders. **Required** if not passing symbol or settleCoin</li></ul>|
 |settleCoin |false|string |Settle coin, uppercase only <ul><li>`linear` & `inverse`: **Required** if not passing symbol or baseCoin</li><li>`option`: USDT or USDC</li><li>Not support `spot`</li></ul>|
 |orderFilter |false |string |<ul><li>category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`, `OcoOrder`, `BidirectionalTpslOrder`<br/>If not passed, `Order` by default</li><li>category=`linear` or `inverse`, you can pass `Order`, `StopOrder`,`OpenOrder`<br/>If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order</li><li>category=`option`, you can pass `Order`,`StopOrder`<br/> If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order</li></ul>|
 |[stopOrderType](../enum#stopordertype) |false |string |Stop order type `Stop` <li>Only used for category=`linear` or `inverse` and orderFilter=`StopOrder`,you can cancel conditional orders except TP/SL order and Trailing stop orders with this param</li> |
@@ -44,7 +44,7 @@ The acknowledgement of create/amend/cancel order requests indicates that the req
 |list |array |Object|
 |> orderId |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|success |string |"1": success, "0": fail<li>[UTA1.0](../acct-mode#uta-10)(inverse), classic(linear, inverse) do not return this field</li>|
+|success |string |"1": success, "0": fail|
 
 ### Request Example
 
