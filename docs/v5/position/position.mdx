@@ -7,13 +7,9 @@ sidebar_position: 1
 Query real-time position data, such as position size, cumulative realized PNL, etc.
 
 :::info
-**[UTA2.0](/v5/acct-mode#uta-20)(inverse)**
+**category="inverse"**
 1. You can query all open positions with `/v5/position/list?category=inverse`;
 2. Cannot query multiple symbols in one request
-
-**[UTA1.0](/v5/acct-mode#uta-10)(inverse) & Classic (inverse)**
-1. You can query all open positions with `/v5/position/list?category=inverse`;
-2. `symbol` parameter can pass up to 10 symbols, e.g., `symbol=BTCUSD,ETHUSD`
 :::
 
 ### HTTP Request
@@ -22,7 +18,7 @@ GET `/v5/position/list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../v5/enum#category) |**true** |string |Product type <ul><li>[UTA2.0](/v5/acct-mode#uta-20), [UTA1.0](/v5/acct-mode#uta-10): `linear`, `inverse`, `option`</li><li>Classic account: `linear`, `inverse`</li></ul> |
+|[category](../v5/enum#category) |**true** |string |Product type `linear`, `inverse`, `option`|
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only<ul><li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null and `settleCoin` specified, it returns position size greater than zero.</li></ul>|
 |baseCoin |false |string |Base coin, uppercase only. `option` **only**. Return all option positions if not passed|
 |settleCoin |false |string |Settle coin<li>`linear`: either `symbol` or `settleCoin` is **required**. `symbol` has a higher priority</li> |
@@ -37,27 +33,24 @@ GET `/v5/position/list`
 |list|array |Object |
 |> [positionIdx](../v5/enum#positionidx) | integer |Position idx, used to identify positions in different position modes<ul><li>`0`: One-Way Mode</li><li>`1`: Buy side of both side mode</li><li>`2`: Sell side of both side mode</li> </ul>|
 |> riskId |integer |Risk tier ID<br/>_for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_ |
-|> riskLimitValue |string  | Risk limit value<br/>_for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_ |
+|> riskLimitValue |string  | Risk limit value, become meaningless when auto risk-limit tier is applied<br/>_for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_ |
 |> symbol |string  |Symbol name |
-|> side |string  |Position side. `Buy`: long, `Sell`: short <ul><li>one-way mode: classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse), an empty position returns `None`.</li><li>[UTA2.0](/v5/acct-mode#uta-20)(linear, inverse) & [UTA1.0](/v5/acct-mode#uta-10)(linear): either one-way or hedge mode returns an empty string `""` for an empty position.</li></ul> |
+|> side |string  |Position side. `Buy`: long, `Sell`: short<br/>return an empty string `""` for an empty position|
 |> size |string  |Position size, always positive |
 |> avgPrice |string  |Average entry price <li>For USDC Perp & Futures, it indicates average entry price, and it will not be changed with 8-hour session settlement</li> |
 |> positionValue | string  |Position value|
-|> tradeMode | integer |Trade mode <ul><li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse): `0`: cross-margin, `1`: isolated margin</li><li>[UTA2.0](/v5/acct-mode#uta-20), [UTA1.0](/v5/acct-mode#uta-10)(execpt inverse): deprecated, always `0`, check [Get Account Info](/v5/account/account-info) to know the margin mode</li></ul>|
 |> autoAddMargin | integer |Whether to add margin automatically when using isolated margin mode <li>`0`: false</li><li>`1`: true</li> |
 |> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage<br/>_for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
 |> markPrice | string  |Mark price |
-|> liqPrice | string  |Position liquidation price <ul><li>[UTA2.0](/v5/acct-mode#uta-20)(isolated margin), [UTA1.0](/v5/acct-mode#uta-10)(isolated margin), [UTA1.0](/v5/acct-mode#uta-10)(inverse), Classic account: <br/>it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>[UTA2.0](/v5/acct-mode#uta-20)(Cross margin), [UTA1.0](/v5/acct-mode#uta-10)(Cross margin):<br/>it is an <b>estimated</b> price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>_this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_|
-|> bustPrice | string  |Bankruptcy price: Only applicable to the classic account|
-|> positionIM | string  |Initial margin<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse): ignore this field</li><li>UTA portfolio margin mode, it returns ""</li> |
-|> positionIMByMp | string  |Initial margin calculated by mark price<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) : ignore this field</li><li>UTA portfolio margin mode, it returns ""</li> |
-|> positionMM | string  |Maintenance margin<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse): ignore this field</li><li>UTA portfolio margin mode, it returns ""</li>|
-|> positionMMByMp | string  |Maintenance margin calculated by mark price<li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) : ignore this field</li><li>UTA portfolio margin mode, it returns ""</li>|
-|> positionBalance | string  |Position margin <li>Classic & [UTA1.0](/v5/acct-mode#uta-10)(inverse) can refer to this field to get the position initial margin plus position closing fee</li> |
+|> liqPrice | string  |Position liquidation price <ul><li>Isolated margin: <br/>it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>Cross margin:<br/>it is an <b>estimated</b> price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>_this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_|
+|> positionIM | string  |Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)<li>Portfolio margin mode: returns ""</li> |
+|> positionIMByMp | string  |Initial margin calculated by mark price, the same value as `positionIM`<li>Portfolio margin mode: returns ""</li>|
+|> positionMM | string  |Maintenance margin, the same value as `positionMMByMp`<li>Portfolio margin mode: returns ""</li> |
+|> positionMMByMp | string  |Maintenance margin calculated by mark price, the same value as `positionMM`<li>Portfolio margin mode: returns ""</li> |
 |> takeProfit | string  |Take profit price|
 |> stopLoss | string  |Stop loss price|
-|> trailingStop | string  |Trailing stop (The distance from market price)|
+|> trailingStop | string  |Trailing stop (the distance from market price)|
 |> sessionAvgPrice | string  |USDC contract session avg price, it is the same figure as avg entry price shown in the web UI |
 |> delta | string  |Delta|
 |> gamma | string  |Gamma|
@@ -73,7 +66,10 @@ GET `/v5/position/list`
 |> isReduceOnly |boolean |Useful when Bybit lower the risk limit <ul><li>`true`: Only allowed to reduce the position. You can consider a series of measures, e.g., lower the risk limit, decrease leverage or reduce the position, add margin, or cancel orders, after these operations, you can call [confirm new risk limit](../v5/position/confirm-mmr#) endpoint to check if your position can be removed the reduceOnly mark</li><li>`false`: There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
 |> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
 |> leverageSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
-|> tpslMode | string  |deprecated, always "Full"|
+|> tpslMode | string  |Deprecated, always "Full"|
+|> bustPrice | string  |Deprecated, always `""`|
+|> positionBalance | string  |Deprecated, can refer to `positionIM` or `positionIMByMp` field|
+|> tradeMode | integer |Trade mode <li>Deprecated, always `0`, check [Get Account Info](/v5/account/account-info) to know the margin mode</li>|
 
 <a href="/api-explorer/v5/position/position-info"><Button>RUN >></Button></a>
 
