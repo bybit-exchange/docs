@@ -12,10 +12,11 @@ GET `/v5/account/transaction-log`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |[accountType](../enum#accounttype) |false	|string	|錢包類型. 僅支持`UNIFIED`|
-|[category](../enum#category) |false |string |交易產品類型 <li>[統一帳戶2.0](../acct-mode#統一帳戶20): `spot`,`linear`,`option`,`inverse`</li><li>[統一帳戶1.0](../acct-mode#統一帳戶10): `spot`,`linear`,`option`</li>|
+|[category](../enum#category) |false |string |交易產品類型 `spot`,`linear`,`option`,`inverse`|
 |currency |false |string |貨幣|
 |baseCoin |false |string |交易幣種. 例如： BTCUSDT 的 baseCoin 是 BTC|
 |[type](../enum#typeuta-translog) |false |string |交易日誌的類型 |
+|transSubType|false |string |`movePosition`, 僅用於篩選移倉產生的交易流水|
 |startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近24小時的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime &le; 7天</li><li>若只傳startTime，則查詢startTime和startTime+24小時的數據</li><li>若只傳endTime，則查詢endTime-24小時和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
 |limit |false |integer |每頁數量, 最大50. 默認每頁20條|
