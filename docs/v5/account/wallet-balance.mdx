@@ -18,7 +18,7 @@ GET `/v5/account/wallet-balance`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](../enum#accounttype) |**true** |string |Account type <ul><li>[UTA2.0](../acct-mode#uta-20): `UNIFIED`</li><li>[UTA1.0](../acct-mode#uta-10): `UNIFIED`, `CONTRACT`(inverse derivatives wallet)</li><li>Classic account: `CONTRACT`, `SPOT`</li></ul>To get Funding wallet balance, please go to this [endpoint](../asset/balance/all-balance) |
+|[accountType](../enum#accounttype) |**true** |string |Account type `UNIFIED`. To get Funding wallet balance, please go to this [endpoint](../asset/balance/all-balance) |
 |coin |false |string |Coin name, uppercase only <ul><li>If not passed, it returns non-zero asset info</li><li>You can pass multiple coins to query, separated by comma. `USDT,USDC`</li></ul>|
 
 ### Response Parameters
@@ -27,40 +27,40 @@ GET `/v5/account/wallet-balance`
 |list |array |Object |
 |> accountType |string |Account type|
 |> accountLTV |string |deprecated field|
-|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../acct-mode#uta-10)(isolated margin), [UTA1.0](../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
-|> accountIMRateByMp |string |Account IM rate calculated by mark price|
+|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to [UTA2.0](../acct-mode#uta-20)(isolated margin)</li>|
 |> accountMMRate |string |Account MM rate|
-|> accountMMRateByMp |string |Account MM rate calculated by mark price|
 |> totalEquity |string |Account total equity (USD)|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
 |> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
 |> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
-|> totalInitialMarginByMp |string |Account initial margin (USD) calculated by mark price: ∑Asset Total Initial Margin Base Coin calculated by mark price|
 |> totalMaintenanceMargin |string |Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin|
-|> totalMaintenanceMarginByMp |string |Account maintenance margin (USD) calculated by mark price: ∑ Asset Total Maintenance Margin Base Coin calculated by mark price|
+|> accountIMRateByMp |string |You can **ignore** this field, and refer to `accountIMRate`, which has the same calculation|
+|> accountMMRateByMp |string |You can **ignore** this field, and refer to `accountMMRate`, which has the same calculation|
+|> totalInitialMarginByMp |string |You can **ignore** this field, and refer to `totalInitialMargin`, which has the same calculation|
+|> totalMaintenanceMarginByMp |string |You can **ignore** this field, and refer to `totalMaintenanceMargin`, which has the same calculation|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
 |>> equity |string |Equity of coin |
 |>> usdValue |string |USD value of coin|
 |>> walletBalance |string |Wallet balance of coin |
-|>> free |string |Available balance for Spot wallet. _This is a unique field for Classic `SPOT`_ |
 |>> locked |string |Locked balance due to the Spot open order |
 |>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default|
 |>> borrowAmount |string |Borrow amount of current coin |
-|>> availableToWithdraw |string |**Note:** this field is deprecated for `accountType=UNIFIED` from 9 Jan, 2025 <ul><li>Transferable balance: you can use [Get Transferable Amount (Unified)](unified-trans-amnt#) or [Get All Coins Balance](../asset/balance/all-balance#) instead</li><li>Derivatives available balance: <br/><b>isolated margin</b>: walletBalance - totalPositionIM - totalOrderIM - locked - bonus<br/><b>cross & portfolio margin</b>: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price</li><li>Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](../order/spot-borrow-quota#)</li></ul>|
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order. For portfolio margin mode, it returns "" |
 |>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns "" |
 |>> totalPositionMM	|string |Sum of maintenance margin for all positions. For portfolio margin mode, it returns ""|
 |>> unrealisedPnl |string |Unrealised P&L |
 |>> cumRealisedPnl |string |Cumulative Realised P&L |
-|>> bonus |string |Bonus. _This is a unique field for accounType=UNIFIED_ |
+|>> bonus |string |Bonus|
 |>> marginCollateral |boolean |Whether it can be used as a margin collateral currency (platform), `true`: YES, `false`: NO <li>When marginCollateral=false, then collateralSwitch is meaningless</li> |
 |>> collateralSwitch |boolean |Whether the collateral is turned on by user (user), `true`: ON, `false`: OFF <li>When marginCollateral=true, then collateralSwitch is meaningful</li>|
-|>> availableToBorrow |string |deprecated field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](collateral-info) |
 |>> spotBorrow |string |Borrow amount by spot margin trade and manual borrow amount (does not include borrow amount by spot margin active order). `spotBorrow` field corresponding to spot liabilities is detailed in the <a href="https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/"> announcement</a>.|
+|>> free |string |**Deprecated** since there is no Spot wallet any more|
+|>> availableToWithdraw |string |**Deprecated** for `accountType=UNIFIED` from 9 Jan, 2025 <ul><li>Transferable balance: you can use [Get Transferable Amount (Unified)](unified-trans-amnt#) or [Get All Coins Balance](../asset/balance/all-balance#) instead</li><li>Derivatives available balance: <br/><b>isolated margin</b>: walletBalance - totalPositionIM - totalOrderIM - locked - bonus<br/><b>cross & portfolio margin</b>: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price</li><li>Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](../order/spot-borrow-quota#)</li></ul>|
+|>> availableToBorrow |string |**Deprecated** field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](collateral-info) |
 
 <a href="/api-explorer/v5/account/wallet"><Button>RUN >></Button></a>
 
