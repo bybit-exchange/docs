@@ -31,10 +31,10 @@ GET `/v5/account/wallet-balance`
 |> accountIMRateByMp |string |Account IM rate calculated by mark price|
 |> accountMMRate |string |Account MM rate|
 |> accountMMRateByMp |string |Account MM rate calculated by mark price|
-|> totalEquity |string |Account total equity (USD)|
+|> totalEquity |string |Account total equity (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
-|> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
+|> totalAvailableBalance |string |Account available balance (USD), <ul><li>Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.</li> <li> Porfolio Margin: total Equity - Haircut - totalInitialMargin. </li></ul>|
 |> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
 |> totalInitialMarginByMp |string |Account initial margin (USD) calculated by mark price: ∑Asset Total Initial Margin Base Coin calculated by mark price|
@@ -42,13 +42,13 @@ GET `/v5/account/wallet-balance`
 |> totalMaintenanceMarginByMp |string |Account maintenance margin (USD) calculated by mark price: ∑ Asset Total Maintenance Margin Base Coin calculated by mark price|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity of coin |
+|>> equity |string |Equity of coin.  Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` - `spotBorrow` + `unrealisedPnl` + Asset Option Value|
 |>> usdValue |string |USD value of coin|
 |>> walletBalance |string |Wallet balance of coin |
 |>> free |string |Available balance for Spot wallet. _This is a unique field for Classic `SPOT`_ |
 |>> locked |string |Locked balance due to the Spot open order |
 |>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default|
-|>> borrowAmount |string |Borrow amount of current coin |
+|>> borrowAmount |string |Borrow amount of current coin = spot liabilities + derivatives liabilities |
 |>> availableToWithdraw |string |**Note:** this field is deprecated for `accountType=UNIFIED` from 9 Jan, 2025 <ul><li>Transferable balance: you can use [Get Transferable Amount (Unified)](unified-trans-amnt#) or [Get All Coins Balance](../asset/balance/all-balance#) instead</li><li>Derivatives available balance: <br/><b>isolated margin</b>: walletBalance - totalPositionIM - totalOrderIM - locked - bonus<br/><b>cross & portfolio margin</b>: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price</li><li>Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](../order/spot-borrow-quota#)</li></ul>|
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order. For portfolio margin mode, it returns "" |
