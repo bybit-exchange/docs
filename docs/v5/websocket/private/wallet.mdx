@@ -26,10 +26,10 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |> accountIMRateByMp |string |Account IM rate calculated by mark price <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All below account wide fields are <b>not</b> applicable to <br/>[UTA2.0](../../acct-mode#uta-20)(isolated margin), <br/>[UTA1.0](../../acct-mode#uta-10)(isolated margin), [UTA1.0](../../acct-mode#uta-10)(CONTRACT), <br/>classic account(SPOT, CONTRACT)</li>|
 |> accountMMRate |string |Account MM rate|
 |> accountMMRateByMp |string |Account MM rate calculated by mark price|
-|> totalEquity |string |Account total equity (USD)|
+|> totalEquity |string |Account total equity (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
-|> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
+|> totalAvailableBalance |string |Account available balance (USD), <ul><li>Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.</li> <li> Porfolio Margin: total Equity - Haircut - totalInitialMargin </li></ul>|
 |> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
 |> totalInitialMarginByMp |string |Account initial margin (USD) calculated by mark price: ∑Asset Total Initial Margin Base Coin calculated by mark price|
@@ -37,13 +37,13 @@ Subscribe to the wallet stream to see changes to your wallet in **real-time**.
 |> totalMaintenanceMarginByMp |string |Account maintenance margin (USD) calculated by mark price: ∑ Asset Total Maintenance Margin Base Coin calculated by mark price|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity of coin |
+|>> equity |string |Equity of coin. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` - `spotBorrow` + `unrealisedPnl` + Asset Option Value|
 |>> usdValue |string |USD value of coin. If this coin cannot be collateral, then it is 0|
 |>> walletBalance |string |Wallet balance of coin |
 |>> free |string |Available balance for Spot wallet. _This is a unique field for Classic `SPOT`_ |
 |>> locked |string |Locked balance due to the Spot open order |
 |>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default _This is a unique field for Unified account_ |
-|>> borrowAmount |string |Borrow amount of coin|
+|>> borrowAmount |string |Borrow amount of coin = spot liabilities + derivatives liabilities|
 |>> availableToBorrow |string |deprecated field, always return `""` due to feature of main-sub UID sharing borrow quota. Please refer to `availableToBorrow` in the [Get Collateral Info](/v5/account/collateral-info)|
 |>> availableToWithdraw |string |Available amount to withdraw of coin <br/>**Note:** this field is deprecated for accountType=UNIFIED, you can use [Get Transferable Amount (Unified)](/v5/account/unified-trans-amnt) instead|
 |>> accruedInterest	|string	|Accrued interest |

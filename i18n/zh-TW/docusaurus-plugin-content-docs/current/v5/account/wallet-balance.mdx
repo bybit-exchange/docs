@@ -33,7 +33,7 @@ GET `/v5/account/wallet-balance`
 |> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL|
-|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: 全倉保證金: totalMarginBalance - totalInitialMargin|
+|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: <ul><li>全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.</li> <li>組合保證金: total Equity - Haircut - totalInitialMargin </li></ul>|
 |> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin|
 |> totalInitialMarginByMp |string |賬戶維度換算成usd的總初始保證金(用mark price計算): ∑Asset Total Initial Margin Base Coin|
