@@ -7,8 +7,7 @@ Obtain wallet balance, query asset information of each currency. By default, cur
 information with assets or liabilities of 0 is not returned.
 
 :::info
-Under the new logic of UTA manual borrow, `spotBorrow` field corresponding to spot liabilities is detailed in the <a href="https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/"> announcement</a>.
-
+Under the new logic of UTA manual borrow, `spotBorrow` field corresponding to spot liabilities is detailed in the <a href="https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/"> announcement</a>.<br/>
 Old `walletBalance` = New `walletBalance` - `spotBorrow`
 :::
 
@@ -26,8 +25,7 @@ GET `/v5/account/wallet-balance`
 |:----- |:-----|----- |
 |list |array |Object |
 |> accountType |string |Account type|
-|> accountLTV |string |deprecated field|
-|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to [UTA2.0](../acct-mode#uta-20)(isolated margin)</li>|
+|> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to isolated margin</li>|
 |> accountMMRate |string |Account MM rate|
 |> totalEquity |string |Account total equity (USD)|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
@@ -40,6 +38,7 @@ GET `/v5/account/wallet-balance`
 |> accountMMRateByMp |string |You can **ignore** this field, and refer to `accountMMRate`, which has the same calculation|
 |> totalInitialMarginByMp |string |You can **ignore** this field, and refer to `totalInitialMargin`, which has the same calculation|
 |> totalMaintenanceMarginByMp |string |You can **ignore** this field, and refer to `totalMaintenanceMargin`, which has the same calculation|
+|> accountLTV |string |**Deprecated** field|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
 |>> equity |string |Equity of coin |
