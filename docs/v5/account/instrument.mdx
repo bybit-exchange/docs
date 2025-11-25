@@ -5,12 +5,11 @@ sidebar_position: 4.5
 ---
 
 Query for the instrument specification of online trading pairs that available to users.
-> **Covers: SPOT / USDT contract / USDC contract / Inverse contract**
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
 
-<!-- :::info
-# * Spot does not support pagination, so `limit`, `cursor` are invalid.
-# :::
- -->
+:::info
+* Spot does not support pagination, so `limit`, `cursor` are invalid.
+:::
 
 :::caution
 * This endpoint returns 200 entries by default. There are now more than 200 `linear` symbols on the platform. As a result, you will need to use `cursor` for pagination or `limit` to get all entries.
@@ -181,6 +180,9 @@ GET `/v5/account/instruments-info`
         </tr>
          <tr>
             <td>>>> makerFeeRate</td><td>string</td><td>The maker fee rate during continues trading phase</td>
+        </tr>
+        <tr>
+            <td>>> skipCallAuction</td><td>boolean</td><td><code>false</code>, <code>true</code> Whether the pre-market contract skips the call auction phase</td>
         </tr>
         <tr>
             <td>> isPublicRpi </td><td>boolean</td><td>Whether RPI Is Openly Provided to Market Makers or not.<li> true: RPI Is Openly Provided to Market Makers</li> <li>false: RPI Is Not Openly Provided to Market Makers</li> </td>
