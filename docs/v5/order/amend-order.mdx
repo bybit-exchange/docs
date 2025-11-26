@@ -13,7 +13,7 @@ POST `/v5/order/amend`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <ul><li>[UTA2.0](../acct-mode#uta-20), [UTA1.0](../acct-mode#uta-10): `linear`, `inverse`, `spot`, `option`</li><li>classic account: `linear`, `inverse`, `spot`</li></ul> |
+|[category](../enum#category) |**true** |string |Product type `linear`, `inverse`, `spot`, `option`|
 |symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
 |orderId |false |string |Order ID. Either `orderId` or `orderLinkId` is required |
 |orderLinkId |false |string |User customised order ID. Either `orderId` or `orderLinkId` is required |
@@ -22,13 +22,13 @@ POST `/v5/order/amend`
 |qty |false |string |Order quantity after modification. Do not pass it if not modify the qty|
 |price |false |string |Order price after modification. Do not pass it if not modify the price|
 |tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear` & `inverse`|
-|takeProfit |false |string |Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit. _valid for `spot`(UTA), `linear`, `inverse`_ |
-|stopLoss |false |string |Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss. _valid for `spot`(UTA), `linear`, `inverse`_ |
+|takeProfit |false |string |Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit|
+|stopLoss |false |string |Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss|
 |[tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. When set a take profit, this param is **required** if no initial value for the order|
 |[slTriggerBy](../enum#triggerby) |false |string |The price type to trigger stop loss. When set a take profit, this param is **required** if no initial value for the order|
 |[triggerBy](../enum#triggerby) |false |string |Trigger price type|
-|tpLimitPrice |false |string |Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl. _valid for `spot`(UTA), `linear`, `inverse`_|
-|slLimitPrice |false |string |Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl. _valid for `spot`(UTA), `linear`, `inverse`_|
+|tpLimitPrice |false |string |Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl. _Option not supported_|
+|slLimitPrice |false |string |Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl. _Option not supported`_|
 
 :::info
 The acknowledgement of an amend order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.

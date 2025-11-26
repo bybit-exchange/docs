@@ -182,7 +182,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'v5/intro',
+            docId: 'v5/guide',
             position: 'left',
             label: 'V5 API',
           },

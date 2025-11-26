@@ -14,7 +14,7 @@ The first list indicates whether or not the order creation was successful and th
 
 :::info
 - **Option rate limt** instruction: its rate limit is count based on the actual number of request sent, e.g., by default, option trading rate limit is 10 reqs per sec, so you can send up to 20 * 10 = 200 orders in one second. 
-- **Perpetual, Futures, Spot rate limit instruction**, please check [here](../rate-limit#api-rate-limit-rules-for-vips)
+- **Perpetual, Futures, Spot rate limit instruction**, please check [here](../rate-limit#instructions-for-batch-endpoints)
 - **Risk control limit notice:**<br/>
 Bybit will monitor on your API requests. When the total number of orders of a single user (aggregated the number of orders across main account and subaccounts) within a day (UTC 0 - UTC 24) exceeds a certain upper limit, the platform will reserve the right to remind, warn, and impose necessary restrictions.
 Customers who use API default to acceptance of these terms and have the obligation to cooperate with adjustments.
@@ -26,18 +26,18 @@ POST `/v5/order/create-batch`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |Product type <li>[UTA2.0](../acct-mode#uta-20): `linear`, `option`, `spot`, `inverse`</li><li>[UTA1.0](../acct-mode#uta-10): `linear`, `option`, `spot`</li> |
+|[category](../enum#category) |**true** |string |Product type `linear`, `option`, `spot`, `inverse`|
 |request |**true** |array |Object |
 |> symbol |**true** |string |Symbol name, like `BTCUSDT`, uppercase only |
-|> isLeverage |false |integer |Whether to borrow. Valid for **Unified `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
+|> isLeverage |false |integer |Whether to borrow, `spot`** only. `0`(default): false then spot trading, `1`: true then margin trading|
 |> side |**true** |string |`Buy`, `Sell`|
 |> [orderType](../enum#ordertype) |**true** |string |`Market`, `Limit`|
-|> qty |**true** |string |Order quantity <ul><li>UTA account<ul><li>Spot: set `marketUnit` for market order qty unit, `quoteCoin` for market buy by default, `baseCoin` for market sell by default</li><li>Perps, Futures & Option: always use base coin as unit</li></ul></li><li>Perps & Futures: if you pass `qty`="0" and specify `reduceOnly`=true&`closeOnTrigger`=true, you can close the position up to `maxMktOrderQty` or `maxOrderQty` shown on [Get Instruments Info](../market/instrument#) of current symbol</li></ul>|
-|> marketUnit |false |string |The unit for `qty` when create **Spot market** orders for **UTA account**, orderFilter=tpslOrder and StopOrder are supported as well.<li>`baseCoin`: for example, buy BTCUSDT, then "qty" unit is BTC</li><li>`quoteCoin`: for example, sell BTCUSDT, then "qty" unit is USDT</li>|
+|> qty |**true** |string |Order quantity <ul><li>Spot: set `marketUnit` for market order qty unit, `quoteCoin` for market buy by default, `baseCoin` for market sell by default</li><li>Perps, Futures & Option: always use base coin as unit.</li><li>Perps & Futures: If you pass `qty`="0" and specify `reduceOnly`=true&`closeOnTrigger`=true, you can close the position up to `maxMktOrderQty` or `maxOrderQty` shown on [Get Instruments Info](../market/instrument#) of current symbol</li></ul>|
+|> marketUnit |false |string |The unit for `qty` when create **Spot market** orders, `orderFilter`="tpslOrder" and "StopOrder" are supported as well.<li>`baseCoin`: for example, buy BTCUSDT, then "qty" unit is BTC</li><li>`quoteCoin`: for example, sell BTCUSDT, then "qty" unit is USDT</li>|
 |> price |false |string |Order price <ul><li>Market order will ignore this field</li><li>Please check the min price and price precision from [instrument info](../market/instrument#response-parameters) endpoint</li><li>If you have position, price needs to be better than liquidation price</li></ul> |
 |> triggerDirection |false |integer |Conditional order param. Used to identify the expected direction of the conditional order. <ul><li>`1`: triggered when market price rises to `triggerPrice`</li><li>`2`: triggered when market price falls to `triggerPrice`</li> </ul>Valid for `linear`|
 |> orderFilter |false |string |If it is not passed, `Order` by default. <ul><li>`Order`</li><li>`tpslOrder`: Spot TP/SL order, the assets are occupied even before the order is triggered</li><li>`StopOrder`: Spot conditional order, the assets will not be occupied until the price of the underlying asset reaches the trigger price, and the required assets will be occupied after the Conditional order is triggered</li></ul>Valid for `spot` **only**|
-|> triggerPrice |false |string |<ul><li>For Perps & Futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is the orderFilter=tpslOrder, or orderFilter=stopOrder trigger price</li></ul>|
+|> triggerPrice |false |string |<ul><li>For Perps & Futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:<br/> _triggerPrice > market price_<br/>Else, _triggerPrice < market price_</li><li>For spot, it is the `orderFilter`="tpslOrder", or "StopOrder" trigger price</li></ul>|
 |> [triggerBy](../enum#triggerby) |false |string |Conditional order param (Perps & Futures). Trigger price type. `LastPrice`, `IndexPrice`, `MarkPrice`|
 |> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
@@ -52,10 +52,10 @@ POST `/v5/order/create-batch`
 |> [smpType](../enum#smptype) |false |string |Smp execution type. [What is SMP?](../smp)|
 |> mmp |false |boolean |Market maker protection. `option` **only**. `true` means set the order as a market maker protection order. [What is mmp?](../account/set-mmp) |
 |> tpslMode |false |string |TP/SL mode <ul><li>`Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`</li><li>`Partial`: partial position tp/sl (as there is no size option, so it will create tp/sl orders with the qty you actually fill). Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`</li></ul>Valid for `linear`, `inverse`|
-|> tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear`&`inverse`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot(UTA): it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
-|> slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear`&`inverse`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot(UTA): it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
-|> tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
-|> slOrderType |false |string |The order type when stop loss is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market</li><li>Spot(UTA): <br/>`Market`: when you set "stopLoss", <br/>`Limit`: when you set "stopLoss" and "slLimitPrice" </li></ul>|
+|> tpLimitPrice |false |string |The limit order price when take profit price is triggered <ul><li>`linear`&`inverse`: only works when tpslMode=Partial and tpOrderType=Limit</li><li>Spot: it is required when the order has `takeProfit` and `tpOrderType=Limit`</li></ul>|
+|> slLimitPrice |false |string |The limit order price when stop loss price is triggered<ul><li>`linear`&`inverse`: only works when tpslMode=Partial and slOrderType=Limit</li><li>Spot: it is required when the order has `stopLoss` and `slOrderType=Limit`</li></ul>|
+|> tpOrderType |false |string |The order type when take profit is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports tpOrderType=Market</li><li>Spot: <br/>`Market`: when you set "takeProfit", <br/>`Limit`: when you set "takeProfit" and "tpLimitPrice" </li></ul>|
+|> slOrderType |false |string |The order type when stop loss is triggered <ul><li>`linear`&`inverse`: `Market`(default), `Limit`. For tpslMode=Full, it only supports slOrderType=Market</li><li>Spot: <br/>`Market`: when you set "stopLoss", <br/>`Limit`: when you set "stopLoss" and "slLimitPrice" </li></ul>|
 
 ### Response Parameters
 | Parameter | Type | Comments|

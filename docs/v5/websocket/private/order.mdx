@@ -28,10 +28,10 @@ The first message tells you the order is executed, and the second message tells 
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> category |string |Product type <ul><li>[UTA2.0](../../acct-mode#uta-20), [UTA1.0](../../acct-mode#uta-10): `spot`, `linear`, `inverse`, `option`</li><li>Classic account: `spot`, `linear`, `inverse`.</li></ul>|
+|> category |string |Product type `spot`, `linear`, `inverse`, `option`|
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> isLeverage |string |Whether to borrow. **Unified `spot`** only. `0`: false, `1`: true<br/> _Classic `spot` is not supported, always `0`_|
+|> isLeverage |string |Whether to borrow. `0`: false, `1`: true|
 |> blockTradeId  |string |Block trade ID|
 |> symbol |string |Symbol name |
 |> price |string |Order price |
@@ -40,23 +40,23 @@ The first message tells you the order is executed, and the second message tells 
 |> side |string |Side. `Buy`,`Sell`|
 |> [positionIdx](../../enum#positionidx) |integer |Position index. Used to identify positions in different position modes |
 |> [orderStatus](../../enum#orderstatus) |string |Order status |
-|> [createType](../../enum#createtype) |string |Order create type <li>Only for category=linear or inverse</li><li>Spot, Option do not have this key</li> |
+|> [createType](../../enum#createtype) |string |Order create type, Spot, Option do not have this key|
 |> [cancelType](../../enum#canceltype) |string |Cancel type |
-|> [rejectReason](../../enum#rejectreason) |string |Reject reason. _Classic `spot` is not supported_ |
-|> avgPrice |string |Average filled price <li>returns `""` for those orders without avg price, and also for those classic account orders have partilly filled but cancelled at the end</li><li>Classic Spot: not supported, always `""`</li>|
-|> leavesQty |string |The remaining qty not executed. _Classic `spot` is not supported_ |
-|> leavesValue |string |The remaining value not executed. _Classic `spot` is not supported_ |
+|> [rejectReason](../../enum#rejectreason) |string |Reject reason|
+|> avgPrice |string |Average filled price, returns `""` for those orders without avg price|
+|> leavesQty |string |The remaining qty not executed|
+|> leavesValue |string |The remaining value not executed|
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li><li>Classic `spot`: it is the latest execution fee for order.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li> |
+|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li> |
 |> closedPnl |string |Closed profit and loss for each close position order. The figure is the same as "closedPnl" from [Get Closed PnL](../../position/close-pnl)|
 |> feeCurrency |string |Deprecated. Trading fee currency for Spot only. Please understand Spot trading fee currency [here](../../enum#spot-fee-currency-instruction) |
 |> [timeInForce](../../enum#timeinforce) |string |Time in force |
 |> [orderType](../../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL orders, is the order type after the order was triggered |
 |> [stopOrderType](../../enum#stopordertype) |string |Stop order type |
-|> ocoTriggerBy |string |The trigger type of Spot OCO order.`OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`. _Classic `spot` is not supported_|
+|> ocoTriggerBy |string |The trigger type of Spot OCO order.`OcoTriggerByUnknown`, `OcoTriggerByTp`, `OcoTriggerBySl`|
 |> orderIv |string |Implied volatility |
-|> marketUnit |string |The unit for `qty` when create **Spot market** orders for **UTA account**. `baseCoin`, `quoteCoin` |
+|> marketUnit |string |The unit for `qty` when create **Spot market** orders. `baseCoin`, `quoteCoin` |
 |> slippageToleranceType |string |Spot and Futures market order slippage tolerance type `TickSize`, `Percent`, `UNKNOWN`(default)|
 |> slippageTolerance |string |Slippage tolerance value|
 |> triggerPrice |string |Trigger price. If `stopOrderType`=_TrailingStop_, it is activate price. Otherwise, it is trigger price |
