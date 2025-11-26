@@ -21,16 +21,34 @@ GET `/v5/crypto-loan-fixed/renew-info`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list|array|Object|
-|> annualRate|string |借款年化利率|
-|> orderId|long |借款訂單 ID|
-|> orderTime|string |訂單建立時間|
-|> filledQty|string |成交數量|
-|> orderQty|string |訂單數量|
-|> orderCurrency|string |幣種名稱|
-|> state|integer |借款訂單狀態，`1`: 等待匹配；`2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消；`5`: 失敗|
-|> term|integer |固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天|
-|> repayType |string |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
-|nextPageCursor |string |下一頁游標|
+|> borrowCurrency|string |放款幣種|
+|> amount|string |放款金額|
+|> autoRepay|integer |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
+|> contractNo|string |合約編號|
+|> dueTime|string |到期時間|
+|> orderId|integer |訂單編號|
+|> loanId|string |貸款編號|
+|> renewLoanNo|string |續貸編號|
+|> status |Integer |`S`: Success; `F`: Failed|
+|> time|string |時間戳|
+|> dto|array |Object: 貸款合約資訊|
+|>> apr |string |貸款 APR|
+|>> autoRepay|integer |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
+|>> canLoan |Boolean |`true`: 可以續貸; `false`: 不可以續貸|
+|>> coin|string |幣種|
+|>> dueTime |string |到期時間|
+|>> id |integer |Id|
+|>> interest|string |貸款利息|
+|>> loanNo |string |貸款編號|
+|>> orderNo|string |訂單編號|
+|>> orderTime |string |訂單時間|
+|>> period |string |期限|
+|>> quantity|string |貸款數量|
+|>> remainPenaltyInterest |string |未付罰息|
+|>> remainPrincipal|string |未償還本金|
+|>> repayPrincipal |string |已還本金|
+|>> status |string |`S`: Success; `F`: Failed|
+|nextPageCursor |string |請參考 `cursor` 請求參數|
 
 ### 請求示例
 

@@ -21,15 +21,33 @@ GET `/v5/crypto-loan-fixed/renew-info`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list|array|Object|
-|> annualRate|string |Annual rate for the borrowing|
-|> orderId|long |Loan order ID|
-|> orderTime|string |Order created time|
-|> filledQty|string |Filled qty|
-|> orderQty|string |Order qty|
-|> orderCurrency|string |Coin name|
-|> state|integer |Borrow order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: fail|
-|> term|integer |Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days|
-|> repayType |string |`1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;|
+|> borrowCurrency|string |Borrow currency|
+|> amount|string |loan amount|
+|> autoRepay|integer |`1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;|
+|> contractNo|string |Contract number|
+|> dueTime|string |Due time|
+|> orderId|integer |Order Id|
+|> loanId|string |Loan Id|
+|> renewLoanNo|string |Renew Loan number|
+|> status |Integer |`S`: Success; `F`: Failed|
+|> time|string |timestamps|
+|> dto|array |Object: Loan Contract Info|
+|>> apr |string |loan APR|
+|>> autoRepay|integer |`1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;|
+|>> canLoan |Boolean |`true`: can renew loan; `false`: can not renew loan|
+|>> coin|string |coin|
+|>> dueTime |string |Due time|
+|>> id |integer |Id|
+|>> interest|string |Loan Interest|
+|>> loanNo |string |Loan number|
+|>> orderNo|string |Order number|
+|>> orderTime |string |Order time|
+|>> period |string |Period|
+|>> quantity|string |Loan Quantity|
+|>> remainPenaltyInterest |string |Unpaid Penalty Interest|
+|>> remainPrincipal|string |Unpaid Principal|
+|>> repayPrincipal |string |Principal Paid|
+|>> status |string |`S`: Success; `F`: Failed|
 |nextPageCursor |string |Refer to the `cursor` request parameter |
 
 ### Request Example
