@@ -1,0 +1,129 @@
+---
+title: 查詢個人續借訂單
+sidebar_label: 查詢個人續借訂單
+sidebar_position: 9.5
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+GET `/v5/crypto-loan-fixed/renew-info`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId|false|string|借款訂單 ID|
+|orderCurrency|false|string|借款幣種名稱|
+|limit |false |string |每頁數量限制. [`1`, `100`]. 默認: `10`|
+|cursor |false |string |游標，用於分頁|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list|array|Object|
+|> borrowCurrency|string |放款幣種|
+|> amount|string |放款金額|
+|> autoRepay|integer |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
+|> contractNo|string |合約編號|
+|> dueTime|string |到期時間|
+|> orderId|integer |訂單編號|
+|> loanId|string |貸款編號|
+|> renewLoanNo|string |續貸編號|
+|> status |Integer |`S`: Success; `F`: Failed|
+|> time|string |時間戳|
+|> dto|array |Object: 貸款合約資訊|
+|>> apr |string |貸款 APR|
+|>> autoRepay|integer |`1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;|
+|>> canLoan |Boolean |`true`: 可以續貸; `false`: 不可以續貸|
+|>> coin|string |幣種|
+|>> dueTime |string |到期時間|
+|>> id |integer |Id|
+|>> interest|string |貸款利息|
+|>> loanNo |string |貸款編號|
+|>> orderNo|string |訂單編號|
+|>> orderTime |string |訂單時間|
+|>> period |string |期限|
+|>> quantity|string |貸款數量|
+|>> remainPenaltyInterest |string |未付罰息|
+|>> remainPrincipal|string |未償還本金|
+|>> repayPrincipal |string |已還本金|
+|>> status |string |`S`: Success; `F`: Failed|
+|nextPageCursor |string |請參考 `cursor` 請求參數|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-fixed/renew-info HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752655239825
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "list": [
+            {
+                "amount": "11",
+                "autoRepay": 2,
+                "borrowCurrency": "USDT",
+                "contractNo": "2092164378648656896",
+                "dto": {
+                    "apr": "0.05",
+                    "autoRepay": 2,
+                    "canLoan": false,
+                    "coin": "USDT",
+                    "dueTime": 1766750400000,
+                    "id": 2364,
+                    "interest": "0.410958904109589042",
+                    "loanNo": "2092164378648656896",
+                    "orderNo": "2092164250764328448",
+                    "orderTime": 1764141429202,
+                    "period": 30,
+                    "quantity": "100",
+                    "remainPenaltyInterest": "0",
+                    "remainPrincipal": "100",
+                    "repayPrincipal": "0",
+                    "status": "S"
+                },
+                "dueTime": 1766750400000,
+                "loanId": "2364",
+                "orderId": 49,
+                "renewLoanNo": "2092170365690461952",
+                "status": "S",
+                "time": 1764142142913
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1764144216937
+}
+```

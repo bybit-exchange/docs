@@ -1,0 +1,82 @@
+---
+title: Renew Borrow Order
+sidebar_label: Renew Borrow Order
+sidebar_position: 4
+---
+> Permission: "Spot trade"<br/>
+> UID rate limit: 1 req / second
+
+:::info
+* The loan funds are released to the Funding wallet.
+* The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
+* This endpoint allows you to re-borrow the principal that was previously repaid. The renewal amount is the same as the amount previously repaid on this loan.
+:::
+
+### HTTP Request
+POST `/v5/crypto-loan-fixed/renew`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|loanId |**true** |string |Loan ID|
+|collateralList |false |array&lt;object&gt; |Collateral coin list, supports putting up to 100 currency in the array|
+|> currency |false |string |Currency used to mortgage|
+|> amount |false |string |Amount to mortgage|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |Loan order ID|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-fixed/renew HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1752633649752
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 208
+
+{
+    "loanId": "2364",
+    "collateralList": {"currency": "ETH","amount": "1"}
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderId": 49
+    },
+    "retExtInfo": {},
+    "time": 1764142142931
+}
+```
