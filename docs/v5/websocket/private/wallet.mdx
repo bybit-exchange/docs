@@ -26,10 +26,10 @@ Old `walletBalance` = New `walletBalance` - `spotBorrow`
 |> accountType |string |Account type `UNIFIED`|
 |> accountIMRate |string |Account IM rate <li>You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning</li><li>All account wide fields are <b>not</b> applicable to isolated margin</li>|
 |> accountMMRate |string |Account MM rate|
-|> totalEquity |string |Account total equity (USD)|
+|> totalEquity |string |Account total equity (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |Account margin balance (USD): totalWalletBalance + totalPerpUPL|
-|> totalAvailableBalance |string |Account available balance (USD), Cross Margin: totalMarginBalance - totalInitialMargin|
+|> totalAvailableBalance |string |Account available balance (USD), <ul><li>Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.</li> <li> Porfolio Margin: total Equity - Haircut - totalInitialMargin </li></ul>|
 |> totalPerpUPL |string |Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |Account initial margin (USD): ∑Asset Total Initial Margin Base Coin|
 |> totalMaintenanceMargin |string |Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin|
@@ -40,12 +40,12 @@ Old `walletBalance` = New `walletBalance` - `spotBorrow`
 |> accountLTV |string |**Deprecated** field|
 |> coin |array |Object |
 |>> coin |string |Coin name, such as BTC, ETH, USDT, USDC |
-|>> equity |string |Equity of coin |
+|>> equity |string |Equity of coin. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` - `spotBorrow` + `unrealisedPnl` + Asset Option Value|
 |>> usdValue |string |USD value of coin. If this coin cannot be collateral, then it is 0|
 |>> walletBalance |string |Wallet balance of coin |
 |>> locked |string |Locked balance due to the Spot open order |
 |>> spotHedgingQty |string |The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default|
-|>> borrowAmount |string |Borrow amount of coin|
+|>> borrowAmount |string |Borrow amount of coin = spot liabilities + derivatives liabilities|
 |>> accruedInterest	|string	|Accrued interest |
 |>> totalOrderIM |string |Pre-occupied margin for order. For portfolio margin mode, it returns ""|
 |>> totalPositionIM	|string	|Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns "" |

@@ -26,10 +26,10 @@ sidebar_position: 4
 |> accountIMRateByMp |string |帳戶初始保證金率(用mark price計算) <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
 |> accountMMRate |string |帳戶維持保證金率|
 |> accountMMRateByMp |string |帳戶維持保證金率(用mark price計算)|
-|> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD)|
+|> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL|
-|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: 全倉保證金: totalMarginBalance - totalInitialMargin|
+|> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: <ul><li>全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.</li> <li>組合保證金: total Equity - Haircut - totalInitialMargin </li></ul>|
 |> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin|
 |> totalInitialMarginByMp |string |賬戶維度換算成usd的總初始保證金(用mark price計算): ∑Asset Total Initial Margin Base Coin (用mark price計算)|
@@ -37,9 +37,9 @@ sidebar_position: 4
 |> totalMaintenanceMarginByMp |string |賬戶維度換算成usd的總維持保證金(用mark price計算): ∑Asset Total Maintenance Margin Base Coin(用mark price計算)|
 |> coin |array |Object. 幣種列表|
 |>> coin |string |幣種名稱，例如 BTC, ETH, USDT, USDC|
-|>> equity |string |當前幣種的資產淨值|
+|>> equity |string |當前幣種的資產淨值: Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` - `spotBorrow` + `unrealisedPnl` + Asset Option Value|
 |>> usdValue |string |當前幣種折算成 usd 的價值, 如果該幣種不能作為保證金的抵押品, 則該數值為0|
-|>> walletBalance |string |當前幣種的錢包餘額|
+|>> walletBalance |string |當前幣種的錢包餘額 = 現貨負債 + 合約浮虧導致借幣產生的借幣負債|
 |>> free |string |經典帳戶現貨錢包的可用餘額. _經典帳戶現貨錢包的獨有字段_ |
 |>> locked |string |現貨掛單凍結金額 |
 |>> spotHedgingQty |string |用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0 _統一帳戶的獨有字段_ |

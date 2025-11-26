@@ -4,10 +4,33 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2025-11-25
+### REST API
+- [Get Instruments Info](../v5/market/instrument) [UPDATE]
+    - Add new response field `skipCallAuction` for USDT pre-market contract
+- [Get Account Instruments Info](../v5/account/instrument) [UPDATE]
+    - Add new response field `skipCallAuction` for USDT pre-market contract
+
+### Websocket API
+- [Orderbook](../v5/websocket/public/orderbook) [UPDATE]
+    - The push frequency of Orderbook Level 1000 data is changed from 300ms to 200ms.
+
+## 2025-11-17
+### REST API
+- We have deprecated the Legacy Crypto Loan Borrow API, since the new crypto loan service is now online.
+    - [Legacy Crypto Loan Borrow](../v5/abandon/borrow)
+
 ## 2025-11-13
 ### REST API
 - [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
     - Add new request param `transSubType`, it is used to filter Move Position trans log only.
+
+## 2025-11-11
+### REST API
+- [Get Instruments Info](../v5/market/instrument) [UPDATE]
+    - Add new response field `postOnlyMaxLimitOrderSize` for spot, each trading pair has its own configuration defining the maximum limit order size for Post-only and RPI orders
+- [Get Account Instruments Info](../v5/account/instrument) [UPDATE]
+    - Add new response field `postOnlyMaxLimitOrderSize` for spot, each trading pair has its own configuration defining the maximum limit order size for Post-only and RPI orders
 
 ## 2025-11-04
 ### REST API
@@ -187,6 +210,11 @@ import '/src/css/changelog.css';
 ### REST API
 - [Get Transaction Log](../v5/account/transaction-log) [UPDATE]
     - Add new type enums `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`, `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`
+
+## 2025-09-11
+### WebSocket API
+- [Orderbook](../v5/websocket/public/orderbook) [REMOVE]
+    - Remove level 500 orderbooks for futures
 
 ## 2025-09-09
 ### REST API
@@ -540,7 +568,7 @@ import '/src/css/changelog.css';
 ### Websocket API
 - [All Liquidation](../v5/websocket/public/all-liquidation) [NEW]
     - A new topic to get full liquidation occurred in Bybit exchange.
-- [Liquidation](../v5/websocket/public/liquidation) [DEPRECATE]
+- Liquidation [DEPRECATE]
     - The old one only pushes 1 liquidation per second, it can be discarded.
 
 ## 2025-02-19
