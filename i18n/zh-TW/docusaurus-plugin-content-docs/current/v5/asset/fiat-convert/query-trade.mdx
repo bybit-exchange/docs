@@ -1,0 +1,72 @@
+---
+title: 查詢報價單狀態
+sidebar_label: 查詢報價單狀態
+sidebar_position: 4  
+---  
+
+### HTTP 請求  
+GET `/v5/fiat/trade-query`  
+
+### 請求參數  
+| 參數 | 是否必需 | 類型 | 說明 |  
+|:----- |:-------|:-----|------ |  
+| tradeNo | 否 | string | 交易訂單號，`tradeNo` 或 `merchantRequestId` 必須提供一個 |  
+| merchantRequestId | 否 | string | 自定義請求 ID，`tradeNo` 或 `merchantRequestId` 必須提供一個 |  
+
+### 響應參數  
+| 參數 | 類型 | 說明 |  
+|:----- |:-----|----- |  
+|result |object |object|
+| > tradeNo | string | 交易訂單號|  
+| > status | string | 交易狀態：<li>processing</li><li>success</li><li>failed</li> |  
+| > quoteTxId | string | 報價交易 ID，系統生成，用於確認報價 |  
+| > exchangeRate | string | 匯率 |  
+| > fromCoin | string | 轉換前的幣種（賣出的幣種） |  
+| > fromCoinType | string | 轉換前的幣種類型：`fiat` 或 `crypto` |  
+| > toCoin | string | 轉換後的幣種（買入的幣種） |  
+| > toCoinType | string | 轉換後的幣種類型：`fiat` 或 `crypto` |  
+| > fromAmount | string | 轉換前的幣種數量（賣出數量） |  
+| > toAmount | string | 轉換後的幣種數量（根據匯率買入的數量） |  
+| > createdAt | string | 交易創建時間 |  
+| > subUserId | string | 用戶在 Bybit 平台的子用戶 ID |  
+
+### 請求示例  
+
+<Tabs groupId="programming-languages">  
+<TabItem value="http" label="HTTP">  
+
+```http  
+GET /v5/fiat/trade-query?tradeNo=TradeNo123456 HTTP/1.1  
+Host: api-testnet.bybit.com  
+X-BAPI-SIGN: XXXXXX  
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+X-BAPI-TIMESTAMP: 1720074159814  
+X-BAPI-RECV-WINDOW: 5000  
+```  
+
+</TabItem>  
+
+</Tabs>  
+
+### 響應示例  
+
+```json  
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "tradeNo": "TradeNo123456",
+        "status": "success",
+        "quoteTaxId": "QuoteTaxId123456",
+        "exchangeRate": "1.0",
+        "fromCoin": "GEL",
+        "fromCoinType": "fiat",
+        "toCoin": "USDT",
+        "toCoinType": "crypto",
+        "fromAmount": "100",
+        "toAmount": "100",
+        "createdAt": "1764558832014",
+        "subUserId": "123456"
+    }
+}
+```

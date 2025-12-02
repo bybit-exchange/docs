@@ -1,0 +1,64 @@
+---
+title: 確認報價
+sidebar_label: 確認報價
+sidebar_position: 3
+---
+:::info  
+1. 兌換是異步的；請通過調用查詢結果 API 確認最終狀態  
+2. 請確保在報價過期之前確認報價
+:::  
+
+### HTTP 請求  
+POST `/v5/fiat/trade-execute`  
+
+### 請求參數  
+| 參數               | 是否必需 | 類型   | 說明 |  
+|:-------------------|:---------|:-------|------|  
+| quoteTxId          | **true** | string | 報價交易 ID，來源於 [申請報價](quote-apply#response-parameters) |  
+| subUserId          | **true**    | string | 用戶在 Bybit 平台的子用戶 ID |  
+| webhookUrl         | false    | string | 當訂單成功或失敗時調用的 API URL（最多 256 個字符） |  
+| merchantRequestId  | false    | string | 自定義請求 ID（最大長度為 36）<li>通常無需填寫，但如果填寫此字段，便於內部跟踪報價請求</li> |  
+
+### 響應參數  
+| 參數               | 類型     | 說明 |  
+|:-------------------|:---------|------|  
+| tradeNo            | string   | 交易訂單號|  
+| merchantRequestId  | string   | 自定義請求 ID |  
+
+### 請求示例  
+
+<Tabs groupId="programming-languages">  
+<TabItem value="http" label="HTTP">  
+
+```http  
+POST /v5/fiat/trade-execute HTTP/1.1  
+Host: api-testnet.bybit.com  
+X-BAPI-SIGN: XXXXXX  
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+X-BAPI-TIMESTAMP: 1720071899789  
+X-BAPI-RECV-WINDOW: 5000  
+Content-Type: application/json  
+Content-Length: 52  
+
+{
+    "quoteTxId": "QuoteTaxId123456",
+    "subUserId":"43456"
+}
+```  
+
+</TabItem>  
+
+</Tabs>  
+
+### 響應示例  
+
+```json  
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "tradeNo": "TradeNo123456",
+        "merchantRequestId": ""
+    }
+}
+```
