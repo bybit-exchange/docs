@@ -1,0 +1,35 @@
+---
+title: SBE Basic Information
+sidebar_label: SBE Basic Information
+sidebar_position: 1
+---
+
+:::info MMWS / Gateway only
+All SBE-based feeds and Fast Order channels described in this section are available **only** via the **Market Maker WebSocket (MMWS) / Market Maker Gateway (GW)** infrastructure.
+
+
+For access and architecture details, see the official announcement: [Market Maker Gateway](https://announcements.bybit.global/article/introducing-the-market-maker-gateway-for-enhanced-api-connectivity-and-performance-bltfaba80a427cac5e5/)
+:::
+
+This page gives a unified introduction to Bybit's **SBE-based market data** and **Fast Order** channels and how they fit into the MMWS/GW environment. Detailed, feature-specific behavior and code examples are provided in the sub-pages for:
+
+- **BBO SBE** (Level 1, with RPI fields)
+- **Level-50 SBE** (50-level order book snapshots + deltas)
+- **Fast Order SBE** (ultra-low-latency order acknowledgements)
+
+
+## What is SBE?
+
+Bybit uses **Simple Binary Encoding (SBE)** in accordance with the FIX/SBE 1.0 specification:
+
+- Binary, little-endian encoding
+- Fixed-width fields where possible
+- Explicit **message header** + **message body** layout
+- High-efficiency decoding suitable for HFT and MM strategies
+
+Compared with JSON WebSocket feeds, SBE provides:
+
+- Smaller payloads (up to ~30–50% reduction vs equivalent JSON data)
+- Deterministic binary layouts
+- Microsecond timestamp precision
+- Lower CPU usage for both encoding and decoding
