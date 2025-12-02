@@ -1,0 +1,109 @@
+---
+title: Get Trading Pair List
+sidebar_label: Get Trading Pair List
+sidebar_position: 1
+---
+
+Query for the list of coins you can convert to/from.
+
+### HTTP Request
+GET `/v5/fiat/query-coin-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|side |false |integer |`0`: buy, buy crypto sell fiat; `1`: sell, sell crypto buy fiat|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|fiats |array|Fiat coin list |
+|> coin |string|Fiat coin code |
+|> fullName |string |Fiat full coin name |
+|> icon |string |Coin icon url |
+|> iconNight |string |Coin icon url (dark mode)|
+|> precision |integer |Fiat precision|
+|> disable|boolean |`true`: the coin is disabled, `false`: the coin is allowed|
+|> singleFromMinLimit |string |For buy side, the minimum amount of fiatCoin per transaction|
+|> singleFromMaxLimit |string |For buy side, the maximum amount of fiatCoin per transaction|
+|cryptos |array |Crypto coin list |
+|> coin |string|Fiat coin code |
+|> fullName |string |Fiat full coin name |
+|> icon |string |Coin icon url |
+|> iconNight |string |Coin icon url (dark mode)|
+|> precision |integer |Fiat precision|
+|> disable|boolean |`true`: the coin is disabled, `false`: the coin is allowed|
+|> singleFromMinLimit |string |For sell side, the minimum amount of cryptoCoin per transaction|
+|> singleFromMaxLimit |string |For sell side, the maximum amount of cryptoCoin per transaction|
+
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/fiat/query-coin-list?side=0 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1720064061248
+X-BAPI-RECV-WINDOW: 5000
+```
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fiats": [
+            {
+                "coin": "GEL",
+                "fullName": "Georgian Lari",
+                "icon": "https://s1.bycsi.com/common-static/wove/fiat-admin/2023-5-4/Tyoe=GEL.svg",
+                "iconNight": "https://s1.bycsi.com/common-static/wove/fiat-admin/2023-5-4/Tyoe=GEL.svg",
+                "precision": 2,
+                "disable": false,
+                "singleFromMinLimit": "10",
+                "singleFromMaxLimit": "100000"
+            }
+        ],
+        "cryptos": [
+            {
+                "coin": "USDT",
+                "fullName": "Tether USDT",
+                "icon": "https://s1.bycsi.com/common-static/wove/fiat-admin/2024-8-5/8e50959d5f3e45bebf522e0cad456439_1726814031848.svg",
+                "iconNight": "https://s1.bycsi.com/common-static/wove/fiat-admin/2024-8-5/8e50959d5f3e45bebf522e0cad456439_1726814031848.svg",
+                "precision": 4,
+                "disable": false,
+                "singleFromMinLimit": "10",
+                "singleFromMaxLimit": "10000"
+            },
+            {
+                "coin": "BTC",
+                "fullName": "Bitcoin",
+                "icon": "https://s1.bycsi.com/common-static/wove/fiat-admin/20d09e76a0ab401f80bd545ae874c6a3_48x48.svg",
+                "iconNight": "https://s1.bycsi.com/common-static/wove/fiat-admin/20d09e76a0ab401f80bd545ae874c6a3_48x48.svg",
+                "precision": 8,
+                "disable": false,
+                "singleFromMinLimit": "0.0001",
+                "singleFromMaxLimit": "1"
+            },
+            {
+                "coin": "ETH",
+                "fullName": "Ethereum",
+                "icon": "https://s1.bycsi.com/common-static/wove/fiat-admin/40b217058a474e17b5d88653b039055c_48x48.svg",
+                "iconNight": "https://s1.bycsi.com/common-static/wove/fiat-admin/40b217058a474e17b5d88653b039055c_48x48.svg",
+                "precision": 8,
+                "disable": false,
+                "singleFromMinLimit": "0.002",
+                "singleFromMaxLimit": "5"
+            }
+        ]
+    }
+}
+```
