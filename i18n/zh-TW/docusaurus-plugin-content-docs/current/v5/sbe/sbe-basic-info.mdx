@@ -1,0 +1,33 @@
+---
+title: SBE 基本信息
+sidebar_label: SBE 基本信息
+sidebar_position: 1
+---
+
+:::info 僅限 MMWS / Gateway
+本節中所描述的所有基於 SBE 的行情資料頻道與 Fast Order 通道，只能透過 **Market Maker WebSocket (MMWS) / Market Maker Gateway (GW)** 基礎設施使用。
+
+如需接入方式與架構細節，請參考官方公告: [做市商網關](https://announcements.bybit.global/article/introducing-the-market-maker-gateway-for-enhanced-api-connectivity-and-performance-bltfaba80a427cac5e5/)
+:::
+
+本頁提供 Bybit **基於 SBE 的市場數據** 與 **Fast Order** 通道在 MMWS/GW 環境中的統一介紹。關於各功能的詳細行為與程式碼範例，請參考以下子頁面:
+
+- **BBO SBE** (Level 1, 含 RPI 欄位)
+- **Level-50 SBE** (50 檔深度訂單簿快照 + 增量更新)
+- **Fast Order SBE** (極低延遲的訂單回報通道)
+
+## 什麼是 SBE?
+
+Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)**:
+
+- 二進位資料, little-endian 編碼
+- 儘可能使用固定長度欄位
+- 明確區分 **訊息標頭 (message header)** 與 **訊息主體 (message body)** 佈局
+- 高效率解碼, 適用於高頻交易 (HFT) 與做市策略
+
+與 JSON WebSocket 行情相比, SBE 具備以下優點:
+
+- 較小的訊息負載 (相較等價 JSON 資料可降低約 30–50%)
+- 決定性的二進位結構
+- 微秒級時間戳精度
+- 在編碼與解碼時皆有較低的 CPU 消耗
