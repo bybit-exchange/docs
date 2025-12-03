@@ -12,28 +12,9 @@ sidebar_position: 1
 
 此頻道專門為 **速度與效率** 而設計, 著重於最新訂單狀態更新, 並且 **不會** 推送被動事件, 例如成交明細或系統主動觸發的撤單。
 
-### 發布時程 Release windows
-
-**Futures (linear & inverse)**
-
-- Testnet: **21st Nov 7am UTC+0**
-- Mainnet: **2026 Q1**
-
 ---
 
 ## 連接 Connection
-
-### 測試網 Testnet
-
-```text
-wss://stream-testnet.bybits.org/v5/private
-```
-
-### 主網 Mainnet
-
-```text
-wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private
-```
 
 > ⚠️ 請使用您的 **專屬 MMWS host**。  
 > 此頻道 **無法** 透過標準 WebSocket endpoint 存取。
@@ -190,11 +171,11 @@ Fast Order 推送是使用專用的 SBE schema 編碼。
 |---------:|----------------|------------|------------------------|------------------------------------------------------------------------------------------------------|
 | 1        | `category`     | uint8      | enum (1–4)             | 市場種類 — `1=spot`, `2=linear`, `3=inverse`, `4=option`。                                          |
 | 2        | `side`         | uint8      | enum (1–2)             | 訂單方向 — `1=Buy`, `2=Sell`。                                                                      |
-| 3        | `orderStatus`  | uint8      | enum (5-9)             | 訂單狀態 (例如: 5=Rejected, 6=New, 7=Cancelled, 8=PartiallyFilled, 9=Filled, 0=Others)。             |
+| 3        | [orderStatus](../../enum#sbe-orderstatus)| uint8      | enum (5-9)             | 訂單狀態|
 | 4        | `priceExponent`| int8       | exponent               | 價格小數位數。`displayPrice = mantissa / 10^priceExponent`。                                        |
 | 5        | `sizeExponent` | int8       | exponent               | 數量小數位數。`displaySize = mantissa / 10^sizeExponent`。                                          |
 | 6        | `valueExponent`| int8       | exponent               | 價值小數位數 (spot buy notional)。                                                                  |
-| 7        | `rejectReason` | uint16     | code                   | 拒單代碼 (若不適用則為 0)。對應請參考下方 **rejectReason mapping**。                               |
+| 7        | [rejectReason](../../enum#sbe-rejectreason) | uint16     | code                   | 拒單代碼 (若不適用則為 0) |
 | 8        | `price`        | int64      | mantissa               | 訂單價格 mantissa; 需套用 `priceExponent`。                                                         |
 | 9        | `qty`          | int64      | mantissa               | 原始訂單數量 mantissa; 需套用 `sizeExponent`。                                                      |
 | 10       | `leavesQty`    | int64      | mantissa               | 剩餘未成交數量 mantissa; 需套用 `sizeExponent`。                                                    |
@@ -206,60 +187,6 @@ Fast Order 推送是使用專用的 SBE schema 編碼。
 | 100      | `symbolName`   | varString8 | UTF-8 string (1-byte length) | 商品代碼 (例如 `BTCUSDT`)。                                                               |
 | 101      | `orderId`      | varString8 | UTF-8 string          | 訂單唯一 ID (UUID)。                                                                               |
 | 102      | `orderLinkId`  | varString8 | UTF-8 string          | 可選的客戶端識別 ID, 由使用者指定; 僅 user-initiated 訂單會出現。                                 |
-
----
-
-## rejectReason 對照表
-
-```text
-  0 EC_NoError
-  1 EC_Others
-  2 EC_UnknownMessageType
-  3 EC_MissingClOrdID
-  4 EC_OrderNotExist
-  5 EC_MissingOrigClOrdID
-  6 EC_ClOrdIDOrigClOrdIDAreTheSame
-  7 EC_OrigClOrdIDDoesNotExist
-  8 EC_TooLateToCancel
-  9 EC_UnknownOrderType
- 10 EC_UnknownSide
- 11 EC_UnknownTimeInForce
- 12 EC_WronglyRouted
- 13 EC_MarketOrderPriceIsNotZero
- 14 EC_LimitOrderInvalidPrice
- 15 EC_NoEnoughQtyToFill
- 16 EC_NoImmediateQtyToFill
- 17 EC_QtyCannotBeZero
- 18 EC_PerCancelRequest
- 19 EC_MarketOrderCannotBePostOnly
- 20 EC_PostOnlyWillTakeLiquidity
- 21 EC_CancelReplaceOrder
- 22 EC_InvalidSymbolStatus
- 23 EC_MarketOrderNoSupportTIF
- 24 EC_ReachMaxTradeNum
- 25 EC_InvalidPriceScale
- 28 EC_BySelfMatch
- 29 EC_InvalidSmpType
- 30 EC_CancelByMMP
- 31 EC_InCallAuctionStatus
- 34 EC_InvalidUserType
- 35 EC_InvalidMirrorOid
- 36 EC_InvalidMirrorUid
-100 EC_EcInvalidQty
-101 EC_InvalidAmount
-102 EC_LoadOrderCancel
-103 EC_CancelForNoFullFill
-104 EC_MarketQuoteNoSuppSell
-105 EC_DisorderOrderID
-106 EC_InvalidBaseValue
-107 EC_LoadOrderCanMatch
-108 EC_SecurityStatusFail
-110 EC_ReachRiskPriceLimit
-111 EC_CancelByOrderValueZero
-112 EC_CancelByMatchValueZero
-113 EC_CancelByMatchValueZero
-200 EC_ReachMarketPriceLimit
-```
 
 ---
 
@@ -807,8 +734,6 @@ handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s
 logger.addHandler(handler)
 
 MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private"
-URL_TESTNET = "wss://stream-testnet.bybit.com/v5/private"
-MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private"
 
 API_KEY = "xxx"
 API_SECRET = "xxx"
