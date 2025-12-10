@@ -21,10 +21,11 @@ sidebar_position: 1
 **Creating an RFQ from the inquirer's perspective**
 1. The inquirer uses [/v5/rfq/create-rfq](../rfq/trade/create-rfq#) to create an inquiry. The inquirer can query the information of the products with [/v5/market/instruments-info](../market/instrument#), and the quoter information can be queried with [/v5/rfq/config query](../rfq/trade/rfq-config#).
 2. The inquirer may cancel the inquiry with [/v5/rfq/cancel-rfq](../rfq/trade/cancel-rfq#) at any time while the inquiry is in force.
-3. The quoting party, if it is one of the quoting parties selected by the inquiry party, will receive the inquiry information in the [rfq.open.rfqs](../rfq/websocket/private/inquiry#) WebSocket topic and can make the corresponding quote.
-4. The inquirer, after receiving the offer information in the [rfq.open.quotes](../rfq/websocket/private/quote#) WebSocket topic, can choose the best offer and execute it through the [/v5/rfq/execute-quote](../rfq/trade/execute-quote#).
-5. Inquirers will receive confirmation of successful trade execution in the [rfq.open.trades](../rfq/websocket/private/transaction#) and [rfq.open.rfqs](../rfq/websocket/private/inquiry#) WebSocket topics.
-6. Inquirers will also receive confirmation of this and other block trades [rfq.open.public.trades](../rfq/websocket/public/public-transaction#) WebSocket topic.
+3. The inquirer can use the endpoint [/v5/rfq/accept-other-quote](../rfq/trade/accept-other-quote#) to accept non-LP OTC quotes, thereby expanding the sources of quotations.
+4. The quoting party, if it is one of the quoting parties selected by the inquiry party, will receive the inquiry information in the [rfq.open.rfqs](../rfq/websocket/private/inquiry#) WebSocket topic and can make the corresponding quote.
+5. The inquirer, after receiving the offer information in the [rfq.open.quotes](../rfq/websocket/private/quote#) WebSocket topic, can choose the best offer and execute it through the [/v5/rfq/execute-quote](../rfq/trade/execute-quote#).
+6. Inquirers will receive confirmation of successful trade execution in the [rfq.open.trades](../rfq/websocket/private/transaction#) and [rfq.open.rfqs](../rfq/websocket/private/inquiry#) WebSocket topics.
+7. Inquirers will also receive confirmation of this and other block trades [rfq.open.public.trades](../rfq/websocket/public/public-transaction#) WebSocket topic.
 
 **Creating a quote from the quoter's perspective**
 1. When a new request for a quote is issued and the quoting party is one of the selected quoting parties, the quoting party will receive this request information in the [rfq.open.rfqs](../rfq/websocket/private/inquiry#) WebSocket topic.

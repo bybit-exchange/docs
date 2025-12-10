@@ -1,0 +1,55 @@
+---
+title: Accept non-LP Quote
+sidebar_label: Accept non-LP Quote
+sidebar_position: 5
+---
+ Accept non-LP Quote. **Up to 50 requests** per second.
+
+:::info
+- Accepts non-LP quotes.
+:::
+
+### HTTP Request
+POST `/v5/rfq/accept-other-quote`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|rfqId |**true** |string |Inquiry ID|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object ||
+|> rfqId |string |Inquiry ID |
+
+### Request Example
+
+```http
+POST /v5/rfq/accept-other-quote HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1744083949347
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 115
+
+{
+  "rfqId":"1754364447601610516653123084412812", 
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "rfqId": "1754364447601610516653123084412812"
+    },
+    "retExtInfo": {},
+    "time": 1757405933132
+}
+```

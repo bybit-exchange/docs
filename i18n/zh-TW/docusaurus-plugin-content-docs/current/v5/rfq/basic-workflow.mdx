@@ -23,10 +23,11 @@ sidebar_position: 1
 **詢價方視角（OpenAPI）**  
 1. 詢價方使用 [/v5/rfq/create-rfq](../rfq/trade/create-rfq#) 創建詢價。詢價方可以通過 [/v5/market/instruments-info](../market/instrument#) 查詢可詢價的產品信息，並通過 [/v5/rfq/config query](../rfq/trade/rfq-config#) 選擇報價方信息。
 2. 詢價方可以隨時通過 [/v5/rfq/cancel-rfq](../rfq/trade/cancel-rfq#) 取消有效的詢價。
-3. 報價方（若為詢價方選定的報價方之一）將在 [rfq.open.rfqs](../rfq/websocket/private/inquiry#) 推送頻道接收到詢價信息，並可進行相應報價。
-4. 詢價方在 [rfq.open.quotes](../rfq/websocket/private/quote#) 推送頻道接收到報價信息後，可以選擇最佳報價並通過 [/v5/rfq/execute-quote](../rfq/trade/execute-quote#) 執行報價。
-5. 詢價方將在 [rfq.open.trades](../rfq/websocket/private/transaction#) 和 [rfq.open.rfqs](../rfq/websocket/private/inquiry#) 推送頻道收到交易成功執行的確認。
-6. 詢價方也會在 [rfq.open.public.trades](../rfq/websocket/public/public-transaction#) 推送頻道收到此及其他大宗交易的確認。
+3. 詢價方可以通過 [/v5/rfq/accept-other-quote](../rfq/trade/accept-other-quote#) 接受非 LP 的場外報價，以擴大報價來源。
+4. 報價方（若為詢價方選定的報價方之一）將在 [rfq.open.rfqs](../rfq/websocket/private/inquiry#) 推送頻道接收到詢價信息，並可進行相應報價。
+5. 詢價方在 [rfq.open.quotes](../rfq/websocket/private/quote#) 推送頻道接收到報價信息後，可以選擇最佳報價並通過 [/v5/rfq/execute-quote](../rfq/trade/execute-quote#) 執行報價。
+6. 詢價方將在 [rfq.open.trades](../rfq/websocket/private/transaction#) 和 [rfq.open.rfqs](../rfq/websocket/private/inquiry#) 推送頻道收到交易成功執行的確認。
+7. 詢價方也會在 [rfq.open.public.trades](../rfq/websocket/public/public-transaction#) 推送頻道收到此及其他大宗交易的確認。
 
 **報價方視角（OpenAPI）**  
 1. 當新的報價請求發出且報價方為選定的報價方之一時，報價方將在 [rfq.open.rfqs](../rfq/websocket/private/inquiry#) 推送頻道收到此請求信息。
