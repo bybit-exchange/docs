@@ -1,0 +1,53 @@
+---
+title: 交易通知
+sidebar_label: 交易通知 
+sidebar_position: 11
+---  
+
+## 交易通知
+
+### Webhook URL
+
+- **Webhook_url**：在 [trade-execute](confirm-quote) API 中提供
+
+### Webhook Method
+
+- **HTTP Method**：`POST`
+
+### Authentication
+
+- 雙方共享 **IP 白名單**
+- Bybit Pay 將透過 **RSA_SHA256** 對回調資料進行加密  
+  - 合作方可提供其 **公鑰（public key）**  
+  - 簽名資料會放在 **回應標頭（response header）** 中 
+  - 詳情請參考 [Signature Algorithm](signature-algorithm)
+
+### Headers
+
+```http
+Content-Type: application/json
+timestamp: xxx
+publicKey: xxx
+signature: xxx
+```
+
+---
+
+### Request Body
+
+請求體為 **JSON** 格式，包含以下欄位：
+
+| 欄位名稱       | 型別   | 說明                                                                                  |
+|----------------|--------|---------------------------------------------------------------------------------------|
+| `tradeNo`      | string | 交易訂單號                                                                             |
+| `status`       | string | 交易狀態：`processing`、`success` 或 `failed`                                         |
+| `quoteTxId`    | string | 報價交易 ID，由系統產生，用於確認報價                                                |
+| `exchangeRate` | string | 匯率                                                                                  |
+| `fromCoin`     | string | 兌出幣種（賣出的幣）                                                                  |
+| `fromCoinType` | string | `fromCoin` 的幣種類型，`fiat` 或 `crypto`                                             |
+| `toCoin`       | string | 兌入幣種（買入的幣）                                                                  |
+| `toCoinType`   | string | `toCoin` 的幣種類型，`fiat` 或 `crypto`                                               |
+| `fromAmount`   | string | 兌出幣種數量（賣出數量）                                                              |
+| `toAmount`     | string | 兌入幣種數量（依照匯率計算的買入數量）                                                |
+| `createdAt`    | string | 交易建立時間                                                                          |
+```
