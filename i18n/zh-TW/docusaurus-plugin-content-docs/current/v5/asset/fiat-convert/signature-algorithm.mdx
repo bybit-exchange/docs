@@ -1,0 +1,164 @@
+---
+title: 簽名算法
+sidebar_label: 簽名算法   
+sidebar_position: 12 
+---  
+
+## 1 加密（Encrypt）
+
+### 步驟
+
+1. 取得當前時間戳 `${timestamp}`
+2. 將 `${timestamp}` 與請求體組合成新的字串 `$content`：
+   - 若 HTTP 方法為 **POST**，請求體為 **JSON** 文本
+   - 若 HTTP 方法為 **GET**，請求體為「**未轉義的查詢字串**」  
+     - 範例：`name=foo&age=18` 為有效格式
+     - `name%3dfoo%26age%3d18` 為無效格式
+3. 使用 **SHA256** 與 **PKCS1V15、1024-bit RSA** 對 `$content` 進行簽名
+4. 將簽名後的資料以 **Base64** 編碼
+
+### 範例
+
+以下為簽名示例。時間戳為 `1751441054`，RSA 金鑰為：
+
+> -----以下金鑰對僅供測試使用-----  
+> -----BEGIN RSA PUBLIC KEY-----  
+> MIGJAoGBAOFSnhqtu40TOtok+yXeB+O76PXb/VAJU4Yih6hViOdSGd7imWmCSZyP  
+> psl3TmLhUoB+rTzYDdYrlYYng6cVn6yUhxjpMWD4Qp5K4GzjvUM0f+AxlKYMj8OQ  
+> AgDPmZG1a5ydFrje4PLytC7sUw3GP4TTk8xg6iMHmYPdRDv7AEWdAgMBAAE=  
+> -----END RSA PUBLIC KEY-----  
+>
+> -----BEGIN RSA PRIVATE KEY-----  
+> MIICXwIBAAKBgQDhUp4arbuNEzraJPsl3gfju+j12/1QCVOGIoeoVYjnUhne4plp  
+> gkmcj6bJd05i4VKAfq082A3WK5WGJ4OnFZ+slIcY6TFg+EKeSuBs471DNH/gMZSm  
+> DI/DkAIAz5mRtWucnRa43uDy8rQu7FMNxj+E05PMYOojB5mD3UQ7+wBFnQIDAQAB  
+> AoGBAIqpeCi83516xw32EiSEleBdBIlA34vAoYj7ePZr5PtN+CPE2Von1rslYCO9  
+> axzIwyfWTTATWbiCS9sqOAe78+1t3shU0ryXelWQ95LOdiMp0ZvU3ya6MzSVuiuL  
+> 6gOQYu8kzRqCzqvyMNdAHFMmP0iESefYegaiU46yQo2ZZAtVAkEA/N6gl4tYJBef  
+> e/Gxi7qhuIKz0mvfA/yieRuiVhFb25oJaagU6hBuzegmbs45hh+n4bw8AA9k0bvi  
+> 3IBIdV/CbwJBAOQcsOPf+lrs4PEJYUQ8/eqiG7tgIUeXxuerfPYMAzvJ7EU1u72o  
+> /5V9zdim+hPq+9cvsqO7dkJx+cEpgwHKzrMCQQDoYqArJP/Hi34hpaiIxOdCbbtc  
+> MY4uV8noiqDRf/pvAkyMMM+nm5p42FQZmKP8wrLCHP72/y6kIIsIIUx1sZ85AkEA  
+> 15eWR4jEoXMIFkd7Onc6tKuJ8kokqfl08DhP3mv0EmoBeFgUnGhBRxSjnIQUDwck  
+> Bnj6KW1fk+UM29dUDjmTqQJBAITyP16eBWjlzcgaxoT2d/d7S7AXvgCxCzRRi5ph  
+> IavMyjrhDKyBGZ0mI6eoREaC4bxl31RRkYtg9mNeU3TxsBM=  
+> -----END RSA PRIVATE KEY-----
+
+#### JSON 請求體
+
+```json
+{
+  "merchantId": "bybit",
+  "clientId": "xx",
+  "paymentType": "E_COMMERCE",
+  "merchantTradeNo": "8751738a-97a4-49da-8b64-185ffcb98a7a",
+  "payId": "01JXWP4XK4ZRVYD3HT9PD52KCD",
+  "status": "PAY_SUCCESS",
+  "amount": "1.23",
+  "currency": "USDT",
+  "currencyType": "crypto",
+  "createTime": 1750088344,
+  "paymentTime": 1750088344,
+  "finishTime": 1750088344,
+  "customer": {
+    "external_user_id": "123",
+    "user_name": "tester",
+    "register_time": "1750088344",
+    "kyc_country": "HK",
+    "uid": "foo"
+  }
+}
+```
+
+#### 具體簽名步驟
+
+1. 取得當前時間戳：
+
+```text
+1751441054
+```
+
+2. 將 `${timestamp}` 與請求體組合為新字串 `$content`：
+
+```text
+1751441054{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+
+3. 使用 **SHA256** 與 **PKCS1V15、1024-bit RSA** 對 `$content` 進行簽名。
+4. 將簽名後的位元資料以 **Base64** 編碼：
+
+```text
+vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=
+```
+
+---
+
+## 2 解密（Decrypt）
+
+### 步驟
+
+1. 從請求標頭中取得 `timestamp` 與 `signature`。
+2. 取得請求體：
+   - 若 HTTP 方法為 **POST**，請求體為 **JSON** 文本。
+   - 若 HTTP 方法為 **GET**，請求體為「**未轉義的查詢字串**」。
+3. 將 `${timestamp}` 與回應體組合成新字串 `$content`。
+4. 將 `signature` 由 **Base64** 解碼為資料。
+5. 使用 **SHA256** 對 `$content` 字串進行雜湊，並用 **PKCS1V15、1024-bit RSA** 驗證簽名。
+
+### 範例
+
+給定以下資料：
+
+```text
+vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=
+```
+
+時間戳為 `1751441054`，RSA 金鑰為：
+
+> -----以下金鑰對僅供測試使用-----  
+> -----BEGIN RSA PUBLIC KEY-----  
+> MIGJAoGBAOFSnhqtu40TOtok+yXeB+O76PXb/VAJU4Yih6hViOdSGd7imWmCSZyP  
+> psl3TmLhUoB+rTzYDdYrlYYng6cVn6yUhxjpMWD4Qp5K4GzjvUM0f+AxlKYMj8OQ  
+> AgDPmZG1a5ydFrje4PLytC7sUw3GP4TTk8xg6iMHmYPdRDv7AEWdAgMBAAE=  
+> -----END RSA PUBLIC KEY-----  
+>
+> -----BEGIN RSA PRIVATE KEY-----  
+> MIICXwIBAAKBgQDhUp4arbuNEzraJPsl3gfju+j12/1QCVOGIoeoVYjnUhne4plp  
+> gkmcj6bJd05i4VKAfq082A3WK5WGJ4OnFZ+slIcY6TFg+EKeSuBs471DNH/gMZSm  
+> DI/DkAIAz5mRtWucnRa43uDy8rQu7FMNxj+E05PMYOojB5mD3UQ7+wBFnQIDAQAB  
+> AoGBAIqpeCi83516xw32EiSEleBdBIlA34vAoYj7ePZr5PtN+CPE2Von1rslYCO9  
+> axzIwyfWTTATWbiCS9sqOAe78+1t3shU0ryXelWQ95LOdiMp0ZvU3ya6MzSVuiuL  
+> 6gOQYu8kzRqCzqvyMNdAHFMmP0iESefYegaiU46yQo2ZZAtVAkEA/N6gl4tYJBef  
+> e/Gxi7qhuIKz0mvfA/yieRuiVhFb25oJaagU6hBuzegmbs45hh+n4bw8AA9k0bvi  
+> 3IBIdV/CbwJBAOQcsOPf+lrs4PEJYUQ8/eqiG7tgIUeXxuerfPYMAzvJ7EU1u72o  
+> /5V9zdim+hPq+9cvsqO7dkJx+cEpgwHKzrMCQQDoYqArJP/Hi34hpaiIxOdCbbtc  
+> MY4uV8noiqDRf/pvAkyMMM+nm5p42FQZmKP8wrLCHP72/y6kIIsIIUx1sZ85AkEA  
+> 15eWR4jEoXMIFkd7Onc6tKuJ8kokqfl08DhP3mv0EmoBeFgUnGhBRxSjnIQUDwck  
+> Bnj6KW1fk+UM29dUDjmTqQJBAITyP16eBWjlzcgaxoT2d/d7S7AXvgCxCzRRi5ph  
+> IavMyjrhDKyBGZ0mI6eoREaC4bxl31RRkYtg9mNeU3TxsBM=  
+> -----END RSA PRIVATE KEY-----
+
+#### 具體驗證步驟
+
+1. 從請求標頭取得 `timestamp` 與 `signature`：
+
+```text
+timestamp = 1751441054
+signature = vOyN+NnfWppnhxS6y1D+CAllj6Z/3np1Tm+nrt16e/EDl4VZjU2sVPSS/cBcf5Hy/jBarA8Y7yrvYqJonJAsAZcFKu9twW2XWyMbURC63Iumh5gkAE9UEx4/irpX4W6KXhqc2+7wc1tapC5zfVWRMIQ5Dh+7VscxLY+/WjKb/Vw=
+```
+
+2. 取得請求體（POST：JSON 文本；GET：未轉義查詢字串）：
+
+```json
+{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+
+3. 將 `${timestamp}` 與回應內容組合為新字串 `$content`：
+
+```text
+1751441054{"merchantId":"bybit","clientId":"xx","paymentType":"E_COMMERCE","merchantTradeNo":"8751738a-97a4-49da-8b64-185ffcb98a7a","payId":"01JXWP4XK4ZRVYD3HT9PD52KCD","status":"PAY_SUCCESS","amount":"1.23","currency":"USDT","currencyType":"crypto","createTime":1750088344,"paymentTime":1750088344,"finishTime":1750088344,"customer":{"external_user_id":"123","user_name":"tester","register_time":"1750088344","kyc_country":"HK","uid":"foo"}}
+```
+
+4. 將 `signature` 由 **Base64** 解碼為位元資料。
+5. 使用 **SHA256** 對上述字串內容進行雜湊，並基於 **PKCS1V15、1024-bit RSA** 驗證簽名。  
+```
