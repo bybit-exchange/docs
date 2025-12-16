@@ -1,0 +1,76 @@
+---
+title: Small Balance History
+sidebar_label: Small Balance History
+sidebar_position: 4
+---
+
+Query the history of small balance  **Up to 5 requests per second ** 
+
+### HTTP Request
+GET `/v5/asset/covert/small-balance-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|fromCoin |false |string |From Coin,If omitted, all will be returned by default|
+|accountType |true |string |UTA / funding account (enum: eb_convert_uta, eb_convert_funding)|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| list            | array | list                   |
+| > accountType  | string        | Account type                                 |
+| > quoteId      | string        | Quote request ID                             |
+| > tradeId      | string        | Conversion transaction ID                    |
+| > estAmount    | string        | Estimated total amount to be received (incl. fees) |
+| >  fee          | string        | Fee                                          |
+| >  feeRate      | string        | Fee rate                                     |
+| >  amount       | string        | Amount credited                              |
+| >  fromCoin     | string        | Sold currency                                |
+| >  fromCoinAmount | string      | Amount of sold currency                      |
+| >  toCoin       | string        | Received currency                            |
+| >  recvAmount   | string        | Amount of received currency                  |
+| nextPageCursor  | string        | Pagination cursor                            |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/covert/small-balance-list?accountType=eb_convert_uta HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1720064061248
+X-BAPI-RECV-WINDOW: 5000
+```
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "fromCoin": "XRP",
+                "isConvert": 1,
+                "availableBalance": "0.024",
+                "usdtValue": "0.048"
+            },
+            {
+                "fromCoin": "EUR",
+                "isConvert": 2,
+                "availableBalance": "0.024",
+                "usdtValue": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1761131749846
+}
+```

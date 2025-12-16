@@ -1,0 +1,83 @@
+---
+title: Execute Convert 
+sidebar_label: Execute Convert
+sidebar_position: 3
+---
+
+Convert small balances from the coins to another coin
+
+:::info
+1. Only available (usdt, usdc, mnt)
+2. ** Up to 5 requests per second ** 
+:::
+
+### HTTP Request
+POST `/v5/asset/covert/small-balance-execute`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|quoteId |**true** |string |Quote request ID. Only one is supported|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| code       | int    | Result code                                                                 |
+| quoteId    | string | Quote request ID                                                            |
+| submitTime | string | Confirmation submission timestamp                                           |
+| status     | string | Conversion status: `Success`, `Fail`, `Processing`                            |
+| msg        | string | Error message when `status = Fail`                                         |
+
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/asset/covert/small-balance-execute HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1720071899789
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 52
+
+{
+    "quoteId": "QuoteTaxId123456"
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "quoteId": "xxxxx01",
+                "submitTime": "1760538645000",
+                "status": "Processing",
+                "code": "",
+                "msg": "xx"
+            },
+            {
+                "quoteId": "xxxxx02",
+                "submitTime": "1760538645000",
+                "status": "Success",
+                "code": "",
+                "msg": "xx"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1761131749846
+}
+```

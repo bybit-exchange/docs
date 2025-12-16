@@ -1,0 +1,73 @@
+---
+title: Get Quote 
+sidebar_label: Get Quote
+sidebar_position: 2
+---
+
+Convert small balances from the coins to another coin
+
+:::info
+1. Only available (usdt, usdc, mnt)
+2. ** Up to 5 requests per second ** 
+:::
+
+### HTTP Request
+POST `/v5/asset/covert/get-quote`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|fromCoins |**true** |string |From currency. A maximum of 20 currencies can be specified in a single request, eg: ["USDT", "USDC", "XRP", "BTC"]|
+|toCoin |**true** |string|For each small-amount conversion request. Only one of MNT, USDT, or USDC can be selected per request.|
+|accountType |true |string |UTA / funding account (enum: eb_convert_uta, eb_convert_funding)|
+
+
+### Response Parameters
+| Parameter        | Type   | Comments                                                  |
+|:----------------|:-------|:----------------------------------------------------------|
+| quoteCreateTime | string | Quote creation timestamp (milliseconds)                   |
+| ttIMS           | string | Quote expiry time                                         |
+| quoteId         | string | quote request ID                                |
+| fromCoinList    | string | List of currencies to be converted, e.g. USDT, USDC, XRP |
+| estAmount       | string | Estimated total amount to be received (including fees)    |
+| fee             | string | Fee                                                       |
+| feeRate         | string | Fee rate, e.g. 2% is returned as 0.02                     |
+| feeCoin         | string | Fee currency                                              |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/asset/covert/get-quote  HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1720071899789
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 52
+
+{
+    "quoteTxId": "QuoteTaxId123456",
+    "subUserId":"43456"
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "tradeNo": "TradeNo123456",
+        "merchantRequestId": ""
+    }
+}
+```
