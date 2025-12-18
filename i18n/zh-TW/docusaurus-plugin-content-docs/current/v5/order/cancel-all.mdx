@@ -11,9 +11,9 @@ sidebar_position: 5
 :::
 
 :::info
-**現貨**: 經典帳戶 - 最多取消500單; 統一帳戶 - 無限制<br/>
-**期貨**: 經典帳戶 - 最多取消500單; 統一帳戶 - 最多取消500單 (當您訂單數量超過500單時, 系統會**隨機挑選500單**進行取消)<br/>
-**期權**: 統一帳戶 - 無限制
+**現貨**: 無限制<br/>
+**期貨**: 最多取消500單 (當您訂單數量超過500單時, 系統會**隨機挑選500單**進行取消)<br/>
+**期權**: 統無限制
 :::
 
 ### HTTP請求
@@ -22,9 +22,9 @@ POST `/v5/order/cancel-all`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `spot`, `linear`, `inverse`, `option`</li><li>經典帳戶: `spot`, `linear`, `inverse`</li></ul> |
+|[category](../enum#category) |**true** |string |產品類型 `spot`, `linear`, `inverse`, `option`|
 |symbol |false|string |合約名稱<br/>對於`linear` & `inverse`: 若不傳`baseCoin`和`settleCoin`, 該字段**必傳**|
-|baseCoin |false|string |交易幣種 <ul><li>經典帳戶`linear` & `inverse`: <br/>當通過baseCoin來全部撤單時, 會將linear和inverse訂單全部撤掉。若不傳`symbol`和`settleCoin`, 則該字段**必傳**</li><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10)`linear` & `inverse`: <br/>當通過baseCoin來全部撤單時, 會將對應category的訂單全部撤掉。若不傳`symbol`和`settleCoin`, 則該字段**必傳**</li><li>對於經典帳戶的現貨: 該字段無效</li></ul> |
+|baseCoin |false|string |交易幣種 <ul><li>`linear` & `inverse`: 當通過baseCoin來全部撤單時, 會將對應category的訂單全部撤掉。若不傳`symbol`和`baseCoin`, 則該字段**必傳**</li></ul> |
 |settleCoin |false|string |結算幣種 <ul><li>對於`linear` & `inverse`: 該字段**必傳**, 若不傳`symbol`和`baseCoin`</li><li>`option`: USDC或者USDT</li><li>該字段不支持`spot`</li></ul> |
 |orderFilter |false |string |<ul><li>category=`spot`, 該字段可以傳: <br/>`Order`(普通單), `tpslOrder`(止盈止損單)<br/>`StopOrder`(條件單), `OcoOrder`<br/>`BidirectionalTpslOrder`(現貨雙向止盈止損訂單)<br/>若不傳, 則默認是撤掉`Order`單</li><li>當category=`linear` 或者 `inverse`, 該字段可以傳`Order`(普通單), `StopOrder`(條件單, 包括止盈止損單和追蹤出場單), `OpenOrder`(僅取消開倉單). 若不傳, 則所有類型的訂單都會被撤掉</li><li>當category=`option`, 該字段可以傳`Order`,`StopOrder`, 若不傳, 則撤掉這兩種類型下所有訂單</li></ul>|
 |[stopOrderType](../enum#stopordertype) |false |string |條件單類型, `Stop` <li>僅用於當category=`linear` 或者 `inverse`以及orderFilter=`StopOrder`時, 若想僅取消條件單 (不包括止盈止損單和追蹤出場單), 則可以傳入該字段</li>|
@@ -39,7 +39,7 @@ POST `/v5/order/cancel-all`
 |list |array |Object|
 |> orderId |string |訂單ID |
 |> orderLinkId |string |用戶自定義的訂單ID |
-|success |string |"1": 成功, "0": 失敗<li>[統一帳戶1.0](../acct-mode#統一帳戶10)(inverse), 經典帳戶(linear, inverse)不返回該字段</li>|
+|success |string |"1": 成功, "0": 失敗|
 
 :::info
 ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態

@@ -10,14 +10,6 @@ Get available wallet types for the master account or sub account
 * Sub api key: you can get its own available wallet types
 :::
 
-:::infoPRACTICE
-"FUND" - If you never deposit or transfer capital into it, this wallet type will not be shown in the array, but your account indeed has this wallet.
-* `["SPOT","FUND","CONTRACT"]` : Classic account and Funding wallet was operated before
-* `["SPOT","CONTRACT"]` : Classic account and Funding wallet is never operated
-* `["UNIFIED""FUND","CONTRACT"]` : UTA account and Funding wallet was operated before.
-* `["UNIFIED","CONTRACT"]` : UTA account and Funding wallet is never operated.
-:::
-
 ### HTTP Request
 GET `/v5/user/get-member-type`
 
@@ -31,7 +23,7 @@ GET `/v5/user/get-member-type`
 |:----- |:-----|----- |
 |accounts |array |Object |
 |> uid |string |Master/Sub user Id |
-|> [accountType](../enum#accounttype) |array |Wallets array. `SPOT`, `CONTRACT`, `FUND`, `OPTION`, `UNIFIED`. Please check above practice to understand the value|
+|> [accountType](../enum#accounttype) |array |Wallets array. `FUND`,`UNIFIED`|
 
 <a href="/api-explorer/v5/user/wallet-type"><Button>RUN >></Button></a>
 
@@ -100,10 +92,8 @@ client
             {
                 "uid": "533285",
                 "accountType": [
-                    "SPOT",
                     "UNIFIED",
-                    "FUND",
-                    "CONTRACT"
+                    "FUND"
                 ]
             }
         ]
