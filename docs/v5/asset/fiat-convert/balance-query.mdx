@@ -1,0 +1,57 @@
+---
+title: Get Balance
+sidebar_label: Get Balance
+sidebar_position: 7
+---
+
+### HTTP Request
+GET `/v5/fiat/balance-query`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency|false |string|`Fiat`: fiat currency code (ISO 4217) etc: KZT. not set will query all fiat balance list|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object |object|
+|> totalBalance |string|Total balance|
+|> balance |string|Available balance|
+|> frozenBalance |string|Frozen balance|
+|> currency |string|Currency|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/fiat/balance-query HTTP/1.1  
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1720074159814
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": [
+        {
+            "currency": "GEL",
+            "totalBalance": "100000",
+            "balance": "100000",
+            "frozenBalance": "0"
+        }
+    ]
+}
+```

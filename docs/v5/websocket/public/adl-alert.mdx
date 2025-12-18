@@ -25,8 +25,8 @@ For more information on how ADL is triggered, see the [ADL endpoint](/docs/v5/ma
 |list       | array  | Object |
 |> c        | string | Token of the insurance pool |
 |> s        | string | Trading pair name |
-|> b        | string | Balance of the insurance fund. Used to determine if ADL is triggered |
-|> mb       | string | Maximum balance of the insurance pool in the last 8 hours |
+|> b        | string | Balance of the insurance fund. Used to determine if ADL is triggered. For shared insurance pool, the "b" field will follow a T+1 refresh mechanism and will be updated daily at 00:00 UTC. |
+|> mb       | string | Deprecated, always return "". Maximum balance of the insurance pool in the last 8 hours |
 |> i_pr     | string | PnL ratio threshold for triggering **contract PnL drawdown ADL** <ul><li>ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value</li></ul> |
 |> pr       | string | Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped |
 |> adl_tt   | string | Trigger threshold for **contract PnL drawdown ADL** <ul><li>This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL</li></ul> |

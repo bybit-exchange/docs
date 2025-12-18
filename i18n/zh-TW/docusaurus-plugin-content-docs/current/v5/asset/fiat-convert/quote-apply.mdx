@@ -1,0 +1,82 @@
+---
+title: 申請報價  
+sidebar_label: 申請報價   
+sidebar_position: 2  
+---  
+:::info  
+僅可使用主帳號 UID 的 API 密鑰進行請求  
+:::  
+
+### HTTP 請求  
+POST `/v5/fiat/quote-apply`  
+
+### 請求參數  
+| 參數           | 是否必需 | 類型   | 說明                                |  
+|:---------------|:---------|:-------|-------------------------------------|  
+| fromCoin       | **true** | string | 轉換的原幣種（賣出的幣種）           |  
+| fromCoinType   | **true** | string | 原幣種類型，可選值：`fiat` 或 `crypto` |  
+| toCoin         | **true** | string | 轉換的目標幣種（買入的幣種）         |  
+| toCoinType     | **true** | string | 目標幣種類型，可選值：`fiat` 或 `crypto` |  
+| requestAmount  | **true** | string | 請求的原幣種數量（賣出的數量）       |  
+|requestCoinType |  false |string | 你想要賣出的 coinType，填入 `fiat` 或 `crypto`，預設為 `fiat`|
+
+### 響應參數  
+| 參數            | 類型   | 說明                                       |  
+|:----------------|:-------|:------------------------------------------|  
+| quoteTxId       | string | 報價交易 ID，系統生成，用於確認報價         |  
+| exchangeRate    | string | 匯率                                       |  
+| fromCoin        | string | 轉換的原幣種（賣出的幣種）                 |  
+| fromCoinType    | string | 原幣種類型，可選值：`fiat` 或 `crypto`     |  
+| toCoin          | string | 轉換的目標幣種（買入的幣種）               |  
+| toCoinType      | string | 目標幣種類型，可選值：`fiat` 或 `crypto`   |  
+| fromAmount      | string | 原幣種數量（賣出的數量）                   |  
+| toAmount        | string | 目標幣種數量（根據匯率買入的數量）         |  
+| expiredTime     | string | 該報價的過期時間（毫秒）                   |  
+
+### 請求示例  
+
+<Tabs groupId="programming-languages">  
+<TabItem value="http" label="HTTP">  
+
+```http  
+POST /v5/fiat/quote-apply HTTP/1.1  
+Host: api-testnet.bybit.com  
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+X-BAPI-TIMESTAMP: 1720071077014  
+X-BAPI-RECV-WINDOW: 5000  
+X-BAPI-SIGN: XXXXXX  
+Content-Type: application/json  
+Content-Length: 172  
+
+{
+    "fromCoin": "ETH",
+    "fromCoinType": "fiat",
+    "toCoin": "BTC",
+    "toCoinType": "crypto",
+    "requestAmount": "0.1"
+}
+```  
+
+</TabItem>  
+
+</Tabs>  
+
+### 響應示例  
+
+```json  
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "quoteTaxId": "QuoteTaxId123456",
+        "exchangeRate": "1.0",
+        "fromCoin": "ETH",
+        "fromCoinType": "fiat",
+        "toCoin": "BTC",
+        "toCoinType": "crypto",
+        "fromAmount": "0.1",
+        "toAmount": "0.1",
+        "expireTime": "1764561045346"
+    }
+}
+```
