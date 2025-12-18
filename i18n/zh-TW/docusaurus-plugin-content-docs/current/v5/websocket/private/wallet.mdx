@@ -20,42 +20,42 @@ sidebar_position: 4
 |topic |string |Topic名 |
 |creationTime |number |消息數據創建時間 |
 |data |array |Object |
-|> accountType |string |帳戶類型. <ul><li>[統一帳戶2.0](../../acct-mode#統一帳戶20): `UNIFIED`</li><li>[統一帳戶1.0](../../acct-mode#統一帳戶10): `UNIFIED`, `CONTRACT`(反向合約錢包)</li><li>經典帳戶: `CONTRACT`(合約錢包), `SPOT`(現貨錢包)</li></ul> |
-|> accountLTV |string |字段廢棄|
-|> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
-|> accountIMRateByMp |string |帳戶初始保證金率(用mark price計算) <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都<b>不適用於</b><br/>[統一帳戶2.0](../../acct-mode#統一帳戶20)(逐倉模式), <br/>[統一帳戶1.0](../../acct-mode#統一帳戶10)(逐倉模式), [統一帳戶1.0](../../acct-mode#統一帳戶10)(CONTRACT), <br/>經典帳戶(SPOT, CONTRACT)</li>|
+|> accountType |string |帳戶類型 `UNIFIED`|
+|> accountIMRate |string |帳戶初始保證金率 <li>您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式</li><li>下面所有帳戶維度的字段都不適用於逐倉模式</li>|
 |> accountMMRate |string |帳戶維持保證金率|
-|> accountMMRateByMp |string |帳戶維持保證金率(用mark price計算)|
 |> totalEquity |string |總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset|
 |> totalWalletBalance |string |賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset|
 |> totalMarginBalance |string |賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL|
 |> totalAvailableBalance |string |賬戶維度換算成usd的可用餘額: <ul><li>全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.</li> <li>組合保證金: total Equity - Haircut - totalInitialMargin </li></ul>|
 |> totalPerpUPL |string |賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin|
 |> totalInitialMargin |string |賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin|
-|> totalInitialMarginByMp |string |賬戶維度換算成usd的總初始保證金(用mark price計算): ∑Asset Total Initial Margin Base Coin (用mark price計算)|
 |> totalMaintenanceMargin |string |賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin|
-|> totalMaintenanceMarginByMp |string |賬戶維度換算成usd的總維持保證金(用mark price計算): ∑Asset Total Maintenance Margin Base Coin(用mark price計算)|
+|> accountIMRateByMp |string |可**忽略**, 可以使用`accountIMRate`, 算法和值保持一致|
+|> accountMMRateByMp |string |可**忽略**, 可以使用`accountMMRate`, 算法和值保持一致|
+|> totalInitialMarginByMp |string |可**忽略**, 可以使用`totalInitialMargin`, 算法和值保持一致|
+|> totalMaintenanceMarginByMp |string |可**忽略**, 可以使用`totalMaintenanceMargin`, 算法和值保持一致|
+|> accountLTV |string |**廢棄**字段|
 |> coin |array |Object. 幣種列表|
 |>> coin |string |幣種名稱，例如 BTC, ETH, USDT, USDC|
 |>> equity |string |當前幣種的資產淨值: Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` - `spotBorrow` + `unrealisedPnl` + Asset Option Value|
 |>> usdValue |string |當前幣種折算成 usd 的價值, 如果該幣種不能作為保證金的抵押品, 則該數值為0|
 |>> walletBalance |string |當前幣種的錢包餘額 = 現貨負債 + 合約浮虧導致借幣產生的借幣負債|
-|>> free |string |經典帳戶現貨錢包的可用餘額. _經典帳戶現貨錢包的獨有字段_ |
 |>> locked |string |現貨掛單凍結金額 |
-|>> spotHedgingQty |string |用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0 _統一帳戶的獨有字段_ |
+|>> spotHedgingQty |string |用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0|
 |>> borrowAmount |string |當前幣種的已用借貸額度 |
-|>> availableToWithdraw |string |當前幣種的可劃轉提現金額 <br/>**注意:** 在accountType=UNIFIED下, 該字段已經廢棄, 請改用[這個接口](/v5/account/unified-trans-amnt)查詢|
 |>> accruedInterest	|string	|當前幣種的預計要在下一個利息週期收取的利息金額|
 |>> totalOrderIM |string |以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串|
 |>> totalPositionIM	|string	|以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費. 組合保證金模式下，該字段返回空字符串|
 |>> totalPositionMM	|string |以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串|
 |>> unrealisedPnl |string |以當前幣種結算的所有倉位的未結盈虧之和|
 |>> cumRealisedPnl |string |以當前幣種結算的所有倉位的累計已結盈虧之和|
-|>> bonus |string |體驗金. _UNIFIED帳戶的獨有字段_ |
-|>> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <ul><li>當marginCollateral=false時, 則collateralSwitch無意義</li><li>UNIFIED帳戶的獨有字段</li></ul>|
-|>> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <ul><li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li><li>UNIFIED帳戶的獨有字段</li></ul>|
-|>> availableToBorrow |string |由於母子共享借貸限額, 該字段已廢棄, 總是返回`""`. 請通過[查詢抵押品信息](/v5/account/collateral-info)接口查詢`availableToBorrow` |
+|>> bonus |string |體驗金|
+|>> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <ul><li>當marginCollateral=false時, 則collateralSwitch無意義</li></ul>|
+|>> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <ul><li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li></ul>|
 |>> spotBorrow |string |現貨槓桿交易借入金額以及手工借貸金額（不包含現貨槓桿活躍訂單借入金額）。現貨負債對應的`spotBorrow`, 請詳見<a href="https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/">公告</a>. |
+|>> free |string |**廢棄**, 不再有現貨錢包|
+|>> availableToWithdraw |string |該字段從2025年1月9日起已經**廢棄** <ul><li>可劃轉餘額: 可以使用[查詢可劃轉餘額(统一账户)](../v5/account/unified-trans-amnt#) 或 [查詢賬戶所有幣種余額](../v5/asset/balance/all-balance#)</li><li>合約可用餘額: <br/><b>逐倉</b>: walletBalance - totalPositionIM - totalOrderIM - locked - bonus<br/><b>全倉/組合保證金</b>: 使用字段`totalAvailableBalance`(USD), 但需要通過index price来轉換成對應幣種的可用餘額</li><li>現貨(槓桿)可用餘額: 可以使用[查詢用戶可用額度 (現貨)](../v5/order/spot-borrow-quota#)</li></ul>|
+|>> availableToBorrow |string |**廢棄**, 由於母子共享借貸限額, 總是返回`""`. 請通過[查詢抵押品信息](../v5/account/collateral-info)接口查詢`availableToBorrow` |
 
 ### 訂閱示例
 ```json

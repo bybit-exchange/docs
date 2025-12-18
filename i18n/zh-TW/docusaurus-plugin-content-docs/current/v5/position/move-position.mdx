@@ -6,10 +6,6 @@ sidebar_position: 12
 您可以在同一個母子帳戶體系下移動期貨、期權的倉位, 以及現貨的幣幣交易
 
 :::info
-目前支持[統一帳戶2.0](../acct-mode#統一帳戶20) 反向合約移倉
-:::
-
-:::info
 * 該接口僅支持母帳戶的api key訪問
 * 移倉間的UID和調用者的UID必須是同一個母子帳戶體系
 * 該移倉生成的交易將不會出現在公有行情的成交中(包括Rest API和Websocket)
@@ -28,7 +24,7 @@ POST `/v5/position/move-positions`
 |fromUid |**true** |string |原UID <ul><li>必須是統一交易帳戶</li><li>期貨倉位必須有處於單向持倉模式</li></ul>|
 |toUid |**true** |string |目標UID <ul><li>必須是統一交易帳戶</li><li>期貨倉位必須有處於單向持倉模式</li></ul>|
 |list |**true** |array |Object. 單次請求最多支持25腿|
-|> [category](../enum#category) |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20): `linear`, `spot`, `option`,`inverse`</li><li> [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `spot`, `option`</li></ul>|
+|> [category](../enum#category) |**true** |string |產品類型 `linear`, `spot`, `option`,`inverse`|
 |> symbol |**true** |string |合約名稱/幣對名|
 |> price |**true** |string |訂單價格 <ul><li>`linear`和`inverse`: 價格需要位於[95% * 標記價格, 105% * 標記價格]之間</li><li>`spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](../market/instrument)的價格上下限和精度</li></ul>|
 |> side |**true** |string |是`fromUid`的交易方向 <ul><li>例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小</li></ul>|

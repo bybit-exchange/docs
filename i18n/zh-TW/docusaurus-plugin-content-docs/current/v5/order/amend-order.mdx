@@ -13,7 +13,7 @@ POST `/v5/order/amend`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |產品類型 <ul><li>[統一帳戶2.0](../acct-mode#統一帳戶20), [統一帳戶1.0](../acct-mode#統一帳戶10): `linear`, `inverse`, `spot`, `option`</li><li>經典帳戶: `linear`, `inverse`, `spot`</li></ul>|
+|[category](../enum#category) |**true** |string |產品類型 `linear`, `inverse`, `spot`, `option`|
 |symbol |**true** |string |合約名稱|
 |orderId |false |string |訂單Id. `orderId`和`orderLinkId`必傳其中一個|
 |orderLinkId |false |string |用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個 |
@@ -22,13 +22,13 @@ POST `/v5/order/amend`
 |qty |false |string |修改後的訂單數量. 若不修改，請不要傳該字段|
 |price |false |string |修改後的訂單價格. 若不修改，請不要傳該字段|
 |tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損. 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>僅對`linear`和`inverse`有效|
-|takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段<br/>_適用於 `spot`(UTA), `linear`, `inverse`_|
-|stopLoss |false |string |修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段<br/>_適用於 `spot`(UTA), `linear`, `inverse`_|
+|takeProfit |false |string |修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段<br/>|
+|stopLoss |false |string |修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段<br/>|
 |[tpTriggerBy](../enum#triggerby) |false |string |止盈價格觸發類型. 若下單時未設置該值，則調用該接口修改止盈價格時，該字段**必傳**|
 |[slTriggerBy](../enum#triggerby) |false |string |止損價格觸發類型. 若下單時未設置該值，則調用該接口修改止損價格時，該字段**必傳**|
 |[triggerBy](../enum#triggerby) |false |string |觸發價格的觸發類型|
-|tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格<br/>當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效<br/>_適用於 `spot`(UTA), `linear`, `inverse`_|
-|slLimitPrice |false |string |觸發止損後轉換為限價單的價格<br/>當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效<br/>_適用於 `spot`(UTA), `linear`, `inverse`_|
+|tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格<br/>當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效<br/>|
+|slLimitPrice |false |string |觸發止損後轉換為限價單的價格<br/>當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效<br/>|
 
 :::info
 ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
