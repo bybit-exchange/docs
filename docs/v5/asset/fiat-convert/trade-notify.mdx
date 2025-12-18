@@ -1,0 +1,52 @@
+---
+title: Trade Notify
+sidebar_label: Trade Notify 
+sidebar_position: 11
+---  
+## Trade Notify
+
+### Webhook URL
+
+- **Webhook_url**: Provided in the [trade-execute](confirm-quote) API.
+
+### Webhook Method
+
+- **HTTP Method**: `POST`
+
+### Authentication
+
+- Share the **IP whitelist** with each other.
+- Bybit Pay will encrypt the callbacks via **RSA_SHA256**.  
+  - Partners can provide their **public key**.  
+  - The signed data will be put in the **response header**.  
+  - For details, see [Signature Algorithm](signature-algorithm).
+
+### Headers
+
+```http
+Content-Type: application/json
+timestamp: xxx
+publicKey: xxx
+signature: xxx
+```
+
+---
+
+### Request Body
+
+The request body is in **JSON** format with the following fields:
+
+| Field Name   | Type   | Description                                                                                   |
+|-------------|--------|-----------------------------------------------------------------------------------------------|
+| `tradeNo`   | string | Trade order number                                                                            |
+| `status`    | string | Trade status: `processing`, `success`, or `failed`                                            |
+| `quoteTxId` | string | Quote transaction ID. System generated, used to confirm the quote                             |
+| `exchangeRate` | string | Exchange rate                                                                            |
+| `fromCoin`  | string | Convert from coin (coin to sell)                                                              |
+| `fromCoinType` | string | Coin type of `fromCoin`, either `fiat` or `crypto`                                       |
+| `toCoin`    | string | Convert to coin (coin to buy)                                                                 |
+| `toCoinType` | string | Coin type of `toCoin`, either `fiat` or `crypto`                                           |
+| `fromAmount` | string | From coin amount (amount to sell)                                                          |
+| `toAmount`  | string | To coin amount (amount to buy according to the exchange rate)                                 |
+| `createdAt` | string | Trade created time                                                                            |
+```
