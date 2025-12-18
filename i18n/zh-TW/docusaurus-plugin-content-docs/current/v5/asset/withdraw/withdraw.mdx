@@ -37,16 +37,22 @@ POST `/v5/asset/withdraw/create`
 |accountType|**true**|string |設置出金帳戶<br/>`FUND`: 資金錢包出金<br/>`SPOT`: 現貨錢包(僅限經典賬戶)<br/>`UTA`: 系統從Unified錢包劃轉到Funding錢包, 然後提現<br/>`FUND,UTA`: 多帳戶組合出金, 優先從資金帳戶扣款, 若資金不足, 再從Unified錢包扣款|
 |feeType|false|integer |手續費選項 <ul><li>`0`(默認): 輸入金額即實際收到的金額, 所以您需要額外考慮手續費</li><li>`1`: 輸入金額不是實際收到的金額, 系統將會自動計算所需的手續費</li></ul> |
 |requestId |false |string |自定義ID, 全局唯一, 用於冪等校驗<li>字母(區分大小寫)數字組合, 可以是純字母或者純數字, 長度在1-32字符之間</li> |
-|beneficiary |false |Object |提現目標方基本信息, 僅kyc=KOR(韓國個人用戶)必須傳遞此字段|
-|> vaspEntityId |**true** |string |接收方交易所id. 請調用該[接口](../asset/withdraw/vasp-list#)來查詢對應的id|
-|> beneficiaryName |false |string |接收方交易所用戶kyc姓名, 比如`John Wilson` 或者 `Wilson John` <li>請依據目標交易所kyc姓名</li><li>僅當vaspEntityId="others"時, 該字段可不傳</li>|
-|> beneficiaryLegalType |false |string |受益人法律類型, `individual`(默認), `company` <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryWalletType |false |string |受益人錢包類型, `0`: 托管錢包 (默認), `1`: 非托管錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryUnhostedWalletType |false |string |受益人未托管錢包類型, `0`: 私有錢包, `1`: 其他類型錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryPoiNumber |false |string |受益人POI號碼 <li>TR和KZ用戶需要傳入參數</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryPoiType |false |string |受益人POI簽發類型 <li>TR和KZ用戶需要傳入: ID card, Passport, driver license, residence permit, Business ID.....</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryPoiIssuingCountry |false |string |受益人POI簽發國家 <li>TR和KZ用戶需要傳入: 請參考 [Alpha-3 country code](https://www.iban.com/country-codes)</li> <li>韓國用戶可忽略</li>|
-|> beneficiaryPoiExpiredDate |false |string |受益人POI到期日 <li>TR和KZ用戶需要傳入: yyyy-mm-dd 格式, e.g., "1990-02-15"</li> <li>韓國用戶可忽略</li>|
+<table border="0.8">
+ <details>
+    <summary>
+    <tr><td>beneficiary</td><td>false</td><td>Object</td><td>提現目標方基本信息, kyc/kyb=KOR (韓國), kyc=IND (印度) 用戶, 以及在<a href="https://www.bybit-tr.com/en-TR/">Bybit土耳其(TR)</a>, <a href="https://www.bybit.kz/kk-KAZ/">Bybit哈薩克斯坦(KZ)</a>, Bybit印尼 (ID)的註冊用戶</td></tr>
+    </summary>
+      <tr><td>> vaspEntityId </td><td><b>true</b></td><td>string </td><td>接收方交易所id. 請調用該<a href="../asset/withdraw/vasp-list#">接口</a>來查詢對應的id</td></tr>
+      <tr><td>> beneficiaryName </td><td>false </td><td>string </td><td>接收方交易所用戶kyc姓名, 比如`John Wilson` 或者 `Wilson John` <li>請依據目標交易所kyc姓名</li><li>僅當vaspEntityId="others"時, 該字段可不傳</li></td></tr>
+      <tr><td>> beneficiaryLegalType </td><td>false </td><td>string </td><td>受益人法律類型, `individual`(默認), `company` <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryWalletType </td><td>false </td><td>string </td><td>受益人錢包類型, `0`: 托管錢包 (默認), `1`: 非托管錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryUnhostedWalletType </td><td>false </td><td>string </td><td>受益人未托管錢包類型, `0`: 私有錢包, `1`: 其他類型錢包 <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryPoiNumber </td><td>false </td><td>string </td><td>受益人POI號碼 <li>TR和KZ用戶需要傳入參數</li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryPoiType </td><td>false </td><td>string </td><td>受益人POI簽發類型 <li>TR和KZ用戶需要傳入: ID card, Passport, driver license, residence permit, Business ID...</li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryPoiIssuingCountry </td><td>false </td><td>string </td><td>受益人POI簽發國家 <li>TR和KZ用戶需要傳入: 請參考 <a href="https://www.iban.com/country-codes">Alpha-3 country code</a></li> <li>韓國用戶可忽略</li></td></tr>
+      <tr><td>> beneficiaryPoiExpiredDate </td><td>false </td><td>string </td><td>受益人POI到期日 <li>TR和KZ用戶需要傳入: yyyy-mm-dd 格式, e.g., "1990-02-15"</li> <li>韓國用戶可忽略</li></td></tr>
+  </details>
+</table>
 
 ### 響應參數
 | 參數 | 類型 | 說明|

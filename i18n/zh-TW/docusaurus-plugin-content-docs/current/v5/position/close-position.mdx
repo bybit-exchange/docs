@@ -8,7 +8,7 @@ sidebar_position: 11
 
 :::info
 * 支持用户查询最近六个月期权平仓数据
-* Fee and price 保留小数点后8位末尾0不省略
+* fee和price相關字段保留小数点后8位末尾0不省略
 :::
 
 ### HTTP 請求
@@ -17,7 +17,7 @@ GET `/v5/position/get-closed-positions`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[category](../enum#category) |**true** |string |option |
+|[category](../enum#category) |**true** |string |`option` |
 |symbol |false |string |合約名稱|
 |startTime |false |integer |開始時間戳 (毫秒) <ul><li>startTime 和 endTime都不傳入, 則默認返回最近1天的數據</li><li>startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天</li><li>若只傳startTime，則查詢startTime和startTime+1天的數據</li><li>若只傳endTime，則查詢endTime-1天和endTime的數據</li></ul>|
 |endTime |false |integer |結束時間戳 (毫秒) |
@@ -28,7 +28,7 @@ GET `/v5/position/get-closed-positions`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |nextPageCursor |string |游標，用於翻頁 |
-| [category](../enum#category) | string  | 產品類型 |
+|[category](../enum#category) | string  | 產品類型 |
 |list |array |Object |
 |> symbol |string |合約名稱 |
 |> side |string |買賣方向 `Buy`, `Side` |
