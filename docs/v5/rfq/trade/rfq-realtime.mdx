@@ -33,6 +33,7 @@ GET `/v5/rfq/rfq-realtime`
 |> expiresAt |string |The inquiry's expiration time (ms) |
 |> strategyType |string |Inquiry label |
 |> status |string |Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
+|> acceptOtherQuoteStatus |string |Whether to accept non-LP quotes. The default value is `false`: `false`: Default value, do not accept non-LP quotes. `true`: Accept non-LP quotes|
 |> deskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created |
 |> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
 |> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
@@ -70,6 +71,7 @@ X-BAPI-SIGN: XXXXXX
                 "strategyType": "custom",
                 "expiresAt": "1756885655801",
                 "status": "Active",
+                "acceptOtherQuoteStatus":"false",
                 "deskCode": "1nu9d1",
                 "createdAt": "1756885055801",
                 "updatedAt": "1756885055801",

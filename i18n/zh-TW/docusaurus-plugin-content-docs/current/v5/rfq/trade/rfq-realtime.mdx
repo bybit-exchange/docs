@@ -31,6 +31,7 @@ GET `/v5/rfq/rfq-realtime`
 |> expiresAt |string |詢價單的過期時間，Unix 時間戳的毫秒格式 |
 |> strategyType |string |詢價標籤 |
 |> status |string |詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed` |
+|> acceptOtherQuoteStatus |string |是否接受非 LP 報價. 預設值是 `false`.`false`: 不接受非 LP 報價. `true`: 接受非 LP 報價|
 |> deskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見 |
 |> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
 |> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
@@ -68,6 +69,7 @@ X-BAPI-SIGN: XXXXXX
                 "strategyType": "custom",
                 "expiresAt": "1756885655801",
                 "status": "Active",
+                "acceptOtherQuoteStatus":"false",
                 "deskCode": "1nu9d1",
                 "createdAt": "1756885055801",
                 "updatedAt": "1756885055801",
