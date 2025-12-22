@@ -7,6 +7,7 @@ sidebar_position: 2
 :::info
 * API密鑰權限: `Convert`
 * API速率限制: `5 req /s`
+* 在統一交易賬戶下，您**真實的成交數量可能小於可用餘額**，若您同時提交多個幣種的兌換請求，則可能會部分成交，請您以實際到賬數量爲準。
 :::
 
 ### HTTP 請求
@@ -29,7 +30,7 @@ POST `/v5/asset/covert/get-quote`
 |> exchangeCoins |array&lt;object&gt;|報價詳情|
 |>> fromCoin|string|源幣種|
 |>> supportConvert|integer|`1`: 支持, `0`: 不支持 |
-|>> availableBalance|string|可用餘額|
+|>> availableBalance|string|可提现餘額|
 |>> baseValue|string|USDT等值金額|
 |>> toCoin|string|目標幣種|
 |>> toAmount|string|預計接收金額|
