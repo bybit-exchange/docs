@@ -1,0 +1,83 @@
+---
+title: 獲取小額資產幣種
+sidebar_label: 獲取小額資產幣種
+sidebar_position: 1
+---
+查詢USDT等值小於10 USDT的小額資產幣種，並確保每筆兌換交易的總金額在1.0e-8至200 USDT之間。
+
+:::info
+* API密鑰權限: `Convert`
+* API速率限制: `10 req /s`
+:::
+
+### HTTP 請求
+GET `/v5/asset/covert/small-balance-list`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|accountType |**true** |string |錢包類型 `eb_convert_uta`，僅支持統一錢包|
+|fromCoin |false |string |源幣種|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|smallAssetCoins |array&lt;object&gt;|小額資產信息 |
+|> fromCoin |string|源幣種 |
+|> supportConvert |integer |`1`: 支持, `0`: 不支持 |
+|> availableBalance |string |可用餘額 |
+|> baseValue |string |USDT等值金額|
+|> toAmount |string |**忽略**，保留字段 |
+|> exchangeRate|string |**忽略**，保留字段|
+|> feeInfo |null |**忽略**，保留字段|
+|> taxFeeInfo |null |**忽略**，保留字段|
+|supportToCoins |array |支持的目標幣種，例如`["MNT","USDT","USDC"]`|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/covert/small-balance-list?fromCoin=XRP&accountType=eb_convert_uta HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1766125546001
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "smallAssetCoins": [
+            {
+                "fromCoin": "XRP",
+                "supportConvert": 1,
+                "availableBalance": "0.0002",
+                "baseValue": "0.00036554008",
+                "toCoin": "",
+                "toAmount": "",
+                "exchangeRate": "",
+                "feeInfo": null,
+                "taxFeeInfo": null
+            }
+        ],
+        "supportToCoins": [
+            "MNT",
+            "USDT",
+            "USDC"
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766125546274
+}
+```
