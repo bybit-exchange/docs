@@ -1,0 +1,97 @@
+---
+title: Get Small Balance Coins
+sidebar_label: Get Small Balance Coins
+sidebar_position: 1
+---
+Query small-balance coins with a USDT equivalent of less than 10 USDT, and ensure that the total amount for each conversion transaction is between 1.0e-8 and 200 USDT.
+
+:::info
+* api key permission: `Convert`
+* api rate limit: `10 req /s`
+:::
+
+### HTTP Request
+GET `/v5/asset/covert/small-balance-list`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|accountType |**true** |string |Wallet type `eb_convert_uta`, support Unified wallet only|
+|fromCoin |false |string |Source currency|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|smallAssetCoins |array&lt;object&gt;|Small balance info |
+|> fromCoin |string|Source currency |
+|> supportConvert |integer |`1`: support, `2`: not supported |
+|> availableBalance |string |Available balance, the value might be bigger than the actual balance you can convert|
+|> baseValue |string |USDT equivalent value|
+|> toAmount |string |**Ignore**, reserved field |
+|> exchangeRate|string |**Ignore**, reserved field|
+|> feeInfo |null |**Ignore**, reserved field|
+|> taxFeeInfo |null |**Ignore**, reserved field|
+|supportToCoins |array |`["MNT","USDT","USDC"]`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/covert/small-balance-list?fromCoin=XRP&accountType=eb_convert_uta HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1766125546001
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "smallAssetCoins": [
+            {
+                "fromCoin": "XRP",
+                "supportConvert": 1,
+                "availableBalance": "0.0002",
+                "baseValue": "0.00036554008",
+                "toCoin": "",
+                "toAmount": "",
+                "exchangeRate": "",
+                "feeInfo": null,
+                "taxFeeInfo": null
+            }
+        ],
+        "supportToCoins": [
+            "MNT",
+            "USDT",
+            "USDC"
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766125546274
+}
+```

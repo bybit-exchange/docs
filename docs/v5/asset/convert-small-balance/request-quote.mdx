@@ -1,0 +1,161 @@
+---
+title: Request a Quote 
+sidebar_label: Request a Quote
+sidebar_position: 2
+---
+
+:::info
+* api key permission: `Convert`
+* api rate limit: `5 req /s`
+* In a Unified Trading Account, your **actual executed amounts may be less than your available balance**. If you submit convert requests for multiple cryptocurrencies simultaneously, partial executions may occur. Please refer to the actual credited amounts.
+:::
+
+### HTTP Request
+POST `/v5/asset/covert/get-quote`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|accountType |**true** |string |Wallet type, `eb_convert_uta`, unified wallet only|
+|fromCoinList |**true** |array&lt;string&gt; |Source currency list `["BTC", "XRP", "ETH"]`, up to 20 coins in one transaction|
+|toCoin |**true** |string |Target currency, each request supports one of MNT, USDT, or USDC|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|quoteId |string|Quote transaction ID. It is system generated, and it is used to confirm quote and query the result of transaction|
+|result |object||
+|> quoteCreateTime |string|Quote created ts|
+|> quoteExpireTime |string|Quote expired ts, 30 seconds|
+|> exchangeCoins |array&lt;object&gt;|Quote details|
+|>> fromCoin|string|Source currency|
+|>> supportConvert|integer|`1`: support, `2`: not supported |
+|>> availableBalance|string|Withdrawable balance|
+|>> baseValue|string|USDT equivalent value|
+|>> toCoin|string|Target currency|
+|>> toAmount|string|Est.received amount|
+|>> exchangeRate|string|Exchange rate|
+|>> feeInfo|object|Exchange fee info|
+|>>> feeCoin|string|Fee currency|
+|>>> amount|string|Fee|
+|>>> feeRate|string|Fee rate|
+|>> taxFeeInfo|object|Tax fee info|
+|>>> totalAmount|string|Tax fee|
+|>>> feeCoin|string|Tax fee coin|
+|>>> taxFeeItems|array|Tax fee items|
+|> totalFeeInfo|object|Total exchange fee details|
+|>> feeCoin|string|Fee currency|
+|>> amount|string|Total fee|
+|>> feeRate|string|Fee rate |
+|> totalTaxFeeInfo|object|Total tax fee info|
+|>> totalAmount|string|Total tax fee|
+|>> feeCoin|string|Tax fee coin|
+|>> taxFeeItems|array|Tax fee items|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/asset/covert/get-quote HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1766126592271
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXXX
+Content-Type: application/json
+Content-Length: 97
+
+{
+    "accountType": "eb_convert_uta",
+    "fromCoinList": ["XRP", "SOL"],
+    "toCoin": "USDC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "quoteId": "1010075157602510902217555968",
+        "result": {
+            "quoteCreateTime": "1766126593232",
+            "quoteExpireTime": "1766126623231",
+            "exchangeCoins": [
+                {
+                    "fromCoin": "SOL",
+                    "supportConvert": 1,
+                    "availableBalance": "0.000003",
+                    "baseValue": "0.00036837",
+                    "toCoin": "USDC",
+                    "toAmount": "0.00035721396701649",
+                    "exchangeRate": "119.07132233883026",
+                    "feeInfo": {
+                        "feeCoin": "USDC",
+                        "amount": "0.00000729008095952",
+                        "feeRate": "0.02"
+                    },
+                    "taxFeeInfo": {
+                        "totalAmount": "0",
+                        "feeCoin": "",
+                        "taxFeeItems": []
+                    }
+                },
+                {
+                    "fromCoin": "XRP",
+                    "supportConvert": 1,
+                    "availableBalance": "0.0002",
+                    "baseValue": "0.00024536",
+                    "toCoin": "USDC",
+                    "toAmount": "0.000359866676661744",
+                    "exchangeRate": "1.79933338330872",
+                    "feeInfo": {
+                        "feeCoin": "USDC",
+                        "amount": "0.000007344217891056",
+                        "feeRate": "0.02"
+                    },
+                    "taxFeeInfo": {
+                        "totalAmount": "0",
+                        "feeCoin": "",
+                        "taxFeeItems": []
+                    }
+                }
+            ],
+            "totalFeeInfo": {
+                "feeCoin": "USDC",
+                "amount": "0.000014634298850576",
+                "feeRate": "0.02"
+            },
+            "totalTaxFeeInfo": {
+                "totalAmount": "0",
+                "feeCoin": "",
+                "taxFeeItems": []
+            }
+        }
+    },
+    "retExtInfo": {},
+    "time": 1766126593232
+}
+```

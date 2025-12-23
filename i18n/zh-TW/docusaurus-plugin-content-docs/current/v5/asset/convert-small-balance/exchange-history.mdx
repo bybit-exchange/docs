@@ -1,0 +1,155 @@
+---
+title: 獲取兌換記錄
+sidebar_label: 獲取兌換記錄
+sidebar_position: 4
+---
+
+:::info
+* API密鑰權限: `Convert`
+* API速率限制: `10 req /s`
+* 您可以查詢通過API或網頁/應用程序在統一錢包和資金錢包中進行的小額資產兌換記錄。
+:::
+
+### HTTP 請求
+GET `/v5/asset/covert/small-balance-history`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|accountType|false |string |`eb_convert_uta`, `eb_convert_funding`|
+|quoteId |false |string |報價ID，查詢時優先級最高|
+|startTime |false |string |起始時間戳（毫秒）|
+|endTime |false |string |結束時間戳（毫秒）|
+|cursor |false |string |頁碼|
+|size |false |string |每頁大小，默認為50，最大為100|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|cursor |string|當前頁碼|
+|size |string|當前頁大小|
+|lastPage |string|最後一頁頁碼|
+|totalCount |string|記錄總數|
+|records |array&lt;object&gt;||
+|> accountType |string|`eb_convert_uta`: 統一錢包, `eb_convert_funding`: 資金錢包|
+|> exchangeTxId |string |兌換交易ID|
+|> toCoin |string |目標幣種 |
+|> toAmount |string|實際接收的總金額|
+|> subRecords |array&lt;object&gt;|詳細信息|
+|>> fromCoin |string|源幣種|
+|>> fromAmount |string|源幣種金額|
+|>> toCoin |string|目標幣種|
+|>> toAmount |string|實際接收金額|
+|>> feeCoin |string|兌換手續費幣種|
+|>> feeAmount |string|兌換手續費金額|
+|>> status |string|`init`, `processing`, `success`, `failure`, `partial_fulfillment`|
+|>> taxFeeInfo |object||
+|>>> totalAmount |string|稅費金額|
+|>>> feeCoin |string|稅費幣種|
+|>>> taxFeeItems |array|稅費項目|
+|> status |string|`init`, `processing`, `success`, `failure`, `partial_fulfillment`|
+|> createdAt |string|報價創建時間戳|
+|> exchangeSource |string|兌換來源 `small_asset_uta`, `small_asset_funding`|
+|> feeCoin |string|兌換手續費幣種|
+|> totalFeeAmount |string|兌換手續費總金額|
+|> totalTaxFeeInfo |object||
+|>> totalAmount |string|稅費總金額|
+|>> feeCoin |string|稅費幣種|
+|>> taxFeeItems |array|稅費項目|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/covert/small-balance-history?quoteId=1010075157602517596339322880&accountType=eb_convert_uta HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1766134218672
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "cursor": "1",
+        "size": "50",
+        "lastPage": "1",
+        "totalCount": "1",
+        "records": [
+            {
+                "accountType": "eb_convert_uta",
+                "exchangeTxId": "1010075157602517596339322880",
+                "toCoin": "USDC",
+                "toAmount": "0.000728325793503221",
+                "subRecords": [
+                    {
+                        "fromCoin": "SOL",
+                        "fromAmount": "0.000003",
+                        "toCoin": "USDC",
+                        "toAmount": "0.000363439538230885",
+                        "feeCoin": "USDC",
+                        "feeAmount": "0.000007417133433283",
+                        "status": "success",
+                        "taxFeeInfo": {
+                            "totalAmount": "0",
+                            "feeCoin": "",
+                            "taxFeeItems": []
+                        }
+                    },
+                    {
+                        "fromCoin": "XRP",
+                        "fromAmount": "0.0002",
+                        "toCoin": "USDC",
+                        "toAmount": "0.000364886255272336",
+                        "feeCoin": "USDC",
+                        "feeAmount": "0.000007446658270864",
+                        "status": "success",
+                        "taxFeeInfo": {
+                            "totalAmount": "0",
+                            "feeCoin": "",
+                            "taxFeeItems": []
+                        }
+                    }
+                ],
+                "status": "success",
+                "createdAt": "1766128195000",
+                "exchangeSource": "small_asset_uta",
+                "feeCoin": "USDC",
+                "totalFeeAmount": "0.000014863791704147",
+                "totalTaxFeeInfo": {
+                    "totalAmount": "0",
+                    "feeCoin": "",
+                    "taxFeeItems": []
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766129394948
+}
+```
