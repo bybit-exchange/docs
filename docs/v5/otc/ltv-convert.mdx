@@ -9,6 +9,7 @@ Get your loan-to-value (LTV) ratio.
 * In cases where an institutional user makes frequent transfers, LTV calculations may become inaccurate, and this endpoint will return retCode = 100016, retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
 * If you encounter this error, it is recommended to reduce the transfer frequency first and retry
 * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+* When a user is in a state such as liquidation, transfer, or manual repayment, LTV is not calculated. We have added a new `liqStatus` to represent these states. When `liqStatus` != 0, `ltvInfo` returns empty strings for `ltv`, `unpaidAmount` and `balance`, and `unpaidInfo` and `balanceInfo` return empty arrays.
 :::
 
 ### HTTP Request
@@ -21,21 +22,23 @@ None
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |ltvInfo | array | Object |
-|> ltv | string	| Risk rate <li>ltv is calculated in real time</li><li>If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)</li> |
-|> rst | string	| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. |
+|> ltv | string	| Risk rate <li>ltv is calculated in real time</li><li>If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)</li>. When `liqStatus` != 0, empty string is returned. |
+|> rst | string	| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. When `liqStatus` != 0, empty string is returned. |
 |> parentUid | string |The designated Risk Unit ID that was used to bind with the INS loan |
 |> subAccountUids | array | Bound user ID |
-|> unpaidAmount	| string | Total debt(USDT) |
-|> unpaidInfo | array | Debt details |
+|> unpaidAmount	| string | Total debt(USDT). When `liqStatus` != 0, empty string is returned. |
+|> unpaidInfo | array | Debt details. When `liqStatus` != 0, empty array is returned.  |
 |>> token | string | coin |
 |>> unpaidQty | string | Unpaid principle |
 |>> unpaidInterest | string	| Useless field, please ignore this for now |
-|> balance | string	| Total asset (margin coins converted to USDT). Please read <a href="https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending">here</a> to understand the calculation |
-|> balanceInfo | array | Asset details |
+|> balance | string	| Total asset (margin coins converted to USDT). Please read <a href="https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending">here</a> to understand the calculation. When `liqStatus` != 0, empty string is returned. |
+|> balanceInfo | array | Asset details. When `liqStatus` != 0, empty array is returned. |
 |>> token | string | Margin coin |
 |>> price | string | Margin coin price |
 |>> qty	| string | Margin coin quantity |
 |>> convertedAmount	| string | Margin conversion amount |
+|> liqStatus | integer | Liquidation status. <ul><li>`0`: Normal</li><li>`1`: Under liquidation</li><li>`2`: Manual repayment in progress</li><li>`3`: Transfer in progress</li></ul> |
+|liqStatus | integer | Liquidation status. <ul><li>`0`: Normal</li><li>`1`: Under liquidation</li><li>`2`: Manual repayment in progress</li><li>`3`: Transfer in progress</li></ul> |
 
 ### Request Example
 
@@ -127,5 +130,32 @@ client
     },
     "retExtInfo": {},
     "time": 1686638166323
+}
+
+When `liqStatus` != 0:
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "ltvInfo": [
+            {
+                "ltv": "",
+                "parentUid": "100331354",
+                "subAccountUids": [
+                    "100334094",
+                    "100334098"
+                ],
+                "unpaidAmount": "",
+                "unpaidInfo": [],
+                "balance": "",
+                "balanceInfo": [],
+                "rst": "",
+                "liqStatus": 3
+            }
+        ],
+        "liqStatus": 3
+    },
+    "retExtInfo": {},
+    "time": 1766462020703
 }
 ```

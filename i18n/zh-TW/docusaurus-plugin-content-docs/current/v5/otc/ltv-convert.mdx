@@ -8,6 +8,7 @@ sidebar_position: 6
 * 如果機構用戶頻繁轉帳，LTV 計算可能會變得不準確，此端點將返回 retCode = 100016，retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
 * 遇到這個報錯，建議先減少轉帳頻率，再重試
 * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+* 當用戶發生強平、劃轉、手工還款等過程中的狀態時，LTV不進行計算。我們新增了一個`liqStatus`來表示這些狀態。當`liqStatus`!=0時，此時`ltvInfo`裡`ltv`、`unpaidAmount`、`balance`都是空字串，`unpaidInfo`、`balanceInfo`都是空數組。
 :::
 
 ### HTTP 請求
@@ -20,21 +21,23 @@ GET `/v5/ins-loan/ltv-convert`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |ltvInfo | array | Object |
-|> ltv | string	| 風險率 <li>該數據是實時計算</li><li>如果持有機構借貸, 強烈建議每秒查詢一次ltv。當達到0.9 (90%)時即觸發強平</li> |
-|> rst | string | 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。|
+|> ltv | string	| 風險率 <li>該數據是實時計算</li><li>如果持有機構借貸, 強烈建議每秒查詢一次ltv。當達到0.9 (90%)時即觸發強平</li>. 當 `liqStatus` != 0 時，傳回空字串。|
+|> rst | string | 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。當 `liqStatus` != 0 時，傳回空字串。|
 |> parentUid | string | 被指定綁定為機構借貸產品的風險單元Id |
 |> subAccountUids | array | 綁定場外借貸產品的UID |
-|> unpaidAmount	| string | 總負債 (USDT) |
-|> unpaidInfo | array | 負債明細 |
+|> unpaidAmount	| string | 總負債 (USDT)。當 `liqStatus` != 0 時，傳回空字串。 |
+|> unpaidInfo | array | 負債明細。 當 `liqStatus` != 0 時，傳回空數組。|
 |>> token | string | 幣種 |
 |>> unpaidQty | string | 未還本金 |
 |>> unpaidInterest | string	| 該字段無效, 暫時請忽略 |
-|> balance | string	| 總資產(保證金幣種資產折算為USDT資產). 可以參考<a href="https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending">這裡</a>了解詳細計算 |
-|> balanceInfo | array | 資產明細 |
+|> balance | string	| 總資產(保證金幣種資產折算為USDT資產). 可以參考<a href="https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending">這裡</a>了解詳細計算。當 `liqStatus` != 0 時，傳回空字串。 |
+|> balanceInfo | array | 資產明細。當 `liqStatus` != 0 時，傳回空數組。 |
 |>> token | string | 保證金幣種 |
 |>> price | string | 保證金幣種價格 |
 |>> qty	| string | 保證金數量 |
 |>> convertedAmount	| string | 保證金折算金額 |
+|> liqStatus | integer | 清算狀態。 <ul><li>`0`: 正常</li><li>`1`: 強平</li><li>`2`: 手工還款</li><li>`3`: 劃轉</li></ul> |
+|liqStatus | integer | 清算狀態。 <ul><li>`0`: 正常</li><li>`1`: 強平</li><li>`2`: 手工還款</li><li>`3`: 劃轉</li></ul> |
 
 ### 請求示例
 
@@ -126,5 +129,32 @@ client
     },
     "retExtInfo": {},
     "time": 1686638166323
+}
+
+When `liqStatus` != 0:
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "ltvInfo": [
+            {
+                "ltv": "",
+                "parentUid": "100331354",
+                "subAccountUids": [
+                    "100334094",
+                    "100334098"
+                ],
+                "unpaidAmount": "",
+                "unpaidInfo": [],
+                "balance": "",
+                "balanceInfo": [],
+                "rst": "",
+                "liqStatus": 3
+            }
+        ],
+        "liqStatus": 3
+    },
+    "retExtInfo": {},
+    "time": 1766462020703
 }
 ```
