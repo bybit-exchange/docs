@@ -1,0 +1,77 @@
+---
+title: 獲取現貨自動還款模式
+sidebar_label: 獲取現貨自動還款模式
+sidebar_position: 12
+---
+獲取現貨自動還款模式
+
+:::caution
+如果沒有指定 `currency` 參數，則返回所有貨幣自動還款模式。
+:::
+
+### HTTP 請求
+GET `/v5/spot-margin-trade/get-auto-repay-mode`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency |false| string |幣名稱，僅限大寫. 如果沒有指定 `currency` 參數，則返回所有貨幣自動還款模式。|
+---
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|data |array |Object|
+|> currency |false| string |幣名稱，僅限大寫. |
+|> autoRepayMode |**true**| string |<ul><li>`1`: 開啟</li><li>`0`: 開啟</li></ul>|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/get-auto-repay-mode?currency=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672299806626
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "data": [
+            {
+                "autoRepayMode": "1",
+                "currency": "ETH"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766977353904
+}
+```

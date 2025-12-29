@@ -1,0 +1,77 @@
+---
+title: Get Auto Repay Mode
+sidebar_label: Get Auto Repay Mode
+sidebar_position: 12
+---
+Get spot automatic repayment mode
+
+:::caution
+If `currency` is not passed, automatic repay mode for all currencies will be returned.
+:::
+
+### HTTP Request
+GET `/v5/spot-margin-trade/get-auto-repay-mode`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency |false| string |Coin name, uppercase only. If `currency` is not passed, automatic repay mode for all currencies will be returned. |
+
+---
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|data |array |Object|
+|> currency |false| string |Coin name, uppercase only. |
+|> autoRepayMode |**true**| string |<ul><li>`1`: On</li><li>`0`: Off</li></ul>|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/get-auto-repay-mode?currency=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672299806626
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "data": [
+            {
+                "autoRepayMode": "1",
+                "currency": "ETH"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766977353904
+}
+```

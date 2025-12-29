@@ -1,0 +1,84 @@
+---
+title: Set Auto Repay Mode
+sidebar_label: Set Auto Repay Mode
+sidebar_position: 11
+---
+Set spot automatic repayment mode
+
+:::caution
+1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
+2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
+:::
+
+### HTTP Request
+POST `/v5/spot-margin-trade/set-auto-repay-mode`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency |false| string |Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.|
+|autoRepayMode |**true**| string |<ul><li>`1`: On</li><li>`0`: Off</li></ul>|
+
+---
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|data |array |Object|
+|> currency |false| string |Coin name, uppercase only. |
+|> autoRepayMode |**true**| string |<ul><li>`1`: On</li><li>`0`: Off</li></ul>|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672299806626
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "currency": "ETH",
+    "autoRepayMode":"1"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "data": [
+            {
+                "currency": "ETH",
+                "autoRepayMode": "1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1766976677678
+}
+```
