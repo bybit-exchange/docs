@@ -1,0 +1,89 @@
+---
+title: API Broker 接入文檔
+sidebar_label: API Broker 接入文檔
+---
+
+### **申請流程**
+
+### - **信息提交**
+向bybit商務提交以下信息:<br/>
+1.Bybit uid, 用於登陸OAuth管理後台 <br/>
+2.OpenAPI 使用的白名單IP(僅作用於openAPI，OAuth管理後台沒有IP限制）)<br/>
+
+### - **商務初始化**
+1.使用對應的UID登陸bybit<br/>
+2.訪問 https://www.bybit.com/app/user/oauth-admin
+- **設定Application-name,Email,上傳logo，等操作**<br/>
+![](./Oauth.PNG)**<br/>
+3.核心參數 redirect_uri: 可設定多個回調地址；喚起頁面傳入的redirect_uri必須在管理後台配置；如果傳入與配置不匹配，默認調轉到第一個地址 <br/>
+4.申請成功後，會收到client_id和client_secret。請務必妥善保存此信息，不要對他人展示。
+
+
+### - **接口調試**<br/>
+### 1. 拼接授權頁面
+```json
+https://www.bybit.com/en/oauth?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openapi&state={state}
+```
+| 字段  | 說明|
+|:----- |----- |
+|client_id |商戶初始化完成後獲得 |
+|response_type |固定值:code |
+|scope |傳openapi,其他值需要與bybit確認 |
+|state |隨機字符串 |
+|redirect_uri |用戶授權後跳轉的地址，必須在管理後台配置|
+
+### 2. 授權成功回調
+```json
+當用戶確認授權後，頁面將會301至redirect_uri 並攜帶參數code，假設redirect_uri為https://www.example.com/callback,
+回調後的URL 為 https://www.example.com/callback/?response_type=code&code=sSn87036PCFub1g0FGigexSjT&scope=openapi&state=1234abc
+```
+| 字段  | 說明|
+|:----- |----- |
+|code |核心參數，商戶後端獲取access_token 使用 |
+
+### 3. 獲取 access_token
+- URL: https://api2.bybit.com/oauth/v1/public/access_token
+- Method: POST
+### 請求示例
+```json
+curl -v  -X POST {url} \
+  -H 'Content-Type: application/x-www-form-urlencoded'
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'  \     # 使用瀏覽器agent
+  -d 'client_id={client_id}' \
+  -d 'client_secret={client_secret}'\
+  -d 'code={code}'    # code 只能使用1次
+```
+### 響應示例
+```json
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjcwODM5NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiJPNmZ0QkdTYVdEIn0.Vq46cxPIzKmWz5fFwU4fQuF-IDqFJDOIelNLnH8r2Oo",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njk1ODk1NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiIwaVZMWVY3Z1pGIn0.ByGH8d5XtSQnkbxeyiXd56iJUTddBWjqFK8_EcAw48w",
+    "token_type": "bearer",
+    "expires_in": 86400,
+    "refresh_token_expires_in": 2592000
+}
+
+```
+### 4. 獲取openAPI
+- URL : https://api2.bybit.com/oauth/v1/resource/restrict/openapi
+- Method: GET
+- 需要在請求的時候攜帶Authorization信息，格式為“Bearer {access_token},例如 access_token = "12345", 則Authorization = "Bearer 12345"
+
+### 請求示例
+```json
+curl {url} \
+-H "Authorization: Bearer {access_token}"
+
+```
+### 響應示例
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "success",
+    "result": {
+        "api_key": "xxxxxxx",
+        "api_secret": "xxxxx"
+    }
+}
+
+```
