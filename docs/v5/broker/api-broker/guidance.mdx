@@ -3,21 +3,21 @@ title: OAuth Integration Guidance
 sidebar_label: OAuth Integration Guidance
 ---
 
-# **Application Process**
+# Application Process
 
-## **1. Information Submission**
-Submit the following information to Bybit Business via this Email: `Broker_Program@bybit.com`:
+## 1. Information Submission
+Submit the following information to Bybit Business via this Email: `broker_program@bybit.com`:
 - **Bybit UID**: Used to log in to the OAuth management backend.
 - **OpenAPI Whitelist IP**: Only applicable to OpenAPI; the OAuth management backend has no IP restrictions.
 
 ---
 
-## **2. Merchant Initialization**
+## 2. Merchant Initialization
 1. **Log in to Bybit** using the corresponding UID.
 2. **Access the OAuth Admin Portal**:  
    Visit [https://www.bybit.com/app/user/oauth-admin](https://www.bybit.com/app/user/oauth-admin)  
    - Configure **Application Name**, **Email**, upload **logo**, etc.  
-     <!-- ![](./Oauth.PNG) -->
+  ![](/img/oauth-redirect-url.jpg)
 3. **Core Parameter `redirect_uri`**:
    - Multiple callback addresses can be configured.
    - The `redirect_uri` passed when invoking the page must be configured in the management backend.
@@ -28,9 +28,9 @@ Submit the following information to Bybit Business via this Email: `Broker_Progr
 
 ---
 
-## **API Integration**
+## API Integration
 
-### **1. Construct Authorization Page**
+### 1. Construct Authorization Page
 ```bash
 https://www.bybit.com/en/oauth?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openapi&state={state}
 ```
@@ -45,7 +45,7 @@ https://www.bybit.com/en/oauth?client_id={client_id}&response_type=code&redirect
 
 ---
 
-### **2. Authorization Success Callback**
+### 2. Authorization Success Callback
 After the user confirms authorization, the page redirects (301) to `redirect_uri` with the parameter `code`.  
 **Example**:  
 If `redirect_uri = https://www.example.com/callback`, the callback URL will be:  
@@ -59,7 +59,7 @@ https://www.example.com/callback/?response_type=code&code=sSn87036PCFub1g0FGigex
 
 ---
 
-### **3. Obtain Access Token**
+### 3. Obtain Access Token
 - **URL**: `https://api2.bybit.com/oauth/v1/public/access_token`
 - **Method**: `POST`
 
@@ -86,7 +86,7 @@ curl -v -X POST {url} \
 
 ---
 
-### **4. Obtain OpenAPI**
+### 4. Obtain OpenAPI
 - **URL**: `https://api2.bybit.com/oauth/v1/resource/restrict/openapi`
 - **Method**: `GET`
 - **Authorization**: Include the `Authorization` header formatted as `"Bearer {access_token}"`.  
@@ -112,6 +112,6 @@ curl {url} \
 
 ---
 
-### **Notes**
+### Notes
 - The `code` parameter from the authorization callback is single-use and expires quickly.
 - Store `client_secret` and `api_secret` securely and never expose them publicly.
