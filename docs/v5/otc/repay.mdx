@@ -1,0 +1,58 @@
+---
+title: Repay
+sidebar_label: Repay
+sidebar_position: 8
+---
+You can repay the INS loan by calling this API.
+
+:::info
+* Only the designated Risk Unit UID is allowed to call this API. To obtain the designated Risk Unit UID, please refer to the `parentUid` from [Get LTV](ltv-convert#)
+* The repayment is processed asynchronously and usually takes 2–3 minutes.
+* Pease confirm the repayment status via [Get Repayment Orders](repay-info#) before initiating the next repayment. **Note** that the repayment record will not appear in the response until 2–3 minutes later.
+:::
+
+### HTTP Request
+POST `/v5/ins-loan/repay-loan`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|token |**true** |string |Coin name|
+|quantity |**true** |string |The qty to be repaid|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|repayOrderStatus |string |`P`: processing|
+
+### Request Example
+
+```http
+POST /v5/ins-loan/repay-loan HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1767605784035
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+Content-Length: 49
+
+{
+    "token": "USDT",
+    "quantity": "500000"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "repayOrderStatus": "P"
+    },
+    "retExtInfo": {},
+    "time": 1767580441965
+}
+```
