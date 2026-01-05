@@ -42,6 +42,9 @@ POST `/v5/asset/withdraw/create`
     <summary>
     <tr><td>beneficiary</td><td>false</td><td>Object</td><td>提現目標方基本信息, kyc/kyb=KOR (韓國), kyc=IND (印度) 用戶, 以及在<a href="https://www.bybit-tr.com/en-TR/">Bybit土耳其(TR)</a>, <a href="https://www.bybit.kz/kk-KAZ/">Bybit哈薩克斯坦(KZ)</a>, Bybit印尼 (ID)的註冊用戶</td></tr>
     </summary>
+      <tr><td>> beneficiaryTransactionPurpose</td><td>false</td><td>string</td><td>出金目的, 當走韓國CODE渠道出金到公司戶時<b>必傳</b></td></tr>
+      <tr><td>> beneficiaryRepresentativeFirstName</td><td>false</td><td>string</td><td>受益公司代表人的"名", 當走韓國CODE渠道出金到公司戶時<b>必傳</b></td></tr>
+      <tr><td>> beneficiaryRepresentativeLastName</td><td>false</td><td>string</td><td>受益公司代表人的"姓", 當走韓國CODE渠道出金到公司戶時<b>必傳</b></td></tr>
       <tr><td>> vaspEntityId </td><td><b>true</b></td><td>string </td><td>接收方交易所id. 請調用該<a href="../asset/withdraw/vasp-list#">接口</a>來查詢對應的id</td></tr>
       <tr><td>> beneficiaryName </td><td>false </td><td>string </td><td>接收方交易所用戶kyc姓名, 比如`John Wilson` 或者 `Wilson John` <li>請依據目標交易所kyc姓名</li><li>僅當vaspEntityId="others"時, 該字段可不傳</li></td></tr>
       <tr><td>> beneficiaryLegalType </td><td>false </td><td>string </td><td>受益人法律類型, `individual`(默認), `company` <li>TR和KZ及kyc為印度用戶需要傳入參數</li> <li>韓國用戶可忽略</li></td></tr>

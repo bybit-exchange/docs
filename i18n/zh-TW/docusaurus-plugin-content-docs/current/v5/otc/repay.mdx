@@ -1,0 +1,58 @@
+---
+title: 還款
+sidebar_label: 還款
+sidebar_position: 8
+---
+您可以透過调用此接口來償還机构借贷
+
+:::info
+* 僅允許風險單元主UID調用此API. 要了解風險單元主UID, 可以參考請參考 [查詢風險率](ltv-convert#) 裏的`parentUid`字段.
+* 還款為異步處理, 通常需要 2–3 分鐘完成.
+* 在發起下一筆還款前，請先透過 [查詢借貸訂單信息](repay-info#) 確認還款狀態。請注意，還款紀錄會在 2–3 分鐘後才會出現在回傳結果中.
+:::
+
+### HTTP 請求
+POST `/v5/ins-loan/repay-loan`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|token |**true** |string |還款幣種|
+|quantity |**true** |string |還款金額|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|repayOrderStatus |string |`P`: 處理中|
+
+### 請求示例
+
+```http
+POST /v5/ins-loan/repay-loan HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: XXXXX
+X-BAPI-TIMESTAMP: 1767605784035
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+Content-Length: 49
+
+{
+    "token": "USDT",
+    "quantity": "500000"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "repayOrderStatus": "P"
+    },
+    "retExtInfo": {},
+    "time": 1767580441965
+}
+```
