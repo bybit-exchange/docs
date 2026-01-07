@@ -37,6 +37,7 @@ sidebar_position: 1
 |> avgPrice| string | 當前倉位的平均入場價格 <li>對於8小時結算的USDC合約倉位, 該字段表示的是平均開倉價格, 不隨著結算而改變</li> |
 |> markPrice |string |標記價 |
 |> leverage |string |槓桿. _注意: 組合保證金模式下，該字段返回""，槓桿規則失效_|
+|> breakEvenPrice| string |損益平衡價，**仅适用于合约**|
 |> autoAddMargin | integer |是否自動追加保證金, _反向合約不支持設置自動追加保證金_ <li>`0`: 否</li><li>`1`: 是</li>|
 |> positionIM| string  | 倉位起始保證金(用mark price計算), 值和`positionIMByMp`保持相同, 请看这个这则[调整](https://www.bybit.com/zh-TW/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation) <li>組合保證金模式(PM)下, 該字段返回為空字符串</li>|
 |> positionIMByMp| string  | 倉位起始保證金(過渡期字段, 用mark price計算), 值和`positionIM`保持相同 <li>組合保證金模式(PM)下, 該字段返回為空字符串</li>|
@@ -111,6 +112,7 @@ while True:
             "size": "0",
             "entryPrice": "0",
             "leverage": "10",
+            "breakEvenPrice":"93556.73034991",
             "positionValue": "0",
             "positionBalance": "0",
             "markPrice": "28184.5",

@@ -43,6 +43,7 @@ GET `/v5/position/list`
 |> autoAddMargin | integer |Whether to add margin automatically when using isolated margin mode <li>`0`: false</li><li>`1`: true</li> |
 |> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage<br/>_for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
+|> breakEvenPrice| string | breakEvenPrice, Only for `linear`,`inverse`|
 |> markPrice | string  |Mark price |
 |> liqPrice | string  |Position liquidation price <ul><li>Isolated margin: <br/>it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>Cross margin:<br/>it is an <b>estimated</b> price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>_this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_|
 |> positionIM | string  |Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)<li>Portfolio margin mode: returns ""</li> |
@@ -169,6 +170,7 @@ client
                 "autoAddMargin": 1,
                 "adlRankIndicator": 2,
                 "leverage": "10",
+                "breakEvenPrice":"93556.73034991",
                 "positionBalance": "0.00139186",
                 "markPrice": "28224.50",
                 "liqPrice": "",
