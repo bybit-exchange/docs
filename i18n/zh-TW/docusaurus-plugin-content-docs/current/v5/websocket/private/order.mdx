@@ -30,6 +30,7 @@ sidebar_position: 3
 |> category |string |產品類型 `spot`, `linear`, `inverse`, `option`|
 |> orderId  |string |訂單ID |
 |> orderLinkId |string |用戶自定義ID |
+|> parentOrderLinkId |string |表示關聯到的母訂單, 用於關聯附帶的止盈(Take Profit)與止損(Stop Loss)訂單. 支援期貨與期權. <li>對止盈或止損訂單進行[修改](../../order/amend-order#)不會改變parentOrderLinkId</li><li>**期貨**: 使用[設置止盈止損](../../position/trading-stop#)修改從原始訂單更新附帶的TP/SL, 不會改變 parentOrderLinkId<br/>**期權**: 使用[設置止盈止損](../../position/trading-stop#)修改從原始訂單更新附帶的TP/SL, 會改變 parentOrderLinkId<br/>**期貨與期權**: 若對原本沒有附帶 TP/SL 的倉位，透過[設置止盈止損](../../position/trading-stop#)設定 TP/SL, 則parentOrderLinkId沒有實際意義</li> |
 |> isLeverage |string |是否借貸. 僅`spot`有效<li>`0`: 否, 幣幣交易</li><li> `1`: 是, 槓桿交易</li>|
 |> blockTradeId  |string |大宗交易訂單Id |
 |> symbol |string |合約名稱 |

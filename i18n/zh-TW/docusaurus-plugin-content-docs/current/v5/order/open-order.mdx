@@ -41,6 +41,7 @@ GET `/v5/order/realtime`
 |list |array |Object |
 |> orderId  |string |訂單Id |
 |> orderLinkId |string |用戶自定義Id |
+|> parentOrderLinkId |string |表示關聯到的母訂單, 用於關聯附帶的止盈(Take Profit)與止損(Stop Loss)訂單. 支援期貨與期權. <li>對止盈或止損訂單進行[修改](amend-order#)不會改變parentOrderLinkId</li><li>**期貨**: 使用[設置止盈止損](../position/trading-stop#)修改從原始訂單更新附帶的TP/SL, 不會改變 parentOrderLinkId<br/>**期權**: 使用[設置止盈止損](../position/trading-stop#)修改從原始訂單更新附帶的TP/SL, 會改變 parentOrderLinkId<br/>**期貨與期權**: 若對原本沒有附帶 TP/SL 的倉位，透過[設置止盈止損](../position/trading-stop#)設定 TP/SL, 則parentOrderLinkId沒有實際意義</li> |
 |> blockTradeId |string |Paradigm大宗交易Id |
 |> symbol |string |合約名稱 |
 |> price |string |訂單價格 |
