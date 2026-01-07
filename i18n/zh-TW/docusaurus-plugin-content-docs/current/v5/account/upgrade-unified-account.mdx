@@ -1,27 +1,14 @@
 ---
-title: 升級統一保證金賬戶
-sidebar_label: 升級統一保證金賬戶
+title: 升級到UTA PRO
+sidebar_label: 升級到UTA PRO
 sidebar_position: 24
 ---
 
 :::tip 升級引導
 通過調用[查詢賬戶配置](account-info)接口來確認當前的帳戶型態
 
-* 如果是經典帳戶, unifiedMarginStatus=1, 可以直接調用該接口升級到統一帳戶2.0 Pro, 調用[查詢賬戶配置](account-info)接口,
-如果unifiedMarginStatus=6, 則表示帳戶已經成功升級至[統一帳戶2.0](../acct-mode#統一帳戶20) Pro.
-
-* 如果unifiedMarginStatus=3, 則表示帳戶是[統一帳戶1.0](../acct-mode#統一帳戶10), 您需要前往網站或者app端先升級到[統一帳戶2.0](../acct-mode#統一帳戶20), 或調用此接口升級至[統一帳戶2.0](../acct-mode#統一帳戶20).
-調用[查詢賬戶配置](account-info)接口, 如果unifiedMarginStatus=5, 則表示帳戶已經成功升級至[統一帳戶2.0](../acct-mode#統一帳戶20).
-
-* 如果unifiedMarginStatus=4, 則表示帳戶是[統一帳戶1.0](../acct-mode#統一帳戶10) Pro, 您可以調用升級接口升級到[統一帳戶2.0](../acct-mode#統一帳戶20) Pro. 調用[查詢賬戶配置](account-info)接口,
-如果unifiedMarginStatus=6, 則表示帳戶已經成功升級至[統一帳戶2.0](../acct-mode#統一帳戶20) Pro.
-
 * 如果unifiedMarginStatus=5, 則表示帳戶是[統一帳戶2.0](../acct-mode#統一帳戶20), 您可以調用升級接口升級到[統一帳戶2.0](../acct-mode#統一帳戶20) Pro. 調用[查詢賬戶配置](account-info)接口,
 如果unifiedMarginStatus=6, 則表示帳戶已經成功升級至[統一帳戶2.0](../acct-mode#統一帳戶20) Pro.
-:::
-
-:::note important
-封禁用戶無法升級至統一帳戶.
 :::
 
 :::info
@@ -33,14 +20,6 @@ sidebar_position: 24
 |每個小時 | 當前時間在小時整點的前10分鐘及後5分鐘內 |
 
 2. 當從統一帳戶2.0升級到[統一帳戶2.0](../acct-mode#統一帳戶20) Pro時, 確保沒有任何掛單<br/><br/>
-關於升級[統一帳戶1.0](../acct-mode#統一帳戶10) Pro到[統一帳戶2.0](../acct-mode#統一帳戶20) Pro的條件, 請確保:
-* 對於任意一種訂單類型, 都沒有活動單
-* 所有的反向合約倉位的保證金模式必須和您統一帳戶的保證金模式保持一致.
- 如果統一帳戶保證金模式是組合保證金, 則要麽將反向倉為全部平掉, 
- 要麽切換統一帳戶保證金模式到逐倉或者全倉
-* 不能有雙向的反向交割倉位, 因為統一帳戶2.0中不支持雙向反向交割
-* **注意，倉位附帶的止盈止損單也屬於掛單**
-
 3. 帳戶升級過程中，可能會由於帳戶相關資產數據處於處理狀態中導致**查詢/推送**的數據不準確，建議在完成升級後，再查詢和使用。
 :::
 
