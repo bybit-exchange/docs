@@ -37,7 +37,7 @@ Every time when you create/amend/cancel an order, the position topic will genera
 |> entryPrice |string |Average entry price <li>For USDC Perp & Futures, it indicates average entry price, and it will not be changed with 8-hour session settlement</li> |
 |> markPrice |string |Mark price |
 |> leverage | string  |Position leverage<br/>_for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
-|> breakEvenPrice| string | breakEvenPrice, only for `linear`,`inverse`|
+|> breakEvenPrice| string | Break even price, only for `linear`,`inverse`.  <li> breakeven_price = (entry_price * qty - realized_pnl) / (qty - abs(qty) * max(taker fee rate, 0.00055))</li>|
 |> autoAddMargin | integer |Whether to add margin automatically when using isolated margin mode <li>`0`: false</li><li>`1`: true</li> |
 |> positionIM | string  |Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)<li>Portfolio margin mode: returns ""</li> |
 |> positionMM | string  |Maintenance margin, the same value as `positionMMByMp`<li>Portfolio margin mode: returns ""</li> |
