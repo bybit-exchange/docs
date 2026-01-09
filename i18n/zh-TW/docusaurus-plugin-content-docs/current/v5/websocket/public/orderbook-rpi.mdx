@@ -36,6 +36,9 @@ sidebar_position: 1.1
 
 ### 訂閱示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="json" label="JSON">
+
 ```json
 {
     "op": "subscribe",
@@ -44,6 +47,29 @@ sidebar_position: 1.1
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.rpi_orderbook_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
 
 ### 訂閱成功響應
 ```json

@@ -41,9 +41,39 @@ Please note currently system maintenance that may result in short interruption (
 
 ### Subscribe Example
 
-```python
-{"op": "subscribe", "args":["system.status"]}
+<Tabs groupId="programming-languages">
+<TabItem value="json" label="JSON">
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "system.status"
+    ]
+}
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="misc/status",
+)
+def handle_message(message):
+    print(message)
+ws.system_status_stream(
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

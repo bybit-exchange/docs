@@ -75,7 +75,25 @@ Content-Type: application/json
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.pre_check_order(
+    category="spot",
+    symbol="BTCUSDT",
+    side="Buy",
+    orderType="Limit",
+    qty="0.1",
+    price="28000",
+    timeInForce="PostOnly",
+    takeProfit="35000",
+    stopLoss="27000",
+    tpOrderType="Market",
+    slOrderType="Market",
+))
 ```
 
 </TabItem>

@@ -23,7 +23,7 @@ GET `/v5/crypto-loan-fixed/renew-info`
 |list|array|Object|
 |> borrowCurrency|string |Borrow currency|
 |> amount|string |loan amount|
-|> autoRepay|integer |`1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;|
+|> autoRepay|integer |`1`: Auto Repayment; `2`: Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;|
 |> contractNo|string |Contract number|
 |> dueTime|string |Due time|
 |> orderId|integer |Order Id|
@@ -50,7 +50,13 @@ X-BAPI-RECV-WINDOW: 5000
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_renewal_orders_fixed_crypto_loan())
 ```
 
 </TabItem>

@@ -24,8 +24,6 @@ GET `/v5/market/price-limit`
 |sellLmt |string |Lowest Ask Price |
 |ts |string |timestamp in milliseconds |
 
----
-
 ### Request Example
 
 <Tabs groupId="programming-languages">
@@ -40,7 +38,14 @@ Host: api-testnet.bybit.com
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+)
+print(session.get_price_limit(
+    category="linear",
+    symbol="BTCUSDT",
+))
 ```
 
 </TabItem>

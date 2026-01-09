@@ -20,7 +20,7 @@ POST `/v5/crypto-loan-fixed/repay-collateral`
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |loanId |false |string |借款合同ID.如果不輸入，則按定期幣種沖銷邏輯來|
-|loanCurrency |**true** |string |Loan currency|
+|loanCurrency |**true** |string |借款幣種|
 |collateralCoin |**true** |string |抵押品幣種: 多個抵押品幣種使用英文逗號分開|
 |amount |**true** |string |還款數量|
 
@@ -53,7 +53,17 @@ Content-Length: 50
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.collateral_repayment_fixed_crypto_loan(
+    loanCurrency="ETH",
+    amount="0.1",
+    collateralCoin="USDT",
+))
 ```
 
 </TabItem>

@@ -17,14 +17,13 @@ POST `/v5/crypto-loan-flexible/repay-collateral`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|loanCurrency |**true** |string |Loan currency|
+|loanCurrency |**true** |string |Loan coin name|
 |collateralCoin |**true** |string |Collateral currencies: Use commas to separate multiple collateral currencies|
 |amount |**true** |string |Repay amount|
 
 ### Response Parameters
-| Parameter | Type | Comments|
-|:----- |:-----|----- |
 None
+
 ### Request Example
 
 <Tabs groupId="programming-languages">
@@ -51,7 +50,17 @@ Content-Length: 52
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.collateral_repayment_flexible_crypto_loan(
+    loanCurrency="USDT",
+    amount="500",
+    collateralCoin="BTC",
+))
 ```
 
 </TabItem>
@@ -75,5 +84,4 @@ Content-Length: 52
     "retExtInfo": {},
     "time": 1756971550401
 }
-
 ```

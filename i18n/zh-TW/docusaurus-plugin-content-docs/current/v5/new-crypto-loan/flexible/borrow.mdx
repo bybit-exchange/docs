@@ -63,7 +63,26 @@ Content-Length: 244
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.borrow_flexible_crypto_loan(
+    loanCurrency="BTC",
+    loanAmount="0.1",
+    collateralList=[
+        {
+            "currency": "USDT",
+            "amount": "1000"
+        },
+        {
+            "currency": "ETH",
+            "amount": "1"
+        }
+    ]
+))
 ```
 
 </TabItem>

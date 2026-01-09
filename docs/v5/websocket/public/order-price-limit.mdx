@@ -27,9 +27,41 @@ Push frequency: **300ms**
 
 ### Subscribe Example
 
-```python
-{"op": "subscribe", "args": ["priceLimit.BTCUSDT"]}
+<Tabs groupId="programming-languages">
+<TabItem value="json" label="JSON">
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "priceLimit.BTCUSDT"
+    ]
+}
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.price_limit_stream(
+    symbol="BTCUSDT",
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
+
 
 ### Response Example
 
