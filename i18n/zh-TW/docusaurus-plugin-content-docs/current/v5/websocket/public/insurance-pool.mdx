@@ -31,6 +31,9 @@ USDC合約: `insurance.USDC` (**注意**: 目前所有的USDC永續, USDC交割�
 
 ### 訂閱示例
 
+<Tabs groupId="programming-languages">
+<TabItem value="json" label="JSON">
+
 ```json
 {
     "op": "subscribe",
@@ -40,6 +43,29 @@ USDC合約: `insurance.USDC` (**注意**: 目前所有的USDC永續, USDC交割�
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.insurance_pool_stream(
+    contract_group=["USDT", "USDC"],
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
 
 ### 消息示例
 

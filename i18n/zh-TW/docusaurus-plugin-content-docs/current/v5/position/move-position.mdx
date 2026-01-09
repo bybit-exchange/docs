@@ -73,7 +73,25 @@ Content-Type: application/json
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.move_position(
+    fromUid="100307601",
+    toUid="592324",
+    list=[
+        {
+            "category": "spot",
+            "symbol": "BTCUSDT",
+            "price": "100",
+            "side": "Sell",
+            "qty": "0.01",
+        }
+    ]
+))
 ```
 
 </TabItem>
