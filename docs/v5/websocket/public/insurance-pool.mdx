@@ -31,6 +31,9 @@ Inverse contracts: `insurance.inverse`
 
 ### Subscribe Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="json" label="JSON">
+
 ```json
 {
     "op": "subscribe",
@@ -41,7 +44,29 @@ Inverse contracts: `insurance.inverse`
 }
 ```
 
-### Message Example
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import WebSocket
+from time import sleep
+ws = WebSocket(
+    testnet=True,
+    channel_type="linear",
+)
+def handle_message(message):
+    print(message)
+ws.insurance_pool_stream(
+    contract_group=["USDT", "USDC"],
+    callback=handle_message
+)
+while True:
+    sleep(1)
+```
+
+</TabItem>
+</Tabs>
+
 
 ```json
 {
