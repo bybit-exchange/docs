@@ -1,6 +1,6 @@
 ---
-title: Query Issued Voucher
-sidebar_label: Query Issued Voucher
+title: Get Issued Voucher
+sidebar_label: Get Issued Voucher
 sidebar_position: 3
 ---
 
@@ -13,7 +13,7 @@ POST `/v5/broker/award/distribution-record`
 |accountId |**true** |string |User ID|
 |awardId |**true** |string |Voucher ID|
 |specCode |**true** |string |Customised unique spec code, up to 8 characters|
-|withUsedAmount |false |boolean |Whether to return the amount used by the user <li>`true`</li><li>`false` (default)</li>|
+|withUsedAmount |false |boolean |Whether or not to return the amount used by the user <li>`true`</li><li>`false` (default)</li>|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -56,7 +56,15 @@ Content-Length: 111
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_issued_voucher(
+    id="80209",
+))
 ```
 
 </TabItem>

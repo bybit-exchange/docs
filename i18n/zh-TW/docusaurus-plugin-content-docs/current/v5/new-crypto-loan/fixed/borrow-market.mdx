@@ -36,7 +36,7 @@ GET `/v5/crypto-loan-fixed/borrow-order-quote`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1
+GET /v5/crypto-loan-fixed/borrow-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
@@ -44,7 +44,16 @@ Host: api-testnet.bybit.com
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_borrowing_market_fixed_crypto_loan(
+    orderCurrency="USDT",
+    orderBy="apy",
+))
 ```
 
 </TabItem>

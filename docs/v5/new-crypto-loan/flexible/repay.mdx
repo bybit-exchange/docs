@@ -19,8 +19,8 @@ POST `/v5/crypto-loan-flexible/repay`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|loanCurrency |**true** |string |Loan currency|
-|amount |**true** |string |Repay amount|
+|loanCurrency |**true** |string |Loan coin name|
+|amount |**true** |string |Amount to repay|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -52,7 +52,16 @@ Content-Length: 52
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.repay_flexible_crypto_loan(
+    loanCurrency="BTC",
+    loanAmount="0.005",
+))
 ```
 
 </TabItem>

@@ -6,8 +6,8 @@ sidebar_position: 1
 Query small-balance coins with a USDT equivalent of less than 10 USDT, and ensure that the total amount for each conversion transaction is between 1.0e-8 and 200 USDT.
 
 :::info
-* api key permission: `Convert`
-* api rate limit: `10 req /s`
+* API key permission: `Convert`
+* API rate limit: `10 req /s`
 :::
 
 ### HTTP Request
@@ -16,7 +16,7 @@ GET `/v5/asset/covert/small-balance-list`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|accountType |**true** |string |Wallet type `eb_convert_uta`, support Unified wallet only|
+|accountType |**true** |string |Wallet type `eb_convert_uta`. Only supports the Unified wallet|
 |fromCoin |false |string |Source currency|
 
 ### Response Parameters
@@ -51,7 +51,16 @@ X-BAPI-RECV-WINDOW: 5000
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_small_balance_coins(
+    fromCoin="XRP",
+    accountType="eb_convert_uta",
+))
 ```
 
 </TabItem>
