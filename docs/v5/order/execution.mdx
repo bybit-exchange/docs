@@ -25,7 +25,7 @@ GET `/v5/execution/list`
 |orderLinkId |false |string |User customised order ID|
 |baseCoin |false |string |Base coin, uppercase only|
 |settleCoin |false |string |Settle coin, uppercase only. Only for `linear`, `inverse`,`option`|
-|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default;<br/><li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime</li>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
+|startTime |false |integer |The start timestamp (ms) <ul><li>startTime and endTime are not passed, return 7 days by default;<li>Only startTime is passed, return range between startTime and startTime+7 days</li><li>Only endTime is passed, return range between endTime-7 days and endTime<br/>If both are passed, the rule is endTime - startTime <= 7 days</li></ul>|
 |endTime |false |integer |The end timestamp (ms)|
 |[execType](../enum#exectype) |false |string |Execution type|
 |limit |false |integer |Limit for data size per page. [`1`, `100`]. Default: `50`|
@@ -43,7 +43,7 @@ GET `/v5/execution/list`
 |> orderPrice |string |Order price |
 |> orderQty |string |Order qty |
 |> leavesQty |string |The remaining qty not executed|
-|> [createType](../enum#createtype) |string |Order create type <li>Spot, Option do not have this key</li> |
+|> [createType](../enum#createtype) |string |Order create type <ul><li>Spot, Option do not have this key</li></ul> |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit` |
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type. If the order is not stop order, it either returns `UNKNOWN` or `""`|
 |> execFee |string  |Executed trading fee. You can get spot fee currency instruction [here](../enum#spot-fee-currency-instruction) |

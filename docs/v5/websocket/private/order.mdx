@@ -31,7 +31,7 @@ The first message tells you the order is executed, and the second message tells 
 |> category |string |Product type `spot`, `linear`, `inverse`, `option`|
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> parentOrderLinkId |string |Indicates the linked parent order for attached take-profit and stop-loss orders. Supported for futures and options.<li>[Amending](../../order/amend-order#) take-profit or stop-loss orders does not change the parentOrderLinkId</li><li>**Futures**: using [set trading stop](../../position/trading-stop#) to update attached TP/SL from the original order does not change the parentOrderLinkId.<br/>**Options**: using [set trading stop](../../position/trading-stop#) to update attached TP/SL from the original order will change the parentOrderLinkId.<br/>**Futures & Options**: if TP/SL is set via [set trading stop](../../position/trading-stop#)for a position that originally has no attached TP/SL, the parentOrderLinkId is meaningless.</li> |
+|> parentOrderLinkId |string |Indicates the linked parent order for attached take-profit and stop-loss orders. Supported for futures and options.<ul><li>[Amending](../../order/amend-order#) take-profit or stop-loss orders does not change the parentOrderLinkId</li><li>**Futures**: using [set trading stop](../../position/trading-stop#) to update attached TP/SL from the original order does not change the parentOrderLinkId.<br/>**Options**: using [set trading stop](../../position/trading-stop#) to update attached TP/SL from the original order will change the parentOrderLinkId.<br/>**Futures & Options**: if TP/SL is set via [set trading stop](../../position/trading-stop#)for a position that originally has no attached TP/SL, the parentOrderLinkId is meaningless.</li></ul> |
 |> isLeverage |string |Whether to borrow. `0`: false, `1`: true|
 |> blockTradeId  |string |Block trade ID|
 |> symbol |string |Symbol name |
@@ -49,7 +49,7 @@ The first message tells you the order is executed, and the second message tells 
 |> leavesValue |string |The remaining value not executed|
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value |
-|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li> |
+|> cumExecFee |string |<ul><li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li><li>After upgraded to the Unified account, you can use `execFee` for each fill in [Execution](execution) topic</li></ul> |
 |> closedPnl |string |Closed profit and loss for each close position order. The figure is the same as "closedPnl" from [Get Closed PnL](../../position/close-pnl)|
 |> feeCurrency |string |Deprecated. Trading fee currency for Spot only. Please understand Spot trading fee currency [here](../../enum#spot-fee-currency-instruction) |
 |> [timeInForce](../../enum#timeinforce) |string |Time in force |
@@ -79,7 +79,7 @@ The first message tells you the order is executed, and the second message tells 
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
-|> cumFeeDetail |json |<li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li> |
+|> cumFeeDetail |json |<ul><li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li></ul> |
 
 ### Subscribe Example
 ```json

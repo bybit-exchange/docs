@@ -25,7 +25,7 @@ GET `/v5/order/realtime`
 |:----- |:-------|:-----|------ |
 |category |**true** |string |Product type `linear`, `inverse`, `spot`, `option`|
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only. For **linear**, either `symbol`, `baseCoin`, `settleCoin` is **required** |
-|baseCoin |false |string |Base coin, uppercase only <li>Supports `linear`, `inverse` & `option`</li><li>`option`: it returns all option open orders by default</li>|
+|baseCoin |false |string |Base coin, uppercase only <ul><li>Supports `linear`, `inverse` & `option`</li><li>`option`: it returns all option open orders by default</li></ul>|
 |settleCoin |false |string |Settle coin, uppercase only <ul><li><b>linear</b>: either `symbol`, `baseCoin` or `settleCoin` is **required**</li><li>`spot`: not supported</li><li>`option`: USDT or USDC</li></ul> |
 |orderId |false |string |Order ID |
 |orderLinkId |false |string |User customised order ID |
@@ -42,7 +42,7 @@ GET `/v5/order/realtime`
 |list |array |Object |
 |> orderId  |string |Order ID |
 |> orderLinkId |string |User customised order ID |
-|> parentOrderLinkId |string |Indicates the linked parent order for attached take-profit and stop-loss orders. Supported for futures and options.<li>[Amending](amend-order#) take-profit or stop-loss orders does not change the parentOrderLinkId</li><li>**Futures**: using [set trading stop](../position/trading-stop#) to update attached TP/SL from the original order does not change the parentOrderLinkId.<br/>**Options**: using [set trading stop](../position/trading-stop#) to update attached TP/SL from the original order will change the parentOrderLinkId.<br/>**Futures & Options**: if TP/SL is set via [set trading stop](../position/trading-stop#)for a position that originally has no attached TP/SL, the parentOrderLinkId is meaningless.</li> |
+|> parentOrderLinkId |string |Indicates the linked parent order for attached take-profit and stop-loss orders. Supported for futures and options.<ul><li>[Amending](amend-order#) take-profit or stop-loss orders does not change the parentOrderLinkId</li><li>**Futures**: using [set trading stop](../position/trading-stop#) to update attached TP/SL from the original order does not change the parentOrderLinkId.<br/>**Options**: using [set trading stop](../position/trading-stop#) to update attached TP/SL from the original order will change the parentOrderLinkId.<br/>**Futures & Options**: if TP/SL is set via [set trading stop](../position/trading-stop#)for a position that originally has no attached TP/SL, the parentOrderLinkId is meaningless.</li></ul> |
 |> blockTradeId |string |Paradigm block trade ID |
 |> symbol |string |Symbol name |
 |> price |string |Order price |
@@ -51,7 +51,7 @@ GET `/v5/order/realtime`
 |> isLeverage |string |Whether to borrow `0`: false, `1`: true|
 |> [positionIdx](../enum#positionidx) |integer |Position index. Used to identify positions in different position modes.|
 |> [orderStatus](../enum#orderstatus) |string |Order status |
-|> [createType](../enum#createtype) |string |Order create type <li>Spot does not have this key</li> |
+|> [createType](../enum#createtype) |string |Order create type <ul><li>Spot does not have this key</li></ul> |
 |> [cancelType](../enum#canceltype) |string |Cancel type |
 |> [rejectReason](../enum#rejectreason) |string |Reject reason|
 |> avgPrice |string |Average filled price, returns `""` for those orders without avg price|
@@ -59,7 +59,7 @@ GET `/v5/order/realtime`
 |> leavesValue |string |The estimated value not executed|
 |> cumExecQty |string |Cumulative executed order qty |
 |> cumExecValue |string |Cumulative executed order value|
-|> cumExecFee |string |<li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li>|
+|> cumExecFee |string |<ul><li>`inverse`, `option`: Cumulative executed trading fee.</li><li>`linear`, `spot`: Deprecated. Use `cumFeeDetail` instead.</li></ul>|
 |> [timeInForce](../enum#timeinforce) |string |Time in force |
 |> [orderType](../enum#ordertype) |string |Order type. `Market`,`Limit`. For TP/SL orders, is the order type after the order was triggered|
 |> [stopOrderType](../enum#stopordertype) |string |Stop order type |
@@ -86,7 +86,7 @@ GET `/v5/order/realtime`
 |> smpOrderId |string |The counterparty's orderID which triggers this SMP execution|
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
-|> cumFeeDetail |json |<li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li> | 
+|> cumFeeDetail |json |<ul><li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li></ul> | 
 
 <a href="/api-explorer/v5/trade/open-order"><Button>RUN >></Button></a>
 
