@@ -43,6 +43,7 @@ GET `/v5/position/list`
 |> autoAddMargin | integer |是否自動追加保證金, _反向合約不支持設置自動追加保證金_ <li>`0`: 否</li><li>`1`: 是</li>|
 |> [positionStatus](../v5/enum#positionstatus) | String |倉位状态. `Normal`,`Liq`, `Adl` |
 |> leverage| string | 當前倉位的槓桿，**仅适用于合约**<br/>_若賬戶為組合保證金模式(PM), 該字段返回空字符串, 槓桿規則失效_|
+|> breakEvenPrice| string | 損益平衡價，**仅适用于合约**.  <li> breakeven_price = (entry_price * qty - realized_pnl) / (qty - abs(qty) * max(taker fee rate, 0.00055))</li>|
 |> markPrice| string  | symbol 的最新標記價格  |
 |> liqPrice| string  | 倉位強平價格<ul><li>逐倉保證金:<br/>是持仓的真實價格, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`。</li><li>全倉保證金:<br/>請注意, 這是預計強平價格僅供參考。僅當帳戶維持保證金率達到100%時會觸發強平, 當強平價 <= minPrice或者 強平價 >= maxPrice, 則為`""`</li></ul>_對於組合保證金模式, 此字段為空, 不會提供強平價格_ |
 |> positionIM| string  | 倉位起始保證金(用mark price計算), 值和`positionIMByMp`保持相同, 请看这个这则[调整](https://www.bybit.com/zh-TW/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation) <li>組合保證金模式(PM)下, 該字段返回為空字符串</li>|
@@ -170,6 +171,7 @@ client
                 "autoAddMargin": 1,
                 "adlRankIndicator": 2,
                 "leverage": "10",
+                "breakEvenPrice":"93556.73034991",
                 "positionBalance": "0.00139186",
                 "markPrice": "28224.50",
                 "liqPrice": "",
