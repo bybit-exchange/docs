@@ -6,30 +6,18 @@ sidebar_position: 1
 
 ## Overview
 
-Bybit provides real-time Level 1 Orderbook data in **SBE (Simple Binary Encoding)** format, following the FIX Protocol SBE 1.0 specification.
-
-- The current version only supports **SBE binary** format.
-- For linear / inverse / spot Level 1 data: if 3 seconds have elapsed without a change in the orderbook, a snapshot message will be pushed again, and the field `u` will be the same as that in the previous message.
-- Under extreme market conditions, there are merge and packet-drop strategies on both the generation side and the push side, so **`u` continuity is not guaranteed**.
-
+- **Channel:** private MMWS only (not available on public WS).
+- **Topic:** `ob.rpi.1.sbe.{symbol}`.
+- **Format:** SBE binary frames (`opcode = 2`), little-endian.
+- **Depth:** Real-time Level 1 Orderbook data.
+- **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
+- From January 15, 2026, sbe connection will only be avaiable via **v5/public-sbe**
 ---
 
 ## Connection
 
-- Please use your **dedicated MMWS host** for mainnet SBE connections.
-
-- From January 15, 2026, sbe connection will only be avaiable via **v5/public-sbe**
-
-
-### Data Frame Type
-
-SBE messages are transmitted as **binary WebSocket frames** (opcode = 2).
-
-### Control Messages
-
-Control messages (subscription, unsubscription, ping/pong, etc.) follow the **Bybit V5 WebSocket JSON standard**.
-
----
+- For Level 1 data on **linear / inverse / spot**: if the order book does not change within **3 seconds**, the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
+- Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, **continuity of `u` is not guaranteed**.
 
 ## Subscription Flow
 
@@ -181,32 +169,9 @@ b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00
 | 14 | sizeExponent    | int8  | Size exponent                           |
 | 55 | symbol          | varStr| Trading pair (e.g., `BTCUSDT`)          |
 
-#### Variable-Length String (`varString8`)
-
-- `uint8 length` (1 byte) – number of following characters  
-- UTF-8 string – trading symbol  
-
-Example: `"BTCUSDT"` encoded as:
-
-```text
-0x07 0x42 0x54 0x43 0x55 0x53 0x44 0x54
-^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-len  "BTCUSDT"
-```
-
 ---
 
 ## Optimisation
-
-### Optimisation 1
-
-`ts` and `cts` will be displayed in microseconds for BBO SBE.
-
-### Optimisation 2
-
-Adjust the field order.
-
-### Optimisation 3
 
 New field definitions (sell side as example; buy side is analogous):
 

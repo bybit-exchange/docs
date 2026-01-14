@@ -5,165 +5,18 @@ sidebar_position: 1
 ---
 
 ## Overview
-
 - **Channel:** private MMWS only (not available on public WS).
 - **Topic:** `ob.50.sbe.{symbol}` (snapshot or delta, every 20 ms).
 - **Format:** SBE binary frames (`opcode = 2`), little-endian.
 - **Depth:** 50 levels per side (no RPI in this stream).
 - **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
 
----
-
-## Order Book Update Logic (Snapshot + Delta Mode)
-
-### Message Types
-
-Order book update streams contain two message types:
-
-| Type     | Meaning                                                    |
-|----------|------------------------------------------------------------|
-| snapshot | A full 50-level orderbook image. Must **reset** the local book. |
-| delta    | Incremental updates. Must **apply changes** to the existing book. |
-
-### Rules for the u (Update ID) Field
-
-#### Behavior of `u`
-
-- Field `u` **increases monotonically** for all snapshots and deltas.
-- Field `u` **does not reset**, unless there is a system reset or precision change.
-- Field `u = 1` always indicates a **snapshot**, and continuity checks must stop.
-
-#### Continuity Validation
-
-Continuity must be checked **only when `u != 1`**.
-
-| Condition | Action                                                                                     |
-|----------|---------------------------------------------------------------------------------------------|
-| `u != 1` | Validate continuity: next `u` should follow previous `u + 1`.                               |
-| `u == 1` | Special snapshot (service restart / precision change). **Do not** perform continuity checks.|
-
-### Rules for Order Book Maintenance
-
-#### First Message of connection and reconnection
-
-After subscribing, the **first message is always a snapshot**.  
-Clients must initialize the local book with it.
-
-#### Snapshot Handling
-
-A snapshot must always **replace the entire local order book**:
-
-- Clear local bids and asks.
-- Rebuild from snapshot data.
-- Set local `lastU = snapshot.u`.
-
-Snapshots may appear:
-
-- after initial subscription
-- when the number of changed levels > 100 (extreme market condition auto-fallback)
-- after internal service restart
-- after exponent / precision changes
-
-#### Delta Handling
-
-A delta applies **incrementally**:
-
-- Insert/update levels with `size > 0`.
-- Remove levels when `size == 0`.
-- Continue continuity checks using the `u` field.
-
-### Example Push Update
-
-Below is a real case where the connection stays healthy and messages arrive in order:
-
-| u     | Type     | Notes                                                                                       |
-|-------|----------|---------------------------------------------------------------------------------------------|
-| 10000 | snapshot | First message after subscription.                                                           |
-| 10001 | delta    | Incremental updates. Must **apply changes** to the existing book.                           |
-| 10002 | delta    | Normal incremental update.                                                                  |
-| 10003 | snapshot | Large market move (> 100 level changes). Use snapshot to **replace** local book.           |
-| 10004 | delta    | Continue delta from the new snapshot.                                                       |
-| 1     | snapshot | Service restarted / precision changed — reset `u` to 1.                                     |
-| 2     | delta    | New continuity sequence.                                                                    |
-| 3     | delta    | —                                                                                           |
-| 4     | delta    | —                                                                                           |
-
----
-
-## Key Differences between SBE & JSON
-
-### 1. Time Precision
-
-- **JSON:** timestamps typically in **milliseconds (ms)**.
-- **SBE:** all timestamps (`ts`, `cts`) are in **microseconds (µs)** for higher precision and better sequencing accuracy.
-
-### 2. Payload Size & Efficiency
-
-- **SBE:** binary-packed and fixed-width where possible → **very compact**.  
-  - A typical 50×2 depth update is around **1.7 KB** per frame.
-- **JSON:** verbose text format → larger payload.  
-  - Equivalent depth update is about **2.4 KB**, and can spike to **4.6 KB** during volatile markets.
-
-### 3. Snapshot Mode Behavior
-
-- SBE mirrors JSON v5 behavior:
-  - 50-depth snapshots serve as **baseline reference** for delta synchronization.
-
-**Extreme Market Condition Handling**
-
-- When a delta contains **more than 100 combined bid+ask updates** (buy + sell), the system automatically sends a **full snapshot** instead of a delta.
-- Ensures client books resync cleanly.
-- Prevents explosion of delta packets during high churn.
-- Keeps snapshot size fixed length for predictable decoding.
-
-### 4. RPI (Retail Price Improvement) Exclusion
-
-- SBE 50-level feed **does not include RPI fields**, only regular best bid/ask levels.
-
----
-
-## Level 50 Snapshot partially vs Level 40 full snapshot
-
-**Pros**
-
-- Delta + small partial snapshot keeps consuming less bandwidth.
-- Extreme Market Handling: partial snapshot + delta is more robust.
-- Supports **more than 10 levels**.
-- Delta + partial snapshot provides continuous sync (similar to CME, Nasdaq, Binance, OKX).
-
-**Cons**
-
-- Client must handle **partial snapshot + deltas** to construct orderbook.
-- Needs correct **delta sequence alignment**.
-
----
-
-## FAQ about field `seq`
-
-- The `seq` field is a **unified global sequence number**.  
-  It remains consistent across different depths. It is monotonically increasing, but **not guaranteed to be continuous**.
-- All messages are generated in the quote service, where both `seq` and `u` values are assigned.
-- In the WebSocket server, messages are forwarded transparently without modification.  
-  Therefore, for all clients connected to the same WS server, **the same message has the same `seq` and `u` values**, regardless of the connection.
-
----
-
-## Connection
-
-Please use your **dedicated MMWS host** to connect.
-
-### Data Frame Type
-
-- SBE messages are transmitted as **binary frames** (`opcode = 2`).
-
-### Control Messages
-
-- Subscription, unsubscription, ping/pong, and other control messages follow the **Bybit V5 API standard**.
-
----
+## SBE Connection Limit
+- **Spot:** 1500 connections limit per dedicated MMWS host.
+- **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
+- Once you breach the connection limit, new connections return **HTTP 429**.
 
 ## Flow
-
 ### Ping / Pong (JSON control frames)
 
 **Send Ping**
@@ -175,19 +28,12 @@ Please use your **dedicated MMWS host** to connect.
 **Receive Pong**
 
 ```json
-{
-  "success": true,
-  "ret_msg": "pong",
-  "conn_id": "xxxxx-xx",
-  "req_id": "",
-  "op": "ping"
-}
+{"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}
 ```
 
 ### Subscribe
 
 - Topic format: `ob.50.sbe.<symbol>`
-- Example: `BTCUSDT`, `ETHUSDT`
 
 **Subscribe request**
 
@@ -198,16 +44,8 @@ Please use your **dedicated MMWS host** to connect.
 **Subscription confirmation**
 
 ```json
-{
-  "success": true,
-  "ret_msg": "",
-  "conn_id": "d30fdpbboasp1pjbe7r0",
-  "req_id": "xxx",
-  "op": "subscribe"
-}
+{"success": true,"ret_msg": "","conn_id": "d30fdpbboasp1pjbe7r0","req_id": "xxx","op": "subscribe"}
 ```
-
----
 
 ## SBE XML Template (L50 OB)
 
@@ -247,7 +85,6 @@ Please use your **dedicated MMWS host** to connect.
     </enum>
   </types>
 
-  <!-- Stream event for "ob.rpi.1.sbe.<symbol>" channel -->
   <sbe:message name="BestOBRpiEvent" id="20000">
     <field id="1"  name="ts"             type="int64" description="The timestamp in microseconds that the system generates the data"/>
     <field id="2"  name="seq"            type="int64" description="Cross sequence ID"/>
@@ -292,9 +129,7 @@ Please use your **dedicated MMWS host** to connect.
 </sbe:messageSchema>
 ```
 
----
-
-## SBE Level 50 – Field Reference
+## Field Reference
 
 **Message:** `OBL50Event` (id = 20001)
 
@@ -311,63 +146,76 @@ Please use your **dedicated MMWS host** to connect.
 | bids         | 41 | group(`groupSize16Encoding`) | —         | Buy side updates (up to 50 levels).                                                    |
 | symbol       | 55 | varString8               | UTF-8         | 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.                                         |
 
-### Enum: `pkgTypeEnum` (for `pkgType`)
-
-| Name     | Value | Meaning                                                                 |
-|----------|-------|-------------------------------------------------------------------------|
-| SNAPSHOT | 0     | Full Level-50 snapshot of the order book. Local book should be fully replaced. |
-| DELTA    | 1     | Incremental update on top of the last applied book. Only listed levels need updates/removal. |
-
----
-
-## Repeating group element layout (bids)
-
-| Parent Group | Element Field | SBE Type | Unit / Format | Notes                |
-|--------------|---------------|----------|---------------|----------------------|
-| asks / bids  | price         | int64    | mantissa      | Apply `priceExponent`. |
-| asks / bids  | size          | int64    | mantissa      | Apply `sizeExponent`.  |
-
 ### Asks Group
-
-Sell side orderbook updates.
-
 | Field (id) | Type  | Description                                                             |
 |------------|-------|-------------------------------------------------------------------------|
 | price (1)  | int64 | Ask price mantissa. Display ask price = `price × 10^priceExponent`.    |
 | size  (2)  | int64 | Ask size mantissa. Display ask size  = `size × 10^sizeExponent`.       |
 
 ### Bids Group
-
-Buy side orderbook updates.
-
 | Field (id) | Type  | Description                                                             |
 |------------|-------|-------------------------------------------------------------------------|
 | price (1)  | int64 | Bid price mantissa. Display bid price = `price × 10^priceExponent`.    |
 | size  (2)  | int64 | Bid size mantissa. Display bid size  = `size × 10^sizeExponent`.       |
+              
+## Order Book Update Logic
+### Rules for the u (Update ID) Field
+#### Behavior of `u`
+- Field `u` **increases monotonically** for all snapshots and deltas.
+- Field `u` **does not reset**, unless there is a system reset or precision change.
+- Field `u = 1` always indicates a **snapshot**, and continuity checks must stop.
 
-Order: groups are encoded as: `blockLength:uint16`, `numInGroup:uint16`, then `numInGroup` elements, each exactly `blockLength` bytes.  
-In this schema each element is **16 bytes** (two `int64`s).
+#### Continuity Validation
 
----
+Continuity must be checked **only when `u != 1`**.
 
-## Supporting composites
+| Condition | Action                                                                                     |
+|----------|---------------------------------------------------------------------------------------------|
+| `u != 1` | Validate continuity: next `u` should follow previous `u + 1`.                               |
+| `u == 1` | Special snapshot (service restart / precision change). **Do not** perform continuity checks.|
 
-### `varString8` (variable string)
+### Rules for Order Book Maintenance
+#### First Message of connection and reconnection
 
-| Field  | SBE Type    | Notes                         |
-|--------|-------------|-------------------------------|
-| length | uint8       | Number of bytes that follow.  |
-| varData| uint8[length] | UTF-8 bytes.                |
+After subscribing, the **first message is always a snapshot**, clients must initialize the local book with it.
 
----
+#### Snapshot Handling
+A snapshot must always **replace the entire local order book**
 
-## SBE Connection Limit
+Snapshots may appear:
+- after initial subscription
+- when the number of changed levels > 100 (extreme market condition auto-fallback)
+- after internal service restart
+- after exponent / precision changes
 
-- **Spot:** 1500 connections limit per dedicated MMWS host.
-- **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
-- Once you breach the connection limit, new connections return **HTTP 429**.
+#### Delta Handling
 
----
+A delta applies **incrementally**:
+
+- Insert/update levels with `size > 0`,remove levels when `size == 0`,continue continuity checks using the `u` field.
+
+**Extreme Market Condition Handling**
+
+- When a delta contains **more than 100 combined bid+ask updates** (buy + sell), the system automatically sends a **full snapshot** instead of a delta.
+- Ensures client books resync cleanly.
+- Prevents explosion of delta packets during high churn.
+- Keeps snapshot size fixed length for predictable decoding.
+
+### Example Push Update
+
+Below is a real case where the connection stays healthy and messages arrive in order:
+
+| u     | Type     | Notes                                                                                       |
+|-------|----------|---------------------------------------------------------------------------------------------|
+| 10000 | snapshot | First message after subscription.                                                           |
+| 10001 | delta    | Incremental updates. Must **apply changes** to the existing book.                           |
+| 10002 | delta    | Normal incremental update.                                                                  |
+| 10003 | snapshot | Large market move (> 100 level changes). Use snapshot to **replace** local book.           |
+| 10004 | delta    | Continue delta from the new snapshot.                                                       |
+| 1     | snapshot | Service restarted / precision changed — reset `u` to 1.                                     |
+| 2     | delta    | New continuity sequence.                                                                    |
+| 3     | delta    | —                                                                                           |
+| 4     | delta    | —                                                                                           |
 
 ## Integration Script
 
