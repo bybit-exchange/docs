@@ -5,25 +5,18 @@ sidebar_position: 1
 ---
 
 ## Overview
-
 - **Channel:** private MMWS only (not available on public WS).
 - **Topic:** `ob.50.sbe.{symbol}` (snapshot or delta, every 20 ms).
 - **Format:** SBE binary frames (`opcode = 2`), little-endian.
 - **Depth:** 50 levels per side (no RPI in this stream).
 - **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
 
----
-
 ## SBE Connection Limit
-
 - **Spot:** 1500 connections limit per dedicated MMWS host.
 - **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
 - Once you breach the connection limit, new connections return **HTTP 429**.
 
----
-
 ## Flow
-
 ### Ping / Pong (JSON control frames)
 
 **Send Ping**
@@ -35,19 +28,12 @@ sidebar_position: 1
 **Receive Pong**
 
 ```json
-{
-  "success": true,
-  "ret_msg": "pong",
-  "conn_id": "xxxxx-xx",
-  "req_id": "",
-  "op": "ping"
-}
+{"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}
 ```
 
 ### Subscribe
 
 - Topic format: `ob.50.sbe.<symbol>`
-- Example: `BTCUSDT`, `ETHUSDT`
 
 **Subscribe request**
 
@@ -58,16 +44,8 @@ sidebar_position: 1
 **Subscription confirmation**
 
 ```json
-{
-  "success": true,
-  "ret_msg": "",
-  "conn_id": "d30fdpbboasp1pjbe7r0",
-  "req_id": "xxx",
-  "op": "subscribe"
-}
+{"success": true,"ret_msg": "","conn_id": "d30fdpbboasp1pjbe7r0","req_id": "xxx","op": "subscribe"}
 ```
-
----
 
 ## SBE XML Template (L50 OB)
 
@@ -107,7 +85,6 @@ sidebar_position: 1
     </enum>
   </types>
 
-  <!-- Stream event for "ob.rpi.1.sbe.<symbol>" channel -->
   <sbe:message name="BestOBRpiEvent" id="20000">
     <field id="1"  name="ts"             type="int64" description="The timestamp in microseconds that the system generates the data"/>
     <field id="2"  name="seq"            type="int64" description="Cross sequence ID"/>
@@ -152,9 +129,7 @@ sidebar_position: 1
 </sbe:messageSchema>
 ```
 
----
-
-## SBE Level 50 – Field Reference
+## Field Reference
 
 **Message:** `OBL50Event` (id = 20001)
 
@@ -171,35 +146,21 @@ sidebar_position: 1
 | bids         | 41 | group(`groupSize16Encoding`) | —         | Buy side updates (up to 50 levels).                                                    |
 | symbol       | 55 | varString8               | UTF-8         | 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.                                         |
 
----
-
 ### Asks Group
-
-Sell side orderbook updates.
-
 | Field (id) | Type  | Description                                                             |
 |------------|-------|-------------------------------------------------------------------------|
 | price (1)  | int64 | Ask price mantissa. Display ask price = `price × 10^priceExponent`.    |
 | size  (2)  | int64 | Ask size mantissa. Display ask size  = `size × 10^sizeExponent`.       |
 
 ### Bids Group
-
-Buy side orderbook updates.
-
 | Field (id) | Type  | Description                                                             |
 |------------|-------|-------------------------------------------------------------------------|
 | price (1)  | int64 | Bid price mantissa. Display bid price = `price × 10^priceExponent`.    |
 | size  (2)  | int64 | Bid size mantissa. Display bid size  = `size × 10^sizeExponent`.       |
-              |
-
----
-
-## Order Book Update Logic (Snapshot + Delta Mode)
-
+              
+## Order Book Update Logic
 ### Rules for the u (Update ID) Field
-
 #### Behavior of `u`
-
 - Field `u` **increases monotonically** for all snapshots and deltas.
 - Field `u` **does not reset**, unless there is a system reset or precision change.
 - Field `u = 1` always indicates a **snapshot**, and continuity checks must stop.
@@ -214,20 +175,14 @@ Continuity must be checked **only when `u != 1`**.
 | `u == 1` | Special snapshot (service restart / precision change). **Do not** perform continuity checks.|
 
 ### Rules for Order Book Maintenance
-
 #### First Message of connection and reconnection
 
-After subscribing, the **first message is always a snapshot**.  
-Clients must initialize the local book with it.
+After subscribing, the **first message is always a snapshot**, clients must initialize the local book with it.
 
 #### Snapshot Handling
-
-A snapshot must always **replace the entire local order book**:
-
-- Clear local bids and asks,rebuild from snapshot data,set local `lastU = snapshot.u`.
+A snapshot must always **replace the entire local order book**
 
 Snapshots may appear:
-
 - after initial subscription
 - when the number of changed levels > 100 (extreme market condition auto-fallback)
 - after internal service restart
@@ -261,9 +216,6 @@ Below is a real case where the connection stays healthy and messages arrive in o
 | 2     | delta    | New continuity sequence.                                                                    |
 | 3     | delta    | —                                                                                           |
 | 4     | delta    | —                                                                                           |
-
-
----
 
 ## Integration Script
 
