@@ -6,33 +6,22 @@ sidebar_position: 1
 
 ## 總覽
 
-Bybit 以 **SBE (Simple Binary Encoding)** 格式提供即時 Level 1 訂單簿資料, 並遵循 FIX Protocol SBE 1.0 規範。
-
-- 目前版本僅支援 **SBE 二進制** 格式。
-- 對於 linear / inverse / spot 的 Level 1 資料: 如果 3 秒內訂單簿沒有變化, 會再次推送 snapshot 信息, 欄位 `u` 會與前一則信息相同。
-- 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
+- **Channel:** 僅支援私有 MMWS, 不開放於 public WS.
+- **Topic:** `ob.rpi.1.sbe.{symbol}`.
+- **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
+- **Depth:** 提供即時 Level 1 訂單簿資料.
+- **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
+- 自2026年1月15日起，SBE連接將僅能通過 **v5/public-sbe** 使用。
 
 ---
 
 ## 連接
 
-- 請在主網 SBE 連接時使用您的 **專屬 MMWS host**。
-
-- 自2026年1月15日起，SBE連接將僅能通過 **v5/public-sbe** 使用。
-
+- 對於 linear / inverse / spot 的 Level 1 資料: 如果 3 秒內訂單簿沒有變化, 會再次推送 snapshot 信息, 欄位 `u` 會與前一則信息相同。
+- 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
 
 
-### 數據框架類型
-
-SBE 信息會以 **二進制 WebSocket frame** 傳送 (opcode = 2)。
-
-### 控制信息
-
-控制信息 (subscription, unsubscription, ping/pong 等) 遵循 **Bybit V5 WebSocket JSON 標準**。
-
----
-
-## 訂閱流程
+## 訂閱流程(JSON 控制 frame)
 
 ### 送出訂閱請求
 
@@ -182,32 +171,9 @@ b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00
 | 14 | sizeExponent    | int8  | 數量 exponent Size exponent                      |
 | 55 | symbol          | varStr| 交易對 (例如 `BTCUSDT`) Trading pair (e.g., `BTCUSDT`) |
 
-#### 可變長度字符串 (`varString8`)
-
-- `uint8 length` (1 byte) – 後續字元的數量 number of following characters  
-- UTF-8 字串 – 交易標的 trading symbol  
-
-範例 Example: `"BTCUSDT"` 的編碼為:
-
-```text
-0x07 0x42 0x54 0x43 0x55 0x53 0x44 0x54
-^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-len  "BTCUSDT"
-```
-
 ---
 
 ## 相關優化
-
-### 優化 1
-
-`ts` 與 `cts` 在 BBO SBE 中會以微秒 (µs) 顯示。
-
-### 優化 2
-
-調整欄位順序。
-
-### 優化 3
 
 新的欄位定義 (以賣方為例, 買方邏輯相同):
 
