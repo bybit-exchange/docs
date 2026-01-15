@@ -21,27 +21,30 @@ None
 |id |string |Unique ID. Internal use|
 |note |string |The remark |
 |apiKey |string |Api key |
-|readOnly |integer |`0`：Read and Write. `1`：Read only |
+|readOnly |integer |`0`: Read and Write. `1`: Read only |
 |secret |string |Always `""` |
 |permissions |Object |The types of permission |
 |> ContractTrade |array |Permission of contract trade `Order`, `Position` |
 |> Spot |array |Permission of spot `SpotTrade` |
 |> Wallet |array |Permission of wallet `AccountTransfer`, `SubMemberTransfer`(master account), `SubMemberTransferList`(sub account), `Withdraw`(master account)|
 |> Options |array |Permission of USDC Contract. It supports trade option and USDC perpetual. `OptionsTrade`|
-|> Derivatives |array |Always has this permission by default `DerivativesTrade` |
+|> Derivatives |array |`DerivativesTrade` |
 |> Exchange |array |Permission of convert `ExchangeHistory` |
 |> Earn |array |Permission of earn product `Earn` |
-|> NFT |array |Deprecated, always `[]` |
+|> FiatP2P |array |Permission of P2P `FiatP2POrder`, `Advertising` |
+|> FiatBybitPay |array |Permission of earn product `FaitPayOrder` |
+|> FiatConvertBroker |array |Permission of fiat convert `FiatConvertBrokerOrder` |
 |> BlockTrade |array |Permission of blocktrade. Not applicable to subaccount, always `[]`|
 |> Affiliate |array |Permission of Affiliate. Only affiliate can have this permission, otherwise always `[]` |
-|> CopyTrading |array |Always `[]` as Master Trader account just use `ContractTrade` to start CopyTrading|
+|> NFT |array |**Deprecated**, always `[]` |
+|> CopyTrading |array |**Deprecated**, always `[]` |
 |ips |array |IP bound|
-|type |integer |The type of api key. `1`：personal, `2`：connected to the third-party app |
+|type |integer |The type of api key. `1`: personal, `2`: connected to the third-party app |
 |deadlineDay |integer |The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed |
 |expiredAt |datetime |The expiry day of the api key. Only for those api key with no IP bound or the password has been changed|
 |createdAt |datetime |The create day of the api key |
-|unified |integer |deprecated field|
-|uta |integer |Whether the account to which the account upgrade to unified trade account. `0`：regular account; `1`：unified trade account |
+|unified |integer |**Deprecated** field|
+|uta |integer |Whether the account to which the account upgrade to unified trade account. `0`: regular account; `1`: unified trade account |
 |userID |integer |User ID |
 |inviterID |integer |Inviter ID (the UID of the account which invited this account to the platform) |
 |[vipLevel](../enum#viplevel) |string |VIP Level |
@@ -50,7 +53,7 @@ None
 |rsaPublicKey |string |Rsa public key |
 |isMaster |boolean |If this api key belongs to master account or not |
 |parentUid |string |The main account uid. Returns `"0"` when the endpoint is called by main account |
-|kycLevel |string |Personal account kyc level. `LEVEL_DEFAULT`, `LEVEL_1`， `LEVEL_2` |
+|kycLevel |string |Personal account kyc level. `LEVEL_DEFAULT`, `LEVEL_1`, `LEVEL_2` |
 |kycRegion |string |Personal account kyc region |
 
 <a href="/api-explorer/v5/user/apikey-info"><Button>RUN >></Button></a>

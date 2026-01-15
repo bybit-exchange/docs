@@ -11,7 +11,7 @@ The API key must have one of the below permissions in order to call this endpoin
 :::
 
 :::info
- Only the api key that calls this interface can be modified
+Only the api key that calls this interface can be modified
 :::
 
 ### HTTP Request
@@ -20,20 +20,18 @@ POST `/v5/user/update-api`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|readOnly |false |integer |`0` (default)：Read and Write. `1`：Read only |
+|readOnly |false |integer |`0` (default): Read and Write. `1`: Read only |
 |ips |false |string |Set the IP bind. example: `"192.168.0.1,192.168.0.2"`<b>note:</b><ul><li>don't pass ips or pass with `"*"` means no bind</li><li>No ip bound api key will be <b>invalid after 90 days</b></li><li>api key will be invalid after <b>7 days</b> once the account password is changed</li></ul>|
 |permissions |false |Object |Tick the types of permission. Don't send this param if you don't want to change the permission|
 |> ContractTrade |false |array |Contract Trade. `["Order","Position"]` |
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
 |> Wallet |false |array |Wallet. `["AccountTransfer","SubMemberTransfer"]` |
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
-|> Derivatives |false |array |**Deprecated** because this permission is added by dafault|
 |> Exchange |false |array |Convert. `["ExchangeHistory"]` |
 |> Earn |false |array |Earn product. `["Earn"]`|
-|> CopyTrading |false |array |Copytrade. `["CopyTrading"]`, **deprecated**|
-|> BlockTrade |false |array |Blocktrade. `["BlockTrade"]` |
-|> NFT |false |array |Deprecated|
 |> Affiliate |false |array |Affiliate. `["Affiliate"]` <ul><li>This permission is only useful for affiliate</li><li>If you need this permission, make sure you remove all other permissions</li></ul> |
+|> Derivatives |false |array |`["DerivativesTrade"]`|
+|> BlockTrade |false |array |Blocktrade. `["BlockTrade"]` |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -41,7 +39,7 @@ POST `/v5/user/update-api`
 |id |string |Unique id. Internal used|
 |note |string |The remark |
 |apiKey |string |Api key |
-|readOnly |integer |`0`：Read and Write. `1`：Read only |
+|readOnly |integer |`0`: Read and Write. `1`: Read only |
 |secret |string |Always `""` |
 |permissions |Object |The types of permission |
 |> ContractTrade |array |Permisson of contract trade |
@@ -49,11 +47,14 @@ POST `/v5/user/update-api`
 |> Wallet |array |Permisson of wallet |
 |> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
 |> Derivatives |array |Permission of Unified account |
-|> CopyTrading |array |Permission of copytrade. Not applicable to sub account, always `[]`|
-|> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]`|
+|> BlockTrade |array |Permission of blocktrade|
 |> Exchange |array |Permission of convert |
-|> Earn |array |Permission of Earn |
-|> NFT |array |Deprecated, always `[]`|
+|> Earn |array |Permission of earn |
+|> FiatP2P |false |array |Permission of P2P|
+|> FiatBybitPay |false |array |Permission of Bybit pay|
+|> FiatConvertBroker |false |array |Permission of fiat convert|
+|> NFT |false |array |**Deprecated**, always `[]`|
+|> CopyTrading |array |**Deprecated**, always `[]`|
 |ips |array |IP bound|
 
 ### Request Example
