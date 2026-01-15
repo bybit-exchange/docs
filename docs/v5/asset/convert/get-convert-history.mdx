@@ -15,7 +15,7 @@ GET `/v5/asset/exchange/query-convert-history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](/v5/enum#convertaccounttype) |false |string |Wallet type <li>Supports passing multiple types, separated by comma e.g., <code>eb_convert_funding,eb_convert_uta</code></li><li>Return all wallet types data if not passed</li>|
+|[accountType](/v5/enum#convertaccounttype) |false |string |Wallet type <br/><code>eb_convert_funding</code>: funding wallet convert records via API<br/><code>eb_convert_uta</code>: uta wallet convert records via API<br/><code>funding</code>: normal crypto convert via web/app<br/><code>funding_fiat</code>: fiat crypto convert via web/app<br/><code>funding_fbtc_convert</code>: FBTC to BTC convert via web/app<br/><code>funding_block_trade</code>: block trade convert via web/app<li>Supports passing multiple types, separated by comma e.g., <code>eb_convert_funding,eb_convert_uta</code></li><li>Return all wallet types data if not passed</li>|
 |index |false |integer |Page number <li>started from 1</li><li>1st page by default</li>|
 |limit |false |integer |Page size <li>20 records by default</li><li>up to 100 records, return 100 when exceeds 100</li>|
 
@@ -23,7 +23,7 @@ GET `/v5/asset/exchange/query-convert-history`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list |array&lt;object&gt;|Array of quotes|
-|> [accountType](/v5/enum#convertaccounttype) |string|Wallet type |
+|> [accountType](/v5/enum#convertaccounttype) |string|Wallet type<br/><code>eb_convert_funding</code>: funding wallet convert records via API<br/><code>eb_convert_uta</code>: uta wallet convert records via API<br/><code>funding</code>: normal crypto convert via web/app<br/><code>funding_fiat</code>: fiat crypto convert via web/app<br/><code>funding_fbtc_convert</code>: FBTC to BTC convert via web/app<br/><code>funding_block_trade</code>: block trade convert via web/app |
 |> exchangeTxId |string |Exchange tx ID, same as quote tx ID |
 |> userId |string |User ID |
 |> fromCoin |string|From coin|
