@@ -26,10 +26,9 @@ POST `/v5/user/update-sub-api`
 |> Spot |false |array |Spot Trade. `["SpotTrade"]` |
 |> Wallet |false |array |Wallet. `["AccountTransfer", "SubMemberTransferList"]`<br/>_Note: fund custodial account is not supported_|
 |> Options |false |array |USDC Contract. `["OptionsTrade"]`|
-|> Derivatives |false |array |**Deprecated** because this permission is added by dafault|
+|> Derivatives |false |array |`["DerivativesTrade"]`|
 |> Exchange |false |array |Convert. `["ExchangeHistory"]` |
 |> Earn |false |array |Earn product. `["Earn"]` |
-|> CopyTrading |false |array |Copytrade. `["CopyTrading"]`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -37,7 +36,7 @@ POST `/v5/user/update-sub-api`
 |id |string |Unique id. Internal used|
 |note |string |The remark |
 |apiKey |string |Api key |
-|readOnly |integer |`0`：Read and Write. `1`：Read only |
+|readOnly |integer |`0`: Read and Write. `1`: Read only |
 |secret |string |Always `""` |
 |permissions |Object |The types of permission |
 |> ContractTrade |array |Permisson of contract trade |
@@ -45,11 +44,15 @@ POST `/v5/user/update-sub-api`
 |> Wallet |array |Permisson of wallet |
 |> Options |array |Permission of USDC Contract. It supports trade option and usdc perpetual. |
 |> Derivatives |array |Permission of Unified account |
-|> CopyTrading |array |Permission of copytrade|
-|> BlockTrade |array |Permission of blocktrade. Not applicable to sub account, always `[]`|
 |> Exchange |array |Permission of convert |
 |> Earn |array |Permission of Earn |
-|> NFT |array |Deprecated, always `[]`|
+|> BlockTrade |array |Not applicable to sub account, always `[]`|
+|> Affiliate |array |Not applicable to sub account, always `[]`|
+|> FiatP2P |array |Not applicable to sub account, always `[]`|
+|> FiatBybitPay |array |Not applicable to sub account, always `[]`|
+|> FiatConvertBroker |array |Not applicable to sub account, always `[]`|
+|> NFT |array |**Deprecated**, always `[]`|
+|> CopyTrading |array |**Deprecated**, always `[]`|
 |ips |array |IP bound|
 
 ### Request Example

@@ -24,17 +24,18 @@ GET `/v5/user/query-api`
 |readOnly |integer |`0`：可讀可寫. `1`：只讀 |
 |secret |string |總是"" |
 |permissions |Object |權限類型 |
-|> ContractTrade |array |合約交易的權限 `Order`, `Position` |
+|> ContractTrade |array |USDT合約、幣本位合約交易的權限 `Order`, `Position` |
 |> Spot |array |現貨交易的權限 `SpotTrade` |
 |> Wallet |array |錢包的權限 `AccountTransfer`, `SubMemberTransfer`(母帳戶), `SubMemberTransferList`(子帳戶), `Withdraw`(母帳戶)|
-|> Options |array |USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 `OptionsTrade` |
-|> Derivatives |array |<li>統一交易帳戶的默認勾選權限</li><li>經典帳戶總是`[]`</li> |
-|> CopyTrading |array |總是`[]`, 因為帶單帳戶現在只需要通過`ContractTrade`權限項來進行API帶單|
-|> BlockTrade |array |大宗交易的權限. 子帳戶暫不支持，總是[]|
+|> Options |array |USDC合約和期權 `OptionsTrade` |
+|> Derivatives |array |`DerivativesTrade` |
 |> Exchange |array |兌換的權限 `ExchangeHistory`|
 |> Earn |array |理財產品的權限 `Earn`|
-|> NFT |array |廢棄, 總是[]|
+|> FiatP2P |array |P2P `FiatP2POrder`, `Advertising` |
+|> FiatBybitPay |array |Bybit Pay `FaitPayOrder` |
+|> FiatConvertBroker |array |數法兌換權限 `FiatConvertBrokerOrder` |
 |> Affiliate |array |代理商權限. 僅代理商可以擁有此權限, 否則總是`[]` |
+|> BlockTrade |array |大宗交易的權限. 不支持子帳戶，總是[]|
 |ips |array |綁定的IP|
 |type |integer |Api key類型. `1`：個人使用, `2`：綁定到第三方應用 |
 |deadlineDay |integer |API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶 |

@@ -24,11 +24,10 @@ POST `/v5/user/update-sub-api`
 |> ContractTrade |false |array |合約. ["Order","Position"] |
 |> Spot |false |array |現貨. ["SpotTrade"] |
 |> Wallet |false |array |錢包. ["AccountTransfer","SubMemberTransferList"] |
-|> Options |false |array |USDC合約. ["OptionsTrade"]|
-|> Derivatives |false |array |統一帳戶權限. 該字段失效, 因為系統將會自動根據您的帳戶類型(經典帳戶和統一帳戶)來決定是否增加該權限 |
+|> Options |false |array |USDC合約和期權. ["OptionsTrade"]|
+|> Derivatives |false |array |統一帳戶權限. ["DerivativesTrade"]|
 |> Exchange |false |array |兌換. ["ExchangeHistory"] |
-|> CopyTrading |false |array |跟單交易. ["CopyTrading"]|
-|> Earn |false |array |理財產品的權限 `Earn`|
+|> Earn |false |array |理財產品的權限 ["Earn"]|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -39,16 +38,20 @@ POST `/v5/user/update-sub-api`
 |readOnly |integer |`0`：可讀可寫. `1`：只讀 |
 |secret |string |總是 `""` |
 |permissions |Object |權限類型 |
-|> ContractTrade |array |合約交易的權限e |
+|> ContractTrade |array |合約交易的權限|
 |> Spot |array |現貨交易的權限 |
 |> Wallet |array |錢包的權限 |
-|> Options |array |USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 |
+|> Options |array |USDC合約和期權|
 |> Derivatives |array |統一帳戶權限 |
-|> CopyTrading |array |跟單交易的權限|
-|> BlockTrade |array |大宗交易的權限. 子帳戶暫不支持，總是[]|
 |> Exchange |array |兌換的權限 |
 |> Earn |array |理財產品的權限 ["Earn"]|
-|> NFT |array |廢棄, 總是[]|
+|> BlockTrade |array ｜子帳戶暫不支持，總是[]|
+|> FiatP2P |array |子帳戶暫不支持，總是[]|
+|> FiatBybitPay |array |子帳戶暫不支持，總是[]|
+|> FiatConvertBroker |array |子帳戶暫不支持，總是[]|
+|> Affiliate |array |子帳戶暫不支持，總是[]|
+|> NFT |array |**廢棄**, 總是[]|
+|> CopyTrading |array |**廢棄**, 總是[]|
 |ips |array |IP綁定|
 
 ### 請求示例
