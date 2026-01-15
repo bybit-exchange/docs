@@ -6,7 +6,7 @@ sidebar_position: 5
 那些被確認的報價單, 不管最終狀態如何, 該接口都會返回
 
 :::info
-僅返回通過open api進行兌換的歷史紀錄
+自 2025 年 9 月 10 日起，前端進行的閃兌也可以在此介面中查詢到
 :::
 
 ### HTTP 請求
@@ -15,7 +15,7 @@ GET `/v5/asset/exchange/query-convert-history`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](/v5/enum#convertaccounttype) |false |string |錢包類型 <li>支持傳遞多個, 用逗號分開 比如, <code>eb_convert_funding,eb_convert_uta</code></li><li>當不傳時, 默認返回所有錢包</li>|
+|[accountType](/v5/enum#convertaccounttype) |false |string |錢包類型 <br/><code>eb_convert_funding</code>: 資金錢包閃兌紀錄(API)<br/><code>eb_convert_uta</code>: uta錢包閃兌紀錄(API)<br/><code>funding</code>: 資金錢包普通幣幣兌換(網頁/APP)<br/><code>funding_fiat</code>: 資金錢包數法兌換(網頁/APP)<br/><code>funding_fbtc_convert</code>: 資金錢包FBTC兌換成BTC(網頁/APP)<br/><code>funding_block_trade</code>: 大宗兌換兌換(網頁/APP)<li>支持傳遞多個, 用逗號分開 比如, <code>eb_convert_funding,eb_convert_uta</code></li><li>當不傳時, 默認返回所有錢包</li>|
 |index |false |integer |頁碼 <li>從1開始</li><li>不傳時, 默認返回第一頁</li>|
 |limit |false |integer |每頁數量 <li>默認20條</li><li>最多支持100條, 大於100, 按照100返回</li>|
 
@@ -23,7 +23,7 @@ GET `/v5/asset/exchange/query-convert-history`
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |list |array&lt;object&gt;|報價單列表|
-|> [accountType](/v5/enum#convertaccounttype) |string|錢包類型|
+|> [accountType](/v5/enum#convertaccounttype) |string|<code>eb_convert_funding</code>: 資金錢包閃兌紀錄(API)<br/><code>eb_convert_uta</code>: uta錢包閃兌紀錄(API)<br/><code>funding</code>: 資金錢包普通幣幣兌換(網頁/APP)<br/><code>funding_fiat</code>: 資金錢包數法兌換(網頁/APP)<br/><code>funding_fbtc_convert</code>: 資金錢包FBTC兌換成BTC(網頁/APP)<br/><code>funding_block_trade</code>: 大宗兌換兌換(網頁/APP) |
 |> exchangeTxId |string |報價單ID, 和quoteTxId保持一致 |
 |> userId |string |用戶ID |
 |> fromCoin |string|兌出幣種|
