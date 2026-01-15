@@ -26,13 +26,14 @@ POST `/v5/user/update-api`
 |> ContractTrade |false |array |合約. ["Order","Position"] |
 |> Spot |false |array |現貨. ["SpotTrade"] |
 |> Wallet |false |array |錢包. ["AccountTransfer","SubMemberTransfer"] |
-|> Options |false |array |USDC合約. ["OptionsTrade"]|
-|> Derivatives |false |array |統一帳戶權限. 該字段失效, 因為系統將會自動根據您的帳戶類型(經典帳戶和統一帳戶)來決定是否增加該權限 |
-|> CopyTrading |false |array |跟單交易. ["CopyTrading"]|
+|> Options |false |array |USDC合約和期權. ["OptionsTrade"]|
+|> Derivatives |false |array |統一帳戶權限. ["DerivativesTrade"]|
 |> BlockTrade |false |array |大宗商品交易. ["BlockTrade"] |
 |> Exchange |false |array |兌換. ["ExchangeHistory"] |
 |> Earn |false |array |理財產品的權限 ["Earn"]|
-|> NFT |false |array |廢棄|
+|> FiatP2P |false|array |P2P `FiatP2POrder`, `Advertising` |
+|> FiatBybitPay |false|array |Bybit Pay `FaitPayOrder` |
+|> FiatConvertBroker |false|array |數法兌換權限 `FiatConvertBrokerOrder` |
 |> Affiliate |false |array |代理商查詢權限. ["Affiliate"] <ul><li>該權限僅作用於代理商</li><li>如果您需要該權限, 請確保移除所有其他權限項</li></ul> |
 
 ### 返回參數
@@ -47,13 +48,17 @@ POST `/v5/user/update-api`
 |> ContractTrade |array |合約交易的權限 |
 |> Spot |array |現貨交易的權限 |
 |> Wallet |array |錢包的權限 |
-|> Options |array |USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 |
+|> Options |array |USDC合約和期權|
 |> Derivatives |array |統一帳戶權限|
-|> CopyTrading |array |跟單交易的權限|
-|> BlockTrade |array |大宗交易的權限|
-|> Exchange |array |兌換的權限 |
 |> Earn |array |理財的權限 |
-|> NFT |array |廢棄, 總是[]|
+|> Exchange |array |兌換的權限 |
+|> FiatP2P |array |P2P `FiatP2POrder`, `Advertising` |
+|> FiatBybitPay |array |Bybit Pay `FaitPayOrder` |
+|> FiatConvertBroker |array |數法兌換權限 `FiatConvertBrokerOrder` |
+|> Affiliate |array |代理商查詢權限|
+|> BlockTrade |array |大宗交易的權限|
+|> NFT |array |**廢棄**, 總是[]|
+|> CopyTrading |array |**廢棄**, 總是[]|
 |ips |array |綁定的IP|
 
 ### 請求示例
