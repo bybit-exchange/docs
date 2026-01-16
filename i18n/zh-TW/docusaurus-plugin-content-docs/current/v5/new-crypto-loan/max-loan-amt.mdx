@@ -1,0 +1,92 @@
+---
+title: 獲取最大可借
+sidebar_label: 獲取最大可借
+sidebar_position: 5
+---
+
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+POST `/v5/crypto-loan-common/max-loan`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |借款幣種|
+|collateralList |false |array&lt;object&gt; ||
+|> amount |**true** |string |抵押品金額. 僅檢查資金錢包可用|
+|> ccy |**true** |string |抵押品幣種. 當要傳入"collateralList"時, `amount` & `ccy`兩個參數必填|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency |string |借款幣種|
+|maxLoan |string |根據已抵押數額, 以及入參時是否新增抵押, 計算出最多可借金額|
+|notionalUsd |string |美元價值|
+|remainingQuota |string |該帳戶(母子帳戶共享)在平台上**剩餘**可借額度|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-common/max-loan HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1768532512103
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 208
+
+{
+    "currency": "BTC",
+    "collateralList": [
+        {
+            "ccy": "XRP",
+            "amount": "1000"
+        },
+        {
+            "ccy": "USDT",
+            "amount": "1000"
+        }
+    ]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "currency": "BTC",
+        "maxLoan": "0.1722",
+        "notionalUsd": "16456.06",
+        "remainingQuota": "9999999.9421"
+    },
+    "retExtInfo": {},
+    "time": 1768533990031
+}
+```

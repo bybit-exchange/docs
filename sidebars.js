@@ -351,6 +351,7 @@ const sidebars = {
         'v5/new-crypto-loan/adjust-collateral',
         'v5/new-crypto-loan/ltv-adjust-history',
         'v5/new-crypto-loan/crypto-loan-position',
+        'v5/new-crypto-loan/max-loan-amt',
         {
           type: 'category',
           label: 'Flexible Loan',
