@@ -1,0 +1,92 @@
+---
+title: Obtain Max Loan Amount
+sidebar_label: Obtain Max Loan Amount
+sidebar_position: 5
+---
+
+> Permission: "Spot trade"<br/>
+> UID rate limit: 5 req / second
+
+### HTTP Request
+POST `/v5/crypto-loan-common/max-loan`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |Coin to borrow|
+|collateralList |false |array&lt;object&gt; ||
+|> amount |**true** |string |Collateral amount. Only check funding account balance|
+|> ccy |**true** |string |Collateral coin. Both `amount` & `ccy` are required, when you pass "collateralList"|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|currency |string |Coin to borrow|
+|maxLoan |string |Based on your current collateral, and with the option to add more collateral, you can borrow up to `maxLoan`|
+|notionalUsd |string |Nontional USD value|
+|remainingQuota |string |The **remaining** individual platform borrowing limit (shared between main and sub accounts)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/crypto-loan-common/max-loan HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1768532512103
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 208
+
+{
+    "currency": "BTC",
+    "collateralList": [
+        {
+            "ccy": "XRP",
+            "amount": "1000"
+        },
+        {
+            "ccy": "USDT",
+            "amount": "1000"
+        }
+    ]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "currency": "BTC",
+        "maxLoan": "0.1722",
+        "notionalUsd": "16456.06",
+        "remainingQuota": "9999999.9421"
+    },
+    "retExtInfo": {},
+    "time": 1768533990031
+}
+```
