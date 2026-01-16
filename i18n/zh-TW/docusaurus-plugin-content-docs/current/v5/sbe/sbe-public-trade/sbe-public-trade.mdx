@@ -9,8 +9,8 @@ sidebar_position: 3
 - **WSURL:** `wss://<your-public-stream-host>.bybit-aws.com/v5/public-sbe/<category>`.
 - **Topic:** `publicTrade.SBE.<symbol>`.
 - **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-- **推送頻率**：即時  
-- 訊息會依照每個商品（symbol）群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
+- **推送頻率**:即時  
+- 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
 
 ## 流程
 ### Ping / Pong (JSON 控制 frame)
@@ -51,23 +51,50 @@ sidebar_position: 3
 ## SBE XML 模板 (Public Trade)
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="quote.sbe" id="1" version="0" semanticVersion="1.0.0" description="Bybit market data streams SBE message schema" byteOrder="littleEndian" headerType="messageHeader">
+  <types>
+    <composite name="messageHeader" description="Template ID and length of message root">
+ <type name="blockLength" primitiveType="uint16"/>
+ <type name="templateId" primitiveType="uint16"/>
+ <type name="schemaId" primitiveType="uint16"/>
+ <type name="version" primitiveType="uint16"/>
+    </composite>
+    <composite name="varString8" description="Variable length UTF-8 string.">
+ <type name="length" primitiveType="uint8"/>
+ <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
+    </composite>
+    <enum name="SideType" encodingType="uint8">
+ <validValue name="UNKNOWN">0</validValue>
+ <validValue name="BUY">1</validValue>
+ <validValue name="SELL">2</validValue>
+ <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="BoolEnum" encodingType="uint8">
+ <validValue name="FALSE">0</validValue>
+ <validValue name="TRUE">1</validValue>
+ <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+  </types>
+  <!-- Stream event for "publicTrade.sbe.<symbol>" channel -->
   <sbe:message name="PublicTradeEvent" id="20002">
     <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>
     <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
     <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
     <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">
-      <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
-      <field id="2" name="price" type="int64" description="Price mantissa"/>
-      <field id="3" name="size" type="int64" description="Size mantissa"/>
-      <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
-      <field id="5" name="side" type="SideType" description="Side of taker"/>
-      <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
-      <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
-      <field id="8" name="execId" type="int64" description="Trade ID"/>
-      <data id="100" name="execIdString" type="varString8"/>
+ <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
+ <field id="2" name="price" type="int64" description="Price mantissa"/>
+ <field id="3" name="size" type="int64" description="Size mantissa"/>
+ <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
+ <field id="5" name="side" type="SideType" description="Side of taker"/>
+ <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
+ <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
+ <field id="8" name="execId" type="int64" description="Trade ID"/>
+ <data id="100" name="execIdString" type="varString8"/>
     </group>
     <data id="55" name="symbol" type="varString8"/>
   </sbe:message>
+</sbe:messageSchema>
 ```
 
 ## 欄位參考
@@ -75,24 +102,35 @@ sidebar_position: 3
 **Message:** `PublicTradeEvent` (id = 20002)
 
 | 欄位名稱 | ID | SBE 型別 | 單位 / 格式 | 備註 |
-|---|---:|---|---|---|
-| ts | 1 | int64 | µs | 推送側（dispatcher）產生資料的系統時間戳|
+|---|---|---|---|---|
+| ts | 1 | int64 | µs | 推送側(dispatcher)產生資料的系統時間戳|
 | priceExponent | 2 | int8 | exponent | 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent` |
 | sizeExponent | 3 | int8 | exponent | 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent` |
-| tradeItems | 40 | group(`groupSize16Encoding`) | - | 重複的成交項目（Repeating trade items） |
-| symbol | 55 | varString8 | UTF-8 | 1-byte 長度 + bytes，例如：`0x07 "BTCUSDT"` |
+| tradeItems | 40 | group<br/>(`groupSize16Encoding`) | - | 重複的成交項目(Repeating trade items) |
+| symbol | 55 | varString8 | UTF-8 | 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"` |
 
 ### 每個 tradeItems[i] 條目
-| 欄位（id） | 型別 | 說明 |
+| 欄位(id) | 型別 | 說明 |
 |------------|------|------|
-| fillTime（1） | int64 | 成交撮合時間戳（µs） |
-| price（2） | int64 | 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。 |
-| size（3） | int64 | 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。 |
-| seq（4） | int64 | 撮合序列 ID |
-| side（5） | SideType | 「吃單方方向」（常見為 Buy/Sell） |
-| isBlockTrade（6） | uint8 | 是否為大宗交易（0 = 非 blockTrade，1 = blockTrade） |
-| isRPI（7） | uint8 | 是否為 RPI（0 = 非 RPI，1 = RPI） |
-| execId（8） | int64 | 成交 ID |
+| fillTime(1) | int64 | 成交撮合時間戳(µs) |
+| price(2) | int64 | 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。 |
+| size(3) | int64 | 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。 |
+| seq(4) | int64 | 撮合序列 ID |
+| side(5) | [SideType](#sidetype)(uint8) | taker單方向 |
+| isBlockTrade(6) | [BoolEnum](#boolenum)(uint8) | 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade) |
+| isRPI(7) | [BoolEnum](#boolenum)(uint8) | 是否為 RPI(0 = 非 RPI,1 = RPI) |
+| execId(8) | int64 | 成交 ID |
+
+#### SideType
+* `0`: UNKOWN
+* `1`: BUY
+* `2`: SELL
+* `254`: NON_REPRESENTABLE
+
+#### BoolEnum
+* `0`: FALSE
+* `1`: TRUE
+* `254`: NON_REPRESENTABLE
 
 ## 接入示例
 
