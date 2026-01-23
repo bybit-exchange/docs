@@ -42,7 +42,7 @@ POST `/v5/order/create-batch`
 |> orderIv |false |string |Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed. `orderIv` has a higher priority when `price` is passed as well |
 |> [timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK">Time in force</a> <ul><li>Market order will use `IOC` directly</li><li>If not passed, `GTC` is used by default</li> </ul>|
 |> [positionIdx](../enum#positionidx) |false |integer |Used to identify positions in different position modes. Under hedge-mode, this param is **required**<ul><li>`0`: one-way mode</li><li>`1`: hedge-mode Buy side</li><li>`2`: hedge-mode Sell side</li></ul>|
-|> orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures, Perps & Spot: orderLinkId rules_:<br/><ul><li>optional param</li><li>always unique</li>_`option` orderLinkId rules_:<br/><ul><li>**required** param</li><li>always unique</li></ul></ul>|
+|> orderLinkId |false |string |User customised order ID. A max of 36 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.<br/>_Futures, Perps & Spot: orderLinkId rules:_ <ul><li>optional param</li><li>always unique</li></ul>_Options orderLinkId rules:_ <ul><li>**required** param</li><li>always unique</li></ul>|
 |> takeProfit |false |string |Take profit price|
 |> stopLoss |false |string |Stop loss price|
 |> [tpTriggerBy](../enum#triggerby) |false |string |The price type to trigger take profit. `MarkPrice`, `IndexPrice`, default: `LastPrice`.<br/>Valid for `linear`, `inverse` |
