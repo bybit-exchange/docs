@@ -11,8 +11,8 @@ GET `/v5/asset/exchange/query-coin-list`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](/v5/enum#convertaccounttype) |**true** |string |錢包類型 <li>`eb_convert_funding`</li><li>`eb_convert_uta`</li><li>`eb_convert_spot`</li><li>`eb_convert_contract`</li><li>`eb_convert_inverse`</li>|
-|coin |false |string |兌出幣種<li>當side=0時, 該字段會被忽略</li> |
+|[accountType](/v5/enum#convertaccounttype) |**true** |string |錢包類型 <ul><li>`eb_convert_funding`</li><li>`eb_convert_uta`</li><li>`eb_convert_spot`</li><li>`eb_convert_contract`</li><li>`eb_convert_inverse`</li></ul>|
+|coin |false |string |兌出幣種<ul><li>當side=0時, 該字段會被忽略</li></ul> |
 |side |false |integer |`0`: 查詢兌出幣種列表, 會返回幣種餘額<br/>`1`: 有傳coin的話, 會根據兌出幣種查詢支持的兌入幣種列表|
 
 ### 響應參數
@@ -25,7 +25,7 @@ GET `/v5/asset/exchange/query-coin-list`
 |> iconNight |string |幣種圖標url (夜間模式)|
 |> accuracyLength |integer |幣種精度 |
 |> coinType |string |幣種類型. `crypto`(加密貨幣)|
-|> balance |string |幣種餘額 <li>當side=0時, 返回餘額不可直接用於兌換. 要獲取準確的可用於兌換的餘額, 應當帶上side=1和指定coin來查</li> |
+|> balance |string |幣種餘額 <ul><li>當side=0時, 返回餘額不可直接用於兌換. 要獲取準確的可用於兌換的餘額, 應當帶上side=1和指定coin來查</li></ul> |
 |> uBalance |string |幣種折成USDT的價值|
 |> singleFromMinLimit |string |單筆交易最小兌出幣種數量|
 |> singleFromMaxLimit |string |單筆交易最大兌出幣種數量|

@@ -5,10 +5,10 @@ sidebar_position: 12
 ---
 獲取歷史報價資訊。**每秒最多 50 次請求**  
 :::info
-<li>獲取使用者發送或接收的報價資訊，從資料庫查詢，有延遲</li>
+<ul><li>獲取使用者發送或接收的報價資訊，從資料庫查詢，有延遲</li>
 <li>同時傳遞 quoteId 和 quoteLinkId 時，以 quoteId 為準</li>
 <li>同時傳遞 rfqId 和 rfqLinkId 時，以 rfqId 為準</li>
-<li>根據報價的創建時間倒序排列</li>
+<li>根據報價的創建時間倒序排列</li></ul>
 :::
 
 ### HTTP 請求
@@ -20,7 +20,7 @@ GET `/v5/rfq/quote-list`
 |rfqId |**false** |string|詢價單 ID|
 |quoteId |**false** |string|報價單 ID|
 |quoteLinkId |**false**  |string |報價單自定義 ID；當 traderType 為 `request` 時，此字段無效|
-|traderType |**false**  |string |交易者類型，`quote` 或 `request`，默認為 `quote`<li>`Request`：詢價方，查詢自己接收到的報價</li><li>`Quote`：報價方，查詢自己發布的報價</li>|
+|traderType |**false**  |string |交易者類型，`quote` 或 `request`，默認為 `quote`<ul><li>`Request`：詢價方，查詢自己接收到的報價</li><li>`Quote`：報價方，查詢自己發布的報價</li></ul>|
 |status |false |string |詢價單狀態：`Active`、`Canceled`、`PendingFill`、`Filled`、`Expired`、`Failed` |
 |limit |**false** |integer|返回的項目數量，最多 100 項，默認 50 項|
 |cursor |**false** |string|翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode|

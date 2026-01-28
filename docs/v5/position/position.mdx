@@ -22,7 +22,7 @@ GET `/v5/position/list`
 |[category](../v5/enum#category) |**true** |string |Product type `linear`, `inverse`, `option`|
 |symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only<ul><li>If `symbol` passed, it returns data regardless of having position or not.</li><li>If `symbol`=null and `settleCoin` specified, it returns position size greater than zero.</li></ul>|
 |baseCoin |false |string |Base coin, uppercase only. `option` **only**. Return all option positions if not passed|
-|settleCoin |false |string |Settle coin<li>`linear`: either `symbol` or `settleCoin` is **required**. `symbol` has a higher priority</li> |
+|settleCoin |false |string |Settle coin<ul><li>`linear`: either `symbol` or `settleCoin` is **required**. `symbol` has a higher priority</li></ul> |
 |limit |false |integer |Limit for data size per page. [`1`, `200`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -38,18 +38,18 @@ GET `/v5/position/list`
 |> symbol |string  |Symbol name |
 |> side |string  |Position side. `Buy`: long, `Sell`: short<br/>return an empty string `""` for an empty position|
 |> size |string  |Position size, always positive |
-|> avgPrice |string  |Average entry price <li>For USDC Perp & Futures, it indicates average entry price, and it will not be changed with 8-hour session settlement</li> |
+|> avgPrice |string  |Average entry price <ul><li>For USDC Perp & Futures, it indicates average entry price, and it will not be changed with 8-hour session settlement</li></ul> |
 |> positionValue | string  |Position value|
-|> autoAddMargin | integer |Whether to add margin automatically when using isolated margin mode <li>`0`: false</li><li>`1`: true</li> |
+|> autoAddMargin | integer |Whether to add margin automatically when using isolated margin mode <ul><li>`0`: false</li><li>`1`: true</li></ul> |
 |> [positionStatus](../v5/enum#positionstatus) | String |Position status. `Normal`, `Liq`, `Adl` |
 |> leverage | string  |Position leverage<br/>_for portfolio margin mode, this field returns "", which means leverage rules are invalid_|
 |> breakEvenPrice| string | Break even price, Only for `linear`,`inverse`. <li> breakeven_price = (entry_price * qty - realized_pnl) / (qty - abs(qty) * max(taker fee rate, 0.00055))</li>|
 |> markPrice | string  |Mark price |
 |> liqPrice | string  |Position liquidation price <ul><li>Isolated margin: <br/>it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li><li>Cross margin:<br/>it is an <b>estimated</b> price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice</li></ul>_this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_|
-|> positionIM | string  |Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)<li>Portfolio margin mode: returns ""</li> |
-|> positionIMByMp | string  |Initial margin calculated by mark price, the same value as `positionIM`<li>Portfolio margin mode: returns ""</li>|
-|> positionMM | string  |Maintenance margin, the same value as `positionMMByMp`<li>Portfolio margin mode: returns ""</li> |
-|> positionMMByMp | string  |Maintenance margin calculated by mark price, the same value as `positionMM`<li>Portfolio margin mode: returns ""</li> |
+|> positionIM | string  |Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)<ul><li>Portfolio margin mode: returns ""</li></ul> |
+|> positionIMByMp | string  |Initial margin calculated by mark price, the same value as `positionIM`<ul><li>Portfolio margin mode: returns ""</li></ul>|
+|> positionMM | string  |Maintenance margin, the same value as `positionMMByMp`<ul><li>Portfolio margin mode: returns ""</li></ul> |
+|> positionMMByMp | string  |Maintenance margin calculated by mark price, the same value as `positionMM`<ul><li>Portfolio margin mode: returns ""</li></ul> |
 |> takeProfit | string  |Take profit price|
 |> stopLoss | string  |Stop loss price|
 |> trailingStop | string  |Trailing stop (the distance from market price)|
@@ -66,8 +66,8 @@ GET `/v5/position/list`
 |> updatedTime | string  |Position updated timestamp (ms)|
 |> seq |long |Cross sequence, used to associate each fill and each position update<ul><li>Different symbols may have the same seq, please use seq + symbol to check unique</li><li>Returns `"-1"` if the symbol has never been traded</li><li>Returns the seq updated by the last transaction when there are settings like leverage, risk limit</li></ul>|
 |> isReduceOnly |boolean |Useful when Bybit lower the risk limit <ul><li>`true`: Only allowed to reduce the position. You can consider a series of measures, e.g., lower the risk limit, decrease leverage or reduce the position, add margin, or cancel orders, after these operations, you can call [confirm new risk limit](../v5/position/confirm-mmr#) endpoint to check if your position can be removed the reduceOnly mark</li><li>`false`: There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
-|> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
-|> leverageSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system<li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul>|
+|> mmrSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system<ul><li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul></ul>|
+|> leverageSysUpdatedTime |string |Useful when Bybit lower the risk limit <ul><li>When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system</li>When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system<ul><li>It returns the timestamp when the system operates, and if you manually operate, there is no timestamp</li><li>Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp</li><li>Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others</li></ul></ul>|
 |> tpslMode | string  |**Deprecated**, always "Full"|
 |> bustPrice | string  |**Deprecated**, always `""`|
 |> positionBalance | string  |**Deprecated**, can refer to `positionIM` or `positionIMByMp` field|

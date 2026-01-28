@@ -15,9 +15,9 @@ GET `/v5/asset/exchange/query-convert-history`
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|[accountType](/v5/enum#convertaccounttype) |false |string |錢包類型 <br/><code>eb_convert_funding</code>: 資金錢包閃兌紀錄(API)<br/><code>eb_convert_uta</code>: uta錢包閃兌紀錄(API)<br/><code>funding</code>: 資金錢包普通幣幣兌換(網頁/APP)<br/><code>funding_fiat</code>: 資金錢包數法兌換(網頁/APP)<br/><code>funding_fbtc_convert</code>: 資金錢包FBTC兌換成BTC(網頁/APP)<br/><code>funding_block_trade</code>: 大宗兌換兌換(網頁/APP)<li>支持傳遞多個, 用逗號分開 比如, <code>eb_convert_funding,eb_convert_uta</code></li><li>當不傳時, 默認返回所有錢包</li>|
-|index |false |integer |頁碼 <li>從1開始</li><li>不傳時, 默認返回第一頁</li>|
-|limit |false |integer |每頁數量 <li>默認20條</li><li>最多支持100條, 大於100, 按照100返回</li>|
+|[accountType](/v5/enum#convertaccounttype) |false |string |錢包類型 <br/><code>eb_convert_funding</code>: 資金錢包閃兌紀錄(API)<br/><code>eb_convert_uta</code>: uta錢包閃兌紀錄(API)<br/><code>funding</code>: 資金錢包普通幣幣兌換(網頁/APP)<br/><code>funding_fiat</code>: 資金錢包數法兌換(網頁/APP)<br/><code>funding_fbtc_convert</code>: 資金錢包FBTC兌換成BTC(網頁/APP)<br/><code>funding_block_trade</code>: 大宗兌換兌換(網頁/APP)<ul><li>支持傳遞多個, 用逗號分開 比如, <code>eb_convert_funding,eb_convert_uta</code></li><li>當不傳時, 默認返回所有錢包</li></ul>|
+|index |false |integer |頁碼 <ul><li>從1開始</li><li>不傳時, 默認返回第一頁</li></ul>|
+|limit |false |integer |每頁數量 <ul><li>默認20條</li><li>最多支持100條, 大於100, 按照100返回</li></ul>|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -32,7 +32,7 @@ GET `/v5/asset/exchange/query-convert-history`
 |> toCoinType |string|兌入幣種類型. `crypto`|
 |> fromAmount |string|兌出幣種數量|
 |> toAmount |string|兌入幣種數量|
-|> exchangeStatus |string|兌換狀態 <li>init</li><li>processing</li><li>success</li><li>failure</li>|
+|> exchangeStatus |string|兌換狀態 <ul><li>init</li><li>processing</li><li>success</li><li>failure</li></ul>|
 |> extInfo |object||
 |>> paramType |string|如果您在[申請報價](apply-quote#)接口中中有發送該字段, 則這裡會釋出該字段|
 |>> paramValue |string|如果您在[申請報價](apply-quote#)接口中中有發送該字段, 則這裡會釋出該字段|

@@ -30,15 +30,15 @@ GET `/v5/market/rpi_orderbook`
 |s |string |Symbol name |
 |> b |array |Bids. For `snapshot` stream. Sorted by price in descending order  |
 |>> b[0] |string |Bid price |
-|>> b[1] |string |None RPI bid size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li>|
-|>> b[2] |string |RPI bid size <li>When a bid RPI order crosses with a non-RPI ask price, the quantity of the bid RPI becomes invalid and is hidden</li>|
+|>> b[1] |string |None RPI bid size <ul><li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li></ul>|
+|>> b[2] |string |RPI bid size <ul><li>When a bid RPI order crosses with a non-RPI ask price, the quantity of the bid RPI becomes invalid and is hidden</li></ul>|
 |> a |array |Asks. For `snapshot` stream. Sorted by price in ascending order  |
 |>> a[0] |string |Ask price |
-|>> a[1] |string |None RPI ask size <li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li> |
-|>> a[2] |string |RPI ask size  <li>When an ask RPI order crosses with a non-RPI bid price, the quantity of the ask RPI becomes invalid and is hidden</li>|
+|>> a[1] |string |None RPI ask size <ul><li>The delta data has size=0, which means that all quotations for this price have been filled or cancelled</li></ul> |
+|>> a[2] |string |RPI ask size  <ul><li>When an ask RPI order crosses with a non-RPI bid price, the quantity of the ask RPI becomes invalid and is hidden</li></ul>|
 |ts |integer |The timestamp (ms) that the system generates the data |
 |u |integer |Update ID, is always in sequence corresponds to `u` in the 50-level [WebSocket RPI orderbook stream](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook-rpi)|
-|seq |integer |Cross sequence <li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li>|
+|seq |integer |Cross sequence <ul><li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier. </li></ul>|
 |cts |integer |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](../websocket/public/trade#)|
 
 ---

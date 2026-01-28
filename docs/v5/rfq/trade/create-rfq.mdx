@@ -18,10 +18,10 @@ POST `/v5/rfq/create-rfq`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |counterparties |**true** |array|Spread combination symbol name|
-|rfqLinkId |false |string |Custom RFQ ID<li>The length should be between 1-32 bits </li> <li>Combination of letters (case sensitive) and numbers</li> <li>An rfqLinkId expires after three months – after which it can be reused</li><li>Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. </li>|
+|rfqLinkId |false |string |Custom RFQ ID<ul><li>The length should be between 1-32 bits </li> <li>Combination of letters (case sensitive) and numbers</li> <li>An rfqLinkId expires after three months – after which it can be reused</li><li>Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. </li></ul>|
 |anonymous |false |boolean |Whether or not it is anonymous inquiry. The default value is `false`. When it is `true` the identity of the inquiring party will not be revealed even after the transaction is concluded.|
 |strategyType |false |string |Strategy type, if it is a custom inquiry, strategyType is `custom`, if it is a product combination provided by the system, it is the combination type; the default is `custom`; non-custom combinations have rate optimization, currently 50%; the transaction rate between LPs is currently 30%|
-|list |**true** |array of objects |Combination transaction list <li>Use <a href="/docs/v5/rfq/trade/rfq-config">Get RFQ Configuration</a> to confirm the maximum length of the combination (`maxLegs`)</li><li>The base coin and settle coin of all combinations must be the same</li><li>Symbols under the same category must be unique</li>|
+|list |**true** |array of objects |Combination transaction list <ul><li>Use <a href="/docs/v5/rfq/trade/rfq-config">Get RFQ Configuration</a> to confirm the maximum length of the combination (`maxLegs`)</li><li>The base coin and settle coin of all combinations must be the same</li><li>Symbols under the same category must be unique</li></ul>|
 |> category |**true** |string |Product type: Unified account:  `spot`, `linear`,`option` |
 |> symbol |**true** |string |Name of the transaction contract. No inquiries are allowed in the last 30 minutes before contract settlement |
 |> side |**true** |string |Inquiry transaction direction: `Buy` , `Sell` |

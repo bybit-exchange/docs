@@ -23,16 +23,16 @@ sidebar_position: 1
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |可選參數, 可用於匹配響應。長度不能超過36個字串。 <li>若不傳, 該字段不會從響應種返回</li>|
+|reqId|false |string |可選參數, 可用於匹配響應。長度不能超過36個字串。 <ul><li>若不傳, 該字段不會從響應種返回</li></ul>|
 |op |**true** |string |Op類型 `auth`|
 |args |**true** |string |["api密鑰", 過期時間, "簽名"]. 請參閱[這裡](/v5/ws/connect#鑒權)來生成簽名 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|reqId |string |<li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li>|
-|retCode |integer |<li>`0`: 鑒權成功</li><li>`20001`: 重複請求</li><li>`10004`: 無效簽名</li><li>`10001`: 參數錯誤</li>|
-|retMsg |string |<li>`OK`</li><li>報錯信息</li> |
+|reqId |string |<ul><li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li></ul>|
+|retCode |integer |<ul><li>`0`: 鑒權成功</li><li>`20001`: 重複請求</li><li>`10004`: 無效簽名</li><li>`10001`: 參數錯誤</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>報錯信息</li></ul> |
 |op |string |Op類型 |
 |connId |string |連接的唯一id |
 
@@ -62,22 +62,22 @@ sidebar_position: 1
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li>|
+|reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <ul><li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li></ul>|
 |header|**true** |object |請求頭|
 |> X-BAPI-TIMESTAMP|**true** |string |當前時間戳|
 |> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
 |> Referer|false |string |API broker用戶返佣標識|
-|op |**true** |string |Op類型 <li>`order.create`: 創建訂單</li> <li>`order.amend`: 修改訂單</li> <li>`order.cancel`: 撤銷訂單</li>|
-|args |**true** |array&ltobject&gt |參數數組, 僅支持一個訂單 <li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li> |
+|op |**true** |string |Op類型 <ul><li>`order.create`: 創建訂單</li> <li>`order.amend`: 修改訂單</li> <li>`order.cancel`: 撤銷訂單</li></ul>|
+|args |**true** |array&ltobject&gt |參數數組, 僅支持一個訂單 <ul><li>`order.create`: 請參閱[創建訂單請求參數](../../order/create-order#請求參數)</li><li>`order.amend`: 請參閱[修改訂單參數](../../order/amend-order#請求參數)</li><li>`order.cancel`: 請參閱[撤銷訂單參數](../../order/cancel-order#請求參數)</li></ul> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|reqId |string |<li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li>|
-|retCode |integer |<li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li>|
-|retMsg |string |<li>`OK`</li><li>`""`</li><li>報錯信息</li> |
+|reqId |string |<ul><li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li></ul>|
+|retCode |integer |<ul><li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>`""`</li><li>報錯信息</li></ul> |
 |op |string |Op類型 |
-|data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <li>`order.create`: 請參閱[創建訂單響應參數](../../order/create-order#響應參數)</li><li>`order.amend`: 請參閱[修改訂單響應參數](../../order/amend-order#響應參數)</li><li>`order.cancel`: 請參閱[取消訂單響應參數](../../order/cancel-order#響應參數)</li> |
+|data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <ul><li>`order.create`: 請參閱[創建訂單響應參數](../../order/create-order#響應參數)</li><li>`order.amend`: 請參閱[修改訂單響應參數](../../order/amend-order#響應參數)</li><li>`order.cancel`: 請參閱[取消訂單響應參數](../../order/cancel-order#響應參數)</li></ul> |
 |retExtInfo|object |總是為空的對象|
 |header |object |響應頭信息 |
 |> TraceId |string |Trace ID, 用於追蹤請求鏈路 (內部使用)|
@@ -149,22 +149,22 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li>|
+|reqId|false |string |請求reqId, 可作為請求的唯一標識, 若有傳, 則響應會返回該字段 <ul><li>當傳, 需保證唯一, 否則將會拿到錯誤 "20006"</li></ul>|
 |header|**true** |object |請求頭|
 |> X-BAPI-TIMESTAMP|**true** |string |當前時間戳|
 |> X-BAPI-RECV-WINDOW|false |string |默認5000(毫秒). 請求的時間需要滿足該公式: <i>Bybit服務器時間 - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit服務器時間 + 1000</i>|
 |> Referer|false |string |API broker用戶返佣標識|
-|op |**true** |string |Op類型 <li>`order.create-batch`: 批量創建訂單</li> <li>`order.amend-batch`: 批量修改訂單</li> <li>`order.cancel-batch`: 批量撤銷訂單</li>|
-|args |**true** |array&ltobject&gt |參數數組 <li>`order.create-batch`: 請參閱[批量創建訂單請求參數](../../order/batch-place#請求參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單參數](../../order/batch-amend#請求參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單參數](../../order/batch-cancel#請求參數)</li> |
+|op |**true** |string |Op類型 <ul><li>`order.create-batch`: 批量創建訂單</li> <li>`order.amend-batch`: 批量修改訂單</li> <li>`order.cancel-batch`: 批量撤銷訂單</li></ul>|
+|args |**true** |array&ltobject&gt |參數數組 <ul><li>`order.create-batch`: 請參閱[批量創建訂單請求參數](../../order/batch-place#請求參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單參數](../../order/batch-amend#請求參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單參數](../../order/batch-cancel#請求參數)</li></ul> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|reqId |string |<li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li>|
-|retCode |integer |<li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li>|
-|retMsg |string |<li>`OK`</li><li>`""`</li><li>報錯信息</li> |
+|reqId |string |<ul><li>若請求有傳, 則響應存在該字段</li><li>若請求不傳, 則響應沒有該字段</li></ul>|
+|retCode |integer |<ul><li>`0`: 成功</li><li>`10403`: 超過了IP頻率. 單個IP最多允許3000次/秒的請求頻率</li><li>`10404`: 1. op類型未找到; 2. `category`不支持/未找到</li><li>`10429`: 觸發系統級別的頻率保護</li><li>`20006`: `reqId`重複</li><li>`10016`: 1.內部錯誤; 2. 服務重啟</li><li>`10019`: ws下單服務正在重啟, 拒絕新的請求, 正在處理中的請求不受影響. 您可以重新/新建連接, 會分配到正常的服務上</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>`""`</li><li>報錯信息</li></ul> |
 |op |string |Op類型 |
-|data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <li>`order.create-batch`: 請參閱[批量創建訂單響應參數](../../order/batch-place#響應參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單響應參數](../../order/batch-amend#響應參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單響應參數](../../order/batch-cancel#響應參數)</li> |
+|data |object |業務數據, 和rest api響應的`result`字段業務數據一致 <ul><li>`order.create-batch`: 請參閱[批量創建訂單響應參數](../../order/batch-place#響應參數)</li><li>`order.amend-batch`: 請參閱[批量修改訂單響應參數](../../order/batch-amend#響應參數)</li><li>`order.cancel-batch`: 請參閱[批量撤銷訂單響應參數](../../order/batch-cancel#響應參數)</li></ul> |
 |retExtInfo|object ||
 |> list|array&ltobject&gt ||
 |>> code|number |成功/錯誤碼|

@@ -30,15 +30,15 @@ GET `/v5/market/rpi_orderbook`
 |s |string |合約名稱 |
 |> b |array |Bid, 買方. `snapshot`數據，是按照價格從大到小 |
 |>> b[0] |string |買方報價 |
-|>> b[1] |string |買方非RPI數量 <li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li>|
-|>> b[2] |string |買方RPI數量 <li>當買方RPI與賣方非RPI價格交叉，買方RPI數量失效隱藏</li>|
+|>> b[1] |string |買方非RPI數量 <ul><li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li></ul>|
+|>> b[2] |string |買方RPI數量 <ul><li>當買方RPI與賣方非RPI價格交叉，買方RPI數量失效隱藏</li></ul>|
 |> a |array |Ask, 賣方. `snapshot`數據，是按照價格從小到大 |
 |>> a[0] |string |賣方報價 |
-|>> a[1] |string |賣方非RPI數量 <li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li> |
-|>> a[2] |string |賣方RPI數量 <li>當賣方RPI與買方非RPI價格交叉，賣方RPI數量失效隱藏</li>｜
+|>> a[1] |string |賣方非RPI數量 <ul><li>增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷</li></ul> |
+|>> a[2] |string |賣方RPI數量 <ul><li>當賣方RPI與買方非RPI價格交叉，賣方RPI數量失效隱藏</li></ul>｜
 |ts |integer |行情服務生成數據的時間戳 (毫秒) |
 |u |integer |更新id, 對應[RPI 深度](https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook-rpi) 中的 `u`|
-|seq |integer |撮合版本號 <li>該字段可以用於關聯不同檔位的orderbook, 如果值越小, 則說明數據生成越早</li>|
+|seq |integer |撮合版本號 <ul><li>該字段可以用於關聯不同檔位的orderbook, 如果值越小, 則說明數據生成越早</li></ul>|
 |cts |integer |產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](../websocket/public/trade#)頻道中的`T`進行關聯|
 
 ---
