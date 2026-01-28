@@ -7,7 +7,7 @@ sidebar_position: 3
 ## 總覽
 - **Channel:** 僅支援MMWS域名
 - **WSURL:** `wss://<your-public-stream-host>.bybit-aws.com/v5/public-sbe/<category>`.
-- **Topic:** `publicTrade.SBE.<symbol>`.
+- **Topic:** `publicTrade.sbe.<symbol>`.
 - **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
 - **推送頻率**:即時  
 - 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
@@ -29,24 +29,18 @@ sidebar_position: 3
 
 ### 訂閱
 
-- Topic format: `publicTrade.SBE.<symbol>`
+- Topic format: `publicTrade.sbe.<symbol>`
 
 **訂閱示例**
 
 ```json
-{"op": "subscribe","args": ["publicTrade.SBE.BTCUSDT"]}
+{"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}
 ```
 
 **訂閱回報**
 
 ```json
-{
-  "id": "trade-001",
-  "topic": "publicTrade.SBE.BTCUSDT",
-  "type": "snapshot",
-  "ts": 1760000000000,
-  "data": [...]
-}
+{"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}
 ```
 ## SBE XML 模板 (Public Trade)
 
@@ -146,28 +140,34 @@ WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"
 SYMBOL = "BTCUSDT"
 TOPIC = f"publicTrade.sbe.{SYMBOL}"
 
-# ---------------- SBE helpers ----------------
 
+# ---------------- SBE helpers ----------------
 def apply_exp(mantissa: int, exp: int) -> float:
     # display = mantissa * 10^exp
     # exp can be negative
-    return mantissa * (10.0 ** exp)
+    return mantissa * (10.0**exp)
+
 
 def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:
     if off + 1 > len(buf):
         raise ValueError("varString8: missing length")
+
     ln = buf[off]
     off += 1
+
     if off + ln > len(buf):
         raise ValueError("varString8: out of range")
-    s = buf[off:off+ln].decode("utf-8", errors="replace")
+
+    s = buf[off : off + ln].decode("utf-8", errors="replace")
     off += ln
     return s, off
+
 
 def parse_public_trade_event(buf: bytes) -> dict:
     # messageHeader: <HHHH
     if len(buf) < 8:
         raise ValueError("too short for header")
+
     block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)
     off = 8
 
@@ -177,13 +177,20 @@ def parse_public_trade_event(buf: bytes) -> dict:
     # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)
     if len(buf) < off + 8 + 1 + 1:
         raise ValueError("too short for fixed fields")
-    ts = struct.unpack_from("<q", buf, off)[0]; off += 8
-    price_exp = struct.unpack_from("<b", buf, off)[0]; off += 1
-    size_exp  = struct.unpack_from("<b", buf, off)[0]; off += 1
+
+    ts = struct.unpack_from("<q", buf, off)[0]
+    off += 8
+
+    price_exp = struct.unpack_from("<b", buf, off)[0]
+    off += 1
+
+    size_exp = struct.unpack_from("<b", buf, off)[0]
+    off += 1
 
     # group header: blockLength(uint16), numInGroup(uint16)
     if len(buf) < off + 4:
         raise ValueError("too short for group header")
+
     grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)
     off += 4
 
@@ -192,40 +199,57 @@ def parse_public_trade_event(buf: bytes) -> dict:
         entry_start = off
 
         # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)
-        fill_time = struct.unpack_from("<q", buf, off)[0]; off += 8
-        price_m   = struct.unpack_from("<q", buf, off)[0]; off += 8
-        size_m    = struct.unpack_from("<q", buf, off)[0]; off += 8
-        seq       = struct.unpack_from("<q", buf, off)[0]; off += 8
+        fill_time = struct.unpack_from("<q", buf, off)[0]
+        off += 8
 
-        side = struct.unpack_from("<B", buf, off)[0]; off += 1
-        is_block = struct.unpack_from("<B", buf, off)[0]; off += 1
-        is_rpi   = struct.unpack_from("<B", buf, off)[0]; off += 1
+        price_m = struct.unpack_from("<q", buf, off)[0]
+        off += 8
 
-        exec_id = struct.unpack_from("<q", buf, off)[0]; off += 8
+        size_m = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        seq = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        side = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        is_block = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        is_rpi = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        exec_id = struct.unpack_from("<q", buf, off)[0]
+        off += 8
 
         # Skip any future extension bytes in fixed part
         fixed_consumed = off - entry_start
         if fixed_consumed < grp_block_len:
-            off += (grp_block_len - fixed_consumed)
+            off += grp_block_len - fixed_consumed
         elif fixed_consumed > grp_block_len:
             # schema mismatch vs blockLength
-            raise ValueError(f"group blockLength too small: {grp_block_len} < {fixed_consumed}")
+            raise ValueError(
+                f"group blockLength too small: {grp_block_len} < {fixed_consumed}"
+            )
 
         exec_id_str, off = read_varstring8(buf, off)
 
-        trades.append({
-            "fillTime": fill_time,
-            "priceMantissa": price_m,
-            "sizeMantissa": size_m,
-            "price": apply_exp(price_m, price_exp),
-            "size": apply_exp(size_m, size_exp),
-            "seq": seq,
-            "side": side,
-            "isBlockTrade": bool(is_block),
-            "isRPI": bool(is_rpi),
-            "execId": exec_id,
-            "execIdString": exec_id_str,
-        })
+        trades.append(
+            {
+                "fillTime": fill_time,
+                "priceMantissa": price_m,
+                "sizeMantissa": size_m,
+                "price": apply_exp(price_m, price_exp),
+                "size": apply_exp(size_m, size_exp),
+                "seq": seq,
+                "side": side,
+                "isBlockTrade": bool(is_block),
+                "isRPI": bool(is_rpi),
+                "execId": exec_id,
+                "execIdString": exec_id_str,
+            }
+        )
 
     symbol, off = read_varstring8(buf, off)
 
@@ -244,37 +268,53 @@ def parse_public_trade_event(buf: bytes) -> dict:
         "parsed_length": off,
     }
 
-# ---------------- WS handlers ----------------
 
+# ---------------- WS handlers ----------------
 def on_open(ws):
     ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))
     print("subscribed:", TOPIC)
 
+
 def on_message(ws, message):
     if isinstance(message, (bytes, bytearray)):
         evt = parse_public_trade_event(message)
+
         # print first trade only (example)
         if evt["tradeItems"]:
             t0 = evt["tradeItems"][0]
-            print(evt["symbol"], "trades=", len(evt["tradeItems"]),
-                  "first:", t0["price"], "@", t0["size"], "seq=", t0["seq"])
+            print(
+                evt["symbol"],
+                "trades=",
+                len(evt["tradeItems"]),
+                "first:",
+                t0["price"],
+                "@",
+                t0["size"],
+                "seq=",
+                t0["seq"],
+            )
     else:
         print("TEXT:", message)
+
 
 def on_error(ws, err):
     print("WS error:", err)
 
+
 def on_close(ws, *_):
     print("closed")
+
 
 if __name__ == "__main__":
     websocket.enableTrace(False)
     ws = websocket.WebSocketApp(
-        WS_URL, on_open=on_open, on_message=on_message,
-        on_error=on_error, on_close=on_close
+        WS_URL,
+        on_open=on_open,
+        on_message=on_message,
+        on_error=on_error,
+        on_close=on_close,
     )
-    ws.run_forever(ping_interval=20, ping_timeout=10)
-    
+    ws.run_forever(ping_interval=20, ping_timeout=10)  
 ```
 
 ### Golang
