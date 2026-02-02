@@ -76,15 +76,14 @@ sidebar_position: 3
     <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
     <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
     <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">
- <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
- <field id="2" name="price" type="int64" description="Price mantissa"/>
- <field id="3" name="size" type="int64" description="Size mantissa"/>
- <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
- <field id="5" name="side" type="SideType" description="Side of taker"/>
- <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
- <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
- <field id="8" name="execId" type="int64" description="Trade ID"/>
- <data id="100" name="execIdString" type="varString8"/>
+      <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
+      <field id="2" name="price" type="int64" description="Price mantissa"/>
+      <field id="3" name="size" type="int64" description="Size mantissa"/>
+      <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
+      <field id="5" name="side" type="SideType" description="Side of taker"/>
+      <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
+      <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
+      <data id="100" name="execId" type="varString8" description="Trade ID"/>
     </group>
     <data id="55" name="symbol" type="varString8"/>
   </sbe:message>
@@ -233,8 +232,6 @@ def parse_public_trade_event(buf: bytes) -> dict:
                 f"group blockLength too small: {grp_block_len} < {fixed_consumed}"
             )
 
-        exec_id_str, off = read_varstring8(buf, off)
-
         trades.append(
             {
                 "fillTime": fill_time,
@@ -247,7 +244,6 @@ def parse_public_trade_event(buf: bytes) -> dict:
                 "isBlockTrade": bool(is_block),
                 "isRPI": bool(is_rpi),
                 "execId": exec_id,
-                "execIdString": exec_id_str,
             }
         )
 
@@ -368,7 +364,6 @@ type TradeItem struct {
         IsBlockTrade bool    `json:"isBlockTrade"`
         IsRPI        bool    `json:"isRPI"`
         ExecID       int64   `json:"execId"`
-        ExecIDString string  `json:"execIdString"`
 }
 
 type PublicTradeEvent struct {
@@ -446,11 +441,6 @@ func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {
                         return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
                 }
 
-                execIDStr, off2, err := readVarString8(buf, off)
-                if err != nil {
-                        return nil, err
-                }
-                off = off2
 
                 items = append(items, TradeItem{
                         FillTime:     fillTime,
@@ -463,7 +453,6 @@ func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {
                         IsBlockTrade: isBlock != 0,
                         IsRPI:        isRpi != 0,
                         ExecID:       execID,
-                        ExecIDString: execIDStr,
                 })
         }
 
