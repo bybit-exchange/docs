@@ -56,9 +56,9 @@ POST `/v5/order/create`
 |side |**true** |string |`Buy`, `Sell`|
 |[orderType](../enum#ordertype) |**true** |string |訂單類型. `Market`, `Limit`|
 |qty |**true** |string |訂單數量 <ul><li>現貨: 可以通過設置`marketUnit`來表示市價單qty的單位, 市價買單默認是`quoteCoin`, 市價賣單默認是`baseCoin`</li><li>期貨和期權: 總是以base coin作為qty的單位</li><li>期貨: 如果傳入`qty`="0"以及`reduceOnly`="true", 則可以平掉對應合約可達單個訂單允許的最大qty的倉位, 參照[查詢可交易產品的規格信息](../market/instrument#)接口裡的字段`maxMktOrderQty`或者`maxOrderQty`</li></ul>|
-|marketUnit |false |string |**現貨交易**創建市價單時給入參`qty`指定的單位, 支持orderFilter=Order, tpslOrder 和 StopOrder<li>`baseCoin`: 比如, 買BTCUSDT, 則"qty"的單位是BTC</li><li>`quoteCoin`: 比如, 賣BTCUSDT, 則"qty"的單位是USDT</li>|
+|marketUnit |false |string |**現貨交易**創建市價單時給入參`qty`指定的單位, 支持orderFilter=Order, tpslOrder 和 StopOrder<ul><li>`baseCoin`: 比如, 買BTCUSDT, 則"qty"的單位是BTC</li><li>`quoteCoin`: 比如, 賣BTCUSDT, 則"qty"的單位是USDT</li></ul>|
 |slippageToleranceType |false |string |市價單滑點容差類型, `TickSize`, `Percent`<ul><li>不支持止盈止損、條件單</li><li><b>TickSize</b>: <br/>限制買單最高價格 = ask1 + <code>slippageTolerance</code> x tickSize; <br/>限制賣單最低價格 = bid1 - <code>slippageTolerance</code> x tickSize</li><li><b>Percent</b>: <br/>限制買單最高價格 = ask1 x (1 + <code>slippageTolerance</code> x 0.01); <br/>限制賣單最低價格 = bid1 x (1 - `slippageTolerance` x 0.01)</li></ul>|
-|slippageTolerance |false |string |滑點容差數值 <li>`TickSize`: 範圍是[1, 10000], 僅整數</li><li>`Percent`: 範圍是[0.01, 10], 最多2位小數</li>|
+|slippageTolerance |false |string |滑點容差數值 <ul><li>`TickSize`: 範圍是[1, 10000], 僅整數</li><li>`Percent`: 範圍是[0.01, 10], 最多2位小數</li></ul>|
 |price |false |string |訂單價格. <ul><li>市價單將會忽視該字段</li><li>請通過該[接口](../market/instrument#response-parameters)確認最低價格和精度要求</li><li>如果有持倉, 確保價格優於強平價格</li></ul>|
 |triggerDirection |false |integer |條件單參數. 用於辨別期望的方向. <ul><li>`1`: 當市場價上漲到了`triggerPrice`時觸發條件單</li><li>`2`: 當市場價下跌到了`triggerPrice`時觸發條件單</li></ul>對`linear`和`inverse`有效|
 |orderFilter |false |string |指定訂單品種. `Order`: 普通單,`tpslOrder`: 止盈止損單,`StopOrder`: 條件單. 若不傳, 默認`Order`<br/>僅對現貨有效|
@@ -67,19 +67,19 @@ POST `/v5/order/create`
 |orderIv |false |string |隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1. `orderIv`比`price`有更高的優先級 |
 |[timeInForce](../enum#timeinforce) |false |string |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001044">訂單執行策略</a><ul><li>市價單，系統直接使用`IOC`</li><li>若不傳，默認使用`GTC`</li></ul>|
 |[positionIdx](../enum#positionidx) |false |integer |倉位標識, 用戶不同倉位模式. 該字段對於雙向持倉模式是**必傳**:<ul><li>`0`: 單向持倉</li><li>`1`: 買側雙向持倉</li><li>`2`: 賣側雙向持倉</li></ul>|
-|orderLinkId |false |string |用戶自定義訂單Id <li>category=`option`時，該參數必傳</li>|
-|takeProfit |false |string |止盈價格 <li>支持期貨、現貨和期權</li> |
-|stopLoss |false |string |止損價格 <li>支持期貨、現貨和期權</li> |
-|[tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型 <li>`MarkPrice`</li><li>`IndexPrice`</li><li>`LastPrice`(默認)</li><br/>僅對`linear`和`inverse`有效|
-|[slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型 <li>`MarkPrice`</li><li>`IndexPrice`</li><li>`LastPrice`(默認)</li><br/>僅對`linear`和`inverse`有效|
+|orderLinkId |false |string |用戶自定義訂單Id <ul><li>category=`option`時，該參數必傳</li></ul>|
+|takeProfit |false |string |止盈價格 <ul><li>支持期貨、現貨和期權</li></ul> |
+|stopLoss |false |string |止損價格 <ul><li>支持期貨、現貨和期權</li></ul> |
+|[tpTriggerBy](../enum#triggerby) |false |string |觸發止盈的價格類型 <ul><li>`MarkPrice`</li><li>`IndexPrice`</li><li>`LastPrice`(默認)</li></ul><br/>僅對`linear`和`inverse`有效|
+|[slTriggerBy](../enum#triggerby) |false |string |觸發止損的價格類型 <ul><li>`MarkPrice`</li><li>`IndexPrice`</li><li>`LastPrice`(默認)</li></ul><br/>僅對`linear`和`inverse`有效|
 |reduceOnly |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001047">什麼是只減倉?</a> `true` 將這筆訂單設為只減倉 <ul><li>當減倉時, reduceOnly=true**必傳**</li><li>只減倉單的止盈止損不生效</li></ul>對`linear`, `inverse`和`option`有效|
 |closeOnTrigger |false |boolean |<a href="https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050">什麼是觸發後平倉委託?</a>此選項可以確保您的止損單被用於減倉（平倉）而非加倉，並且在可用保證金不足的情況下，取消其他委託，騰出保證金以確保平倉委託的執行.<br/>僅對`linear`和`inverse`有效 |
 |[smpType](../enum#smptype) |false |string |Smp執行類型. [什麼是SMP?](../smp)|
-|mmp |false |boolean |做市商保護, `true` 表示該訂單是做市商保護訂單. [什麼是做市商保護?](../account/set-mmp)<li>僅`option`有效</li>|
+|mmp |false |boolean |做市商保護, `true` 表示該訂單是做市商保護訂單. [什麼是做市商保護?](../account/set-mmp)<ul><li>僅`option`有效</li></ul>|
 |tpslMode |false |string |止盈止損模式 <ul><li>`Full`: 全部倉位止盈止損.  此時, tpOrderType或者slOrderType必須傳`Market`</li><li>`Partial`: 部分倉位止盈止損(下單時沒有size選項, 實際上創建tpsl訂單時, 是按照實際成交的數量來生成止盈止損). 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳**且為Partial</li></ul>僅對`linear`和`inverse`有效|
 |tpLimitPrice |false |string |觸發止盈後轉換為限價單的價格 <ul><li>`linear` & `inverse`: 僅作用於當tpslMode=Partial以及tpOrderType=Limit時</li><li>現貨: 參數必傳當創建訂單時帶了`takeProfit` 和 `tpOrderType=Limit`</li></ul>|
 |slLimitPrice |false |string |觸發止損後轉換為限價單的價格 <ul><li>`linear` & `inverse`: 僅作用於當tpslMode=Partial以及slOrderType=Limit時</li><li>現貨: 參數必傳當創建訂單時帶了`stopLoss` 和 `slOrderType=Limit`</li></ul>|
-|tpOrderType |false |string |止盈觸發後的訂單類型 <ul>category="linear"或"inverse": `Market`(默認), `Limit`<br/>對於tpslMode=Full, 僅支持tpOrderType=Market<li>現貨: <br/>`Market`: 當帶了參數"takeProfit", <br/>`Limit`: 當帶了參數"takeProfit" 和 "tpLimitPrice" </li></ul>|
+|tpOrderType |false |string |止盈觸發後的訂單類型 <ul>category="linear"或"inverse": `Market`(默認), `Limit`<br/>對於tpslMode=Full, 僅支持tpOrderType=Market<ul><li>現貨: <br/>`Market`: 當帶了參數"takeProfit", <br/>`Limit`: 當帶了參數"takeProfit" 和 "tpLimitPrice" </li></ul></ul>|
 |slOrderType |false |string |止損觸發後的訂單類型 <ul><li>category="linear"或"inverse": `Market`(默認), `Limit`<br/>對於tpslMode=Full, 僅支持slOrderType=Market</li><li>現貨: <br/>`Market`: 當帶了參數"stopLoss", <br/>`Limit`: 當帶了參數"stopLoss" 和 "slLimitPrice" </li></ul>|
 |bboSideType |false |string |<ul><li>`Queue`: 用orderbook 上與`side`同向的order price掛單 </li><li>`Counterparty`: 用orderbook 上與`side`異向的order price掛單 </li></ul> 對`linear`和`inverse`有效|
 |bboLevel |false |string |`1`,`2`,`3`,`4`,`5` 對`linear`和`inverse`有效|

@@ -26,7 +26,7 @@ GET `/v5/market/instruments-info`
 |symbol |false |string |合約名稱|
 |[symbolType](../enum#symboltype) |false |string |交易對所屬區域:僅对`linear`,`inverse`,`spot`有效|
 |[status](../enum#status) |false |string |交易對狀態篩選 <ul><li>`linear` & `inverse` & `spot ` 默認返回`Trading`狀態的交易對</li><li>`option` 默認返回 `PreLaunch`, `Trading`, `Delivering`狀態的交易對</li><li>現貨 僅有`Trading`狀態</li><li>`linear` & `inverse`: status=PreLaunch可以查詢到盤前交易的合約</li></ul>|
-|baseCoin |false |string |交易貨幣. 僅對期貨/期權有效 <li>對於期權, 默認返回baseCoin為BTC的</li>|
+|baseCoin |false |string |交易貨幣. 僅對期貨/期權有效 <ul><li>對於期權, 默認返回baseCoin為BTC的</li></ul>|
 |limit |false |integer |每頁數量限制. [`1`, `1000`]. 默認: `500`|
 |cursor |false |string |游標，用於翻頁|
 
@@ -68,7 +68,7 @@ GET `/v5/market/instruments-info`
             <td>> launchTime</td><td>string</td><td>發佈時間 (ms) </td>
         </tr>
         <tr>
-            <td>> deliveryTime</td><td>string</td><td>交割時間 (ms)<li>交割合約交割時間</li><li>永續合約下架時間</li></td>
+            <td>> deliveryTime</td><td>string</td><td>交割時間 (ms)<ul><li>交割合約交割時間</li><li>永續合約下架時間</li></ul></td>
         </tr>
         <tr>
             <td>> deliveryFeeRate</td><td>string</td><td>交割費率. 僅對交割合約有效</td>
@@ -155,10 +155,10 @@ GET `/v5/market/instruments-info`
             <td>>> priceLimitRatioY</td><td>string</td><td>參數Y</td>
         </tr>
         <tr>
-            <td>> isPreListing</td><td>boolean</td><td><li>該合約是否為盤前合約</li><li>當盤前合約轉為正式合約後, 值將變成false</li></td>
+            <td>> isPreListing</td><td>boolean</td><td><ul><li>該合約是否為盤前合約</li><li>當盤前合約轉為正式合約後, 值將變成false</li></ul></td>
         </tr>
         <tr>
-            <td>> preListingInfo</td><td>object</td><td><li>如果isPreListing=false, preListingInfo=null</li><li>如果isPreListing=true, preListingInfo是object</li> </td>
+            <td>> preListingInfo</td><td>object</td><td><ul><li>如果isPreListing=false, preListingInfo=null</li><li>如果isPreListing=true, preListingInfo是object</li></ul> </td>
         </tr>
         <tr>
             <td>>> <a href="../enum#curauctionphase">curAuctionPhase</a></td><td>string</td><td>當前的盤前階段</td>
@@ -179,7 +179,7 @@ GET `/v5/market/instruments-info`
             <td>>> auctionFeeInfo</td><td>object</td><td>盤前交易手續費率信息</td>
         </tr>
          <tr>
-            <td>>>> auctionFeeRate</td><td>string</td><td>集合競價期間的手續費率 <li>目前, 僅在連續競價期間才會產生手續費</li></td>
+            <td>>>> auctionFeeRate</td><td>string</td><td>集合競價期間的手續費率 <ul><li>目前, 僅在連續競價期間才會產生手續費</li></ul></td>
         </tr>
          <tr>
             <td>>>> takerFeeRate</td><td>string</td><td>連續競價期間的吃單成交手續費率</td>

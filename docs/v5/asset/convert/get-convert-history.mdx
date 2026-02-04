@@ -15,7 +15,7 @@ GET `/v5/asset/exchange/query-convert-history`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[accountType](/v5/enum#convertaccounttype) |false |string |Wallet type <br/><code>eb_convert_funding</code>: funding wallet convert records via API<br/><code>eb_convert_uta</code>: uta wallet convert records via API<br/><code>funding</code>: normal crypto convert via web/app<br/><code>funding_fiat</code>: fiat crypto convert via web/app<br/><code>funding_fbtc_convert</code>: FBTC to BTC convert via web/app<br/><code>funding_block_trade</code>: block trade convert via web/app<li>Supports passing multiple types, separated by comma e.g., <code>eb_convert_funding,eb_convert_uta</code></li><li>Return all wallet types data if not passed</li>|
+|[accountType](/v5/enum#convertaccounttype) |false |string |Wallet type <br/><code>eb_convert_funding</code>: funding wallet convert records via API<br/><code>eb_convert_uta</code>: uta wallet convert records via API<br/><code>funding</code>: normal crypto convert via web/app<br/><code>funding_fiat</code>: fiat crypto convert via web/app<br/><code>funding_fbtc_convert</code>: FBTC to BTC convert via web/app<br/><code>funding_block_trade</code>: block trade convert via web/app    <ul><li>Supports passing multiple types, separated by comma e.g., <code>eb_convert_funding,eb_convert_uta</code></li><li>Return all wallet types data if not passed</li></ul>|
 |index |false |integer |Page number <li>started from 1</li><li>1st page by default</li>|
 |limit |false |integer |Page size <li>20 records by default</li><li>up to 100 records, return 100 when exceeds 100</li>|
 
@@ -32,7 +32,7 @@ GET `/v5/asset/exchange/query-convert-history`
 |> toCoinType |string|To coin type. `crypto`|
 |> fromAmount |string|From coin amount (amount to sell)|
 |> toAmount |string|To coin amount (amount to buy according to exchange rate)|
-|> exchangeStatus |string|Exchange status <li>init</li><li>processing</li><li>success</li><li>failure</li>|
+|> exchangeStatus |string|Exchange status <ul><li>init</li><li>processing</li><li>success</li><li>failure</li></ul>|
 |> extInfo |object||
 |>> paramType |string|This field is published when you send it in the [Request a Quote ](apply-quote#)|
 |>> paramValue |string|This field is published when you send it in the [Request a Quote ](apply-quote#)|

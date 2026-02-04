@@ -24,16 +24,16 @@ sidebar_position: 1
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |Optional field, used to match the response <li>If not passed, this field will not be returned in response</li>|
+|reqId|false |string |Optional field, used to match the response <ul><li>If not passed, this field will not be returned in response</li></ul>|
 |op |**true** |string |Op type. `auth`|
 |args |**true** |string |["api key", expiry timestamp, "signature"]. Please click [here](/v5/ws/connect#authentication) to generate signature |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|reqId |string |<li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li>|
-|retCode |integer |<li>`0`: auth success</li><li>`20001`: repeat auth</li><li>`10004`: invalid sign</li><li>`10001`: param error</li>|
-|retMsg |string |<li>`OK`</li><li>Error message</li> |
+|reqId |string |<ul><li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li></ul>|
+|retCode |integer |<ul><li>`0`: auth success</li><li>`20001`: repeat auth</li><li>`10004`: invalid sign</li><li>`10001`: param error</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>Error message</li></ul> |
 |op |string |Op type |
 |connId |string |Connection id, the unique id for the connection |
 
@@ -63,22 +63,22 @@ sidebar_position: 1
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |Used to identify the uniqueness of the request, the response will return it when passed. The length cannot exceed 36 characters. <li>If passed, it can't be duplicated, otherwise you will get "20006"</li>|
+|reqId|false |string |Used to identify the uniqueness of the request, the response will return it when passed. The length cannot exceed 36 characters. <ul><li>If passed, it can't be duplicated, otherwise you will get "20006"</li></ul>|
 |header|**true** |object |Request headers|
 |> X-BAPI-TIMESTAMP|**true** |string |Current timestamp|
 |> X-BAPI-RECV-WINDOW|false |string |5000(ms) by default. Request will be rejected when not satisfy this rule: <i>Bybit_server_time - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit_server_time + 1000</i>|
 |> Referer|false |string |The referer identifier for API broker user|
-|op |**true** |string |Op type <li>`order.create`: create an order</li> <li>`order.amend`: amend an order</li> <li>`order.cancel`: cancel an order</li>|
-|args |**true** |array&ltobject&gt |Args array, support one item only for now <li>`order.create`: refer to [create order request](../../order/create-order#request-parameters)</li><li>`order.amend`: refer to [amend order request](../../order/amend-order#request-parameters)</li><li>`order.cancel`: refer to [cancel order request](../../order/cancel-order#request-parameters)</li> |
+|op |**true** |string |Op type <ul><li>`order.create`: create an order</li> <li>`order.amend`: amend an order</li> <li>`order.cancel`: cancel an order</li></ul>|
+|args |**true** |array&ltobject&gt |Args array, support one item only for now <ul><li>`order.create`: refer to [create order request](../../order/create-order#request-parameters)</li><li>`order.amend`: refer to [amend order request](../../order/amend-order#request-parameters)</li><li>`order.cancel`: refer to [cancel order request](../../order/cancel-order#request-parameters)</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|reqId |string |<li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li>|
-|retCode |integer |<li>`0`: success</li><li>`10403`: exceed IP rate limit. 3000 requests per second per IP</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li>|
-|retMsg |string |<li>`OK`</li><li>`""`</li><li>Error message</li> |
+|reqId |string |<ul><li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li></ul>|
+|retCode |integer |<ul><li>`0`: success</li><li>`10403`: exceed IP rate limit. 3000 requests per second per IP</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>`""`</li><li>Error message</li></ul> |
 |op |string |Op type |
-|data |object |Business data, keep the same as `result` on rest api response <li>`order.create`: refer to [create order response](../../order/create-order#response-parameters)</li><li>`order.amend`: refer to [amend order response](../../order/amend-order#response-parameters)</li><li>`order.cancel`: refer to [cancel order response](../../order/cancel-order#response-parameters)</li> |
+|data |object |Business data, keep the same as `result` on rest api response <ul><li>`order.create`: refer to [create order response](../../order/create-order#response-parameters)</li><li>`order.amend`: refer to [amend order response](../../order/amend-order#response-parameters)</li><li>`order.cancel`: refer to [cancel order response](../../order/cancel-order#response-parameters)</li></ul> |
 |retExtInfo|object |Always empty object|
 |header |object |Header info |
 |> TraceId |string |Trace ID, used to track the trip of request |
@@ -150,22 +150,22 @@ The ack of create/amend/cancel order request indicates that the request is succe
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|reqId|false |string |Used to identify the uniqueness of the request, the response will return it when passed. The length cannot exceed 36 characters. <li>If passed, it can't be duplicated, otherwise you will get "20006"</li>|
+|reqId|false |string |Used to identify the uniqueness of the request, the response will return it when passed. The length cannot exceed 36 characters. <ul><li>If passed, it can't be duplicated, otherwise you will get "20006"</li></ul>|
 |header|**true** |object |Request headers|
 |> X-BAPI-TIMESTAMP|**true** |string |Current timestamp|
 |> X-BAPI-RECV-WINDOW|false |string |5000(ms) by default. Request will be rejected when not satisfy this rule: <i>Bybit_server_time - X-BAPI-RECV-WINDOW <= X-BAPI-TIMESTAMP < Bybit_server_time + 1000</i>|
 |> Referer|false |string |The referer identifier for API broker user|
-|op |**true** |string |Op type <li>`order.create-batch`: batch create orders</li> <li>`order.amend-batch`: batch amend orders</li> <li>`order.cancel-batch`: batch cancel orders</li>|
-|args |**true** |array&ltobject&gt |Args array <li>`order.create-batch`: refer to [Batch Place Order request](../../order/batch-place#request-parameters)</li><li>`order.amend-batch`: refer to [Batch Amend Order request](../../order/batch-amend#request-parameters)</li><li>`order.cancel-batch`: refer to [Batch Cancel Order request](../../order/batch-cancel#request-parameters)</li> |
+|op |**true** |string |Op type <ul><li>`order.create-batch`: batch create orders</li> <li>`order.amend-batch`: batch amend orders</li> <li>`order.cancel-batch`: batch cancel orders</li></ul>|
+|args |**true** |array&ltobject&gt |Args array <ul><li>`order.create-batch`: refer to [Batch Place Order request](../../order/batch-place#request-parameters)</li><li>`order.amend-batch`: refer to [Batch Amend Order request](../../order/batch-amend#request-parameters)</li><li>`order.cancel-batch`: refer to [Batch Cancel Order request](../../order/batch-cancel#request-parameters)</li></ul> |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|reqId |string |<li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li>|
-|retCode |integer |<li>`0`: success</li><li>`10403`: exceed IP rate limit. 3000 requests per second per IP</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li>|
-|retMsg |string |<li>`OK`</li><li>`""`</li><li>Error message</li> |
+|reqId |string |<ul><li>If it is passed on the request, then it is returned in the response</li><li>If it is not passed, then it is not returned in the response</li></ul>|
+|retCode |integer |<ul><li>`0`: success</li><li>`10403`: exceed IP rate limit. 3000 requests per second per IP</li><li>`10404`: 1. op type is not found; 2. `category` is not correct/supported</li><li>`10429`: System level frequency protection</li><li>`20006`: reqId is duplicated</li><li>`10016`: 1. internal server error; 2. Service is restarting</li><li>`10019`: ws trade service is restarting, do not accept new request, but the request in the process is not affected. You can build new connection to be routed to normal service</li></ul>|
+|retMsg |string |<ul><li>`OK`</li><li>`""`</li><li>Error message</li></ul> |
 |op |string |Op type |
-|data |object |Business data, keep the same as `result` on rest api response <li>`order.create-batch`: refer to [Batch Place Order response](../../order/batch-place#response-parameters)</li><li>`order.amend-batch`: refer to [Batch Amend Order response](../../order/batch-amend#response-parameters)</li><li>`order.cancel-batch`: refer to [Batch Cancel Order response](../../order/batch-cancel#response-parameters)</li> |
+|data |object |Business data, keep the same as `result` on rest api response <ul><li>`order.create-batch`: refer to [Batch Place Order response](../../order/batch-place#response-parameters)</li><li>`order.amend-batch`: refer to [Batch Amend Order response](../../order/batch-amend#response-parameters)</li><li>`order.cancel-batch`: refer to [Batch Cancel Order response](../../order/batch-cancel#response-parameters)</li></ul> |
 |retExtInfo|object ||
 |> list|array&ltobject&gt ||
 |>> code|number |Success/error code|
