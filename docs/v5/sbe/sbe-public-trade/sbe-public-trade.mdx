@@ -430,8 +430,6 @@ return nil, fmt.Errorf("too short for trade entry %d", i)
     isBlock := uint8(buf[off]); off++
     isRpi := uint8(buf[off]); off++
 
-    execID := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
-
     fixedConsumed := off - entryStart
     if fixedConsumed < int(grpBlockLen) {
 off += int(grpBlockLen) - fixedConsumed
@@ -439,6 +437,11 @@ off += int(grpBlockLen) - fixedConsumed
 return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
     }
 
+    execID, off2, err := readVarString8(buf, off)
+        if err != nil {
+    return nil, err
+        }
+        off = off2
 
     items = append(items, TradeItem{
 FillTime:fillTime,
