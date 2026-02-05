@@ -317,200 +317,201 @@ if __name__ == "__main__":
 package main
 
 import (
-   "encoding/binary"
-   "encoding/json"
-   "fmt"
-   "log"
-   "math"
-   "time"
+        "encoding/binary"
+        "encoding/json"
+        "fmt"
+        "log"
+        "math"
+        "time"
 
-   "github.com/gorilla/websocket"
+        "github.com/gorilla/websocket"
 )
 
 const (
-   WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"
-   Symbol = "BTCUSDT"
-   Topic  = "publicTrade.sbe." + Symbol
+        WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"
+        Symbol = "BTCUSDT"
+        Topic  = "publicTrade.sbe." + Symbol
 )
 
 func applyExp(mantissa int64, exp int8) float64 {
-   return float64(mantissa) * math.Pow10(int(exp))
+        return float64(mantissa) * math.Pow10(int(exp))
 }
 
 func readVarString8(buf []byte, off int) (string, int, error) {
-   if off+1 > len(buf) {
-    return "", off, fmt.Errorf("varString8: missing length")
-   }
-   ln := int(buf[off])
-   off++
-   if off+ln > len(buf) {
-    return "", off, fmt.Errorf("varString8: out of range")
-   }
-   s := string(buf[off : off+ln])
-   off += ln
-   return s, off, nil
+        if off+1 > len(buf) {
+                return "", off, fmt.Errorf("varString8: missing length")
+        }
+        ln := int(buf[off])
+        off++
+        if off+ln > len(buf) {
+                return "", off, fmt.Errorf("varString8: out of range")
+        }
+        s := string(buf[off : off+ln])
+        off += ln
+        return s, off, nil
 }
 
 type TradeItem struct {
-   FillTimeint64   `json:"fillTime"`
-   PriceMant    int64   `json:"priceMantissa"`
-   SizeMantint64   `json:"sizeMantissa"`
-   Price   float64 `json:"price"`
-   Size    float64 `json:"size"`
-   Seqint64   `json:"seq"`
-   Side    uint8   `json:"side"`
-   IsBlockTrade bool    `json:"isBlockTrade"`
-   IsRPI   bool    `json:"isRPI"`
-   ExecID  int64   `json:"execId"`
+        FillTime     int64   `json:"fillTime"`
+        PriceMant    int64   `json:"priceMantissa"`
+        SizeMant     int64   `json:"sizeMantissa"`
+        Price        float64 `json:"price"`
+        Size         float64 `json:"size"`
+        Seq          int64   `json:"seq"`
+        Side         uint8   `json:"side"`
+        IsBlockTrade bool    `json:"isBlockTrade"`
+        IsRPI        bool    `json:"isRPI"`
+        ExecID       string   `json:"execId"`
 }
 
 type PublicTradeEvent struct {
-   Header struct {
-    BlockLength uint16 `json:"blockLength"`
-    TemplateID  uint16 `json:"templateId"`
-    SchemaID    uint16 `json:"schemaId"`
-    Versionuint16 `json:"version"`
-   } `json:"header"`
+        Header struct {
+                BlockLength uint16 `json:"blockLength"`
+                TemplateID  uint16 `json:"templateId"`
+                SchemaID    uint16 `json:"schemaId"`
+                Version     uint16 `json:"version"`
+        } `json:"header"`
 
-   Tsint64  `json:"ts"`
-   PriceExponent int8   `json:"priceExponent"`
-   SizeExponent  int8   `json:"sizeExponent"`
-   TradeItems    []TradeItem `json:"tradeItems"`
-   Symbol   string `json:"symbol"`
-   ParsedLength  int    `json:"parsed_length"`
+        Ts            int64       `json:"ts"`
+        PriceExponent int8        `json:"priceExponent"`
+        SizeExponent  int8        `json:"sizeExponent"`
+        TradeItems    []TradeItem `json:"tradeItems"`
+        Symbol        string      `json:"symbol"`
+        ParsedLength  int         `json:"parsed_length"`
 }
 
 func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {
-   if len(buf) < 8 {
-    return nil, fmt.Errorf("too short for header")
-   }
-   off := 0
-   blk := binary.LittleEndian.Uint16(buf[off : off+2])
-   tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])
-   sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])
-   ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])
-   off += 8
+        if len(buf) < 8 {
+                return nil, fmt.Errorf("too short for header")
+        }
+        off := 0
+        blk := binary.LittleEndian.Uint16(buf[off : off+2])
+        tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])
+        sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])
+        ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])
+        off += 8
 
-   if tid != 20002 {
-    return nil, fmt.Errorf("unexpected templateId=%d", tid)
-   }
-   if off+8+1+1 > len(buf) {
-    return nil, fmt.Errorf("too short for fixed fields")
-   }
-   ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))
-   off += 8
-   priceExp := int8(buf[off])
-   off++
-   sizeExp := int8(buf[off])
-   off++
+        if tid != 20002 {
+                return nil, fmt.Errorf("unexpected templateId=%d", tid)
+        }
+        if off+8+1+1 > len(buf) {
+                return nil, fmt.Errorf("too short for fixed fields")
+        }
+        ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))
+        off += 8
+        priceExp := int8(buf[off])
+        off++
+        sizeExp := int8(buf[off])
+        off++
 
-   // group header
-   if off+4 > len(buf) {
-    return nil, fmt.Errorf("too short for group header")
-   }
-   grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])
-   numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])
-   off += 4
+        // group header
+        if off+4 > len(buf) {
+                return nil, fmt.Errorf("too short for group header")
+        }
+        grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])
+        numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])
+        off += 4
 
-   items := make([]TradeItem, 0, int(numInGroup))
-   for i := 0; i < int(numInGroup); i++ {
-    entryStart := off
+        items := make([]TradeItem, 0, int(numInGroup))
+        for i := 0; i < int(numInGroup); i++ {
+                entryStart := off
 
-    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8
-    if off+needMin > len(buf) {
-return nil, fmt.Errorf("too short for trade entry %d", i)
-    }
+                needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8
+                if off+needMin > len(buf) {
+                        return nil, fmt.Errorf("too short for trade entry %d", i)
+                }
 
-    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
-    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
-    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
-    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
 
-    side := uint8(buf[off]); off++
-    isBlock := uint8(buf[off]); off++
-    isRpi := uint8(buf[off]); off++
+                side := uint8(buf[off]); off++
+                isBlock := uint8(buf[off]); off++
+                isRpi := uint8(buf[off]); off++
 
-    fixedConsumed := off - entryStart
-    if fixedConsumed < int(grpBlockLen) {
-off += int(grpBlockLen) - fixedConsumed
-    } else if fixedConsumed > int(grpBlockLen) {
-return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
-    }
+                fixedConsumed := off - entryStart
+                if fixedConsumed < int(grpBlockLen) {
+                        off += int(grpBlockLen) - fixedConsumed
+                } else if fixedConsumed > int(grpBlockLen) {
+                        return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
+                }
 
-    execID, off2, err := readVarString8(buf, off)
+                 execID, off2, err := readVarString8(buf, off)
+                if err != nil {
+                        return nil, err
+                }
+                off = off2
+
+
+                items = append(items, TradeItem{
+                        FillTime:     fillTime,
+                        PriceMant:    priceM,
+                        SizeMant:     sizeM,
+                        Price:        applyExp(priceM, priceExp),
+                        Size:         applyExp(sizeM, sizeExp),
+                        Seq:          seq,
+                        Side:         side,
+                        IsBlockTrade: isBlock != 0,
+                        IsRPI:        isRpi != 0,
+                        ExecID:       execID,
+                })
+        }
+
+        symbol, off2, err := readVarString8(buf, off)
         if err != nil {
-    return nil, err
+                return nil, err
         }
         off = off2
 
-    items = append(items, TradeItem{
-FillTime:fillTime,
-PriceMant:    priceM,
-SizeMant:sizeM,
-Price:   applyExp(priceM, priceExp),
-Size:    applyExp(sizeM, sizeExp),
-Seq:seq,
-Side:    side,
-IsBlockTrade: isBlock != 0,
-IsRPI:   isRpi != 0,
-ExecID:  execID,
-    })
-   }
-
-   symbol, off2, err := readVarString8(buf, off)
-   if err != nil {
-    return nil, err
-   }
-   off = off2
-
-   evt := &PublicTradeEvent{
-    Ts:ts,
-    PriceExponent: priceExp,
-    SizeExponent:  sizeExp,
-    TradeItems:    items,
-    Symbol:   symbol,
-    ParsedLength:  off,
-   }
-   evt.Header.BlockLength = blk
-   evt.Header.TemplateID = tid
-   evt.Header.SchemaID = sid
-   evt.Header.Version = ver
-   return evt, nil
+        evt := &PublicTradeEvent{
+                Ts:            ts,
+                PriceExponent: priceExp,
+                SizeExponent:  sizeExp,
+                TradeItems:    items,
+                Symbol:        symbol,
+                ParsedLength:  off,
+        }
+        evt.Header.BlockLength = blk
+        evt.Header.TemplateID = tid
+        evt.Header.SchemaID = sid
+        evt.Header.Version = ver
+        return evt, nil
 }
 
 func main() {
-   d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}
-   c, _, err := d.Dial(WSURL, nil)
-   if err != nil {
-    log.Fatal(err)
-   }
-   defer c.Close()
+        d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}
+        c, _, err := d.Dial(WSURL, nil)
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer c.Close()
 
-   sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})
-   if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {
-    log.Fatal(err)
-   }
-   log.Println("subscribed:", Topic)
+        sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})
+        if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {
+                log.Fatal(err)
+        }
+        log.Println("subscribed:", Topic)
 
-   for {
-    mt, msg, err := c.ReadMessage()
-    if err != nil {
-log.Fatal(err)
-    }
-    if mt == websocket.BinaryMessage {
-evt, err := parsePublicTradeEvent(msg)
-if err != nil {
-   log.Println("decode error:", err)
-   continue
-}
-if len(evt.TradeItems) > 0 {
-   t0 := evt.TradeItems[0]
-   log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",
-    evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)
-}
-    } else {
-log.Println("TEXT:", string(msg))
-    }
-   }
+        for {
+                mt, msg, err := c.ReadMessage()
+                if err != nil {
+                        log.Fatal(err)
+                }
+                if mt == websocket.BinaryMessage {
+                        evt, err := parsePublicTradeEvent(msg)
+                        if err != nil {
+                                log.Println("decode error:", err)
+                                continue
+                        }
+                        if len(evt.TradeItems) > 0 {
+                                t0 := evt.TradeItems[0]
+                                log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",
+                                        evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)
+                        }
+                } else {
+                        log.Println("TEXT:", string(msg))
+                }
+        }
 }
 ```
