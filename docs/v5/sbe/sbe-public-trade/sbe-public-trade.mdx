@@ -220,9 +220,6 @@ def parse_public_trade_event(buf: bytes) -> dict:
         is_rpi = struct.unpack_from("<B", buf, off)[0]
         off += 1
 
-        exec_id = struct.unpack_from("<q", buf, off)[0]
-        off += 8
-
         # Skip any future extension bytes in fixed part
         fixed_consumed = off - entry_start
         if fixed_consumed < grp_block_len:
@@ -232,7 +229,7 @@ def parse_public_trade_event(buf: bytes) -> dict:
             raise ValueError(
                 f"group blockLength too small: {grp_block_len} < {fixed_consumed}"
             )
-
+        exec_id, off = read_varstring8(buf, off)
         trades.append(
             {
                 "fillTime": fill_time,
@@ -433,8 +430,6 @@ return nil, fmt.Errorf("too short for trade entry %d", i)
     isBlock := uint8(buf[off]); off++
     isRpi := uint8(buf[off]); off++
 
-    execID := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
-
     fixedConsumed := off - entryStart
     if fixedConsumed < int(grpBlockLen) {
 off += int(grpBlockLen) - fixedConsumed
@@ -442,6 +437,11 @@ off += int(grpBlockLen) - fixedConsumed
 return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
     }
 
+    execID, off2, err := readVarString8(buf, off)
+        if err != nil {
+    return nil, err
+        }
+        off = off2
 
     items = append(items, TradeItem{
 FillTime:fillTime,
