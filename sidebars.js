@@ -33,6 +33,7 @@ const sidebars = {
   p2pSideBar: [
     'p2p/guide',
     'p2p/all-balance',
+    'p2p/rate-limit',
     {
       type: 'category',
       label: 'Advertisement',
