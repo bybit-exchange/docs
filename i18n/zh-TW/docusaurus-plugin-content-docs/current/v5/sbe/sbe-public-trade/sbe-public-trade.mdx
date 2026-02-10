@@ -44,51 +44,7 @@ sidebar_position: 3
 ```
 ## SBE XML 模板 (Public Trade)
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="quote.sbe" id="1" version="0" semanticVersion="1.0.0" description="Bybit market data streams SBE message schema" byteOrder="littleEndian" headerType="messageHeader">
-  <types>
-    <composite name="messageHeader" description="Template ID and length of message root">
- <type name="blockLength" primitiveType="uint16"/>
- <type name="templateId" primitiveType="uint16"/>
- <type name="schemaId" primitiveType="uint16"/>
- <type name="version" primitiveType="uint16"/>
-    </composite>
-    <composite name="varString8" description="Variable length UTF-8 string.">
- <type name="length" primitiveType="uint8"/>
- <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
-    </composite>
-    <enum name="SideType" encodingType="uint8">
- <validValue name="UNKNOWN">0</validValue>
- <validValue name="BUY">1</validValue>
- <validValue name="SELL">2</validValue>
- <validValue name="NON_REPRESENTABLE">254</validValue>
-    </enum>
-    <enum name="BoolEnum" encodingType="uint8">
- <validValue name="FALSE">0</validValue>
- <validValue name="TRUE">1</validValue>
- <validValue name="NON_REPRESENTABLE">254</validValue>
-    </enum>
-  </types>
-  <!-- Stream event for "publicTrade.sbe.<symbol>" channel -->
-  <sbe:message name="PublicTradeEvent" id="20002">
-    <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>
-    <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
-    <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
-    <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">
-      <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
-      <field id="2" name="price" type="int64" description="Price mantissa"/>
-      <field id="3" name="size" type="int64" description="Size mantissa"/>
-      <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
-      <field id="5" name="side" type="SideType" description="Side of taker"/>
-      <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
-      <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
-      <data id="100" name="execId" type="varString8" description="Trade ID"/>
-    </group>
-    <data id="55" name="symbol" type="varString8"/>
-  </sbe:message>
-</sbe:messageSchema>
-```
+[sbe xml template](../sbe/sbe-basic-info#sbe-xml-template)
 
 ## 欄位參考
 
