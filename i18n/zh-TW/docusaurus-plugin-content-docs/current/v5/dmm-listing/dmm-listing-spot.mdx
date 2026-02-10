@@ -1,0 +1,254 @@
+---
+title: 現貨 DMM Listing 指南
+sidebar_label: 現貨 DMM Listing 指南
+sidebar_position: 1
+---
+
+## 先決條件
+
+- 您的 UID 已加入預上市/DMM 交易對的白名單
+- 該 UID 下已建立 API key 與 secret
+- 該幣種已配置在指定的 UID 下
+- 對於現貨上市交易對, 必須先查詢 `/v5/market/instruments-info`, 並帶入:
+  - category=spot
+  - symbol=<SYMBOL_NAME>
+
+### 參考文檔:
+
+- 可交易產品的規格信息: [查詢用户可交易產品的規格信息](/docs/zh-TW/v5/account/instrument)
+- REST 創建委託單: [創建委託單](/docs/zh-TW/v5/order/create-order)
+- Websocket 下單指南: [Websocket 下單指南](/docs/zh-TW/v5/websocket/trade/guideline)
+
+---
+
+## 1. REST – 查詢交易對資訊(現貨)
+
+用於確認在加入白名單後, 該交易對是否可見(如最小變動價, 最小下單量, 狀態等).
+
+```python
+import requests
+import time
+import hashlib
+import hmac
+
+api_key = 'xxxxxxxxx'
+secret_key = 'xxxxxxxxx'
+symbol = 'xxxxx'
+httpClient = requests.Session()
+recv_window = str(5000)
+url = "https://api.bybit.com"
+
+def HTTP_Request(endPoint, method, payload, Info):
+    global time_stamp
+    time_stamp = str(int(time.time() * 10 ** 3))
+    signature = genSignature(payload)
+    headers = {
+        'X-BAPI-API-KEY': api_key,
+        'X-BAPI-SIGN': signature,
+        'X-BAPI-SIGN-TYPE': '2',
+        'X-BAPI-TIMESTAMP': time_stamp,
+        'X-BAPI-RECV-WINDOW': recv_window,
+        'Content-Type': 'application/json'
+    }
+    if method == "POST":
+        response = httpClient.request(method, url + endPoint, headers=headers, data=payload)
+    else:
+        response = httpClient.request(method, url + endPoint + "?" + payload, headers=headers)
+    print(response.text)
+    print(response.headers)
+    print(Info + " Elapsed Time : " + str(response.elapsed))
+
+def genSignature(payload):
+    param_str = str(time_stamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"), hashlib.sha256)
+    signature = hash.hexdigest()
+    return signature
+
+endpoint = "/v5/market/instruments-info"
+method = "GET"
+params = 'symbol=' + symbol + '&category=spot'
+HTTP_Request(endpoint, method, params, "Get Symbol Details")
+```
+
+---
+
+## 2. REST – 下 PostOnly 限價單(現貨)
+
+注意: PostOnly 用於確保做市(maker)意圖. 若價格穿越委託簿, 訂單可能會依產品規則被拒絕或取消.
+
+```python
+import requests
+import time
+import hashlib
+import hmac
+
+api_key='xxxx'
+secret_key='xxxxx'
+httpClient=requests.Session()
+recv_window=str(5000)
+url="https://api-testnet.bybit.com"
+endpoint="/v5/order/create"
+method="POST"
+params='{"category":"spot", "symbol":"XRPUSDT", "orderType":"LIMIT", "side":"buy", "qty":"10", "price":"0.55", "timeInForce":"PostOnly"}'
+
+def HTTP_Request(endPoint,method,payload,Info):
+    global time_stamp
+    time_stamp=str(int(time.time() * 10 ** 3))
+    signature=genSignature(payload)
+    headers = {
+        'X-BAPI-API-KEY': api_key,
+        'X-BAPI-SIGN': signature,
+        'X-BAPI-SIGN-TYPE': '2',
+        'X-BAPI-TIMESTAMP': time_stamp,
+        'X-BAPI-RECV-WINDOW': recv_window,
+        'Content-Type': 'application/json'
+    }
+    if(method=="POST"):
+        response = httpClient.request(method, url+endPoint, headers=headers, data=payload)
+    else:
+        response = httpClient.request(method, url+endPoint+"?"+payload, headers=headers)
+    print(response.text)
+    print(response.headers)
+    print(Info + " Elapsed Time : " + str(response.elapsed))
+
+def genSignature(payload):
+    param_str= str(time_stamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"),hashlib.sha256)
+    signature = hash.hexdigest()
+    return signature
+
+HTTP_Request(endpoint,method,params,"Create")
+```
+
+---
+
+## 3. WebSocket – 驗簽並下現貨訂單
+
+使用 WebSocket 交易接口可相較 REST 降低調用開銷.  
+請確認使用符合環境的正確 WS Host. 更多細節請參考 [Websocket 下單指南](/docs/zh-TW/v5/websocket/trade/guideline).
+
+```python
+import asyncio
+import websockets
+import json
+import hmac
+import hashlib
+from datetime import datetime
+
+async def authenticate(ws):
+    api_key = "xxxxx"
+    api_secret = "xxxxxx"
+    expires = int((datetime.now().timestamp() + 10) * 1000)
+    signature = hmac.new(api_secret.encode(), f'GET/realtime{expires}'.encode(), hashlib.sha256).hexdigest()
+
+    auth_msg = {
+        "op": "auth",
+        "args": [api_key, expires, signature]
+    }
+
+    await ws.send(json.dumps(auth_msg))
+    response = await ws.recv()
+    print(f"Auth response: {response}")
+
+async def spot_send_subscription(ws):
+    sub_msg = {
+        "header": {
+            "Referer": "Test-1",
+            "X-BAPI-RECV-WINDOW": "100000",
+            "X-BAPI-TIMESTAMP": str(int(datetime.now().timestamp() * 1000))
+        },
+        "op": "order.create",
+        "args": [
+            {
+                "category": "spot",
+                "symbol": "XRPUSDT",
+                "orderType": "LIMIT",
+                "side": "buy",
+                "qty": "10",
+                "price": "0.55",
+                "timeInForce": "PostOnly"
+            }
+        ]
+    }
+
+    await ws.send(json.dumps(sub_msg))
+    print("Subscription spot message sent.")
+
+async def listen_messages(ws):
+    while True:
+        message = await ws.recv()
+        print(f"Message received: {message}")
+
+async def main():
+    uri = "wss://stream-testnet.bybit.com/v5/trade"
+    async with websockets.connect(uri) as ws:
+        await authenticate(ws)
+        await spot_send_subscription(ws)
+        await listen_messages(ws)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+---
+
+## Recommended Validation Checklist (for DMM onboarding)
+
+1. Instrument visibility  
+- instruments-info 能返回交易對與正確的參數(最小變動價/最小下單量).
+
+2. Permissions  
+- API key 具備交易權限; UID 已正確加入白名單.
+
+3. Maker behavior  
+- PostOnly 訂單未穿越價差; 否則預期會被拒絕/取消.
+
+4. Operational readiness  
+- 重試/backoff 機制, 冪等性策略, 以及錯誤碼處理.
+
+---
+
+## Tips on Pybit & CCXT
+
+若您使用 Pybit 或 CCXT 搭配 Bybit V5 接口, 且需要請求需驗簽的 GET `/v5/account/instruments-info` 接口, 請參考以下範例.
+
+### 1. Pybit
+
+- 請升級 Pybit 至最新版本(5.14.0+).
+- 目前 Pybit 尚未將 `/v5/account/instruments-info` 暴露為一級方法.
+- 可透過 `_submit_request` 並設定 `auth=True` 直接調用該接口.
+
+```python
+from pybit.unified_trading import HTTP
+
+session = HTTP(
+    testnet=False,
+    api_key="xxx",
+    api_secret="xxx",
+)
+
+resp = session._submit_request(
+    method="GET",
+    path=session.endpoint + "/v5/account/instruments-info",
+    query={"category": "spot"},
+    auth=True,
+)
+print(resp)
+```
+
+### 2. CCXT
+
+- 請升級 CCXT 至最新版本(4.3.75+).
+- 啟用 `usePrivateInstrumentsInfo` 以透過私有接口查詢交易對資訊.
+
+```python
+# option 1: 初始化時設定
+exchange = ccxt.bybit({
+    'options': {
+        'usePrivateInstrumentsInfo': True,
+    }
+})
+
+# option 2: 初始化後再設定
+exchange.options['usePrivateInstrumentsInfo'] = True
+```
