@@ -1,0 +1,73 @@
+---
+title: 查詢EB帳戶的速率上限和使用量
+sidebar_label: 查詢EB帳戶的速率上限和使用量
+sidebar_position: 2
+---
+
+> API 限速：每秒 1 次請求
+
+:::info
+* 查詢EB帳戶級別的總的頻率蓋帽以及所有子帳戶頻率分配量
+* 僅EB母帳戶可以訪問該接口
+* 對於沒有通過客戶經理申請過頻率蓋帽的EB帳戶, 返回為空
+:::
+
+### HTTP 請求
+GET `/v5/broker/apilimit/query-cap`
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list |array |Object|
+|> [bizType](/v5/enum#biztype) |string|業務類型|
+|> totalRate |string|所有子帳號的 API 速率限制總使用量 |
+|> ebCap |string|基於EB帳戶維度的每秒 API 限速蓋帽 |
+|> uidCap |string|基於 UID 等級的每秒 API 限速 
+
+### 請求範例
+```http
+GET /v5/broker/apilimit/query-cap HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1728460942776
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 2
+```
+
+### 響應範例
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "ebCap": "900",
+                "uidCap": "100",
+                "totalRate": "825",
+                "bizType": "SPOT"
+            },
+            {
+                "ebCap": "900",
+                "uidCap": "100",
+                "totalRate": "760",
+                "bizType": "OPTIONS"
+            },
+            {
+                "ebCap": "900",
+                "uidCap": "100",
+                "totalRate": "760",
+                "bizType": "DERIVATIVES"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1770610126806
+}
+```
+
