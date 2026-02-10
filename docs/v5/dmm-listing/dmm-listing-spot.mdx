@@ -1,0 +1,249 @@
+---
+title: Spot DMM Listing Integration
+sidebar_label: Spot DMM Listing Integration
+sidebar_position: 1
+---
+
+## Prerequisites
+
+- Your UID is whitelisted for the pre-market / DMM instrument.
+- You have an API key + secret created under that UID.
+- Coin configured under specify UID
+- For spot listing instruments, you must query /v5/market/instruments-info with:
+  - category=spot
+  - symbol=<SYMBOL_NAME>
+
+### Docs:
+- Instruments info: [Get Instruments Info](/docs/v5/account/instrument)
+- REST place order: [Place Order](/docs/v5/order/create-order)
+- WebSocket trading guideline: [Websocket Trade Guideline](/docs/v5/websocket/trade/guideline)
+
+---
+## 1. REST – Query Instrument Info (Spot)
+
+Use this to confirm the symbol is visible after whitelisting (tick size, lot size, status, etc.).
+
+```python
+import requests
+import time
+import hashlib
+import hmac
+
+api_key = 'xxxxxxxxx'
+secret_key = 'xxxxxxxxx'
+symbol = 'xxxxx'
+httpClient = requests.Session()
+recv_window = str(5000)
+url = "https://api.bybit.com"
+
+def HTTP_Request(endPoint, method, payload, Info):
+    global time_stamp
+    time_stamp = str(int(time.time() * 10 ** 3))
+    signature = genSignature(payload)
+    headers = {
+        'X-BAPI-API-KEY': api_key,
+        'X-BAPI-SIGN': signature,
+        'X-BAPI-SIGN-TYPE': '2',
+        'X-BAPI-TIMESTAMP': time_stamp,
+        'X-BAPI-RECV-WINDOW': recv_window,
+        'Content-Type': 'application/json'
+    }
+    if method == "POST":
+        response = httpClient.request(method, url + endPoint, headers=headers, data=payload)
+    else:
+        response = httpClient.request(method, url + endPoint + "?" + payload, headers=headers)
+    print(response.text)
+    print(response.headers)
+    print(Info + " Elapsed Time : " + str(response.elapsed))
+
+def genSignature(payload):
+    param_str = str(time_stamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"), hashlib.sha256)
+    signature = hash.hexdigest()
+    return signature
+
+endpoint = "/v5/market/instruments-info"
+method = "GET"
+params = 'symbol=' + symbol + '&category=spot'
+HTTP_Request(endpoint, method, params, "Get Symbol Details")
+```
+
+---
+## 2. REST – Place a PostOnly Limit Order (Spot)
+
+Note: PostOnly ensures maker intent. If the price crosses the book, the order may be rejected/cancelled depending on product rules.
+
+```python
+import requests
+import time
+import hashlib
+import hmac
+
+api_key='xxxx'
+secret_key='xxxxx'
+httpClient=requests.Session()
+recv_window=str(5000)
+url="https://api-testnet.bybit.com"
+endpoint="/v5/order/create"
+method="POST"
+params='{"category":"spot", "symbol":"XRPUSDT", "orderType":"LIMIT", "side":"buy", "qty":"10", "price":"0.55", "timeInForce":"PostOnly"}'
+
+def HTTP_Request(endPoint,method,payload,Info):
+    global time_stamp
+    time_stamp=str(int(time.time() * 10 ** 3))
+    signature=genSignature(payload)
+    headers = {
+        'X-BAPI-API-KEY': api_key,
+        'X-BAPI-SIGN': signature,
+        'X-BAPI-SIGN-TYPE': '2',
+        'X-BAPI-TIMESTAMP': time_stamp,
+        'X-BAPI-RECV-WINDOW': recv_window,
+        'Content-Type': 'application/json'
+    }
+    if(method=="POST"):
+        response = httpClient.request(method, url+endPoint, headers=headers, data=payload)
+    else:
+        response = httpClient.request(method, url+endPoint+"?"+payload, headers=headers)
+    print(response.text)
+    print(response.headers)
+    print(Info + " Elapsed Time : " + str(response.elapsed))
+
+def genSignature(payload):
+    param_str= str(time_stamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"),hashlib.sha256)
+    signature = hash.hexdigest()
+    return signature
+
+HTTP_Request(endpoint,method,params,"Create")
+```
+
+---
+## 3. WebSocket – Authenticate + Place Spot Order
+
+Use WebSocket trading endpoint to place orders with lower overhead vs REST.  
+Make sure you use the correct WS host for your environment. For more details please refer to [Websocket Trade Guideline](/docs/v5/websocket/trade/guideline).
+
+```python
+import asyncio
+import websockets
+import json
+import hmac
+import hashlib
+from datetime import datetime
+
+async def authenticate(ws):
+    api_key = "xxxxx"
+    api_secret = "xxxxxx"
+    expires = int((datetime.now().timestamp() + 10) * 1000)
+    signature = hmac.new(api_secret.encode(), f'GET/realtime{expires}'.encode(), hashlib.sha256).hexdigest()
+
+    auth_msg = {
+        "op": "auth",
+        "args": [api_key, expires, signature]
+    }
+
+    await ws.send(json.dumps(auth_msg))
+    response = await ws.recv()
+    print(f"Auth response: {response}")
+
+async def spot_send_subscription(ws):
+    sub_msg = {
+        "header": {
+            "Referer": "Test-1",
+            "X-BAPI-RECV-WINDOW": "100000",
+            "X-BAPI-TIMESTAMP": str(int(datetime.now().timestamp() * 1000))
+        },
+        "op": "order.create",
+        "args": [
+            {
+                "category": "spot",
+                "symbol": "XRPUSDT",
+                "orderType": "LIMIT",
+                "side": "buy",
+                "qty": "10",
+                "price": "0.55",
+                "timeInForce": "PostOnly"
+            }
+        ]
+    }
+
+    await ws.send(json.dumps(sub_msg))
+    print("Subscription spot message sent.")
+
+async def listen_messages(ws):
+    while True:
+        message = await ws.recv()
+        print(f"Message received: {message}")
+
+async def main():
+    uri = "wss://stream-testnet.bybit.com/v5/trade"
+    async with websockets.connect(uri) as ws:
+        await authenticate(ws)
+        await spot_send_subscription(ws)
+        await listen_messages(ws)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+---
+## Recommended Validation Checklist (for DMM onboarding)
+
+1. Instrument visibility  
+- instruments-info returns the symbol and correct filters (tick size / lot size).
+
+2. Permissions  
+- API key has trading permission; UID is correctly whitelisted.
+
+3. Maker behavior  
+- PostOnly order does not cross spread; otherwise expect rejection/cancel behavior.
+
+4. Operational readiness  
+- Retry/backoff logic, idempotency strategy, and error-code handling.
+
+---
+## Tips on Pybit & CCXT
+
+If you are using Pybit or CCXT with the Bybit V5 endpoint and need to call the authenticated
+GET `/v5/account/instruments-info` endpoint, please refer to the examples below.
+
+### 1. Pybit
+
+- Please upgrade Pybit to the latest version (5.14.0+).
+- Pybit does not expose `/v5/account/instruments-info` as a first-class method for now.
+- You can call this endpoint directly via `_submit_request` with `auth=True`.
+
+```python
+from pybit.unified_trading import HTTP
+
+session = HTTP(
+    testnet=False,
+    api_key="xxx",
+    api_secret="xxx",
+)
+
+resp = session._submit_request(
+    method="GET",
+    path=session.endpoint + "/v5/account/instruments-info",
+    query={"category": "spot"},
+    auth=True,
+)
+print(resp)
+```
+
+### 2. CCXT
+
+- Please upgrade CCXT to the latest version (4.3.75+).
+- Enable `usePrivateInstrumentsInfo` to query instruments info via the private endpoint.
+
+```python
+# option 1: provide upon instantiating
+exchange = ccxt.bybit({
+    'options': {
+        'usePrivateInstrumentsInfo': True,
+    }
+})
+
+# option 2: or set it after instantiating
+exchange.options['usePrivateInstrumentsInfo'] = True
+```

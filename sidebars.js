@@ -489,6 +489,13 @@ const sidebars = {
     },
     {
       type: 'category',
+      label: 'DMM Listing',
+      items: [
+        'v5/dmm-listing/dmm-listing-spot',
+      ]
+    },
+    {
+      type: 'category',
       label: 'WebSocket Stream',
       items: [
         'v5/websocket/wss-authentication',
