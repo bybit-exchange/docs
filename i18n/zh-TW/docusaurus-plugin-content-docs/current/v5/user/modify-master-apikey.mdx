@@ -8,6 +8,7 @@ sidebar_position: 6
 :::tip
 在調用接口時，使用的API key至少需要擁有以下其中一種權限
 * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+* 針對讀写  (Read_Write) API ，禁止新增或刪除 FiatP2P、FiatBybitPay 及 FiatConvertBroker 權限。
 :::
 
 :::info
@@ -21,7 +22,6 @@ POST `/v5/user/update-api`
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |readOnly |false |integer |`0` (默認)：可讀可寫. `1`：只讀 |
-|ips |false |string |綁定IP. 比如: "192.168.0.1,192.168.0.2"<b>注意:</b><ul><li>不傳參數ips 或者入参值為`"*"`意味著不綁定</li><li>不綁定IP的api key將有<b>90天的有效期限</b></li><li>一旦帳戶密碼做了修改，帳戶下的非永久api key將在<b>7天後失效</b></li></ul>|
 |permissions |false |Object |勾選api key權限. 如果不修改權限, 則不要傳入該參數 |
 |> ContractTrade |false |array |合約. ["Order","Position"] |
 |> Spot |false |array |現貨. ["SpotTrade"] |
@@ -77,7 +77,6 @@ Content-Type: application/json
 
 {
     "readOnly": null,
-    "ips": "*",
     "permissions": {
             "ContractTrade": [
                 "Order",
@@ -118,7 +117,6 @@ session = HTTP(
     api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 print(session.modify_master_api_key(
-    ips=["*"],
     permissions={
             "ContractTrade": [
                 "Order",
@@ -163,7 +161,6 @@ const client = new RestClientV5({
 
 client
   .updateMasterApiKey({
-    ips: ['*'],
     permissions: {
       ContractTrade: ['Order', 'Position'],
       Spot: ['SpotTrade'],
