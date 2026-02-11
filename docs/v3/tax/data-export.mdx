@@ -60,7 +60,7 @@ class pd_service(Bases):
         df_all = pd.DataFrame()
         for paths in self.path_list(path=file_path):
             df_all = pd.concat([df_all, pd.read_orc(paths)], axis=0)
-        print('Row number of tables：', df_all[df_all.columns[1]].count())
+        print('Row number of tables: ', df_all[df_all.columns[1]].count())
         print(df_all.columns.values)
         df_all.sort_values("TradeTime", inplace=True)
         df_all.to_csv("test_data_s3.csv", header=True, index=False)
