@@ -1,24 +1,28 @@
 ---
-title: Get Trade Behaviour Setting
-sidebar_label: Get Trade Behaviour Setting
+title: Get Trade Behaviour Config
+sidebar_label: Get Trade Behaviour Config
 sidebar_position: 19
 ---
 You can get configuration how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
 
+---
+
+Where x% is [priceLimitRatioX](/docs/v5/market/instrument); and y% is the [priceLimitRatioY](/docs/v5/market/instrument):
+
 Spot
-* **Maximum Buy Price**: *Min[Max(Index, Index × (1 + y%) + 2-Minute Average Premium), Index × (1 + z%)]*
-* **Lowest price for Sell**: *Max[Min(Index, Index × (1 – y%) + 2-Minute Average Premium), Index × (1 – z%)]*
+* **Maximum buy price**: *Min[Max(Index Price, Index Price × (1 + x%) + 2-Minute Average Premium), Index Price × (1 + y%)]*
+* **Minimum sell price**: *Max[Min(Index Price, Index Price × (1 – x%) + 2-Minute Average Premium), Index Price × (1 – y%)]*
 
 Futures
-* **Maximum Buy Price**: *min( max( index , markprice * ( 1 + x% ）), markprice *( 1 + y%) )*
-* **Lowest price for Sell**: *max ( min( index , markprice * ( 1 - x% )) , markprice ( 1 - y%) )
+* **Maximum buy price**: *Min (Max (Index Price, Mark Price × (1 + x%)), Mark Price × (1 + y%))*
+* **Minimum sell price**: *Max (Min (Index Price, Mark Price × (1 - x%)), Mark Price × (1 - y%))*
 
 :::info Default Setting
 *	Spot:
-**lpaSpot = false.** If the order price exceeds the boundary, the system rejects the request.
+**lpaSpot = false.** If the order price exceeds the limit, the system rejects the request.
 
 *	Futures:
-**lpaPerp = false.** If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).
+**lpaPerp = false.** If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price (i.e., highest bid or lowest ask).
 :::
 
 ### HTTP Request
@@ -31,8 +35,8 @@ None
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |result |array |Object |
-|> lpaSpot |boolean |<ul><li>`true`: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary</li><li>`false`: If the order price exceeds the boundary, the system rejects the request.</li></ul>|
-|> lpaPerp |boolean |<ul><li>`true`: If the order price exceeds the boundary, the system rejects the request.</li><li>`false`: If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary</li></ul>|
+|> lpaSpot |boolean |<ul><li>`true`: If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price</li><li>`false`: If the order price exceeds the limit, the system rejects the request.</li></ul>|
+|> lpaPerp |boolean |<ul><li>`true`: If the order price exceeds the limit, the system rejects the request.</li><li>`false`: If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price.</li></ul>|
 
 
 ### Request Example
@@ -49,14 +53,19 @@ X-BAPI-TIMESTAMP: 1753255927950
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 Content-Length: 52
-
 ```
 
 </TabItem>
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_user_setting_config())
 ```
 
 </TabItem>
