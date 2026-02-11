@@ -225,7 +225,7 @@ const config = {
               },
               {
                 to: '/institutional/sbe/basic-info',
-                label: 'Institutional docs',
+                label: 'Institutional Docs',
               },
               {
                 to: '/faq',
