@@ -224,6 +224,10 @@ const config = {
                 label: 'API Explorer',
               },
               {
+                to: '/institutional/sbe/sbe-basic-info',
+                label: 'Institutional docs',
+              },
+              {
                 to: '/faq',
                 label: 'FAQ',
               }
