@@ -1,0 +1,131 @@
+---
+title: SBE Basic Information
+sidebar_label: SBE Basic Information
+sidebar_position: 1
+---
+
+:::info MMWS / Gateway only
+All SBE-based feeds are described in this section are available **only** via the **Market Maker WebSocket (MMWS) / Market Maker Gateway (GW)** infrastructure.
+
+
+For access and architecture details, see the official announcement: [Market Maker Gateway](https://announcements.bybit.global/article/introducing-the-market-maker-gateway-for-enhanced-api-connectivity-and-performance-bltfaba80a427cac5e5/)
+
+From January 15, 2026, sbe connection will only be avaiable via **v5/public-sbe**
+:::
+
+This page gives a unified introduction to Bybit's **SBE-based market data** channels and how they fit into the MMWS/GW environment. Detailed, feature-specific behavior and code examples are provided in the sub-pages for:
+
+- **BBO SBE** (Level 1, with RPI fields)
+- **Level-50 SBE** (50-level order book snapshots + deltas)
+
+## What is SBE?
+
+Bybit uses **Simple Binary Encoding (SBE)** in accordance with the FIX/SBE 1.0 specification:
+
+- Binary, little-endian encoding
+- Fixed-width fields where possible
+- Explicit **message header** + **message body** layout
+- High-efficiency decoding suitable for HFT and MM strategies
+
+Compared with JSON WebSocket feeds, SBE provides:
+
+- Smaller payloads (up to ~30–50% reduction vs equivalent JSON data)
+- Deterministic binary layouts
+- Microsecond timestamp precision
+- Lower CPU usage for both encoding and decoding
+
+## Behavior Of PreLaunch Contracts
+- There is no feed until `ContinuousTrading` stage for orderbook & publicTrade
+
+## SBE XML Template
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="quote.sbe" id="1" version="0" semanticVersion="1.0.0" description="Bybit market data streams SBE message schema" byteOrder="littleEndian" headerType="messageHeader">
+  <types>
+    <composite name="messageHeader" description="Template ID and length of message root">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="templateId" primitiveType="uint16"/>
+      <type name="schemaId" primitiveType="uint16"/>
+      <type name="version" primitiveType="uint16"/>
+    </composite>
+    <composite name="varString8" description="Variable length UTF-8 string.">
+      <type name="length" primitiveType="uint8"/>
+      <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
+    </composite>
+    <composite name="groupSize16Encoding" description="Repeating group dimensions.">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="numInGroup" primitiveType="uint16"/>
+    </composite>
+    <enum name="pkgTypeEnum" encodingType="uint8">
+      <validValue name="SNAPSHOT">0</validValue>
+      <validValue name="DELTA">1</validValue>
+    </enum>
+    <enum name="SideType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="BUY">1</validValue>
+      <validValue name="SELL">2</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="BoolEnum" encodingType="uint8">
+      <validValue name="FALSE">0</validValue>
+      <validValue name="TRUE">1</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+  </types>
+  <!-- Stream event for "ob.rpi.1.sbe.<symbol>" channel -->
+  <sbe:message name="BestOBRpiEvent" id="20000">
+    <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>
+    <field id="2" name="seq" type="int64" description="Cross sequence ID"/>
+    <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>
+    <field id="4" name="u" type="int64" description="Update Id"/>
+    <field id="5" name="askNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask normal price"/>
+    <field id="6" name="askNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask normal size"/>
+    <field id="7" name="askRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask rpi price"/>
+    <field id="8" name="askRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask rpi size"/>
+    <field id="9" name="bidNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid normal price"/>
+    <field id="10" name="bidNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid normal size"/>
+    <field id="11" name="bidRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid rpi price"/>
+    <field id="12" name="bidRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid rpi size"/>
+    <field id="13" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
+    <field id="14" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
+    <data id="55" name="symbol" type="varString8"/>
+  </sbe:message>
+  <!-- Stream event for "ob.50.sbe.<symbol>" channel -->
+  <sbe:message name="OBL50Event" id="20001">
+    <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>
+    <field id="2" name="seq" type="int64" description="Cross sequence ID"/>
+    <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>
+    <field id="4" name="u" type="int64" description="Update Id"/>
+    <field id="5" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
+    <field id="6" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
+    <field id="7" name="pkgType" type="pkgTypeEnum" description="Package type"/>
+    <group id="40" name="asks" dimensionType="groupSize16Encoding" description="Sell side order book updates">
+      <field id="1" name="price" type="int64" description="Price mantissa"/>
+      <field id="2" name="size" type="int64" description="Size mantissa"/>
+    </group>
+    <group id="41" name="bids" dimensionType="groupSize16Encoding" description="Buy side order book updates">
+      <field id="1" name="price" type="int64" description="Price mantissa"/>
+      <field id="2" name="size" type="int64" description="Size mantissa"/>
+    </group>
+    <data id="55" name="symbol" type="varString8"/>
+  </sbe:message>
+  <!-- Stream event for "publicTrade.sbe.<symbol>" channel -->
+  <sbe:message name="PublicTradeEvent" id="20002">
+    <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>
+    <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>
+    <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>
+    <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">
+      <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>
+      <field id="2" name="price" type="int64" description="Price mantissa"/>
+      <field id="3" name="size" type="int64" description="Size mantissa"/>
+      <field id="4" name="seq" type="int64" description="Cross sequence ID"/>
+      <field id="5" name="side" type="SideType" description="Side of taker"/>
+      <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>
+      <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>
+      <data id="100" name="execId" type="varString8" description="Trade ID"/>
+    </group>
+    <data id="55" name="symbol" type="varString8"/>
+  </sbe:message>
+</sbe:messageSchema>
+```

@@ -1,0 +1,472 @@
+---
+title: SBE Public Trade 接入指南
+sidebar_label: SBE Public Trade 接入指南
+sidebar_position: 3
+---
+
+## 總覽
+- **Channel:** 僅支援MMWS域名
+- **WSURL:** `wss://<your-public-stream-host>.bybit-aws.com/v5/public-sbe/<category>`.
+- **Topic:** `publicTrade.sbe.<symbol>`.
+- **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
+- **推送頻率**:即時  
+- 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
+
+## 流程
+### Ping / Pong (JSON 控制 frame)
+
+**Send Ping**
+
+```json
+{"req_id": "100001", "op": "ping"}
+```
+
+**Receive Pong**
+
+```json
+{"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}
+```
+
+### 訂閱
+
+- Topic format: `publicTrade.sbe.<symbol>`
+
+**訂閱示例**
+
+```json
+{"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}
+```
+
+**訂閱回報**
+
+```json
+{"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}
+```
+## SBE XML 模板 (Public Trade)
+
+[sbe xml template](./basic-info#sbe-xml-template)
+
+## 欄位參考
+
+**Message:** `PublicTradeEvent` (id = 20002)
+
+| 欄位名稱 | ID | SBE 型別 | 單位 / 格式 | 備註 |
+|---|---|---|---|---|
+| ts | 1 | int64 | µs |行情服务產生資料的系統時間戳|
+| priceExponent | 2 | int8 | exponent | 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent` |
+| sizeExponent | 3 | int8 | exponent | 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent` |
+| tradeItems | 40 | group<br/>(`groupSize16Encoding`) | - | 重複的成交項目(Repeating trade items) |
+| symbol | 55 | varString8 | UTF-8 | 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"` |
+
+### 每個 tradeItems[i] 條目
+| 欄位(id) | 型別 | 說明 |
+|------------|------|------|
+| fillTime(1) | int64 | 成交撮合時間戳(µs) |
+| price(2) | int64 | 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。 |
+| size(3) | int64 | 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。 |
+| seq(4) | int64 | 撮合序列 ID |
+| side(5) | [SideType](#sidetype)(uint8) | taker單方向 |
+| isBlockTrade(6) | [BoolEnum](#boolenum)(uint8) | 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade) |
+| isRPI(7) | [BoolEnum](#boolenum)(uint8) | 是否為 RPI(0 = 非 RPI,1 = RPI) |
+| execId(8) | int64 | 成交 ID |
+
+#### SideType
+* `0`: UNKOWN
+* `1`: BUY
+* `2`: SELL
+* `254`: NON_REPRESENTABLE
+
+#### BoolEnum
+* `0`: FALSE
+* `1`: TRUE
+* `254`: NON_REPRESENTABLE
+
+## 接入示例
+
+### Python
+
+```python
+import json
+import struct
+import websocket
+from typing import Tuple
+
+WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"
+SYMBOL = "BTCUSDT"
+TOPIC = f"publicTrade.sbe.{SYMBOL}"
+
+
+# ---------------- SBE helpers ----------------
+def apply_exp(mantissa: int, exp: int) -> float:
+    # display = mantissa * 10^exp
+    # exp can be negative
+    return mantissa * (10.0**exp)
+
+
+def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:
+    if off + 1 > len(buf):
+        raise ValueError("varString8: missing length")
+
+    ln = buf[off]
+    off += 1
+
+    if off + ln > len(buf):
+        raise ValueError("varString8: out of range")
+
+    s = buf[off : off + ln].decode("utf-8", errors="replace")
+    off += ln
+    return s, off
+
+
+def parse_public_trade_event(buf: bytes) -> dict:
+    # messageHeader: <HHHH
+    if len(buf) < 8:
+        raise ValueError("too short for header")
+
+    block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)
+    off = 8
+
+    if template_id != 20002:
+        raise ValueError(f"unexpected templateId={template_id}")
+
+    # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)
+    if len(buf) < off + 8 + 1 + 1:
+        raise ValueError("too short for fixed fields")
+
+    ts = struct.unpack_from("<q", buf, off)[0]
+    off += 8
+
+    price_exp = struct.unpack_from("<b", buf, off)[0]
+    off += 1
+
+    size_exp = struct.unpack_from("<b", buf, off)[0]
+    off += 1
+
+    # group header: blockLength(uint16), numInGroup(uint16)
+    if len(buf) < off + 4:
+        raise ValueError("too short for group header")
+
+    grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)
+    off += 4
+
+    trades = []
+    for _ in range(num_in_group):
+        entry_start = off
+
+        # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)
+        fill_time = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        price_m = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        size_m = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        seq = struct.unpack_from("<q", buf, off)[0]
+        off += 8
+
+        side = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        is_block = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        is_rpi = struct.unpack_from("<B", buf, off)[0]
+        off += 1
+
+        # Skip any future extension bytes in fixed part
+        fixed_consumed = off - entry_start
+        if fixed_consumed < grp_block_len:
+            off += grp_block_len - fixed_consumed
+        elif fixed_consumed > grp_block_len:
+            # schema mismatch vs blockLength
+            raise ValueError(
+                f"group blockLength too small: {grp_block_len} < {fixed_consumed}"
+            )
+        exec_id, off = read_varstring8(buf, off)
+        trades.append(
+            {
+                "fillTime": fill_time,
+                "priceMantissa": price_m,
+                "sizeMantissa": size_m,
+                "price": apply_exp(price_m, price_exp),
+                "size": apply_exp(size_m, size_exp),
+                "seq": seq,
+                "side": side,
+                "isBlockTrade": bool(is_block),
+                "isRPI": bool(is_rpi),
+                "execId": exec_id,
+            }
+        )
+
+    symbol, off = read_varstring8(buf, off)
+
+    return {
+        "header": {
+            "blockLength": block_len,
+            "templateId": template_id,
+            "schemaId": schema_id,
+            "version": version,
+        },
+        "ts": ts,
+        "priceExponent": price_exp,
+        "sizeExponent": size_exp,
+        "symbol": symbol,
+        "tradeItems": trades,
+        "parsed_length": off,
+    }
+
+
+# ---------------- WS handlers ----------------
+def on_open(ws):
+    ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))
+    print("subscribed:", TOPIC)
+
+
+def on_message(ws, message):
+    if isinstance(message, (bytes, bytearray)):
+        evt = parse_public_trade_event(message)
+
+        # print first trade only (example)
+        if evt["tradeItems"]:
+            t0 = evt["tradeItems"][0]
+            print(
+                evt["symbol"],
+                "trades=",
+                len(evt["tradeItems"]),
+                "first:",
+                t0["price"],
+                "@",
+                t0["size"],
+                "seq=",
+                t0["seq"],
+            )
+    else:
+        print("TEXT:", message)
+
+
+def on_error(ws, err):
+    print("WS error:", err)
+
+
+def on_close(ws, *_):
+    print("closed")
+
+
+if __name__ == "__main__":
+    websocket.enableTrace(False)
+    ws = websocket.WebSocketApp(
+        WS_URL,
+        on_open=on_open,
+        on_message=on_message,
+        on_error=on_error,
+        on_close=on_close,
+    )
+    ws.run_forever(ping_interval=20, ping_timeout=10)  
+```
+
+### Golang
+
+```go
+package main
+
+import (
+        "encoding/binary"
+        "encoding/json"
+        "fmt"
+        "log"
+        "math"
+        "time"
+
+        "github.com/gorilla/websocket"
+)
+
+const (
+        WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"
+        Symbol = "BTCUSDT"
+        Topic  = "publicTrade.sbe." + Symbol
+)
+
+func applyExp(mantissa int64, exp int8) float64 {
+        return float64(mantissa) * math.Pow10(int(exp))
+}
+
+func readVarString8(buf []byte, off int) (string, int, error) {
+        if off+1 > len(buf) {
+                return "", off, fmt.Errorf("varString8: missing length")
+        }
+        ln := int(buf[off])
+        off++
+        if off+ln > len(buf) {
+                return "", off, fmt.Errorf("varString8: out of range")
+        }
+        s := string(buf[off : off+ln])
+        off += ln
+        return s, off, nil
+}
+
+type TradeItem struct {
+        FillTime     int64   `json:"fillTime"`
+        PriceMant    int64   `json:"priceMantissa"`
+        SizeMant     int64   `json:"sizeMantissa"`
+        Price        float64 `json:"price"`
+        Size         float64 `json:"size"`
+        Seq          int64   `json:"seq"`
+        Side         uint8   `json:"side"`
+        IsBlockTrade bool    `json:"isBlockTrade"`
+        IsRPI        bool    `json:"isRPI"`
+        ExecID       string   `json:"execId"`
+}
+
+type PublicTradeEvent struct {
+        Header struct {
+                BlockLength uint16 `json:"blockLength"`
+                TemplateID  uint16 `json:"templateId"`
+                SchemaID    uint16 `json:"schemaId"`
+                Version     uint16 `json:"version"`
+        } `json:"header"`
+
+        Ts            int64       `json:"ts"`
+        PriceExponent int8        `json:"priceExponent"`
+        SizeExponent  int8        `json:"sizeExponent"`
+        TradeItems    []TradeItem `json:"tradeItems"`
+        Symbol        string      `json:"symbol"`
+        ParsedLength  int         `json:"parsed_length"`
+}
+
+func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {
+        if len(buf) < 8 {
+                return nil, fmt.Errorf("too short for header")
+        }
+        off := 0
+        blk := binary.LittleEndian.Uint16(buf[off : off+2])
+        tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])
+        sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])
+        ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])
+        off += 8
+
+        if tid != 20002 {
+                return nil, fmt.Errorf("unexpected templateId=%d", tid)
+        }
+        if off+8+1+1 > len(buf) {
+                return nil, fmt.Errorf("too short for fixed fields")
+        }
+        ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))
+        off += 8
+        priceExp := int8(buf[off])
+        off++
+        sizeExp := int8(buf[off])
+        off++
+
+        // group header
+        if off+4 > len(buf) {
+                return nil, fmt.Errorf("too short for group header")
+        }
+        grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])
+        numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])
+        off += 4
+
+        items := make([]TradeItem, 0, int(numInGroup))
+        for i := 0; i < int(numInGroup); i++ {
+                entryStart := off
+
+                needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8
+                if off+needMin > len(buf) {
+                        return nil, fmt.Errorf("too short for trade entry %d", i)
+                }
+
+                fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+                seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8
+
+                side := uint8(buf[off]); off++
+                isBlock := uint8(buf[off]); off++
+                isRpi := uint8(buf[off]); off++
+
+                fixedConsumed := off - entryStart
+                if fixedConsumed < int(grpBlockLen) {
+                        off += int(grpBlockLen) - fixedConsumed
+                } else if fixedConsumed > int(grpBlockLen) {
+                        return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)
+                }
+
+                 execID, off2, err := readVarString8(buf, off)
+                if err != nil {
+                        return nil, err
+                }
+                off = off2
+
+
+                items = append(items, TradeItem{
+                        FillTime:     fillTime,
+                        PriceMant:    priceM,
+                        SizeMant:     sizeM,
+                        Price:        applyExp(priceM, priceExp),
+                        Size:         applyExp(sizeM, sizeExp),
+                        Seq:          seq,
+                        Side:         side,
+                        IsBlockTrade: isBlock != 0,
+                        IsRPI:        isRpi != 0,
+                        ExecID:       execID,
+                })
+        }
+
+        symbol, off2, err := readVarString8(buf, off)
+        if err != nil {
+                return nil, err
+        }
+        off = off2
+
+        evt := &PublicTradeEvent{
+                Ts:            ts,
+                PriceExponent: priceExp,
+                SizeExponent:  sizeExp,
+                TradeItems:    items,
+                Symbol:        symbol,
+                ParsedLength:  off,
+        }
+        evt.Header.BlockLength = blk
+        evt.Header.TemplateID = tid
+        evt.Header.SchemaID = sid
+        evt.Header.Version = ver
+        return evt, nil
+}
+
+func main() {
+        d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}
+        c, _, err := d.Dial(WSURL, nil)
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer c.Close()
+
+        sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})
+        if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {
+                log.Fatal(err)
+        }
+        log.Println("subscribed:", Topic)
+
+        for {
+                mt, msg, err := c.ReadMessage()
+                if err != nil {
+                        log.Fatal(err)
+                }
+                if mt == websocket.BinaryMessage {
+                        evt, err := parsePublicTradeEvent(msg)
+                        if err != nil {
+                                log.Println("decode error:", err)
+                                continue
+                        }
+                        if len(evt.TradeItems) > 0 {
+                                t0 := evt.TradeItems[0]
+                                log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",
+                                        evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)
+                        }
+                } else {
+                        log.Println("TEXT:", string(msg))
+                }
+        }
+}
+```
