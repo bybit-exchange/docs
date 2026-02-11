@@ -224,7 +224,7 @@ const config = {
                 label: 'API Explorer',
               },
               {
-                to: '/institutional/sbe/sbe-basic-info',
+                to: '/institutional/sbe/basic-info',
                 label: 'Institutional docs',
               },
               {
