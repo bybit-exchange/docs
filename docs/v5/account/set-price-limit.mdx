@@ -1,29 +1,34 @@
 ---
-title: Set Limit Price Behaviour
-sidebar_label: Set Limit Price Behaviour
+title: Set Price Limit Behaviour
+sidebar_label: Set Price Limit Behaviour
 sidebar_position: 20
 ---
 You can configure how the system behaves when your limit order price exceeds the highest bid or lowest ask price.
-You can query configuration by [Get Trade Behaviour Setting](/docs/v5/account/get-user-setting-config#).
+You can query your current configuration with [Get Trade Behaviour Setting](/docs/v5/account/get-user-setting-config).
+Learn more about the price limit for [spot](https://www.bybit.com/en/help-center/article/Bybit-Spot-Trading-Rules#A) and [futures](https://www.bybit.com/en/help-center/article?id=000002177#D) in the help centre.
+
+---
+
+Where x% is [priceLimitRatioX](/docs/v5/market/instruments-info); and y% is the [priceLimitRatioY](/docs/v5/market/instruments-info):
 
 Spot
-* **Maximum Buy Price**: *Min[Max(Index, Index × (1 + y%) + 2-Minute Average Premium), Index × (1 + z%)]*
-* **Lowest price for Sell**: *Max[Min(Index, Index × (1 – y%) + 2-Minute Average Premium), Index × (1 – z%)]*
+* **Maximum buy price**: *Min[Max(Index Price, Index Price × (1 + x%) + 2-Minute Average Premium), Index Price × (1 + y%)]*
+* **Minimum sell price**: *Max[Min(Index Price, Index Price × (1 – x%) + 2-Minute Average Premium), Index Price × (1 – y%)]*
 
 Futures
-* **Maximum Buy Price**: *min( max( index , markprice * ( 1 + x% ）), markprice *( 1 + y%) )*
-* **Lowest price for Sell**: *max ( min( index , markprice * ( 1 - x% )) , markprice ( 1 - y%) )
+* **Maximum buy price**: *Min (Max (Index Price, Mark Price × (1 + x%)), Mark Price × (1 + y%))*
+* **Minimum sell price**: *Max (Min (Index Price, Mark Price × (1 - x%)), Mark Price × (1 - y%))*
 
 :::info Default Setting
 *	Spot:
-**modifyEnable = false.** If the order price exceeds the boundary, the system rejects the request. <br/>
-Corresponding to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a> that **lpaSpot = false , lpaPerp = true**
+**modifyEnable = false.** If the order price exceeds the limit, the system rejects the request. <br/>
+Corresponds to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>, where **lpaSpot = false, lpaPerp = true**
 
 *	Futures:
-**modifyEnable = true.** If the order price exceeds the boundary, the system will automatically adjust the price to the nearest allowed boundary (i.e., highest bid or lowest ask).<br/>
-Corresponding to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a> that **lpaSpot = true , lpaPerp = false**
+**modifyEnable = true.** If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price (i.e., highest bid or lowest ask).<br/>
+Corresponds to <a href="https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config">Get Limit Price Behaviour</a>, where **lpaSpot = true, lpaPerp = false**
 
-* Setting either `linear` or `inverse` will set behaviour for **all futures**.
+* Setting either `linear` or `inverse` will set the behaviour for **all futures**.
 :::
 
 ### HTTP Request
@@ -33,7 +38,7 @@ POST `/v5/account/set-limit-px-action`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |category |**true** |string |`linear`, `inverse`, `spot`|
-|modifyEnable |**true** |boolean |`true`: allow the syetem to modify the order price<br/>`false`: reject your order request|
+|modifyEnable |**true** |boolean |`true`: allow the system to modify the order price<br/>`false`: reject your order request|
 
 ### Response Parameters
 None
@@ -63,7 +68,16 @@ Content-Length: 52
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.set_limit_price_action(
+    category="spot",
+    modifyEnable=True,
+))
 ```
 
 </TabItem>
