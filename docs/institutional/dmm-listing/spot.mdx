@@ -9,14 +9,14 @@ sidebar_position: 1
 - Your UID is whitelisted for the pre-market / DMM instrument.
 - You have an API key + secret created under that UID.
 - Coin configured under specify UID
-- For spot listing instruments, you must query /v5/market/instruments-info with:
+- To query for a soon to be listed spot instrument, you must query `/v5/market/instruments-info` with:
   - category=spot
   - symbol=<SYMBOL_NAME>
 
 ### Docs:
 - Instruments info: [Get Instruments Info](/v5/account/instrument)
 - REST place order: [Place Order](/v5/order/create-order)
-- WebSocket trading guideline: [Websocket Trade Guideline](/v5/websocket/trade/guideline)
+- WebSocket trading guideline: [Websocket Trade Guidelines](/v5/websocket/trade/guideline)
 
 ---
 ## 1. REST – Query Instrument Info (Spot)
@@ -70,7 +70,7 @@ send_http_request(endpoint, method, params, "Get Symbol Details")
 ---
 ## 2. REST – Place a PostOnly Limit Order (Spot)
 
-Note: PostOnly ensures maker intent. If the price crosses the book, the order may be rejected/cancelled depending on product rules.
+Note: PostOnly ensures maker intent. If the price crosses the book, the order may be rejected/cancelled.
 
 ```python
 import requests
@@ -125,10 +125,10 @@ send_http_request(endpoint, method, params, "Create")
 ```
 
 ---
-## 3. WebSocket – Authenticate + Place Spot Order
+## 3. WebSocket – Authenticate and Place Spot Order
 
-Use WebSocket trading endpoint to place orders with lower overhead vs REST.  
-Make sure you use the correct WS host for your environment. For more details please refer to [Websocket Trade Guideline](/v5/websocket/trade/guideline).
+Use WebSocket trading to place orders with lower latency vs REST.  
+Make sure you use the correct WS host for your environment. For more details please refer to the [Websocket Trade Guidelines](/v5/websocket/trade/guideline).
 
 ```python
 import asyncio
@@ -196,20 +196,17 @@ if __name__ == "__main__":
 ---
 ## Recommended Validation Checklist (for DMM onboarding)
 
-1. Instrument visibility  
-- instruments-info returns the symbol and correct filters (tick size / lot size).
-
-2. Permissions  
-- API key has trading permission; UID is correctly whitelisted.
-
-3. Maker behavior  
-- PostOnly order does not cross spread; otherwise expect rejection/cancel behavior.
-
-4. Operational readiness  
-- Retry/backoff logic, idempotency strategy, and error-code handling.
+1. Instrument visibility
+    - instruments-info returns the symbol and correct specifications (tick size / lot size).
+2. Permissions
+    - API key has the trading permission; UID is correctly whitelisted.
+3. Maker behavior
+    - PostOnly orders do not cross the spread; expect rejections/cancellation if they would.
+4. Operational readiness
+    - Retry/backoff logic, idempotency strategy, and error code handling.
 
 ---
-## Tips on Pybit & CCXT
+## Tips for Pybit & CCXT
 
 If you are using Pybit or CCXT with the Bybit V5 endpoint and need to call the authenticated
 GET `/v5/account/instruments-info` endpoint, please refer to the examples below.
