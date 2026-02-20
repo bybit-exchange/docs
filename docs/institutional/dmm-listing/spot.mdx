@@ -29,43 +29,42 @@ import time
 import hashlib
 import hmac
 
-api_key = 'xxxxxxxxx'
-secret_key = 'xxxxxxxxx'
-symbol = 'xxxxx'
+api_key = "xxxxxxxxxxxxxxxxxx"
+api_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+symbol = "XXXXX"
 httpClient = requests.Session()
 recv_window = str(5000)
 url = "https://api.bybit.com"
 
-def HTTP_Request(endPoint, method, payload, Info):
-    global time_stamp
-    time_stamp = str(int(time.time() * 10 ** 3))
-    signature = genSignature(payload)
+def send_http_request(endpoint, method, payload, info):
+    timestamp = str(int(time.time() * 10 ** 3))
+    signature = generate_signature(payload, timestamp)
     headers = {
-        'X-BAPI-API-KEY': api_key,
-        'X-BAPI-SIGN': signature,
-        'X-BAPI-SIGN-TYPE': '2',
-        'X-BAPI-TIMESTAMP': time_stamp,
-        'X-BAPI-RECV-WINDOW': recv_window,
-        'Content-Type': 'application/json'
+        "X-BAPI-API-KEY": api_key,
+        "X-BAPI-SIGN": signature,
+        "X-BAPI-SIGN-TYPE": "2",
+        "X-BAPI-TIMESTAMP": timestamp,
+        "X-BAPI-RECV-WINDOW": recv_window,
+        "Content-Type": "application/json"
     }
     if method == "POST":
-        response = httpClient.request(method, url + endPoint, headers=headers, data=payload)
+        response = httpClient.request(method, url + endpoint, headers=headers, data=payload)
     else:
-        response = httpClient.request(method, url + endPoint + "?" + payload, headers=headers)
+        response = httpClient.request(method, url + endpoint + "?" + payload, headers=headers)
     print(response.text)
     print(response.headers)
-    print(Info + " Elapsed Time : " + str(response.elapsed))
+    print(info + " Elapsed Time: " + str(response.elapsed))
 
-def genSignature(payload):
-    param_str = str(time_stamp) + api_key + recv_window + payload
-    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"), hashlib.sha256)
+def generate_signature(payload, timestamp):
+    param_str = str(timestamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(api_secret, "utf-8"), param_str.encode("utf-8"), hashlib.sha256)
     signature = hash.hexdigest()
     return signature
 
 endpoint = "/v5/market/instruments-info"
 method = "GET"
-params = 'symbol=' + symbol + '&category=spot'
-HTTP_Request(endpoint, method, params, "Get Symbol Details")
+params = "symbol=" + symbol + "&category=spot"
+send_http_request(endpoint, method, params, "Get Symbol Details")
 ```
 
 ---
@@ -78,43 +77,51 @@ import requests
 import time
 import hashlib
 import hmac
+import json
 
-api_key='xxxx'
-secret_key='xxxxx'
-httpClient=requests.Session()
-recv_window=str(5000)
-url="https://api-testnet.bybit.com"
-endpoint="/v5/order/create"
-method="POST"
-params='{"category":"spot", "symbol":"XRPUSDT", "orderType":"LIMIT", "side":"buy", "qty":"10", "price":"0.55", "timeInForce":"PostOnly"}'
+api_key = "xxxxxxxxxxxxxxxxxx"
+api_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+httpClient = requests.Session()
+recv_window = str(5000)
+url = "https://api-testnet.bybit.com"
+endpoint = "/v5/order/create"
+method = "POST"
+params = json.dumps({
+    "category": "spot",
+    "symbol": "XRPUSDT",
+    "orderType": "LIMIT",
+    "side": "buy",
+    "qty": "10",
+    "price": "0.55",
+    "timeInForce": "PostOnly"
+})
 
-def HTTP_Request(endPoint,method,payload,Info):
-    global time_stamp
-    time_stamp=str(int(time.time() * 10 ** 3))
-    signature=genSignature(payload)
+def send_http_request(endpoint, method, payload, info):
+    timestamp = str(int(time.time() * 10 ** 3))
+    signature = generate_signature(payload, timestamp)
     headers = {
-        'X-BAPI-API-KEY': api_key,
-        'X-BAPI-SIGN': signature,
-        'X-BAPI-SIGN-TYPE': '2',
-        'X-BAPI-TIMESTAMP': time_stamp,
-        'X-BAPI-RECV-WINDOW': recv_window,
-        'Content-Type': 'application/json'
+        "X-BAPI-API-KEY": api_key,
+        "X-BAPI-SIGN": signature,
+        "X-BAPI-SIGN-TYPE": "2",
+        "X-BAPI-TIMESTAMP": timestamp,
+        "X-BAPI-RECV-WINDOW": recv_window,
+        "Content-Type": "application/json"
     }
-    if(method=="POST"):
-        response = httpClient.request(method, url+endPoint, headers=headers, data=payload)
+    if method == "POST":
+        response = httpClient.request(method, url + endpoint, headers=headers, data=payload)
     else:
-        response = httpClient.request(method, url+endPoint+"?"+payload, headers=headers)
+        response = httpClient.request(method, url + endpoint + "?" + payload, headers=headers)
     print(response.text)
     print(response.headers)
-    print(Info + " Elapsed Time : " + str(response.elapsed))
+    print(info + " Elapsed Time: " + str(response.elapsed))
 
-def genSignature(payload):
-    param_str= str(time_stamp) + api_key + recv_window + payload
-    hash = hmac.new(bytes(secret_key, "utf-8"), param_str.encode("utf-8"),hashlib.sha256)
+def generate_signature(payload, timestamp):
+    param_str = str(timestamp) + api_key + recv_window + payload
+    hash = hmac.new(bytes(api_secret, "utf-8"), param_str.encode("utf-8"), hashlib.sha256)
     signature = hash.hexdigest()
     return signature
 
-HTTP_Request(endpoint,method,params,"Create")
+send_http_request(endpoint, method, params, "Create")
 ```
 
 ---
@@ -129,13 +136,13 @@ import websockets
 import json
 import hmac
 import hashlib
-from datetime import datetime
+import time
 
 async def authenticate(ws):
-    api_key = "xxxxx"
-    api_secret = "xxxxxx"
-    expires = int((datetime.now().timestamp() + 10) * 1000)
-    signature = hmac.new(api_secret.encode(), f'GET/realtime{expires}'.encode(), hashlib.sha256).hexdigest()
+    api_key = "xxxxxxxxxxxxxxxxxx"
+    api_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    expires = int(time.time() * 10 ** 3)
+    signature = hmac.new(api_secret.encode(), f"GET/realtime{expires}".encode(), hashlib.sha256).hexdigest()
 
     auth_msg = {
         "op": "auth",
@@ -151,7 +158,7 @@ async def spot_send_subscription(ws):
         "header": {
             "Referer": "Test-1",
             "X-BAPI-RECV-WINDOW": "100000",
-            "X-BAPI-TIMESTAMP": str(int(datetime.now().timestamp() * 1000))
+            "X-BAPI-TIMESTAMP": str(int(time.time() * 10 ** 3))
         },
         "op": "order.create",
         "args": [
@@ -170,7 +177,7 @@ async def spot_send_subscription(ws):
     await ws.send(json.dumps(sub_msg))
     print("Subscription spot message sent.")
 
-async def listen_messages(ws):
+async def receive_message(ws):
     while True:
         message = await ws.recv()
         print(f"Message received: {message}")
@@ -180,7 +187,7 @@ async def main():
     async with websockets.connect(uri) as ws:
         await authenticate(ws)
         await spot_send_subscription(ws)
-        await listen_messages(ws)
+        await receive_message(ws)
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -239,11 +246,11 @@ print(resp)
 ```python
 # option 1: provide upon instantiating
 exchange = ccxt.bybit({
-    'options': {
-        'usePrivateInstrumentsInfo': True,
+    "options": {
+        "usePrivateInstrumentsInfo": True,
     }
 })
 
 # option 2: or set it after instantiating
-exchange.options['usePrivateInstrumentsInfo'] = True
+exchange.options["usePrivateInstrumentsInfo"] = True
 ```
