@@ -8,7 +8,9 @@ Query the available amount to transfer of a specific coin in the Unified wallet.
 :::info
 Formula of Asset Available Balance for withdraw: 
 1. Reverse calculate Asset Available Amount = X, using `totalAvailableBalance` in [Get Wallet Balance](wallet-balance#) and the asset's tiered collateral ratio <br/>
-2. Asset Available Balance for withdraw = min(X, asset spot Available balance - spot hedging qty for portfolio margin mode)
+2. Asset Available Balance for withdraw = min(X, asset withdraw Available balance)
+- under Cross marin mode: asset withdraw Available balance = asset wallet balance + min(unrealised pnl,0) + asset reservation - frozen + negative option value - bonus - Positive Option OrderIM + orderloss <br/>
+- under Portfolio margin mode: asset withdraw Available balance = asset wallet balance + min(unrealised pnl,0) + asset reservation - frozen  - max(bonus, Pm spot Hedged Balance) + orderloss + min(optionValue,0) <br/>
 3. During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 :::
 
