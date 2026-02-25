@@ -11,15 +11,15 @@ sidebar_position: 1
 - **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
 - **Depth:** 提供即時 Level 1 訂單簿資料.
 - **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
-- 自2026年1月15日起，SBE連接將僅能通過 **v5/public-sbe** 使用。
 
 ---
 
 ## 連接
 
-- 對於 linear / inverse / spot 的 Level 1 資料: 如果 3 秒內訂單簿沒有變化, 會再次推送 snapshot 信息, 欄位 `u` 會與前一則信息相同。
+- 字段 `u` 總是**單調遞增**.
+- 字段 `u` 通常**不會重置**, 除非系統重啟或精度 (precision) 改變, 則重置成**1**.
+- 如果 3 秒內BBO沒有變化, 會強推一個 snapshot 信息, 字段 `u` 會與前一則信息保持相同。
 - 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
-
 
 ## 訂閱流程(JSON 控制 frame)
 

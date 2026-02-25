@@ -11,13 +11,14 @@ sidebar_position: 1
 - **Format:** SBE binary frames (`opcode = 2`), little-endian.
 - **Depth:** Real-time Level 1 Orderbook data.
 - **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
-- From January 15, 2026, sbe connection will only be avaiable via **v5/public-sbe**
 ---
 
 ## Connection
 
-- For Level 1 data on **linear / inverse / spot**: if the order book does not change within **3 seconds**, the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
-- Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, **continuity of `u` is not guaranteed**.
+- Field `u` increases **monotonically**.
+- Field `u` **does not reset**, unless there is a system restart or precision change, `u` would be reset to **1**.
+- If BBO does not change within **3 seconds**, the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
+- Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, continuity of `u` is **not guaranteed**.
 
 ## Subscription Flow
 
