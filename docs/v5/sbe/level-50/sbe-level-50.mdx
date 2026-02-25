@@ -11,11 +11,6 @@ sidebar_position: 1
 - **Depth:** 50 levels per side (no RPI in this stream).
 - **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
 
-## SBE Connection Limit
-- **Spot:** 1500 connections limit per dedicated MMWS host.
-- **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
-- Once you breach the connection limit, new connections return **HTTP 429**.
-
 ## Flow
 ### Ping / Pong (JSON control frames)
 
@@ -82,8 +77,8 @@ sidebar_position: 1
 ## Order Book Update Logic
 ### Rules for the u (Update ID) Field
 #### Behavior of `u`
-- Field `u` **increases monotonically** for all snapshots and deltas.
-- Field `u` **does not reset**, unless there is a system reset or precision change.
+- Field `u` increases **monotonically** for all snapshots and deltas.
+- Field `u` **does not reset**, unless there is a system restart or precision change.
 - Field `u = 1` always indicates a **snapshot**, and continuity checks must stop.
 
 #### Continuity Validation
