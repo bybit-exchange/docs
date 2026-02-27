@@ -1,0 +1,73 @@
+---
+title: 查詢好友被邀請人
+sidebar_label: 查詢好友被邀請人
+sidebar_position: 10
+---
+
+:::tip
+* 任意權限可以訪問該接口
+:::
+
+### HTTP 請求
+GET `/v5/user/invitation/referrals`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|status |false |string |邀請關係狀態, `0`: 存活; `1`: 失效. 默認返回全部狀態|
+|size |false |string |每頁數量限制. [`1`, `100`]. 默認: `20`|
+|cursor |false |string |游標，用於翻頁|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|nextCursor |string |游標，用於翻頁|
+|records |array |Object|
+|> id |string |ID, 內部使用|
+|> inviteeUid |string |被邀請人uid|
+|> status |integer |邀請關係狀態, `0`: 存活; `1`: 失效|
+|> createdAt |string |紀錄創建時間戳|
+|> updatedAt |string |紀錄更新時間戳|
+
+### 請求示例
+
+```http
+GET /v5/user/invitation/referrals?status=0&size=5&cursor=6867 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1772095760290
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "nextCursor": "",
+        "records": [
+            {
+                "id": "6866",
+                "inviteeUid": "1447787",
+                "status": 0,
+                "createdAt": "1681206247",
+                "updatedAt": "1681206247"
+            },
+            {
+                "id": "6863",
+                "inviteeUid": "1447350",
+                "status": 0,
+                "createdAt": "1681192249",
+                "updatedAt": "1681192248"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1772095760428
+}
+```
