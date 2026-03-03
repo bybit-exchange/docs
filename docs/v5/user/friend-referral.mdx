@@ -1,0 +1,73 @@
+---
+title: Get Friend Referrals
+sidebar_label: Get Friend Referrals
+sidebar_position: 10
+---
+
+:::tip
+Any permission can access this endpoint.
+:::
+
+### HTTP Request
+GET `/v5/user/invitation/referrals`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|status |false |string |Invitation relationship status, `0`: alive; `1`: invalid. By default, returns all status|
+|size |false |string |Data size per page [1, 100]. Return 20 records by default|
+|cursor |false |string |Cursor. Use the `nextCursor` token from the response to retrieve the next page of the result set|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextCursor |string |The next page cursor value|
+|records |array |Object|
+|> id |string |ID, internal userd|
+|> inviteeUid |string |Invitee userID|
+|> status |integer |Invitation relationship status, `0`: alive; `1`: invalid|
+|> createdAt |string |Created timestamp|
+|> updatedAt |string |Updated timestamp|
+
+### Request Example
+
+```http
+GET /v5/user/invitation/referrals?status=0&size=5&cursor=6867 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1772095760290
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "nextCursor": "",
+        "records": [
+            {
+                "id": "6866",
+                "inviteeUid": "1447787",
+                "status": 0,
+                "createdAt": "1681206247",
+                "updatedAt": "1681206247"
+            },
+            {
+                "id": "6863",
+                "inviteeUid": "1447350",
+                "status": 0,
+                "createdAt": "1681192249",
+                "updatedAt": "1681192248"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1772095760428
+}
+```
