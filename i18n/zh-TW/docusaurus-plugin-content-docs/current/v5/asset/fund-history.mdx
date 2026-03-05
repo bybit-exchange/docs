@@ -1,0 +1,93 @@
+---
+title: 資金帳戶歷史記錄
+sidebar_label: 資金帳戶歷史記錄
+---
+
+查詢資金帳戶的交易記錄，支持按交易類型和時間範圍進行篩選。
+
+### HTTP 請求
+GET `/v5/asset/fundinghistory`
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|createTimeFrom |false |string |起始時間戳（秒）。須與 `createTimeTo` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天 |
+|createTimeTo |false |string |結束時間戳（秒）。須與 `createTimeFrom` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天 |
+|limit |false |string |每頁數據條數。默認值：`10` |
+|cursor |false |string |游標，用於翻頁 |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|nextPageCursor |string |下一頁游標 |
+|list |array |交易記錄列表 |
+|> memberId |string |用戶ID |
+|> currency |string |幣種 |
+|> ioDirection |string |方向。`I`: 收入，`O`: 支出 |
+|> txnAmt |string |交易金額 |
+|> afterAmt |string |交易後餘額 |
+|> createTime |string |創建時間（Unix 秒） |
+|> showBusiType |string |業務類型（本地化 key） |
+|> showBusiTypeEn |string |英文業務類型 |
+|> description |string |描述（本地化 key） |
+|> descriptionEn |string |英文描述 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1739433600000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "MTM3MTU3OTk=",
+        "list": [
+            {
+                "memberId": "290118",
+                "currency": "BTC",
+                "ioDirection": "I",
+                "txnAmt": "0.00003561",
+                "afterAmt": "7.5547230662687035",
+                "createTime": "1772669763",
+                "showBusiType": "fundingAccountRecordEarn",
+                "showBusiTypeEn": "Earn",
+                "description": "fundingAccountRecordFlexSavingInterestDistribution",
+                "descriptionEn": "Easy Earn | Flexible Interest Distribution"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1772699449372
+}
+```

@@ -1,0 +1,93 @@
+---
+title: Asset History (Funding Account)
+sidebar_label: Asset History (Funding Account)
+---
+
+Return transaction log in Funding Account. This endpoint supports filtering by transaction type and time range.
+
+### HTTP Request
+GET `/v5/asset/fundinghistory`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|createTimeFrom |false |string |Start timestamp (seconds). Must be used together with `createTimeTo`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days |
+|createTimeTo |false |string |End timestamp (seconds). Must be used together with `createTimeFrom`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days |
+|limit |false |string |Limit for data size per page. Default: `10` |
+|cursor |false |string |Cursor, used for pagination |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextPageCursor |string |Cursor for next page |
+|list |array |Transaction list |
+|> memberId |string |Member ID |
+|> currency |string |Coin symbol |
+|> ioDirection |string |Direction. `I`: In, `O`: Out |
+|> txnAmt |string |Transaction amount |
+|> afterAmt |string |Balance after transaction |
+|> createTime |string |Create time (Unix seconds) |
+|> showBusiType |string |Business type (localized key) |
+|> showBusiTypeEn |string |Business type in English |
+|> description |string |Description (localized key) |
+|> descriptionEn |string |Description in English |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1739433600000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "MTM3MTU3OTk=",
+        "list": [
+            {
+                "memberId": "290118",
+                "currency": "BTC",
+                "ioDirection": "I",
+                "txnAmt": "0.00003561",
+                "afterAmt": "7.5547230662687035",
+                "createTime": "1772669763",
+                "showBusiType": "fundingAccountRecordEarn",
+                "showBusiTypeEn": "Earn",
+                "description": "fundingAccountRecordFlexSavingInterestDistribution",
+                "descriptionEn": "Easy Earn | Flexible Interest Distribution"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1772699449372
+}
+```
