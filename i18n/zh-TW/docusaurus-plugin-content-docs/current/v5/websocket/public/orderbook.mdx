@@ -19,6 +19,11 @@ sidebar_position: 1
 - **盤前合約**: 直到`ContinuousTrading`(連續競價)階段, orderbook數據才會下發
 :::
 
+:::note 提醒
+* 現貨 & 合約1檔: 在收到的JSON消息中, "ts" 字段出現在"type"字段之**前**, 例如, `{"toptic": "orderbook.1.BTCUSDT", "ts": "1772694601512", "type": "snapshot", ...}`
+* 現貨 & 合約其他檔位: 在收到的JSON消息中, "ts" 字段出現在"ts"字段之**後**, 例如, `{"toptic": "orderbook.50.BTCUSDT", "type": "delta", "ts": "1772694601512", ...}`
+:::
+
 **USDT合約和USDC合約 & 反向合約:**<br/>
   1 檔數據, 推送頻率: **10ms**<br/>
  50 檔數據, 推送頻率: **20ms**<br/>
