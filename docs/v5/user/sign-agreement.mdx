@@ -4,12 +4,12 @@ sidebar_label: Sign Agreement
 sidebar_position: 0.1
 ---
 
-To trade commidities, please sign the agreement first. Once this is done, you can trade any metals commodity contracts.
+To trade commodity contracts, please complete the agreement signing first. Once completed, you will be able to trade all metals commodity contracts.
 
 :::info
-* Use master account only to sign the agreement via this endpoint, subaccount is not support to call
-* Once master account is signed, all subaccounts are free to trade
-* The api key with one of "Account Transfer, SubAccount Transfer, Withdrawal" permissions can call
+* Only the master account can sign the agreement via this endpoint. Subaccounts are not supported for this action.
+* Once the master account has signed, all subaccounts will be eligible to trade.
+* The API key must have at least one of the following permissions to call this endpoint: Account Transfer, Subaccount Transfer, or Withdrawal.
 :::
 
 ### HTTP Request
@@ -27,11 +27,29 @@ None
 ### Request Example
 
 ```http
+POST /v5/user/agreement HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1772695036541
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 40
 
+{
+    "agree": true,
+    "category": 2
+}
 ```
 
 ### Response Example
 
 ```json
-
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1772695037330
+}
 ```
