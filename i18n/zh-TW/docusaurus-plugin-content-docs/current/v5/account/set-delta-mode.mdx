@@ -1,0 +1,74 @@
+---
+title: 設置Delta中性模式
+sidebar_label: 設置Delta中性模式
+sidebar_position: 21.1
+---
+Delta 中性模式旨在為執行 Delta 中性策略的用戶，提升交易體驗。啟用後，符合 Delta 中性標準的倉位在 ADL (自動減倉) 佇列中的排名會較低，從而降低在極端市場條件下被自動減倉的風險。
+詳情請參考 [Delta 中性模式](https://www.bybit.com/en/help-center/article?id=1772092051700)幫助文章。
+
+您可以開啟或關閉 Delta 中性模式。如需查詢當前狀態，請使用 [查詢交易行為設置](./get-user-setting-config) 接口，並查看響應中的 `deltaEnable` 字段。
+
+### HTTP 請求
+POST `/v5/account/set-delta-mode`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|deltaEnable |**true** |string |`1`: 開啟；`0`: 關閉|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|resultStatus |integer |`success`;`failed`|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/set-delta-mode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773113846000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 20
+
+{
+    "deltaEnable": "1"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1773113846355
+}
+```
