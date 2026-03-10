@@ -4,7 +4,7 @@ sidebar_label: 查詢交易行為設置
 sidebar_position: 21
 ---
 
-您可以查詢當限價單價格超過最高買價或最低賣價時，系統的行為方式。
+您可以查詢當限價單價格超過最高買價或最低賣價時，系統的行為方式。回傳結果同時包含 [Delta 中性模式](./set-delta-mode) 的開啟狀態。
 
 現貨
 * **最高買入價格**: *Min[Max(指數價格, 指數價格 × (1 + y%) + 2分鐘平均溢價), 指數價格 × (1 + z%)]*
@@ -34,6 +34,7 @@ GET `/v5/account/user-setting-config`
 |result |array |Object |
 |> lpaSpot |boolean |<ul><li>`true`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界</li><li>`false`: 若下單價格超出限制範圍，系統將拒絕該請求</li></ul>|
 |> lpaPerp |boolean |<ul><li>`true`: 若下單價格超出限制範圍，系統將拒絕該請求 </li><li>`false`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界</li></ul>|
+|> deltaEnable |boolean |[Delta 中性模式](./set-delta-mode) 是否已開啟。`true`: 已開啟；`false`: 已關閉|
 
 
 ### 請求示例
@@ -84,7 +85,8 @@ print(session.get_user_setting_config())
     "retMsg": "OK",
     "result": {
         "lpaSpot": true,
-        "lpaPerp": false
+        "lpaPerp": false,
+        "deltaEnable": false
     },
     "retExtInfo": {},
     "time": 1756794317787

@@ -1,0 +1,74 @@
+---
+title: Set Delta Neutral Mode
+sidebar_label: Set Delta Neutral Mode
+sidebar_position: 19.1
+---
+Delta Neutral Mode is designed to enhance the trading experience for users running delta-neutral strategies. When enabled, positions that meet the Delta Neutral criteria are ranked lower in the ADL (Auto-Deleveraging) queue, reducing the risk of being auto-deleveraged during extreme market conditions. 
+For more details, refer to the [Delta Neutral Mode](https://www.bybit.com/en/help-center/article?id=1772092051700) help article.
+
+You can turn on/off the Delta Neutral mode. To query the current status, use the [Get Trade Behaviour Config](/docs/v5/account/get-user-setting-config) endpoint and check the `deltaEnable` field in the response.
+
+### HTTP Request
+POST `/v5/account/set-delta-mode`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|deltaEnable |**true** |string |`1`: Enable; `0`: Disable|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|resultStatus |integer |`success`;`failed`|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/account/set-delta-mode HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773113846000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+Content-Length: 20
+
+{
+    "deltaEnable": "1"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1773113846355
+}
+```
