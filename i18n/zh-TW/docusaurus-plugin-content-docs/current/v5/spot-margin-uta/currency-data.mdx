@@ -1,0 +1,91 @@
+---
+title: 查詢借幣幣種數據
+sidebar_label: 查詢借幣幣種數據
+sidebar_position: 3
+---
+
+:::info
+若借貸開關為關閉狀態（`false`），相關配置字段將返回 `""`。
+:::
+
+### HTTP 請求
+GET `/v5/spot-margin-trade/currency-data`
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency|false|string|幣種名稱，僅限大寫|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object|
+|> currency |string |幣種名稱|
+|> flexibleManualBorrowable |boolean |是否開啟活期借幣。`true`：開啟，`false`：關閉|
+|> minFlexibleManualBorrowQty |string |活期最小借幣數量|
+|> flexibleManualBorrowAccuracy |string |活期借幣精度|
+|> fixedManualBorrowable |boolean |是否開啟定期借幣。`true`：開啟，`false`：關閉|
+|> minFixedManualBorrowQty |string |定期最小借幣數量|
+|> fixedManualBorrowAccuracy |string |定期借幣精度|
+|> fixedInterestRateAccuracy |string |定期借幣利率精度|
+|> minFixedInterestRate |string |最小借幣利率，例如：`0.01`|
+|> maxFixedInterestRate |string |最大借幣利率，例如：`0.8`|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773220082000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "currency": "BTC",
+                "flexibleManualBorrowable": true,
+                "minFlexibleManualBorrowQty": "0.001",
+                "flexibleManualBorrowAccuracy": "8",
+                "fixedManualBorrowable": false,
+                "minFixedManualBorrowQty": "",
+                "fixedManualBorrowAccuracy": "",
+                "fixedInterestRateAccuracy": "",
+                "minFixedInterestRate": "",
+                "maxFixedInterestRate": ""
+            }
+        ]
+    },
+    "retExtInfo": "{}",
+    "time": 1773220082091
+}
+```
