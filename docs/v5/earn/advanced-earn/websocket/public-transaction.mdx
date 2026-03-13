@@ -1,0 +1,46 @@
+---
+title: Dualassets offers
+sidebar_label: Dualassets offers
+sidebar_position: 1
+---
+
+Push frequency: **second-level**
+
+Push scope: **Full snapshot of all online product quotes**
+
+**Topic:** `earn.dualassets.offers`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|id |string |Message ID|
+|topic | string  | Topic name                                                                                                                              |
+|creationTime | int   | Data created timestamp (ms)                                                                                                              |
+|data |array |Object |
+| > productId | int64 | Product ID |
+| > currentPrice | string | Current price |
+| > buyLowPrice | array of objects | Buy low price list |
+| >> selectPrice | string | Selected price |
+| >> apyE8 | int64 | Annualized yield, e8 precision |
+| >> maxInvestmentAmount | string | Maximum investment amount |
+| > sellHighPrice | array of objects | Sell high price list |
+| >> selectPrice | string | Selected price |
+| >> apyE8 | int64 | Annualized yield, e8 precision |
+| >> maxInvestmentAmount | string | Maximum investment amount |
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "earn.dualassets.offers"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+
+
+```

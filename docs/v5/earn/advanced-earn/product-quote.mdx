@@ -1,0 +1,61 @@
+---
+title: Get Product Quote
+sidebar_label: Get Product Quote
+sidebar_position: 2
+---
+:::info
+Does not need authentication. **Up to 50 requests** per second.
+:::
+
+
+### HTTP Request
+GET `/v5/earn/advance/product-extra-info`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|productId|**true**|string |Product ID|
+|category|**true**|string|Product category,`DualAssets`|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> productId|int64|Product ID|
+|> currentPrice|string|Current market price|
+|> buyLowPrice|array|List of available prices for Buy Low direction|
+|>> selectPrice|string|Optional target price|
+|>> apyE8|int64|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
+|>> maxInvestmentAmount|string|Maximum investment amount at this price|
+|> sellHighPrice|array|List of available prices for Sell High direction|
+|>> selectPrice|string|Optional target price|
+|>> apyE8|int64|Annual Percentage Yield (e8 precision)|
+|>> maxInvestmentAmount|string|Maximum investment amount at this price|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/product-extra-info?category=DualAssets&productId=123 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+
+```

@@ -1,0 +1,72 @@
+---
+title: 獲取產品資訊
+sidebar_label: 獲取產品資訊
+sidebar_position: 1
+---
+:::info
+無需身份驗證
+:::
+
+[Bybit 雙幣投資常見問題](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
+
+### HTTP 請求
+GET `/v5/earn/advance/product`
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------|
+|category|**true**|string|產品類型，`DualAssets`|
+|coin|false|string|幣種名稱，僅限大寫|
+|duration|false|string|產品期限，例如：8h、1d、3d、6d、12d|
+
+
+### 回應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list|array|物件|
+|> category|string|產品類型，`DualAssets`|
+|> productId|string|產品 ID|
+|> displayName|string|產品顯示名稱|
+|> baseCoin|string|基礎幣種|
+|> quoteCoin|string|計價幣種|
+|> investCoin|string|投資幣種|
+|> expectReceiveAt|string|預計收到轉帳的時間，Unix 時間戳（毫秒）|
+|> duration|string|產品期限，例如：8h、1d、3d|
+|> status|string|產品状态,`Available`（可用）、`NotAvailable`（不可用）|
+|> kycLevelLimit|string|KYC 等級限制，`0`：`不限`，`1`：`KYC1`，`2`：`KYC2`，`3`：`KYC3`|
+|> isVipProduct|boolean|是否為 VIP 產品|
+|> subscribeStartAt|string|認購開始時間，Unix 時間戳（毫秒）|
+|> subscribeEndAt|string|認購結束時間，Unix 時間戳（毫秒）|
+|> applyStartAt|string|利息起算開始時間，Unix 時間戳（毫秒）|
+|> settlementTime|string|利息起算結束時間，Unix 時間戳（毫秒）|
+|> minPurchaseQuoteAmount|string|以計價幣種計算的最低購買金額|
+|> minPurchaseBaseAmount|string|以基礎幣種計算的最低購買金額|
+|> remainingAmountQuote|string|低買方向的剩餘配額|
+|> remainingAmountBase|string|高賣方向的剩餘配額|
+
+### 請求範例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/product?category=DualAssets&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 回應範例
+
+```json
+
+```

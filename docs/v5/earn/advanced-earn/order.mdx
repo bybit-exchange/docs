@@ -1,0 +1,80 @@
+---
+title: Get Order Info
+sidebar_label: Get Order Info
+sidebar_position: 5
+---
+:::info
+Need authentication. **Up to 10 requests** per second.
+:::
+
+### HTTP Request
+GET `/v5/earn/advance/order`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|productId|false|string|Product ID|
+|category|**true**|string|Product type, e.g. `DualAssets`|
+|coin |false |string |Coin|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array |Object |
+Here's the corrected result:
+
+| list | array | Order list |
+| > orderId | string | Order ID |
+| > orderLinkId | string | User customised order ID |
+| > productId | string | Product ID |
+| > category | string | Product type |
+| > orderType | string | `Stake`: Subscribe, `Redeem`: Redeem |
+| > amount | string | Order amount |
+| > coin | string | Coin name |
+| > baseCoin | string | Base coin |
+| > quoteCoin | string | Quote coin |
+| > status | string | `Pending`: Order confirming, `Success`: Order successful, position created, `Settled`: Position settled, `Fail`: Order failed |
+| > createdTime | string | Created time, unix timestamp in ms |
+| > updatedTime | string | Updated time, unix timestamp in ms |
+| > direction | string | `BuyLow`, `SellHigh` |
+| > targetPrice | string | Target price in USDT |
+| > settlementTime | int64 | Settlement time, unix timestamp in ms |
+| > estimateApyE8 | int64 | Estimated annualized yield, e8 precision |
+| > duration | string | Product term, e.g. 8h, 1d, 2d, 3d |
+| > accountType | string | Account type |
+| > toAccountType | string | Settlement destination account |
+| > selectApyE8 | int64 | User-selected annualized yield, e8 precision |
+| > confirmApyE8 | int64 | Final confirmed annualized yield, e8 precision, only valid when status=Success |
+| > isVip | bool | Whether it is a VIP product |
+| > settlementCoin | string | Settlement coin |
+| > settlementAmount | string | Settlement amount, in settlement coin |
+| > orderMode | string | Order mode: Normal, RFQ, reserved field |
+| > settlementPrice | string | Settlement price in CoinX |
+| > refundStatus | string | `Processing`: Refund processing, `Processed`: Refund completed, only valid when order status=Fail |
+| nextPageCursor | string | Next page cursor, empty means no more data |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/position?category=DualAssets HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+
+```

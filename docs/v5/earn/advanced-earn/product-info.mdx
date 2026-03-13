@@ -1,0 +1,72 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+:::info
+Does not need authentication. **Up to 50 requests** per second.
+:::
+
+[Bybit Dual Asset FAQ](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
+
+### HTTP Request
+GET `/v5/earn/advance/product`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category,`DualAssets`|
+|coin|false|string|Coin name, uppercase only |
+|duration|false|string|Product duration, eg:8h, 1d, 3d, 6d, 12d|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> category|string |`DualAssets`|
+|> productId|string |Product ID|
+|> displayName|string |Product display name|
+|> baseCoin|string |Base Coin|
+|> quoteCoin|string |Quote Coin|
+|> investCoin|string |Invest Coin|
+|> expectReceiveAt|string |Expected time to receive the transfer, Unix timestamp in milliseconds|
+|> duration|string|Product duration, eg:8h, 1d, 3d|
+|> status|string|`Available`,`NotAvailable`|
+|> kycLevelLimit|string|Kyc Level Limit, `0`:`Unlimited`,`1`:`KYC1`,`2`:`KYC2`,`3`:`KYC3`|
+|> isVipProduct|boolean|Whether it is a VIP product|
+|> subscribeStartAt|string |Subscription start time, Unix timestamp in ms|
+|> subscribeEndAt|string |Subscription end time, Unix timestamp in ms |
+|> applyStartAt|string |Interest accrual start time, Unix timestamp in ms|
+|> settlementTime|string |Interest accrual end time, Unix timestamp in ms|
+|> minPurchaseQuoteAmount|string |Minimum purchase amount in quote currency |
+|> minPurchaseBaseAmount|string |Minimum purchase amount in base currency |
+|> remainingAmountQuote|string |Remaining quota for Buy Low direction |
+|> remainingAmountBase|string |Remaining quota for Sell High direction |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/product?category=DualAssets&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+
+```
