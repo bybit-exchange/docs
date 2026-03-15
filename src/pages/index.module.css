@@ -1,23 +1,195 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
+/* ===== HERO BANNER ===== */
 .heroBanner {
-  padding: 4rem 0;
+  padding: 5rem 0 4.5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: #0B0B0E;
+  border-bottom: 1px solid #2A2A33;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+/* Ambient glow behind hero content */
+.heroGlow {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 400px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(247, 166, 15, 0.12) 0%,
+    rgba(247, 166, 15, 0.04) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
-.buttons {
+.heroBanner .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Badge pill */
+.heroBadge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: rgba(247, 166, 15, 0.12);
+  border: 1px solid rgba(247, 166, 15, 0.3);
+  border-radius: 999px;
+  color: #F7A60F;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+/* Hero title */
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin: 0 auto 1rem;
+  max-width: 700px;
+  letter-spacing: -0.02em;
+}
+
+/* Hero subtitle */
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: #9999AA;
+  max-width: 520px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+
+/* Button row */
+.heroButtons {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+/* Primary CTA button — amber fill */
+.primaryButton {
+  background-color: #F7A60F !important;
+  border-color: #F7A60F !important;
+  color: #0B0B0E !important;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.7rem 2rem;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 20px rgba(247, 166, 15, 0.25);
+}
+
+.primaryButton:hover {
+  background-color: #FAB83C !important;
+  border-color: #FAB83C !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px rgba(247, 166, 15, 0.4);
+  color: #0B0B0E !important;
+  text-decoration: none;
+}
+
+/* Secondary CTA button — outlined */
+.secondaryButton {
+  background-color: transparent !important;
+  border: 1px solid #2A2A33 !important;
+  color: #E8E8EE !important;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.7rem 2rem;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.secondaryButton:hover {
+  border-color: #F7A60F !important;
+  color: #F7A60F !important;
+  background-color: rgba(247, 166, 15, 0.06) !important;
+  text-decoration: none;
+}
+
+/* Meta strip */
+.heroMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.heroMetaItem {
+  color: #6A6A80;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.heroMetaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #3A3A45;
+  flex-shrink: 0;
+}
+
+/* Light mode overrides */
+[data-theme='light'] .heroBanner {
+  background: linear-gradient(160deg, #fffbf0 0%, #fff9e6 100%);
+  border-bottom: 1px solid #f0e4c0;
+}
+
+[data-theme='light'] .heroGlow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(247, 166, 15, 0.18) 0%,
+    rgba(247, 166, 15, 0.06) 45%,
+    transparent 70%
+  );
+}
+
+[data-theme='light'] .heroTitle {
+  color: #1A1A25;
+}
+
+[data-theme='light'] .heroSubtitle {
+  color: #555568;
+}
+
+[data-theme='light'] .heroBadge {
+  background: rgba(247, 166, 15, 0.15);
+  border-color: rgba(247, 166, 15, 0.5);
+}
+
+[data-theme='light'] .secondaryButton {
+  border-color: #D0C0A0 !important;
+  color: #444455 !important;
+}
+
+[data-theme='light'] .heroMetaItem {
+  color: #888899;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .heroBanner {
+    padding: 3rem 1.5rem 3rem;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .heroMeta {
+    display: none;
+  }
 }

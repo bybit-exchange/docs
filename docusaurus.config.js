@@ -130,7 +130,10 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: require.resolve('./src/css/bybit.css'),
+          customCss: [
+            require.resolve('./src/css/bybit.css'),
+            require.resolve('./src/css/custom.css'),
+          ],
         },
       }),
     ],

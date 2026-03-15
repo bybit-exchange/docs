@@ -1,62 +1,215 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Bybit API Documentation — Global Styles
+ * Framework: Docusaurus 2 (Infima CSS)
  */
 
-/* You can override the default Infima variables here. */
+/* ============================================================
+   COLOR VARIABLES — Light Mode
+   ============================================================ */
 :root {
-  --ifm-color-primary: #f7a60f;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
+  /* Primary amber/gold ramp */
+  --ifm-color-primary: #F7A60F;
+  --ifm-color-primary-dark: #DE950D;
+  --ifm-color-primary-darker: #D28D0C;
+  --ifm-color-primary-darkest: #AD740A;
+  --ifm-color-primary-light: #F9B22D;
+  --ifm-color-primary-lighter: #FAB83C;
+  --ifm-color-primary-lightest: #FBC960;
+
+  /* Typography */
+  --ifm-font-size-base: 15px;
+  --ifm-line-height-base: 1.65;
+  --ifm-heading-font-weight: 600;
+
+  /* Code */
+  --ifm-code-font-size: 92%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Links */
+  --ifm-link-color: #D28D0C;
+  --ifm-link-hover-color: #F7A60F;
+
+  /* Layout */
+  --ifm-navbar-height: 60px;
+  --ifm-sidebar-width: 280px;
+  --ifm-card-border-radius: 8px;
+  --ifm-table-cell-padding: 0.6rem 0.85rem;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* ============================================================
+   COLOR VARIABLES — Dark Mode
+   ============================================================ */
 [data-theme='dark'] {
-  --ifm-color-primary: #f7a60f;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Primary amber/gold ramp (same values, readable on dark) */
+  --ifm-color-primary: #F7A60F;
+  --ifm-color-primary-dark: #DE950D;
+  --ifm-color-primary-darker: #D28D0C;
+  --ifm-color-primary-darkest: #AD740A;
+  --ifm-color-primary-light: #F9B22D;
+  --ifm-color-primary-lighter: #FAB83C;
+  --ifm-color-primary-lightest: #FBC960;
+
+  /* Bybit brand backgrounds */
+  --ifm-background-color: #0B0B0E;
+  --ifm-background-surface-color: #151518;
+  --ifm-navbar-background-color: #0F0F12;
+  --ifm-footer-background-color: #0B0B0E;
+
+  /* Borders */
+  --ifm-toc-border-color: #2A2A33;
+  --ifm-color-emphasis-300: #2A2A33;
+  --ifm-hr-border-color: #252530;
+  --ifm-table-border-color: #2A2A33;
+
+  /* Text */
+  --ifm-font-color-base: #E8E8EE;
+  --ifm-color-content: #E8E8EE;
+  --ifm-color-content-secondary: #9999AA;
+
+  /* Links */
+  --ifm-link-color: #F9B22D;
+  --ifm-link-hover-color: #FBC960;
+
+  /* Code */
+  --ifm-code-background: #1C1B22;
+  --docusaurus-highlighted-code-line-bg: rgba(247, 166, 15, 0.12);
+
+  /* Sidebar interaction */
+  --ifm-menu-color-background-active: rgba(247, 166, 15, 0.10);
+  --ifm-menu-color-background-hover: rgba(247, 166, 15, 0.06);
+
+  /* Navbar shadow */
+  --ifm-navbar-shadow: 0 1px 0 0 #2A2A33;
 }
 
+/* ============================================================
+   FONTS
+   ============================================================ */
 
-/* apply Bybit's font */
+/* Latin/Extended — Inter */
 @font-face {
-  font-family: 'Bybit';
-  src: url('/font/Inter-Regular.ttf');       /* international */
-  src: url('/font/NotoSansTC-Regular.otf');  /* zh-TW */
+  font-family: 'BybitFont';
+  src: url('/font/Inter-Regular.ttf') format('truetype');
+  font-display: swap;
+  unicode-range: U+0000-024F, U+0250-02AF, U+1E00-1EFF, U+2000-206F;
 }
 
-
-body {
-  font-family: 'Bybit';
+/* Traditional Chinese — Noto Sans TC */
+@font-face {
+  font-family: 'BybitFont';
+  src: url('/font/NotoSansTC-Regular.otf') format('opentype');
+  font-display: swap;
+  unicode-range: U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F;
 }
 
+body,
+html {
+  font-family: 'BybitFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
 
-/* use minimalist-style tables (as used in the old slate documentation) by default */
-table th, table td {
-  padding: 5px 10px;
+[data-theme='dark'] .navbar {
+  background-color: rgba(15, 15, 18, 0.92);
+  border-bottom: 1px solid #2A2A33;
+  box-shadow: none;
+}
+
+.navbar__link--active {
+  color: var(--ifm-color-primary) !important;
+  font-weight: 600;
+}
+
+.navbar__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .dropdown__menu {
+  background-color: #1C1B22;
+  border: 1px solid #2A2A33;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .dropdown__link:hover {
+  background-color: rgba(247, 166, 15, 0.08);
+  color: var(--ifm-color-primary);
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+[data-theme='dark'] .theme-doc-sidebar-container {
+  border-right: 1px solid #2A2A33;
+}
+
+[data-theme='dark'] .menu {
+  background-color: #0F0F12;
+}
+
+[data-theme='dark'] .menu__link {
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+[data-theme='dark'] .menu__link:hover {
+  background-color: rgba(247, 166, 15, 0.07);
+  color: var(--ifm-color-primary-lightest);
+}
+
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(247, 166, 15, 0.12) !important;
+  color: var(--ifm-color-primary) !important;
+  font-weight: 600;
+  border-left: 2px solid var(--ifm-color-primary);
+  padding-left: calc(var(--ifm-menu-link-padding-horizontal) - 2px);
+}
+
+[data-theme='dark'] .menu__caret::before {
+  border-color: #666680;
+}
+
+[data-theme='dark'] .menu__list-item-collapsible:hover {
+  background-color: rgba(247, 166, 15, 0.05);
+}
+
+/* ============================================================
+   TABLES — Default (minimalist)
+   ============================================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+table th {
+  padding: 0.6rem 0.85rem;
   border: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
   background-color: var(--ifm-table-head-background);
 }
 
 table td {
-  padding: 10px;
+  padding: 0.65rem 0.85rem;
+  border: none;
+  vertical-align: top;
 }
 
 table tr {
-  border: none;
+  border-bottom: 1px solid var(--ifm-table-border-color);
 }
 
 table tr:first-child {
@@ -64,21 +217,51 @@ table tr:first-child {
 }
 
 table tr:last-child {
-  border-bottom: 2px solid var(--ifm-table-border-color);
+  border-bottom: 2px solid var(--ifm-color-primary-darkest);
 }
 
+table td code {
+  font-size: 0.82rem;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
 
-/* blocky table style: blocky borders, no stripes (zebra rows) */
+[data-theme='dark'] table {
+  border: 1px solid #2A2A33;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+[data-theme='dark'] table th {
+  background-color: #1C1B22;
+  color: var(--ifm-color-primary-lighter);
+  border-bottom: 1px solid #2A2A33;
+}
+
+[data-theme='dark'] table tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme='dark'] table tr:hover td {
+  background-color: rgba(247, 166, 15, 0.04);
+  transition: background-color 0.1s ease;
+}
+
+/* ============================================================
+   TABLES — Blocky variant (explicit border style)
+   ============================================================ */
 .blocky_table table {
   border-collapse: collapse;
   display: block;
+  overflow-x: auto;
 }
 
 .blocky_table tr:nth-child(2n) {
   background-color: var(--ifm-table-head-background);
 }
 
-.blocky_table th, .blocky_table table td {
+.blocky_table th,
+.blocky_table table td {
   border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
   padding: var(--ifm-table-cell-padding);
   background-color: var(--ifm-table-head-background);
@@ -89,33 +272,203 @@ table tr:last-child {
   font-weight: var(--ifm-table-head-font-weight);
 }
 
-/* it is also possible to assign a style per .mdx file, by referring to its ID (find it by inspecting the page)
-"\2f" = "/"; because CSS classes don't parse the forward slash correctly
-html.docs-doc-id-v5/upgrade-guide = html.docs-doc-id-v5\2fupgrade-guide */
-/*
-html.docs-doc-id-v5\2fupgrade-guide table {
-  border-collapse: collapse;
+[data-theme='dark'] .blocky_table th {
+  background-color: #1C1B22;
+  color: var(--ifm-color-primary-lighter);
+}
+
+/* ============================================================
+   CODE BLOCKS
+   ============================================================ */
+[data-theme='dark'] .prism-code {
+  background-color: #141318 !important;
+  border: 1px solid #252530;
+  border-radius: 8px;
+}
+
+/* Inline code */
+[data-theme='dark'] code:not([class*='language-']) {
+  background-color: #1C1B22;
+  border: 1px solid #2A2A33;
+  color: #F9B22D;
+  border-radius: 4px;
+  padding: 0.1em 0.45em;
+}
+
+/* Code block highlighted line */
+[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(247, 166, 15, 0.12);
   display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
 }
 
-html.docs-doc-id-v5\2fupgrade-guide table tr:nth-child(odd)>td {
-  background-color: var(--ifm-background-color);
+/* ============================================================
+   ADMONITIONS
+   ============================================================ */
+[data-theme='dark'] .alert {
+  border-radius: 0 8px 8px 0;
 }
 
-html.docs-doc-id-v5\2fupgrade-guide table tr:nth-child(even)>td {
-  background-color: var(--ifm-background-color);
+[data-theme='dark'] .alert--info {
+  background-color: rgba(56, 100, 189, 0.10);
+  border-left: 3px solid #4D7FD9;
 }
 
-html.docs-doc-id-v5\2fupgrade-guide th,
-  html.docs-doc-id-v5\2fupgrade-guide table td {
-    border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
-    padding: var(--ifm-table-cell-padding);
+[data-theme='dark'] .alert--info .admonition-heading h5 {
+  color: #7BA7F5;
 }
 
-html.docs-doc-id-v5\2fupgrade-guide th {
-    color: var(--ifm-table-head-color);
-    font-weight: var(--ifm-table-head-font-weight);
+[data-theme='dark'] .alert--success {
+  background-color: rgba(247, 166, 15, 0.08);
+  border-left: 3px solid #F7A60F;
 }
-*/
 
+[data-theme='dark'] .alert--success .admonition-heading h5 {
+  color: var(--ifm-color-primary);
+}
 
+[data-theme='dark'] .alert--warning {
+  background-color: rgba(237, 107, 33, 0.10);
+  border-left: 3px solid #ED6B21;
+}
+
+[data-theme='dark'] .alert--warning .admonition-heading h5 {
+  color: #F0925A;
+}
+
+[data-theme='dark'] .alert--danger {
+  background-color: rgba(220, 53, 69, 0.10);
+  border-left: 3px solid #DC3545;
+}
+
+[data-theme='dark'] .alert--danger .admonition-heading h5 {
+  color: #F07585;
+}
+
+[data-theme='dark'] .alert .admonition-content p {
+  color: #C8C8D4;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4 {
+  color: #FFFFFF;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.25;
+  margin-bottom: 1.25rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  margin-top: 2rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--ifm-toc-border-color);
+}
+
+h3 {
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.markdown p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+/* ============================================================
+   TABLE OF CONTENTS
+   ============================================================ */
+[data-theme='dark'] .table-of-contents__link {
+  color: #7A7A90;
+  font-size: 0.85rem;
+  transition: color 0.15s ease;
+}
+
+[data-theme='dark'] .table-of-contents__link:hover,
+[data-theme='dark'] .table-of-contents__link--active {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .table-of-contents {
+  border-left: 1px solid #2A2A33;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+[data-theme='dark'] .footer {
+  background-color: #0B0B0E;
+  border-top: 1px solid #2A2A33;
+}
+
+[data-theme='dark'] .footer__link-item {
+  color: #7A7A90;
+  transition: color 0.15s ease;
+}
+
+[data-theme='dark'] .footer__link-item:hover {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .footer__title {
+  color: #C8C8D4;
+}
+
+/* ============================================================
+   PAGINATION (prev/next)
+   ============================================================ */
+[data-theme='dark'] .pagination-nav__link {
+  background-color: #151518;
+  border: 1px solid #2A2A33;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+[data-theme='dark'] .pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+  background-color: rgba(247, 166, 15, 0.05);
+}
+
+[data-theme='dark'] .pagination-nav__sublabel {
+  color: #7A7A90;
+}
+
+[data-theme='dark'] .pagination-nav__label {
+  color: #E8E8EE;
+}
+
+/* ============================================================
+   SCROLLBAR (WebKit)
+   ============================================================ */
+[data-theme='dark'] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: #2A2A33;
+  border-radius: 3px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: #3A3A45;
+}
