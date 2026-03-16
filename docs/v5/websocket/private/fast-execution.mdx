@@ -8,7 +8,7 @@ Fast execution stream significantly reduces data latency compared original "exec
 execution type of trades, and fewer data fields.
 
 **All-In-One Topic:** `execution.fast`<br/>
-**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`<br/>
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`<br/>
 
 :::info
 * Supports all Perps, Futures and Spot exceution, and do not support Options for now
@@ -21,11 +21,11 @@ execution type of trades, and fewer data fields.
 |topic |string |Topic name |
 |creationTime |number |Data created timestamp (ms) |
 |data |array |Object |
-|> [category](../../enum#category) | string  | Product type `linear`, `inverse`, `spot`|
+|> [category](../../enum#category) | string  | Product type `linear`, `inverse`, `spot`, `option`|
 |> symbol |string   |Symbol name |
 |> orderId |string |Order ID |
 |> isMaker |boolean |`true`: Maker, `false`: Taker |
-|> orderLinkId |string |User customized order ID <ul><li>maker trade is always `""`</li><li>If a maker order in the orderbook is converted to taker (by price amend), orderLinkId is also ""</li></ul> |
+|> orderLinkId |string |User customized order ID <ul><li>maker trade is always `""`</li><li>If a maker order in the orderbook is converted to taker (by price amend), orderLinkId is also `""`</li><li>For option: maker trade is always `""`, taker trade is always orderLinkId</li></ul> |
 |> execId |string |Execution ID |
 |> execPrice |string |Execution price |
 |> execQty |string |Execution qty |
