@@ -12,7 +12,7 @@ sidebar_position: 2.1
 :::
 
 **All-In-One Topic:** `execution.fast`<br/>
-**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`<br/>
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`<br/>
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -20,11 +20,11 @@ sidebar_position: 2.1
 |topic |string |Topic名 |
 |creationTime |number |消息數據創建時間 |
 |data |array |Object |
-|> [category](../../enum#category) | string | 產品類型 `linear`, `iverse`, `spot`|
+|> [category](../../enum#category) | string | 產品類型 `linear`, `inverse`, `spot`, `option`|
 |> symbol |string |合約名稱|
 |> orderId |string |訂單ID |
 |> isMaker |boolean |`true`: maker成交, `false`: taker成交 |
-|> orderLinkId |string |用戶自定義訂單ID <ul><li>maker成交總是返回`""`</li><li>當maker訂單在訂單簿中轉化成了taker單(比如修改了價格), 這種情況orderLinkId也是""</li></ul>|
+|> orderLinkId |string |用戶自定義訂單ID <ul><li>maker成交總是返回`""`</li><li>當maker訂單在訂單簿中轉化成了taker單(比如修改了價格), 這種情況orderLinkId也是`""`</li><li>期權: maker成交永遠返回`""`, taker成交永遠返回orderLinkId</li></ul>|
 |> side |string |訂單方向.買：`Buy`,賣：`Sell` |
 |> execId |string |成交Id |
 |> execPrice |string |成交價格 |
