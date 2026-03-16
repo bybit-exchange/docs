@@ -1,46 +1,89 @@
 import React from 'react';
 import clsx from 'clsx';
+import Link from '@docusaurus/Link';
+import Translate from '@docusaurus/Translate';
 import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Unified APIs',
+    title: (
+      <Translate id="homepage.feature.unified.title">Unified V5 APIs</Translate>
+    ),
     Svg: require('@site/static/img/power_plug_dark_mode.svg').default,
     description: (
-      <>
-        Bybit's latest v5 suite of APIs allow for a smooth and easy integration.
-      </>
+      <Translate id="homepage.feature.unified.desc">
+        Bybit's V5 suite unifies spot, derivatives, and options under a single
+        API surface for a smooth and reliable integration experience.
+      </Translate>
     ),
+    link: '/v5/guide',
+    linkLabel: (
+      <Translate id="homepage.feature.unified.link">Read the guide</Translate>
+    ),
+    external: false,
+    internal: true,
   },
   {
-    title: 'Learn Exchange Mechanisms',
+    title: (
+      <Translate id="homepage.feature.mechanics.title">Learn Exchange Mechanics</Translate>
+    ),
     Svg: require('@site/static/img/clipboard_light_mode.svg').default,
     description: (
-      <>
-        <b><a href="https://www.bybit.com/en-US/help-center/HelpCenterKnowledge/bybitHC_Guides?language=en_US">Learn</a></b> the intricate details of Bybit's market rules to fully maximise your API usage.
-      </>
+      <Translate id="homepage.feature.mechanics.desc">
+        Understand order types, margin modes, settlement rules, and market
+        microstructure to fully maximize your API usage.
+      </Translate>
     ),
+    link: 'https://www.bybit.com/en/help-center/homepage',
+    linkLabel: (
+      <Translate id="homepage.feature.mechanics.link">Help Center</Translate>
+    ),
+    external: true,
   },
   {
-    title: 'Historical Market Data',
+    title: (
+      <Translate id="homepage.feature.data.title">Historical Market Data</Translate>
+    ),
     Svg: require('@site/static/img/candlesticks_dark_mode.svg').default,
     description: (
-      <>
-        <b><a href="https://public.bybit.com/">Get</a></b> comprehensive public market data in CSV format to speedily backtest and build strategies.
-      </>
+      <Translate id="homepage.feature.data.desc">
+        Access comprehensive public OHLCV and tick data in CSV format to
+        backtest strategies and build quantitative models.
+      </Translate>
     ),
+    link: 'https://www.bybit.com/derivatives/en/history-data',
+    linkLabel: (
+      <Translate id="homepage.feature.data.link">Download data</Translate>
+    ),
+    external: true,
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({Svg, title, description, link, linkLabel, external, internal}) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
+    <div className={clsx('col col--4', styles.featureCol)}>
+      <div className={styles.featureCard}>
+        <div className={styles.featureIconWrap}>
+          <Svg className={styles.featureSvg} role="img" />
+        </div>
+        <div className={styles.featureBody}>
+          <h3 className={styles.featureTitle}>{title}</h3>
+          <p className={styles.featureDescription}>{description}</p>
+          {link && internal && (
+            <Link to={link} className={styles.featureLink}>
+              {linkLabel} →
+            </Link>
+          )}
+          {link && !internal && (
+            <a
+              href={link}
+              className={styles.featureLink}
+              {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+            >
+              {linkLabel} →
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
