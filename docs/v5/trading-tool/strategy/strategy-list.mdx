@@ -1,0 +1,160 @@
+---
+title: Get Strategy List
+sidebar_label: Get Strategy List
+sidebar_position: 2
+---
+Query the strategy list. Supports filtering by strategy ID, symbol, status, category, and strategy type.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/strategy/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|strategyId |false |string |Strategy ID (exact match) |
+|symbol |false |string |Symbol name, e.g. `BTCUSDT` |
+|status |false |integer |Strategy status. `2`: running, `3`/`4`: terminated, `5`: paused, `6`: untriggered |
+|category |false |string |Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE` |
+|strategyType |false |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
+|beginTimeE0 |false |integer |Start time in seconds (Unix timestamp) |
+|endTimeE0 |false |integer |End time in seconds (Unix timestamp) |
+|pageSize |false |integer |Limit for data size per page. Default: `20`, max: `50` |
+|cursor |false |string |Cursor for pagination, returned from the previous response |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|list |array |Object |
+|> strategyId |string |Strategy ID (UUID format) |
+|> category |string |Product type |
+|> symbol |string |Symbol name |
+|> side |string |`Buy`, `Sell` |
+|> size |string |Total order quantity |
+|> strategyType |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
+|> status |integer |Strategy status. `2`: running, `3`/`4`: terminated, `5`: paused, `6`: untriggered |
+|> executedSize |string |Executed quantity |
+|> executedAvgPrice |string |Average executed price |
+|> executedStartTimeE3 |int64 |Execution start time (ms) |
+|> executedEndTimeE3 |int64 |Execution end time (ms). `0` means not yet ended |
+|> createdTimeE3 |int64 |Strategy creation time (ms) |
+|> updatedTimeE3 |int64 |Strategy last updated time (ms) |
+|> reduceOnly |boolean |Whether it is a reduce-only order |
+|> triggerPrice |string |Trigger price |
+|> isTriggered |boolean |Whether the strategy has been triggered |
+|> leverageType |integer |Leverage type. `0`: normal, `1`: margin |
+|> terminateType |integer |Termination reason code. `0`: none, `1`: user stop, `2`: completed normally, `3`: insufficient balance, and more |
+|> terminateRemark |string |Termination reason description |
+|> triggerCount |integer |Number of trigger attempts |
+|> tradingCount |integer |Number of actual orders placed |
+|> realizedPnl |string |Realized PnL (futures only) |
+|> strategyName |string |Strategy custom name |
+|> strategyPrefer |string |Execution preference. `limit`, `priceSpeedBalance`, `fastestExecution`, `quickExecution` |
+|> duration |integer |Total planned execution duration in seconds. _TWAP only_ |
+|> executedDuration |integer |Actual executed duration in seconds. _TWAP only_ |
+|> isRandom |boolean |Whether sub-order quantity randomization is enabled. _TWAP only_ |
+|> interval |integer |Sub-order placement interval in seconds. _TWAP only_ |
+|> chasePercentE4 |int64 |Chase price offset in basis points (1/10000). _Chase / Iceberg_ |
+|> chaseDistance |string |Chase price distance (absolute value). _Chase / Iceberg_ |
+|> maxChasePrice |string |Maximum chase price protection. _Chase / Iceberg_ |
+|> chaseOrderPrice |string |Current chase order price (real-time). _Chase only_ |
+|> postOnly |integer |Maker-only mode. `0`: taker allowed, `1`: post-only. _Iceberg only_ |
+|> isRebalance |boolean |Whether rebalance is enabled |
+|> orderType |integer |Order type. `1`: market order, `2`: limit order |
+|> positionIdx |integer |Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode |
+|nextCursor |string |Cursor for the next page. Empty string means no more data |
+|prevCursor |string |Cursor for the previous page |
+
+<a href="/api-explorer/v5/strategy/strategy-list"><Button>RUN >></Button></a>
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/strategy/list?strategyId=afae1b1b-e765-4348-bb5c-4fb56c2d1e88&status=5&strategyType=twap&pageSize=1&cursor=eyJPZmZzZXQiOjIwMzM3MTk0MTE1MjkxMTc2OTYsIlBhZ2VTaXplIjoxLCJycGNDdXJzb3IiOiIifQ%3D%3D HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773718018000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+                "category": "UTA_USDT",
+                "symbol": "BTCUSDT",
+                "side": "Buy",
+                "size": "0.05",
+                "duration": 1560,
+                "status": 3,
+                "executedDuration": 1608,
+                "executedSize": "0.046",
+                "executedAvgPrice": "76695.48",
+                "executedStartTimeE3": "1773711467045",
+                "executedEndTimeE3": "1773713075628",
+                "createdTimeE3": "1773711467045",
+                "updatedTimeE3": "1773713075628",
+                "isRandom": false,
+                "limitPrice": "",
+                "reduceOnly": false,
+                "terminateType": 2,
+                "terminateRemark": "RunningStop",
+                "strategyName": "",
+                "triggerCount": "26",
+                "tradingCount": "0",
+                "realizedPnl": "0",
+                "strategyType": "twap",
+                "chasePrice": "Bid1",
+                "chasePercentE4": "0",
+                "chaseDistance": "0",
+                "maxChasePrice": "",
+                "chaseOrderPrice": "",
+                "arbitrageOrders": [],
+                "strategyPrefer": "quickExecution",
+                "isRebalance": false,
+                "interval": 60,
+                "leverageType": 0,
+                "postOnly": 0,
+                "triggerPrice": "0",
+                "isTriggered": false,
+                "strategyTp": "",
+                "strategySl": "",
+                "orderType": "UNKNOWN",
+                "orderPriceOffset": "",
+                "positionValue": "",
+                "filledPositionValue": ""
+            }
+        ],
+        "nextCursor": "",
+        "prevCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1773718018568
+}
+```

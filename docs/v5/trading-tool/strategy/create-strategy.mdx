@@ -1,0 +1,174 @@
+---
+title: Create Strategy Order
+sidebar_label: Create Strategy Order
+sidebar_position: 1
+---
+
+Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`.
+
+## Strategy Types
+
+### TWAP (Time-Weighted Average Price)
+Splits a large order into equal-sized sub-orders executed at fixed time intervals, minimizing market impact and achieving a price close to the time-weighted average.
+
+**Execution logic:** `Number of sub-orders = Running Time (seconds) ÷ Frequency`. Sub-orders that fail to fill are retried once; if unsuccessful, they are canceled and the strategy continues.
+
+Please refer to [Introduction to TWAP Strategy](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) to get more details.
+
+| Parameter | Constraint |
+|:---|:---|
+|`size` (total quantity) |Must be ≥ Max(MinNotional × subOrders ÷ LastPrice × 1.1, MinSize × subOrders) |
+|Running time (`duration`) |5 minutes – 24 hours |
+|Sub-order interval (`interval`) |5 – 120 seconds |
+|Sub-order quantity |≤ 50% of the exchange's maximum single order size (Perpetual/Futures) |
+|Random quantity variance |±20% if `isRandom` is enabled |
+
+---
+
+### Chase Order (Chase Limit Order)
+Continuously places and adjusts a limit order at the best bid/ask price to track market movements until the order is fully filled, canceled, or reaches the maximum chase distance.
+
+**Execution logic:** The order price updates every second. All Chase Limit Orders are **Post Only** by default (maker execution). If the order is rejected by the Post Only condition 5 consecutive times, the strategy is canceled.
+
+Please refer to [Chase Limit Order](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) to get more details.
+
+| Parameter | Constraint |
+|:---|:---|
+|`chasePrice` |`Bid1` / `Ask1` (track without distance), or a fixed price offset |
+|Chase distance |0.01% – 10% of Last Traded Price (LTP); up to 2 decimal places |
+|`maxChasePrice` |Optional cap; order stops adjusting once reached |
+|`triggerPrice` |Optional; strategy activates when LTP reaches this value |
+
+---
+
+### Iceberg Order
+Splits a large order into multiple smaller sub-orders that are placed sequentially, revealing only a small portion of the total order size to the market at any one time.
+
+**Execution logic:** Each sub-order enters the order book → upon fill, the next sub-order is automatically placed → repeats until the full quantity is executed.
+
+Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) to get more details.
+
+**Order preferences:**
+
+| Preference | Execution behavior |
+|:---|:---|
+|`Chase Limit (Taker)` |Buy at Ask1 / Sell at Bid1; prioritizes speed |
+|`Chase Limit` |Buy at Bid1 / Sell at Ask1; maker execution |
+|`Chase Limit (offset)` |Fixed distance from Ask1/Bid1; balances speed and cost |
+|`Fixed Prices` |All sub-orders placed at a single fixed price |
+
+| Parameter | Constraint |
+|:---|:---|
+|Max total quantity (Spot) |100× max single order quantity |
+|Max total quantity (Derivatives) |500× max single order size |
+|Max sub-order quantity (Derivatives) |5× max single order size |
+|`triggerPrice` (Price Limit) |Buy executes only when LTP ≤ limit; Sell only when LTP ≥ limit. Available for Chase Limit variants only |
+
+---
+
+## Account-Level Limits
+
+| Limit | Value |
+|:---|:---|
+|Max simultaneous strategies per account |20 |
+|Max simultaneous strategies per trading pair |10 |
+
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/strategy/create" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|category |**true** |string |Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE` |
+|symbol |**true** |string |Symbol name, e.g. `BTCUSDT` |
+|side |**true** |string |`Buy`, `Sell` |
+|size |**true** |string |Total order quantity |
+|strategyType |**true** |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
+|reduceOnly |false |boolean |Reduce-only order. `true`, `false` |
+|positionIdx |false |integer |Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode |
+|leverageType |false |integer |Spot leverage type. `0`: normal, `1`: margin (spot only) |
+|duration |**true (TWAP)** |integer |Total execution duration in seconds. Range: [300, 86400]. Must be divisible by `interval` |
+|interval |false (TWAP) |integer |Sub-order placement interval in seconds. Default: `30`, minimum: `5`. Must divide `duration` evenly |
+|isRandom |false (TWAP) |boolean |Whether to randomize each sub-order quantity by ±20% |
+|triggerPrice |false (TWAP / Chase / Iceberg) |string |Trigger price. Strategy activates when the market price reaches this value |
+|maxChasePrice |false (TWAP / Chase / Iceberg) |string |Maximum chase price. Strategy pauses when this price is reached. Strongly recommended |
+|chaseDistance |false (TWAP / Chase / Iceberg) |string |Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set. For Iceberg, `"-1"` means immediate fill at counterparty price |
+|chasePercentE4 |false (TWAP / Chase / Iceberg) |integer |Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%. Max: `1000` for Chase, `999` for Iceberg. Mutually exclusive with `chaseDistance` |
+|subSize |false (Iceberg) |string |Quantity per sub-order. Mutually exclusive with `orderCount`; `subSize` takes priority if both are set |
+|orderCount |false (Iceberg) |integer |Number of sub-orders. Mutually exclusive with `subSize` |
+|limitPrice |false (Iceberg) |string |Fixed limit price applied to all sub-orders |
+|postOnly |false (Iceberg) |integer |Maker-only mode. `0`: taker allowed, `1`: post-only (maker only) |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|retCode |integer |Return code. `0`: success |
+|retMsg |string |Return message |
+|result |object | |
+|> strategyId |string |Strategy ID (UUID format) |
+|> category |string |Product type |
+|> symbol |string |Symbol name |
+|> side |string |`Buy`, `Sell` |
+|> size |string |Total order quantity |
+|> strategyType |string |Strategy type |
+|> result |string |Execution result. `null` if creation succeeded |
+|time |integer |Server timestamp (ms) |
+
+### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/strategy/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773711467000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "side": "Buy",
+    "symbol": "BTCUSDT",
+    "reduceOnly": false,
+    "category": "UTA_USDT",
+    "size": "0.1",
+    "positionIdx": 1,
+    "strategyType": "chaseOrder",
+    "chasePrice": "75967.7",
+    "maxChasePrice": "83564.5",
+    "triggerPrice": "75000.0"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+        "result": null
+    },
+    "retExtInfo": {},
+    "time": 1773711467052
+}
+```
