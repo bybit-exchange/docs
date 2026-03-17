@@ -4,7 +4,7 @@ sidebar_label: Get Product Quote
 sidebar_position: 2
 ---
 :::info
-Does not need authentication. **Up to 50 requests** per second.
+Does not need authentication. **Up to 50 requests** per second per IP.
 :::
 
 
@@ -15,22 +15,22 @@ GET `/v5/earn/advance/product-extra-info`
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |productId|**true**|string |Product ID|
-|category|**true**|string|Product category,`DualAssets`|
+|[category](../../enum#advanced-earn-category) |**true**|string|Product category,`DualAssets`|
 
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list|array|Object|
-|> productId|int64|Product ID|
+|> productId|string|Product ID|
 |> currentPrice|string|Current market price|
 |> buyLowPrice|array|List of available prices for Buy Low direction|
 |>> selectPrice|string|Optional target price|
-|>> apyE8|int64|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
+|>> apyE8|string|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
 |>> maxInvestmentAmount|string|Maximum investment amount at this price|
 |> sellHighPrice|array|List of available prices for Sell High direction|
 |>> selectPrice|string|Optional target price|
-|>> apyE8|int64|Annual Percentage Yield (e8 precision)|
+|>> apyE8|string|Annual Percentage Yield (e8 precision)|
 |>> maxInvestmentAmount|string|Maximum investment amount at this price|
 
 ### Request Example
@@ -45,17 +45,80 @@ Host: api-testnet.bybit.com
 
 </TabItem>
 
-<TabItem value="Node" label="Node.js">
-
-```n4js
-
-```
-
-</TabItem>
 </Tabs>
 
 ### Response Example
 
 ```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "dualAssetsExtraInfo": {
+            "offers": [
+                {
+                    "productId": "36306",
+                    "currentPrice": "1.5707",
+                    "buyLowPrice": [
+                        {
+                            "selectPrice": "1.56",
+                            "apyE8": "810810000",
+                            "maxInvestmentAmount": "2000"
+                        },
+                        {
+                            "selectPrice": "1.55",
+                            "apyE8": "770310000",
+                            "maxInvestmentAmount": "2000"
+                        },
+                        {
+                            "selectPrice": "1.54",
+                            "apyE8": "729810000",
+                            "maxInvestmentAmount": "2000"
+                        },
+                        {
+                            "selectPrice": "1.45",
+                            "apyE8": "46510758",
+                            "maxInvestmentAmount": "15945.104"
+                        },
+                        {
+                            "selectPrice": "1.5",
+                            "apyE8": "92113200",
+                            "maxInvestmentAmount": "15945.104"
+                        },
+                        {
+                            "selectPrice": "1.569397",
+                            "apyE8": "201208851",
+                            "maxInvestmentAmount": "7934.8864"
+                        }
+                    ],
+                    "sellHighPrice": [
+                        {
+                            "selectPrice": "1.58",
+                            "apyE8": "729810000",
+                            "maxInvestmentAmount": "1277.79"
+                        },
+                        {
+                            "selectPrice": "1.6",
+                            "apyE8": "61519500",
+                            "maxInvestmentAmount": "10160"
+                        },
+                        {
+                            "selectPrice": "1.56",
+                            "apyE8": "810810000",
+                            "maxInvestmentAmount": "1277.79"
+                        },
+                        {
+                            "selectPrice": "1.57",
+                            "apyE8": "770310000",
+                            "maxInvestmentAmount": "1277.79"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1773712609177
+}
 
 ```

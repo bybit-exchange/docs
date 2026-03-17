@@ -4,7 +4,8 @@ sidebar_label: Get Order Info
 sidebar_position: 5
 ---
 :::info
-Need authentication. **Up to 10 requests** per second.
+* Need authentication. **Up to 10 requests** per second.
+* Query your Dual Assets order history. Requires Earn permission on the API key.
 :::
 
 ### HTTP Request
@@ -13,27 +14,30 @@ GET `/v5/earn/advance/order`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category) |**true**|string|Product type, e.g. `DualAssets`|
 |productId|false|string|Product ID|
-|category|**true**|string|Product type, e.g. `DualAssets`|
-|coin |false |string |Coin|
+|orderId |false |string |OrderId|
+|orderLinkId |false |string |User customised order ID|
+|startTime |false |string |Start time (order creation time), unix timestamp in milliseconds|
+|endTime |false |string |End time, unix timestamp in milliseconds|
+|limit |false |int |Number of items per page. Default: 20, Max: 20|
+|cursor |false |string |Pagination cursor. Use nextPageCursor from previous response|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|list|array |Object |
-Here's the corrected result:
-
 | list | array | Order list |
+| nextPageCursor | string | Next page cursor, empty means no more data |
 | > orderId | string | Order ID |
 | > orderLinkId | string | User customised order ID |
 | > productId | string | Product ID |
-| > category | string | Product type |
-| > orderType | string | `Stake`: Subscribe, `Redeem`: Redeem |
+| > [category](../../enum#advanced-earn-category)  | string | Product category,'DualAssets' |
+| > orderType | string | `Stake`: Subscribe|
 | > amount | string | Order amount |
 | > coin | string | Coin name |
 | > baseCoin | string | Base coin |
 | > quoteCoin | string | Quote coin |
-| > status | string | `Pending`: Order confirming, `Success`: Order successful, position created, `Settled`: Position settled, `Fail`: Order failed |
+| > [status](../../enum#advanced-earn-order-status) | string | `Pending`: Order confirming, `Success`: Order successful, position created, `Settled`: Position settled, `Fail`: Order failed |
 | > createdTime | string | Created time, unix timestamp in ms |
 | > updatedTime | string | Updated time, unix timestamp in ms |
 | > direction | string | `BuyLow`, `SellHigh` |
@@ -43,15 +47,15 @@ Here's the corrected result:
 | > duration | string | Product term, e.g. 8h, 1d, 2d, 3d |
 | > accountType | string | Account type |
 | > toAccountType | string | Settlement destination account |
-| > selectApyE8 | int64 | User-selected annualized yield, e8 precision |
-| > confirmApyE8 | int64 | Final confirmed annualized yield, e8 precision, only valid when status=Success |
+| > selectApyE8 | int64 | APY selected by user at order time, e8 precision |
 | > isVip | bool | Whether it is a VIP product |
-| > settlementCoin | string | Settlement coin |
-| > settlementAmount | string | Settlement amount, in settlement coin |
-| > orderMode | string | Order mode: Normal, RFQ, reserved field |
-| > settlementPrice | string | Settlement price in CoinX |
-| > refundStatus | string | `Processing`: Refund processing, `Processed`: Refund completed, only valid when order status=Fail |
-| nextPageCursor | string | Next page cursor, empty means no more data |
+| > settlementCoin | string | Settlement coin, Only available when status=Settled |
+| > settlementAmount | string | Settlement amount, Only available when status=Settled |
+| > orderMode | string | Order mode: `Normal`, `RFQ`|
+| > settlementPrice | string | Settlement price in USDT, Only available when status=Settled |
+| > refundStatus | string | Refund status. Only valid when status=`Fail`, `Processing`, `Processed` |
+| > trialBonusAmount | string |Trial bonus amount |
+| > trialBonusPnl | string | Trial bonus P&L|
 
 ---
 
@@ -61,7 +65,7 @@ Here's the corrected result:
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/earn/advance/position?category=DualAssets HTTP/1.1
+GET /v5/earn/advance/position?category=DualAssets&limit=2 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -76,5 +80,78 @@ X-BAPI-RECV-WINDOW: 5000
 ### Response Example
 
 ```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "dualAssetsOrders": {
+            "list": [
+                {
+                    "orderId": "d09d7f54-525d-4553-963c-c70963f3abe3",
+                    "orderLinkId": "",
+                    "productId": "81729",
+                    "category": "DualAssets",
+                    "orderType": "Stake",
+                    "amount": "0.005",
+                    "coin": "ETH",
+                    "baseCoin": "ETH",
+                    "quoteCoin": "USDT",
+                    "status": "Success",
+                    "createdTime": "1773216329000",
+                    "updatedTime": "1773216329000",
+                    "direction": "SellHigh",
+                    "targetPrice": "2000",
+                    "settlementTime": "0",
+                    "estimateApyE8": "857375000",
+                    "duration": "0",
+                    "accountType": "FUND",
+                    "toAccountType": "",
+                    "selectApyE8": "902500000",
+                    "isVip": true,
+                    "settlementCoin": "",
+                    "settlementAmount": "",
+                    "orderMode": "Normal",
+                    "settlementPrice": "",
+                    "refundStatus": "",
+                    "trialBonusAmount": "",
+                    "trialBonusPnl": ""
+                },
+                {
+                    "orderId": "769838db-8708-4e0a-bcf3-bcc7b18b2825",
+                    "orderLinkId": "",
+                    "productId": "81729",
+                    "category": "DualAssets",
+                    "orderType": "Stake",
+                    "amount": "20",
+                    "coin": "USDT",
+                    "baseCoin": "ETH",
+                    "quoteCoin": "USDT",
+                    "status": "Success",
+                    "createdTime": "1773216328000",
+                    "updatedTime": "1773216328000",
+                    "direction": "BuyLow",
+                    "targetPrice": "1950",
+                    "settlementTime": "0",
+                    "estimateApyE8": "771637500",
+                    "duration": "0",
+                    "accountType": "FUND",
+                    "toAccountType": "",
+                    "selectApyE8": "812250000",
+                    "isVip": true,
+                    "settlementCoin": "",
+                    "settlementAmount": "",
+                    "orderMode": "Normal",
+                    "settlementPrice": "",
+                    "refundStatus": "",
+                    "trialBonusAmount": "",
+                    "trialBonusPnl": ""
+                }
+            ],
+            "nextPageCursor": "70411"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1773218308930
+}
 
 ```

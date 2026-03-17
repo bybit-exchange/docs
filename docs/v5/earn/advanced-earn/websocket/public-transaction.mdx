@@ -4,9 +4,18 @@ sidebar_label: Dualassets offers
 sidebar_position: 1
 ---
 
-Push frequency: **second-level**
+* Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
 
-Push scope: **Full snapshot of all online product quotes**
+* Push scope: **Full snapshot of all online product quotes**
+
+* Recommended usage pattern:
+
+    1. Call [Get Product Quote](../product-quote) to get initial quotes
+    2. Subscribe to the WebSocket topic for real-time updates
+    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
+    4. If WebSocket disconnects, fallback to the REST endpoint 
+
+
 
 **Topic:** `earn.dualassets.offers`
 
@@ -17,16 +26,16 @@ Push scope: **Full snapshot of all online product quotes**
 |topic | string  | Topic name                                                                                                                              |
 |creationTime | int   | Data created timestamp (ms)                                                                                                              |
 |data |array |Object |
-| > productId | int64 | Product ID |
-| > currentPrice | string | Current price |
-| > buyLowPrice | array of objects | Buy low price list |
-| >> selectPrice | string | Selected price |
-| >> apyE8 | int64 | Annualized yield, e8 precision |
-| >> maxInvestmentAmount | string | Maximum investment amount |
-| > sellHighPrice | array of objects | Sell high price list |
-| >> selectPrice | string | Selected price |
-| >> apyE8 | int64 | Annualized yield, e8 precision |
-| >> maxInvestmentAmount | string | Maximum investment amount |
+| > p | int64 | Product ID |
+| > c | string | Current price |
+| > b | array of objects | Buy low price list |
+| >> s | string | Selected price |
+| >> a | int64 | Annualized yield, e8 precision |
+| >> m | string | Max investment amount at this price point |
+| > s | array of objects | Sell high price list |
+| >> s | string | Selected price |
+| >> a | int64 | Annualized yield, e8 precision |
+| >> m | string |Max investment amount at this price point |
 
 ### Subscribe Example
 ```json
@@ -41,6 +50,24 @@ Push scope: **Full snapshot of all online product quotes**
 ### Stream Example
 
 ```json
-
+{
+    "topic": "earn.dualassets.offers",
+    "data": [
+        {
+            "p": "81843",
+            "c": "3200",
+            "b": [
+                {"s": "2075", "a": "908817500", "m": "2000"},
+                {"s": "2050", "a": "863692500", "m": "2000"},
+                {"s": "2025", "a": "818567500", "m": "2000"}
+            ],
+            "s": [
+                {"s": "2075", "a": "908817500", "m": "0.625"},
+                {"s": "2100", "a": "863692500", "m": "0.625"},
+                {"s": "2125", "a": "818567500", "m": "0.625"}
+            ]
+        }
+    ]
+}
 
 ```

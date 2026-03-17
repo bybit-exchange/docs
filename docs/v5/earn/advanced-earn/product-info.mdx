@@ -4,7 +4,7 @@ sidebar_label: Get Product Info
 sidebar_position: 1
 ---
 :::info
-Does not need authentication. **Up to 50 requests** per second.
+Does not need authentication. **Up to 50 requests** per second per IP .
 :::
 
 [Bybit Dual Asset FAQ](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
@@ -15,7 +15,7 @@ GET `/v5/earn/advance/product`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|Product category,`DualAssets`|
+|[category](../../enum#advanced-earn-category)|**true**|string|Product category,`DualAssets`|
 |coin|false|string|Coin name, uppercase only |
 |duration|false|string|Product duration, eg:8h, 1d, 3d, 6d, 12d|
 
@@ -24,16 +24,13 @@ GET `/v5/earn/advance/product`
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |list|array|Object|
-|> category|string |`DualAssets`|
+|> [category](../../enum#advanced-earn-category)|string |`DualAssets`|
 |> productId|string |Product ID|
-|> displayName|string |Product display name|
 |> baseCoin|string |Base Coin|
 |> quoteCoin|string |Quote Coin|
-|> investCoin|string |Invest Coin|
 |> expectReceiveAt|string |Expected time to receive the transfer, Unix timestamp in milliseconds|
 |> duration|string|Product duration, eg:8h, 1d, 3d|
-|> status|string|`Available`,`NotAvailable`|
-|> kycLevelLimit|string|Kyc Level Limit, `0`:`Unlimited`,`1`:`KYC1`,`2`:`KYC2`,`3`:`KYC3`|
+|> [status](../../enum#advanced-earn-product-status)|string|`Available`,`NotAvailable`|
 |> isVipProduct|boolean|Whether it is a VIP product|
 |> subscribeStartAt|string |Subscription start time, Unix timestamp in ms|
 |> subscribeEndAt|string |Subscription end time, Unix timestamp in ms |
@@ -43,6 +40,9 @@ GET `/v5/earn/advance/product`
 |> minPurchaseBaseAmount|string |Minimum purchase amount in base currency |
 |> remainingAmountQuote|string |Remaining quota for Buy Low direction |
 |> remainingAmountBase|string |Remaining quota for Sell High direction |
+|> orderPrecisionDigitalQuote|int |Precision for Buy Low direction |
+|> orderPrecisionDigitalBase|int |Precision for Sell High direction |
+
 
 ### Request Example
 
@@ -50,23 +50,48 @@ GET `/v5/earn/advance/product`
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/earn/advance/product?category=DualAssets&coin=BTC HTTP/1.1
+GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1
 Host: api-testnet.bybit.com
 ```
 
 </TabItem>
 
-<TabItem value="Node" label="Node.js">
-
-```n4js
-
-```
-
-</TabItem>
 </Tabs>
 
 ### Response Example
 
 ```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "dualAssetsProducts": {
+            "list": [
+                {
+                    "category": "DualAssets",
+                    "productId": "36306",
+                    "baseCoin": "XRP",
+                    "quoteCoin": "USDT",
+                    "expectReceiveAt": "1773821999000",
+                    "duration": "1d",
+                    "status": "Available",
+                    "isVipProduct": false,
+                    "subscribeStartAt": "1773648000000",
+                    "subscribeEndAt": "1773734399000",
+                    "applyStartAt": "1773648000000",
+                    "settlementTime": "1773820799000",
+                    "minPurchaseQuoteAmount": "10",
+                    "minPurchaseBaseAmount": "10",
+                    "remainingAmountQuote": "1000000",
+                    "remainingAmountBase": "10000",
+                    "orderPrecisionDigitalQuote": 4,
+                    "orderPrecisionDigitalBase": 2
+                }
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1773709006809
+}
 
 ```

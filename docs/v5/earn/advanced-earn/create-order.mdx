@@ -4,8 +4,13 @@ sidebar_label: Place Order
 sidebar_position: 3
 ---
 :::info
-Need authentication. **Up to 5 requests** per second.
+* Need authentication. **Up to 5 requests** per second.
+* Requires Earn permission on the API key.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use Get Order to track the order status (Pending → Success).
+* The `selectPrice` and `apyE8` must match a valid quote from Get Product Extra Info or the WebSocket feed. Stale quotes will be rejected.
+* orderLinkId is used for idempotency — resubmitting the same orderLinkId within 30 minutes returns the same orderId without creating a duplicate order.
 :::
+
 
 
 ### HTTP Request
@@ -14,25 +19,26 @@ POST `/v5/order/advance/place-order`
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category|**true**|string|Product type, e.g. `DualAssets`|
+|[category](../../enum#advanced-earn-category) |**true**|string|Product type, e.g. `DualAssets`|
 |productId|**true**|string|Product ID|
-|orderType|**true**|string|Order type: `Stake`, `Redeem`|
+|orderType|**true**|string|Order type: `Stake`|
 |amount|**true**|string|Order amount (decimal string)|
 |accountType|**true**|string|Account type: `FUND`, `UNIFIED`|
 |coin|**true**|string|Coin name|
-|orderLinkId|**true**|string|User customised order ID (max 36 characters)|
-|dualAssetsExtra.orderDirection|**true**|string|Direction: `BuyLow`, `SellHigh`|
-|dualAssetsExtra.selectPrice|**true**|string|Target price selected by the user|
-|dualAssetsExtra.apyE8|**true**|int64|Expected APY in e8 format. If the final confirmed APY is lower than this value, the order will be rejected|
-|interestCard|false|Object|Interest rate coupon|
-|> awardId|**true**|int64|Interest rate coupon unique ID|
-|> specCode|**true**|string|Spec_code of the interest rate coupon|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters), used for idempotency|
+|dualAssetsExtra|**true**|Object|Dual Assets specific parameters|
+|> orderDirection|**true**|string|Direction: `BuyLow`, `SellHigh`|
+|> selectPrice|**true**|string|Target price selected by user. Must match a valid quote|
+|> apyE8|**true**|int64|Expected APY in e8 precision. Order fails if the confirmed APY is less than this value|
+|interestCard|false|Object|Interest bonus card|
+|> awardId|**true**|int64|Interest bonus card unique ID|
+|> specCode|**true**|string|Spec_code of the interest bonus card|
 
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
-|orderId |string |Order ID |
+|orderId |string |System-generated order ID |
 |orderLinkId |string |User customised order ID |
 
 
@@ -53,18 +59,18 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-  "category": "DualAssets",
-  "productId": 81736,
-  "orderType": "Stake",
-  "amount": "20",
-  "accountType": "FUND",
-  "coin": "USDT",
-  "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9",
-  "dualAssetsExtra": {
-    "orderDirection": "BuyLow",
-    "selectPrice": "69500",
-    "apyE8": 855000000
-  }
+    "category": "DualAssets",
+    "productId": 81736,
+    "orderType": "Stake",
+    "amount": "20",
+    "accountType": "FUND",
+    "coin": "USDT",
+    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9",
+    "dualAssetsExtra": {
+        "orderDirection": "BuyLow",
+        "selectPrice": "69500",
+        "apyE8": 855000000
+    }
 }
 
 ```
@@ -76,13 +82,14 @@ Content-Type: application/json
 
 ```json
 {
-  "retCode": 0,
-  "retMsg": "",
-  "result": {
-    "orderId": "1558585f-c15e-4255-8f75-01d24e7cfefd",
-    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9"
-  },
-  "retExtInfo": {},
-  "time": 1773218430573
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "1558585f-c15e-4255-8f75-01d24e7cfefd",
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9"
+    },
+    "retExtInfo": {},
+    "time": 1773218430573
 }
+
 ```
