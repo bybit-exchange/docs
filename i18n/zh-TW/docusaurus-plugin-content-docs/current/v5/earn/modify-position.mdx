@@ -1,0 +1,80 @@
+---
+title: 修改持倉設置
+sidebar_label: 修改持倉設置
+sidebar_position: 5
+---
+:::info
+API key 需要「理財」權限
+:::
+
+:::note
+僅 `duration` = `Fixed` 的持倉支持設置自動複投。您可以從 [GET /v5/earn/product?category=OnChain](product-info.mdx) 的響應參數中獲取 `duration` 的值。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/position/modify" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，固定傳 `OnChain`|
+|productId|**true**|integer|產品 ID，從 [GET /v5/earn/product](product-info.mdx) 獲取|
+|positionId|**true**|integer|持倉 ID，從 [GET /v5/earn/position](position.mdx) 獲取|
+|autoReinvest|**true**|integer|自動續期開關。`0`：關閉，`1`：開啟|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|retCode|integer|返回碼，`0` 表示成功|
+|retMsg|string|返回信息，成功時為 `""`|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/earn/position/modify HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773732693000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "OnChain",
+    "productId": 8,
+    "positionId": 326,
+    "autoReinvest": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1773732693032
+}
+```
