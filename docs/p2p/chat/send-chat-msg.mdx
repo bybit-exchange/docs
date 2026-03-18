@@ -1,24 +1,24 @@
 ---
-title: Send Chat Message
-sidebar_label: Send Chat Message
-sidebar_position: 6
+title: Send Message
+sidebar_label: Send Message
+sidebar_position: 2
 ---
 
-:::caution
-DEPRECATED!! Do NOT use.
+:::tip
+Rate limit:
+* Global: 50 QPS
+* Per User: 5 requests/second
 :::
 
 ### HTTP Request
-POST `/v5/p2p/order/message/send`
+POST `/v5/p2p/chat/message/send`
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |message|**true** |string |Chat message. Is either: the text of the message you send, or the URL of the file you want to send|
-|contentType|**true** |string |Chat message. <ul><li>For text messages use: `str`</li><li>For images use: `pic`</li><li>For PDF files use: `pdf`</li><li>For video files use: `video`</li></ul>|
-|orderId|**true** |string |Order ID |
-|msgUuid|**true** |string |Client message UUID |
-|fileName|false |string |Image/pdf/video filename |
+|contentType|**true** |string |Chat message type. <ul><li>For text messages use: `STR`</li><li>For images use: `PIC`</li><li>For PDF files use: `PDF`</li><li>For video files use: `VIDEO`</li></ul>|
+|sessionId|**true** |string |Session ID |
 
 ### Response Parameters
 None
@@ -29,7 +29,7 @@ None
 <TabItem value="http" label="HTTP">
 
 ```http
-POST /v5/p2p/order/message/send HTTP/1.1
+POST /v5/p2p/chat/message/send HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -38,10 +38,9 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "message":"hi, test",
-    "contentType":"str",
-    "orderId":"1898976123321221120",
-    "msgUuid":"cf016044-c754-4be0-b2dc-b403ecce150d"
+    "message": "hi, test",
+    "contentType": "STR",
+    "sessionId": "rl8BAkdDTQDgSTg+FGrPjr6Vc06F1TWGGU7rg1oLqPDKtM0VNXvL1I7Oo1aPYKKWVbnEEZRclyY+/w=="
 }
 ```
 
@@ -50,17 +49,15 @@ Content-Type: application/json
 
 ```python
 from bybit_p2p import P2P
-import uuid
 api = P2P(
     testnet=True,
     api_key="xxxxxxxxxxxxxxxxxx",
     api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 )
-print(api.send_chat_message(
+print(api.send_message(
     message="hi, test",
-    contentType="str",
-    orderId="1898976123321221120",
-    msgUuid=uuid.uuid4().hex
+    contentType="STR",
+    sessionId="rl8BAkdDTQDgSTg+FGrPjr6Vc06F1TWGGU7rg1oLqPDKtM0VNXvL1I7Oo1aPYKKWVbnEEZRclyY+/w=="
 ))
 ```
 
@@ -76,6 +73,6 @@ print(api.send_chat_message(
     "result": null,
     "ext_code": "",
     "ext_info": {},
-    "time_now": "1741763625.212991"
+    "time_now": "1773866621.838588"
 }
 ```
