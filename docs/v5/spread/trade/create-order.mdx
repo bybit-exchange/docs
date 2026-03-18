@@ -31,6 +31,9 @@ The acknowledgement of an place order request indicates that the request was suc
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/spread/order/create HTTP/1.1
 Host: api-testnet.bybit.com
@@ -50,7 +53,32 @@ Content-Length: 191
     "orderLinkId": "1744072052193428479",
     "timeInForce": "PostOnly"
 }
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_place_order(
+    symbol="SOLUSDT_SOL/USDT",
+    side="Buy",
+    orderType="Limit",
+    qty="0.1",
+    price="21",
+    orderLinkId="1744072052193428479",
+    timeInForce="PostOnly"
+))
 ```
+
+</TabItem>
+</Tabs>
+
 
 ### Response Example
 ```json

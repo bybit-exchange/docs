@@ -43,6 +43,9 @@ GET `/v5/spread/order/realtime`
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/spread/order/realtime HTTP/1.1
 Host: api-testnet.bybit.com
@@ -51,7 +54,23 @@ X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1744096099520
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_get_open_orders())
 ```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 ```json

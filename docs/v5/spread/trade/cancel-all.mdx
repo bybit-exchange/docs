@@ -28,6 +28,9 @@ The acknowledgement of cancel all orders request indicates that the request was 
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/spread/order/cancel-all HTTP/1.1
 Host: api-testnet.bybit.com
@@ -42,7 +45,26 @@ Content-Length: 49
     "symbol": null,
     "cancelAll": true
 }
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_cancel_all_orders(
+    cancelAll=True
+))
 ```
+
+</TabItem>
+</Tabs>
+
 
 ### Response Example
 ```json

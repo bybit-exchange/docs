@@ -24,6 +24,9 @@ The acknowledgement of an cancel order request indicates that the request was su
 :::
 
 ### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/spread/order/cancel HTTP/1.1
 Host: api-testnet.bybit.com
@@ -37,7 +40,26 @@ Content-Length: 48
 {
     "orderLinkId": "1744072052193428476"
 }
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_cancel_order(
+    orderLinkId="1744072052193428476"
+))
 ```
+
+</TabItem>
+</Tabs>
+
 
 ### Response Example
 
