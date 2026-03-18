@@ -6,8 +6,8 @@ sidebar_position: 3
 :::info
 * Need authentication. **Up to 5 requests** per second.
 * Requires Earn permission on the API key.
-* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use Get Order to track the order status (Pending → Success).
-* The `selectPrice` and `apyE8` must match a valid quote from Get Product Extra Info or the WebSocket feed. Stale quotes will be rejected.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order)  to track the order status (Pending → Success).
+* The `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](./product-quote) or the WebSocket channel. Stale quotes will be rejected.
 * orderLinkId is used for idempotency — resubmitting the same orderLinkId within 30 minutes returns the same orderId without creating a duplicate order.
 :::
 
@@ -60,16 +60,16 @@ Content-Type: application/json
 
 {
     "category": "DualAssets",
-    "productId": 81736,
+    "productId": 36320,
     "orderType": "Stake",
     "amount": "20",
-    "accountType": "FUND",
+    "accountType": "UNIFIED",
     "coin": "USDT",
-    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9",
+    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",
     "dualAssetsExtra": {
         "orderDirection": "BuyLow",
-        "selectPrice": "69500",
-        "apyE8": 855000000
+        "selectPrice": "2325",
+        "apyE8": 857565000
     }
 }
 
@@ -85,11 +85,11 @@ Content-Type: application/json
     "retCode": 0,
     "retMsg": "",
     "result": {
-        "orderId": "1558585f-c15e-4255-8f75-01d24e7cfefd",
-        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb9"
+        "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"
     },
     "retExtInfo": {},
-    "time": 1773218430573
+    "time": 1773815412459
 }
 
 ```

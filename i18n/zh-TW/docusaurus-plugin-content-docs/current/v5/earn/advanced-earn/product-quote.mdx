@@ -1,42 +1,42 @@
 ---
-title: Get Product Quote
-sidebar_label: Get Product Quote
+title: 查詢產品報價
+sidebar_label: 查詢產品報價
 sidebar_position: 2
 ---
 :::info
-Does not need authentication. **Up to 50 requests** per second per IP.
+無需身份驗證。每個 IP 每秒**最多 50 次請求**。
 :::
 
 
-### HTTP Request
+### HTTP 請求
 GET `/v5/earn/advance/product-extra-info`
 
-### Request Parameters
-| Parameter | Required | Type | Comments|
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|productId|**true**|string |Product ID|
-|[category](../../enum#advanced-earn-category) |**true**|string|Product category,`DualAssets`|
+|productId|**true**|string |產品 ID|
+|[category](../../enum#advanced-earn-category) |**true**|string|產品類別，`DualAssets`|
 
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |[category](../../enum#advanced-earn-category)|string |`DualAssets`|
-|list|array|Object|
-|> productId|string|Product ID|
-|> currentPrice|string|Current market price|
-|> buyLowPrice|array|List of available prices for Buy Low direction|
-|>> selectPrice|string|Optional target price|
-|>> apyE8|string|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
-|>> maxInvestmentAmount|string|Maximum investment amount at this price|
-|>> expiredAt|string|The expiry time,Unix timestamp in ms|
-|> sellHighPrice|array|List of available prices for Sell High direction|
-|>> selectPrice|string|Optional target price|
-|>> apyE8|string|Annual Percentage Yield (e8 precision)|
-|>> maxInvestmentAmount|string|Maximum investment amount at this price|
-|>> expiredAt|string|The expiry time,Unix timestamp in ms|
+|list|array|物件|
+|> productId|string|產品 ID|
+|> currentPrice|string|當前市場價格|
+|> buyLowPrice|array|低買 (Buy Low) 方向的可用價格列表|
+|>> selectPrice|string|可選目標價格（掛鉤價）|
+|>> apyE8|string|年化收益率（e8 精度，即 APY × 10^8）|
+|>> maxInvestmentAmount|string|該價格下的最大投資額度|
+|>> expiredAt|string|過期時間，毫秒級 Unix 時間戳|
+|> sellHighPrice|array|高賣 (Sell High) 方向的可用價格列表|
+|>> selectPrice|string|可選目標價格（掛鉤價）|
+|>> apyE8|string|年化收益率（e8 精度）|
+|>> maxInvestmentAmount|string|該價格下的最大投資額度|
+|>> expiredAt|string|過期時間，毫秒級 Unix 時間戳|
 
-### Request Example
+### 請求示例
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
@@ -50,7 +50,7 @@ Host: api-testnet.bybit.com
 
 </Tabs>
 
-### Response Example
+### 響應示例
 
 ```json
 {
@@ -132,5 +132,4 @@ Host: api-testnet.bybit.com
     "retExtInfo": {},
     "time": 1773814753684
 }
-
 ```
