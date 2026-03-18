@@ -17,7 +17,7 @@ Please refer to [Introduction to TWAP Strategy](https://www.bybit.com/en/help-ce
 
 | Parameter | Constraint |
 |:---|:---|
-|`size` (total quantity) |Must be ≥ Max(MinNotional × subOrders ÷ LastPrice × 1.1, MinSize × subOrders) |
+|Total quantity (`size`) |Must be ≥ Max(MinNotional × subOrders ÷ LastPrice × 1.1, MinSize × subOrders) |
 |Running time (`duration`) |5 minutes – 24 hours |
 |Sub-order interval (`interval`) |5 – 120 seconds |
 |Sub-order quantity |≤ 50% of the exchange's maximum single order size (Perpetual/Futures) |
@@ -31,13 +31,6 @@ Continuously places and adjusts a limit order at the best bid/ask price to track
 **Execution logic:** The order price updates every second. All Chase Limit Orders are **Post Only** by default (maker execution). If the order is rejected by the Post Only condition 5 consecutive times, the strategy is canceled.
 
 Please refer to [Chase Limit Order](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) to get more details.
-
-| Parameter | Constraint |
-|:---|:---|
-|`chasePrice` |`Bid1` / `Ask1` (track without distance), or a fixed price offset |
-|Chase distance |0.01% – 10% of Last Traded Price (LTP); up to 2 decimal places |
-|`maxChasePrice` |Optional cap; order stops adjusting once reached |
-|`triggerPrice` |Optional; strategy activates when LTP reaches this value |
 
 ---
 
@@ -57,22 +50,6 @@ Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Ice
 |`Chase Limit (offset)` |Fixed distance from Ask1/Bid1; balances speed and cost |
 |`Fixed Prices` |All sub-orders placed at a single fixed price |
 
-| Parameter | Constraint |
-|:---|:---|
-|Max total quantity (Spot) |100× max single order quantity |
-|Max total quantity (Derivatives) |500× max single order size |
-|Max sub-order quantity (Derivatives) |5× max single order size |
-|`triggerPrice` (Price Limit) |Buy executes only when LTP ≤ limit; Sell only when LTP ≥ limit. Available for Chase Limit variants only |
-
----
-
-## Account-Level Limits
-
-| Limit | Value |
-|:---|:---|
-|Max simultaneous strategies per account |20 |
-|Max simultaneous strategies per trading pair |10 |
-
 ---
 
 ### HTTP Request
@@ -81,40 +58,31 @@ Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Ice
 ### Request Parameters
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
-|category |**true** |string |Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE` |
+|category |**true** |string |Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_SPOT`(Spot), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures) |
 |symbol |**true** |string |Symbol name, e.g. `BTCUSDT` |
 |side |**true** |string |`Buy`, `Sell` |
 |size |**true** |string |Total order quantity |
 |strategyType |**true** |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
-|reduceOnly |false |boolean |Reduce-only order. `true`, `false` |
-|positionIdx |false |integer |Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode |
-|leverageType |false |integer |Spot leverage type. `0`: normal, `1`: margin (spot only) |
+|reduceOnly |false |boolean |Reduce-only order, must set `true` when reduce the position. `true`, `false` |
+|positionIdx |false |integer |Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode position |
+|leverageType |false |integer |Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only) |
 |duration |**true (TWAP)** |integer |Total execution duration in seconds. Range: [300, 86400]. Must be divisible by `interval` |
-|interval |false (TWAP) |integer |Sub-order placement interval in seconds. Default: `30`, minimum: `5`. Must divide `duration` evenly |
+|interval |false (TWAP) |integer |Sub-order placement interval in seconds. `5`, `10`, `15`, `30`(default), `60`, `120`|
 |isRandom |false (TWAP) |boolean |Whether to randomize each sub-order quantity by ±20% |
-|triggerPrice |false (TWAP / Chase / Iceberg) |string |Trigger price. Strategy activates when the market price reaches this value |
-|maxChasePrice |false (TWAP / Chase / Iceberg) |string |Maximum chase price. Strategy pauses when this price is reached. Strongly recommended |
-|chaseDistance |false (TWAP / Chase / Iceberg) |string |Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set. For Iceberg, `"-1"` means immediate fill at counterparty price |
-|chasePercentE4 |false (TWAP / Chase / Iceberg) |integer |Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%. Max: `1000` for Chase, `999` for Iceberg. Mutually exclusive with `chaseDistance` |
 |subSize |false (Iceberg) |string |Quantity per sub-order. Mutually exclusive with `orderCount`; `subSize` takes priority if both are set |
 |orderCount |false (Iceberg) |integer |Number of sub-orders. Mutually exclusive with `subSize` |
 |limitPrice |false (Iceberg) |string |Fixed limit price applied to all sub-orders |
-|postOnly |false (Iceberg) |integer |Maker-only mode. `0`: taker allowed, `1`: post-only (maker only) |
+|postOnly |false (Iceberg) |integer |Maker-only mode. `0`: post-only (maker only), `1`: taker allowed |
+|triggerPrice |false (TWAP / Chase) |string |Trigger price. Strategy activates when the market price reaches this value |
+|maxChasePrice |false (TWAP / Chase / Iceberg) |string |`TWAP`: when last traded prices reaches, the strategy would terminate<br/>`chaseOrder`: stop chasing when last traded price reaches<br/>`iceberg`: seen as price limit param, Buy orders will only be placed when the price is at or below this limit and will pause if the price rises above it. Sell orders will only be placed when the price is at or above this limit and will pause if the price falls below it.|
+|chaseDistance |false (TWAP / Chase / Iceberg) |string |Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set. For Iceberg, `"-1"` means immediate fill at counterparty price |
+|chasePercentE4 |false (TWAP / Chase / Iceberg) |integer |Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%. Mutually exclusive with `chaseDistance` |
 
 ### Response Parameters
 | Parameter | Type | Comments |
 |:----- |:-----|----- |
-|retCode |integer |Return code. `0`: success |
-|retMsg |string |Return message |
-|result |object | |
-|> strategyId |string |Strategy ID (UUID format) |
-|> category |string |Product type |
-|> symbol |string |Symbol name |
-|> side |string |`Buy`, `Sell` |
-|> size |string |Total order quantity |
-|> strategyType |string |Strategy type |
-|> result |string |Execution result. `null` if creation succeeded |
-|time |integer |Server timestamp (ms) |
+|strategyId |string |Strategy ID (UUID format) |
+|result |string |Execution result. `null` if creation succeeded |
 
 ### Request Example
 <Tabs groupId="programming-languages">
