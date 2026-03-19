@@ -1,52 +1,53 @@
 ---
-title: 即時報價
-sidebar_label: 即時報價
+title: 雙幣投資報價
+sidebar_label: 雙幣投資報價
 sidebar_position: 1
 ---
-### Desc
-* Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
+### 描述 (Desc)
+* 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
 
-* Push scope: **Full snapshot of all online product quotes**
+* 推播範圍：**所有上線產品報價的完整快照**
 
-* Recommended usage pattern:
+* 建議使用方式：
 
-    1. Call [Get Product Quote](../product-quote) to get initial quotes
-    2. Subscribe to the WebSocket topic for real-time updates
-    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
-    4. If WebSocket disconnects, fallback to the REST endpoint 
+    1. 使用 [獲取產品報價](../product-quote) 以獲取初始報價
+    2. 訂閱 WebSocket 主題以獲取即時更新
+    3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
+    4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
 
-### WebSocket public URL
+### WebSocket URL
 
-- **Mainnet:**<br/>
-Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+- **主網 (Mainnet):**<br/>
+理財 (Earn): `wss://stream.bybit.com/v5/public/fp`<br/>
 
 
-- **Testnet:**<br/>
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+- **測試網 (Testnet):**<br/>
+理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
 
-### Topic: `earn.dualassets.offers`
+### 主題 (Topic): `earn.dualassets.offers`
 
-### Response Parameters
-| Parameter | Type | Comments|
+### 回應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|id |string |Message ID|
-|topic | string  | Topic name                                                                                                                              |
-|creationTime | int   | Data created timestamp (ms)                                                                                                              |
-|data |array |Object |
-| > p | int64 | Product ID |
-| > c | string | Current price |
-| > b | array of objects | Buy low price list |
-| >> s | string | Selected price |
-| >> a | int64 | Annualized yield, e8 precision |
-| >> m | string | Max investment amount at this price point |
-| >> x|string|Quote expiration time,Unix timestamp in ms|
-| > s | array of objects | Sell high price list |
-| >> s | string | Selected price |
-| >> a | int64 | Annualized yield, e8 precision |
-| >> m | string |Max investment amount at this price point |
-| >> x|string|Quote expiration time,Unix timestamp in ms|
+|id |string |訊息 ID|
+|topic | string  | 主題名稱 |
+|creationTime | int   | 資料建立時間戳 (毫秒) |
+|data |array |物件 (Object) |
+| > p | int64 | 產品 ID |
+| > c | string | 當前價格 |
+| > b | array of objects | 低買價格列表 |
+| >> s | string | 所選價格 |
+| >> a | int64 | 年化收益率，e8 精度 |
+| >> m | string | 該價位的最大投資金額 |
+| >> x |string|報價過期時間，Unix 時間戳 (毫秒)|
+| > s | array of objects | 高賣價格列表 |
+| >> s | string | 所選價格 |
+| >> a | int64 | 年化收益率，e8 精度 |
+| >> m | string |該價位的最大投資金額 |
+| >> x |string|報價過期時間，Unix 時間戳 (毫秒)|
 
-### Subscribe Example
+
+### 訂閱範例
 ```json
 {
     "op": "subscribe",
@@ -56,7 +57,7 @@ Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
 }
 ```
 
-### Stream Example
+### 推播範例
 
 ```json
 {
