@@ -134,6 +134,8 @@ const sidebars = {
         'v5/asset/exchange',
         'v5/asset/coin-info',
         'v5/asset/sub-uid-list',
+        'v5/asset/portfolio-margin',
+        'v5/asset/total-members-assets',
         {
           type: 'category',
           label: 'Balances',

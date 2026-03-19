@@ -1,0 +1,104 @@
+---
+title: Get Pay Info
+sidebar_label: Get Pay Info
+sidebar_position: 25
+---
+
+Query repayment collateral information for the account.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/account/pay-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |false |string |Coin name, e.g. `USDT`, `BTC`. Returns all repayment info if not passed|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|collateralInfo |object |Collateral info |
+|> collateralList |array&lt;object&gt; |Collateral list |
+|>> coin |string |Coin name |
+|>> availableSize |string |Available size |
+|>> availableValue |string |Available value |
+|>> coinScale |integer |Coin precision |
+|>> borrowSize |string |Borrow size |
+|>> spotHedgeAmount |string |Spot hedge amount |
+|>> assetFrozen |string |Frozen asset |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/pay-info?coin=USDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "collateralInfo": {
+            "collateralList": [
+                {
+                    "availableValue": "0",
+                    "coinScale": 6,
+                    "borrowSize": "0",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "0",
+                    "coin": "USDC"
+                },
+                {
+                    "availableValue": "0.3292772100000000000",
+                    "coinScale": 8,
+                    "borrowSize": "0.3",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "0.329277210000000000",
+                    "coin": "BTC"
+                },
+                {
+                    "availableValue": "17.42799911416770180000000000",
+                    "coinScale": 4,
+                    "borrowSize": "50",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "1216139.749700000000000000",
+                    "coin": "USDT"
+                }
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1773230926882
+}
+```

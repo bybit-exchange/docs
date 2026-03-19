@@ -1,0 +1,105 @@
+---
+title: Get Trade Info For Analysis
+sidebar_label: Get Trade Info For Analysis
+sidebar_position: 26
+---
+
+Query aggregated trade statistics for a symbol, including execution values, quantities, fees, and daily breakdown.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/account/trade-info-for-analysis" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Symbol name, e.g. `BTCUSDT`, `ETHUSDT`|
+|startTime |false |long |Query start time (ms)|
+|endTime |false |long |Query end time (ms)|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|symbolRnl |string |Symbol realised P&L |
+|netExecQty |string |Net execution quantity |
+|sumExecValue |string |Total execution value |
+|sumExecQty |string |Total execution quantity |
+|avgBuyExecPrice |string |Average buy execution price |
+|sumBuyExecValue |string |Total buy execution value |
+|sumBuyExecQty |string |Total buy execution quantity |
+|sumBuyExecFee |string |Total buy execution fee |
+|sumBuyOrderQty |string |Total buy order quantity |
+|avgSellExecPrice |string |Average sell execution price |
+|sumSellExecValue |string |Total sell execution value |
+|sumSellExecQty |string |Total sell execution quantity |
+|sumSellExecFee |string |Total sell execution fee |
+|sumSellOrderQty |string |Total sell order quantity |
+|maxMarginVersion |integer |Max margin version number |
+|baseCoin |string |Base coin |
+|settleCoin |string |Settle coin |
+|sumPriceList |array&lt;object&gt; |Daily aggregated price list |
+|> day |string |Date |
+|> sumBuyExecValue |string |Daily total buy execution value |
+|> sumSellExecValue |string |Daily total sell execution value |
+|> sumExecValue |string |Daily total execution value |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/trade-info-for-analysis?symbol=ETHUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "symbolRnl": "0",
+        "sumBuyExecValue": "0",
+        "sumBuyExecQty": "0",
+        "sumSellExecFee": "0",
+        "netExecQty": "0",
+        "sumExecQty": "0",
+        "settleCoin": "USDT",
+        "sumExecValue": "0",
+        "sumSellExecValue": "0",
+        "sumBuyOrderQty": "0",
+        "sumSellOrderQty": "0",
+        "maxMarginVersion": 0,
+        "avgSellExecPrice": "0",
+        "avgBuyExecPrice": "0",
+        "sumBuyExecFee": "0",
+        "sumSellExecQty": "0",
+        "baseCoin": "ETH"
+    },
+    "retExtInfo": {},
+    "time": 1773230927308
+}
+```

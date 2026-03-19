@@ -1,0 +1,97 @@
+---
+title: 查詢組合保證金信息
+sidebar_label: 查詢組合保證金信息
+sidebar_position: 14
+---
+
+查詢組合保證金帳戶的資產餘額及資產盈虧範圍信息。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/asset/portfolio-margin" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|baseCoin |false |string |基礎幣種，如 `BTC`、`ETH`。不傳則返回全部|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|wallet |object |錢包信息 |
+|> equity |string |權益 |
+|> cashBalance |string |現金餘額 |
+|> marginBalance |string |保證金餘額 |
+|> availableBalance |string |可用餘額 |
+|> totalRPL |string |總已實現盈虧 |
+|> totalSessionRPL |string |當日已實現盈虧 |
+|> totalSessionUPL |string |當日未實現盈虧 |
+|> accountIM |string |賬戶初始保證金 |
+|> accountMM |string |賬戶維持保證金 |
+|> experienceBalance |string |體驗金餘額 |
+|> perpUPL |string |永續合約未實現盈虧 |
+|> accountMMRate |string |賬戶維持保證金率 |
+|> accountIMRate |string |賬戶初始保證金率 |
+|assetPnlRange |array |資產盈虧範圍列表 |
+|traceId |string |追蹤ID |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/portfolio-margin?baseCoin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "wallet": {
+            "equity": "0.00000000",
+            "cashBalance": "0.00000000",
+            "marginBalance": "0.00000000",
+            "availableBalance": "0.00000000",
+            "totalRPL": "0.00000000",
+            "totalSessionRPL": "0.00000000",
+            "totalSessionUPL": "0.00000000",
+            "accountIM": "0.00000000",
+            "accountMM": "0.00000000",
+            "experienceBalance": "0.00000000",
+            "perpUPL": "0.00000000",
+            "accountMMRate": "0.0000",
+            "accountIMRate": "0.0000"
+        },
+        "assetPnlRange": [],
+        "traceId": "455b871a3b266aab5c9adea7131c1f17"
+    },
+    "retExtInfo": {},
+    "time": 1773230923610
+}
+```

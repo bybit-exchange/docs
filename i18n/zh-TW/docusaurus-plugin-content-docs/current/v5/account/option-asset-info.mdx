@@ -1,0 +1,83 @@
+---
+title: 查詢期權資產信息
+sidebar_label: 查詢期權資產信息
+sidebar_position: 23
+---
+
+查詢帳戶下各幣種的期權資產盈虧信息。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/account/option-asset-info" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |array&lt;object&gt; |資產盈虧信息列表 |
+|> coin |string |幣種 |
+|> totalDelta |string |總Delta |
+|> totalRPL |string |總已實現盈虧 |
+|> totalUPL |string |總未實現盈虧 |
+|> assetIM |string |資產初始保證金 |
+|> assetMM |string |資產維持保證金 |
+|> version |long |版本號 |
+|> sendTime |long |發送時間戳（毫秒） |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/option-asset-info HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "result": [
+            {
+                "totalDelta": "0.0118",
+                "assetIM": "0.0000",
+                "totalUPL": "-47.6318",
+                "totalRPL": "-0.2790",
+                "assetMM": "0.0000",
+                "version": 1600758,
+                "coin": "BTC",
+                "sendTime": 1773230923530
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1773230923533
+}
+```

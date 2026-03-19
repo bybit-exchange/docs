@@ -1,0 +1,47 @@
+---
+title: 查詢可用餘額
+sidebar_label: 查詢可用餘額
+sidebar_position: 8
+---
+
+根據指定的交易對、方向及下單價格，查詢下單可用餘額。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/spread/wallet-balance" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbolId |**true** |integer |價差交易對ID|
+|side |**true** |string |訂單方向. `1`: 買, `2`: 賣|
+|orderPrice |**true** |string |下單價格|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|ab |string |可用餘額（保留8位小數，向下截斷）|
+
+### 請求示例
+
+```http
+GET /v5/spread/wallet-balance?symbolId=1&side=1&orderPrice=50000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "ab": "0.00000000"
+    },
+    "retExtInfo": {},
+    "time": 1773230923211
+}
+```

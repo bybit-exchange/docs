@@ -1,0 +1,109 @@
+---
+title: 查詢全部成員資產
+sidebar_label: 查詢全部成員資產
+sidebar_position: 15
+---
+
+查詢所有成員帳戶（母帳戶及子帳戶）的總資產，支持指定幣種計價。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/asset/total-members-assets" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |幣種，如 `BTC`、`USDT`。指定後總資產以該幣種計價|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|total |string |總資產價值 |
+|quoteTotal |string |計價後總資產價值 |
+|stat |integer |狀態 |
+|list |array&lt;object&gt; |帳戶資產列表 |
+|> uid |long |用戶ID |
+|> isM |boolean |是否為母帳戶 |
+|> stat |integer |帳戶狀態 |
+|> origb |string |原始餘額（基礎幣種） |
+|> quoteb |string |原始餘額（計價幣種） |
+|> items |array&lt;object&gt; |子帳戶類型明細 |
+|>> type |string |帳戶類型，如 `ACCOUNT_TYPE_FUND`、`ACCOUNT_TYPE_UNIFIED` |
+|>> origb |string |原始餘額 |
+|>> quoteb |string |計價後餘額 |
+|>> stat |integer |狀態 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/total-members-assets?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "total": "7369376.9136310276027477088095516543224115696",
+        "stat": 0,
+        "quoteTotal": "126.18796084984636306",
+        "list": [
+            {
+                "origb": "7252396.5385745423203887154762334543224115696",
+                "uid": 1001796602,
+                "isM": true,
+                "stat": 0,
+                "items": [
+                    {
+                        "origb": "7180203.788461284230524983",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_FUND",
+                        "quoteb": "122.948695007898702577"
+                    },
+                    {
+                        "origb": "17.467024256661260423",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_UNIFIED",
+                        "quoteb": "0.000299092881107213"
+                    },
+                    {
+                        "origb": "17920.161",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_CONTRACT",
+                        "quoteb": "0.306782556651556862"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1773230927614
+}
+```

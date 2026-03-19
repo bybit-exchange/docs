@@ -1,0 +1,104 @@
+---
+title: 查詢還款信息
+sidebar_label: 查詢還款信息
+sidebar_position: 25
+---
+
+查詢帳戶的還款抵押品信息。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/account/pay-info" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin |false |string |幣種，如 `USDT`、`BTC`。不傳則返回全部還款信息|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|collateralInfo |object |抵押品信息 |
+|> collateralList |array&lt;object&gt; |抵押品列表 |
+|>> coin |string |幣種 |
+|>> availableSize |string |可用數量 |
+|>> availableValue |string |可用價值 |
+|>> coinScale |integer |幣種精度 |
+|>> borrowSize |string |借貸數量 |
+|>> spotHedgeAmount |string |現貨對沖數量 |
+|>> assetFrozen |string |凍結資產 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/pay-info?coin=USDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "collateralInfo": {
+            "collateralList": [
+                {
+                    "availableValue": "0",
+                    "coinScale": 6,
+                    "borrowSize": "0",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "0",
+                    "coin": "USDC"
+                },
+                {
+                    "availableValue": "0.3292772100000000000",
+                    "coinScale": 8,
+                    "borrowSize": "0.3",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "0.329277210000000000",
+                    "coin": "BTC"
+                },
+                {
+                    "availableValue": "17.42799911416770180000000000",
+                    "coinScale": 4,
+                    "borrowSize": "50",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "1216139.749700000000000000",
+                    "coin": "USDT"
+                }
+            ]
+        }
+    },
+    "retExtInfo": {},
+    "time": 1773230926882
+}
+```

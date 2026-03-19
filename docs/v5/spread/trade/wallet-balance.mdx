@@ -1,0 +1,47 @@
+---
+title: Get Wallet Balance
+sidebar_label: Get Wallet Balance
+sidebar_position: 8
+---
+
+Query the available balance for placing a spread order based on the given symbol, side, and order price.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spread/wallet-balance" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbolId |**true** |integer |Spread symbol ID|
+|side |**true** |string |Order side. `1`: Buy, `2`: Sell|
+|orderPrice |**true** |string |Order price|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|ab |string |Available balance (truncated to 8 decimal places)|
+
+### Request Example
+
+```http
+GET /v5/spread/wallet-balance?symbolId=1&side=1&orderPrice=50000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "ab": "0.00000000"
+    },
+    "retExtInfo": {},
+    "time": 1773230923211
+}
+```

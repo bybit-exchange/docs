@@ -1,0 +1,97 @@
+---
+title: Get Portfolio Margin Info
+sidebar_label: Get Portfolio Margin Info
+sidebar_position: 14
+---
+
+Query portfolio margin account balance and asset P&L range information.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/asset/portfolio-margin" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|baseCoin |false |string |Base coin, e.g. `BTC`, `ETH`. Returns all if not passed|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|wallet |object |Wallet info |
+|> equity |string |Equity |
+|> cashBalance |string |Cash balance |
+|> marginBalance |string |Margin balance |
+|> availableBalance |string |Available balance |
+|> totalRPL |string |Total realised P&L |
+|> totalSessionRPL |string |Today's realised P&L |
+|> totalSessionUPL |string |Today's unrealised P&L |
+|> accountIM |string |Account initial margin |
+|> accountMM |string |Account maintenance margin |
+|> experienceBalance |string |Experience bonus balance |
+|> perpUPL |string |Perpetual contract unrealised P&L |
+|> accountMMRate |string |Account maintenance margin rate |
+|> accountIMRate |string |Account initial margin rate |
+|assetPnlRange |array |Asset P&L range list |
+|traceId |string |Trace ID |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/portfolio-margin?baseCoin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "wallet": {
+            "equity": "0.00000000",
+            "cashBalance": "0.00000000",
+            "marginBalance": "0.00000000",
+            "availableBalance": "0.00000000",
+            "totalRPL": "0.00000000",
+            "totalSessionRPL": "0.00000000",
+            "totalSessionUPL": "0.00000000",
+            "accountIM": "0.00000000",
+            "accountMM": "0.00000000",
+            "experienceBalance": "0.00000000",
+            "perpUPL": "0.00000000",
+            "accountMMRate": "0.0000",
+            "accountIMRate": "0.0000"
+        },
+        "assetPnlRange": [],
+        "traceId": "455b871a3b266aab5c9adea7131c1f17"
+    },
+    "retExtInfo": {},
+    "time": 1773230923610
+}
+```

@@ -1,0 +1,109 @@
+---
+title: Get Total Members Assets
+sidebar_label: Get Total Members Assets
+sidebar_position: 15
+---
+
+Query total assets across all member accounts (master and sub-accounts), with optional coin-denominated valuation.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/asset/total-members-assets" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin |false |string |Coin name, e.g. `BTC`, `USDT`. If specified, total assets will be quoted in this coin|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|total |string |Total asset value |
+|quoteTotal |string |Total asset value in quoted coin |
+|stat |integer |Status |
+|list |array&lt;object&gt; |Account asset list |
+|> uid |long |User ID |
+|> isM |boolean |Whether it is a master account |
+|> stat |integer |Account status |
+|> origb |string |Original balance (base coin) |
+|> quoteb |string |Original balance (quoted coin) |
+|> items |array&lt;object&gt; |Sub-account type breakdown |
+|>> type |string |Account type, e.g. `ACCOUNT_TYPE_FUND`, `ACCOUNT_TYPE_UNIFIED` |
+|>> origb |string |Original balance |
+|>> quoteb |string |Balance in quoted coin |
+|>> stat |integer |Status |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/asset/total-members-assets?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "total": "7369376.9136310276027477088095516543224115696",
+        "stat": 0,
+        "quoteTotal": "126.18796084984636306",
+        "list": [
+            {
+                "origb": "7252396.5385745423203887154762334543224115696",
+                "uid": 1001796602,
+                "isM": true,
+                "stat": 0,
+                "items": [
+                    {
+                        "origb": "7180203.788461284230524983",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_FUND",
+                        "quoteb": "122.948695007898702577"
+                    },
+                    {
+                        "origb": "17.467024256661260423",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_UNIFIED",
+                        "quoteb": "0.000299092881107213"
+                    },
+                    {
+                        "origb": "17920.161",
+                        "stat": 0,
+                        "type": "ACCOUNT_TYPE_CONTRACT",
+                        "quoteb": "0.306782556651556862"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1773230927614
+}
+```

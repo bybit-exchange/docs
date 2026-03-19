@@ -1,0 +1,105 @@
+---
+title: 查詢交易分析信息
+sidebar_label: 查詢交易分析信息
+sidebar_position: 26
+---
+
+查詢指定交易對的聚合交易統計信息，包括成交金額、數量、手續費及每日明細。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/account/trade-info-for-analysis" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |交易對，如 `BTCUSDT`、`ETHUSDT`|
+|startTime |false |long |查詢開始時間（毫秒時間戳）|
+|endTime |false |long |查詢結束時間（毫秒時間戳）|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|symbolRnl |string |交易對已實現盈虧 |
+|netExecQty |string |淨成交數量 |
+|sumExecValue |string |總成交金額 |
+|sumExecQty |string |總成交數量 |
+|avgBuyExecPrice |string |平均買入成交價 |
+|sumBuyExecValue |string |買入總成交金額 |
+|sumBuyExecQty |string |買入總成交數量 |
+|sumBuyExecFee |string |買入總手續費 |
+|sumBuyOrderQty |string |買入總委託數量 |
+|avgSellExecPrice |string |平均賣出成交價 |
+|sumSellExecValue |string |賣出總成交金額 |
+|sumSellExecQty |string |賣出總成交數量 |
+|sumSellExecFee |string |賣出總手續費 |
+|sumSellOrderQty |string |賣出總委託數量 |
+|maxMarginVersion |integer |最大保證金版本號 |
+|baseCoin |string |基礎幣種 |
+|settleCoin |string |結算幣種 |
+|sumPriceList |array&lt;object&gt; |每日匯總價格列表 |
+|> day |string |日期 |
+|> sumBuyExecValue |string |當日買入總成交金額 |
+|> sumSellExecValue |string |當日賣出總成交金額 |
+|> sumExecValue |string |當日總成交金額 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/account/trade-info-for-analysis?symbol=ETHUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "symbolRnl": "0",
+        "sumBuyExecValue": "0",
+        "sumBuyExecQty": "0",
+        "sumSellExecFee": "0",
+        "netExecQty": "0",
+        "sumExecQty": "0",
+        "settleCoin": "USDT",
+        "sumExecValue": "0",
+        "sumSellExecValue": "0",
+        "sumBuyOrderQty": "0",
+        "sumSellOrderQty": "0",
+        "maxMarginVersion": 0,
+        "avgSellExecPrice": "0",
+        "avgBuyExecPrice": "0",
+        "sumBuyExecFee": "0",
+        "sumSellExecQty": "0",
+        "baseCoin": "ETH"
+    },
+    "retExtInfo": {},
+    "time": 1773230927308
+}
+```
