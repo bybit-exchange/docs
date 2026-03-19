@@ -39,10 +39,13 @@ Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
 | >> s | string | Selected price |
 | >> a | int64 | Annualized yield, e8 precision |
 | >> m | string | Max investment amount at this price point |
+| >> x |string|Quote expiration time,Unix timestamp in ms|
 | > s | array of objects | Sell high price list |
 | >> s | string | Selected price |
 | >> a | int64 | Annualized yield, e8 precision |
 | >> m | string |Max investment amount at this price point |
+| >> x |string|Quote expiration time,Unix timestamp in ms|
+
 
 ### Subscribe Example
 ```json
@@ -58,23 +61,49 @@ Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
 
 ```json
 {
-    "topic": "earn.dualassets.offers",
-    "data": [
+  "topic": "earn.dualassets.offers",
+  "data": [
+    {
+      "p": "36352",
+      "c": "74168.46",
+      "b": [
         {
-            "p": "81843",
-            "c": "3200",
-            "b": [
-                {"s": "2075", "a": "908817500", "m": "2000"},
-                {"s": "2050", "a": "863692500", "m": "2000"},
-                {"s": "2025", "a": "818567500", "m": "2000"}
-            ],
-            "s": [
-                {"s": "2075", "a": "908817500", "m": "0.625"},
-                {"s": "2100", "a": "863692500", "m": "0.625"},
-                {"s": "2125", "a": "818567500", "m": "0.625"}
-            ]
+          "s": "74142",
+          "a": "979209000",
+          "m": "2000",
+          "x": "1773825237781"
         }
-    ]
+      ],
+      "s": [
+        {
+          "s": "74142",
+          "a": "979209000",
+          "m": "0.02697492",
+          "x": "1773825237781"
+        }
+      ]
+    },
+    {
+      "p": "36382",
+      "c": "74168.46",
+      "b": [
+        {
+          "s": "74142",
+          "a": "890190000",
+          "m": "2000",
+          "x": "1773825237781"
+        }
+      ],
+      "s": [
+        {
+          "s": "74142",
+          "a": "890190000",
+          "m": "0.02697492",
+          "x": "1773825237781"
+        }
+      ]
+    }
+  ]
 }
 
 ```
