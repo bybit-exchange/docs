@@ -13,7 +13,7 @@ For Onchain, only active position will be returned in the response
 :::
 
 ### HTTP Request
-GET `/v5/earn/position`
+<APIEndpoint method="GET" url="/v5/earn/position" />
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -38,6 +38,7 @@ GET `/v5/earn/position`
 |> estimateStakeTime|string |Estimate stake time, in milliseconds. Only for Onchain|
 |> estimateInterestCalculationTime|string |Estimated Interest accrual time, in milliseconds. Only for Onchain |
 |> settlementTime|string |Settlement time, in milliseconds. Only has value for Onchain `Fixed` product|
+|> autoReinvest|string |Auto-reinvest status. `Enable`: enabled, `Disable`: disabled. See [Modify Position](modify-position.mdx)|
 
 ### Request Example
 
@@ -101,7 +102,8 @@ print(session.get_staked_position(
                 "estimateRedeemTime": "",
                 "estimateStakeTime": "",
                 "estimateInterestCalculationTime": "1744243200000",
-                "settlementTime": "1744675200000"
+                "settlementTime": "1744675200000",
+                "autoReinvest": "Enable"
             }
         ]
     },

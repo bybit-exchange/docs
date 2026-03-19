@@ -13,7 +13,7 @@ API key需要"理財""權限
 :::
 
 ### HTTP 請求
-GET `/v5/earn/position`
+<APIEndpoint method="GET" url="/v5/earn/position" />
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
@@ -38,6 +38,7 @@ GET `/v5/earn/position`
 |> estimateStakeTime|string |預計質押時間。以毫秒為單位.僅適用於 OnChain|
 |> estimateInterestCalculationTime|string |預計計息時間。以毫秒為單位.僅適用於 OnChain |
 |> settlementTime|string |結算時間。以毫秒為單位.僅對 OnChain `Fixed`產品有價值|
+|> autoReinvest|string |自動複投狀態。`Enable`：已開啟，`Disable`：已關閉。參考 [修改持倉設置](modify-position.mdx)|
 
 ### 請求示例
 
@@ -101,7 +102,8 @@ print(session.get_staked_position(
                 "estimateRedeemTime": "",
                 "estimateStakeTime": "",
                 "estimateInterestCalculationTime": "1744243200000",
-                "settlementTime": "1744675200000"
+                "settlementTime": "1744675200000",
+                "autoReinvest": "Enable"
             }
         ]
     },

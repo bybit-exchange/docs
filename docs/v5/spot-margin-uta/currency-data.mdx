@@ -1,0 +1,91 @@
+---
+title: Get Currency Data
+sidebar_label: Get Currency Data
+sidebar_position: 3
+---
+
+:::info
+If the borrowable switch is disabled (`false`), the related configuration fields will return `""`.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/currency-data" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency|false|string|Coin name, uppercase only|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object|
+|> currency |string |Coin name|
+|> flexibleManualBorrowable |boolean |Whether flexible manual borrow is enabled. `true`: enabled, `false`: disabled|
+|> minFlexibleManualBorrowQty |string |Min flexible manual borrow qty|
+|> flexibleManualBorrowAccuracy |string |Coin precision for flexible manual borrow|
+|> fixedManualBorrowable |boolean |Whether fixed manual borrow is enabled. `true`: enabled, `false`: disabled|
+|> minFixedManualBorrowQty |string |Min fixed manual borrow qty|
+|> fixedManualBorrowAccuracy |string |Coin precision for fixed manual borrow|
+|> fixedInterestRateAccuracy |string |Coin precision for fixed manual borrow interest rate.|
+|> minFixedInterestRate |string |Min fixed manual borrow interest rate, e.g.: `0.01`|
+|> maxFixedInterestRate |string |Max fixed manual borrow interest rate, e.g.: `0.8`|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773220082000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "currency": "BTC",
+                "flexibleManualBorrowable": true,
+                "minFlexibleManualBorrowQty": "0.001",
+                "flexibleManualBorrowAccuracy": "8",
+                "fixedManualBorrowable": false,
+                "minFixedManualBorrowQty": "",
+                "fixedManualBorrowAccuracy": "",
+                "fixedInterestRateAccuracy": "",
+                "minFixedInterestRate": "",
+                "maxFixedInterestRate": ""
+            }
+        ]
+    },
+    "retExtInfo": "{}",
+    "time": 1773220082091
+}
+```
