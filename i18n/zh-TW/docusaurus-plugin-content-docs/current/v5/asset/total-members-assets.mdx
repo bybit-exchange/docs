@@ -12,7 +12,7 @@ sidebar_position: 15
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|coin |false |string |幣種，如 `BTC`、`USDT`。指定後總資產以該幣種計價|
+|coin |false |string |幣種，如 `BTC`、`USDT`。不傳時默認為 `BTC`。指定後總資產以該幣種計價|
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -24,12 +24,12 @@ sidebar_position: 15
 |> uid |long |用戶ID |
 |> isM |boolean |是否為母帳戶 |
 |> stat |integer |帳戶狀態 |
-|> origb |string |原始餘額（基礎幣種） |
-|> quoteb |string |原始餘額（計價幣種） |
+|> origb |string |USD 計價的原始餘額 |
+|> quoteb |string |請求入參指定幣種計價的餘額 |
 |> items |array&lt;object&gt; |子帳戶類型明細 |
 |>> type |string |帳戶類型，如 `ACCOUNT_TYPE_FUND`、`ACCOUNT_TYPE_UNIFIED` |
-|>> origb |string |原始餘額 |
-|>> quoteb |string |計價後餘額 |
+|>> origb |string |USD 計價的原始餘額 |
+|>> quoteb |string |請求入參指定幣種計價的餘額 |
 |>> stat |integer |狀態 |
 
 ### 請求示例

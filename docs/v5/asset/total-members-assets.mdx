@@ -12,7 +12,7 @@ Query total assets across all member accounts (master and sub-accounts), with op
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|coin |false |string |Coin name, e.g. `BTC`, `USDT`. If specified, total assets will be quoted in this coin|
+|coin |false |string |Coin name, e.g. `BTC`, `USDT`. If not specified, defaults to `BTC`. If specified, total assets will be quoted in this coin|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -24,12 +24,12 @@ Query total assets across all member accounts (master and sub-accounts), with op
 |> uid |long |User ID |
 |> isM |boolean |Whether it is a master account |
 |> stat |integer |Account status |
-|> origb |string |Original balance (base coin) |
-|> quoteb |string |Original balance (quoted coin) |
+|> origb |string |Original balance in USD |
+|> quoteb |string |Balance in quoted coin (the coin specified in the request parameter) |
 |> items |array&lt;object&gt; |Sub-account type breakdown |
 |>> type |string |Account type, e.g. `ACCOUNT_TYPE_FUND`, `ACCOUNT_TYPE_UNIFIED` |
-|>> origb |string |Original balance |
-|>> quoteb |string |Balance in quoted coin |
+|>> origb |string |Original balance in USD |
+|>> quoteb |string |Balance in quoted coin (the coin specified in the request parameter) |
 |>> stat |integer |Status |
 
 ### Request Example
