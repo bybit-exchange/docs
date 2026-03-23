@@ -17,6 +17,8 @@ For `accountType=Alpha`, on-chain assets are not included in the returned data i
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |memberId |false |string |User ID. When using master API key to query sub account assets, this field is required |
+|valuationCurrency |false |string |Fiat currency for valuation. Defaults to `USD` if not passed |
+|category |false |string |Account type filter, e.g. `funding`, `uta`. Returns all accounts if not passed |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -36,6 +38,10 @@ For `accountType=Alpha`, on-chain assets are not included in the returned data i
 |>> coinDetail |array |Coin-level holdings within this sub-category |
 |>>> coin |string |Coin name |
 |>>> equity |string |Coin equity amount |
+|>>> extMap |object |Extended fields. Only returned when `accountType=Alpha` |
+|>>>> priceUpper |string |Upper price of the liquidity position range |
+|>>>> priceLower |string |Lower price of the liquidity position range |
+|>>>> equityUnit |string |Unit of the equity value, e.g. `USD` |
 
 ---
 
@@ -347,6 +353,52 @@ X-BAPI-RECV-WINDOW: 5000
                     }
                 ],
                 "snapshotTime": "1772449024908"
+            },
+            {
+                "totalEquity": "335.33",
+                "valuationCurrency": "USD",
+                "accountType": "Alpha",
+                "snapshotTime": "1773748881734",
+                "categories": [
+                    {
+                        "coinDetail": [
+                            {
+                                "equity": "112.46434565",
+                                "coin": "TSLAx"
+                            },
+                            {
+                                "equity": "43.36958077",
+                                "coin": "PUMP"
+                            }
+                        ],
+                        "category": "trade",
+                        "equity": "296.16"
+                    },
+                    {
+                        "coinDetail": [
+                            {
+                                "extMap": {
+                                    "priceUpper": "139.24762909452249825",
+                                    "priceLower": "125.99709511942565098",
+                                    "equityUnit": "USD"
+                                },
+                                "equity": "3.4268",
+                                "coin": "SOL-USDC"
+                            },
+                            {
+                                "extMap": {
+                                    "priceUpper": "3.91780569",
+                                    "priceLower": "3.54499491",
+                                    "equityUnit": "USD"
+                                },
+                                "equity": "3.3879",
+                                "coin": "JLP-USDC"
+                            }
+                        ],
+                        "category": "farm",
+                        "equity": "39.16"
+                    }
+                ]
             }
         ]
     },
