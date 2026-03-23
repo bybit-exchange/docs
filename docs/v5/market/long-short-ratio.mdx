@@ -56,7 +56,20 @@ Host: api-testnet.bybit.com
 <TabItem value="python" label="Python">
 
 ```python
-
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_long_short_ratio(
+    category="linear",
+    symbol="BTCUSDT",
+    period="1h",
+    limit=2,
+    startTime="1696089600000",
+    endTime="1696262400000"
+))
 ```
 
 </TabItem>

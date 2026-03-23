@@ -34,6 +34,10 @@ sidebar_position: 2
 |> [msg](/v5/enum#msg) |string|Result message |
 
 ### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/broker/apilimit/set HTTP/1.1
 Host: api.bybit.com
@@ -53,6 +57,37 @@ Content-Type: application/json
     ]
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.set_broker_rate_limit(
+    list=[
+        {
+            "uids": "290118",
+            "bizType": "SPOT",
+            "rate": 600
+        }
+    ]
+))
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 ```json

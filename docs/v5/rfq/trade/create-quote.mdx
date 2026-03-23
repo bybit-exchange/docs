@@ -45,6 +45,9 @@ Create a quote. **Up to 50 requests** per second. The quoting party sends a quot
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 POST /v5/rfq/create-quote HTTP/1.1
 Host: api-testnet.bybit.com
@@ -73,6 +76,40 @@ Content-Length: 115
     ]
 }
 ```
+
+</TabItem>
+
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.create_quote(
+    rfqId="1754364447601610516653123084412812",
+    quoteBuyList=[
+        {
+            "category": "linear",
+            "symbol": "BTCUSDT",
+            "price": "106000"
+        }
+    ],
+    quoteSellList=[
+        {
+            "category": "linear",
+            "symbol": "BTCUSDT",
+            "price": "126500"
+        }
+    ]
+))
+```
+
+</TabItem>
+
+</Tabs>
 
 ### Response Example
 
