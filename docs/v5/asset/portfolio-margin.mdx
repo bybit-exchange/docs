@@ -22,17 +22,61 @@ Query portfolio margin account balance and asset P&L range information. The data
 |> cashBalance |string |Cash balance |
 |> marginBalance |string |Margin balance |
 |> availableBalance |string |Available balance |
-|> totalRPL |string |Total realised P&L |
-|> totalSessionRPL |string |Today's realised P&L |
-|> totalSessionUPL |string |Today's unrealised P&L |
 |> accountIM |string |Account initial margin |
 |> accountMM |string |Account maintenance margin |
-|> experienceBalance |string |Experience bonus balance |
-|> perpUPL |string |Perpetual contract unrealised P&L |
 |> accountMMRate |string |Account maintenance margin rate |
 |> accountIMRate |string |Account initial margin rate |
 |assetPnlRange |array |Asset P&L range list |
-|traceId |string |Trace ID |
+|> baseCoin |string |Base coin, e.g. `BTC` |
+|> totalPnlRanges |object |Aggregated P&L ranges by contract type |
+|>> ALL |object |Combined P&L range across all contract types |
+|>> PERPETUAL |object |P&L range for perpetual positions |
+|>> OPTION |object |P&L range for option positions |
+|>>> pnlRanges |array |P&L range data points |
+|>>>> priceScale |string |Price change scale, e.g. `-0.1` means -10% |
+|>>>> pnls |array |P&L values at this price scale |
+|> perpPositionPnlRanges |array |P&L ranges per perpetual position |
+|>> symbolName |string |Symbol name |
+|>> position |string |Position size |
+|>> pnlRanges |array |P&L range data points (same structure as above) |
+|>> sessionAvgPrice |string |Session average price |
+|>> markPrice |string |Mark price |
+|>> orderSize |string |Open order size |
+|>> contractType |integer |Contract type |
+|>> settleCoin |string |Settlement coin |
+|>> symbolAlias |string |Symbol alias |
+|> optionExpiryDatePnlRanges |array |P&L ranges grouped by option expiry date |
+|>> expiryDateRepresentation |string |Expiry date, e.g. `25SEP26` |
+|>> pnlRanges |array |P&L range data points. Each `pnls` array contains values for multiple IV shock scenarios |
+|>> optionPositionPnlRanges |array |P&L ranges per option position |
+|>>> symbolName |string |Option symbol name |
+|>>> position |string |Position size |
+|>>> pnlRanges |array |P&L range data points |
+|>>> sessionAvgPrice |string |Session average price |
+|>>> markPrice |string |Mark price |
+|>>> orderSize |string |Open order size |
+|>>> contractType |integer |Contract type |
+|>>> settleCoin |string |Settlement coin |
+|> contingency |object |Contingency margin info |
+|>> optionContingency |string |Option contingency |
+|>> futureDeltaContingency |string |Future delta contingency |
+|>> optionVegaContingency |string |Option vega contingency |
+|>> contingencyComponents |string |Total contingency components |
+|>> usdtUsdcContingency |string |USDT/USDC contingency |
+|>> futureContingency |string |Future contingency |
+|> asset |object |Asset margin info |
+|>> coin |string |Coin |
+|>> assetIM |string |Asset initial margin |
+|>> assetMM |string |Asset maintenance margin |
+|> maxLossPriceMove |string |Max loss price move scenario |
+|> maxLossIvShock |string |Max loss IV shock scenario |
+|> totalClosePzFee |string |Total close position fee |
+|> spotHedgeInfo |object |Spot hedge info |
+|>> hedgeSpotSize |string |Hedge spot size |
+|>> walletBalance |string |Spot wallet balance |
+|>> usdIndexPrice |string |USD index price |
+|>> pnlRanges |array |P&L range data points for spot hedge |
+|> maxLossIvShockList |array |IV shock values corresponding to each price scale scenario |
 
 ### Request Example
 
@@ -74,24 +118,171 @@ X-BAPI-RECV-WINDOW: 5000
     "retMsg": "Success",
     "result": {
         "wallet": {
-            "equity": "0.00000000",
-            "cashBalance": "0.00000000",
-            "marginBalance": "0.00000000",
-            "availableBalance": "0.00000000",
-            "totalRPL": "0.00000000",
-            "totalSessionRPL": "0.00000000",
-            "totalSessionUPL": "0.00000000",
-            "accountIM": "0.00000000",
-            "accountMM": "0.00000000",
-            "experienceBalance": "0.00000000",
-            "perpUPL": "0.00000000",
-            "accountMMRate": "0.0000",
-            "accountIMRate": "0.0000"
+            "equity": "52197.86892104",
+            "cashBalance": "45391.74423708",
+            "marginBalance": "52145.70917115",
+            "availableBalance": "50893.36062347",
+            "accountIM": "1304.50829757",
+            "accountMM": "1069.93399838",
+            "accountMMRate": "0.0204",
+            "accountIMRate": "0.0249"
         },
-        "assetPnlRange": [],
-        "traceId": "455b871a3b266aab5c9adea7131c1f17"
+        "assetPnlRange": [
+            {
+                "baseCoin": "BTC",
+                "totalPnlRanges": {
+                    "ALL": {
+                        "pnlRanges": [
+                            {"priceScale": "-0.1", "pnls": ["-1004.74710000"]},
+                            {"priceScale": "-0.08", "pnls": ["-807.88000000"]},
+                            {"priceScale": "-0.06", "pnls": ["-610.19020000"]},
+                            {"priceScale": "-0.04", "pnls": ["-411.59200000"]},
+                            {"priceScale": "-0.02", "pnls": ["-212.00760000"]},
+                            {"priceScale": "0.0", "pnls": ["-11.36910000"]},
+                            {"priceScale": "0.02", "pnls": ["191.78950000"]},
+                            {"priceScale": "0.04", "pnls": ["396.10080000"]},
+                            {"priceScale": "0.06", "pnls": ["601.59360000"]},
+                            {"priceScale": "0.08", "pnls": ["808.28220000"]},
+                            {"priceScale": "0.1", "pnls": ["1016.16720000"]}
+                        ]
+                    },
+                    "PERPETUAL": {
+                        "pnlRanges": [
+                            {"priceScale": "-0.1", "pnls": ["-972.14482880"]},
+                            {"priceScale": "-0.08", "pnls": ["-777.71586304"]},
+                            {"priceScale": "-0.06", "pnls": ["-583.28689728"]},
+                            {"priceScale": "-0.04", "pnls": ["-388.85793152"]},
+                            {"priceScale": "-0.02", "pnls": ["-194.42896576"]},
+                            {"priceScale": "0.0", "pnls": ["0.00000000"]},
+                            {"priceScale": "0.02", "pnls": ["194.42896576"]},
+                            {"priceScale": "0.04", "pnls": ["388.85793152"]},
+                            {"priceScale": "0.06", "pnls": ["583.28689728"]},
+                            {"priceScale": "0.08", "pnls": ["777.71586304"]},
+                            {"priceScale": "0.1", "pnls": ["972.14482880"]}
+                        ]
+                    },
+                    "OPTION": {
+                        "pnlRanges": [
+                            {"priceScale": "-0.1", "pnls": ["-39.65273684"]},
+                            {"priceScale": "-0.08", "pnls": ["-35.80450518"]},
+                            {"priceScale": "-0.06", "pnls": ["-31.13352117"]},
+                            {"priceScale": "-0.04", "pnls": ["-25.55420042"]},
+                            {"priceScale": "-0.02", "pnls": ["-18.98866670"]},
+                            {"priceScale": "0.0", "pnls": ["-11.36906857"]},
+                            {"priceScale": "0.02", "pnls": ["-2.63944748"]},
+                            {"priceScale": "0.04", "pnls": ["7.24291762"]},
+                            {"priceScale": "0.06", "pnls": ["18.30672359"]},
+                            {"priceScale": "0.08", "pnls": ["30.56641060"]},
+                            {"priceScale": "0.1", "pnls": ["44.02244694"]}
+                        ]
+                    }
+                },
+                "perpPositionPnlRanges": [
+                    {
+                        "symbolName": "BTCUSDT",
+                        "position": "0.038",
+                        "pnlRanges": [
+                            {"priceScale": "-0.1", "pnls": ["-972.14482880"]},
+                            {"priceScale": "-0.08", "pnls": ["-777.71586304"]},
+                            {"priceScale": "-0.06", "pnls": ["-583.28689728"]},
+                            {"priceScale": "-0.04", "pnls": ["-388.85793152"]},
+                            {"priceScale": "-0.02", "pnls": ["-194.42896576"]},
+                            {"priceScale": "0.0", "pnls": ["0.00000000"]},
+                            {"priceScale": "0.02", "pnls": ["194.42896576"]},
+                            {"priceScale": "0.04", "pnls": ["388.85793152"]},
+                            {"priceScale": "0.06", "pnls": ["583.28689728"]},
+                            {"priceScale": "0.08", "pnls": ["777.71586304"]},
+                            {"priceScale": "0.1", "pnls": ["972.14482880"]}
+                        ],
+                        "sessionAvgPrice": "75995.4295",
+                        "markPrice": "255902.31000000",
+                        "orderSize": "0.0",
+                        "contractType": 2,
+                        "settleCoin": "USDT",
+                        "symbolAlias": "BTCUSDT"
+                    }
+                ],
+                "optionExpiryDatePnlRanges": [
+                    {
+                        "expiryDateRepresentation": "25SEP26",
+                        "pnlRanges": [
+                            {"priceScale": "-0.1", "pnls": ["-24.06747339", "-33.15841013", "-39.65273684"]},
+                            {"priceScale": "-0.08", "pnls": ["-18.12509537", "-28.31048642", "-35.80450518"]},
+                            {"priceScale": "-0.06", "pnls": ["-11.36193138", "-22.62748031", "-31.13352117"]},
+                            {"priceScale": "-0.04", "pnls": ["-3.73852526", "-16.04846592", "-25.55420042"]},
+                            {"priceScale": "-0.02", "pnls": ["4.77766694", "-8.52041879", "-18.98866670"]},
+                            {"priceScale": "0.0", "pnls": ["14.21190294", "0.00067229", "-11.36906857"]},
+                            {"priceScale": "0.02", "pnls": ["24.58198339", "9.54902598", "-2.63944748"]},
+                            {"priceScale": "0.04", "pnls": ["35.89827143", "20.14862960", "7.24291762"]},
+                            {"priceScale": "0.06", "pnls": ["48.16388381", "31.81313064", "18.30672359"]},
+                            {"priceScale": "0.08", "pnls": ["61.37503018", "44.54603289", "30.56641060"]},
+                            {"priceScale": "0.1", "pnls": ["75.52147477", "58.34116026", "44.02244694"]}
+                        ],
+                        "optionPositionPnlRanges": [
+                            {
+                                "symbolName": "BTC-25SEP26-80000-C-USDT",
+                                "position": "0.02",
+                                "pnlRanges": [
+                                    {"priceScale": "-0.1", "pnls": ["-24.06747339", "-33.15841013", "-39.65273684"]},
+                                    {"priceScale": "-0.08", "pnls": ["-18.12509537", "-28.31048642", "-35.80450518"]},
+                                    {"priceScale": "-0.06", "pnls": ["-11.36193138", "-22.62748031", "-31.13352117"]},
+                                    {"priceScale": "-0.04", "pnls": ["-3.73852526", "-16.04846592", "-25.55420042"]},
+                                    {"priceScale": "-0.02", "pnls": ["4.77766694", "-8.52041879", "-18.98866670"]},
+                                    {"priceScale": "0.0", "pnls": ["14.21190294", "0.00067229", "-11.36906857"]},
+                                    {"priceScale": "0.02", "pnls": ["24.58198339", "9.54902598", "-2.63944748"]},
+                                    {"priceScale": "0.04", "pnls": ["35.89827143", "20.14862960", "7.24291762"]},
+                                    {"priceScale": "0.06", "pnls": ["48.16388381", "31.81313064", "18.30672359"]},
+                                    {"priceScale": "0.08", "pnls": ["61.37503018", "44.54603289", "30.56641060"]},
+                                    {"priceScale": "0.1", "pnls": ["75.52147477", "58.34116026", "44.02244694"]}
+                                ],
+                                "sessionAvgPrice": "0",
+                                "markPrice": "2608.56395729",
+                                "orderSize": "0.0",
+                                "contractType": 5,
+                                "settleCoin": "USDT"
+                            }
+                        ]
+                    }
+                ],
+                "contingency": {
+                    "optionContingency": "0.00000000",
+                    "futureDeltaContingency": "56.89174177",
+                    "optionVegaContingency": "0.00000000",
+                    "contingencyComponents": "57.69544638",
+                    "usdtUsdcContingency": "0.00000000",
+                    "futureContingency": "0.80370460"
+                },
+                "asset": {
+                    "coin": "BTC",
+                    "assetIM": "1274.8190514137673",
+                    "assetMM": "1062.3492095114727"
+                },
+                "maxLossPriceMove": "-0.1",
+                "maxLossIvShock": "-0.2",
+                "totalClosePzFee": "-0.2",
+                "spotHedgeInfo": {
+                    "hedgeSpotSize": "-0.00100006",
+                    "walletBalance": "-0.00000007",
+                    "usdIndexPrice": "0",
+                    "pnlRanges": [
+                        {"priceScale": "-0.1", "pnls": ["7.05047869"]},
+                        {"priceScale": "-0.08", "pnls": ["5.64038295"]},
+                        {"priceScale": "-0.06", "pnls": ["4.23028721"]},
+                        {"priceScale": "-0.04", "pnls": ["2.82019147"]},
+                        {"priceScale": "-0.02", "pnls": ["1.41009574"]},
+                        {"priceScale": "0.0", "pnls": ["0"]},
+                        {"priceScale": "0.02", "pnls": ["0"]},
+                        {"priceScale": "0.04", "pnls": ["0"]},
+                        {"priceScale": "0.06", "pnls": ["0"]},
+                        {"priceScale": "0.08", "pnls": ["0"]},
+                        {"priceScale": "0.1", "pnls": ["0"]}
+                    ]
+                },
+                "maxLossIvShockList": ["-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2", "-0.2"]
+            }
+        ]
     },
     "retExtInfo": {},
-    "time": 1773230923610
+    "time": 1774319290506
 }
 ```

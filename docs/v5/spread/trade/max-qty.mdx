@@ -4,7 +4,7 @@ sidebar_label: Get Max Qty
 sidebar_position: 8
 ---
 
-Query the available balance for placing a spread order based on the given symbol, side, and order price.
+Query the maximum order quantity for the given symbol.
 
 ### HTTP Request
 <APIEndpoint method="GET" url="/v5/spread/max-qty" />
@@ -12,7 +12,7 @@ Query the available balance for placing a spread order based on the given symbol
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|symbolId |**true** |integer |Spread symbol ID|
+|symbol |**true** |string |Spread symbol name|
 |side |**true** |string |Order side. `1`: Buy, `2`: Sell|
 |orderPrice |**true** |string |Order price|
 
@@ -24,7 +24,7 @@ Query the available balance for placing a spread order based on the given symbol
 ### Request Example
 
 ```http
-GET /v5/spread/max-qty?symbolId=1&side=1&orderPrice=50000 HTTP/1.1
+GET /v5/spread/max-qty?symbol=SOLUSDT_SOL/USDT&side=1&orderPrice=50000 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXXX
 X-BAPI-API-KEY: XXXXXX
@@ -39,9 +39,9 @@ Content-Type: application/json
     "retCode": 0,
     "retMsg": "Success",
     "result": {
-        "ab": "0.00000000"
+        "ab": "1992.55199490"
     },
     "retExtInfo": {},
-    "time": 1773230923211
+    "time": 1774318807656
 }
 ```
