@@ -12,7 +12,7 @@ Query repayment collateral information for the account before repayment. This da
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|coin |false |string |Coin name, e.g. `USDT`, `BTC`. Returns all repayment info if not passed|
+|coin |false |string |Coin name, e.g. `USDT`, `BTC`. Must be a coin with outstanding liabilities, otherwise an error will be returned. If not passed, returns the aggregated total across all liabilities.|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -21,11 +21,17 @@ Query repayment collateral information for the account before repayment. This da
 |> collateralList |array&lt;object&gt; |Collateral list |
 |>> coin |string |Coin name |
 |>> availableSize |string |Available size |
-|>> availableValue |string |Available value |
+|>> availableValue |string |Available value (in USD) |
 |>> coinScale |integer |Coin precision |
 |>> borrowSize |string |Borrow size |
 |>> spotHedgeAmount |string |Spot hedge amount |
 |>> assetFrozen |string |Frozen asset |
+|borrowInfo |object |Borrow info for the queried coin. |
+|> coin |string |Coin name. Only returned when `coin` is passed in the request |
+|> borrowSize |string |Borrow size |
+|> borrowValue |string |Borrow value (in USD) |
+|> assetFrozen |string |Frozen asset |
+|> availableBalance |string |Available balance |
 
 ### Request Example
 
@@ -69,36 +75,61 @@ X-BAPI-RECV-WINDOW: 5000
         "collateralInfo": {
             "collateralList": [
                 {
-                    "availableValue": "0",
+                    "availableValue": "13038.369918809215134556464993",
+                    "coinScale": 4,
+                    "borrowSize": "0",
+                    "spotHedgeAmount": "0",
+                    "assetFrozen": "0",
+                    "availableSize": "13041.904274867704282417",
+                    "coin": "USDT"
+                },
+                {
+                    "availableValue": "4997.9120975285472554850",
                     "coinScale": 6,
                     "borrowSize": "0",
                     "spotHedgeAmount": "0",
                     "assetFrozen": "0",
-                    "availableSize": "0",
+                    "availableSize": "4997.912097528547255485",
                     "coin": "USDC"
                 },
                 {
-                    "availableValue": "0.3292772100000000000",
+                    "availableValue": "0",
                     "coinScale": 8,
-                    "borrowSize": "0.3",
+                    "borrowSize": "0.10006839",
                     "spotHedgeAmount": "0",
                     "assetFrozen": "0",
-                    "availableSize": "0.329277210000000000",
+                    "availableSize": "0",
+                    "coin": "SOL"
+                },
+                {
+                    "availableValue": "0",
+                    "coinScale": 9,
+                    "borrowSize": "0.001000068",
+                    "spotHedgeAmount": "-0.00100006728685180109293673123005419256514869630336761474609375",
+                    "assetFrozen": "0",
+                    "availableSize": "0",
                     "coin": "BTC"
                 },
                 {
-                    "availableValue": "17.42799911416770180000000000",
-                    "coinScale": 4,
-                    "borrowSize": "50",
+                    "availableValue": "38488.319604591478793130841305",
+                    "coinScale": 8,
+                    "borrowSize": "0",
                     "spotHedgeAmount": "0",
                     "assetFrozen": "0",
-                    "availableSize": "1216139.749700000000000000",
-                    "coin": "USDT"
+                    "availableSize": "17.867158854367695555",
+                    "coin": "ETH"
                 }
             ]
+        },
+        "borrowInfo": {
+            "borrowSize": "0.100068384926503532",
+            "assetFrozen": "0",
+            "borrowValue": "9.172497619169950215718876",
+            "coin": "SOL",
+            "availableBalance": "0"
         }
     },
     "retExtInfo": {},
-    "time": 1773230926882
+    "time": 1774344990873
 }
 ```
