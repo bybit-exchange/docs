@@ -1,0 +1,97 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+:::info
+Does not need authentication. **Up to 50 requests** per second per IP .
+:::
+
+[Bybit Dual Asset FAQ](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
+
+### HTTP Request
+GET `/v5/earn/advance/product`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category)|**true**|string|Product category,`DualAssets`|
+|coin|false|string|Coin name, uppercase only |
+|duration|false|string|Product duration, eg:8h, 1d, 3d, 6d, 12d|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|[category](../../enum#advanced-earn-category)|string |`DualAssets`|
+|list|array|Object|
+|> [category](../../enum#advanced-earn-category)|string |`DualAssets`|
+|> productId|string |Product ID|
+|> baseCoin|string |Base Coin|
+|> quoteCoin|string |Quote Coin|
+|> expectReceiveAt|string |Expected time to receive the transfer, Unix timestamp in milliseconds|
+|> duration|string|Product duration, eg:8h, 1d, 3d|
+|> [status](../../enum#advanced-earn-product-status)|string|`Available`,`NotAvailable`|
+|> isVipProduct|boolean|Whether it is a VIP product|
+|> subscribeStartAt|string |Subscription start time, Unix timestamp in ms|
+|> subscribeEndAt|string |Subscription end time, Unix timestamp in ms |
+|> applyStartAt|string |Interest accrual start time, Unix timestamp in ms|
+|> settlementTime|string |Interest accrual end time, Unix timestamp in ms|
+|> minPurchaseQuoteAmount|string |Minimum purchase amount in quote currency |
+|> minPurchaseBaseAmount|string |Minimum purchase amount in base currency |
+|> remainingAmountQuote|string |Remaining quota for Buy Low direction |
+|> remainingAmountBase|string |Remaining quota for Sell High direction |
+|> orderPrecisionDigitalQuote|int |Precision for Buy Low direction |
+|> orderPrecisionDigitalBase|int |Precision for Sell High direction |
+
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DualAssets",
+        "list": [
+            {
+                "category": "DualAssets",
+                "productId": "36340",
+                "baseCoin": "XRP",
+                "quoteCoin": "USDT",
+                "expectReceiveAt": "1773908399000",
+                "duration": "1d",
+                "status": "Available",
+                "isVipProduct": false,
+                "subscribeStartAt": "1773734400000",
+                "subscribeEndAt": "1773820799000",
+                "applyStartAt": "1773734400000",
+                "settlementTime": "1773907199000",
+                "minPurchaseQuoteAmount": "10",
+                "minPurchaseBaseAmount": "10",
+                "remainingAmountQuote": "1000000",
+                "remainingAmountBase": "10000",
+                "orderPrecisionDigitalQuote": 4,
+                "orderPrecisionDigitalBase": 2
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1773814359231
+}
+
+```

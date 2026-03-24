@@ -1,0 +1,107 @@
+---
+title: 查詢倉位資訊
+sidebar_label: 查詢倉位資訊
+sidebar_position: 4
+---
+:::info
+* 需要身份驗證。每秒**最多 10 次請求**。
+* 查詢您當前生效的雙幣投資倉位。API 金鑰需要具備 Earn (理財) 權限。
+:::
+
+### HTTP 請求
+GET `/v5/earn/advance/position`
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category) |**true**|string|產品類型，例如 `DualAssets`|
+|productId|false|string|產品 ID|
+|coin |false |string |幣種|
+|limit |false |int |每頁數量。預設值：20，最大值：20|
+|cursor |false |string |分頁游標。請使用上一次請求返回的 `nextPageCursor`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+| [category](../../enum#advanced-earn-category)|string |`DualAssets`|
+| nextPageCursor | string | 下一頁的游標。如果沒有更多資料則為空字串 |
+| list|array |物件 |
+| > positionId | string | 倉位 ID |
+| > productId | string | 產品 ID |
+| > [category](../../enum#advanced-earn-category)  | string | 產品類別，`DualAssets` |
+| > baseCoin | string | 基礎幣種 (Base Coin) |
+| > quoteCoin | string | 計價幣種 (Quote Coin) |
+| > investCoin | string |投資幣種。`BuyLow` (低買)：與計價幣種相同；`SellHigh` (高賣)：與基礎幣種相同|
+| > amount | string | 倉位數量，單位為 `investCoin` (投資幣種) |
+| > apyE8 | string | 已確認的年化收益率（e8 精度） |
+| > direction | string | 方向：`BuyLow` (低買), `SellHigh` (高賣) |
+| > targetPrice | string | 目標價格（掛鉤價），單位為 USDT |
+| > settlementTime | string | 結算時間，毫秒級 Unix 時間戳 |
+| > [status](../../enum#advanced-earn-position-status) | string | `Active`: 申購中 (生效中), `Redeeming`: 贖回中 |
+| > orderId | string | 申購訂單 ID |
+| > duration | string | 產品期限，例如 8h, 1d, 2d, 3d |
+| > expectReturnCoin | string | 預計結算幣種 |
+| > expectReturnAmount | string | 預計結算數量 |
+| > accountType | string | 申購帳戶：`FUND` (資金帳戶), `UNIFIED` (統一帳戶) |
+| > toAccountType | string | 結算帳戶：`FUND`，目前僅支援結算至資金帳戶 (Fund) |
+| > yieldStartAt | int64 | 計息開始時間，毫秒級 Unix 時間戳 |
+| > yieldEndAt | int64 | 計息結束時間，毫秒級 Unix 時間戳 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/position?category=DualAssets HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DualAssets",
+        "list": [
+            {
+                "positionId": "19035",
+                "productId": "36320",
+                "category": "DualAssets",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "investCoin": "USDT",
+                "amount": "20",
+                "apyE8": "902700000",
+                "direction": "BuyLow",
+                "targetPrice": "2325",
+                "settlementTime": "1774079999000",
+                "status": "Active",
+                "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",
+                "duration": "3d",
+                "expectReturnCoin": "USDT",
+                "expectReturnAmount": "21.4838",
+                "accountType": "UNIFIED",
+                "toAccountType": "FUND",
+                "yieldStartAt": "1773820799000",
+                "yieldEndAt": "1774079999000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1773815399307
+}
+```
