@@ -28,10 +28,32 @@ Query recent public spread trading history in Bybit.
 |> seq |string |Cross sequence |
 
 ### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1
 Host: api-testnet.bybit.com
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_get_public_trade_history(
+    symbol="SOLUSDT_SOL/USDT",
+    limit=2
+))
 ```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

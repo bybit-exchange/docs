@@ -18,13 +18,16 @@ To trade commodity contracts, please complete the agreement signing first. Once 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category | **true**|integer |`2`: Metals commodity contracts|
+|category | **true**|integer |`2`: Metals commodity contracts (XAU & XAG)<br/>`3`: Crude oil commodity contract|
 |agree |**true** |boolean |`true`|
 
 ### Response Parameters
 None
 
 ### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 POST /v5/user/agreement HTTP/1.1
@@ -41,6 +44,25 @@ Content-Length: 40
     "category": 2
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.sign_agreement(
+    category=2,
+    agree=True
+))
+```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 

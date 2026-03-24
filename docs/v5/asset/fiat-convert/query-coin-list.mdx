@@ -12,7 +12,7 @@ Query for the list of coins you can convert to/from.
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|side |false |integer |`0`: buy, buy crypto sell fiat; `1`: sell, sell crypto buy fiat|
+|side |false |string |`0`: buy, buy crypto sell fiat; `1`: sell, sell crypto buy fiat|
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -51,6 +51,23 @@ X-BAPI-TIMESTAMP: 1720064061248
 X-BAPI-RECV-WINDOW: 5000
 ```
 </TabItem>
+
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_fiat_trading_pair_list(
+    side="0"
+))
+```
+
+</TabItem>
+
 </Tabs>
 
 ### Response Example

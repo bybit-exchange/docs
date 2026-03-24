@@ -53,6 +53,9 @@ sidebar_position: 7
 
 ### Request Example
 
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
 ```http
 GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1
 Host: api-testnet.bybit.com
@@ -61,7 +64,25 @@ X-BAPI-API-KEY: XXXXX
 X-BAPI-TIMESTAMP: 1744105738529
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+````
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spread_get_trade_history(
+    orderId="5e010c35-2b44-4f03-8081-8fa31fb73376"
+))
 ```
+
+</TabItem>
+</Tabs>
 
 ### Response Example
 ```json
