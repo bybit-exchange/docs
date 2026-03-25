@@ -19,18 +19,19 @@ sidebar_position: 15
 |:----- |:-----|----- |
 |total |string |總資產價值 |
 |quoteTotal |string |計價後總資產價值 |
-|stat |integer |狀態 |
+|stat |integer |請求下游接口是否存在異常。`0`: 正常，非零: 存在異常 |
 |list |array&lt;object&gt; |帳戶資產列表 |
 |> uid |long |用戶ID |
-|> isM |boolean |是否為母帳戶 |
-|> stat |integer |帳戶狀態 |
+|> isM |boolean |是否為母帳戶。僅當帳戶為**母帳戶**時返回 |
+|> type |integer |子帳戶類型（如普通子帳戶、托管子帳戶、跟單子帳戶）。僅當帳戶為**子帳戶**時返回 |
+|> stat |integer |請求下游接口是否存在異常。`0`: 正常，非零: 存在異常 |
 |> origb |string |USD 計價的原始餘額 |
 |> quoteb |string |請求入參指定幣種計價的餘額 |
 |> items |array&lt;object&gt; |子帳戶類型明細 |
 |>> type |string |帳戶類型，如 `ACCOUNT_TYPE_FUND`、`ACCOUNT_TYPE_UNIFIED` |
 |>> origb |string |USD 計價的原始餘額 |
 |>> quoteb |string |請求入參指定幣種計價的餘額 |
-|>> stat |integer |狀態 |
+|>> stat |integer |請求下游接口是否存在異常。`0`: 正常，非零: 存在異常 |
 
 ### 請求示例
 

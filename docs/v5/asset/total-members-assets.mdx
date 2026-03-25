@@ -19,18 +19,19 @@ Query total assets across all member accounts (master and sub-accounts), with op
 |:----- |:-----|----- |
 |total |string |Total asset value |
 |quoteTotal |string |Total asset value in quoted coin |
-|stat |integer |Status |
+|stat |integer |Whether there was an exception when requesting downstream data. `0`: normal, non-zero: exception occurred |
 |list |array&lt;object&gt; |Account asset list |
 |> uid |long |User ID |
-|> isM |boolean |Whether it is a master account |
-|> stat |integer |Account status |
+|> isM |boolean |Whether it is a master account. Only returned when the account is a **master account** |
+|> type |integer |Sub-account type (e.g. normal sub-account, custodial sub-account, copy trading sub-account). Only returned when the account is a **sub-account** |
+|> stat |integer |Whether there was an exception when requesting downstream data. `0`: normal, non-zero: exception occurred |
 |> origb |string |Original balance in USD |
 |> quoteb |string |Balance in quoted coin (the coin specified in the request parameter) |
 |> items |array&lt;object&gt; |Sub-account type breakdown |
 |>> type |string |Account type, e.g. `ACCOUNT_TYPE_FUND`, `ACCOUNT_TYPE_UNIFIED` |
 |>> origb |string |Original balance in USD |
 |>> quoteb |string |Balance in quoted coin (the coin specified in the request parameter) |
-|>> stat |integer |Status |
+|>> stat |integer |Whether there was an exception when requesting downstream data. `0`: normal, non-zero: exception occurred |
 
 ### Request Example
 
