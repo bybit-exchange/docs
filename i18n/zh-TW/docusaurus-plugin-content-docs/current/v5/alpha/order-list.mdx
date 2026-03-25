@@ -1,0 +1,151 @@
+---
+title: 查詢訂單列表
+sidebar_label: 查詢訂單列表
+sidebar_position: 5
+---
+
+查詢用戶的鏈上交易訂單歷史，包含訂單狀態、手續費及執行詳情。
+
+:::info
+- 支持按交易類型、訂單狀態、代幣及時間範圍篩選
+- 最大查詢範圍為 90 天，結果按創建時間倒序排列
+- 訂單狀態流轉：`1`（處理中）→ `2`（成功）或 `3`（失敗）
+- 鏈上確認通常需要 10–60 秒
+- 調用 [執行購買](trade-purchase) 或 [執行贖回](trade-redeem) 後，可使用此接口確認最終訂單狀態
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/trade/order-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tradeType |false |integer |按交易類型篩選。`0`: 全部（默認），`1`: 購買，`2`: 贖回|
+|tokenCode |false |string |按代幣代碼篩選|
+|orderStatus |false |array |按訂單狀態篩選（支持多個值）。`1`: 處理中，`2`: 成功，`3`: 失敗|
+|days |false |integer |查詢最近 N 天。範圍：[0, 90]。`0` 使用系統默認（90 天）。默認：`0`|
+|limit |false |integer |每頁條數。範圍：[1, 100]。默認：`20`|
+|pageIndex |false |integer |頁碼（從 1 開始）。默認：`1`|
+|direction |false |string |翻頁方向。`prev`、`next`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|total |integer |符合篩選條件的訂單總數|
+|pageIndex |integer |當前頁碼|
+|orders |array |訂單列表|
+|> orderType |integer |訂單類型。`1`: 市價單，`2`: 限價單|
+|> tradeType |integer |交易類型。`1`: 購買，`2`: 贖回|
+|> orderNo |string |系統訂單號|
+|> orderStatus |integer |訂單狀態。`1`: 處理中，`2`: 成功，`3`: 失敗|
+|> fromTokenCode |string |源代幣代碼|
+|> fromTokenAmount |string |預計支付數量|
+|> fromTokenSymbol |string |源代幣符號|
+|> fromTokenDecimals |integer |源代幣小數精度|
+|> fromTokenIconUrlDay |string |源代幣圖標 URL（淺色模式）|
+|> fromTokenIconUrlNight |string |源代幣圖標 URL（深色模式）|
+|> fromChainCode |string |源鏈代碼|
+|> fromChainIconUrl |string |源鏈圖標 URL|
+|> toTokenCode |string |目標代幣代碼|
+|> toTokenAmount |string |實際接收數量（完成後填充）|
+|> toTokenSymbol |string |目標代幣符號|
+|> toTokenDecimals |integer |目標代幣小數精度|
+|> toTokenIconUrlDay |string |目標代幣圖標 URL（淺色模式）|
+|> toTokenIconUrlNight |string |目標代幣圖標 URL（深色模式）|
+|> toChainCode |string |目標鏈代碼|
+|> toChainIconUrl |string |目標鏈圖標 URL|
+|> gasTokenSymbol |string |原生 Gas 代幣符號，如 `ETH`、`SOL`、`BNB`|
+|> gasOnchain |string |鏈上 Gas 費用（原生代幣單位）|
+|> gasUsd |string |Gas 費用（USD）。訂單處理中時可能為 null|
+|> platformFee |string |平台手續費|
+|> platformFeeUsd |string |平台手續費（USD）。訂單處理中時可能為 null|
+|> quoteMode |integer |使用的報價模式|
+|> createTime |integer |訂單創建時間（Unix 時間戳，秒）|
+|> executionTime |integer |訂單完成時間（Unix 時間戳，秒）|
+|> failureReasonCode |string |失敗原因代碼，僅當 `orderStatus=3` 時存在。`ERR999`: 未知原因，`ERR101`: 系統異常，`ERR102`: 執行超時，`ERR103`: 餘額不足，`ERR104`: 廣播失敗，`ERR105`: 鏈上執行失敗，`ERR106`: 交易損耗過大，`ERR107`: 流動性範圍過大|
+|> source |string |交易來源標識|
+|> swapRate |string |實際兌換匯率|
+|> actualFromTokenAmount |string |實際支付數量|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/order-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tradeType": 0,
+    "days": 7,
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "total": 1,
+        "pageIndex": 1,
+        "orders": [
+            {
+                "orderType": 1,
+                "tradeType": 1,
+                "orderNo": "ORD_20240101_001",
+                "orderStatus": 2,
+                "fromTokenCode": "CEX_1",
+                "fromTokenAmount": "100",
+                "fromTokenSymbol": "USDT",
+                "fromTokenDecimals": 6,
+                "fromChainCode": "ETH",
+                "toTokenCode": "DEX_123",
+                "toTokenAmount": "12450000",
+                "toTokenSymbol": "PEPE",
+                "toTokenDecimals": 18,
+                "toChainCode": "ETH",
+                "gasTokenSymbol": "ETH",
+                "gasOnchain": "0.0003",
+                "gasUsd": "0.30",
+                "platformFee": "0.20",
+                "platformFeeUsd": "0.20",
+                "quoteMode": 0,
+                "createTime": 1704067200,
+                "executionTime": 1704067230,
+                "swapRate": "124500",
+                "actualFromTokenAmount": "100"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067300000
+}
+```

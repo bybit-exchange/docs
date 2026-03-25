@@ -1,0 +1,108 @@
+---
+title: Get Biz Token List
+sidebar_label: Get Biz Token List
+sidebar_position: 6
+---
+
+Query the list of on-chain tokens available for trading, with risk flags and order limits.
+
+:::info
+- Returns token codes in `DEX_<id>` format used by [Get Trade Quote](trade-quote) and execution endpoints
+- `riskFlag=1` indicates risk — warn the user before proceeding to trade
+- `payTokenCodes` lists which payment tokens are supported for each trading token
+- To get token prices or market data, use [Get Token Price List](biz-token-price-list) instead
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/biz-token-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenTag |false |integer |Token tag filter. `0`: All (default), `1`: New token sniping, `2`: On-chain hot token|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|tokenCode |string |Token code in `DEX_<id>` format. Use this in quote and execution requests|
+|chainCode |string |Blockchain code, e.g. `ETH`, `BSC`, `SOL`, `TRX`, `BASE`|
+|chainIconUrl |string |Chain icon URL|
+|tokenAddress |string |Token contract address on chain|
+|symbol |string |Token symbol, e.g. `PEPE`|
+|tokenDecimals |integer |Token decimal precision|
+|tokenIconUrlDay |string |Token icon URL (light mode)|
+|tokenIconUrlNight |string |Token icon URL (dark mode)|
+|createTime |integer |Token listing time on platform (Unix timestamp in seconds)|
+|createTimeOnchain |integer |Token creation time on chain (Unix timestamp in seconds)|
+|riskFlag |integer |Risk flag. `0`: No risk identified, `1`: Risk identified — warn user before trading|
+|minOrderQuantity |number |Minimum order quantity (in payment token unit, e.g. USD)|
+|maxOrderQuantity |number |Maximum order quantity (in payment token unit)|
+|tokenTags |array |Tag ID list associated with this token|
+|payTokenCodes |array |Supported payment token codes (`CEX_<id>`), e.g. `["CEX_1", "CEX_2"]`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/biz-token-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenTag": 2
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenCode": "DEX_123",
+            "chainCode": "ETH",
+            "chainIconUrl": "https://example.com/eth.png",
+            "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+            "symbol": "PEPE",
+            "tokenDecimals": 18,
+            "tokenIconUrlDay": "https://example.com/pepe-day.png",
+            "tokenIconUrlNight": "https://example.com/pepe-night.png",
+            "createTime": 1704067200,
+            "createTimeOnchain": 1682000000,
+            "riskFlag": 0,
+            "minOrderQuantity": 1,
+            "maxOrderQuantity": 50000,
+            "tokenTags": [1, 2],
+            "payTokenCodes": ["CEX_1", "CEX_2"]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

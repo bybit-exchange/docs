@@ -1,0 +1,146 @@
+---
+title: Get Trade Quote
+sidebar_label: Get Trade Quote
+sidebar_position: 1
+---
+
+Get a price quote before executing a purchase or redeem trade. This is a **mandatory step** before calling [Execute Purchase](trade-purchase) or [Execute Redeem](trade-redeem).
+
+:::info
+- Returns estimated receive amount, exchange rate, platform fee, gas cost, and slippage
+- `quoteData` and `correctingCode` must be passed as-is to the execution endpoint — do not modify
+- Quote expires at `expireTime`; re-fetch if expired before executing
+- `correctingCode` is an MD5 of `(quoteData + fromTokenCode + fromTokenAmount + toTokenCode)` for tamper protection
+- Token codes can be obtained from [Get Pay Token List](pay-token-list) (CEX tokens) and [Get Biz Token List](biz-token-list) (DEX tokens)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/quote" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tradeType |**true** |integer |Trade type. `1`: Purchase (buy on-chain token with payment token), `2`: Redeem (sell on-chain token for payment token)|
+|fromTokenCode |**true** |string |Source token code (`CEX_<id>` or `DEX_<id>`). Purchase: CEX token (e.g. `CEX_1` for USDT); Redeem: DEX token (e.g. `DEX_123`)|
+|fromTokenAmount |**true** |string |Amount to pay, string-formatted positive decimal. Must be greater than 0|
+|toTokenCode |**true** |string |Target token code (`CEX_<id>` or `DEX_<id>`). Purchase: DEX token; Redeem: CEX token (e.g. `CEX_1` for USDT)|
+|quoteMode |false |integer |Quote mode. `0`: Auto (default), `1`: Price Priority, `2`: Success Rate Priority|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|tradeType |integer |Trade type echoed back|
+|fromTokenCode |string |Source token code|
+|fromTokenAmount |string |Amount to pay|
+|fromTokenAmountUsd |string |Payment amount in USD|
+|toTokenCode |string |Target token code|
+|toTokenAmount |string |Expected amount to receive|
+|toTokenAmountUsd |string |Expected receive amount in USD|
+|minToTokenAmount |string |Minimum amount to receive after slippage|
+|slippage |string |Estimated slippage as decimal, e.g. `0.005` = 0.5%|
+|gas |string |Estimated gas fee in native token unit|
+|gasUsd |string |Gas fee in USD|
+|platformFee |string |Platform fee|
+|platformFeeUsd |string |Platform fee in USD|
+|swapRate |string |Exchange rate (toToken per fromToken)|
+|lossRate |string |Estimated loss rate from fees and slippage|
+|quoteData |string |Base64-encoded quote context. **Must be passed as-is to the execution endpoint**|
+|correctingCode |string |MD5 checksum for data integrity. **Must be passed as-is to the execution endpoint**|
+|quoteMode |integer |Actual quote mode used|
+|quoteDataId |string |Unique quote ID for idempotency|
+|expireTime |integer |Quote expiration time (ms). Do not execute with an expired quote|
+|timestamp |integer |Quote timestamp (ms). Use to compare freshness across multiple quotes|
+|chargeAmount |string |Fee charge amount|
+|modeEstimations |array |Alternative mode estimations for comparison|
+|> quoteMode |integer |Quote mode|
+|> estimatedGas |string |Estimated gas fee in this mode|
+|> estimatedGasUsd |string |Estimated gas in USD|
+|> estimatedSlippage |string |Estimated slippage|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/quote HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tradeType": 1,
+    "fromTokenCode": "CEX_1",
+    "fromTokenAmount": "100",
+    "toTokenCode": "DEX_123",
+    "quoteMode": 0
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tradeType": 1,
+        "fromTokenCode": "CEX_1",
+        "fromTokenAmount": "100",
+        "fromTokenAmountUsd": "100.00",
+        "toTokenCode": "DEX_123",
+        "toTokenAmount": "12500000",
+        "toTokenAmountUsd": "99.50",
+        "minToTokenAmount": "12375000",
+        "slippage": "0.005",
+        "gas": "0.0003",
+        "gasUsd": "0.30",
+        "platformFee": "0.20",
+        "platformFeeUsd": "0.20",
+        "swapRate": "125000",
+        "lossRate": "0.005",
+        "quoteData": "eyJhbGciOiJIUzI1NiJ9...",
+        "correctingCode": "a1b2c3d4e5f6",
+        "quoteMode": 0,
+        "quoteDataId": "QD_20240101_001",
+        "expireTime": 1704067230000,
+        "modeEstimations": [
+            {
+                "quoteMode": 1,
+                "estimatedGas": "12600000",
+                "estimatedGasUsd": "0.28",
+                "estimatedSlippage": "0.008"
+            },
+            {
+                "quoteMode": 2,
+                "estimatedGas": "12400000",
+                "estimatedGasUsd": "0.35",
+                "estimatedSlippage": "0.003"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```
