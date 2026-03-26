@@ -1,0 +1,95 @@
+---
+title: 執行贖回
+sidebar_label: 執行贖回
+sidebar_position: 2
+---
+
+執行賣出交易，將鏈上代幣贖回為支付代幣（如 USDT/USDC）。
+
+:::info
+- 必須先調用 [獲取交易報價](trade-quote) 以獲取有效報價
+- 必須向用戶展示報價詳情並獲得明確確認後，才能調用此接口
+- `quoteData`、`correctingCode` 和 `gas` 必須原樣傳入來自報價接口的返回值
+- `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](order-list) 確認最終訂單狀態
+- 基於 `quoteDataId` 的冪等性 — 重複提交將返回相同訂單號
+- 鏈上確認通常需要 10–60 秒
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/trade/redeem" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|fromTokenCode |**true** |string |要賣出的鏈上代幣（`DEX_<id>`），須與報價請求一致，如 `DEX_123`|
+|fromTokenAmount |**true** |string |賣出數量（正數小數字符串），須與報價請求一致|
+|toTokenCode |**true** |string |要接收的支付代幣（`CEX_<id>`），如 USDT 對應 `CEX_1`，須與報價請求一致|
+|slippage |**true** |string |滑點容忍度（小數形式）。`0.005` = 0.5%，`0.01` = 1%，`0.05` = 5%|
+|quoteData |**true** |string |Base64 編碼的報價數據。必須原樣傳入來自 `/quote` 的返回值|
+|gas |**true** |string |預估 Gas 費用。必須原樣傳入來自 `/quote` 的返回值|
+|quoteMode |**true** |integer |報價模式，須與 `/quote` 請求一致。`0`: 自動，`1`: 價格優先，`2`: 成功率優先|
+|correctingCode |**true** |string |數據完整性 MD5 校驗碼。必須原樣傳入來自 `/quote` 的返回值|
+|tenant |false |string |可選的租戶標識符|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |系統生成的訂單號，可通過 [查詢訂單列表](order-list) 查詢訂單狀態|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/redeem HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fromTokenCode": "DEX_123",
+    "fromTokenAmount": "10000000",
+    "toTokenCode": "CEX_1",
+    "slippage": "0.01",
+    "quoteData": "eyJhbGciOiJIUzI1NiJ9...",
+    "gas": "0.0003",
+    "quoteMode": 0,
+    "correctingCode": "a1b2c3d4e5f6"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderNo": "ORD_20240101_002"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

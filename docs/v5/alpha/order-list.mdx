@@ -1,0 +1,151 @@
+---
+title: Get Order List
+sidebar_label: Get Order List
+sidebar_position: 5
+---
+
+Query user's on-chain trade order history with status, fees, and execution details.
+
+:::info
+- Supports filtering by trade type, order status, token, and time range
+- Maximum query range is 90 days; orders sorted by creation time descending
+- Order status flow: `1` (Processing) → `2` (Success) or `3` (Failed)
+- On-chain confirmation typically takes 10–60 seconds
+- Use this endpoint after [Execute Purchase](trade-purchase) or [Execute Redeem](trade-redeem) to confirm the final order status
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/order-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tradeType |false |integer |Filter by trade type. `0`: All (default), `1`: Purchase, `2`: Redeem|
+|tokenCode |false |string |Filter by token code|
+|orderStatus |false |array |Filter by order status (multiple values allowed). `1`: Processing, `2`: Success, `3`: Failed|
+|days |false |integer |Query last N days. Range: [0, 90]. `0` uses system default (90 days). Default: `0`|
+|limit |**true** |integer |Results per page. Range: [1, 100]|
+|pageIndex |**true** |integer |Page number (1-based)|
+|direction |false |string |Pagination direction. `prev`, `next`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|total |integer |Total order count matching the filter|
+|pageIndex |integer |Current page number|
+|orders |array |Order list|
+|> orderType |integer |Order type. `1`: Market order, `2`: Limit order|
+|> tradeType |integer |Trade type. `1`: Purchase, `2`: Redeem|
+|> orderNo |string |System order number|
+|> orderStatus |integer |Order status. `1`: Processing, `2`: Success, `3`: Failed|
+|> fromTokenCode |string |Source token code|
+|> fromTokenAmount |string |Intended payment amount|
+|> fromTokenSymbol |string |Source token symbol|
+|> fromTokenDecimals |integer |Source token decimal precision|
+|> fromTokenIconUrlDay |string |Source token icon URL (light mode)|
+|> fromTokenIconUrlNight |string |Source token icon URL (dark mode)|
+|> fromChainCode |string |Source chain code|
+|> fromChainIconUrl |string |Source chain icon URL|
+|> toTokenCode |string |Target token code|
+|> toTokenAmount |string |Actual amount received (populated after completion)|
+|> toTokenSymbol |string |Target token symbol|
+|> toTokenDecimals |integer |Target token decimal precision|
+|> toTokenIconUrlDay |string |Target token icon URL (light mode)|
+|> toTokenIconUrlNight |string |Target token icon URL (dark mode)|
+|> toChainCode |string |Target chain code|
+|> toChainIconUrl |string |Target chain icon URL|
+|> gasTokenSymbol |string |Native gas token symbol, e.g. `ETH`, `SOL`, `BNB`|
+|> gasOnchain |string |On-chain gas fee in native token|
+|> gasUsd |string |Gas fee in USD. May be null if order is still processing|
+|> platformFee |string |Platform fee|
+|> platformFeeUsd |string |Platform fee in USD. May be null if order is still processing|
+|> quoteMode |integer |Quote mode used|
+|> createTime |integer |Order creation time (Unix timestamp in seconds)|
+|> executionTime |integer |Order completion time (Unix timestamp in seconds)|
+|> failureReasonCode |string |Failure reason code, only present when `orderStatus=3`. `ERR999`: Unknown, `ERR101`: System exception, `ERR102`: Execution timeout, `ERR103`: Insufficient balance, `ERR104`: Broadcast failed, `ERR105`: On-chain execution failed, `ERR106`: Trade loss too large, `ERR107`: Liquidity range too large|
+|> source |string |Trade source identifier|
+|> swapRate |string |Actual exchange rate|
+|> actualFromTokenAmount |string |Actual amount paid|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/order-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tradeType": 0,
+    "days": 7,
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "total": 1,
+        "pageIndex": 1,
+        "orders": [
+            {
+                "orderType": 1,
+                "tradeType": 1,
+                "orderNo": "ORD_20240101_001",
+                "orderStatus": 2,
+                "fromTokenCode": "CEX_1",
+                "fromTokenAmount": "100",
+                "fromTokenSymbol": "USDT",
+                "fromTokenDecimals": 6,
+                "fromChainCode": "ETH",
+                "toTokenCode": "DEX_123",
+                "toTokenAmount": "12450000",
+                "toTokenSymbol": "PEPE",
+                "toTokenDecimals": 18,
+                "toChainCode": "ETH",
+                "gasTokenSymbol": "ETH",
+                "gasOnchain": "0.0003",
+                "gasUsd": "0.30",
+                "platformFee": "0.20",
+                "platformFeeUsd": "0.20",
+                "quoteMode": 0,
+                "createTime": 1704067200,
+                "executionTime": 1704067230,
+                "swapRate": "124500",
+                "actualFromTokenAmount": "100"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067300000
+}
+```

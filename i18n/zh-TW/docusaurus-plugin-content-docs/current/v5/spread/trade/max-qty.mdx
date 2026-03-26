@@ -1,0 +1,47 @@
+---
+title: 查詢最大下單數量
+sidebar_label: 查詢最大下單數量
+sidebar_position: 8
+---
+
+查詢指定交易對的最大下單數量。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/spread/max-qty" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |價差交易對名稱|
+|side |**true** |string |訂單方向. `1`: 買, `2`: 賣|
+|orderPrice |**true** |string |下單價格|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|ab |string |最大下單數量|
+
+### 請求示例
+
+```http
+GET /v5/spread/max-qty?symbol=SOLUSDT_SOL/USDT&side=1&orderPrice=50000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "ab": "1992.55199490"
+    },
+    "retExtInfo": {},
+    "time": 1774318807656
+}
+```

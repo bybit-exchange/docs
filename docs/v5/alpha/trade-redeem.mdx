@@ -1,0 +1,95 @@
+---
+title: Execute Redeem
+sidebar_label: Execute Redeem
+sidebar_position: 2
+---
+
+Execute a sell trade to redeem on-chain tokens back to payment tokens (e.g. USDT/USDC).
+
+:::info
+- Must call [Get Trade Quote](trade-quote) first to get a valid quote
+- Must display quote details to the user and obtain explicit confirmation before calling this endpoint
+- Pass `quoteData`, `correctingCode`, and `gas` from the quote response as-is
+- A `200` response is only an acknowledgment — use [Get Order List](order-list) to check the final order status
+- Idempotent based on `quoteDataId` — duplicate submissions return the same order number
+- On-chain confirmation typically takes 10–60 seconds
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/redeem" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|fromTokenCode |**true** |string |On-chain token to sell (`DEX_<id>`). Must match the quote request, e.g. `DEX_123`|
+|fromTokenAmount |**true** |string |Amount to sell (positive decimal as string). Must match the quote request|
+|toTokenCode |**true** |string |Payment token to receive (`CEX_<id>`), e.g. `CEX_1` for USDT. Must match the quote request|
+|slippage |**true** |string |Slippage tolerance as decimal. `0.005` = 0.5%, `0.01` = 1%, `0.05` = 5%|
+|quoteData |**true** |string |Base64-encoded quote data. Must pass as-is from the `/quote` response|
+|gas |**true** |string |Estimated gas fee. Must pass as-is from the `/quote` response|
+|quoteMode |**true** |integer |Quote mode. Must be consistent with the `/quote` request. `0`: Auto, `1`: Price Priority, `2`: Success Rate Priority|
+|correctingCode |**true** |string |MD5 checksum for data integrity. Must pass as-is from the `/quote` response|
+|tenant |false |string |Optional tenant identifier|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |System-generated order number. Use this to query order status via [Get Order List](order-list)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/redeem HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fromTokenCode": "DEX_123",
+    "fromTokenAmount": "10000000",
+    "toTokenCode": "CEX_1",
+    "slippage": "0.01",
+    "quoteData": "eyJhbGciOiJIUzI1NiJ9...",
+    "gas": "0.0003",
+    "quoteMode": 0,
+    "correctingCode": "a1b2c3d4e5f6"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderNo": "ORD_20240101_002"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```
