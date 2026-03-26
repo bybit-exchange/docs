@@ -1,0 +1,68 @@
+---
+title: Close Grid Bot
+sidebar_label: Close Spot Grid Bot
+sidebar_position: 3
+---
+
+Close a running spot grid bot with a specified settlement mode.
+
+:::info
+- **Bot state requirement:**<br/>
+The bot must be in a closeable state (`NEW` or `RUNNING`). Bots already in `CANCELLING` or `COMPLETED` state cannot be closed again (returns status_code=405).
+
+- **Settlement mode (`close_mode`):**<br/>
+`2`: Base token mode — convert all holdings to base token<br/>
+`3`: Quote token mode — convert all holdings to quote token (e.g. USDT)<br/>
+`4`: Base + Quote mode — return assets as-is without conversion
+
+- **Rate limit:**<br/>
+3 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/grid/close-grid" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|grid_id |**true** |string |Grid bot ID to close, obtained from [Create Spot Grid Bot](./create) response|
+|close_mode |**true** |string |Asset settlement mode: `2` Base token, `3` Quote token (e.g. USDT), `4` Base + Quote token|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`200` = success, non-zero = error|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/grid/close-grid HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612340768081708828"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774513501331
+}
+```

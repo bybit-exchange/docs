@@ -1,0 +1,95 @@
+---
+title: 創建定投機器人
+sidebar_label: 創建定投機器人
+sidebar_position: 1
+---
+
+創建一個新的定投（DCA）機器人，按固定時間間隔自動在指定交易對上投資。
+
+:::info
+- **運作方式：**<br/>
+機器人每隔 `frequency_in_second` 秒買入每個配置交易對的固定金額，無論市場價格如何。
+
+- **支持的交易對：**<br/>
+每個機器人最多 **5** 個交易對。
+
+- **最小頻率：**<br/>
+10 秒。常用值：`600`（10 分鐘）、`3600`（1 小時）、`86400`（1 天）。
+
+- **`max_invest_amount`：**<br/>
+可選的累計投資上限。當累計消費達到此金額時，機器人自動關閉。
+
+- **響應 `bot_id`：**<br/>
+成功時返回，用於後續[關閉](./close)操作。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 3 次請求。
+
+- **受合規管控及 KYC 驗證約束。**<br/>
+若用戶被封禁（status_code=421），`ban_reason_text` 提供本地化說明。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/dca/create-bot" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|parameters |**true** |object |定投機器人配置對象（詳見下方）|
+|> frequency_in_second |**true** |integer |投資頻率（秒）。最小 `10`。常用：`600`（10 分鐘）、`3600`（1 小時）、`86400`（1 天）|
+|> quote_coin |**true** |string |購買所用報價幣種（例如 `USDT`、`USDC`）|
+|> pairs |**true** |array |要投資的交易對。最多 5 個|
+|>> base |**true** |string |待投資的幣種（例如 `BTC`）|
+|>> amount |**true** |string |每輪投資金額，以報價幣種計（小數字符串，例如 `"10"` 表示 10 USDT）|
+|> max_invest_amount |false |string |可選。以報價幣種計的最大總投資金額（小數字符串）。達到後機器人自動關閉|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`200` = 成功，`421` = 用戶被封禁|
+|bot_id |integer |已創建的定投機器人 ID，用於後續關閉操作|
+|debug_msg |string |創建失敗原因（測試網：調試信息）|
+|ban_reason_text |string |用戶語言的封禁原因，僅當 `status_code=421` 時返回|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/dca/create-bot HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "parameters": {
+        "frequency_in_second": "600",
+        "quote_coin": "USDT",
+        "max_invest_amount": "2000",
+        "pairs": [
+            {
+                "base": "BTC",
+                "amount": "66"
+            },
+            {
+                "base": "ETH",
+                "amount": "88"
+            }
+        ]
+    }
+}
+```
+
+### 響應示例
+
+```json
+{
+    "status_code": 200,
+    "bot_id": 9876543210,
+    "debug_msg": "",
+    "ban_reason_text": ""
+}
+```

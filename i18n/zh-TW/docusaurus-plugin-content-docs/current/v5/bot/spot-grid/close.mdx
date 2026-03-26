@@ -1,0 +1,68 @@
+---
+title: 關閉網格機器人
+sidebar_label: 關閉現貨網格機器人
+sidebar_position: 3
+---
+
+以指定的結算模式關閉一個正在運行的現貨網格機器人。
+
+:::info
+- **機器人狀態要求：**<br/>
+機器人必須處於可關閉狀態（`NEW` 或 `RUNNING`）。已處於 `CANCELLING` 或 `COMPLETED` 狀態的機器人無法再次關閉（返回 status_code=405）。
+
+- **結算模式（`close_mode`）：**<br/>
+`2`：基礎幣模式 — 將所有資產轉換為基礎幣<br/>
+`3`：報價幣模式 — 將所有資產轉換為報價幣（例如 USDT）<br/>
+`4`：基礎幣 + 報價幣模式 — 按原樣返回資產，不做轉換
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 3 次請求。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/grid/close-grid" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|grid_id |**true** |string |要關閉的網格機器人 ID，從[創建現貨網格機器人](./create)響應中獲取|
+|close_mode |**true** |string |資產結算模式：`2` 基礎幣，`3` 報價幣（例如 USDT），`4` 基礎幣+報價幣|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`200` = 成功，非零 = 錯誤|
+|debug_msg |string |調試信息（僅測試網）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/grid/close-grid HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612340768081708828"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774513501331
+}
+```

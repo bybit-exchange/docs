@@ -1,0 +1,99 @@
+---
+title: Create Grid Bot
+sidebar_label: Create Spot Grid Bot
+sidebar_position: 2
+---
+
+Create a new spot grid trading bot with a specified trading pair, price range, grid count, and investment amount.
+
+:::info
+- **Prerequisites:**<br/>
+Call [Validate Spot Grid Input](./validate-input) before this endpoint to ensure parameters are within valid ranges.<br/>
+User must be authenticated and pass KYC/compliance checks.
+
+- **Investment mode (`invest_mode`):**<br/>
+`0`: Quote only (default) — invest in quote token (e.g. USDT)<br/>
+`1`: Base only — invest in base token (e.g. BTC)<br/>
+`2`: Base + Quote — split investment across both tokens
+
+- **Grid trailing (`enable_trailing`):**<br/>
+When enabled, the grid automatically shifts as price moves. Requires `cell_number >= 5`.
+
+- **Response `grid_id`:**<br/>
+Returned on success. Use this ID for subsequent [Get Detail](./get-detail) and [Close](./close) operations.
+
+- **Rate limit:**<br/>
+3 requests per second per UID.
+
+- **Subject to compliance wall and KYC verification.**<br/>
+If the user is banned (status_code=421), `ban_reason_text` provides a localized explanation.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/grid/create-grid" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|symbol |**true** |string |Trading pair symbol, uppercase only (e.g. `BTCUSDT`)|
+|max_price |**true** |string |Upper bound of the grid price range (decimal string)|
+|min_price |**true** |string |Lower bound of the grid price range (decimal string)|
+|cell_number |**true** |integer |Number of grid intervals, minimum 2|
+|invest_mode |false |integer |Investment mode. `0`: Quote only (default), `1`: Base only, `2`: Base + Quote|
+|base_investment |false |string |Investment in base token (decimal string). **Required** when `invest_mode` is `1` or `2`|
+|quote_investment |false |string |Investment in quote token (decimal string). **Required** when `invest_mode` is `0` or `2`|
+|entry_price |false |string |Entry trigger price (decimal string). Bot activates when market price reaches this level|
+|stop_loss_price |false |string |Stop-loss trigger price (decimal string)|
+|take_profit_price |false |string |Take-profit trigger price (decimal string)|
+|ts_percent |false |string |Trailing stop callback ratio, range `[0, 0.99]` (e.g. `"0.05"` means 5%)|
+|enable_trailing |false |boolean |Enable grid trailing (auto-shift). Requires `cell_number >= 5`. Default: `false`|
+|limit_up_price |false |string |Upper limit price for grid trailing (decimal string), usd when "enable_trailing"=`true`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`200` = success, `421` = user banned|
+|grid_id |integer |Created grid bot ID. Use for subsequent queries and close operations|
+|ban_reason_text |string |Ban reason in user's locale. Returned only when `status_code=421`|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/grid/create-grid HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "MNTUSDT",
+    "max_price": "1.0968",
+    "min_price": "0.3656",
+    "quote_investment": "200",
+    "base_investment": "",
+    "invest_mode": 0,
+    "cell_number": 50
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "debug_msg": "",
+        "grid_id": "612340768081708828",
+        "ban_reason_text": ""
+    },
+    "retExtInfo": {},
+    "time": 1774513139729
+}
+```

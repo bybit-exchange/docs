@@ -1,0 +1,72 @@
+---
+title: Close DCA Bot
+sidebar_label: Close DCA Bot
+sidebar_position: 2
+---
+
+Close a running DCA (Dollar-Cost Averaging) bot with a specified settlement mode.
+
+:::info
+- **Bot state requirement:**<br/>
+The bot must be in a closeable state. Bots that are currently mid-investment cycle may not be closeable (returns status_code=503).
+
+- **Settlement mode (`close_mode`):**<br/>
+`2`: Base token mode — convert all holdings to base tokens<br/>
+`3`: Quote token mode — convert all holdings to quote token (e.g. USDT)
+
+- **Rate limit:**<br/>
+3 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/dca/close-bot" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|bot_id |**true** |string |DCA bot ID to close, obtained from [Create Spot DCA Bot](./create) response|
+|close_mode |**true** |string |Asset settlement mode: `2` Base token, `3` Quote token (e.g. USDT)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`200` = success, non-zero = error|
+|bot_id |string |The closed DCA bot ID|
+|close_mode |string |The settlement mode used, `DCA_BASE_MODE`, `DCA_QUOTE_MODE`|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/dca/close-bot HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612349292702654770",
+    "close_mode": 2
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "bot_id": "612349292702654770",
+        "close_mode": "DCA_BASE_MODE",
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774518356929
+}
+```

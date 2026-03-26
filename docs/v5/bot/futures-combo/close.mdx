@@ -1,0 +1,65 @@
+---
+title: Close Bot
+sidebar_label: Close Bot
+sidebar_position: 3
+---
+
+Close a running futures combo trading bot. The bot will cancel all pending orders and close all positions across the portfolio.
+
+:::info
+- **Bot state requirement:**<br/>
+Only bots in a running state can be closed. The `bot_id` can be obtained from the [Create Futures Combo Bot](./create) response or from [Get Futures Combo Bot Detail](./get-detail).
+
+- **After closing:**<br/>
+Use [Get Futures Combo Bot Detail](./get-detail) to check the final PnL and close reason.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/fcombobot/close" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|bot_id |**true** |string |Bot ID to close, obtained from [Create Futures Combo Bot](./create) response|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` = success, non-zero = error|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/fcombobot/close HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612324421335537259"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774503410522
+}
+```

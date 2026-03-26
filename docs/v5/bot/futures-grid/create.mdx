@@ -1,0 +1,122 @@
+---
+title: Create Grid Bot
+sidebar_label: Create Grid Bot
+sidebar_position: 2
+---
+
+Create a new futures grid trading bot that automatically places grid orders within a specified price range.
+
+:::info
+- **Prerequisites:**<br/>
+Call [Validate Grid Input](./validate-input) before this endpoint to ensure parameters are within valid bounds.
+
+- **Grid mode (`grid_mode`):**<br/>
+`1`: Neutral — no directional bias<br/>
+`2`: Long — bullish strategy<br/>
+`3`: Short — bearish strategy
+
+- **Grid type (`grid_type`):**<br/>
+`1`: Arithmetic — equal price difference between grids<br/>
+`2`: Geometric — equal price ratio between grids
+
+- **TP/SL type (`tp_sl_type`):**<br/>
+`1`: Both TP and SL by percentage<br/>
+`2`: Both TP and SL by price<br/>
+`3`: TP by price, SL by percentage<br/>
+`4`: TP by percentage, SL by price
+
+- **Response `bot_id`:**<br/>
+Returned on success. Use this ID for [Get Detail](./get-detail) and [Close](./close).
+
+- **`check_code`:**<br/>
+Returned in the response to indicate specific validation errors. `FGRID_CHECK_CODE_SUCCESS` = OK.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+
+- **Subject to compliance wall and KYC verification.**
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/fgridbot/create" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|symbol |**true** |string |Trading pair symbol, uppercase only (e.g. `BTCUSDT`)|
+|grid_mode |**true** |integer |Strategy direction: `1` Neutral, `2` Long, `3` Short|
+|min_price |**true** |string |Lower price bound of the grid range (decimal string)|
+|max_price |**true** |string |Upper price bound of the grid range (decimal string)|
+|cell_number |**true** |integer |Number of grid levels, minimum 2|
+|leverage |**true** |string |Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1|
+|grid_type |**true** |integer |Grid spacing type: `1` Arithmetic, `2` Geometric|
+|total_investment |**true** |string |Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)|
+|take_profit_per |false |string |Take-profit as percentage (e.g. `"0.2"` means 20%). Used when `tp_sl_type` includes percentage-based TP|
+|stop_loss_per |false |string |Stop-loss as percentage (e.g. `"0.1"` means 10%). Used when `tp_sl_type` includes percentage-based SL|
+|take_profit_price |false |string |Take-profit trigger price (decimal string). Used when `tp_sl_type` includes price-based TP|
+|stop_loss_price |false |string |Stop-loss trigger price (decimal string). Used when `tp_sl_type` includes price-based SL|
+|tp_sl_type |false |integer |TP/SL trigger mode: `1` Both by %, `2` Both by price, `3` TP price+SL %, `4` TP %+SL price|
+|entry_price |false |string |Optional entry trigger price for delayed activation (decimal string)|
+|trailing_stop_per |false |string |Trailing stop exit as percentage (e.g. `"0.05"` means 5%)|
+|move_up_price |false |string |Move-up price for grid shifting, not applicable when "grid_type"=`2`|
+|move_down_price |false |string |Move-down price for grid shifting, not applicable when "grid_type"=`2`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` = success, `421` = user banned|
+|bot_id |integer |Unique bot ID. Use for [Get Detail](./get-detail) and [Close](./close)|
+|check_code |string |Validation result. `FGRID_CHECK_CODE_SUCCESS` = OK. See [Validate Futures Grid Input](./validate-input) for full list|
+|ban_reason_text |string |Ban reason in user's locale. Returned only when `status_code=421`|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/fgridbot/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "BTCUSDT",
+    "grid_mode": 2,
+    "min_price": "230000",
+    "max_price": "800000",
+    "cell_number": 88,
+    "leverage": "6",
+    "grid_type": 2,
+    "total_investment": "950",
+    "entry_price": "370000",
+    "trailing_stop_per": "0.18",
+    "tp_sl_type": 4,
+    "stop_loss_price": "200000",
+    "take_profit_per": "0.28"
+}
+
+
+
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 200,
+        "debug_msg": "",
+        "bot_id": "612330315406398322",
+        "check_code": "FGRID_CHECK_CODE_UNSPECIFIED",
+        "ban_reason_text": ""
+    },
+    "retExtInfo": {},
+    "time": 1774506909426
+}
+```

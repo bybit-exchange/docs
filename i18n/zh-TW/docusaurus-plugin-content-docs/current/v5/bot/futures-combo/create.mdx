@@ -1,0 +1,114 @@
+---
+title: 創建拼盤機器人
+sidebar_label: 創建拼盤機器人
+sidebar_position: 2
+---
+
+創建一個新的合約拼盤交易機器人，用於管理多個合約交易對的投資拼盤，並支援自動倉位再平衡。
+
+:::info
+- **前置條件：**<br/>
+在調用本端點前，請先調用[查詢拼盤機器人限制參數](./get-limit)，驗證參數範圍。用戶必須通過 KYC 合規及地理位置 IP 審核。
+
+- **投資拼盤配置：**<br/>
+`symbol_settings` 陣列定義各交易對的投資拼盤配置。所有交易對的 `target_position_percent` 之和必須等於 **100**。
+
+- **再平衡模式（`adjust_position_mode`）：**<br/>
+`1`：按時間 — 按固定時間間隔再平衡<br/>
+`2`：按百分比 — 偏離閾值時再平衡<br/>
+`3`：時間或百分比 — 任一條件觸發即再平衡<br/>
+`4`：手動 — 由用戶手動觸發<br/>
+`5`：設置修改時再平衡<br/>
+`6`：資金轉入時再平衡
+
+- **方向（`symbol_settings` 中的 `side`）：**<br/>
+`1`：做多，`2`：做空
+
+- **響應 `bot_id`：**<br/>
+成功時返回，用於[查詢詳情](./get-detail)和[關閉](./close)。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 10 次請求。
+
+- **受合規管控、地理位置 IP 限制及 KYC 驗證約束。**
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/fcombobot/create" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|leverage |**true** |string |倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1|
+|init_margin |**true** |string |初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）|
+|adjust_position_mode |**true** |integer |再平衡觸發模式：`1` 按時間，`2` 按百分比，`3` 時間或百分比，`4` 手動，`5` 設置修改時，`6` 轉入時|
+|symbol_settings |**true** |array&lt;object&gt; |各交易對投資拼盤配置，至少一項。所有 `target_position_percent` 之和必須為 1|
+|> symbol |**true** |string |交易對名稱（例如 `BTCUSDT`）|
+|> target_position_percent |**true** |string |目標倉位權重，整數百分比（例如 `"0.5"` 表示 50%）|
+|> side |**true** |integer |倉位方向：`1` 做多，`2` 做空|
+|adjust_position_percent |false |string |再平衡偏離閾值百分比，範圍：[0.01, 0.5]（例如 `"0.05"` 表示偏離 5% 時再平衡）。當模式包含百分比時**必填**|
+|adjust_position_time_interval |false |integer |再平衡時間間隔（**秒**）。當模式包含時間時**必填**。`30M`、`1H`、`4H`、`8H`、`12H`、`1D`、`3D`、`7D`、`14D`、`28D` 均轉換為秒|
+|sl_percent |false |string |止損百分比，以總保證金為基準（例如 `"0.2"` 表示虧損達 20% 時平倉）|
+|tp_percent |false |string |止盈百分比，以總保證金為基準（例如 `"0.5"` 表示盈利達 50% 時平倉）|
+|trailing_stop_percent |false |string |移動止損回撥百分比（例如 `"0.05"` 表示 5%）|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`0` = 成功，`421` = 用戶被封禁|
+|bot_id |integer |唯一機器人 ID，用於[查詢詳情](./get-detail)和[關閉](./close)|
+|ban_reason_text |string |本地化封禁原因，僅當 `status_code=421` 時返回|
+|debug_msg |string |調試信息（僅測試網）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/fcombobot/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "leverage": "5",
+    "init_margin": "500",
+    "adjust_position_mode": 3,
+    "adjust_position_percent": "0.05",
+    "adjust_position_time_interval": 3600,
+    "symbol_settings": [
+        {
+            "symbol": "BTCUSDT",
+            "target_position_percent": "0.5",
+            "side": 1
+        },
+        {
+            "symbol": "ETHUSDT",
+            "target_position_percent": "0.5",
+            "side": 2
+        }
+    ],
+    "sl_percent": "0.2",
+    "tp_percent": "0.5"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": "",
+        "bot_id": "612323083000239723",
+        "ban_reason_text": ""
+    },
+    "retExtInfo": {},
+    "time": 1774502598542
+}
+```

@@ -1,0 +1,155 @@
+---
+title: Get Bot Parameter Limit
+sidebar_label: Get Bot Parameter Limit
+sidebar_position: 1
+---
+
+Validate futures combo bot input parameters and return allowable ranges. Use before creating a combo bot to ensure parameters are within valid bounds.
+
+:::info
+- **When to call:**<br/>
+Always call this endpoint before [Create Futures Combo Bot](./create).
+
+- **`check_code`:**<br/>
+`LIMIT_CHECK_CODE_SUCCESS_UNSPECIFIED` = all parameters are valid. Any other value identifies the specific parameter out of range.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/fcombobot/getlimit" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|leverage |**true** |string |Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1|
+|init_margin |**true** |string |Initial investment in quote currency (decimal string)|
+|adjust_position_mode |**true** |integer |Rebalancing trigger mode: `1` Time, `2` Percentage, `3` Time or %, `4` Manual, `5` On settings change, `6` On transfer|
+|symbol_settings |**true** |array&lt;object&gt; |Per-symbol portfolio configuration|
+|> symbol |**true** |string |Trading pair symbol (e.g. `BTCUSDT`)|
+|> target_position_percent |**true** |string |Target portfolio weight as percentage. All symbols must sum to 1|
+|> side |**true** |integer |Position direction: `1` Long, `2` Short|
+|adjust_position_percent |false |string |Rebalancing drift threshold as percentage|
+|adjust_position_time_interval |false |integer |Rebalancing time interval in seconds|
+|sl_percent |false |string |Stop-loss as percentage (e.g. `"0.2"` means 20%)|
+|tp_percent |false |string |Take-profit as percentage (e.g. `"0.5"` means 50%)|
+|trailing_stop_percent |false |string |Trailing stop callback as percentage (e.g. `"0.05"` means 5%)|
+|need_to_slippage |false |boolean |Whether to include slippage calculation|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` = success, non-zero = error|
+|debug_msg |string |Debug message (testnet only)|
+|check_code |string |Validation result. See check code table below|
+|init_margin |object |Acceptable initial margin range (`min` / `max`, decimal strings in quote currency)|
+|leverage |object |Acceptable leverage range (`min` / `max`)|
+|adjust_position_percent |object |Acceptable rebalancing drift threshold range (`min` / `max`)|
+|adjust_position_time_interval |object |Acceptable rebalancing time interval range in seconds (`min` / `max`)|
+|sl_percent |object |Acceptable stop-loss percentage range (`min` / `max`)|
+|tp_percent |object |Acceptable take-profit percentage range (`min` / `max`)|
+|trailing_stop_percent |object |Acceptable trailing stop percentage range (`min` / `max`)|
+
+#### Check Code Values
+
+| check_code | Description |
+|:-----------|:-----------|
+|`LIMIT_CHECK_CODE_SUCCESS_UNSPECIFIED` |OK — no error|
+|`LIMIT_CHECK_CODE_SYMBOL_NUM_TOO_LOW` |Symbol count too low|
+|`LIMIT_CHECK_CODE_SYMBOL_NUM_TOO_HIGH` |Symbol count too high|
+|`LIMIT_CHECK_CODE_ADJUST_POSITION_PERCENT_TOO_LOW` |Rebalancing threshold too low|
+|`LIMIT_CHECK_CODE_ADJUST_POSITION_PERCENT_TOO_HIGH` |Rebalancing threshold too high|
+|`LIMIT_CHECK_CODE_ADJUST_POSITION_TIME_INTERVAL_TOO_LOW` |Rebalancing time interval too short|
+|`LIMIT_CHECK_CODE_ADJUST_POSITION_TIME_INTERVAL_TOO_HIGH` |Rebalancing time interval too long|
+|`LIMIT_CHECK_CODE_INIT_MARGIN_TOO_HIGH` |Initial margin too high|
+|`LIMIT_CHECK_CODE_INIT_MARGIN_TOO_LOW` |Initial margin too low|
+|`LIMIT_CHECK_CODE_SL_PER_TOO_HIGH` |Stop-loss percentage too high|
+|`LIMIT_CHECK_CODE_SL_PER_TOO_LOW` |Stop-loss percentage too low|
+|`LIMIT_CHECK_CODE_TP_PER_TOO_HIGH` |Take-profit percentage too high|
+|`LIMIT_CHECK_CODE_TP_PER_TOO_LOW` |Take-profit percentage too low|
+|`LIMIT_CHECK_CODE_LEVERAGE_TOO_HIGH` |Leverage too high|
+|`LIMIT_CHECK_CODE_LEVERAGE_TOO_LOW` |Leverage too low|
+|`LIMIT_CHECK_CODE_TRAILING_STOP_PERCENT_TOO_LOW` |Trailing stop percentage too low|
+|`LIMIT_CHECK_CODE_TRAILING_STOP_PERCENT_TOO_HIGH` |Trailing stop percentage too high|
+
+---
+
+### Request Example
+
+```http
+POST /v5/fcombobot/getlimit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "leverage": "5",
+    "init_margin": "500",
+    "adjust_position_mode": 3,
+    "adjust_position_percent": "0.05",
+    "adjust_position_time_interval": 3600,
+    "symbol_settings": [
+        {
+            "symbol": "BTCUSDT",
+            "target_position_percent": "0.5",
+            "side": 1
+        },
+        {
+            "symbol": "ETHUSDT",
+            "target_position_percent": "0.5",
+            "side": 2
+        }
+    ],
+    "sl_percent": "0.2",
+    "tp_percent": "0.5",
+    "need_to_slippage": false
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": "",
+        "check_code": "LIMIT_CHECK_CODE_SUCCESS_UNSPECIFIED",
+        "adjust_position_percent": {
+            "max": "0.5",
+            "min": "0.01"
+        },
+        "adjust_position_time_interval": {
+            "max": "2419200",
+            "min": "1800"
+        },
+        "init_margin": {
+            "max": "576840",
+            "min": "352.3"
+        },
+        "sl_percent": {
+            "max": "0.99",
+            "min": "0.01"
+        },
+        "tp_percent": {
+            "max": "100",
+            "min": "0.01"
+        },
+        "leverage": {
+            "max": "100",
+            "min": "1"
+        },
+        "trailing_stop_percent": {
+            "max": "0.99",
+            "min": "0.05"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1774505009140
+}
+```

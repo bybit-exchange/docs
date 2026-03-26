@@ -1,0 +1,119 @@
+---
+title: 創建網格機器人
+sidebar_label: 創建網格機器人
+sidebar_position: 2
+---
+
+創建一個新的合約網格交易機器人，在指定價格範圍內自動掛出網格訂單。
+
+:::info
+- **前置條件：**<br/>
+在調用本端點前，請先調用[驗證網格輸入](./validate-input)，確保參數在有效範圍內。
+
+- **網格模式（`grid_mode`）：**<br/>
+`1`：中性 — 無方向偏好<br/>
+`2`：做多 — 看漲策略<br/>
+`3`：做空 — 看跌策略
+
+- **網格類型（`grid_type`）：**<br/>
+`1`：等差 — 網格之間價格差相等<br/>
+`2`：等比 — 網格之間價格比例相等
+
+- **止盈止損類型（`tp_sl_type`）：**<br/>
+`1`：止盈止損均按百分比<br/>
+`2`：止盈止損均按價格<br/>
+`3`：止盈按價格，止損按百分比<br/>
+`4`：止盈按百分比，止損按價格
+
+- **響應 `bot_id`：**<br/>
+成功時返回，用於[查詢詳情](./get-detail)和[關閉](./close)。
+
+- **`check_code`：**<br/>
+響應中返回，表示具體驗證錯誤。`FGRID_CHECK_CODE_SUCCESS` = 正常。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 10 次請求。
+
+- **受合規管控及 KYC 驗證約束。**
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/fgridbot/create" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|symbol |**true** |string |交易對名稱，僅大寫（例如 `BTCUSDT`）|
+|grid_mode |**true** |integer |策略方向：`1` 中性，`2` 做多，`3` 做空|
+|min_price |**true** |string |網格價格範圍下限（小數字符串）|
+|max_price |**true** |string |網格價格範圍上限（小數字符串）|
+|cell_number |**true** |integer |網格層數，最小為 2|
+|leverage |**true** |string |倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1|
+|grid_type |**true** |integer |網格間距類型：`1` 等差，`2` 等比|
+|total_investment |**true** |string |初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）|
+|take_profit_per |false |string |止盈百分比（例如 `"0.2"` 表示 20%），當 `tp_sl_type` 包含百分比止盈時使用|
+|stop_loss_per |false |string |止損百分比（例如 `"0.1"` 表示 10%），當 `tp_sl_type` 包含百分比止損時使用|
+|take_profit_price |false |string |止盈觸發價格（小數字符串），當 `tp_sl_type` 包含價格止盈時使用|
+|stop_loss_price |false |string |止損觸發價格（小數字符串），當 `tp_sl_type` 包含價格止損時使用|
+|tp_sl_type |false |integer |止盈止損觸發模式：`1` 均按百分比，`2` 均按價格，`3` 止盈按價格+止損按百分比，`4` 止盈按百分比+止損按價格|
+|entry_price |false |string |可選入場觸發價格，用於延遲啓動（小數字符串）|
+|trailing_stop_per |false |string |移動止損退出百分比（例如 `"0.05"` 表示 5%）|
+|move_up_price |false |string |網格移動上限價格，`grid_type`=`2` 時不適用|
+|move_down_price |false |string |網格移動下限價格，`grid_type`=`2` 時不適用|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`0` = 成功，`421` = 用戶被封禁|
+|bot_id |integer |唯一機器人 ID，用於[查詢詳情](./get-detail)和[關閉](./close)|
+|check_code |string |驗證結果。`FGRID_CHECK_CODE_SUCCESS` = 正常。詳見[驗證合約網格輸入](./validate-input)|
+|ban_reason_text |string |用戶語言的封禁原因，僅當 `status_code=421` 時返回|
+|debug_msg |string |調試信息（僅測試網）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/fgridbot/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "BTCUSDT",
+    "grid_mode": 2,
+    "min_price": "230000",
+    "max_price": "800000",
+    "cell_number": 88,
+    "leverage": "6",
+    "grid_type": 2,
+    "total_investment": "950",
+    "entry_price": "370000",
+    "trailing_stop_per": "0.18",
+    "tp_sl_type": 4,
+    "stop_loss_price": "200000",
+    "take_profit_per": "0.28"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 200,
+        "debug_msg": "",
+        "bot_id": "612330315406398322",
+        "check_code": "FGRID_CHECK_CODE_UNSPECIFIED",
+        "ban_reason_text": ""
+    },
+    "retExtInfo": {},
+    "time": 1774506909426
+}
+```
