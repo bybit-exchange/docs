@@ -1,0 +1,107 @@
+---
+title: Get Token Price List
+sidebar_label: Get Token Price List
+sidebar_position: 7
+---
+
+Batch query on-chain token prices, 24h change, volume, market cap, and other market data.
+
+:::info
+- Supports querying multiple tokens in a single request (max 20)
+- Tokens are identified by `chainCode` + `tokenAddress` pairs — get these from [Get Biz Token List](biz-token-list) or [Get Asset List](asset-list)
+- To discover new tokens, use [Get Biz Token List](biz-token-list) instead
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/biz-token-price-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenAddressInfo |**true** |array |List of token identifiers to query. Maximum 20 items per request|
+|> chainCode |**true** |string |Blockchain code, e.g. `ETH`, `SOL`, `BSC`|
+|> tokenAddress |**true** |string |Token contract address on the specified chain|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|tokenPriceInfoList |array |Token price info list|
+|> chainCode |string |Blockchain code|
+|> tokenAddress |string |Token contract address|
+|> price |string |Current price in USD|
+|> change24h |string |24-hour price change as decimal, e.g. `0.15` = +15%|
+|> vol24h |string |24-hour trading volume in USD|
+|> marketCap |string |Market capitalization in USD|
+|> liquidity |string |Total liquidity in USD|
+|> holders |string |Number of token holders|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/biz-token-price-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenAddressInfo": [
+        {
+            "chainCode": "ETH",
+            "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933"
+        },
+        {
+            "chainCode": "SOL",
+            "tokenAddress": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+        }
+    ]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tokenPriceInfoList": [
+            {
+                "chainCode": "ETH",
+                "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+                "price": "0.00001",
+                "change24h": "0.15",
+                "vol24h": "125000000",
+                "marketCap": "4200000000",
+                "liquidity": "50000000",
+                "holders": "250000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

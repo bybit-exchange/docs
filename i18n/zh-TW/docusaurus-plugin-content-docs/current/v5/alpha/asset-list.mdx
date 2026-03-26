@@ -1,0 +1,117 @@
+---
+title: 查詢資產列表
+sidebar_label: 查詢資產列表
+sidebar_position: 9
+---
+
+查詢用戶的鏈上代幣持倉，包含持倉數量、市值及盈虧信息。
+
+:::info
+- 僅返回餘額不為零的代幣，零餘額代幣不在返回列表中
+- 資產按 USD 價值倒序排列
+- 使用 `tradeFlag` 判斷代幣是否可通過 [執行贖回](trade-redeem) 賣出
+- 使用返回的 `tokenCode` 用於報價及執行接口
+- 使用 `chainCode` + `tokenAddress` 調用 [獲取代幣詳情](biz-token-details) 獲取更多信息
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/trade/asset-list" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|totalAssetUsd |string |持倉總市值（USD）|
+|assetList |array |代幣持倉列表|
+|> chainCode |string |區塊鏈代碼，如 `ETH`、`SOL`、`BSC`|
+|> chainIconUrl |string |鏈圖標 URL|
+|> tokenAddress |string |代幣合約地址|
+|> tokenCode |string |`DEX_<id>` 格式的代幣代碼，用於報價及執行接口|
+|> tokenSymbol |string |代幣符號|
+|> tokenDecimals |integer |代幣小數精度|
+|> tokenIconUrlDay |string |代幣圖標 URL（淺色模式）|
+|> tokenIconUrlNight |string |代幣圖標 URL（深色模式）|
+|> tokenAmount |string |持倉數量|
+|> tokenAmountUsd |string |持倉市值（USD）|
+|> tradeFlag |integer |是否可交易。`0`: 不可交易，`1`: 可交易|
+|> pnl |string |未實現盈虧（USD），正數為盈利。無成本數據時為 null|
+|> pnlRatio |string |盈虧比率（小數），如 `0.15` = +15%。無成本數據時為 null|
+|> costPrice |string |平均成本價。無成本數據時為 null|
+|> lastPrice |string |當前市場價格|
+|> costTotalValue |string |總成本（USD）。無成本數據時為 null|
+|> assetStatus |integer |代幣生命週期狀態。`0`: 運行中，`1`: 即將下線，`2`: 已下線|
+|> announcementUrl |string |下線公告 URL。`assetStatus` 為 `1` 或 `2` 時存在|
+|> estimatedOfflineTime |integer |預計下線時間（ms）。`assetStatus=1` 時存在|
+|> delistingTime |integer |實際下線時間（ms）。`assetStatus=2` 時存在|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/asset-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "totalAssetUsd": "1250.50",
+        "assetList": [
+            {
+                "chainCode": "SOL",
+                "chainIconUrl": "https://example.com/sol.png",
+                "tokenAddress": "0xabc...",
+                "tokenCode": "DEX_123",
+                "tokenSymbol": "PEPE",
+                "tokenDecimals": 18,
+                "tokenIconUrlDay": "https://example.com/pepe-day.png",
+                "tokenIconUrlNight": "https://example.com/pepe-night.png",
+                "tokenAmount": "50000000",
+                "tokenAmountUsd": "500.00",
+                "tradeFlag": 1,
+                "pnl": "75.00",
+                "pnlRatio": "0.15",
+                "costPrice": "0.0000085",
+                "lastPrice": "0.00001",
+                "costTotalValue": "425.00",
+                "assetStatus": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

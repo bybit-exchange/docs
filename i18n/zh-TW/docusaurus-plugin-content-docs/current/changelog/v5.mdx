@@ -8,9 +8,25 @@ import '/src/css/changelog.css';
 ### REST API
 - [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
     - 針對現貨交易, 新增響應字段`xstockMultiplier`, 用於xstocks幣對
-
 - [查詢用户可交易產品的規格信息](../v5/account/instrument) [更新]
     - 針對現貨交易, 新增響應字段`xstockMultiplier`, 用於xstocks幣對
+- [資產總覽](../v5/asset/balance/asset-overview) [更新]
+    - 新增請求參數 `valuationCurrency` 和 `accountType`
+    - 當 `accountType=Alpha` 時，`coinDetail` 下新增返回字段 `extMap`（含 `priceUpper`、`priceLower`、`equityUnit`）
+- [查詢價差最大下單數量](../v5/spread/trade/max-qty) [新增]
+    - 新增接口，根據交易對ID、方向及下單價格查詢下單可用餘額
+- [查詢期權資產信息](../v5/account/option-asset-info) [新增]
+    - 新增接口，查詢帳戶下各幣種的期權資產盈虧信息，包含Delta、已實現/未實現盈虧及保證金數據
+- [查詢組合保證金信息](../v5/asset/portfolio-margin) [新增]
+    - 新增接口，查詢組合保證金帳戶的錢包餘額及資產盈虧範圍信息
+- [查詢還款信息](../v5/account/pay-info) [新增]
+    - 新增接口，查詢帳戶的還款抵押品信息
+- [查詢交易分析信息](../v5/account/trade-info-for-analysis) [新增]
+    - 新增接口，查詢指定交易對的聚合交易統計信息，包括成交金額、數量、手續費及每日明細
+- [查詢全部成員資產](../v5/asset/total-members-assets) [新增]
+    - 新增接口，查詢所有成員帳戶的總資產，支持指定幣種計價
+- [查詢交易行為設置](../v5/account/get-user-setting-config) [更新]
+    - 新增響應字段 `smsef` 和 `fmsef`，分別表示現貨及合約MNT手續費抵扣開關狀態
 
 ## 2026-03-24
 ### REST API
@@ -23,6 +39,29 @@ import '/src/css/changelog.css';
 
 - [查詢標記價格K線數據](../v5/market/mark-kline) [更新]
     - 支持期權
+
+## 2026-03-23
+### REST API
+- [獲取交易報價](../v5/alpha/trade-quote) [新增]
+    - 新增接口，在執行鏈上購買或贖回交易前獲取價格報價
+- [執行購買](../v5/alpha/trade-purchase) [新增]
+    - 新增接口，使用支付代幣（如 USDT）執行買入訂單購買鏈上代幣
+- [執行贖回](../v5/alpha/trade-redeem) [新增]
+    - 新增接口，執行賣出訂單將鏈上代幣贖回為支付代幣
+- [獲取支付代幣列表](../v5/alpha/pay-token-list) [新增]
+    - 新增接口，查詢鏈上交易可用的支付代幣及其 CEX 代幣代碼
+- [查詢訂單列表](../v5/alpha/order-list) [新增]
+    - 新增接口，查詢鏈上交易訂單歷史，包含狀態、手續費及執行詳情
+- [獲取業務代幣列表](../v5/alpha/biz-token-list) [新增]
+    - 新增接口，查詢可交易的鏈上代幣列表，包含 DEX 代幣代碼、風險標識及下單限制
+- [獲取代幣價格列表](../v5/alpha/biz-token-price-list) [新增]
+    - 新增接口，批量查詢鏈上代幣的價格、24 小時漲跌幅、成交量及市值
+- [獲取代幣詳情](../v5/alpha/biz-token-details) [新增]
+    - 新增接口，查詢代幣項目詳情，包含描述、社交鏈接及風險標識
+- [查詢資產列表](../v5/alpha/asset-list) [新增]
+    - 新增接口，查詢用戶的鏈上代幣持倉，包含持倉數量、盈虧及市值
+- [查詢資產詳情](../v5/alpha/asset-detail) [新增]
+    - 新增接口，查詢指定鏈上代幣的持倉詳情，包含盈虧及成本數據
 
 ## 2026-03-20
 ### REST API

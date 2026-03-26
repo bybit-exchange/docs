@@ -1,0 +1,123 @@
+---
+title: Get Token Details
+sidebar_label: Get Token Details
+sidebar_position: 8
+---
+
+Query detailed information for a specific on-chain token, including description, social links, and risk flags.
+
+:::info
+- Token is identified by `chainCode` + `tokenAddress` — get these from [Get Biz Token List](biz-token-list) or [Get Asset List](asset-list)
+- `riskFlag=1` indicates risk — warn the user before trading
+- When `showMessage=1`, display the `content` notification to the user; if `linkName` and `linkAddress` are provided, include the link
+- Only returns tokens with `status=1` (Listed) or `status=2` (Delisting)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/biz-token-details" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|chainCode |**true** |string |Blockchain code, e.g. `ETH`, `SOL`, `BSC`|
+|tokenAddress |**true** |string |Token contract address on the specified chain|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|tokenCode |string |Token code in `DEX_<id>` format|
+|chainCode |string |Blockchain code|
+|chainIconUrl |string |Chain icon URL|
+|tokenAddress |string |Token contract address|
+|symbol |string |Token symbol|
+|tokenDecimals |integer |Token decimal precision|
+|tokenIconUrlDay |string |Token icon URL (light mode)|
+|tokenIconUrlNight |string |Token icon URL (dark mode)|
+|minOrderQuantity |string |Minimum order quantity|
+|maxOrderQuantity |string |Maximum order quantity|
+|maxPositionQuantity |string |Maximum position quantity per user|
+|tokenDesc |string |Token project description|
+|xUrl |string |X (Twitter) profile URL|
+|officialUrl |string |Official website URL|
+|whitePaperUrl |string |Whitepaper URL|
+|tokenTag |integer |Token tag. `0`: No tag, `1`: New token sniping, `2`: On-chain hot token|
+|riskFlag |integer |Risk flag. `0`: No risk, `1`: Risk identified — warn user before trading|
+|createTimeOnchain |integer |On-chain creation time (Unix timestamp in seconds)|
+|status |integer |Token status. `0`: Not listed, `1`: Listed, `2`: Delisting, `3`: In delivery, `4`: Delisted|
+|tokenTags |array |Tag ID list|
+|showMessage |integer |Whether to display a notification. `0`: No notification, `1`: Display notification|
+|content |string |Notification message content. Present when `showMessage=1`|
+|linkName |string |Notification link display name. Present when `showMessage=1`|
+|linkAddress |string |Notification link URL. Present when `showMessage=1`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/biz-token-details HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "chainCode": "ETH",
+    "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tokenCode": "DEX_123",
+        "chainCode": "ETH",
+        "chainIconUrl": "https://example.com/eth.png",
+        "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+        "symbol": "PEPE",
+        "tokenDecimals": 18,
+        "tokenIconUrlDay": "https://example.com/pepe-day.png",
+        "tokenIconUrlNight": "https://example.com/pepe-night.png",
+        "minOrderQuantity": "1",
+        "maxOrderQuantity": "50000",
+        "maxPositionQuantity": "100000",
+        "tokenDesc": "PEPE is a meme token on Ethereum.",
+        "xUrl": "https://x.com/pepecoineth",
+        "officialUrl": "https://www.pepe.vip",
+        "whitePaperUrl": "",
+        "tokenTag": 2,
+        "riskFlag": 0,
+        "createTimeOnchain": 1682000000,
+        "status": 1,
+        "tokenTags": [1, 2],
+        "showMessage": 0
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

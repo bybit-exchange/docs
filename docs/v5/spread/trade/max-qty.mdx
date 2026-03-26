@@ -1,0 +1,47 @@
+---
+title: Get Max Qty
+sidebar_label: Get Max Qty
+sidebar_position: 8
+---
+
+Query the maximum order quantity for the given symbol.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spread/max-qty" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Spread symbol name|
+|side |**true** |string |Order side. `1`: Buy, `2`: Sell|
+|orderPrice |**true** |string |Order price|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|ab |string |Maximum order quantity|
+
+### Request Example
+
+```http
+GET /v5/spread/max-qty?symbol=SOLUSDT_SOL/USDT&side=1&orderPrice=50000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1773230920000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "ab": "1992.55199490"
+    },
+    "retExtInfo": {},
+    "time": 1774318807656
+}
+```

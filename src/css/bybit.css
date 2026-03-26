@@ -112,9 +112,16 @@ html {
 /* ============================================================
    NAVBAR
    ============================================================ */
-.navbar {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+
+/* backdrop-filter 仅在桌面端生效
+   移动端下 .navbar-sidebar 是 .navbar 的子元素且为 position:fixed，
+   若祖先有 backdrop-filter 会创建新的 stacking context，
+   导致 fixed 退化为 absolute，侧边栏被裁剪在 navbar 高度内 */
+@media (min-width: 997px) {
+  .navbar {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
 
 [data-theme='dark'] .navbar {

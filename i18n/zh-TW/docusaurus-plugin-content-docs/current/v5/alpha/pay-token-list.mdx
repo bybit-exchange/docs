@@ -1,0 +1,102 @@
+---
+title: 獲取支付代幣列表
+sidebar_label: 獲取支付代幣列表
+sidebar_position: 4
+---
+
+查詢可用的支付代幣（如 USDT、USDC）及其 `CEX_<id>` 代幣代碼，用於鏈上交易。
+
+:::info
+- 返回 `CEX_<id>` 格式的代幣代碼，供 [獲取交易報價](trade-quote) 及執行接口使用
+- 每個支付代幣通過 `supportChains` 列出支持的鏈
+- 若需查詢可交易的鏈上代幣，請使用 [獲取業務代幣列表](biz-token-list)
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/trade/pay-token-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|chainCode |**true** |string |區塊鏈代碼，如 `SOL`、`MANTLE`|
+|tokenAddress |**true** |string |指定鏈上的代幣合約地址|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|tokenCode |string |`CEX_<id>` 格式的支付代幣代碼，用於報價及執行接口|
+|symbol |string |代幣符號，如 `USDT`、`USDC`|
+|tokenDecimals |integer |代幣小數精度|
+|tokenIconUrlDay |string |代幣圖標 URL（淺色模式）|
+|tokenIconUrlNight |string |代幣圖標 URL（深色模式）|
+|limit |string |該支付代幣的最大交易金額|
+|supportChains |array |支持的區塊鏈代碼列表，如 `["ETH", "BSC", "SOL"]`|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/pay-token-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "chainCode": "SOL",
+    "tokenAddress": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenCode": "CEX_1",
+            "symbol": "USDT",
+            "tokenDecimals": 6,
+            "tokenIconUrlDay": "https://example.com/usdt-day.png",
+            "tokenIconUrlNight": "https://example.com/usdt-night.png",
+            "limit": "50000",
+            "supportChains": ["ETH", "BSC", "SOL", "TRX"]
+        },
+        {
+            "tokenCode": "CEX_2",
+            "symbol": "USDC",
+            "tokenDecimals": 6,
+            "tokenIconUrlDay": "https://example.com/usdc-day.png",
+            "tokenIconUrlNight": "https://example.com/usdc-night.png",
+            "limit": "50000",
+            "supportChains": ["ETH", "SOL", "BASE"]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

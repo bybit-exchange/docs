@@ -1,0 +1,117 @@
+---
+title: Get Asset List
+sidebar_label: Get Asset List
+sidebar_position: 9
+---
+
+Query user's on-chain token portfolio including holdings, market value, and PnL.
+
+:::info
+- Only returns tokens with non-zero balance; zero-balance tokens are filtered out
+- Assets are sorted by USD value descending
+- Use `tradeFlag` to determine if a token can be sold via [Execute Redeem](trade-redeem)
+- Use `tokenCode` from the response for quote and execution requests
+- Use `chainCode` + `tokenAddress` to call [Get Token Details](biz-token-details) for more info
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/asset-list" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|totalAssetUsd |string |Total portfolio value in USD|
+|assetList |array |Token holdings list|
+|> chainCode |string |Blockchain code, e.g. `ETH`, `SOL`, `BSC`|
+|> chainIconUrl |string |Chain icon URL|
+|> tokenAddress |string |Token contract address|
+|> tokenCode |string |Token code in `DEX_<id>` format. Use this in quote and execution requests|
+|> tokenSymbol |string |Token symbol|
+|> tokenDecimals |integer |Token decimal precision|
+|> tokenIconUrlDay |string |Token icon URL (light mode)|
+|> tokenIconUrlNight |string |Token icon URL (dark mode)|
+|> tokenAmount |string |Holding quantity|
+|> tokenAmountUsd |string |Holding value in USD|
+|> tradeFlag |integer |Whether tradable. `0`: Not tradable, `1`: Tradable|
+|> pnl |string |Unrealized profit/loss in USD. Positive = profit. Null if no cost basis available|
+|> pnlRatio |string |PnL ratio as decimal, e.g. `0.15` = +15%. Null if no cost basis available|
+|> costPrice |string |Average cost price. Null if no cost basis available|
+|> lastPrice |string |Current market price|
+|> costTotalValue |string |Total cost basis in USD. Null if no cost basis available|
+|> assetStatus |integer |Token lifecycle status. `0`: Running, `1`: Delisting soon, `2`: Delisted|
+|> announcementUrl |string |Delisting announcement URL. Present when `assetStatus` is `1` or `2`|
+|> estimatedOfflineTime |integer |Estimated delisting timestamp (ms). Present when `assetStatus=1`|
+|> delistingTime |integer |Actual delisting timestamp (ms). Present when `assetStatus=2`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/asset-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "totalAssetUsd": "1250.50",
+        "assetList": [
+            {
+                "chainCode": "SOL",
+                "chainIconUrl": "https://example.com/sol.png",
+                "tokenAddress": "0xabc...",
+                "tokenCode": "DEX_123",
+                "tokenSymbol": "PEPE",
+                "tokenDecimals": 18,
+                "tokenIconUrlDay": "https://example.com/pepe-day.png",
+                "tokenIconUrlNight": "https://example.com/pepe-night.png",
+                "tokenAmount": "50000000",
+                "tokenAmountUsd": "500.00",
+                "tradeFlag": 1,
+                "pnl": "75.00",
+                "pnlRatio": "0.15",
+                "costPrice": "0.0000085",
+                "lastPrice": "0.00001",
+                "costTotalValue": "425.00",
+                "assetStatus": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

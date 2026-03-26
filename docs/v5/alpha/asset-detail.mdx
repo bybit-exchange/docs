@@ -1,0 +1,119 @@
+---
+title: Get Asset Detail
+sidebar_label: Get Asset Detail
+sidebar_position: 10
+---
+
+Query detailed holding information for a specific on-chain token, including PnL and cost basis.
+
+:::info
+- Token is identified by `chainCode` + `tokenAddress` — get these from [Get Asset List](asset-list) or [Get Biz Token List](biz-token-list)
+- Response wraps the asset in an `assetList` array with 0 or 1 element; an empty array means the user does not hold this token
+- Use `tradeFlag` to determine if the token can be sold via [Execute Redeem](trade-redeem)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/trade/asset-detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|chainCode |**true** |string |Blockchain code, e.g. `ETH`, `SOL`, `BSC`|
+|tokenAddress |**true** |string |Token contract address on the specified chain|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|assetList |array |Asset details. Contains 0 or 1 element. Empty if user does not hold this token|
+|> chainCode |string |Blockchain code|
+|> chainIconUrl |string |Chain icon URL|
+|> tokenAddress |string |Token contract address|
+|> tokenCode |string |Token code in `DEX_<id>` format. Use this in quote and execution requests|
+|> tokenSymbol |string |Token symbol|
+|> tokenDecimals |integer |Token decimal precision|
+|> tokenIconUrlDay |string |Token icon URL (light mode)|
+|> tokenIconUrlNight |string |Token icon URL (dark mode)|
+|> tokenAmount |string |Holding quantity|
+|> tokenAmountUsd |string |Holding value in USD|
+|> tradeFlag |integer |Whether tradable. `0`: Not tradable, `1`: Tradable|
+|> pnl |string |Unrealized PnL in USD. Positive = profit. Null if no cost basis available|
+|> pnlRatio |string |PnL ratio as decimal, e.g. `0.15` = +15%. Null if no cost basis available|
+|> costPrice |string |Average cost price. Null if no cost basis available|
+|> lastPrice |string |Current market price|
+|> costTotalValue |string |Total cost basis in USD. Null if no cost basis available|
+|> assetStatus |integer |Token lifecycle status. `0`: Running, `1`: Delisting soon, `2`: Delisted|
+|> announcementUrl |string |Delisting announcement URL. Present when `assetStatus` is `1` or `2`|
+|> estimatedOfflineTime |integer |Estimated delisting timestamp (ms). Present when `assetStatus=1`|
+|> delistingTime |integer |Actual delisting timestamp (ms). Present when `assetStatus=2`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/trade/asset-detail HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "chainCode": "ETH",
+    "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "assetList": [
+            {
+                "chainCode": "ETH",
+                "chainIconUrl": "https://example.com/eth.png",
+                "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",
+                "tokenCode": "DEX_123",
+                "tokenSymbol": "PEPE",
+                "tokenDecimals": 18,
+                "tokenIconUrlDay": "https://example.com/pepe-day.png",
+                "tokenIconUrlNight": "https://example.com/pepe-night.png",
+                "tokenAmount": "50000000",
+                "tokenAmountUsd": "500.00",
+                "tradeFlag": 1,
+                "pnl": "75.00",
+                "pnlRatio": "0.15",
+                "costPrice": "0.0000085",
+                "lastPrice": "0.00001",
+                "costTotalValue": "425.00",
+                "assetStatus": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

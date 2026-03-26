@@ -8,9 +8,25 @@ import '/src/css/changelog.css';
 ### REST API
 - [Get Instruments Info](../v5/market/instrument) [UPDATE]
     - Add a new response field `xstockMultiplier`for category=spot, used for xstocks trading pairs.
-
 - [Get Account Instruments Info](../v5/account/instrument) [UPDATE]
     - Add a new response field `xstockMultiplier`for category=spot, used for xstocks trading pairs.
+- [Asset Overview](../v5/asset/balance/asset-overview) [UPDATE]
+    - Add new request parameters `valuationCurrency` and `accountType`
+    - Add new response field `extMap` (with `priceUpper`, `priceLower`, `equityUnit`) under `coinDetail` when `accountType=Alpha`
+- [Get Spread Max Qty](../v5/spread/trade/max-qty) [NEW]
+    - Add a new endpoint to query the available balance for placing a spread order based on symbol ID, side, and order price
+- [Get Option Asset Info](../v5/account/option-asset-info) [NEW]
+    - Add a new endpoint to query option asset P&L information per coin, including delta, realised/unrealised P&L, and margin data
+- [Get Portfolio Margin Info](../v5/asset/portfolio-margin) [NEW]
+    - Add a new endpoint to query portfolio margin account wallet balance and asset P&L range information
+- [Get Pay Info](../v5/account/pay-info) [NEW]
+    - Add a new endpoint to query repayment collateral information for the account
+- [Get Trade Info For Analysis](../v5/account/trade-info-for-analysis) [NEW]
+    - Add a new endpoint to query aggregated trade statistics for a symbol, including execution values, quantities, fees, and daily breakdown
+- [Get Total Members Assets](../v5/asset/total-members-assets) [NEW]
+    - Add a new endpoint to query total assets across all member accounts with optional coin-denominated valuation
+- [Get Trade Behaviour Config](../v5/account/get-user-setting-config) [UPDATE]
+    - Add new response fields `smsef` and `fmsef` to indicate whether Spot and Futures MNT fee deduction is enabled
 
 ## 2026-03-24
 ### REST API
@@ -23,6 +39,29 @@ import '/src/css/changelog.css';
 
 - [Get Mark Price Kline](../v5/market/mark-kline) [UPDATE]
     - Support options
+
+## 2026-03-23
+### REST API
+- [Get Trade Quote](../v5/alpha/trade-quote) [NEW]
+    - Add a new endpoint to get a price quote before executing an on-chain purchase or redeem trade
+- [Execute Purchase](../v5/alpha/trade-purchase) [NEW]
+    - Add a new endpoint to execute a buy order to purchase on-chain tokens with payment tokens (e.g. USDT)
+- [Execute Redeem](../v5/alpha/trade-redeem) [NEW]
+    - Add a new endpoint to execute a sell order to redeem on-chain tokens back to payment tokens
+- [Get Payment Token List](../v5/alpha/pay-token-list) [NEW]
+    - Add a new endpoint to query available payment tokens and their CEX token codes for on-chain trading
+- [Get Order List](../v5/alpha/order-list) [NEW]
+    - Add a new endpoint to query on-chain trade order history with status, fees, and execution details
+- [Get Biz Token List](../v5/alpha/biz-token-list) [NEW]
+    - Add a new endpoint to query on-chain tradable tokens with DEX token codes, risk flags, and order limits
+- [Get Token Price List](../v5/alpha/biz-token-price-list) [NEW]
+    - Add a new endpoint to batch query on-chain token prices, 24h change, volume, and market cap
+- [Get Token Details](../v5/alpha/biz-token-details) [NEW]
+    - Add a new endpoint to query token project details including description, social links, and risk flags
+- [Get Asset List](../v5/alpha/asset-list) [NEW]
+    - Add a new endpoint to query user's on-chain token portfolio with holdings, PnL, and market value
+- [Get Asset Detail](../v5/alpha/asset-detail) [NEW]
+    - Add a new endpoint to query detailed holding information for a specific on-chain token
 
 ## 2026-03-20
 ### REST API
