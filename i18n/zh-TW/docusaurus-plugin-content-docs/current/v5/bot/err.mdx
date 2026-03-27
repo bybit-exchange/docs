@@ -1,0 +1,69 @@
+---
+title: 機器人錯誤碼
+sidebar_label: 錯誤碼
+---
+
+Bot API 返回的 HTTP 層級錯誤碼。
+
+## 合約組合機器人（Futures Combo Bot）
+
+適用端點：[創建](./futures-combo/create)、[關閉](./futures-combo/close)、[查詢詳情](./futures-combo/get-detail)、[查詢限制參數](./futures-combo/get-limit)
+
+| error_code | error_msg | 適用端點 |
+|:----------:|:----------|:--------|
+| 400 | Invalid request parameters（請求參數無效） | 所有 |
+| 401 | Authentication required（需要身份驗證） | 所有 |
+| 421 | User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因） | 創建 |
+| 429 | Rate limit exceeded（超過頻率限制） | 所有 |
+
+---
+
+## 合約網格機器人（Futures Grid Bot）
+
+適用端點：[創建](./futures-grid/create)、[關閉](./futures-grid/close)、[查詢詳情](./futures-grid/get-detail)、[驗證輸入](./futures-grid/validate-input)
+
+| error_code | error_msg | 適用端點 |
+|:----------:|:----------|:--------|
+| 400 | Invalid request parameters（請求參數無效） | 所有 |
+| 401 | Authentication required（需要身份驗證） | 所有 |
+| 421 | User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因） | 創建 |
+| 429 | Rate limit exceeded（超過頻率限制） | 所有 |
+
+---
+
+## 合約馬丁格爾機器人（Futures Martingale Bot）
+
+適用端點：[創建](./futures-martingale/create)、[關閉](./futures-martingale/close)、[查詢詳情](./futures-martingale/get-detail)、[查詢限制參數](./futures-martingale/get-limit)
+
+| error_code | error_msg | 適用端點 |
+|:----------:|:----------|:--------|
+| 400 | Invalid request parameters（請求參數無效） | 所有 |
+| 401 | Authentication required（需要身份驗證） | 所有 |
+| 421 | User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因） | 創建 |
+| 429 | Rate limit exceeded（超過頻率限制） | 所有 |
+
+---
+
+## 定投機器人（DCA Bot）
+
+適用端點：[創建](./dca/create)、[關閉](./dca/close)
+
+| error_code | error_msg | 適用端點 |
+|:----------:|:----------|:--------|
+| 400 | Invalid parameters (e.g., duplicated symbols, invalid frequency)（參數無效，例如重複的交易對或無效的頻率） | 創建 |
+| 421 | User is banned（用戶已被封禁） | 創建 |
+| 503 | Bot cannot be closed currently (investment cycle in progress)（機器人當前無法關閉，投資週期進行中） | 關閉 |
+
+---
+
+## 現貨網格機器人（Spot Grid Bot）
+
+適用端點：[創建](./spot-grid/create)、[關閉](./spot-grid/close)、[查詢詳情](./spot-grid/get-detail)、[驗證輸入](./spot-grid/validate-input)
+
+| error_code | error_msg | 適用端點 |
+|:----------:|:----------|:--------|
+| 400 | Invalid request parameters（請求參數無效） | 創建、驗證輸入 |
+| 401 | Insufficient balance（餘額不足） | 創建 |
+| 404 | Grid bot not found（找不到網格機器人） | 查詢詳情 |
+| 405 | Grid cannot be cancelled (already in CANCELLING or COMPLETED state)（網格無法取消，已處於取消中或已完成狀態） | 關閉 |
+| 421 | User is banned（用戶已被封禁） | 創建 |

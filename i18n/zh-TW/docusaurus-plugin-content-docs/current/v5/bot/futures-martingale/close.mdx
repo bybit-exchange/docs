@@ -1,0 +1,65 @@
+---
+title: 關閉馬丁格爾機器人
+sidebar_label: 關閉馬丁格爾機器人
+sidebar_position: 3
+---
+
+關閉一個正在運行的合約馬丁格爾交易機器人。機器人將取消所有掛單並平倉。
+
+:::info
+- **機器人狀態要求：**<br/>
+只有處於運行狀態的機器人才能被關閉。`bot_id` 可從[創建合約馬丁格爾機器人](./create)響應或[查詢合約馬丁格爾機器人詳情](./get-detail)中獲取。
+
+- **關閉後：**<br/>
+使用[查詢合約馬丁格爾機器人詳情](./get-detail)查看最終盈虧及關閉原因。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 10 次請求。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/fmartingalebot/close" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|bot_id |**true** |string |要關閉的機器人 ID，從[創建合約馬丁格爾機器人](./create)響應中獲取|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`0` = 成功，非零 = 錯誤|
+|debug_msg |string |調試信息（僅測試網）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/fmartingalebot/close HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612335280740902531"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774510066757
+}
+```

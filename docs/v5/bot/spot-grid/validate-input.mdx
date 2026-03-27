@@ -1,0 +1,172 @@
+---
+title: Validate Grid Input
+sidebar_label: Validate Grid Input
+sidebar_position: 1
+---
+
+Validate spot grid bot parameters before creation. Returns acceptable ranges for each parameter and a check code indicating any validation errors.
+
+:::info
+- **When to call:**<br/>
+Always call this endpoint before [Create Spot Grid Bot](./create) to ensure parameters are within valid bounds.
+
+- **`check_code`:**<br/>
+`SPOT_CHECK_CODE_SUCCESS_UNSPECIFIED` (value `0`) means all parameters are valid. Any other value identifies the specific parameter that is out of range.
+
+- **Authentication:**<br/>
+This endpoint does **not** require authentication (guest mode).
+
+- **Rate limit:**<br/>
+100 requests per second per IP.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/grid/validate-input" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|symbol |**true** |string |Trading pair symbol, uppercase only (e.g. `BTCUSDT`)|
+|cell_number |**true** |integer |Number of grid intervals, minimum 2|
+|min_price |**true** |string |Lower bound of the grid price range (decimal string)|
+|max_price |**true** |string |Upper bound of the grid price range. Must be greater than `min_price` (decimal string)|
+|invest_mode |false |integer |Investment mode: `0` Quote only (default), `1` Base only, `2` Base + Quote|
+|base_investment |false |string |Investment in base token (decimal string). **Required** when `invest_mode` is `1` or `2`|
+|quote_investment |false |string |Investment in quote token (decimal string). **Required** when `invest_mode` is `0` or `2`|
+|stop_loss |false |string |Stop-loss as absolute price (decimal string)|
+|take_profit |false |string |Take-profit as absolute price (decimal string)|
+|entry_price |false |string |Entry trigger as absolute price (decimal string)|
+|ts_percent |false |string |Trailing stop callback ratio, range `[0, 0.99]` (e.g. `"0.05"` means 5%)|
+|enable_trailing |false |boolean |Whether to enable grid trailing. Requires `cell_number >= 5`|
+|limit_up_price |false |string |Upper limit price for grid trailing (decimal string)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` or `200` = success|
+|debug_msg |string |Debug message (testnet only)|
+|check_code |string |Validation result code. `SPOT_CHECK_CODE_SUCCESS_UNSPECIFIED` = OK. See check code table below|
+|investment |object |Acceptable range for total investment (`from` / `to`, decimal strings)|
+|profit |object |Acceptable per-grid profit rate range as decimal ratio (`from` / `to`)|
+|cell_number |object |Acceptable grid count range (`from` / `to`)|
+|min_price |object |Acceptable lower price bound range (`from` / `to`)|
+|max_price |object |Acceptable upper price bound range (`from` / `to`)|
+|stop_loss |object |Acceptable stop-loss price range (`from` / `to`)|
+|take_profit |object |Acceptable take-profit price range (`from` / `to`)|
+|entry_price |object |Acceptable entry price range (`from` / `to`)|
+|base_investment |object |Acceptable base token investment range (`from` / `to`)|
+|cell_distance |string |Grid interval distance in quote token price units (decimal string)|
+|ts_percent |object |Acceptable trailing stop ratio range (`from` / `to`)|
+|limit_up_price |object |Acceptable trailing upper limit price range (`from` / `to`)|
+
+#### Check Code Values
+
+| check_code | Description |
+|:-----------|:-----------|
+|`SPOT_CHECK_CODE_SUCCESS_UNSPECIFIED` |OK — no error|
+|`SPOT_CHECK_CODE_LOW_PRICE_TOO_LOW` |`min_price` too low|
+|`SPOT_CHECK_CODE_LOW_PRICE_TOO_HIGH` |`min_price` too high|
+|`SPOT_CHECK_CODE_HIGH_PRICE_TOO_LOW` |`max_price` too low|
+|`SPOT_CHECK_CODE_HIGH_PRICE_TOO_HIGH` |`max_price` too high|
+|`SPOT_CHECK_CODE_GRID_NO_TOO_LOW` |`cell_number` too few|
+|`SPOT_CHECK_CODE_GRID_NO_TOO_HIGH` |`cell_number` too many|
+|`SPOT_CHECK_CODE_INVESTMENT_TOO_LOW` |Investment too low|
+|`SPOT_CHECK_CODE_INVESTMENT_TOO_HIGH` |Investment too high|
+|`SPOT_CHECK_CODE_TP_TOO_LOW` |Take-profit too low|
+|`SPOT_CHECK_CODE_TP_TOO_HIGH` |Take-profit too high|
+|`SPOT_CHECK_CODE_SL_TOO_LOW` |Stop-loss too low|
+|`SPOT_CHECK_CODE_SL_TOO_HIGH` |Stop-loss too high|
+|`SPOT_CHECK_CODE_EP_TOO_LOW` |Entry price too low|
+|`SPOT_CHECK_CODE_EP_TOO_HIGH` |Entry price too high|
+|`SPOT_CHECK_CODE_TS_PERCENT_TOO_LOW` |Trailing stop percentage too low|
+|`SPOT_CHECK_CODE_TS_PERCENT_TOO_HIGH` |Trailing stop percentage too high|
+|`SPOT_CHECK_CODE_TP_TOO_LOW_THAN_MARKET` |Take-profit too low relative to market price|
+|`SPOT_CHECK_CODE_SL_TOO_HIGH_THAN_MARKET` |Stop-loss too high relative to market price|
+|`SPOT_CHECK_CODE_LIMIT_UP_PRICE_TOO_LOW` |`limit_up_price` too low|
+|`SPOT_CHECK_CODE_LIMIT_UP_PRICE_TOO_HIGH` |`limit_up_price` too high|
+|`SPOT_CHECK_CODE_CAN_NOT_ENABLE_TRAILING_UP` |`cell_number < 5`, trailing not allowed|
+|`SPOT_CHECK_CODE_ENTRY_PRICE_FORBIDDEN_TRAILING_UP` |Entry price out of grid range, trailing not allowed|
+|`SPOT_CHECK_CODE_LAST_PRICE_FORBIDDEN_TRAILING_UP` |Market price out of grid range, trailing not allowed|
+|`SPOT_CHECK_CODE_INVESTMENT_FORBIDDEN_TRAILING_UP` |Investment too small for trailing|
+
+---
+
+### Request Example
+
+```http
+POST /v5/grid/validate-input HTTP/1.1
+Host: api-testnet.bybit.com
+Content-Type: application/json
+
+{
+    "symbol": "MNTUSDT",
+    "max_price": "1.2",
+    "min_price": "0.3",
+    "quote_investment": "",
+    "base_investment": "300",
+    "invest_mode": 1,
+    "cell_number": 66,
+    "entry_price": "0.4"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "debug_msg": "",
+        "investment": {
+            "from": "0",
+            "to": "0"
+        },
+        "profit": {
+            "from": "0.0114",
+            "to": "0.0453"
+        },
+        "cell_number": {
+            "from": "2",
+            "to": "562"
+        },
+        "min_price": {
+            "from": "0.1568",
+            "to": "3.92"
+        },
+        "max_price": {
+            "from": "0.3012",
+            "to": "40"
+        },
+        "stop_loss": {
+            "from": "0",
+            "to": "0.3"
+        },
+        "take_profit": {
+            "from": "1.2",
+            "to": ""
+        },
+        "entry_price": {
+            "from": "0.2352",
+            "to": "0.784"
+        },
+        "cell_distance": "0.0136",
+        "check_code": "SPOT_CHECK_CODE_SUCCESS_UNSPECIFIED",
+        "base_investment": {
+            "from": "228.36",
+            "to": "1366590.08"
+        },
+        "ts_percent": {
+            "from": "0.03",
+            "to": "0.99"
+        },
+        "limit_up_price": {
+            "from": "1.2112",
+            "to": "3.9065"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1774513367099
+}
+```

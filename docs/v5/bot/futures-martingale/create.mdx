@@ -1,0 +1,99 @@
+---
+title: Create Martingale Bot
+sidebar_label: Create Martingale Bot
+sidebar_position: 2
+---
+
+Create a new futures Martingale trading bot. The bot opens an initial position and adds to it when price moves against the position, then takes profit when price reverses.
+
+:::info
+- **How it works:**<br/>
+The bot opens an initial position and scales into it when price moves adversely by `price_float_percent`. Each add multiplies the base position size by `add_position_percent`. When the accumulated position reaches the round take-profit (`round_tp_percent`), the bot closes and optionally restarts.
+
+- **Mode (`martingale_mode`):**<br/>
+`1`: Long — buys on dips, profits on price reversal up<br/>
+`2`: Short — sells on rallies, profits on price reversal down
+
+- **Auto-cycle (`auto_cycle_toggle`):**<br/>
+`1`: Enable — restart after each round take-profit<br/>
+`2`: Disable — stop after a single round take-profit
+
+- **Prerequisites:**<br/>
+Call [Get Futures Martingale Limit](./get-limit) before this endpoint to validate parameter ranges.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+
+- **Subject to compliance wall, GEO IP check, and KYC verification.**
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/fmartingalebot/create" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|symbol |**true** |string |Trading pair symbol, uppercase only (e.g. `BTCUSDT`)|
+|martingale_mode |**true** |integer |Strategy direction: `1` Long (buy dips), `2` Short (sell rallies)|
+|leverage |**true** |string |Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1|
+|price_float_percent |**true** |string |Price movement percentage to trigger a position add (e.g. `"0.015"` means add when price moves 1.5% against the position)|
+|add_position_percent |**true** |string |Position add scaling as percentage of base position size (e.g. `"1.1"` = 1.1x base; `"2"` = 2x base)|
+|add_position_num |**true** |integer |Maximum number of position adds per round|
+|init_margin |**true** |string |Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)|
+|round_tp_percent |**true** |string |Single round take-profit as percentage (e.g. `"0.03"` means close when profit reaches 3%)|
+|auto_cycle_toggle |false |integer |Auto-cycle mode: `1` Enable (restart after TP), `2` Disable (stop after single TP)|
+|sl_percent |false |string |Stop-loss as percentage of total margin (e.g. `"0.2"` means close when loss reaches 20%). Leave empty if not set|
+|entry_price |false |string |Entry trigger price as absolute price (decimal string). Leave empty if not set|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` = success, `421` = user banned|
+|bot_id |integer |Unique bot ID. Use for [Get Detail](./get-detail) and [Close](./close)|
+|ban_reason_text |string |Ban reason in user's locale. Returned only when `status_code=421`|
+|debug_msg |string |Debug message (testnet only)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/fmartingalebot/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "MNTUSDT",
+    "martingale_mode": 1,
+    "leverage": "5",
+    "price_float_percent": "0.16",
+    "add_position_percent": "1.8",
+    "add_position_num": 5,
+    "round_tp_percent": "0.1",
+    "init_margin": "650",
+    "sl_percent": "0.5",
+    "entry_price": "0.56",
+    "auto_cycle_toggle": 2
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": "",
+        "ban_reason_text": "",
+        "bot_id": "612335280740902531"
+    },
+    "retExtInfo": {},
+    "time": 1774509868961
+}
+```

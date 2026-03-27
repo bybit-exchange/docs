@@ -1,0 +1,99 @@
+---
+title: 創建網格機器人
+sidebar_label: 創建現貨網格機器人
+sidebar_position: 2
+---
+
+創建一個新的現貨網格交易機器人，指定交易對、價格範圍、網格數量及投資金額。
+
+:::info
+- **前置條件：**<br/>
+在調用本端點前，請先調用[驗證現貨網格輸入](./validate-input)，確保參數在有效範圍內。<br/>
+用戶必須完成身份驗證及 KYC 合規審核。
+
+- **投資模式（`invest_mode`）：**<br/>
+`0`：僅報價幣（默認）— 以報價幣種投資（例如 USDT）<br/>
+`1`：僅基礎幣 — 以基礎幣種投資（例如 BTC）<br/>
+`2`：基礎幣 + 報價幣 — 跨兩種幣種分配投資
+
+- **網格追蹤（`enable_trailing`）：**<br/>
+啓用後，網格隨價格自動移動。要求 `cell_number >= 5`。
+
+- **響應 `grid_id`：**<br/>
+成功時返回，用於後續[查詢詳情](./get-detail)和[關閉](./close)操作。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 3 次請求。
+
+- **受合規管控及 KYC 驗證約束。**<br/>
+若用戶被封禁（status_code=421），`ban_reason_text` 提供本地化說明。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/grid/create-grid" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|symbol |**true** |string |交易對名稱，僅大寫（例如 `BTCUSDT`）|
+|max_price |**true** |string |網格價格範圍上限（小數字符串）|
+|min_price |**true** |string |網格價格範圍下限（小數字符串）|
+|cell_number |**true** |integer |網格間隔數量，最小為 2|
+|invest_mode |false |integer |投資模式。`0`：僅報價幣（默認），`1`：僅基礎幣，`2`：基礎幣+報價幣|
+|base_investment |false |string |基礎幣種投資金額（小數字符串）。`invest_mode` 為 `1` 或 `2` 時**必填**|
+|quote_investment |false |string |報價幣種投資金額（小數字符串）。`invest_mode` 為 `0` 或 `2` 時**必填**|
+|entry_price |false |string |入場觸發價格（小數字符串），市場價格到達此水平時機器人啓動|
+|stop_loss_price |false |string |止損觸發價格（小數字符串）|
+|take_profit_price |false |string |止盈觸發價格（小數字符串）|
+|ts_percent |false |string |移動止損回撥比例，範圍 `[0, 0.99]`（例如 `"0.05"` 表示 5%）|
+|enable_trailing |false |boolean |啓用網格追蹤（自動移動）。要求 `cell_number >= 5`。默認：`false`|
+|limit_up_price |false |string |網格追蹤上限價格（小數字符串），`enable_trailing`=`true` 時使用|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`200` = 成功，`421` = 用戶被封禁|
+|grid_id |integer |已創建的網格機器人 ID，用於後續查詢和關閉操作|
+|ban_reason_text |string |用戶語言的封禁原因，僅當 `status_code=421` 時返回|
+|debug_msg |string |調試信息（僅測試網）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/grid/create-grid HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "symbol": "MNTUSDT",
+    "max_price": "1.0968",
+    "min_price": "0.3656",
+    "quote_investment": "200",
+    "base_investment": "",
+    "invest_mode": 0,
+    "cell_number": 50
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "debug_msg": "",
+        "grid_id": "612340768081708828",
+        "ban_reason_text": ""
+    },
+    "retExtInfo": {},
+    "time": 1774513139729
+}
+```

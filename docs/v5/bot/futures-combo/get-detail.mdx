@@ -1,0 +1,181 @@
+---
+title: Get Bot Detail
+sidebar_label: Get Bot Detail
+sidebar_position: 3
+---
+
+Retrieve comprehensive details for a specific futures combo bot, including configuration, current status, PnL metrics, portfolio positions, margin balances, and timestamps.
+
+:::info
+- **`bot_id`:**<br/>
+Obtained from the [Create Futures Combo Bot](./create) response.
+
+- **PnL fields:**<br/>
+`total_pnl` is the cumulative total. `realized_pnl` and `unrealized_pnl` break it down. `funding_fee` shows net funding fee. `total_pnl_per` and `roi` express returns as percentages.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/fcombobot/detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|bot_id |**true** |string |Bot ID to query|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`0` = success, non-zero = error|
+|debug_msg |string |Debug message (testnet only)|
+|detail |object |Combo bot detail object (see below)|
+|> bot_id |string |Unique combo bot ID|
+|> bot_mode |string |Strategy direction: `Unspecified`, `Long`, `Short`, `Mix`|
+|> bot_display_status |string |UI display status: `Unspecified`, `Initializing`, `Awaiting activation`, `Running`, `Cancelling`, `Completed`|
+|> bot_name |string |Bot display name (comma-separated symbol list)|
+|> leverage |string |Position leverage multiplier (e.g. `"5"` means 5x)|
+|> total_margin |string |Total margin including additional top-ups (decimal string)|
+|> equity |string |Running equity value in quote currency (decimal string)|
+|> total_pnl |string |Cumulative total PnL in quote currency (decimal string)|
+|> total_pnl_per |string |Total PnL as percentage of total margin (e.g. `"0.0505"` means 5.05%)|
+|> roi |string |Return on investment as percentage|
+|> total_apr |string |Total annualized profit rate as percentage (e.g. `"0.365"` means 36.5% APR)|
+|> realized_pnl |string |Cumulative realized PnL (decimal string)|
+|> unrealized_pnl |string |Unrealized PnL based on mark price (decimal string)|
+|> total_exec_fee |string |Cumulative trading execution fees (decimal string)|
+|> funding_fee |string |Cumulative funding fee (decimal string, positive = received, negative = paid)|
+|> total_position_value |string |Total position value in quote currency (decimal string)|
+|> margin_balance |string |Margin balance in quote currency (decimal string)|
+|> available_balance |string |Available (free) balance in quote currency (decimal string)|
+|> imr |string |Initial margin rate as decimal ratio (e.g. `"0.1"` = 10%)|
+|> mmr |string |Maintenance margin rate as decimal ratio (e.g. `"0.005"` = 0.5%)|
+|> symbol_settings |array&lt;object&gt; |Per-symbol portfolio configuration|
+|>> symbol |string |Trading pair symbol (e.g. `BTCUSDT`)|
+|>> base_token |string |Base coin (e.g. `BTC`)|
+|>> quote_token |string |Quote coin (e.g. `USDT`)|
+|>> target_position_percent |string |Target portfolio weight as percentage|
+|>> side |string |Position direction: `Long`, `Short`|
+|>> symbol_id |integer |Internal symbol ID|
+|> adjust_position_mode |string |Rebalancing trigger mode: `Unspecified`, `Time-based rebalancing`, `Percentage-based rebalancing`, `Time or percentage (whichever triggers first)`, `Manual rebalancing by user`, `Rebalancing on settings modification`, `Rebalancing on transfer`|
+|> adjust_position_percent |string |Rebalancing drift threshold as percentage|
+|> adjust_position_time_interval |integer |Rebalancing time interval in seconds|
+|> adjusted_position_num |string |Total number of position rebalances performed|
+|> last_adjust_position_time |string |Last rebalancing timestamp (Unix seconds)|
+|> sl_percent |string |Stop-loss as percentage (e.g. `"0.2"` means 20%)|
+|> tp_percent |string |Take-profit as percentage (e.g. `"0.5"` means 50%)|
+|> trailing_stop_percent |string |Trailing stop callback as percentage (e.g. `"0.05"` means 5%)|
+|> stop_type |string |Stop reason: `Unspecified`, `Init failure`, `User stopped`, `Liquidation`, `Symbol delisted`, `Stop-loss triggered`, `System stopped`, `User banned`, `Take-profit triggered`, `Insufficient order balance`, `Reduce-only`, `Bankruptcy price breach`, `Trailing stop`, `OI limit`, `Compliance clearance`, `ADL (Auto-Deleveraging)`|
+|> close_code |string |UI close code: `Unspecified`, `Failed initiation`, `Canceled manually by user`, `Canceled automatically (other)`, `Canceled by take-profit trigger`, `Canceled by stop-loss trigger`, `Canceled by liquidation`, `DCA reached max investment`, `User account banned`, `Neutral grid hit top price`, `Neutral grid hit bottom price`, `Martingale round take-profit triggered`, `Symbol delisted`, `Negative arbitrage`, `Trailing stop exit`, `OI limit`, `Compliance clearance`, `ADL (Auto-Deleveraging)`|
+|> exit_equity |string |Equity at exit (decimal string)|
+|> sl_exit_equity |string |Equity at stop-loss exit (decimal string)|
+|> tp_exit_equity |string |Equity at take-profit exit (decimal string)|
+|> midway_transfer |string |Midway margin transfer amount (decimal string)|
+|> settlement_assets |string |Settlement asset transfer details|
+|> follow_num |integer |Number of users copying this bot|
+|> used_reward_amount |string |Total voucher/reward amount used|
+|> used_reward_id |string |ID of the first insurance voucher used|
+|> total_bonus |string |Total bonus amount|
+|> run_time_duration |string |Running duration in seconds|
+|> create_time |string |Bot creation timestamp (Unix seconds)|
+|> end_time |string |Bot end timestamp (Unix seconds), `0` if still running|
+|> last_modify_setting_time |string |Last settings modification timestamp (Unix seconds)|
+|> ws_token |string |WebSocket token for real-time updates|
+
+---
+
+### Request Example
+
+```http
+POST /v5/fcombobot/detail HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612324421335537259"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": "",
+        "detail": {
+            "bot_id": "612324421335537259",
+            "bot_mode": "BOT_MODE_MIX",
+            "bot_display_status": "BOT_DISPLAY_STATUS_COMPLETED",
+            "leverage": "5",
+            "total_margin": "500",
+            "total_pnl": "-3.7543",
+            "total_pnl_per": "-0.0075",
+            "equity": "496.24",
+            "roi": "",
+            "total_apr": "",
+            "adjusted_position_num": "0",
+            "last_adjust_position_time": "1774503406",
+            "create_time": "1774503396",
+            "end_time": "1774503410",
+            "close_code": "BOT_CLOSE_CODE_CANCELED_MANUALLY",
+            "ws_token": "",
+            "symbol_settings": [
+                {
+                    "symbol": "BTCUSDT",
+                    "base_token": "BTC",
+                    "quote_token": "USDT",
+                    "target_position_percent": "0.5",
+                    "side": "SIDE_LONG",
+                    "symbol_id": 5
+                },
+                {
+                    "symbol": "ETHUSDT",
+                    "base_token": "ETH",
+                    "quote_token": "USDT",
+                    "target_position_percent": "0.5",
+                    "side": "SIDE_SHORT",
+                    "symbol_id": 6
+                }
+            ],
+            "sl_percent": "0.2",
+            "tp_percent": "0.5",
+            "total_position_value": "0",
+            "margin_balance": "0",
+            "available_balance": "0",
+            "imr": "0",
+            "mmr": "0",
+            "funding_fee": "0",
+            "adjust_position_mode": "ADJUST_POSITION_MODE_TIME_OR_PERCENT",
+            "adjust_position_percent": "0.05",
+            "adjust_position_time_interval": 3600,
+            "bot_name": "BTC ETH",
+            "run_time_duration": "15",
+            "settlement_assets": "496.24566099 USDT",
+            "stop_type": "BOT_STOP_TYPE_BY_USER",
+            "follow_num": 0,
+            "used_reward_amount": "",
+            "used_reward_id": "0",
+            "total_bonus": "0",
+            "realized_pnl": "-3.7543",
+            "unrealized_pnl": "0",
+            "total_exec_fee": "0.7061",
+            "last_modify_setting_time": "0",
+            "midway_transfer": "0",
+            "exit_equity": "0",
+            "trailing_stop_percent": "0",
+            "sl_exit_equity": "0",
+            "tp_exit_equity": "0"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1774503836793
+}
+```

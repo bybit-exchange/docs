@@ -1,0 +1,154 @@
+---
+title: 查詢網格機器人詳情
+sidebar_label: 查詢網格機器人詳情
+sidebar_position: 4
+---
+
+查詢指定現貨網格機器人的完整詳情，包括配置、狀態、利潤指標、套利次數、止盈止損設置及關閉原因。
+
+:::info
+- **`grid_id`：**<br/>
+從[創建現貨網格機器人](./create)響應或網格列表查詢中獲取。
+
+- **APR 字段：**<br/>
+`grid_apr` 和 `total_apr` 以小數比例返回（例如 `"0.15"` 表示 15% APR）。乘以 100 可轉換為百分比。
+
+- **`current_profit` / `current_per`：**<br/>
+僅在機器人為 `RUNNING` 狀態時返回。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 10 次請求。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/grid/query-grid-detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|grid_id |**true** |string |要查詢的網格機器人 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |業務狀態碼|
+|debug_msg |string |調試信息（僅測試網）|
+|detail |object |網格機器人詳情對象（詳見下方）|
+|> grid_id |integer |網格機器人 ID|
+|> symbol |string |交易對名稱（例如 `BTCUSDT`）|
+|> base_token |string |基礎幣種（例如 `BTC`）|
+|> quote_token |string |報價幣種（例如 `USDT`）|
+|> status |string |機器人生命週期狀態：`RAW`、`REJECTED`、`NEW`、`INITIALIZING`、`RUNNING`、`CANCELLING`、`COMPLETED`|
+|> max_price |string |網格價格上限（小數字符串）|
+|> min_price |string |網格價格下限（小數字符串）|
+|> cell_number |integer |活躍網格間隔數量|
+|> total_investment |string |報價幣種總投資金額（小數字符串）|
+|> total_profit |string |報價幣種總利潤（小數字符串）|
+|> grid_profit |string |網格套利利潤，以報價幣種計（小數字符串）|
+|> grid_apr |string |網格 APR，小數比例（例如 `"0.15"` = 15%）|
+|> total_apr |string |總 APR，小數比例（例如 `"0.2"` = 20%）|
+|> arbitrage_num |integer |已完成套利交易總次數|
+|> arbitrage_num_24 |integer |過去 24 小時套利交易次數|
+|> current_price |string |當前市場價格（小數字符串）|
+|> current_profit |string |運行中機器人的當前未實現盈虧（小數字符串）|
+|> current_per |string |當前盈虧小數比例（例如 `"0.05"` = 5%）|
+|> equity |string |報價幣種當前淨值（小數字符串）|
+|> entry_price |string |設置的入場觸發價格（小數字符串）|
+|> stop_loss_price |string |設置的止損價格（小數字符串）|
+|> take_profit_price |string |設置的止盈價格（小數字符串）|
+|> close_reason |string |關閉原因：`UNKNOWN`、`CLOSED_MANUALLY`、`CLOSED_FAILED_INITIATION`、`CLOSED_SYMBOL_DELISTED`、`CLOSED_STOP_LOSS`、`CLOSED_TAKE_PROFIT`、`CLOSED_USER_BAN`、`CLOSED_TRAILING_STOP`、`CLOSE_STANDARD_CLEARANCE`、`CLOSE_TAX_TAG_CHANGE`|
+|> bot_close_code |string |關閉代碼：`Unknown`、`Failed initiation`、`Canceled manually`、`Auto canceled (other)`、`Auto canceled (take-profit)`、`Auto canceled (stop-loss)`、`Trailing stop`|
+|> ts_percent |string |移動止損回撥小數比例（例如 `"0.05"` = 5%）|
+|> is_support_ts |boolean |該交易對是否支持移動止損|
+|> enable_trailing |boolean |是否啓用網格追蹤|
+|> limit_up_price |string |網格追蹤上限價格（小數字符串）|
+|> ori_max_price |string |追蹤移動前的原始最高價格|
+|> ori_min_price |string |追蹤移動前的原始最低價格|
+|> ori_cell_number |integer |追蹤移動前的原始網格數量|
+|> allow_follow |integer |是否允許跟單：`1` 是，`0` 否|
+|> follow_num |integer |跟單跟隨者數量|
+|> operation_time |integer |自機器人創建以來的毫秒數|
+|> create_time |integer |創建時間戳（Unix 毫秒）|
+|> end_time |integer |結束時間戳（Unix 毫秒），運行中返回 `0`|
+|> used_reward_amount |string |已使用的憑證金額，以報價幣種計（小數字符串）|
+|> settlement_assets |string |關閉時的資產結算信息|
+|> account_type |string |帳戶類型：`Unspecified`、`Derivatives account`、`Unified account`、`Account upgrading`、`Spot account`、`UTA account`、`Fund account`|
+|> cum_withdrew_amount |string |累計提取利潤，以報價幣種計（小數字符串）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/grid/query-grid-detail HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{"grid_id":1234567890}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "detail": {
+            "grid_id": "612340768081708828",
+            "symbol": "MNTUSDT",
+            "base_token": "MNT",
+            "quote_token": "USDT",
+            "total_investment": "200",
+            "total_profit": "40.4186",
+            "max_price": "1.0968",
+            "min_price": "0.3656",
+            "cell_number": 50,
+            "grid_profit": "61.3113",
+            "grid_apr": "111.893143923675",
+            "total_apr": "73.763945",
+            "arbitrage_num": 291,
+            "arbitrage_num_24": 0,
+            "allow_follow": 1,
+            "operation_time": "986587",
+            "status": "RUNNING",
+            "entry_price": "",
+            "stop_loss_price": "",
+            "take_profit_price": "",
+            "current_price": "0.7279",
+            "close_reason": "UNKNOWN_GridCloseReason",
+            "bot_close_code": "BOT_CLOSE_CODE_UNKNOWN",
+            "follow_num": 0,
+            "create_time": "1774513139000",
+            "end_time": "0",
+            "used_reward_amount": "",
+            "settlement_assets": "",
+            "account_type": "BOT_ACCOUNT_TYPE_FUND",
+            "cum_withdrew_amount": "0",
+            "current_profit": "40.4186",
+            "current_per": "0.202093",
+            "spot_symbol_status": "ONLINE",
+            "used_reward_id": "",
+            "taker_fee_rate": "0.0006",
+            "maker_fee_rate": "0.0004",
+            "equity": "237.412782",
+            "ts_exit_equity": "0",
+            "ts_percent": "0",
+            "is_support_ts": true,
+            "enable_trailing": false,
+            "limit_up_price": "",
+            "ori_max_price": "",
+            "ori_min_price": "",
+            "ori_cell_number": 0
+        },
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774514125596
+}
+```

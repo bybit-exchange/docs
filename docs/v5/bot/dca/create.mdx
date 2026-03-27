@@ -1,0 +1,95 @@
+---
+title: Create DCA Bot
+sidebar_label: Create DCA Bot
+sidebar_position: 1
+---
+
+Create a new DCA (Dollar-Cost Averaging) bot that automatically invests at regular intervals across specified trading pairs.
+
+:::info
+- **How it works:**<br/>
+The bot buys a fixed amount of each configured trading pair at every `frequency_in_second` interval, regardless of market price.
+
+- **Supported trading pairs:**<br/>
+Maximum **5** pairs per bot.
+
+- **Minimum frequency:**<br/>
+10 seconds. Common values: `600` (10 min), `3600` (1 hour), `86400` (1 day).
+
+- **`max_invest_amount`:**<br/>
+Optional cap on total cumulative investment. The bot auto-closes when cumulative spending reaches this amount.
+
+- **Response `bot_id`:**<br/>
+Returned on success. Use this ID for subsequent [Close](./close) operations.
+
+- **Rate limit:**<br/>
+3 requests per second per UID.
+
+- **Subject to compliance wall and KYC verification.**<br/>
+If the user is banned (status_code=421), `ban_reason_text` provides a localized explanation.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/dca/create-bot" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|parameters |**true** |object |DCA bot configuration object (see below)|
+|> frequency_in_second |**true** |integer |Investment frequency in seconds. Minimum `10`. Common: `600` (10 min), `3600` (1 hr), `86400` (1 day)|
+|> quote_coin |**true** |string |Quote token used for purchasing (e.g. `USDT`, `USDC`)|
+|> pairs |**true** |array |Trading pairs to invest in. Maximum 5 pairs|
+|>> base |**true** |string |coin to be invested (e.g. `BTC`)|
+|>> amount |**true** |string |Per-round investment amount in quote coin (decimal string, e.g. `"10"` for 10 USDT)|
+|> max_invest_amount |false |string |Optional. Maximum total investment in quote coin (decimal string). Bot auto-closes when reached|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |`200` = success, `421` = user banned|
+|bot_id |integer |Created DCA bot ID. Use for subsequent close operations|
+|debug_msg |string |Reason for creation failure (testnet: debug info)|
+|ban_reason_text |string |Ban reason in user's locale. Returned only when `status_code=421`|
+
+---
+
+### Request Example
+
+```http
+POST /v5/dca/create-bot HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "parameters": {
+        "frequency_in_second": "600",
+        "quote_coin": "USDT",
+        "max_invest_amount": "2000",
+        "pairs": [
+            {
+                "base": "BTC",
+                "amount": "66"
+            },
+            {
+                "base": "ETH",
+                "amount": "88"
+            }
+        ]
+    }
+}
+```
+
+### Response Example
+
+```json
+{
+    "status_code": 200,
+    "bot_id": 9876543210,
+    "debug_msg": "",
+    "ban_reason_text": ""
+}
+```

@@ -1,0 +1,154 @@
+---
+title: Get Grid Bot Detail
+sidebar_label: Get Grid Bot Detail
+sidebar_position: 4
+---
+
+Retrieve comprehensive details for a specific spot grid bot, including configuration, status, profit metrics, arbitrage count, TP/SL settings, and close reason.
+
+:::info
+- **`grid_id`:**<br/>
+Obtained from the [Create Spot Grid Bot](./create) response or grid list queries.
+
+- **APR fields:**<br/>
+`grid_apr` and `total_apr` are returned as decimal ratios (e.g. `"0.15"` means 15% APR). Multiply by 100 to convert to percentage.
+
+- **`current_profit` / `current_per`:**<br/>
+Only present for bots in `RUNNING` state.
+
+- **Rate limit:**<br/>
+10 requests per second per UID.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/grid/query-grid-detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|---------|
+|grid_id |**true** |string |Grid bot ID to query|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|---------|
+|status_code |integer |Business status code|
+|debug_msg |string |Debug message (testnet only)|
+|detail |object |Grid bot detail object (see below)|
+|> grid_id |integer |Grid bot ID|
+|> symbol |string |Trading pair (e.g. `BTCUSDT`)|
+|> base_token |string |Base token symbol (e.g. `BTC`)|
+|> quote_token |string |Quote token symbol (e.g. `USDT`)|
+|> status |string |Bot lifecycle status: `RAW`, `REJECTED`, `NEW`, `INITIALIZING`, `RUNNING`, `CANCELLING`, `COMPLETED`|
+|> max_price |string |Grid upper price bound (decimal string)|
+|> min_price |string |Grid lower price bound (decimal string)|
+|> cell_number |integer |Number of active grid intervals|
+|> total_investment |string |Total investment amount in quote token (decimal string)|
+|> total_profit |string |Total profit in quote token (decimal string)|
+|> grid_profit |string |Grid arbitrage profit in quote token (decimal string)|
+|> grid_apr |string |Grid APR as decimal ratio (e.g. `"0.15"` = 15%)|
+|> total_apr |string |Total APR as decimal ratio (e.g. `"0.2"` = 20%)|
+|> arbitrage_num |integer |Total number of completed arbitrage trades|
+|> arbitrage_num_24 |integer |Number of arbitrage trades in the last 24 hours|
+|> current_price |string |Current market price (decimal string)|
+|> current_profit |string |Current unrealized P&L for running bots (decimal string)|
+|> current_per |string |Current P&L as decimal ratio (e.g. `"0.05"` = 5%)|
+|> equity |string |Current equity in quote token (decimal string)|
+|> entry_price |string |Entry trigger price if set (decimal string)|
+|> stop_loss_price |string |Stop-loss price if set (decimal string)|
+|> take_profit_price |string |Take-profit price if set (decimal string)|
+|> close_reason |string |Reason for closure: `UNKNOWN`, `CLOSED_MANUALLY`, `CLOSED_FAILED_INITIATION`, `CLOSED_SYMBOL_DELISTED`, `CLOSED_STOP_LOSS`, `CLOSED_TAKE_PROFIT`, `CLOSED_USER_BAN`, `CLOSED_TRAILING_STOP`, `CLOSE_STANDARD_CLEARANCE`, `CLOSE_TAX_TAG_CHANGE`|
+|> bot_close_code |string |Close code: `Unknown`, `Failed initiation`, `Canceled manually`, `Auto canceled (other)`, `Auto canceled (take-profit)`, `Auto canceled (stop-loss)`, `Trailing stop`|
+|> ts_percent |string |Trailing stop callback as decimal ratio (e.g. `"0.05"` = 5%)|
+|> is_support_ts |boolean |Whether the symbol supports trailing stop|
+|> enable_trailing |boolean |Whether grid trailing is enabled|
+|> limit_up_price |string |Upper limit price for grid trailing (decimal string)|
+|> ori_max_price |string |Original max price before trailing shift|
+|> ori_min_price |string |Original min price before trailing shift|
+|> ori_cell_number |integer |Original grid count before trailing shift|
+|> allow_follow |integer |Whether copy-trading is allowed: `1` yes, `0` no|
+|> follow_num |integer |Number of copy-trade followers|
+|> operation_time |integer |Milliseconds since bot creation|
+|> create_time |integer |Creation timestamp (Unix milliseconds)|
+|> end_time |integer |End timestamp (Unix milliseconds). `0` if still running|
+|> used_reward_amount |string |Total voucher amount used in quote token (decimal string)|
+|> settlement_assets |string |Settlement asset information on close|
+|> account_type |string |Account type: `Unspecified`, `Derivatives account`, `Unified account`, `Account upgrading`, `Spot account`, `UTA account`, `Fund account`|
+|> cum_withdrew_amount |string |Cumulative withdrawn profit in quote token (decimal string)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/grid/query-grid-detail HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{"grid_id":1234567890}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "status_code": 200,
+        "detail": {
+            "grid_id": "612340768081708828",
+            "symbol": "MNTUSDT",
+            "base_token": "MNT",
+            "quote_token": "USDT",
+            "total_investment": "200",
+            "total_profit": "40.4186",
+            "max_price": "1.0968",
+            "min_price": "0.3656",
+            "cell_number": 50,
+            "grid_profit": "61.3113",
+            "grid_apr": "111.893143923675",
+            "total_apr": "73.763945",
+            "arbitrage_num": 291,
+            "arbitrage_num_24": 0,
+            "allow_follow": 1,
+            "operation_time": "986587",
+            "status": "RUNNING",
+            "entry_price": "",
+            "stop_loss_price": "",
+            "take_profit_price": "",
+            "current_price": "0.7279",
+            "close_reason": "UNKNOWN_GridCloseReason",
+            "bot_close_code": "BOT_CLOSE_CODE_UNKNOWN",
+            "follow_num": 0,
+            "create_time": "1774513139000",
+            "end_time": "0",
+            "used_reward_amount": "",
+            "settlement_assets": "",
+            "account_type": "BOT_ACCOUNT_TYPE_FUND",
+            "cum_withdrew_amount": "0",
+            "current_profit": "40.4186",
+            "current_per": "0.202093",
+            "spot_symbol_status": "ONLINE",
+            "used_reward_id": "",
+            "taker_fee_rate": "0.0006",
+            "maker_fee_rate": "0.0004",
+            "equity": "237.412782",
+            "ts_exit_equity": "0",
+            "ts_percent": "0",
+            "is_support_ts": true,
+            "enable_trailing": false,
+            "limit_up_price": "",
+            "ori_max_price": "",
+            "ori_min_price": "",
+            "ori_cell_number": 0
+        },
+        "debug_msg": ""
+    },
+    "retExtInfo": {},
+    "time": 1774514125596
+}
+```

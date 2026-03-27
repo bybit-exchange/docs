@@ -1,0 +1,181 @@
+---
+title: 查詢拼盤機器人詳情
+sidebar_label: 查詢拼盤機器人詳情
+sidebar_position: 3
+---
+
+查詢指定合約拼盤機器人的完整詳情，包括配置、當前狀態、盈虧指標、投資拼盤倉位、保證金餘額及時間戳。
+
+:::info
+- **`bot_id`：**<br/>
+從[創建合約拼盤機器人](./create)響應中獲取。
+
+- **盈虧字段：**<br/>
+`total_pnl` 為累計總盈虧。`realized_pnl` 和 `unrealized_pnl` 為細分數據。`funding_fee` 為淨資金費。`total_pnl_per` 和 `roi` 以百分比表示收益率。
+
+- **頻率限制：**<br/>
+每個 UID 每秒最多 10 次請求。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/fcombobot/detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----------|:---------|:-----|------|
+|bot_id |**true** |string |要查詢的機器人 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----------|:-----|------|
+|status_code |integer |`0` = 成功，非零 = 錯誤|
+|debug_msg |string |調試信息（僅測試網）|
+|detail |object |拼盤機器人詳情對象（詳見下方）|
+|> bot_id |string |唯一拼盤機器人 ID|
+|> bot_mode |string |策略方向：`Unspecified`、`Long`、`Short`、`Mix`|
+|> bot_display_status |string |UI 顯示狀態：`Unspecified`、`Initializing`、`Awaiting activation`、`Running`、`Cancelling`、`Completed`|
+|> bot_name |string |機器人顯示名稱（逗號分隔的交易對列表）|
+|> leverage |string |倉位槓桿倍數（例如 `"5"` 表示 5 倍）|
+|> total_margin |string |總保證金（含追加投資，小數字符串）|
+|> equity |string |當前淨值（報價幣種，小數字符串）|
+|> total_pnl |string |累計總盈虧（報價幣種，小數字符串）|
+|> total_pnl_per |string |總盈虧佔總保證金的百分比（例如 `"0.0505"` 表示 5.05%）|
+|> roi |string |投資回報率百分比|
+|> total_apr |string |總年化收益率百分比（例如 `"0.365"` 表示 36.5% APR）|
+|> realized_pnl |string |累計已實現盈虧（小數字符串）|
+|> unrealized_pnl |string |基於標記價格的未實現盈虧（小數字符串）|
+|> total_exec_fee |string |累計交易手續費（小數字符串）|
+|> funding_fee |string |累計資金費（小數字符串，正值 = 收入，負值 = 支出）|
+|> total_position_value |string |總倉位價值（報價幣種，小數字符串）|
+|> margin_balance |string |保證金餘額（報價幣種，小數字符串）|
+|> available_balance |string |可用（空閒）餘額（報價幣種，小數字符串）|
+|> imr |string |初始保證金率（小數比例，例如 `"0.1"` = 10%）|
+|> mmr |string |維持保證金率（小數比例，例如 `"0.005"` = 0.5%）|
+|> symbol_settings |array&lt;object&gt; |各交易對投資拼盤配置|
+|>> symbol |string |交易對名稱（例如 `BTCUSDT`）|
+|>> base_token |string |基礎幣種（例如 `BTC`）|
+|>> quote_token |string |報價幣種（例如 `USDT`）|
+|>> target_position_percent |string |目標倉位權重百分比|
+|>> side |string |倉位方向：`Long`、`Short`|
+|>> symbol_id |integer |內部交易對 ID|
+|> adjust_position_mode |string |再平衡觸發模式：`Unspecified`、`Time-based rebalancing`、`Percentage-based rebalancing`、`Time or percentage (whichever triggers first)`、`Manual rebalancing by user`、`Rebalancing on settings modification`、`Rebalancing on transfer`|
+|> adjust_position_percent |string |再平衡偏離閾值百分比|
+|> adjust_position_time_interval |integer |再平衡時間間隔（秒）|
+|> adjusted_position_num |string |已執行的倉位再平衡總次數|
+|> last_adjust_position_time |string |最後一次再平衡時間戳（Unix 秒）|
+|> sl_percent |string |止損百分比（例如 `"0.2"` 表示 20%）|
+|> tp_percent |string |止盈百分比（例如 `"0.5"` 表示 50%）|
+|> trailing_stop_percent |string |移動止損回撥百分比（例如 `"0.05"` 表示 5%）|
+|> stop_type |string |停止原因：`Unspecified`、`Init failure`、`User stopped`、`Liquidation`、`Symbol delisted`、`Stop-loss triggered`、`System stopped`、`User banned`、`Take-profit triggered`、`Insufficient order balance`、`Reduce-only`、`Bankruptcy price breach`、`Trailing stop`、`OI limit`、`Compliance clearance`、`ADL (Auto-Deleveraging)`|
+|> close_code |string |UI 關閉代碼：`Unspecified`、`Failed initiation`、`Canceled manually by user`、`Canceled automatically (other)`、`Canceled by take-profit trigger`、`Canceled by stop-loss trigger`、`Canceled by liquidation`、`DCA reached max investment`、`User account banned`、`Neutral grid hit top price`、`Neutral grid hit bottom price`、`Martingale round take-profit triggered`、`Symbol delisted`、`Negative arbitrage`、`Trailing stop exit`、`OI limit`、`Compliance clearance`、`ADL (Auto-Deleveraging)`|
+|> exit_equity |string |退出時淨值（小數字符串）|
+|> sl_exit_equity |string |止損退出時淨值（小數字符串）|
+|> tp_exit_equity |string |止盈退出時淨值（小數字符串）|
+|> midway_transfer |string |中途保證金轉入金額（小數字符串）|
+|> settlement_assets |string |關閉時資產結算詳情|
+|> follow_num |integer |跟單此機器人的用戶數量|
+|> used_reward_amount |string |已使用的憑證/獎勵總金額|
+|> used_reward_id |string |首個使用的保險憑證 ID|
+|> total_bonus |string |總獎勵金額|
+|> run_time_duration |string |運行時長（秒）|
+|> create_time |string |機器人創建時間戳（Unix 秒）|
+|> end_time |string |機器人結束時間戳（Unix 秒），運行中返回 `0`|
+|> last_modify_setting_time |string |最後一次設置修改時間戳（Unix 秒）|
+|> ws_token |string |用於實時更新的 WebSocket 令牌|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/fcombobot/detail HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "bot_id": "612324421335537259"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "status_code": 0,
+        "debug_msg": "",
+        "detail": {
+            "bot_id": "612324421335537259",
+            "bot_mode": "BOT_MODE_MIX",
+            "bot_display_status": "BOT_DISPLAY_STATUS_COMPLETED",
+            "leverage": "5",
+            "total_margin": "500",
+            "total_pnl": "-3.7543",
+            "total_pnl_per": "-0.0075",
+            "equity": "496.24",
+            "roi": "",
+            "total_apr": "",
+            "adjusted_position_num": "0",
+            "last_adjust_position_time": "1774503406",
+            "create_time": "1774503396",
+            "end_time": "1774503410",
+            "close_code": "BOT_CLOSE_CODE_CANCELED_MANUALLY",
+            "ws_token": "",
+            "symbol_settings": [
+                {
+                    "symbol": "BTCUSDT",
+                    "base_token": "BTC",
+                    "quote_token": "USDT",
+                    "target_position_percent": "0.5",
+                    "side": "SIDE_LONG",
+                    "symbol_id": 5
+                },
+                {
+                    "symbol": "ETHUSDT",
+                    "base_token": "ETH",
+                    "quote_token": "USDT",
+                    "target_position_percent": "0.5",
+                    "side": "SIDE_SHORT",
+                    "symbol_id": 6
+                }
+            ],
+            "sl_percent": "0.2",
+            "tp_percent": "0.5",
+            "total_position_value": "0",
+            "margin_balance": "0",
+            "available_balance": "0",
+            "imr": "0",
+            "mmr": "0",
+            "funding_fee": "0",
+            "adjust_position_mode": "ADJUST_POSITION_MODE_TIME_OR_PERCENT",
+            "adjust_position_percent": "0.05",
+            "adjust_position_time_interval": 3600,
+            "bot_name": "BTC ETH",
+            "run_time_duration": "15",
+            "settlement_assets": "496.24566099 USDT",
+            "stop_type": "BOT_STOP_TYPE_BY_USER",
+            "follow_num": 0,
+            "used_reward_amount": "",
+            "used_reward_id": "0",
+            "total_bonus": "0",
+            "realized_pnl": "-3.7543",
+            "unrealized_pnl": "0",
+            "total_exec_fee": "0.7061",
+            "last_modify_setting_time": "0",
+            "midway_transfer": "0",
+            "exit_equity": "0",
+            "trailing_stop_percent": "0",
+            "sl_exit_equity": "0",
+            "tp_exit_equity": "0"
+        }
+    },
+    "retExtInfo": {},
+    "time": 1774503836793
+}
+```
