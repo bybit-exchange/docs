@@ -9,14 +9,12 @@ sidebar_position: 4
 ### HTTP 請求
 <APIEndpoint method="GET" url="/v5/asset/asset-overview" />
 
-:::info
-當 `accountType=Alpha` 時，目前版本不返回鏈上（on-chain）資產。
-:::
-
 ### 請求參數
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |memberId |false |string |用戶ID。使用母帳號 API Key 查詢子帳戶資產時，該字段必傳 |
+|valuationCurrency |false |string |折算幣種（法幣）。不傳默認折算為 `USD` |
+|[accountType](../../enum#assetaccounttype) |false |string |帳戶類型。不傳默認查詢所有帳戶 |
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -36,6 +34,10 @@ sidebar_position: 4
 |>> coinDetail |array |該子分類下的幣種持倉明細 |
 |>>> coin |string |幣種名稱 |
 |>>> equity |string |幣種權益金額 |
+|>>> extMap |object |擴展字段。僅當 `accountType=Alpha` 且 `category=farm` 時返回 |
+|>>>> priceUpper |string |流動性倉位價格範圍上限 |
+|>>>> priceLower |string |流動性倉位價格範圍下限 |
+|>>>> equityUnit |string |權益金額的單位，如 `USD` |
 
 ---
 
@@ -347,6 +349,52 @@ X-BAPI-RECV-WINDOW: 5000
                     }
                 ],
                 "snapshotTime": "1772449024908"
+            },
+            {
+                "totalEquity": "335.33",
+                "valuationCurrency": "USD",
+                "accountType": "Alpha",
+                "snapshotTime": "1773748881734",
+                "categories": [
+                    {
+                        "coinDetail": [
+                            {
+                                "equity": "112.46434565",
+                                "coin": "TSLAx"
+                            },
+                            {
+                                "equity": "43.36958077",
+                                "coin": "PUMP"
+                            }
+                        ],
+                        "category": "trade",
+                        "equity": "296.16"
+                    },
+                    {
+                        "coinDetail": [
+                            {
+                                "extMap": {
+                                    "priceUpper": "139.24762909452249825",
+                                    "priceLower": "125.99709511942565098",
+                                    "equityUnit": "USD"
+                                },
+                                "equity": "3.4268",
+                                "coin": "SOL-USDC"
+                            },
+                            {
+                                "extMap": {
+                                    "priceUpper": "3.91780569",
+                                    "priceLower": "3.54499491",
+                                    "equityUnit": "USD"
+                                },
+                                "equity": "3.3879",
+                                "coin": "JLP-USDC"
+                            }
+                        ],
+                        "category": "farm",
+                        "equity": "39.16"
+                    }
+                ]
             }
         ]
     },
