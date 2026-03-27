@@ -13,11 +13,11 @@ Query the strategy list. Supports filtering by strategy ID, symbol, status, cate
 |:----- |:-------|:-----|------ |
 |strategyId |false |string |Strategy ID (exact match) |
 |symbol |false |string |Symbol name, e.g. `BTCUSDT` |
-|status |false |integer |Strategy status. `2`: running, `3`/`4`: terminated, `5`: paused, `6`: untriggered |
+|status |false |string |Strategy status. `2`: running, `3`/`4`: terminated, `5`: paused, `6`: untriggered |
 |category |false |string |Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE` |
 |strategyType |false |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
-|beginTimeE0 |false |integer |Start time in seconds (Unix timestamp) |
-|endTimeE0 |false |integer |End time in seconds (Unix timestamp) |
+|beginTimeE0 |false |int64 |Start time in seconds (Unix timestamp) |
+|endTimeE0 |false |int64 |End time in seconds (Unix timestamp) |
 |pageSize |false |integer |Limit for data size per page. Default: `20`, max: `50` |
 |cursor |false |string |Cursor for pagination, returned from the previous response |
 
@@ -42,7 +42,7 @@ Query the strategy list. Supports filtering by strategy ID, symbol, status, cate
 |> triggerPrice |string |Trigger price |
 |> isTriggered |boolean |Whether the strategy has been triggered |
 |> leverageType |integer |Leverage type. `0`: normal, `1`: margin |
-|> terminateType |integer |Termination reason code. `0`: none, `1`: user stop, `2`: completed normally, `3`: insufficient balance, and more |
+|> terminateType |integer |Termination reason code. `0`: unknown, `1`: user stop, `2`: completed normally, `3`: insufficient balance, `4`: position mode changed, `5`: uid blocked, `6`: would trigger liquidation, `7`: no position for reduce-only, `8`: upgrade to UTA, `9`: OI limited, `10`: user trading banned, `11`: risk limit exceeded, `12`: symbol delivery stopped, `13`: symbol delisted, `14`: consecutive order failures, `15`: missing template param, `16`: signal latency, `17`: symbol mismatch, `18`: beyond max chase price, `19`: max sub-order count exceeded, `20`: order already cancelled, `21`: max risk limit value exceeded, `22`: risk limit max leverage exceeded, `23`: coin not collateral, `24`: reached limit price, `25`: reduce-only state with pending UTA upgrade, `26`: user in cooling-off period |
 |> terminateRemark |string |Termination reason description |
 |> triggerCount |integer |Number of trigger attempts |
 |> tradingCount |integer |Number of actual orders placed |
@@ -53,20 +53,23 @@ Query the strategy list. Supports filtering by strategy ID, symbol, status, cate
 |> executedDuration |integer |Actual executed duration in seconds. _TWAP only_ |
 |> isRandom |boolean |Whether sub-order quantity randomization is enabled. _TWAP only_ |
 |> interval |integer |Sub-order placement interval in seconds. _TWAP only_ |
+|> limitPrice |string |Fixed limit price. Orders will not be placed beyond this price |
 |> chasePercentE4 |int64 |Chase price offset in basis points (1/10000). _Chase / Iceberg_ |
 |> chaseDistance |string |Chase price distance (absolute value). _Chase / Iceberg_ |
 |> maxChasePrice |string |Maximum chase price protection. _Chase / Iceberg_ |
 |> chaseOrderPrice |string |Current chase order price (real-time). _Chase only_ |
+|> chasePrice |string |Reference price side for chase orders, e.g. `Bid1`, `Ask1`. _Chase / Iceberg_ |
 |> postOnly |integer |Maker-only mode. `0`: taker allowed, `1`: post-only. _Iceberg only_ |
 |> isRebalance |boolean |Whether rebalance is enabled |
 |> orderType |integer |Order type. `1`: market order, `2`: limit order |
-|> positionIdx |integer |Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode |
+|> orderPriceOffset |string |Limit order price offset percentage. _TWAP only_ |
+|> strategySl |string |Strategy stop-loss price |
+|> strategyTp |string |Strategy take-profit price |
+|> arbitrageOrders |array |List of associated arbitrage orders |
+|> positionValue |string |Total position value |
+|> filledPositionValue |string |Filled position value |
 |nextCursor |string |Cursor for the next page. Empty string means no more data |
 |prevCursor |string |Cursor for the previous page |
-
-<a href="/api-explorer/v5/strategy/strategy-list"><Button>RUN >></Button></a>
-
----
 
 ### Request Example
 
@@ -74,7 +77,7 @@ Query the strategy list. Supports filtering by strategy ID, symbol, status, cate
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/strategy/list?strategyId=afae1b1b-e765-4348-bb5c-4fb56c2d1e88&status=5&strategyType=twap&pageSize=1&cursor=eyJPZmZzZXQiOjIwMzM3MTk0MTE1MjkxMTc2OTYsIlBhZ2VTaXplIjoxLCJycGNDdXJzb3IiOiIifQ%3D%3D HTTP/1.1
+GET /v5/strategy/list?strategyId=119b6211-2611-461b-be5e-5ac557099e82 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -155,6 +158,6 @@ X-BAPI-RECV-WINDOW: 5000
         "prevCursor": ""
     },
     "retExtInfo": {},
-    "time": 1773718018568
+    "time": 1774583153599
 }
 ```
