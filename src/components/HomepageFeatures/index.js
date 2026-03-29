@@ -62,7 +62,7 @@ const primaryCards = [
       </Translate>
     ),
     link: 'https://github.com/bybit-exchange/pybit',
-    linkLabel: <Translate id="homepage.card.sdks.link">Explore SDKs</Translate>,
+    linkLabel: <Translate id="homepage.card.sdks.link">Pybit Quick Start</Translate>,
     external: true,
     links: [
       {label: 'Python', href: 'https://github.com/bybit-exchange/pybit'},
@@ -156,11 +156,11 @@ export default function HomepageFeatures() {
             <Translate id="homepage.section.eyebrow">Developer Toolkit</Translate>
           </div>
           <h2 className={styles.sectionTitle}>
-            <Translate id="homepage.section.title">Choose the fastest path into the Bybit ecosystem</Translate>
+            <Translate id="homepage.section.title">Build faster with Bybit tools</Translate>
           </h2>
           <p className={styles.sectionDescription}>
             <Translate id="homepage.section.desc">
-              Start with the official API surface, plug in agent tooling, or pick an SDK that matches your stack.
+              Start with the official API, plug in agent tooling, or pick an SDK that matches your stack.
             </Translate>
           </p>
         </div>
