@@ -61,11 +61,12 @@ const primaryCards = [
         Start faster with official SDKs for Python, Java, Go, and .NET when you need typed clients and language-native integration paths.
       </Translate>
     ),
-    link: 'https://github.com/bybit-exchange/pybit',
-    linkLabel: <Translate id="homepage.card.sdks.link">Pybit Quick Start</Translate>,
+    link: 'https://github.com/bybit-exchange/pybit/blob/master/examples/http_example_quickstart.py',
+    linkLabel: <Translate id="homepage.card.sdks.link">pybit quickstart</Translate>,
     external: true,
     links: [
       {label: 'Python', href: 'https://github.com/bybit-exchange/pybit'},
+      {label: 'TypeScript', href: 'https://www.npmjs.com/package/bybit-api'},
       {label: 'Java', href: 'https://github.com/bybit-exchange/bybit-java-api'},
       {label: 'C#', href: 'https://github.com/bybit-exchange/bybit.net.api'},
       {label: 'Go', href: 'https://github.com/bybit-exchange/bybit.go.api'},
