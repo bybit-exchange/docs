@@ -58,7 +58,7 @@ const primaryCards = [
     title: <Translate id="homepage.card.sdks.title">SDKs</Translate>,
     description: (
       <Translate id="homepage.card.sdks.desc">
-        Start faster with official SDKs for Python, Java, Go, and .NET when you need typed clients and language-native integration paths.
+        Start faster with official SDKs for Python, TypeScript, Java, Go, and .NET when you need typed clients and language-native integration paths.
       </Translate>
     ),
     link: 'https://github.com/bybit-exchange/pybit/blob/master/examples/http_example_quickstart.py',
