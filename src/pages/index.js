@@ -57,10 +57,10 @@ export default function Home() {
     <Layout
       title="Bybit API Documentation"
       description="Build powerful trading applications with Bybit's unified V5 Open API. Access spot, derivatives, and options markets.">
-      <HomepageHeader />
       <main>
         <HomepageFeatures />
       </main>
+      <HomepageHeader />
     </Layout>
   );
 }
