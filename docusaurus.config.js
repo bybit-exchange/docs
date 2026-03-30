@@ -293,6 +293,27 @@ const config = {
               },
             ],
           },
+          {
+            title: 'Byreal',
+            items: [
+               {
+                label: 'About Byreal',
+                href: 'https://learn.bybit.com/en/bybit-guide/what-is-byreal',
+              },
+              {
+                label: 'Skills',
+                href: 'https://github.com/byreal-git/byreal-agent-skills',
+              },
+              {
+                label: 'Byreal API',
+                href: 'https://github.com/byreal-git/byreal-api-docs',
+              },
+              {
+                label: 'SDK',
+                href: 'https://github.com/byreal-git/byreal-sdk',
+              },
+            ],
+          },
         ],
       },
       prism: {
