@@ -3,22 +3,24 @@ title: Get Product Quote
 sidebar_label: Get Product Quote
 sidebar_position: 2
 ---
+
 :::info
 Does not need authentication. **Up to 50 requests** per second per IP.
 :::
 
-
 ### HTTP Request
-GET `/v5/earn/advance/product-extra-info`
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|productId|**true**|string |Product ID|
-|[category](../../enum#advanced-earn-category) |**true**|string|Product category,`DualAssets`|
+|[category](../../enum#advanced-earn-category) |**true**|string|Product category. `DualAssets`, `SmartLeverage`|
+|productId|**true**|string |Product ID. For `SmartLeverage`, use int64 value|
 
 
 ### Response Parameters
+
+#### DualAssets
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |[category](../../enum#advanced-earn-category)|string |`DualAssets`|
@@ -29,12 +31,26 @@ GET `/v5/earn/advance/product-extra-info`
 |>> selectPrice|string|Optional target price|
 |>> apyE8|string|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
 |>> maxInvestmentAmount|string|Maximum investment amount at this price|
-|>> expiredAt|string|The expiry time,Unix timestamp in ms|
+|>> expiredAt|string|The expiry time, Unix timestamp in ms|
 |> sellHighPrice|array|List of available prices for Sell High direction|
 |>> selectPrice|string|Optional target price|
 |>> apyE8|string|Annual Percentage Yield (e8 precision)|
 |>> maxInvestmentAmount|string|Maximum investment amount at this price|
-|>> expiredAt|string|The expiry time,Unix timestamp in ms|
+|>> expiredAt|string|The expiry time, Unix timestamp in ms|
+
+#### SmartLeverage
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|[category](../../enum#advanced-earn-category)|string |`SmartLeverage`|
+|productId|int64|Product ID|
+|breakevenPrice|string|Breakeven price — the best available institutional quote. Empty if no active quote *(SmartLeverage only)*|
+|currentPrice|string|Current market price of the underlying asset. Used as reference for `initialPrice` *(SmartLeverage only)*|
+|expireAt|int64|Quote expiry time, Unix timestamp in ms. Empty if no active quote *(SmartLeverage only)*|
+|maxInvestmentAmount|string|Maximum single order amount at current quote. Empty if no active quote *(SmartLeverage only)*|
+
+:::note
+For `SmartLeverage`, `breakevenPrice`, `expireAt`, and `maxInvestmentAmount` may be empty when no institutional quote is available. `currentPrice` is sourced directly from the market feed and is always present.
+:::
 
 ### Request Example
 
@@ -51,6 +67,9 @@ Host: api-testnet.bybit.com
 </Tabs>
 
 ### Response Example
+
+<Tabs groupId="product-category">
+<TabItem value="dualassets" label="DualAssets">
 
 ```json
 {
@@ -132,5 +151,25 @@ Host: api-testnet.bybit.com
     "retExtInfo": {},
     "time": 1773814753684
 }
-
 ```
+
+</TabItem>
+<TabItem value="smartleverage" label="SmartLeverage">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "category": "SmartLeverage",
+        "productId": 123456,
+        "breakevenPrice": "70000",
+        "currentPrice": "67000",
+        "expireAt": 1710001200000,
+        "maxInvestmentAmount": "10000"
+    }
+}
+```
+
+</TabItem>
+</Tabs>

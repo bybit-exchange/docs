@@ -3,22 +3,24 @@ title: 查詢產品報價
 sidebar_label: 查詢產品報價
 sidebar_position: 2
 ---
+
 :::info
 無需身份驗證。每個 IP 每秒**最多 50 次請求**。
 :::
 
-
 ### HTTP 請求
-GET `/v5/earn/advance/product-extra-info`
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
 
 ### 請求參數
 | 參數 | 必填 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|productId|**true**|string |產品 ID|
-|[category](../../enum#advanced-earn-category) |**true**|string|產品類別，`DualAssets`|
+|[category](../../enum#advanced-earn-category) |**true**|string|產品類別。`DualAssets`、`SmartLeverage`|
+|productId|**true**|string |產品 ID。`SmartLeverage` 時請使用 int64 值|
 
 
 ### 響應參數
+
+#### DualAssets
 | 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
 |[category](../../enum#advanced-earn-category)|string |`DualAssets`|
@@ -36,6 +38,20 @@ GET `/v5/earn/advance/product-extra-info`
 |>> maxInvestmentAmount|string|該價格下的最大投資額度|
 |>> expiredAt|string|過期時間，毫秒級 Unix 時間戳|
 
+#### SmartLeverage
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|[category](../../enum#advanced-earn-category)|string |`SmartLeverage`|
+|productId|int64|產品 ID|
+|breakevenPrice|string|盈虧平衡價格（機構最優報價）。無活躍報價時為空 *(僅 SmartLeverage)*|
+|currentPrice|string|標的資產當前市價，可作為下單 `initialPrice` 的參考 *(僅 SmartLeverage)*|
+|expireAt|int64|報價過期時間，毫秒級 Unix 時間戳。無活躍報價時為空 *(僅 SmartLeverage)*|
+|maxInvestmentAmount|string|當前報價下的單筆最大投資額。無活躍報價時為空 *(僅 SmartLeverage)*|
+
+:::note
+`SmartLeverage` 時，若機構未提交報價，`breakevenPrice`、`expireAt`、`maxInvestmentAmount` 可能為空或零值。`currentPrice` 直接來自行情服務，始終有值。
+:::
+
 ### 請求示例
 
 <Tabs groupId="programming-languages">
@@ -51,6 +67,9 @@ Host: api-testnet.bybit.com
 </Tabs>
 
 ### 響應示例
+
+<Tabs groupId="product-category">
+<TabItem value="dualassets" label="DualAssets">
 
 ```json
 {
@@ -133,3 +152,24 @@ Host: api-testnet.bybit.com
     "time": 1773814753684
 }
 ```
+
+</TabItem>
+<TabItem value="smartleverage" label="SmartLeverage">
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "category": "SmartLeverage",
+        "productId": 123456,
+        "breakevenPrice": "70000",
+        "currentPrice": "67000",
+        "expireAt": 1710001200000,
+        "maxInvestmentAmount": "10000"
+    }
+}
+```
+
+</TabItem>
+</Tabs>

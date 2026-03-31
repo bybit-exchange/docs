@@ -1,0 +1,151 @@
+---
+title: 創建訂單
+sidebar_label: 創建訂單
+sidebar_position: 3
+---
+
+:::info
+* 需要身份驗證。每秒**最多 5 次請求**。
+* API 金鑰需要具備 Earn (理財) 權限。
+* 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)來追蹤訂單狀態（Pending → Success）。
+* `orderLinkId` 用於保證冪等性（Idempotency）——在 30 分鐘內重複提交相同的 `orderLinkId`，將返回相同的 `orderId`，而不會創建重複的訂單。
+* **DualAssets**：`selectPrice` 和 `apyE8` 必須與[查詢產品報價](./product-quote)或 WebSocket 頻道的有效報價相匹配。過期的報價將被拒絕。
+* **SmartLeverage（申購）**：必須傳入 `smartLeverageStakeExtra`，包含 `initialPrice` 和 `breakevenPrice`。申購強制執行滑點保護：若實際價格與 `initialPrice` 偏差超過 ±5%，訂單失敗（錯誤碼 180030）。
+* **SmartLeverage（贖回）**：必須先調用赎回估算接口獲取 `estRedeemAmount`（結果緩存 10 分鐘），下贖回單時服務端會校驗該緩存。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category) |**true**|string|產品類型。`DualAssets`、`SmartLeverage`|
+|productId|**true**|string|產品 ID。`SmartLeverage` 時請使用 int64 值|
+|orderType|**true**|string|訂單類型：`Stake`（申購）。`SmartLeverage` 另外支援 `Redeem`（提前贖回）|
+|amount|**true**|string|訂單數量（字串格式的數字）。`SmartLeverage` 贖回訂單時不需要填寫|
+|accountType|**true**|string|帳戶類型：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)|
+|coin|**true**|string|幣種名稱。`SmartLeverage` 贖回訂單時不需要填寫|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|dualAssetsExtra|**true**|Object|雙幣投資專屬參數 *(僅 DualAssets)*|
+|> orderDirection|**true**|string|方向：`BuyLow` (低買), `SellHigh` (高賣) *(僅 DualAssets)*|
+|> selectPrice|**true**|string|用戶選擇的目標價格（掛鉤價）。必須與有效報價相匹配 *(僅 DualAssets)*|
+|> apyE8|**true**|int64|預期年化收益率（e8 精度）。如果確認的 APY 低於此數值，訂單將會失敗 *(僅 DualAssets)*|
+|interestCard|false|Object|加息券 (Interest bonus card) *(僅 DualAssets)*|
+|> awardId|**true**|int64|加息券唯一 ID *(僅 DualAssets)*|
+|> specCode|**true**|string|加息券的特殊代碼 (Spec_code) *(僅 DualAssets)*|
+|smartLeverageStakeExtra|false|Object|SmartLeverage 申購專屬參數。`category=SmartLeverage` 且 `orderType=Stake` 時必填 *(僅 SmartLeverage)*|
+|> initialPrice|**true**|string|下單時標的資產的市場價格，用於滑點保護（±5%）。建議使用[查詢產品報價](./product-quote)返回的 `currentPrice` *(僅 SmartLeverage)*|
+|> breakevenPrice|**true**|string|用戶選擇的盈虧平衡價格，從[查詢產品報價](./product-quote)獲取 *(僅 SmartLeverage)*|
+|smartLeverageRedeemExtra|false|Object|SmartLeverage 贖回專屬參數。`category=SmartLeverage` 且 `orderType=Redeem` 時必填 *(僅 SmartLeverage)*|
+|> positionId|**true**|int64|要贖回的倉位 ID *(僅 SmartLeverage)*|
+|> estRedeemAmount|**true**|string|預估贖回金額，從贖回估算接口獲取。服務端緩存 10 分鐘並進行校驗 *(僅 SmartLeverage)*|
+|> isSlippageProtected|false|bool|是否開啟贖回滑點保護，預設 `false`。開啟後，若實際贖回金額與 `estRedeemAmount` 偏差過大，贖回訂單失敗 *(僅 SmartLeverage)*|
+
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|orderId |string |系統生成的訂單 ID |
+|orderLinkId |string |用戶自定義訂單 ID |
+
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+**DualAssets — 申購**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DualAssets",
+    "productId": 36320,
+    "orderType": "Stake",
+    "amount": "20",
+    "accountType": "UNIFIED",
+    "coin": "USDT",
+    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",
+    "dualAssetsExtra": {
+        "orderDirection": "BuyLow",
+        "selectPrice": "2325",
+        "apyE8": 857565000
+    }
+}
+```
+
+**SmartLeverage — 申購**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": 123456,
+    "orderType": "Stake",
+    "amount": "100",
+    "accountType": "FUND",
+    "coin": "USDT",
+    "orderLinkId": "user-order-001",
+    "smartLeverageStakeExtra": {
+        "initialPrice": "67000",
+        "breakevenPrice": "70000"
+    }
+}
+```
+
+**SmartLeverage — 贖回**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": 123456,
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "orderLinkId": "user-redeem-001",
+    "smartLeverageRedeemExtra": {
+        "positionId": 789012,
+        "estRedeemAmount": "105.5",
+        "isSlippageProtected": true
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"
+    },
+    "retExtInfo": {},
+    "time": 1773815412459
+}
+```

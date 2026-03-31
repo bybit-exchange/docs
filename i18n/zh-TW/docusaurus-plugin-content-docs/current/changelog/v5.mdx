@@ -34,8 +34,8 @@ import '/src/css/changelog.css';
 - [一鍵還款](../v5/account/repay-liability) [更新]
 - [無損手工還款](../v5/account/no-convert-repay) [更新]
     - 自2026年3月17日起開始灰度，2026年3月24日全量發布，BYUSDT 可用於還款
-- [高級理財雙幣投資 API 與 WebSocket](../v5/earn/advanced-earn/product-info) [新增]
-    - OpenAPI已正式上線 Bybit 高級理財雙幣投資功能。詳情請參閱我們的[產品資訊](../v5/earn/advanced-earn/product-info).
+- [高級理財雙幣投資 API 與 WebSocket](../v5/finance/advanced-earn/product-info) [新增]
+    - OpenAPI已正式上線 Bybit 高級理財雙幣投資功能。詳情請參閱我們的[產品資訊](../v5/finance/advanced-earn/product-info).
 
 - [查詢標記價格K線數據](../v5/market/mark-kline) [更新]
     - 支持期權
@@ -74,13 +74,13 @@ import '/src/css/changelog.css';
     - 現貨 200 檔數據推送頻率由 200ms 調整為 100ms
 
 ### REST API
-- [查詢理財持倉](../v5/earn/position) [更新]
+- [查詢理財持倉](../v5/finance/earn/position) [更新]
     - 新增響應字段 `autoReinvest`，表示自動複投是否開啟。
-- [修改持倉設置](../v5/earn/modify-position) [新增]
+- [修改持倉設置](../v5/finance/earn/modify-position) [新增]
     - 新增接口用於修改鏈上定期產品持倉的自動複投設置
-- [查詢收益歷史](../v5/earn/yield-history) [更新]
+- [查詢收益歷史](../v5/finance/earn/yield-history) [更新]
     - `category` 新增支持 `OnChain`
-- [查詢歷史 APR](../v5/earn/apr-history) [新增]
+- [查詢歷史 APR](../v5/finance/earn/apr-history) [新增]
     - 新增接口用於查詢 FlexibleSaving 和 OnChain 產品的歷史 APR 數據，最多支持查詢 6 個月
 
 ## 2026-03-17
@@ -159,7 +159,7 @@ import '/src/css/changelog.css';
 
 ## 2026-01-16
 ### REST API
-- [獲取最大可借](../v5/new-crypto-loan/max-loan-amt) [新增]
+- [獲取最大可借](../v5/finance/crypto-loan/max-loan-amt) [新增]
     - 新增接口用戶獲取質押借貸的最大可借以及剩餘可借額度
 
 ## 2026-01-13
@@ -254,9 +254,9 @@ import '/src/css/changelog.css';
 
 ## 2025-11-27
 ### REST API
-- [創建續借單](../v5/new-crypto-loan/fixed/renew) [新增]
+- [創建續借單](../v5/finance/crypto-loan/fixed/renew) [新增]
     - 創建續借單
-- [查詢個人續借訂單](../v5/new-crypto-loan/fixed/renew-order) [新增]
+- [查詢個人續借訂單](../v5/finance/crypto-loan/fixed/renew-order) [新增]
     - 查詢個人續借訂單
 
 ## 2025-11-25
@@ -361,7 +361,7 @@ import '/src/css/changelog.css';
 ### REST API
 - [查詢用户可交易產品的規格信息](../v5/account/instrument) [新增]
     - 這個新端點支援查詢當前賬戶是否有交易權限、是否有 RPI 權限，以及當前的symbol是否屬於公開的 RPI symbols
-- [查詢借款中信息](../v5/new-crypto-loan/flexible/unpaid-loan-order) [更新]
+- [查詢借款中信息](../v5/finance/crypto-loan/flexible/unpaid-loan-order) [更新]
     - 更新響應參數`unpaidAmount`, `unpaidInterest`, 以區分`totalDebt`中的未償還本金與未償還利息
 - [手工還款](../v5/account/repay) [新增]
     - 新增UTA手動還幣接口
@@ -381,10 +381,10 @@ import '/src/css/changelog.css';
 - [RFQ Open API](../v5/rfq/basic-workflow) [新增]
     - 我們已上線全新的 RFQ 功能，具體內容請參考 [連結](../v5/rfq/basic-workflow).
 - 理財API [新增]
-    - [查詢收益歷史](../v5/earn/yield-history)
-    - [查詢每小時收益歷史](../v5/earn/hourly-yield)
+    - [查詢收益歷史](../v5/finance/earn/yield-history)
+    - [查詢每小時收益歷史](../v5/finance/earn/hourly-yield)
 - Earn API [更新]
-    - [查詢質押/贖回訂單歷史](../v5/earn/order-history)
+    - [查詢質押/贖回訂單歷史](../v5/finance/earn/order-history)
      - 新增新的輸入參數 `productId`,`startTime`,`endTime`,`limit`,`cursor`,支援批次查詢訂單
 
 ## 2025-10-09
@@ -416,13 +416,13 @@ import '/src/css/changelog.css';
 
 ## 2025-09-24
 ### REST API
-- [創建借款單](../v5/new-crypto-loan/fixed/borrow) [更新]
+- [創建借款單](../v5/finance/crypto-loan/fixed/borrow) [更新]
     - 新增新的輸入參數 `repayType`
-- [查詢借款合同](../v5/new-crypto-loan/fixed/borrow-contract) [更新]
+- [查詢借款合同](../v5/finance/crypto-loan/fixed/borrow-contract) [更新]
     - 添加新的響應字段 `repayType`
-- [查詢個人借款訂單](../v5/new-crypto-loan/fixed/borrow-order) [更新]
+- [查詢個人借款訂單](../v5/finance/crypto-loan/fixed/borrow-order) [更新]
     - 添加新的響應字段 `repayType`
-- [查詢還款紀錄](../v5/new-crypto-loan/fixed/repay-history) [更新]
+- [查詢還款紀錄](../v5/finance/crypto-loan/fixed/repay-history) [更新]
     - 給`repayType`新增新的枚舉`8`（轉為活期貸款）`repayType`
 
 ## 2025-09-23
@@ -482,13 +482,13 @@ import '/src/css/changelog.css';
 
 ## 2025-09-08
 ### REST API
-- [定期抵押品還款](../v5/new-crypto-loan/fixed/repay-collateral) [新增]
+- [定期抵押品還款](../v5/finance/crypto-loan/fixed/repay-collateral) [新增]
     - 新增定期抵押品還款接口
-- [定期查詢還款紀錄](../v5/new-crypto-loan/fixed/repay-history) [更新]
+- [定期查詢還款紀錄](../v5/finance/crypto-loan/fixed/repay-history) [更新]
     - 定期查詢還款紀錄repayType新增 7: 兌幣還款
-- [活期抵押品還款](../v5/new-crypto-loan/flexible/repay-collateral) [新增]
+- [活期抵押品還款](../v5/finance/crypto-loan/flexible/repay-collateral) [新增]
     - 新增活期抵押品還款接口
-- [活期查詢還款歷史](../v5/new-crypto-loan/flexible/repay-orders) [更新]
+- [活期查詢還款歷史](../v5/finance/crypto-loan/flexible/repay-orders) [更新]
     - 活期查詢還款紀錄repayType新增 7: 兌幣還款
 - [移倉](../v5/position/move-position) [更新]
     - 新增 category = inverse ,僅支援UTA2.0
@@ -508,7 +508,7 @@ import '/src/css/changelog.css';
 - [查詢期權歷史交割價格](../v5/market/new-delivery-price) [新增]
     - 新增查詢期權歷史交割價格的接口
 
-- [質押/贖回](../v5/earn/create-order) [更新]
+- [質押/贖回](../v5/finance/earn/create-order) [更新]
     - 新增新的輸入參數 `toAccountType`
 
 ## 2025-08-14
@@ -554,7 +554,7 @@ import '/src/css/changelog.css';
 
 ## 2025-07-25
 ### REST API
-- [新質押借貸](../v5/new-crypto-loan/loan-coin) [更新]
+- [新質押借貸](../v5/finance/crypto-loan/loan-coin) [更新]
     - 新增響應字段: `flexibleAnnualizedInterestRate`,`annualizedInterestRate7D`,`annualizedInterestRate14D`,`annualizedInterestRate30D`,`annualizedInterestRate60D`,`annualizedInterestRate90D`,`annualizedInterestRate180D`
 
 ## 2025-07-22
@@ -574,7 +574,7 @@ import '/src/css/changelog.css';
 
 ## 2025-07-17
 ### REST API
-- [新質押借貸](../v5/new-crypto-loan/loan-coin) [新增]
+- [新質押借貸](../v5/finance/crypto-loan/loan-coin) [新增]
     - 新質押借貸open api上線了
 
 ## 2025-07-16
@@ -801,10 +801,10 @@ import '/src/css/changelog.css';
 ## 2025-02-20
 ### REST API
 - 理財API [新增]
-    - [查询产品信息](../v5/earn/product-info)
-    - [質押/贖回](../v5/earn/create-order)
-    - [查詢質押/贖回訂單歷史](../v5/earn/order-history)
-    - [查詢理財持倉](../v5/earn/position)
+    - [查询产品信息](../v5/finance/earn/product-info)
+    - [質押/贖回](../v5/finance/earn/create-order)
+    - [查詢質押/贖回訂單歷史](../v5/finance/earn/order-history)
+    - [查詢理財持倉](../v5/finance/earn/position)
 
 ### Websocket API
 - [完整強平推送](../v5/websocket/public/all-liquidation) [新增]
@@ -946,7 +946,7 @@ import '/src/css/changelog.css';
 
 ## 2024-10-11
 ### REST API
-- [質押借貸](../v5/crypto-loan/collateral-coin) API發佈到主網
+- [質押借貸](../v5/crypto-loan-legacy/collateral-coin) API發佈到主網
 
 ## 2024-09-29
 ### Websocket API

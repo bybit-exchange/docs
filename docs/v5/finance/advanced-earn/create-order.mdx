@@ -1,0 +1,151 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 3
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second.
+* Requires Earn permission on the API key.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (Pending → Success).
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* **DualAssets**: `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](./product-quote) or the WebSocket channel. Stale quotes will be rejected.
+* **SmartLeverage (Stake)**: must pass `smartLeverageStakeExtra` with `initialPrice` and `breakevenPrice`. Stake slippage protection is enforced: order fails if actual price deviates more than ±5% from `initialPrice` (error code 180030).
+* **SmartLeverage (Redeem)**: must call [Get Redeem Estimated Amount](./product-quote) first to obtain `estRedeemAmount`. The result is cached for 10 minutes and validated server-side when placing the redeem order.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category) |**true**|string|Product type. `DualAssets`, `SmartLeverage`|
+|productId|**true**|string|Product ID. For `SmartLeverage`, use int64 value|
+|orderType|**true**|string|Order type: `Stake` (subscribe). `Redeem` (early redemption) is additionally supported for `SmartLeverage`|
+|amount|**true**|string|Order amount (decimal string). For `SmartLeverage` Redeem orders, this field is not required|
+|accountType|**true**|string|Account type: `FUND`, `UNIFIED`|
+|coin|**true**|string|Coin name. For `SmartLeverage` Redeem orders, this field is not required|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters), used for idempotency|
+|dualAssetsExtra|**true**|Object|DualAssets specific parameters *(DualAssets only)*|
+|> orderDirection|**true**|string|Direction: `BuyLow`, `SellHigh` *(DualAssets only)*|
+|> selectPrice|**true**|string|Target price selected by user. Must match a valid quote *(DualAssets only)*|
+|> apyE8|**true**|int64|Expected APY in e8 precision. Order fails if the confirmed APY is less than this value *(DualAssets only)*|
+|interestCard|false|Object|Interest bonus card *(DualAssets only)*|
+|> awardId|**true**|int64|Interest bonus card unique ID *(DualAssets only)*|
+|> specCode|**true**|string|Spec_code of the interest bonus card *(DualAssets only)*|
+|smartLeverageStakeExtra|false|Object|SmartLeverage Stake extra parameters. Required when `category=SmartLeverage` and `orderType=Stake` *(SmartLeverage only)*|
+|> initialPrice|**true**|string|Underlying asset price at order time, used for slippage protection (±5%). Recommend using `currentPrice` from [Get Product Quote](./product-quote) *(SmartLeverage only)*|
+|> breakevenPrice|**true**|string|Breakeven price selected by user. Obtain from [Get Product Quote](./product-quote) *(SmartLeverage only)*|
+|smartLeverageRedeemExtra|false|Object|SmartLeverage Redeem extra parameters. Required when `category=SmartLeverage` and `orderType=Redeem` *(SmartLeverage only)*|
+|> positionId|**true**|int64|Position ID to redeem *(SmartLeverage only)*|
+|> estRedeemAmount|**true**|string|Estimated redeem amount, obtained from the Get Redeem Estimated Amount API. Cached for 10 minutes server-side *(SmartLeverage only)*|
+|> isSlippageProtected|false|bool|Whether to enable slippage protection for redemption. Default: `false`. If enabled, the redeem order fails when the actual redeem amount deviates significantly from `estRedeemAmount` *(SmartLeverage only)*|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |System-generated order ID |
+|orderLinkId |string |User customised order ID |
+
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+**DualAssets — Stake**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DualAssets",
+    "productId": 36320,
+    "orderType": "Stake",
+    "amount": "20",
+    "accountType": "UNIFIED",
+    "coin": "USDT",
+    "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",
+    "dualAssetsExtra": {
+        "orderDirection": "BuyLow",
+        "selectPrice": "2325",
+        "apyE8": 857565000
+    }
+}
+```
+
+**SmartLeverage — Stake**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": 123456,
+    "orderType": "Stake",
+    "amount": "100",
+    "accountType": "FUND",
+    "coin": "USDT",
+    "orderLinkId": "user-order-001",
+    "smartLeverageStakeExtra": {
+        "initialPrice": "67000",
+        "breakevenPrice": "70000"
+    }
+}
+```
+
+**SmartLeverage — Redeem**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": 123456,
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "orderLinkId": "user-redeem-001",
+    "smartLeverageRedeemExtra": {
+        "positionId": 789012,
+        "estRedeemAmount": "105.5",
+        "isSlippageProtected": true
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"
+    },
+    "retExtInfo": {},
+    "time": 1773815412459
+}
+```
