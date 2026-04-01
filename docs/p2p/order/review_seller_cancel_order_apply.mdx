@@ -1,0 +1,83 @@
+---
+title: Review Seller Cancel Order Apply
+sidebar_label: Review Seller Cancel Order Apply
+sidebar_position: 6
+---
+
+### HTTP Request
+POST `/v5/p2p/order/buyer/examine/sellerCancelOrderApply`
+
+:::info
+This endpoint can only be called by the buyer of the order when a seller cancel request is pending.
+:::
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId|**true** |string |The ID of the order being reviewed |
+|examineResult|**true** |string |Review decision. `PASS`, `REJECT` |
+|rejectReason|false |string |Reason for rejection. Required when `examineResult` is `REJECT`. For example: `ITEM_NOT_RECEIVED` |
+|rejectProofs|false |string |Evidence/proof images for rejection, as comma-separated URLs or identifiers. Required when `examineResult` is `REJECT` |
+|rejectRemark|false |string |Free-text remark for rejection. Optional when `examineResult` is `REJECT` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode|int|`0` for success, non-zero for error|
+|retMsg|string|Response message|
+|retExtInfo|object|Extended response information|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/p2p/order/buyer/examine/sellerCancelOrderApply HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741832094881
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderId": "1234567890",
+    "examineResult": "REJECT",
+    "rejectReason": "ITEM_NOT_RECEIVED",
+    "rejectProofs": "https://example.com/proof1.jpg,https://example.com/proof2.jpg",
+    "rejectRemark": "I have not received the item yet."
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from bybit_p2p import P2P
+api = P2P(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+)
+print(api.buyer_examine_seller_cancel_order_apply(
+    orderId="1234567890",
+    examineResult="REJECT",
+    rejectReason="ITEM_NOT_RECEIVED",
+    rejectProofs="https://example.com/proof1.jpg,https://example.com/proof2.jpg",
+    rejectRemark="I have not received the item yet."
+))
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "SUCCESS",
+    "retExtInfo": {}
+}
+```
