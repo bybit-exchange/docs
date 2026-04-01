@@ -1,0 +1,72 @@
+---
+title: 查詢贖回預估金額
+sidebar_label: 查詢贖回預估金額
+sidebar_position: 6
+---
+
+:::info
+* 需要身份驗證。每秒**最多 10 次請求**。
+* API 金鑰需要具備 Earn（理財）權限。
+* 這是提交贖回訂單前的**必要前置步驟**。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。若快取已過期，請在重試前重新呼叫本端點。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/get-redeem-est-amount-list" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category |**true**|string|產品類型，`SmartLeverage`|
+|positionIds|**true**|string|要查詢的倉位 ID（逗號分隔），最多 5 個，例如：`897,898`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list|array|列表|
+|> success|bool|是否成功獲取|
+|> positionId|string|倉位 ID|
+|> estRedeemAmount|string|以 `investCoin` 計的預估贖回金額|
+|> estRedeemTime|string|預計到帳時間，毫秒級 Unix 時間戳|
+|> slippageRate|string|此次贖回的滑點容忍率|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/get-redeem-est-amount-list?category=SmartLeverage&positionIds=1277,1260 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "success": true,
+                "positionId": "1260",
+                "estRedeemAmount": "975.0977",
+                "estRedeemTime": "1775038305626",
+                "slippageRate": "0.97"
+            },
+            {
+                "success": true,
+                "positionId": "1277",
+                "estRedeemAmount": "76.8356",
+                "estRedeemTime": "1775038305615",
+                "slippageRate": "0.97"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775038005629
+}
+```

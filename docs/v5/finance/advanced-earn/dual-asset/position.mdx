@@ -1,0 +1,108 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 4
+---
+:::info
+* Need authentication. **Up to 10 requests** per second.
+* Query your active Dual Assets positions. Requires Earn permission on the API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../../enum#advanced-earn-category) |**true**|string|Product type, e.g. `DualAssets`|
+|productId|false|string|Product ID|
+|coin |false |string |Coin|
+|limit |false |int |Number of items per page. Default: 20, Max: 20|
+|cursor |false |string |Pagination cursor. Use nextPageCursor from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| [category](../../enum#advanced-earn-category)|string |`DualAssets`|
+| nextPageCursor | string | Cursor for the next page. Empty string if no more data |
+| list|array |Object |
+| > positionId | string | Position ID |
+| > productId | string | Product ID |
+| > [category](../../enum#advanced-earn-category)  | string | Product category, `DualAssets` |
+| > baseCoin | string | Base coin |
+| > quoteCoin | string | Quote coin |
+| > investCoin | string |Invest coin. `BuyLow`: same as quoteCoin; `SellHigh`: same as baseCoin|
+| > amount | string | Position amount, unit is investCoin |
+| > apyE8 | string | Confirmed annualized yield in e8 precision |
+| > direction | string | Direction: `BuyLow`, `SellHigh` |
+| > targetPrice | string | Target price in USDT |
+| > settlementTime | string | Settlement time, unix timestamp in ms |
+| > [status](../../enum#advanced-earn-position-status) | string | `Active`: Staking, `Redeeming`: Redeeming |
+| > orderId | string | Staking order ID |
+| > duration | string | Product term, e.g. 8h, 1d, 2d, 3d |
+| > expectReturnCoin | string | Expected settlement coin |
+| > expectReturnAmount | string | Expected settlement amount |
+| > accountType | string | Staking account: `FUND`, `UNIFIED` |
+| > toAccountType | string | Settlement account: `FUND`, currently only supports settlement to `Fund` account |
+| > yieldStartAt | int64 | Yield start time, unix timestamp in ms |
+| > yieldEndAt | int64 | Yield end time, unix timestamp in ms |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/advance/position?category=DualAssets HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DualAssets",
+        "list": [
+            {
+                "positionId": "19035",
+                "productId": "36320",
+                "category": "DualAssets",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "investCoin": "USDT",
+                "amount": "20",
+                "apyE8": "902700000",
+                "direction": "BuyLow",
+                "targetPrice": "2325",
+                "settlementTime": "1774079999000",
+                "status": "Active",
+                "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",
+                "duration": "3d",
+                "expectReturnCoin": "USDT",
+                "expectReturnAmount": "21.4838",
+                "accountType": "UNIFIED",
+                "toAccountType": "FUND",
+                "yieldStartAt": "1773820799000",
+                "yieldEndAt": "1774079999000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1773815399307
+}
+
+```

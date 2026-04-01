@@ -1,0 +1,57 @@
+---
+title: 槓桿無憂報價
+sidebar_label: 槓桿無憂報價
+sidebar_position: 2
+---
+### WebSocket 公共頻道網址
+
+- **主網：**<br/>
+Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **測試網：**<br/>
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
+### 說明
+* 當價格或報價參數變化時即時推送
+* 即使無任何更新，每 30 秒定期推送
+
+### 頻道：`earn.smartleverage.offers`
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|topic | string  | 頻道名稱 |
+|data |array |列表 |
+| > p | string | 產品 ID |
+| > b | string | 損益平衡價格 |
+| > e | string | 報價到期時間 |
+| > m | string| 當前報價下的最大單筆訂單金額 |
+| > c | string | 標的資產的當前市場價格 |
+
+
+### 訂閱示例
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "earn.dualassets.offers"
+    ]
+}
+```
+
+### 推送示例
+
+```json
+{
+    "topic": "earn.smartleverage.offers",
+    "data": [
+        {
+            "p": "13010",
+            "b": "553.849143",
+            "e": "1775040711994",
+            "m": "784",
+            "c": "615.1"
+        }
+    ]
+}
+```

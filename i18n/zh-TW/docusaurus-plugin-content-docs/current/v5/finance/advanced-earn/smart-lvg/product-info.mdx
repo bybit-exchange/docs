@@ -1,0 +1,77 @@
+---
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
+sidebar_position: 1
+---
+:::info
+無需身份驗證。每個 IP 每秒**最多 50 次請求**。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`SmartLeverage`|
+|coin|false|string|標的資產篩選，僅限大寫，例如：`BTC`, `ETH`|
+|duration|false|string|產品期限，例如：`1d`, `3d`, `6d`, `12d`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+| category|string|產品類別|
+| list|array|列表|
+| > category|string|產品類別|
+| > productId|string|產品 ID|
+| > investCoin|string|投資幣種，例如：`USDT`|
+| > underlyingAsset|string|標的資產（價格錨定），例如：`BTC`, `ETH`|
+| > direction|string|交易方向：`Long`（多頭），`Short`（空頭）|
+| > leverage|string|固定槓桿倍數，例如：`3`, `5`|
+| > duration|string|產品期限，例如：`1d`, `3d`|
+| > subscribeStartAt|string|申購開始時間，毫秒級 Unix 時間戳|
+| > subscribeEndAt|string|申購結束時間，毫秒級 Unix 時間戳|
+| > settlementTime|string|結算時間，毫秒級 Unix 時間戳|
+| > expectReceiveAt|string|預計到帳時間，毫秒級 Unix 時間戳|
+| > minPurchaseAmount|string|最小單筆申購金額|
+| > remainingAmount|string|剩餘可用額度|
+| > orderPrecisionDigital|int|訂單金額精度|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product?category=SmartLeverage&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "SmartLeverage",
+        "list": [
+            {
+                "category": "SmartLeverage",
+                "productId": "13015",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "direction": "Short",
+                "leverage": "10",
+                "duration": "7d",
+                "expectReceiveAt": "1775635800000",
+                "subscribeStartAt": "1775001600000",
+                "subscribeEndAt": "1775087999000",
+                "settlementTime": "1775635200000",
+                "minPurchaseAmount": "10",
+                "remainingAmount": "9994748366.907",
+                "orderPrecisionDigital": 4
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775001977686
+}
+```

@@ -1,58 +1,42 @@
 ---
-title: 查詢產品報價
-sidebar_label: 查詢產品報價
+title: Get Product Quote
+sidebar_label: Get Product Quote
 sidebar_position: 2
 ---
-
 :::info
-無需身份驗證。每個 IP 每秒**最多 50 次請求**。
+Does not need authentication. **Up to 50 requests** per second per IP.
 :::
 
-### HTTP 請求
+
+### HTTP Request
 <APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
 
-### 請求參數
-| 參數 | 必填 | 類型 | 說明 |
+### Request Parameters
+| Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|[category](../../enum#advanced-earn-category) |**true**|string|產品類別。`DualAssets`、`SmartLeverage`|
-|productId|**true**|string |產品 ID。`SmartLeverage` 時請使用 int64 值|
+|productId|**true**|string |Product ID|
+|[category](../../enum#advanced-earn-category) |**true**|string|Product category,`DualAssets`|
 
 
-### 響應參數
-
-#### DualAssets
-| 參數 | 類型 | 說明 |
+### Response Parameters
+| Parameter | Type | Comments|
 |:----- |:-----|----- |
 |[category](../../enum#advanced-earn-category)|string |`DualAssets`|
-|list|array|列表|
-|> productId|string|產品 ID|
-|> currentPrice|string|當前市場價格|
-|> buyLowPrice|array|低買 (Buy Low) 方向的可用價格列表|
-|>> selectPrice|string|可選目標價格（掛鉤價）|
-|>> apyE8|string|年化收益率（e8 精度，即 APY × 10^8）|
-|>> maxInvestmentAmount|string|該價格下的最大投資額度|
-|>> expiredAt|string|過期時間，毫秒級 Unix 時間戳|
-|> sellHighPrice|array|高賣 (Sell High) 方向的可用價格列表|
-|>> selectPrice|string|可選目標價格（掛鉤價）|
-|>> apyE8|string|年化收益率（e8 精度）|
-|>> maxInvestmentAmount|string|該價格下的最大投資額度|
-|>> expiredAt|string|過期時間，毫秒級 Unix 時間戳|
+|list|array|Object|
+|> productId|string|Product ID|
+|> currentPrice|string|Current market price|
+|> buyLowPrice|array|List of available prices for Buy Low direction|
+|>> selectPrice|string|Optional target price|
+|>> apyE8|string|Annual Percentage Yield (e8 precision, i.e. APY × 10^8)|
+|>> maxInvestmentAmount|string|Maximum investment amount at this price|
+|>> expiredAt|string|The expiry time,Unix timestamp in ms|
+|> sellHighPrice|array|List of available prices for Sell High direction|
+|>> selectPrice|string|Optional target price|
+|>> apyE8|string|Annual Percentage Yield (e8 precision)|
+|>> maxInvestmentAmount|string|Maximum investment amount at this price|
+|>> expiredAt|string|The expiry time,Unix timestamp in ms|
 
-#### SmartLeverage
-| 參數 | 類型 | 說明 |
-|:----- |:-----|----- |
-|[category](../../enum#advanced-earn-category)|string |`SmartLeverage`|
-|productId|int64|產品 ID|
-|breakevenPrice|string|盈虧平衡價格（機構最優報價）。無活躍報價時為空 *(僅 SmartLeverage)*|
-|currentPrice|string|標的資產當前市價，可作為下單 `initialPrice` 的參考 *(僅 SmartLeverage)*|
-|expireAt|int64|報價過期時間，毫秒級 Unix 時間戳。無活躍報價時為空 *(僅 SmartLeverage)*|
-|maxInvestmentAmount|string|當前報價下的單筆最大投資額。無活躍報價時為空 *(僅 SmartLeverage)*|
-
-:::note
-`SmartLeverage` 時，若機構未提交報價，`breakevenPrice`、`expireAt`、`maxInvestmentAmount` 可能為空或零值。`currentPrice` 直接來自行情服務，始終有值。
-:::
-
-### 請求示例
+### Request Example
 
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
@@ -66,10 +50,7 @@ Host: api-testnet.bybit.com
 
 </Tabs>
 
-### 響應示例
-
-<Tabs groupId="product-category">
-<TabItem value="dualassets" label="DualAssets">
+### Response Example
 
 ```json
 {
@@ -151,25 +132,5 @@ Host: api-testnet.bybit.com
     "retExtInfo": {},
     "time": 1773814753684
 }
+
 ```
-
-</TabItem>
-<TabItem value="smartleverage" label="SmartLeverage">
-
-```json
-{
-    "retCode": 0,
-    "retMsg": "success",
-    "result": {
-        "category": "SmartLeverage",
-        "productId": 123456,
-        "breakevenPrice": "70000",
-        "currentPrice": "67000",
-        "expireAt": 1710001200000,
-        "maxInvestmentAmount": "10000"
-    }
-}
-```
-
-</TabItem>
-</Tabs>

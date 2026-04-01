@@ -1,0 +1,111 @@
+---
+title: 創建訂單
+sidebar_label: 創建訂單
+sidebar_position: 3
+---
+
+:::info
+* 需要身份驗證。每秒**最多 5 次請求**。
+* API 金鑰需要具備 Earn（理財）權限。
+* 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)來追蹤訂單狀態（Pending → Success）。
+* `orderLinkId` 用於保證冪等性（Idempotency）——在 30 分鐘內重複提交相同的 `orderLinkId`，將返回相同的 `orderId`，而不會創建重複訂單。
+* **申購（Stake）**：必須傳入 `smartLeverageStakeExtra`，包含 `initialPrice` 和 `breakevenPrice`。系統將強制執行申購滑點保護：若實際價格與 `initialPrice` 偏差超過 ±5%，訂單將失敗（錯誤代碼 180030）。
+* **贖回（Redeem）**：必須先呼叫[查詢贖回預估金額](./est-redeem)獲取 `estRedeemAmount`。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category |**true**|string|產品類型，`SmartLeverage`|
+|productId|**true**|string|產品 ID|
+|orderType|**true**|string|訂單類型：`Stake`（申購），`Redeem`（提前贖回）|
+|amount|**true**|string|訂單金額（字串格式的數字）。`Redeem` 訂單無需填寫|
+|accountType|**true**|string|帳戶類型：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）|
+|coin|**true**|string|幣種名稱。`Redeem` 訂單無需填寫|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|smartLeverageStakeExtra|false|Object|`orderType=Stake` 時必填|
+|> initialPrice|**true**|string|下單時的標的資產價格，用於滑點保護（±5%）。建議使用[查詢產品報價](./product-quote)中的 `currentPrice`|
+|> breakevenPrice|**true**|string|用戶選擇的損益平衡價格。從[查詢產品報價](./product-quote)獲取|
+|smartLeverageRedeemExtra|false|Object|`orderType=Redeem` 時必填|
+|> positionId|**true**|string|要贖回的倉位 ID|
+|> estRedeemAmount|**true**|string|預估贖回金額，從查詢贖回預估金額 API 獲取。服務端快取 10 分鐘|
+|> isSlippageProtected|false|bool|是否啟用贖回滑點保護。預設值：`false`。啟用後，當實際贖回金額與 `estRedeemAmount` 偏差過大時，贖回訂單將失敗|
+
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|orderId |string |系統生成的訂單 ID |
+|orderLinkId |string |用戶自定義訂單 ID |
+
+
+---
+
+### 請求示例
+
+**申購（Stake）**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": "12999",
+    "coin": "USDT",
+    "orderType": "Stake",
+    "amount": "100",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-007",
+    "smartLeverageStakeExtra": {
+        "initialPrice": "68403",
+        "breakevenPrice": "68650"
+    }
+}
+```
+
+**贖回（Redeem）**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": "12999",
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-008",
+    "smartLeverageRedeemExtra": {
+        "positionId": "1277",
+        "estRedeemAmount": "77.8469",
+        "isSlippageProtected": true
+    }
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",
+        "orderLinkId": "usdt-earn-004"
+    },
+    "retExtInfo": {},
+    "time": 1773815412459
+}
+```

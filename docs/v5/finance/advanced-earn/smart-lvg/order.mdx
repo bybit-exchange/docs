@@ -1,0 +1,106 @@
+---
+title: Get Order Info
+sidebar_label: Get Order Info
+sidebar_position: 5
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second.
+* Query your order history. Requires Earn permission on the API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**|string|Product type. `SmartLeverage`|
+|productId|false|string|Product ID|
+|orderId |false |string |Order ID|
+|orderLinkId |false |string |User customised order ID|
+|startTime |false |string |Start time (order creation time), unix timestamp in milliseconds|
+|endTime |false |string |End time, unix timestamp in milliseconds|
+|limit |false |int |Number of items per page. Default: 20, Max: 20|
+|cursor |false |string |Pagination cursor. Use nextPageCursor from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| category|string |Product category|
+| nextPageCursor | string | Next page cursor, empty means no more data |
+| list | array | Order list |
+| > orderId | string | Order ID |
+| > orderLinkId | string | User customised order ID |
+| > productId | string | Product ID |
+| > category  | string | Product category |
+| > orderType | string | `Stake`: Subscribe. `Redeem`: Early redemption |
+| > amount | string | Order amount |
+| > createdTime | string | Created time, unix timestamp in ms |
+| > status | string | `Pending`: Order confirming, `Success`: Order successful (position created), `Settled`: Position settled, `Fail`: Order failed |
+| > duration | string | Product term, e.g. `1d`, `2d`, `3d` |
+| > accountType | string | Account type |
+| > settlementTime | string | Settlement time, unix timestamp in ms |
+| > refundStatus | string | Refund status. Only valid when status=`Fail`, `Processing`, `Processed` |
+| > investCoin | string | Investment coin, e.g. `USDT` |
+| > underlyingAsset | string | Underlying asset, e.g. `BTC`, `ETH` |
+| > direction | string | `Long`, `Short` |
+| > leverage | string | Fixed leverage multiplier |
+| > breakevenPrice | string | Breakeven price |
+| > initialPrice | string | Underlying asset price at order time |
+| > settlementPrice | string | Settlement price. Only available when orderType=`Redeem` |
+| > pnl | string | Profit and loss. Only available when orderType=`Redeem` |
+| > toAccountType | string | The account back to when redeem. Only available when orderType=`Redeem`  |
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/order?category=SmartLeverage&orderId=3e7d23fb-acc4-4853-9e32-ab0c0eb43985 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "SmartLeverage",
+        "list": [
+            {
+                "orderId": "3e7d23fb-acc4-4853-9e32-ab0c0eb43985",
+                "orderLinkId": "usdt-earn-008",
+                "productId": "12999",
+                "category": "SmartLeverage",
+                "orderType": "Redeem",
+                "investCoin": "USDT",
+                "amount": "100",
+                "underlyingAsset": "BTC",
+                "direction": "Long",
+                "leverage": "200",
+                "breakevenPrice": "68622.69",
+                "initialPrice": "68403",
+                "settlementTime": "1775038327000",
+                "duration": "2d",
+                "createdTime": "1775038326000",
+                "status": "Settled",
+                "settlementPrice": "68566.72",
+                "pnl": "83.6876",
+                "refundStatus": "",
+                "accountType": "",
+                "toAccountType": "FUND"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775038381558
+}
+```
