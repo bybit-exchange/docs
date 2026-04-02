@@ -10,7 +10,7 @@ sidebar_position: 3
 * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)來追蹤訂單狀態（Pending → Success）。
 * `orderLinkId` 用於保證冪等性（Idempotency）——在 30 分鐘內重複提交相同的 `orderLinkId`，將返回相同的 `orderId`，而不會創建重複訂單。
 * **申購（Stake）**：必須傳入 `smartLeverageStakeExtra`，包含 `initialPrice` 和 `breakevenPrice`。系統將強制執行申購滑點保護：若實際價格與 `initialPrice` 偏差超過 ±5%，訂單將失敗（錯誤代碼 180030）。
-* **贖回（Redeem）**：必須先呼叫[查詢贖回預估金額](./est-redeem)獲取 `estRedeemAmount`。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。
+* **贖回（Redeem）**：必須先通過[查詢贖回預估金額](./est-redeem)獲取 `estRedeemAmount`。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。
 :::
 
 ### HTTP 請求
