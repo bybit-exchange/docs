@@ -1,0 +1,70 @@
+---
+title: Double Win Offers
+sidebar_label: Double Win Offers
+sidebar_position: 8
+---
+
+### WebSocket public URL
+
+- **Mainnet:**<br/>
+Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **Testnet:**<br/>
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
+:::info
+* Subscribing to this topic does not require authentication.
+* This topic pushes **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Double Win Leverage](./leverage) to obtain a quote on demand.
+* **Recommended usage**: call [Get Product Quote](./product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Product Quote](./product-quote) to refresh before re-subscribing.
+:::
+
+### Topic: `earn.doublewin.offers`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|:---------|
+|topic|string|Topic name. `earn.doublewin.offers`|
+|data|array|Object|
+|> p|string|Product ID|
+|> c|string|Current index price of the underlying asset|
+|> l|string|Current maximum leverage multiplier|
+|> m|string|Maximum single order amount at current quote|
+|> e|string|Quote expiry time, Unix timestamp in ms|
+
+### Push Example
+
+```json
+{
+    "topic": "earn.doublewin.offers",
+    "data": [
+        {
+            "p": "14082",
+            "c": "2050.99",
+            "l": "37.78",
+            "m": "1000",
+            "e": "1775111431407"
+        },
+        {
+            "p": "14083",
+            "c": "2050.99",
+            "l": "75.57",
+            "m": "700",
+            "e": "1775111431552"
+        },
+        {
+            "p": "14088",
+            "c": "66647.87",
+            "l": "23.25",
+            "m": "500",
+            "e": "1775111432115"
+        },
+        {
+            "p": "14089",
+            "c": "66647.87",
+            "l": "23.25",
+            "m": "1000",
+            "e": "1775111432115"
+        }
+    ]
+}
+```

@@ -1,0 +1,60 @@
+---
+title: 查詢產品報價
+sidebar_label: 查詢產品報價
+sidebar_position: 2
+---
+
+:::info
+無需身份驗證。每個 IP 每秒**最多 50 次請求**。
+:::
+
+:::note
+僅接口適用於**固定區間產品**（`isRfqProduct=false`）。如需 RFQ 產品的報價，請使用[查詢漲跌雙贏槓桿倍數](./leverage)。
+
+您也可以訂閱 WebSocket 頻道 [`earn.doublewin.offers`](../websocket/double-win-offer) 以接收即時報價推送。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DoubleWin`|
+|productId|**true**|string|產品 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|category|string|`DoubleWin`|
+|productId|string|產品 ID|
+|leverage|string|當前最大槓桿倍數。若無有效報價則為空|
+|expireTime|string|報價到期時間，毫秒級 Unix 時間戳。需在此時間前完成下單。若無有效報價則為空|
+|maxInvestmentAmount|string|當前報價下的最大單筆下單金額。若無有效報價則為空|
+|currentPrice|string|標的資產當前指數價格，可作為下單時 `initialPrice` 的參考|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product-extra-info?category=DoubleWin&productId=20001 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "14084",
+        "leverage": "9.30452991038687184855947115",
+        "expireTime": "1775102611946",
+        "maxInvestmentAmount": "1000",
+        "currentPrice": "66628.76",
+        "category": "DoubleWin"
+    },
+    "retExtInfo": {},
+    "time": 1775102648543
+}
+```

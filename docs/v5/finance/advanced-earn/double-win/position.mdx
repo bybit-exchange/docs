@@ -1,0 +1,96 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 5
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID.
+* Requires Earn permission on the API key.
+* Returns active positions only. Settled positions are not returned.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|productId|false|string|Filter by product ID|
+|coin|false|string|Filter by underlying asset, e.g. `BTC`, `ETH`|
+|limit|false|int|Number of items per page. Default: 20, Max: 20|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category|string|Product category. `DoubleWin`|
+|nextPageCursor|string|Cursor for the next page. Empty string if no more data|
+|list|array|Object|
+|> positionId|string|Position ID|
+|> productId|string|Product ID|
+|> category|string|Product category|
+|> investCoin|string|Investment coin, e.g. `USDT`|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> amount|string|Position amount in `investCoin`|
+|> leverage|string|Leverage multiplier|
+|> initialPrice|string|Underlying asset index price at position creation|
+|> lowerPrice|string|Lower bound of the price range|
+|> upperPrice|string|Upper bound of the price range|
+|> duration|string|Product term, e.g. `1d`, `3d`|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> createdTime|string|Position creation time, Unix timestamp in ms|
+|> status|string|`Active`: holding; `Redeeming`: early redemption in progress|
+|> redeemable|bool|Whether the position can be redeemed now. `false` if a pending redeem order exists or less than 30 minutes remain until settlement|
+|> accountType|string|Staking account: `FUND` or `UNIFIED`|
+|> orderId|string|Staking order ID|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/position?category=DoubleWin&productId=20001 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DoubleWin",
+        "list": [
+            {
+                "positionId": "2848",
+                "productId": "14084",
+                "category": "DoubleWin",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "amount": "150",
+                "leverage": "9.3309793178843419",
+                "initialPrice": "66445.69",
+                "lowerPrice": "66245.69",
+                "upperPrice": "66645.69",
+                "duration": "1d",
+                "settlementTime": "1775203200000",
+                "createdTime": "1775107014000",
+                "status": "Active",
+                "redeemable": true,
+                "accountType": "FUND",
+                "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775107714828
+}
+```

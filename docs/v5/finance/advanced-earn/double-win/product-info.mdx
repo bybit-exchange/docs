@@ -1,0 +1,84 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+
+:::info
+Does not need authentication. **Up to 50 requests** per second per IP.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|coin|false|string|Underlying asset to filter by, uppercase only, e.g. `BTC`, `ETH`|
+|duration|false|string|Product duration, e.g. `1d`, `2d`, `3d`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category|string|Product category. `DoubleWin`|
+|list|array|Object|
+|> category|string|Product category|
+|> productId|string|Product ID|
+|> investCoin|string|Investment coin, e.g. `USDT`|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> duration|string|Product duration, e.g. `1d`, `2d`, `3d`|
+|> subscribeStartAt|string|Subscription start time, Unix timestamp in ms|
+|> subscribeEndAt|string|Subscription end time, Unix timestamp in ms|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> expectReceiveAt|string|Expected time to receive settlement funds, Unix timestamp in ms|
+|> minPurchaseAmount|string|Minimum single order amount|
+|> orderPrecisionDigital|int|Order amount precision (decimal places)|
+|> isRfqProduct|bool|`false`: fixed price range product; `true`: RFQ custom price range product|
+|> lowerPriceBuffer|string|**Fixed range only** (`isRfqProduct=false`). Lower price buffer offset. Actual lower price = `initialPrice - lowerPriceBuffer`|
+|> upperPriceBuffer|string|**Fixed range only** (`isRfqProduct=false`). Upper price buffer offset. Actual upper price = `initialPrice + upperPriceBuffer`|
+|> minDeviationRatio|string|**RFQ only** (`isRfqProduct=true`). Minimum allowed deviation ratio of the custom price from current price|
+|> maxDeviationRatio|string|**RFQ only** (`isRfqProduct=true`). Maximum allowed deviation ratio of the custom price from current price|
+|> priceTickSize|string|**RFQ only** (`isRfqProduct=true`). Price tick size. Custom lower/upper prices must be a multiple of this value|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DoubleWin",
+        "list": [
+            {
+                "category": "DoubleWin",
+                "productId": "14092",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "duration": "2d",
+                "expectReceiveAt": "1775290500000",
+                "minPurchaseAmount": "10",
+                "subscribeStartAt": "1775088000000",
+                "subscribeEndAt": "1775174399000",
+                "settlementTime": "1775289600000",
+                "orderPrecisionDigital": 4,
+                "isRfqProduct": true,
+                "lowerPriceBuffer": "",
+                "upperPriceBuffer": "",
+                "minDeviationRatio": "0.01",
+                "maxDeviationRatio": "0.15",
+                "priceTickSize": "500"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775100184409
+}
+```

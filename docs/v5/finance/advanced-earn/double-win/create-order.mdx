@@ -1,0 +1,139 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 4
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second per UID.
+* Requires Earn permission on the API key.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (`Pending` → `Success`).
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* **Stake**: must pass `doubleWinStakeExtra`. For fixed range products, use the `leverage` from [Get Product Quote](./product-quote). For RFQ products, use the `leverage` from [Get Double Win Leverage](./leverage) and include `lowerPrice` / `upperPrice`. The order must be placed before the quote's `expireTime`.
+* **Redeem**: must call [Get Redeem Estimated Amount](./est-redeem) first to obtain `estRedeemAmount`, then pass it in `doubleWinRedeemExtra`.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|productId|**true**|string|Product ID|
+|orderType|**true**|string|`Stake`: subscribe; `Redeem`: early redemption|
+|amount|**true**|string|Order amount. Not required for `Redeem`|
+|accountType|**true**|string|Account type: `FUND` or `UNIFIED`. Not required for `Redeem`|
+|coin|**true**|string|Coin name, e.g. `USDT`. Not required for `Redeem`|
+|orderLinkId|**true**|string|User customised order ID (max 64 characters, alphanumeric and `_-`), used for idempotency|
+|doubleWinStakeExtra|false|Object|Required when `orderType=Stake`|
+|> leverage|**true**|string|Leverage multiplier obtained from [Get Product Quote](./product-quote) or [Get Double Win Leverage](./leverage). Maximum 2 decimal places, must not exceed the quoted maximum|
+|> initialPrice|**true**|string|Current index price of the underlying asset at order time. Recommend using `currentPrice` from [Get Product Quote](./product-quote)|
+|> lowerPrice|false|string|**RFQ only.** Custom lower bound of price range. Must match the value used in [Get Double Win Leverage](./leverage)|
+|> upperPrice|false|string|**RFQ only.** Custom upper bound of price range. Must match the value used in [Get Double Win Leverage](./leverage)|
+|doubleWinRedeemExtra|false|Object|Required when `orderType=Redeem`|
+|> positionId|**true**|string|Position ID to redeem, obtained from [Get Position Info](./position)|
+|> estRedeemAmount|**true**|string|Estimated redeem amount from [Get Redeem Estimated Amount](./est-redeem)|
+|> isSlippageProtected|false|bool|Whether to enable slippage protection. Default: `false`. If enabled, the order fails when the actual redeem amount deviates significantly from `estRedeemAmount`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId|string|System-generated order ID|
+|orderLinkId|string|User customised order ID|
+
+---
+
+### Request Example
+
+**Stake (Fixed Range)**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DoubleWin",
+    "productId": "14084",
+    "coin": "USDT",
+    "amount": "150",
+    "orderType": "Stake",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-009",
+    "doubleWinStakeExtra": {
+        "initialPrice": "66445.69",
+        "leverage": "9"
+    }
+}
+```
+
+**Stake (RFQ Custom Range)**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DoubleWin",
+    "productId": "14084",
+    "coin": "USDT",
+    "amount": "150",
+    "orderType": "Stake",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-009",
+    "doubleWinStakeExtra": {
+        "initialPrice": "66445.69",
+        "leverage": "9"
+    }
+}
+```
+
+**Redeem**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DoubleWin",
+    "productId": "14092",
+    "coin": "USDT",
+    "amount": "200",
+    "orderType": "Stake",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-010",
+    "doubleWinStakeExtra": {
+        "initialPrice": "66333.94",
+        "lowerPrice": "63000",
+        "upperPrice": "70000",
+        "leverage": "245.18"
+    }
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc",
+        "orderLinkId": "usdt-earn-009"
+    },
+    "retExtInfo": {},
+    "time": 1775107011430
+}
+```

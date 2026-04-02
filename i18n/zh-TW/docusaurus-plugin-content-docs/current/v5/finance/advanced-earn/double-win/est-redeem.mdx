@@ -1,0 +1,65 @@
+---
+title: 查詢贖回預估金額
+sidebar_label: 查詢贖回預估金額
+sidebar_position: 7
+---
+
+:::info
+* 需要身份驗證。每個 UID 每秒**最多 10 次請求**。
+* API 金鑰需要具備 Earn（理財）權限。
+* 這是提交贖回訂單前的**必要前置步驟**。請將返回的 `estRedeemAmount` 透過 `doubleWinRedeemExtra` 傳入[創建訂單](./create-order)。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/redeem-est-amount" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DoubleWin`|
+|positionIds|**true**|string|倉位 ID 列表（逗號分隔），最多 5 個，例如：`2847,2848`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list|array|列表|
+|> success|bool|是否成功獲取該倉位的預估金額|
+|> positionId|string|倉位 ID|
+|> estRedeemAmount|string|以 `investCoin` 計的預估贖回金額|
+|> estRedeemTime|string|預計贖回到帳時間，毫秒級 Unix 時間戳|
+|> slippageRate|string|此次贖回的滑點容忍率，例如：`"0.9"` = 90%|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/get-redeem-est-amount-list?category=DoubleWin&positionIds=2847 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "success": false,
+                "positionId": "2847",
+                "estRedeemAmount": "0",
+                "estRedeemTime": "0",
+                "slippageRate": "0.9"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775107977370
+}
+```

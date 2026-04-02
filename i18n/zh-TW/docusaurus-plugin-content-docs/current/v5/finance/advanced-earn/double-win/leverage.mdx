@@ -1,0 +1,72 @@
+---
+title: 查詢漲跌雙贏槓桿倍數
+sidebar_label: 查詢漲跌雙贏槓桿倍數
+sidebar_position: 3
+---
+
+:::info
+* 需要身份驗證。每個 UID 每秒**最多 1 次請求**。
+* API 金鑰需要具備 Earn（理財）權限。
+* 此接口**僅適用於 RFQ 產品**（`isRfqProduct=true`）。固定區間產品請使用[查詢產品報價](./product-quote)，或訂閱 WebSocket 頻道 [`earn.doublewin.offers`](../websocket/double-win-offer)。
+:::
+
+:::tip
+**RFQ 自選區間使用流程：**
+1. 通過[查詢產品資訊](./product-info)獲取 `priceTickSize`、`minDeviationRatio` 和 `maxDeviationRatio`。
+2. 在允許的偏離範圍內選擇 `lowerPrice` 和 `upperPrice`，兩者均須為 `priceTickSize` 的整數倍。
+3. 攜帶所選價格調用本接口，獲取 `leverage` 報價及其 `expireTime`。
+4. 在 `expireTime` 前使用返回的 `leverage` 完成下單。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/double-win-leverage" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品 ID|
+|initialPrice|**true**|string|標的資產當前指數價格|
+|lowerPrice|**true**|string|自選價格區間下限，須為 `priceTickSize` 的整數倍，且小於 `initialPrice`|
+|upperPrice|**true**|string|自選價格區間上限，須為 `priceTickSize` 的整數倍，且大於 `initialPrice`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|productId|string|產品 ID|
+|initialPrice|string|請求中傳入的 `initialPrice`（原值返回）|
+|lowerPrice|string|請求中傳入的 `lowerPrice`（原值返回）|
+|upperPrice|string|請求中傳入的 `upperPrice`（原值返回）|
+|leverage|string|對應所選價格區間的槓桿倍數，例如：`"241.15"`|
+|expireTime|string|報價到期時間，毫秒級 Unix 時間戳，須在此時間前完成下單|
+|maxInvestmentAmount|string|本次報價下的最大單筆下單金額|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/double-win-leverage?productId=14092&initialPrice=66333.94&lowerPrice=63000&upperPrice=70000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "14092",
+        "initialPrice": "66333.94",
+        "lowerPrice": "63000",
+        "upperPrice": "70000",
+        "leverage": "241.15",
+        "expireTime": "1775106748000",
+        "maxInvestmentAmount": "10000"
+    },
+    "retExtInfo": {},
+    "time": 1775106718961
+}
+```

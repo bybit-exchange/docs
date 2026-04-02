@@ -1,0 +1,65 @@
+---
+title: Get Redeem Estimated Amount
+sidebar_label: Get Redeem Estimated Amount
+sidebar_position: 7
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID.
+* Requires Earn permission on the API key.
+* This is a **required prerequisite** before placing a Redeem order. Pass the returned `estRedeemAmount` in `doubleWinRedeemExtra` when calling [Place Order](./create-order).
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/redeem-est-amount" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|positionIds|**true**|string|Comma-separated position IDs, max 5. e.g. `5001,5002`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> success|bool|Whether the estimation succeeded for this position|
+|> positionId|string|Position ID|
+|> estRedeemAmount|string|Estimated redeem amount in `investCoin`|
+|> estRedeemTime|string|Estimated time to receive funds after redemption, Unix timestamp in ms|
+|> slippageRate|string|Slippage tolerance rate for this redemption, e.g. `"0.05"` = 5%|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/get-redeem-est-amount-list?category=DoubleWin&positionIds=2847 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "success": false,
+                "positionId": "2847",
+                "estRedeemAmount": "0",
+                "estRedeemTime": "0",
+                "slippageRate": "0.9"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775107977370
+}
+```
