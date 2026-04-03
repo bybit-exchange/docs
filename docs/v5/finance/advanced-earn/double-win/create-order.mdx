@@ -5,11 +5,10 @@ sidebar_position: 4
 ---
 
 :::info
-* Need authentication. **Up to 5 requests** per second per UID.
 * Requires Earn permission on the API key.
 * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (`Pending` → `Success`).
 * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
-* **Stake**: must pass `doubleWinStakeExtra`. For fixed range products, use the `leverage` from [Get Product Quote](./product-quote). For RFQ products, use the `leverage` from [Get Double Win Leverage](./leverage) and include `lowerPrice` / `upperPrice`. The order must be placed before the quote's `expireTime`.
+* **Stake**: must pass `doubleWinStakeExtra`. For fixed range products, use the `leverage` from [Get Fixed Product Quote](./product-quote). For RFQ products, use the `leverage` from [Get Custom Product Quote](./leverage) and include `lowerPrice` / `upperPrice`. The order must be placed before the quote's `expireTime`.
 * **Redeem**: must call [Get Redeem Estimated Amount](./est-redeem) first to obtain `estRedeemAmount`, then pass it in `doubleWinRedeemExtra`.
 :::
 
@@ -22,15 +21,15 @@ sidebar_position: 4
 |category|**true**|string|Product category. `DoubleWin`|
 |productId|**true**|string|Product ID|
 |orderType|**true**|string|`Stake`: subscribe; `Redeem`: early redemption|
-|amount|**true**|string|Order amount. Not required for `Redeem`|
+|amount|false|string|Order amount. **Required** for `Stake`|
 |accountType|**true**|string|Account type: `FUND` or `UNIFIED`. Not required for `Redeem`|
 |coin|**true**|string|Coin name, e.g. `USDT`. Not required for `Redeem`|
 |orderLinkId|**true**|string|User customised order ID (max 64 characters, alphanumeric and `_-`), used for idempotency|
 |doubleWinStakeExtra|false|Object|Required when `orderType=Stake`|
-|> leverage|**true**|string|Leverage multiplier obtained from [Get Product Quote](./product-quote) or [Get Double Win Leverage](./leverage). Maximum 2 decimal places, must not exceed the quoted maximum|
-|> initialPrice|**true**|string|Current index price of the underlying asset at order time. Recommend using `currentPrice` from [Get Product Quote](./product-quote)|
-|> lowerPrice|false|string|**RFQ only.** Custom lower bound of price range. Must match the value used in [Get Double Win Leverage](./leverage)|
-|> upperPrice|false|string|**RFQ only.** Custom upper bound of price range. Must match the value used in [Get Double Win Leverage](./leverage)|
+|> leverage|**true**|string|Leverage multiplier obtained from [Get Fixed Product Quote](./product-quote) or [Get Custom Product Quote](./leverage). Maximum 2 decimal places, must not exceed the quoted maximum|
+|> initialPrice|**true**|string|Current index price of the underlying asset at order time. Recommend using `currentPrice` from [Get Fixed Product Quote](./product-quote)|
+|> lowerPrice|false|string|**RFQ only.** Custom lower bound of price range. Must match the value used in [Get Custom Product Quote](./leverage)|
+|> upperPrice|false|string|**RFQ only.** Custom upper bound of price range. Must match the value used in [Get Custom Product Quote](./leverage)|
 |doubleWinRedeemExtra|false|Object|Required when `orderType=Redeem`|
 |> positionId|**true**|string|Position ID to redeem, obtained from [Get Position Info](./position)|
 |> estRedeemAmount|**true**|string|Estimated redeem amount from [Get Redeem Estimated Amount](./est-redeem)|
