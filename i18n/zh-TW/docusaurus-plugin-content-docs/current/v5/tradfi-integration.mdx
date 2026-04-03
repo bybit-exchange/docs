@@ -1,0 +1,99 @@
+---
+title: TradFi 整合指南
+sidebar_label: TradFi Integration
+---
+
+本指南說明如何通過現有的 V5 API 整合 Bybit 的 TradFi（傳統金融）產品，包括如何區分 MT5 相關的交易對與 Bybit 平台原生的合約、如何簽署所需協議，以及如何進行交易。
+
+## 區分 MT5 與 Equity Perp 上架
+
+Bybit 提供兩條傳統資產交易路徑：
+
+### TradFi（MT5 驅動）
+通過 Web UI 訪問：導航至 **Trade → TradFi**。該區塊涵蓋由 MT5 引擎驅動的外匯、大宗商品和股票 CFD。
+
+![TradFi Web UI 入口](/img/tradfi-webui-entry.png)
+
+### Bybit 平台（原生）
+通過主選單 **Trade** 訪問。包含所有標準的 Bybit 產品類型：
+- **現貨（Spot）**：xStock 代幣（如 TSLA、AAPL、GOOG）
+- **合約（Futures）**：貴金屬永續合約（XAU、XAG）、原油永續合約
+- **期權（Options）**：以 USDT 結算的期權合約，包括代幣化黃金期權（XAUTUSDT-Options）
+
+![Bybit 交易選單](/img/tradfi-bybit-trading.png)
+
+## 法律條款審閱
+
+在交易傳統資產永續合約之前，請閱讀適用的條款和條件：
+
+- [衍生品合約條款 - TradFi Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+- [衍生品合約條款 - Oil Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-Oil-Perps)
+
+## 母帳戶簽署協議
+
+交易大宗商品合約（貴金屬和原油）前，用戶必須先簽署交易協議。可通過以下兩種方式完成：
+
+### 方式一：通過 Web UI
+首次嘗試交易時，會彈出 **Trading Terms** 視窗。勾選核取方塊並點擊 **Confirm** 即可接受。
+
+:::info
+僅**母帳戶**可通過 Web UI 簽署協議，請確保使用母帳戶登入。
+:::
+
+![交易條款協議彈窗](/img/tradfi-trading-terms.png)
+
+### 方式二：通過 API
+使用 [簽署協議](/v5/user/sign-agreement) 接口以程式化方式簽署。
+
+#### HTTP 請求
+```
+POST /v5/user/agreement
+```
+
+#### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category | **true**|integer |`2`: 貴金屬（黃金、白銀）合約協議<br/>`3`: 原油合約協議|
+|agree |**true** |boolean |`true`|
+
+:::info
+* 請使用**母帳戶**調用接口，子帳戶不支持此操作。
+* 一旦母帳戶簽署後，所有子帳戶都可以交易。
+* API key 權限需要擁有其中之一：**帳戶劃轉**、**母子帳戶劃轉**、**提幣**。
+:::
+
+#### 請求示例
+
+```http
+POST /v5/user/agreement HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1772695036541
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "agree": true,
+    "category": 2
+}
+```
+
+## 通過現有 API 交易
+
+簽署協議後，您可以使用標準的 [交易](/v5/order/create-order) 接口來交易 TradFi 相關的交易對（貴金屬永續合約、原油永續合約等）。無需使用單獨的 API — 使用相同的下單、修改和取消接口即可：
+
+- [創建委託單](/v5/order/create-order)
+- [修改委託單](/v5/order/amend-order)
+- [撤銷委託單](/v5/order/cancel-order)
+- [查詢實時委託單](/v5/order/open-order)
+- [撤銷所有委託單](/v5/order/cancel-all)
+- [查詢歷史訂單 (2年)](/v5/order/order-list)
+- [查詢成交紀錄 (2年)](/v5/order/execution)
+- [批量創建委託單](/v5/order/batch-place)
+- [批量修改委託單](/v5/order/batch-amend)
+- [批量撤銷委託單](/v5/order/batch-cancel)
+- [查詢現貨可借額度](/v5/order/spot-borrow-quota)
+- [預檢查訂單](/v5/order/pre-check-order)
+
+只需在請求中傳入對應的 `symbol`（如 `XAUUSDT`、`XAGUSDT` 用於貴金屬；原油相關 symbol 用於原油合約）和 `category` 即可。
