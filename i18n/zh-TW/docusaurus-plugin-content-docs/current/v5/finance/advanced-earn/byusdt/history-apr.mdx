@@ -1,0 +1,77 @@
+---
+title: 查詢歷史年化利率
+sidebar_label: 查詢歷史年化利率
+sidebar_position: 7
+---
+
+:::info
+無需身份驗證
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/token/history-apr" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+|range|**true**|integer|時間範圍：`1` = 7 天，`2` = 30 天，`3` = 180 天|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|歷史年化利率列表|
+|> timestamp|string|日期，秒級 Unix 時間戳|
+|> aprE8|string|e8 精度的年化利率。除以 10^8 可得實際利率|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1
+Host: api.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "timestamp": "1774569600",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774656000",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774742400",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774828800",
+                "aprE8": "52750000"
+            },
+            {
+                "timestamp": "1774915200",
+                "aprE8": "60000000"
+            },
+            {
+                "timestamp": "1775001600",
+                "aprE8": "108070000"
+            },
+            {
+                "timestamp": "1775088000",
+                "aprE8": "96290000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775180579207
+}
+```

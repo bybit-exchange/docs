@@ -1,0 +1,72 @@
+---
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
+sidebar_position: 0.5
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/token/product" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|productId|string|產品 ID|
+|coin|string|代幣幣種|
+|mintFeeRateE8|string|鑄造手續費率（e8 精度，例如 `5000000` = 0.05%）|
+|redeemFeeRateE8|string|贖回手續費率（e8 精度）|
+|minInvestment|string|最低投資金額（以 USDT 計）|
+|userHolding|string|用戶當前 byUSDT 持倉量。未身份驗證時返回 `""`|
+|leftQuota|string|剩餘可鑄造額度。未身份驗證時返回 `""`|
+|canMint|boolean|當前是否可進行鑄造。未身份驗證時返回 `false`|
+|savingsBalance|string|用戶活期理財帳戶的 USDT 餘額（可用於鑄造）。未身份驗證時返回 `""`|
+|aprE8|string|基礎年化利率（e8 精度）。除以 10^8 可得實際利率|
+|bonusAprE8|string|加成年化利率（e8 精度，符合條件的用戶才返回）。除以 10^8 可得實際利率|
+|bonusMaxAmount|string|可享受加成年化利率的最大本金上限。超出部分僅享受基礎年化利率|
+|baseCoinPrecision|integer|USDT 金額的小數精度|
+|tokenPrecision|integer|byUSDT 金額的小數精度|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/token/product?coin=BYUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: XXXXXXX
+X-BAPI-TIMESTAMP: 1775179312802
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "1",
+        "coin": "BYUSDT",
+        "mintFeeRateE8": "0",
+        "redeemFeeRateE8": "100000",
+        "minInvestment": "1",
+        "userHolding": "588",
+        "leftQuota": "999412",
+        "canMint": true,
+        "savingsBalance": "1412",
+        "aprE8": "60000000",
+        "bonusAprE8": "0",
+        "bonusMaxAmount": "",
+        "baseCoinPrecision": 4,
+        "tokenPrecision": 4
+    },
+    "retExtInfo": {},
+    "time": 1775179313444
+}
+```

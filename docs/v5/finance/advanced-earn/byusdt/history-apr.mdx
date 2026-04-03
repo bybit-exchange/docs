@@ -1,0 +1,77 @@
+---
+title: Get History APR
+sidebar_label: Get History APR
+sidebar_position: 7
+---
+
+:::info
+No authentication required
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/token/history-apr" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+|range|**true**|integer|Time range: `1` = 7 days, `2` = 30 days, `3` = 180 days|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Historical APR list|
+|> timestamp|string|Date, unix timestamp in seconds|
+|> aprE8|string|APR value in e8 precision. Divide by 10^8 to get the actual rate|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "timestamp": "1774569600",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774656000",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774742400",
+                "aprE8": "2000000"
+            },
+            {
+                "timestamp": "1774828800",
+                "aprE8": "52750000"
+            },
+            {
+                "timestamp": "1774915200",
+                "aprE8": "60000000"
+            },
+            {
+                "timestamp": "1775001600",
+                "aprE8": "108070000"
+            },
+            {
+                "timestamp": "1775088000",
+                "aprE8": "96290000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775180579207
+}
+```

@@ -1,0 +1,85 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 1
+---
+
+:::info
+* Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order List](./order) to track order status.
+* `orderLinkId` provides idempotency — submitting the same `orderLinkId` returns the same `orderId` without creating a duplicate order.
+* **Mint**: Transfers USDT from your Flexible Saving account to mint byUSDT.
+* **Redeem**: Burns byUSDT and returns USDT to your Unified Trading Account (UTA).
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/token/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency and order lookup|
+|orderType|**true**|string|Order type: `Mint` (USDT → byUSDT), `Redeem` (byUSDT → USDT)|
+|amount|**true**|string|Order amount (decimal string). For `Mint`: USDT quantity; for `Redeem`: byUSDT quantity|
+|accountType|**true**|string|Account type. For `Mint`: must be `FlexibleSaving`; for `Redeem`: must be `UNIFIED`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|System-generated order ID (UUID)|
+|orderLinkId|string|User-customised order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/token/place-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin": "BYUSDT",
+    "orderLinkId": "my-order-001",
+    "orderType": "Mint",
+    "amount": "100.00",
+    "accountType": "FlexibleSaving"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "550e8400-e29b-41d4-a716-446655440000",
+        "orderLinkId": "my-order-001"
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```
+
+### Error Codes
+| Code | Description |
+|:-----|:------------|
+|180001|Invalid parameter|
+|180002|Invalid coin|
+|180003|User banned|
+|180005|Compliance wall not reached|
+|180007|Product not available|
+|180009|Product is forbidden|
+|180010|User not allowed|
+|180011|User not VIP|
+|180012|Purchase share is invalid|
+|180013|Stake over maximum share|
+|180015|Products share not enough|
+|180016|Balance not enough|
+|180018|Internal error|
+|180019|Empty orderLinkId|

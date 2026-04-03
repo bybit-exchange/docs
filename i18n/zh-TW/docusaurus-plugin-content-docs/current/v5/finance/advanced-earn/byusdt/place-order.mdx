@@ -1,0 +1,85 @@
+---
+title: 下單
+sidebar_label: 下單
+sidebar_position: 1
+---
+
+:::info
+* 訂單為非同步處理。成功響應表示訂單已被接受，而非已完成結算。請使用[查詢訂單列表](./order)追蹤訂單狀態。
+* `orderLinkId` 提供冪等性保障——提交相同 `orderLinkId` 將返回相同 `orderId`，不會建立重複訂單。
+* **Mint（鑄造）**：將 USDT 從活期理財帳戶轉入，鑄造 byUSDT。
+* **Redeem（贖回）**：銷毀 byUSDT，將 USDT 返還至統一交易帳戶（UTA）。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/token/place-order" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制及訂單查詢|
+|orderType|**true**|string|訂單類型：`Mint`（USDT → byUSDT）、`Redeem`（byUSDT → USDT）|
+|amount|**true**|string|訂單金額（十進位字串）。`Mint` 時為 USDT 數量；`Redeem` 時為 byUSDT 數量|
+|accountType|**true**|string|帳戶類型。`Mint` 時必須為 `FlexibleSaving`；`Redeem` 時必須為 `UNIFIED`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|orderId|string|系統生成的訂單 ID（UUID）|
+|orderLinkId|string|用戶自定義訂單 ID|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/token/place-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin": "BYUSDT",
+    "orderLinkId": "my-order-001",
+    "orderType": "Mint",
+    "amount": "100.00",
+    "accountType": "FlexibleSaving"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "550e8400-e29b-41d4-a716-446655440000",
+        "orderLinkId": "my-order-001"
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```
+
+### 錯誤碼
+| 錯誤碼 | 說明 |
+|:-----|:------------|
+|180001|無效參數|
+|180002|無效幣種|
+|180003|用戶已被封禁|
+|180005|未達到合規要求|
+|180007|產品暫不可用|
+|180009|產品已被禁止|
+|180010|用戶無操作權限|
+|180011|用戶非 VIP|
+|180012|購買份額無效|
+|180013|超過最大可購份額|
+|180015|產品剩餘份額不足|
+|180016|餘額不足|
+|180018|內部錯誤|
+|180019|orderLinkId 為空|

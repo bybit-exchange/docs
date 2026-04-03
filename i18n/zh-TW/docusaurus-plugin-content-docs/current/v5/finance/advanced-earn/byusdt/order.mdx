@@ -1,0 +1,93 @@
+---
+title: 查詢訂單列表
+sidebar_label: 查詢訂單列表
+sidebar_position: 2
+---
+
+:::info
+* 單獨傳入 `orderLinkId` 或 `orderId` 可查詢單筆訂單。兩者均不傳入時，可搭配可選篩選條件查詢訂單列表。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/token/order" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+|orderLinkId|false|string|用戶自定義訂單 ID。傳入可查詢單筆訂單|
+|orderId|false|string|系統訂單 ID。傳入可查詢單筆訂單|
+|orderType|false|string|按訂單類型篩選：`Mint`、`Redeem`。不傳入時返回所有類型|
+|startTime|false|integer|開始時間，秒級時間戳。預設：1 年前|
+|endTime|false|integer|結束時間，秒級時間戳。預設：當前時間|
+|cursor|false|string|分頁游標。使用上次響應中的 `nextPageCursor`|
+|limit|false|integer|每頁返回數量。預設：`20`，最大：`100`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|訂單列表|
+|> orderId|string|系統訂單 ID|
+|> orderLinkId|string|用戶自定義訂單 ID|
+|> orderType|string|訂單類型：`Mint`、`Redeem`|
+|> fromCoin|string|來源幣種|
+|> toCoin|string|目標幣種|
+|> fromAmount|string|來源金額|
+|> toAmount|string|到帳金額（扣除手續費後）|
+|> serviceFee|string|服務費|
+|> status|string|訂單狀態：`Success`（成功）、`Processing`（處理中）、`Fail`（失敗）|
+|> createdTime|string|訂單建立時間，秒級 Unix 時間戳|
+|nextPageCursor|string|下一頁游標，為空表示無更多資料|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/token/order?coin=BYUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "orderId": "9985caf3-7b24-452e-bb28-afbc5b52805f",
+                "orderLinkId": "byusdt-order-001",
+                "orderType": "Mint",
+                "fromCoin": "USDT",
+                "toCoin": "BYUSDT",
+                "fromAmount": "108",
+                "toAmount": "108",
+                "serviceFee": "0",
+                "status": "Success",
+                "createdTime": "1775179628"
+            },
+            {
+                "orderId": "63581995-4e3b-4ffa-9a20-c8415e7ed558",
+                "orderLinkId": "",
+                "orderType": "Mint",
+                "fromCoin": "USDT",
+                "toCoin": "BYUSDT",
+                "fromAmount": "588",
+                "toAmount": "588",
+                "serviceFee": "0",
+                "status": "Success",
+                "createdTime": "1775177332"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775179790446
+}
+```
