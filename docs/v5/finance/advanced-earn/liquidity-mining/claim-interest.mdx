@@ -1,0 +1,53 @@
+---
+title: Claim Interest
+sidebar_label: Claim Interest
+sidebar_position: 6
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
+* Claims all available yield for the specified product. Pass `productId=-1` to claim yield across all your liquidity mining positions at once.
+* Yield is credited to your default account. Account type cannot be specified.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/liquidity-mining/claim-interest" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|Product ID. Pass `-1` to claim interest from all positions at once|
+
+### Response Parameters
+None
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/liquidity-mining/claim-interest HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+   
+    "productId": "-1"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

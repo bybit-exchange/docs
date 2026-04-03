@@ -1,0 +1,92 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 7
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID. Requires Earn permission on the API key.
+* Returns all active liquidity mining positions. Position amounts are dynamically calculated based on the current market price.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/liquidity-mining/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|false|string|Filter by product ID|
+|baseCoin|false|string|Filter by base coin, e.g. `BTC`, `ETH`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|positions|array|Active position list|
+|> positionId|string|Position ID|
+|> productId|string|Product ID|
+|> baseCoin|string|Base coin, e.g. `BTC`|
+|> quoteCoin|string|Quote coin, e.g. `USDT`|
+|> quoteAmount|string|Current quoteCoin balance in the position (dynamically calculated including leverage)|
+|> baseAmount|string|Current baseCoin balance in the position (dynamically calculated including leverage)|
+|> principalQuoteAmount|string|Total quoteCoin principal invested (dynamically calculated)|
+|> principalBaseAmount|string|Total baseCoin principal invested (dynamically calculated)|
+|> principalLiquidityValue|string|Principal liquidity value (quoted in quoteCoin, real-time)|
+|> leveragedValue|string|Total leveraged position value (quoted in quoteCoin, real-time)|
+|> loan|string|Borrowed amount (in quoteCoin)|
+|> claimableYield|string|Current claimable yield amount|
+|> currentApr|string|Current APR (real-time). Divide by 10^8 to get the actual rate|
+|> leverage|string|Current leverage multiplier|
+|> margin|string|Current margin amount|
+|> liquidationPrice|string|Liquidation price (baseCoin price in quoteCoin terms)|
+|> currentPriceY|string|Current market price of baseCoin (real-time)|
+|> status|string|Position status: `Active`, `Liquidating`|
+|> createdTime|string|Position creation time, unix timestamp in milliseconds|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/liquidity-mining/position?baseCoin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "positions": [
+            {
+                "positionId": "1498",
+                "productId": "5",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "quoteAmount": "1637.7537",
+                "baseAmount": "0.80131605",
+                "principalQuoteAmount": "817.5297",
+                "principalBaseAmount": "0.39999891",
+                "principalLiquidityValue": "1635.0595",
+                "leveragedValue": "3275.5075",
+                "loan": "1640.448",
+                "claimableYield": "0",
+                "currentApr": "27856097",
+                "leverage": "2.003295552626342963",
+                "margin": "0",
+                "liquidationPrice": "538.272",
+                "currentPriceY": "2043.83",
+                "status": "Active",
+                "createdTime": "1775116860000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775124245970
+}
+```

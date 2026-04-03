@@ -1,0 +1,91 @@
+---
+title: Get Order Info
+sidebar_label: Get Order Info
+sidebar_position: 8
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID. Requires Earn permission on the API key.
+* Pass `orderId` or `orderLinkId` alone to retrieve a single order. Omit both to query the order list with optional filters.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/liquidity-mining/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|orderId|false|string|Order ID. Pass to retrieve a single order (mutually exclusive with `orderLinkId` for exact lookup)|
+|orderLinkId|false|string|User-customised order ID. Pass to retrieve a single order|
+|productId|false|string|Filter by product ID |
+|orderType|false|string|Filter by order type: `AddLiquidity`, `RemoveLiquidity`, `Reinvest`, `AddMargin` |
+|startTime|false|string|Start time (order creation time), unix timestamp in milliseconds |
+|endTime|false|string|End time, unix timestamp in milliseconds|
+|status|false|string|Filter by status: `Success`, `Processing`. Returns all terminal statuses if not specified|
+|limit|false|integer|Number of items per page. Default: `20`, Max: `50` |
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orders|array|Order list|
+|> orderId|string|Order ID|
+|> orderLinkId|string|User-customised order ID|
+|> productId|string|Product ID|
+|> orderType|string|Order type: `AddLiquidity`, `RemoveLiquidity`, `Reinvest`, `AddMargin`|
+|> baseCoin|string|Base coin|
+|> quoteCoin|string|Quote coin|
+|> quoteAmount|string|quoteCoin amount|
+|> baseAmount|string|baseCoin amount|
+|> status|string|Order status: `Success`, `Processing`, `Fail`|
+|> removeType|string|Withdrawal mode (only for `RemoveLiquidity`): `Normal`, `SingleQuoteCoin`, `SingleBaseCoin`|
+|> removeRate|integer|Withdrawal percentage, integer (only for `RemoveLiquidity`)|
+|> leverage|string|Leverage multiplier at order time (only for `AddLiquidity`)|
+|> slippageValue|string|Slippage deduction amount (only for `AddLiquidity`, populated after `Success`)|
+|> createdTime|string|Order creation time, unix timestamp in milliseconds|
+|nextPageCursor|string|Cursor for next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/liquidity-mining/order?orderLinkId=lm-001 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orders": [
+            {
+                "orderId": "5e651d09-6169-4f72-a609-8622ff421d19",
+                "orderLinkId": "lm-001",
+                "productId": "36",
+                "orderType": "AddLiquidity",
+                "baseCoin": "TON",
+                "quoteCoin": "USDT",
+                "quoteAmount": "200",
+                "baseAmount": "0",
+                "status": "Success",
+                "removeType": "Normal",
+                "removeRate": 0,
+                "leverage": "2",
+                "slippageValue": "0.02",
+                "createdTime": "1775123507000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775123797220
+}
+```

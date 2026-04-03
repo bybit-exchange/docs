@@ -1,0 +1,67 @@
+---
+title: Remove Liquidity
+sidebar_label: Remove Liquidity
+sidebar_position: 3
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
+* Orders are processed asynchronously. A successful response means the order was accepted, not that it has been completed. Use [Get Order Info](./order) to track order status.
+* `orderLinkId` provides idempotency — submitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* Only one pending order is allowed per position at a time.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/liquidity-mining/remove-liquidity" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|Product ID|
+|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency|
+|positionId|**true**|string|Position ID to remove liquidity from. Obtain from [Get Position Info](./position)|
+|removeRate|false|integer|Withdrawal percentage (integer, 1–100). Defaults to `100` (full withdrawal) if not provided or set to `0`|
+|removeType|false|string|Withdrawal mode: `Normal` (default, returns both coins proportionally), `SingleQuoteCoin` (returns quoteCoin only), `SingleBaseCoin` (returns baseCoin only)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|System-generated order ID|
+|orderLinkId|string|User-customised order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/liquidity-mining/remove-liquidity HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": "1001",
+    "orderLinkId": "lm-remove-001-20260312",
+    "positionId": "5001",
+    "removeRate": 50,
+    "removeType": "Normal"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "orderLinkId": "lm-remove-001-20260312"
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```
