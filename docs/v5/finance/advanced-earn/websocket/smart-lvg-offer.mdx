@@ -1,0 +1,57 @@
+---
+title: Smart Leverage Offers
+sidebar_label: Smart Leverage Offers
+sidebar_position: 2
+---
+### WebSocket public URL
+
+- **Mainnet:**<br/>
+Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **Testnet:**<br/>
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
+### Desc
+* Real-time push when price or quota parameters change
+* Periodic push every 30 seconds, even without any updates
+
+### Topic: `earn.smartleverage.offers`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic | string  | Topic name                                                                                                                              |
+|data |array |Object |
+| > p | string | Product ID |
+| > b | string | Breakeven price |
+| > e | string | Quote expiry time |
+| > m | string| Maximum single order amount at current quote |
+| > c | string | Current market price of the underlying asset |
+
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "earn.dualassets.offers"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+    "topic": "earn.smartleverage.offers",
+    "data": [
+        {
+            "p": "13010",
+            "b": "553.849143",
+            "e": "1775040711994",
+            "m": "784",
+            "c": "615.1"
+        }
+    ]
+}
+```

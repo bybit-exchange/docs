@@ -1,0 +1,68 @@
+---
+title: 追加保證金
+sidebar_label: 追加保證金
+sidebar_position: 5
+---
+
+:::info
+* 需要身份驗證。每個 UID 每秒**最多 5 次請求**。API 金鑰需要具備 Earn（理財）權限。
+* 向槓桿持倉追加額外保證金（以計價幣種計），以降低強制平倉風險。
+* 訂單為非同步處理。成功響應表示訂單已被接受。請使用[查詢訂單資訊](./order)追蹤訂單狀態。
+* `orderLinkId` 提供冪等性保障——30 分鐘內提交相同 `orderLinkId` 將返回相同 `orderId`，不會建立重複訂單。
+* 每個持倉同一時間只允許存在一筆待處理訂單。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/liquidity-mining/add-margin" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品 ID|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|positionId|**true**|string|要追加保證金的持倉 ID。可從[查詢持倉資訊](./position)獲取|
+|amount|**true**|string|追加的計價幣種保證金金額（例如 USDT）|
+|quoteAccountType|**true**|string|保證金來源帳戶：`FUND`、`UNIFIED`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|orderId|string|系統生成的訂單 ID|
+|orderLinkId|string|用戶自定義訂單 ID|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/liquidity-mining/add-margin HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": "5",
+    "orderLinkId": "lm-add-m-01",
+    "positionId": "1498",
+    "amount": "1000",
+    "quoteAccountType": "FUND"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "91720e72-86f8-4ee7-a22c-47f01a9a14e9",
+        "orderLinkId": "lm-add-m-01"
+    },
+    "retExtInfo": {},
+    "time": 1775124668762
+}
+```

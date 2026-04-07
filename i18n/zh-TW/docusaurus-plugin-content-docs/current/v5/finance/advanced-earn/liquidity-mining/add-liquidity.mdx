@@ -1,0 +1,70 @@
+---
+title: 增加流動性
+sidebar_label: 增加流動性
+sidebar_position: 2
+---
+
+:::info
+* 需要身份驗證。每個 UID 每秒**最多 5 次請求**。API 金鑰需要具備 Earn（理財）權限。
+* 訂單為非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)追蹤訂單狀態（`Processing` → `Success`）。
+* `orderLinkId` 提供冪等性保障——30 分鐘內提交相同 `orderLinkId` 將返回相同 `orderId`，不會建立重複訂單。
+* `quoteAmount` 與 `baseAmount` 至少須提供其中一個。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/liquidity-mining/add-liquidity" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品 ID|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|quoteAmount|false|string|注入的計價幣種金額（例如 USDT）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個|
+|baseAmount|false|string|注入的基礎幣種金額（例如 BTC）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個|
+|quoteAccountType|false|string|計價幣種來源帳戶：`FUND`、`UNIFIED`。提供 `quoteAmount` 時必填|
+|baseAccountType|false|string|基礎幣種來源帳戶：`FUND`、`UNIFIED`。提供 `baseAmount` 時必填|
+|leverage|false|string|槓桿倍數。不提供時預設為 `1`（不使用槓桿）|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|orderId|string|系統生成的訂單 ID|
+|orderLinkId|string|用戶自定義訂單 ID|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/liquidity-mining/add-liquidity HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": "36",
+    "coin": "USDT",
+    "quoteAmount": "200",
+    "quoteAccountType": "FUND",
+    "orderLinkId": "lm-001",
+    "leverage": "2"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "5e651d09-6169-4f72-a609-8622ff421d19",
+        "orderLinkId": "lm-001"
+    },
+    "retExtInfo": {},
+    "time": 1775123507299
+}
+```

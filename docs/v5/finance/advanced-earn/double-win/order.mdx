@@ -1,0 +1,107 @@
+---
+title: Get Order Info
+sidebar_label: Get Order Info
+sidebar_position: 6
+---
+
+:::info
+* Requires Earn permission on the API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|productId|false|string|Filter by product ID|
+|orderId|false|string|Filter by order ID|
+|orderLinkId|false|string|Filter by user customised order ID|
+|startTime|false|string|Start time (order creation time), Unix timestamp in ms|
+|endTime|false|string|End time, Unix timestamp in ms|
+|limit|false|int|Number of items per page. Default: 20, Max: 20|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category|string|Product category. `DoubleWin`|
+|nextPageCursor|string|Next page cursor. Empty string if no more data|
+|list|array|Object|
+|> orderId|string|Order ID|
+|> orderLinkId|string|User customised order ID|
+|> productId|string|Product ID|
+|> category|string|Product category|
+|> orderType|string|`Stake`: subscribe; `Redeem`: early redemption|
+|> investCoin|string|Investment coin, e.g. `USDT`|
+|> amount|string|Order amount|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> leverage|string|Leverage multiplier|
+|> initialPrice|string|Underlying asset index price at order time|
+|> lowerPrice|string|Lower bound of the price range|
+|> upperPrice|string|Upper bound of the price range|
+|> duration|string|Product term, e.g. `1d`, `3d`|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> createdTime|string|Order creation time, Unix timestamp in ms|
+|> updatedTime|string|Order last updated time, Unix timestamp in ms|
+|> status|string|`Pending`: confirming; `Success`: order successful, position created; `Settled`: settled (on expiry or early redemption); `Fail`: order failed|
+|> settlementPrice|string|Settlement price. Only available when `status=Settled`|
+|> pnl|string|Profit and loss amount. Only available when `status=Settled`|
+|> refundStatus|string|Refund status. Only valid when `status=Fail`: `Processing` (refund in progress), `Processed` (refund completed)|
+|> accountType|string|Staking account: `FUND` or `UNIFIED`|
+|> toAccountType|string|Account that receives the settlement. Only available when `status=Settled` or `status=Fail`|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/order?category=DoubleWin&orderId=97f198e9-b14b-4703-b4a6-a4aa06ba1499 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DoubleWin",
+        "list": [
+            {
+                "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc",
+                "orderLinkId": "usdt-earn-009",
+                "productId": "14084",
+                "category": "DoubleWin",
+                "orderType": "Stake",
+                "investCoin": "USDT",
+                "amount": "150",
+                "underlyingAsset": "BTC",
+                "initialPrice": "66445.69",
+                "lowerPrice": "66245.69",
+                "upperPrice": "66645.69",
+                "leverage": "9.3309793178843419",
+                "settlementTime": "1775203200000",
+                "duration": "1d",
+                "createdTime": "1775107011000",
+                "updatedTime": "1775107011000",
+                "status": "Success",
+                "settlementPrice": "",
+                "pnl": "",
+                "refundStatus": "",
+                "accountType": "FUND",
+                "toAccountType": ""
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775107200953
+}
+```

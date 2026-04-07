@@ -1,0 +1,59 @@
+---
+title: Get Product Quote
+sidebar_label: Get Product Quote
+sidebar_position: 2
+---
+
+:::info
+Does not need authentication. **Up to 50 requests** per second per IP.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**|string|Product category. `SmartLeverage`|
+|productId|**true**|string |Product ID|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category|string |`SmartLeverage`|
+|productId|string|Product ID|
+|breakevenPrice|string|Breakeven price — the best available institutional quote. Empty if no active quote|
+|currentPrice|string|Current market price of the underlying asset. Used as reference for `initialPrice`|
+|expireAt|string|Quote expiry time, Unix timestamp in ms. Empty if no active quote|
+|maxInvestmentAmount|string|Maximum single order amount at current quote. Empty if no active quote|
+
+:::note
+`breakevenPrice`, `expireAt`, and `maxInvestmentAmount` may be empty when no institutional quote is available. `currentPrice` is sourced directly from the market feed and is always present.
+:::
+
+### Request Example
+
+```http
+GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "12999",
+        "breakevenPrice": "68650.62",
+        "expireAt": "1775036984839",
+        "maxInvestmentAmount": "1000",
+        "currentPrice": "68403.67",
+        "category": "SmartLeverage"
+    },
+    "retExtInfo": {},
+    "time": 1775036429311
+}
+```

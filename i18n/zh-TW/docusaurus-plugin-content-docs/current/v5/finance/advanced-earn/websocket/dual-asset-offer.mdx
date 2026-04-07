@@ -3,6 +3,14 @@ title: 雙幣投資報價
 sidebar_label: 雙幣投資報價
 sidebar_position: 1
 ---
+### WebSocket URL
+
+- **主網 (Mainnet):**<br/>
+理財 (Earn): `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **測試網 (Testnet):**<br/>
+理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
 ### 描述 (Desc)
 * 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
 
@@ -10,28 +18,17 @@ sidebar_position: 1
 
 * 建議使用方式：
 
-    1. 使用 [獲取產品報價](../product-quote) 以獲取初始報價
+    1. 使用 [獲取產品報價](../dual-asset/product-quote) 以獲取初始報價
     2. 訂閱 WebSocket 主題以獲取即時更新
     3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
     4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
-
-### WebSocket URL
-
-- **主網 (Mainnet):**<br/>
-理財 (Earn): `wss://stream.bybit.com/v5/public/fp`<br/>
-
-
-- **測試網 (Testnet):**<br/>
-理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
 
 ### 主題 (Topic): `earn.dualassets.offers`
 
 ### 回應參數
 | 參數 | 類型 | 說明 |
 |:----- |:-----|----- |
-|id |string |訊息 ID|
 |topic | string  | 主題名稱 |
-|creationTime | int   | 创建時間戳 (毫秒) |
 |data |array |列表 |
 | > p | int64 | 產品 ID |
 | > c | string | 當前價格 |

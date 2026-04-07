@@ -1,0 +1,72 @@
+---
+title: Get Redeem Estimated Amount
+sidebar_label: Get Redeem Estimated Amount
+sidebar_position: 6
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second.
+* Requires Earn permission on the API key.
+* This is a **required prerequisite** before placing a Redeem order. The result is cached server-side for 10 minutes and validated when the redeem order is submitted. If the cache expires, call this endpoint again before retrying.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/get-redeem-est-amount-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**|string|Product type. `SmartLeverage`|
+|positionIds|**true**|string|Comma-separated position IDs to query, max 5. e.g. `897,898`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> success|bool|Whether the estimation was successful for this position|
+|> positionId|string|Position ID|
+|> estRedeemAmount|string|Estimated redeem amount in `investCoin`|
+|> estRedeemTime|string|Estimated time to receive funds, Unix timestamp in ms|
+|> slippageRate|string|Slippage tolerance rate for this redemption|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/get-redeem-est-amount-list?category=SmartLeverage&positionIds=1277,1260 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "success": true,
+                "positionId": "1260",
+                "estRedeemAmount": "975.0977",
+                "estRedeemTime": "1775038305626",
+                "slippageRate": "0.97"
+            },
+            {
+                "success": true,
+                "positionId": "1277",
+                "estRedeemAmount": "76.8356",
+                "estRedeemTime": "1775038305615",
+                "slippageRate": "0.97"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775038005629
+}
+```

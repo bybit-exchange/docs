@@ -1,0 +1,84 @@
+---
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
+sidebar_position: 1
+---
+
+:::info
+無需身份驗證
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DoubleWin`|
+|coin|false|string|標的資產篩選，僅限大寫，例如：`BTC`, `ETH`|
+|duration|false|string|產品期限篩選，例如：`1d`, `2d`, `3d`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|category|string|產品類別，`DoubleWin`|
+|list|array|列表|
+|> category|string|產品類別|
+|> productId|string|產品 ID|
+|> investCoin|string|投資幣種，例如：`USDT`|
+|> underlyingAsset|string|標的資產，例如：`BTC`, `ETH`|
+|> duration|string|產品期限，例如：`1d`, `2d`, `3d`|
+|> subscribeStartAt|string|申購開始時間，毫秒級 Unix 時間戳|
+|> subscribeEndAt|string|申購結束時間，毫秒級 Unix 時間戳|
+|> settlementTime|string|結算時間，毫秒級 Unix 時間戳|
+|> expectReceiveAt|string|預計結算資金到帳時間，毫秒級 Unix 時間戳|
+|> minPurchaseAmount|string|最小單筆申購金額|
+|> orderPrecisionDigital|int|訂單金額精度（小數位數）|
+|> isRfqProduct|bool|`false`：固定區間產品；`true`：RFQ 自選區間產品|
+|> lowerPriceBuffer|string|**僅固定區間產品有效**（`isRfqProduct=false`）。價格緩衝區間（下限），實際下限價格 = `initialPrice - lowerPriceBuffer`|
+|> upperPriceBuffer|string|**僅固定區間產品有效**（`isRfqProduct=false`）。價格緩衝區間（上限），實際上限價格 = `initialPrice + upperPriceBuffer`|
+|> minDeviationRatio|string|**僅 RFQ 產品有效**（`isRfqProduct=true`）。自選價格偏離當前價格的最小允許比例|
+|> maxDeviationRatio|string|**僅 RFQ 產品有效**（`isRfqProduct=true`）。自選價格偏離當前價格的最大允許比例|
+|> priceTickSize|string|**僅 RFQ 產品有效**（`isRfqProduct=true`）。價格步長，自選下限/上限價格須為此值的整數倍|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "DoubleWin",
+        "list": [
+            {
+                "category": "DoubleWin",
+                "productId": "14092",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "duration": "2d",
+                "expectReceiveAt": "1775290500000",
+                "minPurchaseAmount": "10",
+                "subscribeStartAt": "1775088000000",
+                "subscribeEndAt": "1775174399000",
+                "settlementTime": "1775289600000",
+                "orderPrecisionDigital": 4,
+                "isRfqProduct": true,
+                "lowerPriceBuffer": "",
+                "upperPriceBuffer": "",
+                "minDeviationRatio": "0.01",
+                "maxDeviationRatio": "0.15",
+                "priceTickSize": "500"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775100184409
+}
+```

@@ -1,0 +1,74 @@
+---
+title: Get Yield Records
+sidebar_label: Get Yield Records
+sidebar_position: 9
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID. Requires Earn permission on the API key.
+* Returns yield claim history, including both manual claims and yields settled on removal.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/liquidity-mining/yield-records" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|baseCoin|false|string|Filter by base coin, e.g. `BTC`, `ETH`|
+|quoteCoin|false|string|Filter by quote coin, e.g. `USDT`|
+|startTime|false|string|Start time, unix timestamp in milliseconds|
+|endTime|false|string|End time, unix timestamp in milliseconds|
+|limit|false|integer|Number of items per page. Default: `20`, Max: `50`|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|records|array|Yield record list|
+|> coin|string|Yield coin received|
+|> amount|string|Amount received|
+|> baseCoin|string|Base coin of the pool, e.g. `BTC`|
+|> quoteCoin|string|Quote coin of the pool, e.g. `USDT`|
+|> type|string|Claim type: `Manual` (manually claimed), `RemoveLiquidity` (yield settled on removal)|
+|> status|string|Record status: `Complete`, `Processing`|
+|> createdTime|string|Record creation time, unix timestamp in milliseconds|
+|nextPageCursor|string|Cursor for next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/liquidity-mining/yield-records?baseCoin=ETH HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "records": [
+            {
+                "coin": "USDT",
+                "amount": "0.0098",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "type": "Manual",
+                "status": "Complete",
+                "createdTime": "1775125850000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775126002035
+}
+```
