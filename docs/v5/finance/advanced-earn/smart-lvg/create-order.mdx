@@ -1,0 +1,111 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 3
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second.
+* Requires Earn permission on the API key.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (Pending → Success).
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* **Stake**: must pass `smartLeverageStakeExtra` with `initialPrice` and `breakevenPrice`. Stake slippage protection is enforced: order fails if actual price deviates more than ±5% from `initialPrice` (error code 180030).
+* **Redeem**: must call [Get Redeem Estimated Amount](./est-redeem) first to obtain `estRedeemAmount`. The result is cached for 10 minutes and validated server-side when placing the redeem order.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**|string|Product type. `SmartLeverage`|
+|productId|**true**|string|Product ID|
+|orderType|**true**|string|Order type: `Stake` (subscribe), `Redeem` (early redemption)|
+|amount|false|string|Order amount. **Required** for `Stake`|
+|accountType|**true**|string|Account type: `FUND`, `UNIFIED`|
+|coin|**true**|string|Coin name. Not required for `Redeem` orders|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters), used for idempotency|
+|smartLeverageStakeExtra|false|Object|Required when `orderType=Stake`|
+|> initialPrice|**true**|string|Underlying asset price at order time, used for slippage protection (±5%). Recommend using `currentPrice` from [Get Product Quote](./product-quote)|
+|> breakevenPrice|**true**|string|Breakeven price selected by user. Obtain from [Get Product Quote](./product-quote)|
+|smartLeverageRedeemExtra|false|Object|Required when `orderType=Redeem`|
+|> positionId|**true**|string|Position ID to redeem|
+|> estRedeemAmount|**true**|string|Estimated redeem amount, obtained from the Get Redeem Estimated Amount API. Cached for 10 minutes server-side|
+|> isSlippageProtected|false|bool|Whether to enable slippage protection for redemption. Default: `false`. If enabled, the redeem order fails when the actual redeem amount deviates significantly from `estRedeemAmount`|
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId |string |System-generated order ID |
+|orderLinkId |string |User customised order ID |
+
+
+---
+
+### Request Example
+
+**Stake**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": "12999",
+    "coin": "USDT",
+    "orderType": "Stake",
+    "amount": "100",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-007",
+    "smartLeverageStakeExtra": {
+        "initialPrice": "68403",
+        "breakevenPrice": "68650"
+    }
+}
+```
+
+**Redeem**
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211928338
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "SmartLeverage",
+    "productId": "12999",
+    "orderType": "Redeem",
+    "accountType": "FUND",
+    "orderLinkId": "usdt-earn-008",
+    "smartLeverageRedeemExtra": {
+        "positionId": "1277",
+        "estRedeemAmount": "77.8469",
+        "isSlippageProtected": true
+    }
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",
+        "orderLinkId": "usdt-earn-004"
+    },
+    "retExtInfo": {},
+    "time": 1773815412459
+}
+```

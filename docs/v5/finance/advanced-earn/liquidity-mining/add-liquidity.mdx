@@ -1,0 +1,70 @@
+---
+title: Add Liquidity
+sidebar_label: Add Liquidity
+sidebar_position: 2
+---
+
+:::info
+* Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
+* Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order Info](./order) to track order status (`Processing` → `Success`).
+* `orderLinkId` provides idempotency — submitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* At least one of `quoteAmount` or `baseAmount` must be provided.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/liquidity-mining/add-liquidity" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|Product ID|
+|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency|
+|quoteAmount|false|string|Amount of quoteCoin to inject (e.g. USDT). At least one of `quoteAmount` or `baseAmount` is required|
+|baseAmount|false|string|Amount of baseCoin to inject (e.g. BTC). At least one of `quoteAmount` or `baseAmount` is required|
+|quoteAccountType|false|string|Source account for quoteCoin: `FUND`, `UNIFIED`. Required when providing `quoteAmount`|
+|baseAccountType|false|string|Source account for baseCoin: `FUND`, `UNIFIED`. Required when providing `baseAmount`|
+|leverage|false|string|Leverage multiplier. Defaults to `1` (no leverage) if not provided|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|System-generated order ID|
+|orderLinkId|string|User-customised order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/liquidity-mining/add-liquidity HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": "36",
+    "coin": "USDT",
+    "quoteAmount": "200",
+    "quoteAccountType": "FUND",
+    "orderLinkId": "lm-001",
+    "leverage": "2"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "5e651d09-6169-4f72-a609-8622ff421d19",
+        "orderLinkId": "lm-001"
+    },
+    "retExtInfo": {},
+    "time": 1775123507299
+}
+```

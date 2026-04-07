@@ -1,0 +1,108 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+
+:::info
+No authentication required. **Up to 50 requests** per second per IP.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/liquidity-mining/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|baseCoin|false|string|Filter by base coin, e.g. `BTC`, `ETH`|
+|quoteCoin|false|string|Filter by quote coin, e.g. `USDT`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|products|array|Product list|
+|> productId|string|Product ID|
+|> baseCoin|string|Base coin, e.g. `BTC`|
+|> quoteCoin|string|Quote coin, e.g. `USDT`|
+|> status|string|Product status: `Available`, `NotAvailable`|
+|> maxLeverage|integer|Maximum leverage multiplier|
+|> minInvestmentQuote|string|Minimum investment amount in quoteCoin|
+|> minInvestmentBase|string|Minimum investment amount in baseCoin|
+|> maxInvestmentQuote|string|Maximum investment amount in quoteCoin|
+|> maxInvestmentBase|string|Maximum investment amount in baseCoin|
+|> minWithdrawalAmount|string|Minimum withdrawal amount (in quoteCoin)|
+|> minReinvestAmount|string|Minimum reinvestment amount (in quoteCoin)|
+|> baseCoinPrecision|integer|Decimal precision for baseCoin amounts|
+|> quoteCoinPrecision|integer|Decimal precision for quoteCoin amounts|
+|> yieldCoins|array|List of yield coins, e.g. `["BTC", "USDT"]`|
+|> apyE8|integer|Current APY in e8 precision. Divide by 10^8 to get the actual rate|
+|> apy7dE8|integer|7-day APY in e8 precision. Divide by 10^8 to get the actual rate|
+|> poolLiquidityValue|string|Total pool liquidity value (quoted in quoteCoin)|
+|> dailyYield|string|Daily yield|
+|> slippageRateE8List|array|Slippage rates for each tier in e8 precision|
+|> apyBreakdown|array|APY breakdown by coin|
+|>> coin|string|Coin name|
+|>> apy|string|APY for this coin|
+|> apy7dBreakdown|array|7-day APY breakdown by coin|
+|>> coin|string|Coin name|
+|>> apy|string|7-day APY for this coin|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/liquidity-mining/product?baseCoin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "products": [
+            {
+                "productId": "5",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "status": "Available",
+                "maxLeverage": 3,
+                "minInvestmentQuote": "1",
+                "minInvestmentBase": "0.01",
+                "maxInvestmentQuote": "150000",
+                "maxInvestmentBase": "50",
+                "minWithdrawalAmount": "20",
+                "baseCoinPrecision": 8,
+                "quoteCoinPrecision": 4,
+                "minReinvestAmount": "10",
+                "yieldCoins": [
+                    "USDT"
+                ],
+                "apyE8": "13714946",
+                "apy7dE8": "338344880",
+                "poolLiquidityValue": "1361221.17",
+                "dailyYield": "1028.3745",
+                "slippage_levels": [
+                    "0",
+                    "500",
+                    "100000",
+                    "500000"
+                ],
+                "apyBreakdown": [],
+                "apy7dBreakdown": [],
+                "slippageRateE8List": [
+                    "0",
+                    "100000",
+                    "300000",
+                    "500000"
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775121766407
+}
+```

@@ -1,0 +1,66 @@
+---
+title: 查詢每小時收益記錄
+sidebar_label: 查詢每小時收益記錄
+sidebar_position: 6
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/token/hourly-yield" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+|startTime|false|integer|開始時間，秒級時間戳|
+|endTime|false|integer|結束時間，秒級時間戳|
+|cursor|false|string|分頁游標。使用上次響應中的 `nextPageCursor`|
+|limit|false|integer|每頁返回數量。預設：`20`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|每小時收益記錄列表|
+|> effectiveAmount|string|本小時用於計算收益的本金金額|
+|> yield|string|本小時的收益金額|
+|> rewardType|integer|收益類型：`0` = 基礎收益，`1` = 加成收益|
+|> aprE8|string|本小時實際適用的年化利率（e8 精度）。除以 10^8 可得實際利率|
+|> hourlyDate|string|收益小時的起始時間，秒級 Unix 時間戳|
+|> createdTime|string|記錄建立時間，秒級 Unix 時間戳|
+|nextPageCursor|string|下一頁游標，為空表示無更多資料|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/token/hourly-yield?coin=BYUSDT&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "effectiveAmount": "500.00",
+                "yield": "0.02",
+                "rewardType": 0,
+                "aprE8": "500000000",
+                "hourlyDate": "1710691200",
+                "createdTime": "1710694800"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

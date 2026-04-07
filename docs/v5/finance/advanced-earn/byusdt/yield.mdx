@@ -1,0 +1,62 @@
+---
+title: Get Daily Yield Records
+sidebar_label: Get Daily Yield Records
+sidebar_position: 5
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/token/yield" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+|startTime|false|integer|Start timestamp in seconds|
+|endTime|false|integer|End timestamp in seconds|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+|limit|false|integer|Number of items per page. Default: `5`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Daily yield record list|
+|> yield|string|Base yield amount|
+|> bonusYield|string|Bonus yield amount|
+|> status|string|Status: `Success`, `Processing`|
+|> createdTime|string|Record time, unix timestamp in seconds|
+|nextPageCursor|string|Cursor for the next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "yield": "0.50",
+                "bonusYield": "0.20",
+                "status": "Success",
+                "createdTime": "1710691200"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

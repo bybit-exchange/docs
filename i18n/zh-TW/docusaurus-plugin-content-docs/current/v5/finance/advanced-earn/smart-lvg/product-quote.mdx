@@ -1,0 +1,59 @@
+---
+title: 查詢產品報價
+sidebar_label: 查詢產品報價
+sidebar_position: 2
+---
+
+:::info
+無需身份驗證。每個 IP 每秒**最多 50 次請求**。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category |**true**|string|產品類別，`SmartLeverage`|
+|productId|**true**|string |產品 ID|
+
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|category|string |`SmartLeverage`|
+|productId|string|產品 ID|
+|breakevenPrice|string|損益平衡價格——最優機構報價。若無有效報價則為空|
+|currentPrice|string|標的資產的當前市場價格。用作 `initialPrice` 的參考|
+|expireAt|string|報價到期時間，毫秒級 Unix 時間戳。若無有效報價則為空|
+|maxInvestmentAmount|string|當前報價下的最大單筆訂單金額。若無有效報價則為空|
+
+:::note
+當無機構報價時，`breakevenPrice`、`expireAt` 和 `maxInvestmentAmount` 可能為空。`currentPrice` 直接來自市場行情，始終存在。
+:::
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "12999",
+        "breakevenPrice": "68650.62",
+        "expireAt": "1775036984839",
+        "maxInvestmentAmount": "1000",
+        "currentPrice": "68403.67",
+        "category": "SmartLeverage"
+    },
+    "retExtInfo": {},
+    "time": 1775036429311
+}
+```

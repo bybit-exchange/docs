@@ -1,0 +1,97 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 4
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second.
+* Query your active positions. Requires Earn permission on the API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category |**true**|string|Product type. `SmartLeverage`|
+|productId|false|string|Product ID|
+|coin |false |string |Underlying asset to filter by, e.g. `BTC`, `ETH`|
+|limit |false |int |Number of items per page. Default: 20, Max: 20|
+|cursor |false |string |Pagination cursor. Use nextPageCursor from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+| category|string |Product category|
+| nextPageCursor | string | Cursor for the next page. Empty string if no more data |
+| list|array |Object |
+| > positionId | string | Position ID |
+| > productId | string | Product ID |
+| > category  | string | Product category |
+| > investCoin | string | Investment coin |
+| > amount | string | Position amount, unit is investCoin |
+| > duration | string | Product term, e.g. `1d`, `2d`, `3d` |
+| > settlementTime | string | Settlement time, unix timestamp in ms |
+| > accountType | string | Staking account: `FUND`, `UNIFIED` |
+| > orderId | string | Staking order ID |
+| > underlyingAsset | string | Underlying asset, e.g. `BTC`, `ETH` |
+| > direction | string | `Long`, `Short` |
+| > leverage | string | Fixed leverage multiplier, e.g. `3`, `5` |
+| > breakevenPrice | string | Breakeven price (precision-adjusted) |
+| > initialPrice | string | Underlying asset price at position creation (precision-adjusted) |
+| > status | string | `Active`: Staking, `Redeeming`: Redeeming, `Settled`: Settled |
+| > createdTime | string | Position creation time, unix timestamp in ms |
+| > redeemable | bool | Whether the position can be redeemed now. `false` if: global redemption is disabled, a pending redeem order exists, or less than 60 minutes remain until settlement |
+| > orderLinkId | string | User customised order ID |
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/advance/position?category=SmartLeverage&productId=12959 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "SmartLeverage",
+        "list": [
+            {
+                "positionId": "1252",
+                "productId": "12959",
+                "category": "SmartLeverage",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "direction": "Long",
+                "leverage": "50",
+                "amount": "1000",
+                "breakevenPrice": "67367.16",
+                "initialPrice": "67243.31",
+                "duration": "1d",
+                "settlementTime": "1774944000000",
+                "createdTime": "1774838832000",
+                "status": "Active",
+                "redeemable": false,
+                "accountType": "FUND",
+                "orderLinkId": "",
+                "orderId": "d7be0f06-af7b-4ae8-bd2f-37000d67edf2"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775038447882
+}
+```

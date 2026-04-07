@@ -1,0 +1,72 @@
+---
+title: Get Liquidation Records
+sidebar_label: Get Liquidation Records
+sidebar_position: 10
+---
+
+:::info
+* Need authentication. **Up to 10 requests** per second per UID. Requires Earn permission on the API key.
+* Returns historical liquidation records for your leveraged liquidity mining positions.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/liquidity-mining/liquidation-records" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|baseCoin|false|string|Filter by base coin, e.g. `BTC`, `ETH`|
+|quoteCoin|false|string|Filter by quote coin, e.g. `USDT`|
+|startTime|false|string|Start time, unix timestamp in milliseconds|
+|endTime|false|string|End time, unix timestamp in milliseconds|
+|limit|false|integer|Number of items per page. Default: `20`, Max: `50`|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|records|array|Liquidation record list|
+|> baseCoin|string|Base coin of the pool, e.g. `BTC`|
+|> quoteCoin|string|Quote coin of the pool, e.g. `USDT`|
+|> baseAmount|string|Returned baseCoin amount after liquidation|
+|> quoteAmount|string|Returned quoteCoin amount after liquidation|
+|> liquidationPrice|string|Liquidation price (baseCoin priced in quoteCoin)|
+|> liquidationTime|string|Liquidation time, unix timestamp in milliseconds|
+|nextPageCursor|string|Cursor for next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/liquidity-mining/liquidation-records?baseCoin=BTC&limit=20 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "records": [
+            {
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "baseAmount": "0.05234",
+                "quoteAmount": "1580.21",
+                "liquidationPrice": "30200.00",
+                "liquidationTime": "1741824000000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1741824100000
+}
+```
