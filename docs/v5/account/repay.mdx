@@ -5,8 +5,16 @@ sidebar_position: 6
 ---
 
 :::info
-* If neither `coin` nor `amount` is passed in input parameter, then repay all the liabilities.
 * If `coin` is passed in input parameter and `amount` is not, the coin will be repaid in full.
+* When `amount` is provided, the following validation applies based on `repaymentType`:
+  * `ALL`: request is rejected if `amount` exceeds total liability
+  * `FIXED`: request is rejected if `amount` exceeds fixed-rate liability
+  * `FLEXIBLE`: request is rejected if `amount` exceeds floating-rate liability
+* When `coin` is provided and `amount` is not:
+  * `FLEXIBLE`: repays floating-rate liability of that coin only
+  * `FIXED`: repays fixed-rate liability of that coin only
+  * `ALL`: repays all liabilities of that coin (floating-rate first, then fixed-rate)
+* When neither `coin` nor `amount` is provided, `repaymentType` must be `ALL`, then repay all the liabilities; otherwise the request will be rejected.
 :::
 
 :::note important
@@ -27,6 +35,7 @@ sidebar_position: 6
 |:----- |:-------|:-----|------ |
 |coin |false |string |coin name, uppercase only|
 |amount |false |string |Repay amount. If `coin` is not passed in input parameter, `amount` can not be passed in input parameter|
+|repaymentType |false |string |Repayment type. `ALL`: repay both fixed-rate and floating-rate liabilities, repaying floating-rate first; `FIXED`: repay fixed-rate liabilities only; `FLEXIBLE`: repay floating-rate liabilities only. Default: `FLEXIBLE`|
 
 ### Response Parameters
 | Parameter | Type | Comments|

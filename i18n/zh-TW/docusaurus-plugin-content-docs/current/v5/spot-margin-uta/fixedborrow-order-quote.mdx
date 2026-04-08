@@ -1,0 +1,103 @@
+---
+title: 查詢固定利率借款掛單報價
+sidebar_label: 查詢固定利率借款掛單報價
+sidebar_position: 15
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixedborrow-order-quote" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderCurrency |**true** |string |幣種名稱 |
+|term |false |string |借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天 |
+|orderBy |**true** |string |排序字段。`apy`：年化利率；`term`：期限；`quantity`：數量 |
+|sort |false |integer |排序方向。`0`：升序（默認）；`1`：降序 |
+|limit |false |integer |每頁返回數量，[1, 100]，默認：`10` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> orderCurrency |string |幣種名稱 |
+|> term |integer |借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天 |
+|> annualRate |string |年化利率 |
+|> qty |string |數量 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1692696840996
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "orderCurrency": "ETH",
+                "term": 30,
+                "annualRate": "0.026",
+                "qty": "0.1"
+            },
+            {
+                "orderCurrency": "ETH",
+                "term": 60,
+                "annualRate": "0.033",
+                "qty": "0.1"
+            },
+            {
+                "orderCurrency": "ETH",
+                "term": 90,
+                "annualRate": "0.038",
+                "qty": "0.1"
+            },
+            {
+                "orderCurrency": "ETH",
+                "term": 30,
+                "annualRate": "0.1",
+                "qty": "0.6"
+            },
+            {
+                "orderCurrency": "ETH",
+                "term": 60,
+                "annualRate": "0.1",
+                "qty": "0.1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1775617874744
+}
+```

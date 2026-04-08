@@ -1,0 +1,120 @@
+---
+title: Get Fixed-Rate Borrow Order Info
+sidebar_label: Get Fixed-Rate Borrow Order Info
+sidebar_position: 13
+---
+
+:::info
+* Results are returned in descending order by `orderTime`.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixedborrow-order-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId |false |string |Loan order ID |
+|orderCurrency |false |string |Loan coin name |
+|state |false |string |Borrow order status. `1`: Matching; `2`: Partially filled and cancelled; `3`: Fully filled; `4`: Cancelled |
+|term |false |string |Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days |
+|limit |false |string |Limit for data size per page. [1, 100]. Default: `10` |
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> annualRate |string |Annual rate for the borrowing |
+|> orderId |long |Loan order ID |
+|> orderTime |string |Order created time |
+|> filledQty |string |Filled quantity |
+|> orderQty |string |Order quantity |
+|> orderCurrency |string |Coin name |
+|> state |integer |Borrow order status. `1`: Matching; `2`: Partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: Failed |
+|> term |integer |Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days |
+|> repayType |string |`1`: Auto Repayment; `2`: Transfer to flexible loan |
+|> strategyType |string |`PARTIAL`: Allow partial fill; `FULL`: Full fill only |
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixedborrow-order-info?orderCurrency=ETH&limit=10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1692696840996
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.spot_margin_trade_get_fixed_borrow_order_info(
+    orderCurrency="ETH",
+    limit="10"
+))
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "annualRate": "0.070000000000000000",
+                "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187",
+                "orderTime": "1775616125000",
+                "filledQty": "0.000000000000000000",
+                "orderQty": "1.000000000000000000",
+                "orderCurrency": "ETH",
+                "state": 1,
+                "term": 7,
+                "repayType": "1",
+                "strategyType": "FULL"
+            },
+            {
+                "annualRate": "1.000000000000000000",
+                "orderId": "FIXED_BORROW_a17089fc526441faa52eb99b0b9feb69185",
+                "orderTime": "1764120783000",
+                "filledQty": "1000.000000000000000000",
+                "orderQty": "1000.000000000000000000",
+                "orderCurrency": "USDT",
+                "state": 3,
+                "term": 1,
+                "repayType": "1",
+                "strategyType": "PARTIAL"
+            }
+        ],
+        "nextPageCursor": "30"
+    },
+    "retExtInfo": {},
+    "time": 1775616669348
+}
+```
