@@ -5,15 +5,18 @@ sidebar_position: 5.5
 ---
 
 :::info
-* If `coin` is passed in input parameter and `amount` is not, the repayment amount will be the available spot balance of that coin.
-* When `amount` is provided, the following validation applies based on `repaymentType`:
+* When `coin` is provided and `amount` is provided, the following validation applies based on `repaymentType`:
   * `ALL`: request is rejected if `amount` exceeds total liability
   * `FIXED`: request is rejected if `amount` exceeds fixed-rate liability
   * `FLEXIBLE`: request is rejected if `amount` exceeds floating-rate liability
-* When `coin` is provided and `amount` is not:
+* When `coin` is provided and `amount` is not, repayment uses the spot available balance of that coin:
   * `FLEXIBLE`: repays floating-rate liability of that coin only
   * `FIXED`: repays fixed-rate liability of that coin only
   * `ALL`: repays all liabilities of that coin (floating-rate first, then fixed-rate)
+* API response behavior based on `repaymentType`:
+  * `FIXED`: asynchronous
+  * `FLEXIBLE`: synchronous
+  * `ALL`: asynchronous
 :::
 
 :::note important

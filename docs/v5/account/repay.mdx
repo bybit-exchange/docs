@@ -5,8 +5,7 @@ sidebar_position: 6
 ---
 
 :::info
-* If `coin` is passed in input parameter and `amount` is not, the coin will be repaid in full.
-* When `amount` is provided, the following validation applies based on `repaymentType`:
+* When `coin` is provided and `amount` is provided, the following validation applies based on `repaymentType`:
   * `ALL`: request is rejected if `amount` exceeds total liability
   * `FIXED`: request is rejected if `amount` exceeds fixed-rate liability
   * `FLEXIBLE`: request is rejected if `amount` exceeds floating-rate liability
@@ -25,6 +24,7 @@ sidebar_position: 6
 5. Starting Mar 17, 2026 (gradual rollout, fully released on Mar 24, 2026), BYUSDT can be used for repayment.
 6. MNT will temporarily not be used for repayment, and repaying MNT liabilities through convert-repay is not supported. However, you may still use [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay) to repay MNT using your existing balance.
 7. Starting Feb 10, 2026 at 08:00 UTC, UTA Loan manual repayments will be updated to calculate coin-conversion repayment fees using the higher of the collateral or debt asset fee rate and introduce a per-transaction coin-conversion limit of USD 300,000 (Total coin-conversion amount must less than 300,000 USD equivalent) to strengthen stability and risk controls. Please refer to [UTA Loan manual repayment update](https://announcements.bybit.com/article/uta-loan-manual-repayment-update-bltbef3f1ad72a8295d/) 
+8. API response behavior based on `repaymentType`: `FIXED`: asynchronous; `FLEXIBLE`: synchronous; `ALL`: asynchronous
 :::
 
 ### HTTP Request
