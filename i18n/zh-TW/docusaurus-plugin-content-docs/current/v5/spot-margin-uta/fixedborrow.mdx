@@ -1,0 +1,76 @@
+---
+title: 固定利率借款
+sidebar_label: 固定利率借款
+sidebar_position: 14
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/spot-margin-trade/fixedborrow" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderCurrency |**true** |string |借款幣種 |
+|orderAmount |**true** |string |借款金額 |
+|annualRate |**true** |string |自定義年化利率，例如 `0.02` 表示 2% |
+|term |**true** |string |借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天 |
+|repayType |false |string |`1`：自動還款（默認）。開啟「自動還款」後，借款到期時將自動使用 UTA 帳戶資產還款，避免逾期罰息。`2`：轉為活期借款 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderId |string |借款訂單 ID |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/fixedborrow HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1692696840996
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderCurrency": "BTC",
+    "orderAmount": "0.01",
+    "annualRate": "0.02",
+    "term": "30"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187"
+    },
+    "retExtInfo": {},
+    "time": 1775616124837
+}
+```

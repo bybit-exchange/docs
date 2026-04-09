@@ -5,7 +5,14 @@ sidebar_position: 7
 ---
 
 :::info
-* 如果輸入參數中傳遞了 `coin`，而未傳遞 `amount`，則還款金額為該coin的最大現貨可用餘額。
+* 當傳入 `coin` 和 `amount` 時，根據 `repaymentType` 進行以下校驗：
+  * `ALL`：若 `amount` 超過總負債，則拒絕請求
+  * `FIXED`：若 `amount` 超過定期負債，則拒絕請求
+  * `FLEXIBLE`：若 `amount` 超過活期負債，則拒絕請求
+* 當傳入 `coin` 但未傳入 `amount` 時，使用該幣種的現貨可用餘額進行還款：
+  * `FLEXIBLE`：僅償還該幣種的活期負債
+  * `FIXED`：僅償還該幣種的定期負債
+  * `ALL`：償還該幣種的所有負債（先活期，再定期）
 :::
 
 :::note 重要
@@ -14,6 +21,7 @@ sidebar_position: 7
 3. 每小時04分-05分30秒，禁止還款。計息是按每小時05分那一刻的borrowAmount來進行計息。
 4. 系統先償還浮動利率債務，然後償還固定利率債務。
 5. 自2026年3月17日起開始灰度，2026年3月24日全量發布，BYUSDT 可用於還款
+6. 接口結果說明（根據 `repaymentType`）：`FIXED`：異步；`FLEXIBLE`：同步；`ALL`：異步
 :::
 
 ### HTTP 請求
@@ -24,6 +32,7 @@ sidebar_position: 7
 |:----- |:-------|:-----|------ |
 |coin |**true** |string |幣名稱，僅限大寫|
 |amount |false |string |還款金額，若未使用 `coin` 作為輸入參數，則 `amount` 不作為輸入參數|
+|repaymentType |false |string |還款類型。`ALL`：同時償還定期和活期負債，先還活期再還定期；`FIXED`：僅償還定期負債；`FLEXIBLE`：僅償還活期負債。默認值：`FLEXIBLE`|
 
 ### 響應參數
 | 參數 | 類型 | 說明|

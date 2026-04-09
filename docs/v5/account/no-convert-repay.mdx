@@ -5,7 +5,14 @@ sidebar_position: 5.5
 ---
 
 :::info
-* If `coin` is passed in input parameter and `amount` is not, the repayment amount will be the available spot balance of that coin.
+* When `coin` is provided and `amount` is provided, the following validation applies based on `repaymentType`:
+  * `ALL`: request is rejected if `amount` exceeds total liability
+  * `FIXED`: request is rejected if `amount` exceeds fixed-rate liability
+  * `FLEXIBLE`: request is rejected if `amount` exceeds floating-rate liability
+* When `coin` is provided and `amount` is not, repayment uses the spot available balance of that coin:
+  * `FLEXIBLE`: repays floating-rate liability of that coin only
+  * `FIXED`: repays fixed-rate liability of that coin only
+  * `ALL`: repays all liabilities of that coin (floating-rate first, then fixed-rate)
 :::
 
 :::note important
@@ -14,6 +21,7 @@ sidebar_position: 5.5
 3. Repayment is prohibited between 04:00 and 05:30 per hour. Interest is calculated based on the BorrowAmount at 05:00 per hour.
 4. System repays floating-rate liabilities first, followed by fixed-rate
 5. Starting Mar 17, 2026 (gradual rollout, fully released on Mar 24, 2026), BYUSDT can be used for repayment.
+6. API response behavior based on `repaymentType`: `FIXED`: asynchronous; `FLEXIBLE`: synchronous; `ALL`: asynchronous
 :::
 
 ### HTTP Request
@@ -24,6 +32,7 @@ sidebar_position: 5.5
 |:----- |:-------|:-----|------ |
 |coin |**true** |string |coin name, uppercase only|
 |amount |false |string |Repay amount. If `coin` is not passed in input parameter, `amount` can not be passed in input parameter|
+|repaymentType |false |string |Repayment type. `ALL`: repay both fixed-rate and floating-rate liabilities, repaying floating-rate first; `FIXED`: repay fixed-rate liabilities only; `FLEXIBLE`: repay floating-rate liabilities only. Default: `FLEXIBLE`|
 
 ### Response Parameters
 | Parameter | Type | Comments|
