@@ -6,6 +6,17 @@ sidebar_position: 23
 您可以通過該接口手動還清統一帳戶中的借款
 > 權限: USDC合約
 
+:::warning
+本接口不支持還款手工借貸負債。如嘗試使用本接口還款手工借貸，將返回以下錯誤：
+```json
+{
+    "retCode": 182120,
+    "retMsg": "Please use the repay and no-convert-repay API."
+}
+```
+請使用 [手工還款](/docs/zh-TW/v5/account/repay)（`/v5/account/repay`）或 [無損手工還款](/docs/zh-TW/v5/account/no-convert-repay)（`/v5/account/no-convert-repay`）接口進行還款。
+:::
+
 :::info
 1. 自2026年3月17日起開始灰度，2026年3月24日全量發布，BYUSDT 可用於還款
 2. MNT 暫時不會被用於還款, 亦不支援通過貨幣轉換還款(convert-repay)來償還 MNT 負債. 不過, 您仍可使用 [無損手工還款](/docs/zh-TW/v5/account/no-convert-repay)以現有餘額償還 MNT 借款

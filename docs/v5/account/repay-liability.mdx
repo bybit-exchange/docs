@@ -6,6 +6,17 @@ sidebar_position: 21
 You can manually repay the liabilities of Unified account
 > **Permission**: USDC Contracts<br/>
 
+:::warning
+This API does not support repaying manual borrow liabilities. If you attempt to do so, the following error will be returned:
+```json
+{
+    "retCode": 182120,
+    "retMsg": "Please use the repay and no-convert-repay API."
+}
+```
+Please use [Manual Repay](/docs/v5/account/repay) (`/v5/account/repay`) or [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay) (`/v5/account/no-convert-repay`) to repay manual borrow liabilities.
+:::
+
 :::info
 1. Starting Mar 17, 2026 (gradual rollout, fully released on Mar 24, 2026), BYUSDT can be used for repayment.
 2. MNT will temporarily not be used for repayment, and repaying MNT liabilities through convert-repay is not supported. However, you may still use [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay) to repay MNT using your existing balance.
