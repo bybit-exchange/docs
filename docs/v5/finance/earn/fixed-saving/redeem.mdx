@@ -1,0 +1,62 @@
+---
+title: Redeem
+sidebar_label: Redeem
+sidebar_position: 2
+---
+
+:::info
+* Early redemption is only supported for `FundPool` (category=`FundPool`) products where `allowEarlyRedemption` is `true`. Calling this endpoint for other product types returns an error.
+* The position must have been held for at least `redemptionLimitDuration` before early redemption is allowed.
+* Redeemed funds are always returned to the `FUND` account.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/redeem" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|Product ID|
+|category|**true**|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|positionId|**true**|integer|Position ID to redeem|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|redeemAmount|string|Estimated redemption amount (principal)|
+|estEarnings|string|Estimated earnings at early redemption APY|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/fixed-term/redeem HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": 1001,
+    "category": "FundPool",
+    "positionId": 200001
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "redeemAmount": "0.1",
+        "estEarnings": "0.000041"
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

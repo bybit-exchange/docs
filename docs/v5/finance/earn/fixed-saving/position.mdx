@@ -1,0 +1,105 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 3
+---
+
+:::info
+* Only active positions are returned. Settled positions (status `REVENUE_DISTRIBUTED`) are excluded.
+* All filters are optional — omit them to return all active positions.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/fixed-term/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|false|integer|Filter by product ID|
+|category|false|string|Filter by product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|coin|false|string|Filter by coin, e.g. `BTC`, `ETH`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Position list|
+|> positionId|integer|Position ID|
+|> productId|integer|Product ID|
+|> category|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|> coin|string|Staking coin|
+|> amount|string|Position amount|
+|> effectiveAmount|string|Effective amount earning interest (takes effect T+1)|
+|> duration|string|Fixed term duration, e.g. `1d`, `8h`, `2m`|
+|> status|string|Position status: `Active`, `EarlyRedemptionProcessing`|
+|> settlementTime|integer|Maturity time, unix timestamp in ms|
+|> createdAt|integer|Position creation time, unix timestamp in ms|
+|> orderId|string|Associated order ID|
+|> earlyRedeemInfo|object|Early redemption info|
+|>> allowEarlyRedeem|boolean|Whether early redemption is available|
+|>> earlyRedeemEarning|string|Estimated earnings if redeemed early now|
+|>> returnCoin|string|Coin returned upon redemption|
+|>> redemptionLimitDuration|string|Minimum hold time required before early redemption, e.g. `1d`, `8h`, `2m`|
+|> allowAutoReinvest|boolean|Whether the product supports auto-reinvest|
+|> autoReinvest|string|User's current auto-reinvest setting: `Enable`, `Disable`|
+|> interestCoinApyList|array|Multi-coin reward APY list|
+|>> coin|string|Reward coin|
+|>> apy|string|Reward APY|
+|>> expectReturnEarning|string|Expected earnings for this position|
+|>> price|string|Locked price of the reward coin|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/fixed-term/position?category=FixedTermSaving HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "positionId": 200001,
+                "productId": 1001,
+                "category": "FixedTermSaving",
+                "coin": "BTC",
+                "amount": "0.1",
+                "effectiveAmount": "0.1",
+                "duration": "30d",
+                "status": "Active",
+                "settlementTime": 1744329600000,
+                "createdAt": 1741651200000,
+                "orderId": "550e8400-e29b-41d4-a716-446655440000",
+                "earlyRedeemInfo": {
+                    "allowEarlyRedeem": false,
+                    "earlyRedeemEarning": "",
+                    "returnCoin": "BTC",
+                    "redemptionLimitDuration": ""
+                },
+                "allowAutoReinvest": true,
+                "autoReinvest": "Enable",
+                "interestCoinApyList": [
+                    {
+                        "coin": "BTC",
+                        "apy": "0.05",
+                        "expectReturnEarning": "0.000411",
+                        "price": "85000"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

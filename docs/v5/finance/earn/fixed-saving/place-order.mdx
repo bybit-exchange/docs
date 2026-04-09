@@ -1,0 +1,70 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 1
+---
+
+:::info
+* Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order List](./order) to track order status.
+* `orderLinkId` provides idempotency — submitting the same `orderLinkId` returns the same `orderId` without creating a duplicate order.
+* `auto_invest` is only applicable when `category` is `FundPool`; it is ignored for other product types.
+* Supported account types: `FUND`, `UNIFIED`.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|Product ID|
+|category|**true**|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|coin|**true**|string|Coin name, e.g. `BTC`, `ETH`|
+|amount|**true**|string|Subscription amount (must be > 0)|
+|accountType|**true**|string|Account type: `FUND` or `UNIFIED`|
+|orderLinkId|**true**|string|User-customised idempotent ID (max 36 characters)|
+|autoInvest|false|boolean|Enable auto-reinvest. Only effective when `category` is `FundPool`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|System-generated order ID|
+|orderLinkId|string|User-customised idempotent ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/fixed-term/place-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": 1001,
+    "category": "FixedTermSaving",
+    "coin": "BTC",
+    "amount": "0.1",
+    "accountType": "FUND",
+    "orderLinkId": "my-fixed-order-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "550e8400-e29b-41d4-a716-446655440000",
+        "orderLinkId": "my-fixed-order-001"
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

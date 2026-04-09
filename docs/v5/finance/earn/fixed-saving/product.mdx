@@ -1,0 +1,118 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 0.5
+---
+
+:::info
+* `category` maps to internal product types: `FixedTermSaving` (type=6), `FundPool` (type=9), `FundPoolPremium` (type=14).
+* This endpoint is publicly accessible — authentication is optional. Fields that require authentication return `""` or `false` when unauthenticated.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/fixed-term/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|false|string|Filter by coin, e.g. `BTC`, `ETH`. Returns all coins if omitted|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Product list|
+|> productId|integer|Product ID|
+|> category|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|> coin|string|Staking coin|
+|> duration|string|Fixed term duration, e.g. `1d`, `8h`, `2m`|
+|> status|string|Product status: `Available`, `SoldOut`, `NotStarted`|
+|> tieredApyList|array|Tiered APY list (if applicable)|
+|>> min|string|Minimum amount for this tier|
+|>> max|string|Maximum amount for this tier. `"-1"` means no upper limit|
+|>> apy|string|APY for this tier|
+|> minStakeAmount|string|Minimum staking amount|
+|> maxStakeAmount|string|Maximum staking amount|
+|> precision|integer|Coin trading precision|
+|> subscribeStartAt|integer|Subscription start time, unix timestamp in ms|
+|> subscribeEndAt|integer|Subscription end time, unix timestamp in ms|
+|> allowEarlyRedemption|boolean|Whether early redemption is supported|
+|> earlyRedemptionApy|string|Discounted APY applied on early redemption|
+|> redemptionLimitDuration|string|Minimum hold time before early redemption is allowed, e.g. `1d`, `8h`, `2m`|
+|> allowAutoReinvest|boolean|Whether auto-reinvest is supported|
+|> interestCoinApyList|array|Multi-coin reward APY list|
+|>> coin|string|Reward coin|
+|>> apy|string|Reward APY|
+|>> expectUnitEarning|string|Expected reward per unit invested (influenced by spot price of reward coin)|
+|>> currentPrice|string|Current price of the reward coin|
+|> isVip|boolean|Whether this is a VIP-only product|
+|> creditTime|integer|Estimated time for earnings to be credited, unix timestamp in ms|
+|> specialUserGroupRequired|boolean|Whether purchase is restricted to a specific user group|
+|> specialUserGroupInfo|string|Description of the restricted user group|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "productId": 1001,
+                "category": "FixedTermSaving",
+                "coin": "BTC",
+                "duration": "30d",
+                "status": "Available",
+                "tieredApyList": [
+                    {
+                        "min": "0",
+                        "max": "1",
+                        "apy": "0.05"
+                    },
+                    {
+                        "min": "1",
+                        "max": "-1",
+                        "apy": "0.03"
+                    }
+                ],
+                "minStakeAmount": "0.001",
+                "maxStakeAmount": "10",
+                "precision": 8,
+                "subscribeStartAt": 1741651200000,
+                "subscribeEndAt": 1744329600000,
+                "allowEarlyRedemption": false,
+                "earlyRedemptionApy": "",
+                "redemptionLimitDuration": "",
+                "allowAutoReinvest": true,
+                "interestCoinApyList": [
+                    {
+                        "coin": "BTC",
+                        "apy": "0.05",
+                        "expectUnitEarning": "0.00004109",
+                        "currentPrice": "85000"
+                    }
+                ],
+                "isVip": false,
+                "creditTime": 1744416000000,
+                "specialUserGroupRequired": false,
+                "specialUserGroupInfo": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

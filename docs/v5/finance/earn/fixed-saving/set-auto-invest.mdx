@@ -1,0 +1,58 @@
+---
+title: Set Auto-Invest
+sidebar_label: Set Auto-Invest
+sidebar_position: 5
+---
+
+:::info
+* Auto-invest can only be enabled on products where `allowAutoReinvest` is `true`.
+* The position must be active and not undergoing early redemption processing.
+* The reward coin must match the staking coin.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/position/auto-invest" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|Product ID|
+|category|**true**|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|positionId|**true**|integer|Position ID|
+|status|**true**|string|Auto-invest setting: `Enable` or `Disable`|
+
+### Response Parameters
+None
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/fixed-term/position/auto-invest HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": 1001,
+    "category": "FixedTermSaving",
+    "positionId": 200001,
+    "status": "Enable"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```
