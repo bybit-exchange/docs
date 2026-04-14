@@ -1,56 +1,56 @@
 ---
-title: Get Product Info
-sidebar_label: Get Product Info
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
 sidebar_position: 0.5
 ---
 
 :::info
-Does not need authentication. **Up to 50 requests** per second per IP .
+無需身份驗證。每個IP每秒最多 **50次** 請求。
 :::
 
-### HTTP Request
+### HTTP 請求
 <APIEndpoint method="GET" url="/v5/earn/fixed-term/product" />
 
-### Request Parameters
-| Parameter | Required | Type | Comments |
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
-|coin|false|string|Filter by coin, e.g. `BTC`, `ETH`. Returns all coins if omitted|
+|coin|false|string|依幣種篩選，例如 `BTC`、`ETH`。若省略則返回所有幣種|
 
-### Response Parameters
-| Parameter | Type | Comments |
+### 響應參數
+| 參數 | 類型 | 說明 |
 |:----- |:-----|:---------|
-|list|array|Product list|
-|> productId|string|Product ID|
-|> category|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
-|> coin|string|Staking coin|
-|> duration|string|Fixed term duration, e.g. `1d`, `8h`, `2m`|
-|> status|string|Product status: `Available`, `SoldOut`, `NotStarted`|
-|> tieredApyList|array|Tiered APY list (if applicable)|
-|>> min|string|Minimum amount for this tier|
-|>> max|string|Maximum amount for this tier. `"-1"` means no upper limit|
-|>> apy|string|APY for this tier|
-|> minStakeAmount|string|Minimum staking amount|
-|> maxStakeAmount|string|Maximum staking amount|
-|> precision|integer|Coin trading precision|
-|> subscribeStartAt|string|Subscription start time, unix timestamp in ms|
-|> subscribeEndAt|string|Subscription end time, unix timestamp in ms|
-|> allowEarlyRedemption|boolean|Whether early redemption is supported|
-|> earlyRedemptionApy|string|Discounted APY applied on early redemption|
-|> redemptionLimitDuration|string|Minimum hold time before early redemption is allowed, e.g. `1d`, `8h`, `2m`|
-|> allowAutoReinvest|boolean|Whether auto-reinvest is supported|
-|> interestCoinApyList|array|Multi-coin reward APY list|
-|>> coin|string|Reward coin|
-|>> apy|string|Reward APY|
-|>> expectUnitEarning|string|Expected reward per unit invested (influenced by spot price of reward coin)|
-|>> currentPrice|string|Current price of the reward coin|
-|> isVip|boolean|Whether this is a VIP-only product|
-|> creditTime|string|Estimated time for earnings to be credited, unix timestamp in ms|
-|> specialUserGroupRequired|boolean|Whether purchase is restricted to a specific user group|
-|> specialUserGroupInfo|string|Description of the restricted user group|
+|list|array|產品列表|
+|> productId|string|產品ID|
+|> category|string|產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`|
+|> coin|string|質押幣種|
+|> duration|string|固定期限，例如 `1d`、`8h`、`2m`|
+|> status|string|產品狀態：`Available`、`SoldOut`、`NotStarted`|
+|> tieredApyList|array|分層APY列表（如適用）|
+|>> min|string|此層最低金額|
+|>> max|string|此層最高金額，`"-1"` 表示無上限|
+|>> apy|string|此層APY|
+|> minStakeAmount|string|最低質押金額|
+|> maxStakeAmount|string|最高質押金額|
+|> precision|integer|幣種交易精度|
+|> subscribeStartAt|string|訂閱開始時間，毫秒級unix時間戳|
+|> subscribeEndAt|string|訂閱結束時間，毫秒級unix時間戳|
+|> allowEarlyRedemption|boolean|是否支持提前贖回|
+|> earlyRedemptionApy|string|提前贖回時適用的折扣APY|
+|> redemptionLimitDuration|string|允許提前贖回前的最短持有時間，例如 `1d`、`8h`、`2m`|
+|> allowAutoReinvest|boolean|是否支持自動續投|
+|> interestCoinApyList|array|多幣種獎勵APY列表|
+|>> coin|string|獎勵幣種|
+|>> apy|string|獎勵APY|
+|>> expectUnitEarning|string|每單位投資預期獎勵（受獎勵幣種現貨價格影響）|
+|>> currentPrice|string|獎勵幣種當前價格|
+|> isVip|boolean|是否為VIP專屬產品|
+|> creditTime|string|預計收益到賬時間，毫秒級unix時間戳|
+|> specialUserGroupRequired|boolean|是否限制特定用戶群體購買|
+|> specialUserGroupInfo|string|限制用戶群體的描述|
 
 ---
 
-### Request Example
+### 請求示例
 
 ```http
 GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1
@@ -61,7 +61,7 @@ X-BAPI-TIMESTAMP: 1741651200000
 X-BAPI-RECV-WINDOW: 5000
 ```
 
-### Response Example
+### 響應示例
 
 ```json
 {

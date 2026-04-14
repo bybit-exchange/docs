@@ -10,7 +10,6 @@ API rate limit: 5 reqs / sec
 :::info
 * Auto-invest can only be enabled on products where `allowAutoReinvest` is `true`.
 * The position must be active and not undergoing early redemption processing.
-* The reward coin must match the staking coin.
 :::
 
 ### HTTP Request
@@ -19,9 +18,9 @@ API rate limit: 5 reqs / sec
 ### Request Parameters
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
-|productId|**true**|integer|Product ID|
+|productId|**true**|string|Product ID|
 |category|**true**|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
-|positionId|**true**|integer|Position ID|
+|positionId|**true**|string|Position ID|
 |status|**true**|string|Auto-invest setting: `Enable` or `Disable`|
 
 ### Response Parameters
@@ -41,9 +40,9 @@ X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
 
 {
-    "productId": 1001,
-    "category": "FixedTermSaving",
-    "positionId": 200001,
+    "productId": "23",
+    "category": "FundPool",
+    "positionId": "19454",
     "status": "Enable"
 }
 ```
@@ -53,9 +52,9 @@ Content-Type: application/json
 ```json
 {
     "retCode": 0,
-    "retMsg": "success",
+    "retMsg": "",
     "result": {},
     "retExtInfo": {},
-    "time": 1741651200000
+    "time": 1776075584538
 }
 ```

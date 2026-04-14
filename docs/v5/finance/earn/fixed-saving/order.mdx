@@ -20,7 +20,7 @@ API rate limit: 10 reqs / sec
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
 |orderType|false|string|Filter by order type: `Stake`, `Redeem`, `Reinvest`. Returns all types if omitted|
-|productId|false|integer|Filter by product ID. Requires `category` when passed|
+|productId|false|string|Filter by product ID. Requires `category` when passed|
 |category|false|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`. Required when `productId` is passed|
 |orderId|false|string|System order ID for single order lookup|
 |startTime|false|integer|Start timestamp in ms|
@@ -36,19 +36,19 @@ API rate limit: 10 reqs / sec
 |> orderLinkId|string|User-customised idempotent ID|
 |> orderType|string|Order type: `Stake`, `Redeem`, `Reinvest`|
 |> status|string|Order status: `Processing`, `Active`, `Complete`, `Failed`|
-|> productId|integer|Product ID|
+|> productId|string|Product ID|
 |> category|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
 |> coin|string|Coin|
 |> amount|string|Order amount|
 |> duration|string|Fixed term duration, e.g. `1d`, `8h`, `2m`|
 |> accountType|string|Account type: `FUND`, `UNIFIED`. Redeem orders always show `FUND`|
-|> settlementTime|integer|Settlement time, unix timestamp in ms|
-|> createdAt|integer|Order creation time, unix timestamp in ms|
+|> settlementTime|string|Settlement time, unix timestamp in ms|
+|> createdAt|string|Order creation time, unix timestamp in ms|
 |> yieldInfoList|array|Yield info list. Populated after settlement|
 |>> coin|string|Yield coin|
 |>> amount|string|Yield amount|
 |>> status|string|Yield status: `Pending`, `Distributed`, `Fail`|
-|>> createdAt|integer|Yield record creation time, unix timestamp in ms|
+|>> createdAt|string|Yield record creation time, unix timestamp in ms|
 |>> apy|string|APY applied for this yield|
 |nextPageCursor|string|Cursor for the next page. Empty string means no more data|
 
@@ -57,7 +57,7 @@ API rate limit: 10 reqs / sec
 ### Request Example
 
 ```http
-GET /v5/earn/fixed-term/order?category=FixedTermSaving&limit=20 HTTP/1.1
+GET /v5/earn/fixed-term/order?productId=546&category=FixedTermSaving HTTP/1.1
 Host: api.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -74,24 +74,32 @@ X-BAPI-RECV-WINDOW: 5000
     "result": {
         "list": [
             {
-                "orderId": "550e8400-e29b-41d4-a716-446655440000",
-                "orderLinkId": "my-fixed-order-001",
-                "orderType": "Stake",
-                "status": "Active",
-                "productId": 1001,
+                "orderId": "6f2530d6-46b9-41f9-880a-4addbd152398",
+                "orderLinkId": "",
+                "orderType": "Redeem",
+                "status": "Complete",
+                "productId": "546",
                 "category": "FixedTermSaving",
-                "coin": "BTC",
-                "amount": "0.1",
-                "duration": "30d",
-                "accountType": "FUND",
-                "settlementTime": 1744329600000,
-                "createdAt": 1741651200000,
-                "yieldInfoList": []
+                "coin": "USDT",
+                "amount": "100.056",
+                "duration": "1d",
+                "accountType": "UNIFIED",
+                "settlementTime": "1750811400000",
+                "createdAt": "1750648976000",
+                "yieldInfoList": [
+                    {
+                        "coin": "USDT",
+                        "amount": "0.0063",
+                        "status": "Distributed",
+                        "createdAt": "1750811401000",
+                        "apy": "2.33%"
+                    }
+                ]
             }
         ],
         "nextPageCursor": ""
     },
     "retExtInfo": {},
-    "time": 1741651200000
+    "time": 1776070828622
 }
 ```
