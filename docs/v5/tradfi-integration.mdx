@@ -79,6 +79,47 @@ Content-Type: application/json
 }
 ```
 
+## Index Price Roll Mechanism
+
+The index price of perpetual futures is derived from the respective underlying futures contracts. As commodities do not have a traditional spot market, the external reference price is determined based on designated futures contracts.
+
+The underlying contracts will undergo a rollover (contract transition). During this period, the reference price will gradually shift from the current active contract to the next active contract.
+
+For example, for `CLUSDT` (Crude Oil), the reference is currently based on the `WTIK6` contract and will transition to `WTIM6` according to the following schedule:
+
+- **April 9, 2026** — 60% near-month contract, 40% next-month contract
+- **April 10, 2026** — 40% near-month contract, 60% next-month contract
+- **April 13, 2026** — 20% near-month contract, 80% next-month contract
+- **April 14, 2026** — 0% near-month contract, 100% next-month contract (rollover completed)
+
+:::info
+This mechanism is continuously refined. For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
+:::
+
+## Instruments Info for xStock & Commodities
+
+Use the [Get Instruments Info](/v5/market/instrument) endpoint together with the `symbolType` filter to retrieve trading rules and metadata for TradFi instruments. See the [symbolType enum](/v5/enum#symboltype) for all supported values.
+
+### xStock tokens (Spot)
+
+Query with `category=spot` and `symbolType=xstocks` to list all xStock tokens (e.g., `TSLAXUSDT`, `AAPLXUSDT`, `NVDAXUSDT`).
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=spot&symbolType=xstocks&limit=1000
+```
+
+The response includes xStock-specific fields such as `xstockMultiplier` and `symbolType: "xstocks"`.
+
+### Commodity Perpetuals (Linear)
+
+Query with `category=linear` and `symbolType=commodity` to list all commodity perpetuals (e.g., `XAUUSDT`, `XAGUSDT`, `CLUSDT`).
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000
+```
+
+The response includes `symbolType: "commodity"` along with standard linear contract fields (leverage, tick size, funding interval, etc.).
+
 ## Trade via Existing API
 
 After signing the agreement, you can trade TradFi-related instruments (metals perpetuals, crude oil perpetuals, etc.) using the standard [Trade](/v5/order/create-order) endpoints. No separate API is needed — use the same order placement, amendment, and cancellation interfaces:
