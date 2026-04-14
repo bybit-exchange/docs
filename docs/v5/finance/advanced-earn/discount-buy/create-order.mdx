@@ -1,0 +1,85 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 3
+---
+
+:::info
+* Requires Earn permission on the API key.
+* The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
+* You must call [Get Product Quote](./product-quote) first and pass the returned quote values in `discountBuyExtra`.
+* **Only `DiscountBuy` products are supported.** Ultra Discount Buy and Interest Card products are not supported by this API.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/advance/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DiscountBuy`|
+|productId|**true**|string|Product ID|
+|orderType|**true**|string|Fixed value: `Stake`|
+|amount|**true**|string|Investment amount in USDT. Precision is determined by `orderPrecisionDigital` from [Get Product Info](./product-info)|
+|coin|**true**|string|Investment coin. `USDT`|
+|accountType|**true**|string|Deduction account: `FUND` or `UNIFIED` (requires Unified Trading Account to be enabled)|
+|orderLinkId|**true**|string|User customised order ID for idempotency. Max 40 characters, alphanumeric and `_` only|
+|discountBuyExtra|**true**|Object|Discount Buy pricing parameters|
+|> initialPrice|**true**|string|Current index price of the underlying asset at order time. Use `currentPrice` from [Get Product Quote](./product-quote). Max 8 decimal places|
+|> purchasePrice|**true**|string|Anchor buy price from [Get Product Quote](./product-quote). Max 8 decimal places|
+|> knockoutPrice|**true**|string|Knockout price from [Get Product Quote](./product-quote). Max 8 decimal places|
+|> knockoutCouponE8|**true**|string|Annualized interest rate in e8 precision from [Get Product Quote](./product-quote)|
+|> settleType|**true**|string|Settlement preference when exercised: `Base` = receive underlying asset (quantity = amount / purchasePrice); `Quote` = receive USDT (amount = amount / purchasePrice × settlementPrice). Has no effect upon knockout — USDT principal + interest is always returned|
+|> instUid|**true**|string|Market maker institution ID from [Get Product Quote](./product-quote)|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderId|string|System-generated order ID|
+|orderLinkId|string|User customised order ID echoed back|
+
+### Request Example
+
+```http
+POST /v5/earn/advance/place-order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1713600000000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "DiscountBuy",
+    "productId": "7037",
+    "orderType": "Stake",
+    "amount": "200",
+    "coin": "USDT",
+    "accountType": "FUND",
+    "orderLinkId": "my-order-001",
+    "discountBuyExtra": {
+        "initialPrice": "74571.32",
+        "purchasePrice": "74019",
+        "knockoutPrice": "76050",
+        "knockoutCouponE8": "1000000",
+        "settleType": "Base",
+        "instUid": "100307526"
+    }
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "38f6f5ce-57e2-4d69-b4d3-c39464389ccb",
+        "orderLinkId": "my-order-001"
+    },
+    "retExtInfo": {},
+    "time": 1776154116919
+}
+```

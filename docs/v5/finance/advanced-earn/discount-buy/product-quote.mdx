@@ -1,0 +1,69 @@
+---
+title: Get Product Quote
+sidebar_label: Get Product Quote
+sidebar_position: 2
+---
+
+:::info
+Does not need authentication
+:::
+
+:::note
+* You **must** call this endpoint before placing an order to obtain the latest pricing parameters. Pass the returned values as-is into the order request.
+* You can also subscribe to the WebSocket topic [`earn.discountbuy.offers`](../websocket/discount-buy-offer) to receive real-time quote updates.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DiscountBuy`|
+|productId|false|string|Product ID. Returns quotes for all products if not provided|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|offers|array|Object|
+|> productId|string|Product ID|
+|> currentPrice|string|Current index price of the underlying asset|
+|> purchasePrice|string|Anchor buy price|
+|> knockoutPrice|string|Knockout price|
+|> knockoutCouponE8|string|Annualized interest rate in e8 precision. Actual rate = `knockoutCouponE8` / 1e8|
+|> maxInvestmentAmount|string|Maximum investment amount for this quote|
+|> instUid|string|Market maker institution ID. **Must be passed as-is when placing an order**|
+|> expiredAt|string|Quote expiry time, Unix timestamp in ms. `0` means no expiry is set by the institution|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/product-extra-info?category=DiscountBuy&productId=7037 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "offers": [
+            {
+                "productId": "7037",
+                "currentPrice": "74514.26",
+                "purchasePrice": "74014",
+                "knockoutPrice": "76000",
+                "knockoutCouponE8": "1000000",
+                "maxInvestmentAmount": "100000",
+                "instUid": "100307526",
+                "expiredAt": "1776153608188",
+                "category": "DiscountBuy"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776153594375
+}
+```

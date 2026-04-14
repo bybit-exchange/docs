@@ -1,0 +1,54 @@
+---
+title: 折價買幣報價
+sidebar_label: 折價買幣報價
+sidebar_position: 3
+---
+
+### WebSocket 公共頻道網址
+
+- **主網：**<br/>
+Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **測試網：**<br/>
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
+:::info
+* 訂閱此頻道無需身份驗證。
+* **建議使用方式**：初始化時先調用[查詢產品報價](../discount-buy/product-quote)取得當前報價，再訂閱此頻道維持即時報價視圖。若 WebSocket 連線中斷，請重新調用[查詢產品報價](../discount-buy/product-quote)更新數據後再訂閱。
+:::
+
+### 頻道：`earn.discountbuy.offers`
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|topic|string|頻道名稱，`earn.discountbuy.offers`|
+|data|array|列表|
+|> p|string|產品 ID|
+|> c|string|標的資產當前市場價格|
+|> b|string|錨定買入價|
+|> k|string|敲出價|
+|> e|string|年化息率（e8 精度），實際利率 = `knockoutCouponE8` / 1e8|
+|> m|string|當前報價下的最大可投金額|
+|> i|string|做市商機構 ID，下單時必須原樣傳入|
+|> x|string|報價到期時間，毫秒級 Unix 時間戳。`0` 表示機構未設定有效期|
+
+### 推送示例
+
+```json
+{
+    "topic": "earn.discountbuy.offers",
+    "data": [
+        {
+            "p": "12723",
+            "c": "74551.1",
+            "b": "73847",
+            "k": "75300",
+            "e": "10000000",
+            "m": "950000",
+            "i": "103489231",
+            "x": "1776154870336"
+        }
+    ]
+}
+```

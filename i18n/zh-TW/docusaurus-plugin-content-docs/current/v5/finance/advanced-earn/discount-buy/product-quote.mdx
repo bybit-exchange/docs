@@ -1,0 +1,69 @@
+---
+title: 查詢產品報價
+sidebar_label: 查詢產品報價
+sidebar_position: 2
+---
+
+:::info
+無需身份驗證
+:::
+
+:::note
+* 下單前**必須**先調用此接口取得最新報價參數，並將返回值原樣傳入下單請求。
+* 您也可以訂閱 WebSocket 頻道 [`earn.discountbuy.offers`](../websocket/discount-buy-offer)，接收即時報價推送。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DiscountBuy`|
+|productId|false|string|產品 ID。不傳則返回所有產品報價|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|offers|array|列表|
+|> productId|string|產品 ID|
+|> currentPrice|string|標的資產當前市場價格|
+|> purchasePrice|string|錨定買入價。行權結算時，標的資產將以此價格買入|
+|> knockoutPrice|string|敲出價。結算價 >= `knockoutPrice` 時敲出，返還 USDT 本金 + 利息|
+|> knockoutCouponE8|string|年化息率（e8 精度），實際利率 = `knockoutCouponE8` / 1e8，敲出時按此計算利息|
+|> maxInvestmentAmount|string|當前報價下的最大可投金額|
+|> instUid|string|做市商機構 ID，**下單時必須原樣傳入**|
+|> expiredAt|string|報價到期時間，毫秒級 Unix 時間戳。`0` 表示機構未設定有效期|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product-extra-info?category=DiscountBuy&productId=7037 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "offers": [
+            {
+                "productId": "7037",
+                "currentPrice": "74514.26",
+                "purchasePrice": "74014",
+                "knockoutPrice": "76000",
+                "knockoutCouponE8": "1000000",
+                "maxInvestmentAmount": "100000",
+                "instUid": "100307526",
+                "expiredAt": "1776153608188",
+                "category": "DiscountBuy"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776153594375
+}
+```

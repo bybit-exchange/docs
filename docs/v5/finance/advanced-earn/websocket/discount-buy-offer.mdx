@@ -1,0 +1,54 @@
+---
+title: Discount Buy Offers
+sidebar_label: Discount Buy Offers
+sidebar_position: 3
+---
+
+### WebSocket public URL
+
+- **Mainnet:**<br/>
+Earn: `wss://stream.bybit.com/v5/public/fp`<br/>
+
+- **Testnet:**<br/>
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`<br/>
+
+:::info
+* Subscribing to this topic does not require authentication.
+* **Recommended usage**: call [Get Product Quote](../discount-buy/product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Product Quote](../discount-buy/product-quote) to refresh before re-subscribing.
+:::
+
+### Topic: `earn.discountbuy.offers`
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|:---------|
+|topic|string|Topic name. `earn.discountbuy.offers`|
+|data|array|Object|
+|> p|string|Product ID|
+|> c|string|Current index price of the underlying asset|
+|> b|string|Anchor buy price|
+|> k|string|Knockout price|
+|> e|string|Annualized interest rate in e8 precision. Actual rate = `knockoutCouponE8` / 1e8|
+|> m|string|Maximum investment amount for this quote|
+|> i|string|Market maker institution ID. Must be passed as-is when placing an order|
+|> x|string|Quote expiry time, Unix timestamp in ms. `0` means no expiry is set by the institution|
+
+### Push Example
+
+```json
+{
+    "topic": "earn.discountbuy.offers",
+    "data": [
+        {
+            "p": "12723",
+            "c": "74551.1",
+            "b": "73847",
+            "k": "75300",
+            "e": "10000000",
+            "m": "950000",
+            "i": "103489231",
+            "x": "1776154870336"
+        }
+    ]
+}
+```
