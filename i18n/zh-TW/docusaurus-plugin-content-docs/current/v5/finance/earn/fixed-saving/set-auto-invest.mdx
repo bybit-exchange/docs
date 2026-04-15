@@ -1,0 +1,60 @@
+---
+title: 設定自動續投
+sidebar_label: 設定自動續投
+sidebar_position: 5
+---
+
+API key權限：`Earn`<br/>
+API 頻率限制：每秒5次
+
+:::info
+* 自動續投只能在 `allowAutoReinvest` 為 `true` 的產品上啟用。
+* 持倉必須為活躍狀態且未進行提前贖回處理。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/position/auto-invest" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品ID|
+|category|**true**|string|產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`|
+|positionId|**true**|string|持倉ID|
+|status|**true**|string|自動續投設置：`Enable` 或 `Disable`|
+
+### 響應參數
+無
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/fixed-term/position/auto-invest HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": "23",
+    "category": "FundPool",
+    "positionId": "19454",
+    "status": "Enable"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1776075584538
+}
+```

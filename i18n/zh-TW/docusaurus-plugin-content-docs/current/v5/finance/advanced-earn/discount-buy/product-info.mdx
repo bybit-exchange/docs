@@ -1,0 +1,93 @@
+---
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
+sidebar_position: 1
+---
+
+:::info
+無需身份驗證
+:::
+
+:::note
+僅返回當前可申購的產品。已下線、不在申購窗口內或已售罄的產品不會包含在內。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/product" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DiscountBuy`|
+|coin|false|string|標的資產篩選，例如：`BTC`, `ETH`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list|array|列表|
+|> category|string|產品類別，`DiscountBuy`|
+|> productId|string|產品 ID|
+|> coin|string|投資幣種，例如：`USDT`|
+|> underlyingAsset|string|標的資產，例如：`BTC`, `ETH`|
+|> settlementTime|string|結算時間，毫秒級 Unix 時間戳|
+|> duration|string|產品期限，例如：`7d`|
+|> isVipProduct|bool|是否為 VIP 專屬產品|
+|> subscribeStartAt|string|申購開始時間，毫秒級 Unix 時間戳|
+|> subscribeEndAt|string|申購結束時間，毫秒級 Unix 時間戳|
+|> minPurchaseAmount|string|最小單筆申購金額|
+|> remainingAmount|string|產品剩餘可申購額度|
+|> orderPrecisionDigital|int|訂單金額精度（小數位數）|
+|> expectReceiveAt|string|預計到帳時間，毫秒級 Unix 時間戳，等於 `settlementTime` + 15 分鐘|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/product?category=DiscountBuy&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "",
+        "list": [
+            {
+                "category": "DiscountBuy",
+                "productId": "7038",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "settlementTime": "1776240000000",
+                "duration": "1d",
+                "isVipProduct": true,
+                "subscribeStartAt": "1776124800000",
+                "subscribeEndAt": "1776211199000",
+                "minPurchaseAmount": "100",
+                "remainingAmount": "10000000",
+                "orderPrecisionDigital": 4,
+                "expectReceiveAt": "1776240900000"
+            },
+            {
+                "category": "DiscountBuy",
+                "productId": "7037",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "settlementTime": "1776240000000",
+                "duration": "1d",
+                "isVipProduct": false,
+                "subscribeStartAt": "1776124800000",
+                "subscribeEndAt": "1776211199000",
+                "minPurchaseAmount": "100",
+                "remainingAmount": "9998547.575",
+                "orderPrecisionDigital": 4,
+                "expectReceiveAt": "1776240900000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776152654908
+}
+```

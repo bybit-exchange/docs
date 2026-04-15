@@ -1,0 +1,92 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 4
+---
+
+:::info
+* Requires Earn permission on the API key.
+* Returns active positions only. Settled positions are not returned.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DiscountBuy`|
+|productId|false|string|Filter by product ID|
+|coin|false|string|Filter by underlying coin, e.g. `USDT`|
+|limit|false|int|Number of items per page|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextPageCursor|string|Cursor for the next page. Empty string if no more data|
+|list|array|Object|
+|> positionId|string|Position ID|
+|> productId|string|Product ID|
+|> category|string|Product category. `DiscountBuy`|
+|> coin|string|Investment coin, e.g. `USDT`|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> amount|string|Investment amount|
+|> purchasePrice|string|Anchor buy price locked at order time|
+|> knockoutPrice|string|Knockout price|
+|> knockoutCouponE8|string|Annualized interest rate in e8 precision. Actual rate = `knockoutCouponE8` / 1e8|
+|> status|string|Position status: `Active` (holding); `Settling` (settlement in progress)|
+|> orderId|string|Associated order ID|
+|> duration|string|Product duration, e.g. `7d`|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> accountType|string|Deduction account: `FUND` or `UNIFIED`|
+|> toAccountType|string|Settlement credit account. Always `FUND`|
+|> settleType|string|Settlement preference when exercised: `Base` = receive underlying asset; `Quote` = receive USDT. Has no effect upon knockout|
+|> expectReceiveAt|string|Expected settlement credit time, Unix timestamp in ms. Equal to `settlementTime` + 15 minutes|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/position?category=DiscountBuy&productId=7037 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1713600000000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "",
+        "list": [
+            {
+                "positionId": "11959",
+                "productId": "7037",
+                "category": "DiscountBuy",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "amount": "200",
+                "purchasePrice": "74019",
+                "knockoutPrice": "76050",
+                "knockoutCouponE8": "1000000",
+                "status": "Active",
+                "orderId": "38f6f5ce-57e2-4d69-b4d3-c39464389ccb",
+                "duration": "1d",
+                "settlementTime": "1776240000000",
+                "accountType": "FUND",
+                "toAccountType": "FUND",
+                "settleType": "Base",
+                "expectReceiveAt": "1776240900000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1776154219022
+}
+```

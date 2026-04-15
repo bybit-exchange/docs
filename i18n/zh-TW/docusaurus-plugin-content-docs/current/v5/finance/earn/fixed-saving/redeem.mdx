@@ -1,0 +1,65 @@
+---
+title: 提前贖回
+sidebar_label: 提前贖回
+sidebar_position: 2
+---
+
+API key權限：`Earn`<br/>
+API 頻率限制：每秒5次
+
+:::info
+* 提前贖回僅支持 category=`FundPool` 且 `allowEarlyRedemption` 為 `true` 的產品。對其他產品類型調用此端點將返回錯誤。
+* 持倉必須已持有至少 `redemptionLimitDuration` 的時間後才允許提前贖回。
+* 贖回資金始終返回至 `FUND` 帳戶。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/redeem" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品ID|
+|category|**true**|string|產品子類型：`FundPool`|
+|positionId|**true**|string|要贖回的持倉ID|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|redeemAmount|string|預計贖回金額（本金）|
+|estEarnings|string|按提前贖回APY計算的預計收益|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/fixed-term/redeem HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": 1001,
+    "category": "FundPool",
+    "positionId": 200001
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "redeemAmount": "0.1",
+        "estEarnings": "0.00002191"
+    },
+    "retExtInfo": {},
+    "time": 1776075665623
+}
+```

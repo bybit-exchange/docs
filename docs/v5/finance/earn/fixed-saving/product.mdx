@@ -1,0 +1,164 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 0.5
+---
+
+:::info
+Does not need authentication. **Up to 50 requests** per second per IP .
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/fixed-term/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|false|string|Filter by coin, e.g. `BTC`, `ETH`. Returns all coins if omitted|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Product list|
+|> productId|string|Product ID|
+|> category|string|Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`|
+|> coin|string|Staking coin|
+|> duration|string|Fixed term duration, e.g. `1d`, `8h`, `2m`|
+|> status|string|Product status: `Available`, `SoldOut`, `NotStarted`|
+|> tieredApyList|array|Tiered APY list (if applicable)|
+|>> min|string|Minimum amount for this tier|
+|>> max|string|Maximum amount for this tier. `"-1"` means no upper limit|
+|>> apy|string|APY for this tier|
+|> minStakeAmount|string|Minimum staking amount|
+|> maxStakeAmount|string|Maximum staking amount|
+|> precision|integer|Coin trading precision|
+|> subscribeStartAt|string|Subscription start time, unix timestamp in ms|
+|> subscribeEndAt|string|Subscription end time, unix timestamp in ms|
+|> allowEarlyRedemption|boolean|Whether early redemption is supported|
+|> earlyRedemptionApy|string|Discounted APY applied on early redemption|
+|> redemptionLimitDuration|string|Minimum hold time before early redemption is allowed, e.g. `1d`, `8h`, `2m`|
+|> allowAutoReinvest|boolean|Whether auto-reinvest is supported|
+|> interestCoinApyList|array|Multi-coin reward APY list|
+|>> coin|string|Reward coin|
+|>> apy|string|Reward APY|
+|>> expectUnitEarning|string|Expected reward per unit invested (influenced by spot price of reward coin)|
+|>> currentPrice|string|Current price of the reward coin|
+|> isVip|boolean|Whether this is a VIP-only product|
+|> creditTime|string|Estimated time for earnings to be credited, unix timestamp in ms|
+|> specialUserGroupRequired|boolean|Whether purchase is restricted to a specific user group|
+|> specialUserGroupInfo|string|Description of the restricted user group|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "productId": "427",
+                "category": "FixedTermSaving",
+                "coin": "USDT",
+                "duration": "30d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "50",
+                "maxStakeAmount": "10000",
+                "precision": 4,
+                "subscribeStartAt": "1686704400000",
+                "subscribeEndAt": "1909094399000",
+                "allowEarlyRedemption": false,
+                "earlyRedemptionApy": "",
+                "redemptionLimitDuration": "",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "2.50%",
+                        "expectUnitEarning": "0.002",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": false,
+                "creditTime": "1778718600000",
+                "specialUserGroupRequired": false,
+                "specialUserGroupInfo": ""
+            },
+            {
+                "productId": "27",
+                "category": "FundPool",
+                "coin": "USDT",
+                "duration": "3d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "100",
+                "maxStakeAmount": "10000",
+                "precision": 4,
+                "subscribeStartAt": "1722448800000",
+                "subscribeEndAt": "0",
+                "allowEarlyRedemption": true,
+                "earlyRedemptionApy": "0.30%",
+                "redemptionLimitDuration": "1d",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "9.99%",
+                        "expectUnitEarning": "0.0008",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": false,
+                "creditTime": "1776391500000",
+                "specialUserGroupRequired": true,
+                "specialUserGroupInfo": "Limited Offer"
+            },
+            {
+                "productId": "12",
+                "category": "FundPoolPremium",
+                "coin": "USDT",
+                "duration": "3d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "1",
+                "maxStakeAmount": "300",
+                "precision": 4,
+                "subscribeStartAt": "1751500800000",
+                "subscribeEndAt": "0",
+                "allowEarlyRedemption": false,
+                "earlyRedemptionApy": "",
+                "redemptionLimitDuration": "",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "19.70%",
+                        "expectUnitEarning": "0.0016",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": true,
+                "creditTime": "1776391200000",
+                "specialUserGroupRequired": false,
+                "specialUserGroupInfo": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776067553433
+}
+```

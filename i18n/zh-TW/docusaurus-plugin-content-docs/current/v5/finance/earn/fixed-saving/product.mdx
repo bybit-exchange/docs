@@ -1,0 +1,164 @@
+---
+title: 查詢產品資訊
+sidebar_label: 查詢產品資訊
+sidebar_position: 0.5
+---
+
+:::info
+無需身份驗證。每個IP每秒最多 **50次** 請求。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/fixed-term/product" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|false|string|依幣種篩選，例如 `BTC`、`ETH`。若省略則返回所有幣種|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|產品列表|
+|> productId|string|產品ID|
+|> category|string|產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`|
+|> coin|string|質押幣種|
+|> duration|string|固定期限，例如 `1d`、`8h`、`2m`|
+|> status|string|產品狀態：`Available`、`SoldOut`、`NotStarted`|
+|> tieredApyList|array|分層APY列表（如適用）|
+|>> min|string|此層最低金額|
+|>> max|string|此層最高金額，`"-1"` 表示無上限|
+|>> apy|string|此層APY|
+|> minStakeAmount|string|最低質押金額|
+|> maxStakeAmount|string|最高質押金額|
+|> precision|integer|幣種交易精度|
+|> subscribeStartAt|string|訂閱開始時間，毫秒級unix時間戳|
+|> subscribeEndAt|string|訂閱結束時間，毫秒級unix時間戳|
+|> allowEarlyRedemption|boolean|是否支持提前贖回|
+|> earlyRedemptionApy|string|提前贖回時適用的折扣APY|
+|> redemptionLimitDuration|string|允許提前贖回前的最短持有時間，例如 `1d`、`8h`、`2m`|
+|> allowAutoReinvest|boolean|是否支持自動續投|
+|> interestCoinApyList|array|多幣種獎勵APY列表|
+|>> coin|string|獎勵幣種|
+|>> apy|string|獎勵APY|
+|>> expectUnitEarning|string|每單位投資預期獎勵（受獎勵幣種現貨價格影響）|
+|>> currentPrice|string|獎勵幣種當前價格|
+|> isVip|boolean|是否為VIP專屬產品|
+|> creditTime|string|預計收益到賬時間，毫秒級unix時間戳|
+|> specialUserGroupRequired|boolean|是否限制特定用戶群體購買|
+|> specialUserGroupInfo|string|限制用戶群體的描述|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "productId": "427",
+                "category": "FixedTermSaving",
+                "coin": "USDT",
+                "duration": "30d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "50",
+                "maxStakeAmount": "10000",
+                "precision": 4,
+                "subscribeStartAt": "1686704400000",
+                "subscribeEndAt": "1909094399000",
+                "allowEarlyRedemption": false,
+                "earlyRedemptionApy": "",
+                "redemptionLimitDuration": "",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "2.50%",
+                        "expectUnitEarning": "0.002",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": false,
+                "creditTime": "1778718600000",
+                "specialUserGroupRequired": false,
+                "specialUserGroupInfo": ""
+            },
+            {
+                "productId": "27",
+                "category": "FundPool",
+                "coin": "USDT",
+                "duration": "3d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "100",
+                "maxStakeAmount": "10000",
+                "precision": 4,
+                "subscribeStartAt": "1722448800000",
+                "subscribeEndAt": "0",
+                "allowEarlyRedemption": true,
+                "earlyRedemptionApy": "0.30%",
+                "redemptionLimitDuration": "1d",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "9.99%",
+                        "expectUnitEarning": "0.0008",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": false,
+                "creditTime": "1776391500000",
+                "specialUserGroupRequired": true,
+                "specialUserGroupInfo": "Limited Offer"
+            },
+            {
+                "productId": "12",
+                "category": "FundPoolPremium",
+                "coin": "USDT",
+                "duration": "3d",
+                "status": "Available",
+                "tieredApyList": [],
+                "minStakeAmount": "1",
+                "maxStakeAmount": "300",
+                "precision": 4,
+                "subscribeStartAt": "1751500800000",
+                "subscribeEndAt": "0",
+                "allowEarlyRedemption": false,
+                "earlyRedemptionApy": "",
+                "redemptionLimitDuration": "",
+                "allowAutoReinvest": false,
+                "interestCoinApyList": [
+                    {
+                        "coin": "USDT",
+                        "apy": "19.70%",
+                        "expectUnitEarning": "0.0016",
+                        "currentPrice": "1.00"
+                    }
+                ],
+                "isVip": true,
+                "creditTime": "1776391200000",
+                "specialUserGroupRequired": false,
+                "specialUserGroupInfo": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776067553433
+}
+```

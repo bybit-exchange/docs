@@ -1,0 +1,89 @@
+---
+title: Get Product Info
+sidebar_label: Get Product Info
+sidebar_position: 1
+---
+
+:::info
+Does not need authentication
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DiscountBuy`|
+|coin|false|string|Filter by underlying asset, e.g. `BTC`, `ETH`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list|array|Object|
+|> category|string|Product category. `DiscountBuy`|
+|> productId|string|Product ID|
+|> coin|string|Investment coin, e.g. `USDT`|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> duration|string|Product duration, e.g. `7d`|
+|> isVipProduct|bool|Whether this is a VIP-exclusive product|
+|> subscribeStartAt|string|Subscription start time, Unix timestamp in ms|
+|> subscribeEndAt|string|Subscription end time, Unix timestamp in ms|
+|> minPurchaseAmount|string|Minimum purchase amount|
+|> remainingAmount|string|Remaining purchasable quota for this product|
+|> orderPrecisionDigital|int|Order amount precision (decimal places)|
+|> expectReceiveAt|string|Expected settlement credit time, Unix timestamp in ms. Equal to `settlementTime` + 15 minutes|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/product?category=DiscountBuy&coin=BTC HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "",
+        "list": [
+            {
+                "category": "DiscountBuy",
+                "productId": "7038",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "settlementTime": "1776240000000",
+                "duration": "1d",
+                "isVipProduct": true,
+                "subscribeStartAt": "1776124800000",
+                "subscribeEndAt": "1776211199000",
+                "minPurchaseAmount": "100",
+                "remainingAmount": "10000000",
+                "orderPrecisionDigital": 4,
+                "expectReceiveAt": "1776240900000"
+            },
+            {
+                "category": "DiscountBuy",
+                "productId": "7037",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "settlementTime": "1776240000000",
+                "duration": "1d",
+                "isVipProduct": false,
+                "subscribeStartAt": "1776124800000",
+                "subscribeEndAt": "1776211199000",
+                "minPurchaseAmount": "100",
+                "remainingAmount": "9998547.575",
+                "orderPrecisionDigital": 4,
+                "expectReceiveAt": "1776240900000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1776152654908
+}
+```

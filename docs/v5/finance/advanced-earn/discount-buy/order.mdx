@@ -1,0 +1,106 @@
+---
+title: Get Order Info
+sidebar_label: Get Order Info
+sidebar_position: 5
+---
+
+:::info
+* Requires Earn permission on the API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DiscountBuy`|
+|orderId|false|string|Filter by order ID|
+|orderLinkId|false|string|Filter by user customised order ID|
+|productId|false|string|Filter by product ID|
+|startTime|false|int|Start time (order creation time), Unix timestamp in ms|
+|endTime|false|int|End time, Unix timestamp in ms|
+|limit|false|int|Number of items per page|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from previous response|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|nextPageCursor|string|Next page cursor. Empty string if no more data|
+|list|array|Object|
+|> orderId|string|Order ID|
+|> orderLinkId|string|User customised order ID|
+|> productId|string|Product ID|
+|> category|string|Product category. `DiscountBuy`|
+|> orderType|string|Fixed value: `Stake`|
+|> amount|string|Investment amount|
+|> coin|string|Investment coin, e.g. `USDT`|
+|> underlyingAsset|string|Underlying asset, e.g. `BTC`, `ETH`|
+|> status|string|Order status: `Pending` (processing); `Success` (order accepted, position created); `Settled` (product settled — knocked out or exercised); `Fail` (order failed)|
+|> createdTime|string|Order creation time, Unix timestamp in ms|
+|> purchasePrice|string|Anchor buy price|
+|> knockoutPrice|string|Knockout price|
+|> knockoutCouponE8|string|Annualized interest rate in e8 precision. Actual rate = `knockoutCouponE8` / 1e8|
+|> duration|string|Product duration, e.g. `7d`|
+|> settlementTime|string|Settlement time, Unix timestamp in ms|
+|> accountType|string|Deduction account: `FUND` or `UNIFIED`|
+|> toAccountType|string|Settlement credit account. `FUND` when `status=Settled`; deduction account when `status=Fail`|
+|> settleType|string|Settlement preference when exercised: `Base` = receive underlying asset; `Quote` = receive USDT. Has no effect upon knockout|
+|> settlementPrice|string|Settlement price (30-min TWAP before `settlementTime`). Only available when `status=Settled`|
+|> settlementCoin|string|Settlement coin. Only available when `status=Settled`|
+|> settlementAmount|string|Settlement amount. Only available when `status=Settled`. See calculation rules below|
+|> isVip|bool|Whether this is a VIP product order|
+|> refundStatus|string|Refund status. Only valid when `status=Fail`: `REFUNDING` (refund in progress), `REFUND_DONE` (refund completed). Empty string for other statuses|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/order?category=DiscountBuy&orderLinkId=my-order-001 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1713600000000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "",
+        "list": [
+            {
+                "orderId": "38f6f5ce-57e2-4d69-b4d3-c39464389ccb",
+                "orderLinkId": "my-order-001",
+                "productId": "7037",
+                "category": "DiscountBuy",
+                "orderType": "Stake",
+                "amount": "200",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "status": "Success",
+                "createdTime": "1776154116000",
+                "purchasePrice": "74019",
+                "knockoutPrice": "76050",
+                "knockoutCouponE8": "1000000",
+                "duration": "1d",
+                "settlementTime": "1776240000000",
+                "accountType": "FUND",
+                "toAccountType": "",
+                "settlementPrice": "",
+                "settlementCoin": "",
+                "settlementAmount": "",
+                "settleType": "Base",
+                "isVip": false,
+                "refundStatus": ""
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1776154473104
+}
+```

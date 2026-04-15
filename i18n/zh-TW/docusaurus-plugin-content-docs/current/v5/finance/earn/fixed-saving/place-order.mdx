@@ -1,0 +1,72 @@
+---
+title: 下單
+sidebar_label: 下單
+sidebar_position: 1
+---
+API key權限：`Earn`<br/>
+API 頻率限制：每秒5次
+
+:::info
+* 訂單非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[取得訂單列表](./order)追蹤訂單狀態。
+* `orderLinkId` 提供冪等性——提交相同的 `orderLinkId` 會返回相同的 `orderId`，不會重複建立訂單。
+* `autoInvest` 僅在 `category` 為 `FundPool` 時有效，對其他產品類型無效。
+* 支持的帳戶類型：`FUND`、`UNIFIED`。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/fixed-term/place-order" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|產品ID|
+|category|**true**|string|產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`|
+|coin|**true**|string|幣種名稱，例如 `BTC`、`ETH`|
+|amount|**true**|string|訂閱金額（必須 > 0）|
+|accountType|**true**|string|帳戶類型：`FUND` 或 `UNIFIED`|
+|orderLinkId|**true**|string|用戶自訂冪等ID（最多36個字符）|
+|autoInvest|false|boolean|啟用自動續投。僅在 `category` 為 `FundPool` 時有效|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|orderId|string|系統生成的訂單ID|
+|orderLinkId|string|用戶自訂冪等ID|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/fixed-term/place-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "category": "FixedTermSaving",
+    "accountType": "FUND",
+    "amount": "201",
+    "coin": "USDT",
+    "productId": "724",
+    "orderLinkId": "usdt-fixdearn-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "orderId": "86468516-5497-4a2b-8c4c-f9c58e01e12c",
+        "orderLinkId": "usdt-fixdearn-001"
+    },
+    "retExtInfo": {},
+    "time": 1776068177658
+}
+```
