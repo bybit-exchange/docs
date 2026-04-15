@@ -1,0 +1,97 @@
+---
+title: 查詢倉位資訊
+sidebar_label: 查詢倉位資訊
+sidebar_position: 4
+---
+
+:::info
+* 需要身份驗證。每秒**最多 10 次請求**。
+* 查詢持倉中的倉位。API 金鑰需要具備 Earn（理財）權限。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category |**true**|string|產品類型，`SmartLeverage`|
+|productId|false|string|產品 ID|
+|coin |false |string |標的資產篩選，例如：`BTC`, `ETH`|
+|limit |false |int |每頁返回數量。預設：20，最大：20|
+|cursor |false |string |分頁游標。使用上次響應中的 nextPageCursor|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+| category|string |產品類別|
+| nextPageCursor | string | 下一頁游標，為空字串表示無更多資料 |
+| list|array |列表 |
+| > positionId | string | 倉位 ID |
+| > productId | string | 產品 ID|
+| > category  | string | 產品類別 |
+| > investCoin | string | 投資幣種 |
+| > amount | string | 倉位金額，單位為 investCoin |
+| > duration | string | 產品期限，例如：`1d`, `2d`, `3d` |
+| > settlementTime | string | 結算時間，毫秒級 Unix 時間戳 |
+| > accountType | string | 申購帳戶：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）|
+| > orderId | string | 申購訂單 ID |
+| > underlyingAsset | string | 標的資產，例如：`BTC`, `ETH` |
+| > direction | string | `Long`（多頭），`Short`（空頭）|
+| > leverage | string | 固定槓桿倍數，例如：`3`, `5` |
+| > breakevenPrice | string | 損益平衡價格（精度調整後）|
+| > initialPrice | string | 創建倉位時的標的資產價格（精度調整後）|
+| > status | string | `Active`：持倉中，`Redeeming`：贖回中，`Settled`：已結算 |
+| > createdTime | string | 倉位創建時間，毫秒級 Unix 時間戳 |
+| > redeemable | bool | 是否可立即贖回。若全域贖回已禁用、存在待處理的贖回訂單，或距結算時間不足 60 分鐘，則為 `false` |
+| > orderLinkId | string | 用戶自定義訂單 ID |
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/position?category=SmartLeverage&productId=12959 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "SmartLeverage",
+        "list": [
+            {
+                "positionId": "1252",
+                "productId": "12959",
+                "category": "SmartLeverage",
+                "investCoin": "USDT",
+                "underlyingAsset": "BTC",
+                "direction": "Long",
+                "leverage": "50",
+                "amount": "1000",
+                "breakevenPrice": "67367.16",
+                "initialPrice": "67243.31",
+                "duration": "1d",
+                "settlementTime": "1774944000000",
+                "createdTime": "1774838832000",
+                "status": "Active",
+                "redeemable": false,
+                "accountType": "FUND",
+                "orderLinkId": "",
+                "orderId": "d7be0f06-af7b-4ae8-bd2f-37000d67edf2"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775038447882
+}
+```

@@ -1,0 +1,148 @@
+---
+title: TradFi 接入指南
+sidebar_label: TradFi 接入指南
+---
+
+本指南說明如何透過現有的 V5 API 接入 Bybit 的 TradFi（傳統金融）產品，包括如何區分 MT5 相關的交易產品與 Bybit 平台原生的合約、如何簽署所需協議，以及如何進行交易。
+
+## 區分 MT5 與 Equity Perp 上架
+
+Bybit 提供兩條傳統資產交易路徑：
+
+### TradFi（MT5 驅動）
+透過 Web UI 進入：導覽至 **Trade → TradFi**。此區塊涵蓋由 MT5 引擎驅動的外匯、大宗商品及股票 CFD。
+
+![TradFi Web UI 入口](/img/tradfi-webui-entry.png)
+
+### Bybit 平台（原生）
+透過主選單 **Trade** 進入，包含所有標準的 Bybit 產品類型：
+- **現貨（Spot）**：xStock 代幣（如 TSLA、AAPL、GOOG）
+- **合約（Futures）**：貴金屬永續合約（XAU、XAG）、原油永續合約
+- **期權（Options）**：以 USDT 結算的期權合約，包括代幣化黃金期權（XAUTUSDT-Options）
+
+![Bybit 交易選單](/img/tradfi-bybit-trading.png)
+
+## 法律條款審閱
+
+在交易傳統資產永續合約之前，請先閱讀適用的條款與細則：
+
+- [衍生品合約條款 - TradFi Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+- [衍生品合約條款 - Oil Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-Oil-Perps)
+
+## 母帳戶簽署協議
+
+交易大宗商品合約（貴金屬與原油）前，用戶必須先簽署交易協議，可透過以下兩種方式完成：
+
+### 方式一：透過 Web UI
+首次嘗試交易時，系統會彈出 **Trading Terms** 視窗，勾選核取方塊並點擊 **Confirm** 即可接受。
+
+:::info
+僅**母帳戶**可透過 Web UI 簽署協議，請確保使用母帳戶登入。
+:::
+
+![交易條款協議彈窗](/img/tradfi-trading-terms.png)
+
+### 方式二：透過 API
+使用 [簽署協議](/v5/user/sign-agreement) 介面以程式化方式簽署。
+
+#### HTTP 請求
+```
+POST /v5/user/agreement
+```
+
+#### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|category | **true**|integer |`2`: 貴金屬（黃金、白銀）合約協議<br/>`3`: 原油合約協議|
+|agree |**true** |boolean |`true`|
+
+:::info
+* 請使用**母帳戶**呼叫介面，子帳戶不支援此操作。
+* 母帳戶簽署後，旗下所有子帳戶即可進行交易。
+* API key 權限需具備其中之一：**帳戶劃轉**、**母子帳戶劃轉**、**提幣**。
+:::
+
+#### 請求示例
+
+```http
+POST /v5/user/agreement HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1772695036541
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "agree": true,
+    "category": 2
+}
+```
+
+## 指數價格展期機制（Index Price Roll Mechanism）
+
+永續期貨的指數價格源自各自的標的期貨合約。由於大宗商品並無傳統的現貨市場，因此外部參考價格將根據指定的期貨合約來確定。
+
+標的合約會進行展期換月（contract rollover），在此期間，參考價格將從當前有效合約逐步過渡至下一個有效合約。
+
+以 `CLUSDT`（原油）為例，目前參考的是 `WTIK6` 合約，並將依以下時程展期至 `WTIM6`：
+
+- **2026 年 4 月 9 日** — 60% 近月合約，40% 下月合約
+- **2026 年 4 月 10 日** — 40% 近月合約，60% 下月合約
+- **2026 年 4 月 13 日** — 20% 近月合約，80% 下月合約
+- **2026 年 4 月 14 日** — 0% 近月合約，100% 下月合約（展期完成）
+
+:::info
+此機制將持續優化更新。如需取得最新的展期時程與完整說明，請參閱幫助中心文章：[TradFi 永續合約介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8)。
+:::
+
+如需查詢指數的當前成分及各成分的權重，可使用 [查詢指數價格成分](/v5/market/index-components) 介面：
+
+```
+GET /v5/market/index-price-components?indexName={symbol}
+```
+
+響應包含每個成分的交易所名稱、現貨交易對、等價價格、乘數，以及在指數計算中所占的權重。
+
+## xStock 與大宗商品的可交易產品的規格信息
+
+請使用 [查詢可交易產品的規格信息](/v5/market/instrument) 介面，並搭配 `symbolType` 參數來取得 TradFi 可交易產品的配置規則信息。完整列舉值請參閱 [symbolType 列舉值](/v5/enum#symboltype)。
+
+### xStock 代幣（現貨）
+
+使用 `category=spot` 及 `symbolType=xstocks` 查詢所有 xStock 代幣（如 `TSLAXUSDT`、`AAPLXUSDT`、`NVDAXUSDT`）。
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=spot&symbolType=xstocks&limit=1000
+```
+
+響應參數中會包含 xStock 專屬欄位（例如 `xstockMultiplier`）以及 `symbolType: "xstocks"`。
+
+### 大宗商品永續合約（Linear）
+
+使用 `category=linear` 及 `symbolType=commodity` 查詢所有大宗商品永續合約（如 `XAUUSDT`、`XAGUSDT`、`CLUSDT`）。
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000
+```
+
+響應參數中會包含 `symbolType: "commodity"`，以及標準的 linear 合約欄位（槓桿、最小價格變動單位、資金費率間隔等）。
+
+## 透過現有 API 交易
+
+簽署協議後，您可以使用標準的 [交易](/v5/order/create-order) 介面來交易 TradFi 相關的交易對（貴金屬永續合約、原油永續合約等），無需使用獨立的 API — 使用相同的下單、修改與撤單介面即可：
+
+- [創建委託單](/v5/order/create-order)
+- [修改委託單](/v5/order/amend-order)
+- [撤銷委託單](/v5/order/cancel-order)
+- [查詢實時委託單](/v5/order/open-order)
+- [撤銷所有委託單](/v5/order/cancel-all)
+- [查詢歷史訂單 (2年)](/v5/order/order-list)
+- [查詢成交紀錄 (2年)](/v5/order/execution)
+- [批量創建委託單](/v5/order/batch-place)
+- [批量修改委託單](/v5/order/batch-amend)
+- [批量撤銷委託單](/v5/order/batch-cancel)
+- [查詢現貨可借額度](/v5/order/spot-borrow-quota)
+- [預檢查訂單](/v5/order/pre-check-order)
+
+僅需在請求中傳入對應的 `symbol`（如 `XAUUSDT`、`XAGUSDT` 用於貴金屬；原油相關 symbol 用於原油合約）與 `category` 即可。

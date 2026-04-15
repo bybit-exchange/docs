@@ -1,0 +1,62 @@
+---
+title: 查詢每日收益記錄
+sidebar_label: 查詢每日收益記錄
+sidebar_position: 5
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/token/yield" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|代幣幣種。目前僅支援 `BYUSDT`|
+|startTime|false|integer|開始時間，秒級時間戳|
+|endTime|false|integer|結束時間，秒級時間戳|
+|cursor|false|string|分頁游標。使用上次響應中的 `nextPageCursor`|
+|limit|false|integer|每頁返回數量。預設：`5`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|每日收益記錄列表|
+|> yield|string|基礎收益金額|
+|> bonusYield|string|加成收益金額|
+|> status|string|狀態：`Success`（成功）、`Processing`（處理中）|
+|> createdTime|string|記錄時間，秒級 Unix 時間戳|
+|nextPageCursor|string|下一頁游標，為空表示無更多資料|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "yield": "0.50",
+                "bonusYield": "0.20",
+                "status": "Success",
+                "createdTime": "1710691200"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

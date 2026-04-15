@@ -4,6 +4,63 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2026-04-14
+### REST API
+- Earn adds new produc [UPDATE]
+    - [Fixed Saving](../v5/finance/earn/fixed-saving/product) [NEW]
+
+- Advanced-Earn adds new product [UPDATE]
+    - [Discount Buy](../v5/finance/advanced-earn/discount-buy/product-info) [NEW]
+
+## 2026-04-10
+### REST API
+- Advanced-Earn adds new product [UPDATE]
+    - [Liquidity Mining](../v5/finance/advanced-earn/liquidity-mining/product-info) [NEW]
+
+## 2026-04-09
+### REST API
+- [Manual Repay](../v5/account/repay) [UPDATE]
+- [Manual Repay Without Asset Conversion](../v5/account/no-convert-repay) [UPDATE]
+    - Add new request parameter `repaymentType` to specify whether to repay fixed-rate, floating-rate, or both liabilities
+- [Get Liability Info](../v5/spot-margin-uta/liability) [NEW]
+    - Add a new endpoint to query liability details for a coin, including total, fixed-rate, floating-rate, spot, and derivatives borrow amounts
+- [Fixed-Rate Borrow](../v5/spot-margin-uta/fixedborrow) [NEW]
+    - Add a new endpoint to place a fixed-rate borrow order with customizable annual rate, term, repayment type, and fill strategy
+- [Get Fixed-Rate Borrow Order Info](../v5/spot-margin-uta/fixedborrow-order-info) [NEW]
+    - Add a new endpoint to query fixed-rate borrow order history with filtering by order ID, coin, status, and term
+- [Get Fixed-Rate Borrow Contract Info](../v5/spot-margin-uta/fixedborrow-contract-info) [NEW]
+    - Add a new endpoint to query fixed-rate borrow contract details including principal, interest, repayment time, and contract status
+- [Get Fixed-Rate Borrow Order Quote](../v5/spot-margin-uta/fixedborrow-order-quote) [NEW]
+    - Add a new endpoint to query available fixed-rate borrow quotes with sorting by annual rate, term, or quantity
+- [Renew Fixed-Rate Borrow](../v5/spot-margin-uta/fixedborrow-renew) [NEW]
+    - Add a new endpoint to renew a fixed-rate borrow contract, supporting full or partial renewal by quantity
+- [Get API Key Information](../v5/user/apikey-info) [UPDATE]
+    - Add new response field `FiatBitPay` under `permissions`. The old field `FiatBybitPay` remains available during the transition period
+- [Modify Master API Key](../v5/user/modify-master-apikey) [UPDATE]
+    - Add new request parameter `FiatBitPay` under `permissions`. The old field `FiatBybitPay` remains available during the transition period
+
+## 2026-04-08
+### REST API
+- Support a new earn product [UPDATE]
+    - [BYUSDT](../v5/finance/earn/byusdt/product) [NEW]
+
+## 2026-04-07
+### REST API
+- Advanced-Earn adds two new products [UPDATE]
+    - [Smart Leverage](../v5/finance/advanced-earn/smart-lvg/product-info) [NEW]
+    - [Double Win](../v5/finance/advanced-earn/double-win/product-info) [NEW]
+
+## 2026-03-31
+### REST API
+- [Set Deposit Account](../v5/asset/deposit/set-deposit-acct) [UPDATE]
+    - Support setting Earn account
+
+- [Withdraw](../v5/asset/withdraw) [UPDATE]
+    - `accountType` now supports Earn account
+
+- [Get Delay Withdraw Amount](../v5/asset/balance/delay-amount) [UPDATE]
+    - Support querying Earn account balance when try to withdraw via Earn account
+
 ## 2026-03-26
 ### REST API
 - [Get Instruments Info](../v5/market/instrument) [UPDATE]
@@ -34,8 +91,8 @@ import '/src/css/changelog.css';
 - [Repay Liability](../v5/account/repay-liability) [UPDATE]
 - [Manual Repay Without Asset Conversion](../v5/account/no-convert-repay) [UPDATE]
     - Starting Mar 17, 2026 (gradual rollout, fully released on Mar 24, 2026), BYUSDT can be used for repayment
-- [Advanced-Earn DualAssets APIs and WebSockets](../v5/earn/advanced-earn/product-info) [NEW]
-    - We have launched Bybit Advanced-Earn DualAssets. Please see our [Product info](../v5/earn/advanced-earn/product-info) for details.
+- [Advanced-Earn DualAssets APIs and WebSockets](../v5/finance/advanced-earn/dual-asset/product-info) [NEW]
+    - We have launched Bybit Advanced-Earn DualAssets. Please see our [Product info](../v5/finance/advanced-earn/dual-asset/product-info) for details.
 
 - [Get Mark Price Kline](../v5/market/mark-kline) [UPDATE]
     - Support options
@@ -74,13 +131,13 @@ import '/src/css/changelog.css';
     - Spot Level 200 data push frequency changed from 200ms to 100ms
 
 ### REST API
-- [Get Staked Position](../v5/earn/position) [UPDATE]
+- [Get Staked Position](../v5/finance/earn/easy-onchain/position) [UPDATE]
     - Add new response field `autoReinvest` to indicate whether auto-reinvest is enabled.
-- [Modify Position](../v5/earn/modify-position) [NEW]
+- [Modify Position](../v5/finance/earn/easy-onchain/modify-position) [NEW]
     - Add a new endpoint to modify the auto-reinvestment setting for OnChain Fixed positions
-- [Get Yield History](../v5/earn/yield-history) [UPDATE]
+- [Get Yield History](../v5/finance/earn/easy-onchain/yield-history) [UPDATE]
     - `category` now supports `OnChain`
-- [Get APR History](../v5/earn/apr-history) [NEW]
+- [Get APR History](../v5/finance/earn/easy-onchain/apr-history) [NEW]
     - Add a new endpoint to query historical APR data for FlexibleSaving and OnChain products, supporting up to 6 months of history
 
 ## 2026-03-17
@@ -381,10 +438,10 @@ import '/src/css/changelog.css';
 - [RFQ APIs and WebSockets](../v5/rfq/basic-workflow) [NEW]
     - We have launched Bybit RFQ (Request for Quote). Please see our [basic workflow](../v5/rfq/basic-workflow) and the [help centre](https://www.bybit.com/en/help-center/article/Introduction-to-RFQ) for details.
 - Earn API [NEW]
-    - [Get Yield History](../v5/earn/yield-history)
-    - [Get Hourly Yield History](../v5/earn/hourly-yield)
+    - [Get Yield History](../v5/finance/earn/easy-onchain/yield-history)
+    - [Get Hourly Yield History](../v5/finance/earn/easy-onchain/hourly-yield)
 - Earn API [UPDATE]
-    - [Get Stake/Redeem Order History](../v5/earn/order-history)
+    - [Get Stake/Redeem Order History](../v5/finance/earn/easy-onchain/order-history)
      - Add request parameters `productId`,`startTime`,`endTime`,`limit`,`cursor`  to support batch query of orders
 
 ## 2025-10-09
@@ -503,7 +560,7 @@ import '/src/css/changelog.css';
 - [Get New Delivery Price](../v5/market/new-delivery-price) [NEW]
     - Add a new endpoint to query historical option delivery price
 
-- [Stake / Redeem](../v5/earn/create-order) [UPDATE]
+- [Stake / Redeem](../v5/finance/earn/easy-onchain/create-order) [UPDATE]
     - Add a new input parameter `toAccountType`
 
 ## 2025-08-14
@@ -752,7 +809,7 @@ import '/src/css/changelog.css';
 
 ## 2025-04-11
 ### REST API
-- [Earn API](https://bybit-exchange.github.io/docs/v5/earn/product-info) [UPDATE]
+- [Earn API](https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/product-info) [UPDATE]
     - Add category `OnChain`.
 
 ## 2025-04-02
@@ -814,10 +871,10 @@ import '/src/css/changelog.css';
 ## 2025-02-20
 ### REST API
 - Earn API [NEW]
-    - [Get Product Info](../v5/earn/product-info)
-    - [Stake / Redeem](../v5/earn/create-order)
-    - [Get Stake/Redeem Order History](../v5/earn/order-history)
-    - [Get Staked Position](../v5/earn/position)
+    - [Get Product Info](../v5/finance/earn/easy-onchain/product-info)
+    - [Stake / Redeem](../v5/finance/earn/easy-onchain/create-order)
+    - [Get Stake/Redeem Order History](../v5/finance/earn/easy-onchain/order-history)
+    - [Get Staked Position](../v5/finance/earn/easy-onchain/position)
 
 ### Websocket API
 - [All Liquidation](../v5/websocket/public/all-liquidation) [NEW]

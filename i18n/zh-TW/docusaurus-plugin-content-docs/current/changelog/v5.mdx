@@ -4,6 +4,63 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2026-04-14
+### REST API
+- 理財新增1個產品 [更新]
+    - [定期理財](../v5/finance/earn/fixed-saving/product) [新增]
+
+- 高級理財新增1個產品 [更新]
+    - [折價買幣](../v5/finance/advanced-earn/discount-buy/product-info) [新增]
+
+## 2026-04-10
+### REST API
+- 高級理財新增1個產品 [更新]
+    - [流動性挖礦](../v5/finance/advanced-earn/liquidity-mining/product-info) [新增]
+
+## 2026-04-09
+### REST API
+- [手工還款](../v5/account/repay) [更新]
+- [無損手工還款](../v5/account/no-convert-repay) [更新]
+    - 新增請求參數 `repaymentType`，用於指定還款類型（定期、活期或兩者均還）
+- [查詢負債信息](../v5/spot-margin-uta/liability) [新增]
+    - 新增接口，用於查詢指定幣種的負債詳情，包括總負債、定期負債、活期負債、現貨負債及衍生品負債金額
+- [固定利率借款](../v5/spot-margin-uta/fixedborrow) [新增]
+    - 新增接口，用於發起固定利率借款訂單，支持自定義年化利率、借款期限、還款方式及成交策略
+- [查詢固定利率借款訂單信息](../v5/spot-margin-uta/fixedborrow-order-info) [新增]
+    - 新增接口，用於查詢固定利率借款訂單歷史，支持按訂單 ID、幣種、狀態及期限篩選
+- [查詢固定利率借款合約信息](../v5/spot-margin-uta/fixedborrow-contract-info) [新增]
+    - 新增接口，用於查詢固定利率借款合約詳情，包括本金、利息、還款時間及合約狀態
+- [查詢固定利率借款掛單報價](../v5/spot-margin-uta/fixedborrow-order-quote) [新增]
+    - 新增接口，用於查詢可借的固定利率掛單報價，支持按年化利率、期限或數量排序
+- [固定利率借款續借](../v5/spot-margin-uta/fixedborrow-renew) [新增]
+    - 新增接口，用於對固定利率借款合約進行續借，支持全額續借或按指定數量部分續借
+- [查詢API Key相關信息](../v5/user/apikey-info) [更新]
+    - `permissions` 下新增響應字段 `FiatBitPay`，過渡期內舊字段 `FiatBybitPay` 仍可用
+- [修改母帳戶的API Key設置](../v5/user/modify-master-apikey) [更新]
+    - `permissions` 下新增請求參數 `FiatBitPay`，過渡期內傳入舊字段 `FiatBybitPay` 仍正常可用
+
+## 2026-04-08
+### REST API
+- 支持新的理財產品 [更新]
+    - [BYUSDT](../v5/finance/earn/byusdt/product) [新增]
+
+## 2026-04-07
+### REST API
+- 高級理財新增2個產品 [更新]
+    - [槓桿無憂](../v5/finance/advanced-earn/smart-lvg/product-info) [新增]
+    - [漲跌雙贏](../v5/finance/advanced-earn/double-win/product-info) [新增]
+
+## 2026-03-26
+### REST API
+- [設置充值帳戶](../v5/asset/deposit/set-deposit-acct) [更新]
+    - 支持設置理財帳戶作為充值帳戶
+
+- [提幣](../v5/asset/withdraw) [更新]
+    - 支持從理財帳戶提幣
+
+- [查詢延遲提幣凍結金額](../v5/asset/balance/delay-amount)
+    - 支持返回理財帳戶的可提現金額 [更新]
+
 ## 2026-03-26
 ### REST API
 - [查詢可交易產品的規格信息](../v5/market/instrument) [更新]
@@ -34,8 +91,8 @@ import '/src/css/changelog.css';
 - [一鍵還款](../v5/account/repay-liability) [更新]
 - [無損手工還款](../v5/account/no-convert-repay) [更新]
     - 自2026年3月17日起開始灰度，2026年3月24日全量發布，BYUSDT 可用於還款
-- [高級理財雙幣投資 API 與 WebSocket](../v5/earn/advanced-earn/product-info) [新增]
-    - OpenAPI已正式上線 Bybit 高級理財雙幣投資功能。詳情請參閱我們的[產品資訊](../v5/earn/advanced-earn/product-info).
+- [高級理財雙幣投資 API 與 WebSocket](../v5/finance/advanced-earn/dual-asset/product-info) [新增]
+    - OpenAPI已正式上線 Bybit 高級理財雙幣投資功能。詳情請參閱我們的[產品資訊](../v5/finance/advanced-earn/dual-asset/product-info).
 
 - [查詢標記價格K線數據](../v5/market/mark-kline) [更新]
     - 支持期權
@@ -74,13 +131,13 @@ import '/src/css/changelog.css';
     - 現貨 200 檔數據推送頻率由 200ms 調整為 100ms
 
 ### REST API
-- [查詢理財持倉](../v5/earn/position) [更新]
+- [查詢理財持倉](../v5/finance/earn/easy-onchain/position) [更新]
     - 新增響應字段 `autoReinvest`，表示自動複投是否開啟。
-- [修改持倉設置](../v5/earn/modify-position) [新增]
+- [修改持倉設置](../v5/finance/earn/easy-onchain/modify-position) [新增]
     - 新增接口用於修改鏈上定期產品持倉的自動複投設置
-- [查詢收益歷史](../v5/earn/yield-history) [更新]
+- [查詢收益歷史](../v5/finance/earn/easy-onchain/yield-history) [更新]
     - `category` 新增支持 `OnChain`
-- [查詢歷史 APR](../v5/earn/apr-history) [新增]
+- [查詢歷史 APR](../v5/finance/earn/easy-onchain/apr-history) [新增]
     - 新增接口用於查詢 FlexibleSaving 和 OnChain 產品的歷史 APR 數據，最多支持查詢 6 個月
 
 ## 2026-03-17
@@ -381,10 +438,10 @@ import '/src/css/changelog.css';
 - [RFQ Open API](../v5/rfq/basic-workflow) [新增]
     - 我們已上線全新的 RFQ 功能，具體內容請參考 [連結](../v5/rfq/basic-workflow).
 - 理財API [新增]
-    - [查詢收益歷史](../v5/earn/yield-history)
-    - [查詢每小時收益歷史](../v5/earn/hourly-yield)
+    - [查詢收益歷史](../v5/finance/earn/easy-onchain/yield-history)
+    - [查詢每小時收益歷史](../v5/finance/earn/easy-onchain/hourly-yield)
 - Earn API [更新]
-    - [查詢質押/贖回訂單歷史](../v5/earn/order-history)
+    - [查詢質押/贖回訂單歷史](../v5/finance/earn/easy-onchain/order-history)
      - 新增新的輸入參數 `productId`,`startTime`,`endTime`,`limit`,`cursor`,支援批次查詢訂單
 
 ## 2025-10-09
@@ -508,7 +565,7 @@ import '/src/css/changelog.css';
 - [查詢期權歷史交割價格](../v5/market/new-delivery-price) [新增]
     - 新增查詢期權歷史交割價格的接口
 
-- [質押/贖回](../v5/earn/create-order) [更新]
+- [質押/贖回](../v5/finance/earn/easy-onchain/create-order) [更新]
     - 新增新的輸入參數 `toAccountType`
 
 ## 2025-08-14
@@ -801,10 +858,10 @@ import '/src/css/changelog.css';
 ## 2025-02-20
 ### REST API
 - 理財API [新增]
-    - [查询产品信息](../v5/earn/product-info)
-    - [質押/贖回](../v5/earn/create-order)
-    - [查詢質押/贖回訂單歷史](../v5/earn/order-history)
-    - [查詢理財持倉](../v5/earn/position)
+    - [查询产品信息](../v5/finance/earn/easy-onchain/product-info)
+    - [質押/贖回](../v5/finance/earn/easy-onchain/create-order)
+    - [查詢質押/贖回訂單歷史](../v5/finance/earn/easy-onchain/order-history)
+    - [查詢理財持倉](../v5/finance/earn/easy-onchain/position)
 
 ### Websocket API
 - [完整強平推送](../v5/websocket/public/all-liquidation) [新增]

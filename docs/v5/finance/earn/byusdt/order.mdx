@@ -1,0 +1,93 @@
+---
+title: Get Order List
+sidebar_label: Get Order List
+sidebar_position: 2
+---
+
+:::info
+* Pass `orderLinkId` or `orderId` alone to retrieve a single order. Omit both to query the full order list with optional filters.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/token/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+|orderLinkId|false|string|User-customised order ID. Pass to retrieve a single order|
+|orderId|false|string|System order ID. Pass to retrieve a single order|
+|orderType|false|string|Filter by order type: `Mint`, `Redeem`. Returns all types if omitted|
+|startTime|false|integer|Start timestamp in seconds. Default: 1 year ago|
+|endTime|false|integer|End timestamp in seconds. Default: current time|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+|limit|false|integer|Number of items per page. Default: `20`, Max: `100`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Order list|
+|> orderId|string|System order ID|
+|> orderLinkId|string|User-customised order ID|
+|> orderType|string|Order type: `Mint`, `Redeem`|
+|> fromCoin|string|Source coin|
+|> toCoin|string|Destination coin|
+|> fromAmount|string|Source amount|
+|> toAmount|string|Amount credited (after deducting fees)|
+|> serviceFee|string|Service fee|
+|> status|string|Order status: `Success`, `Processing`, `Fail`|
+|> createdTime|string|Order creation time, unix timestamp in seconds|
+|nextPageCursor|string|Cursor for the next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/token/order?coin=BYUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "list": [
+            {
+                "orderId": "9985caf3-7b24-452e-bb28-afbc5b52805f",
+                "orderLinkId": "byusdt-order-001",
+                "orderType": "Mint",
+                "fromCoin": "USDT",
+                "toCoin": "BYUSDT",
+                "fromAmount": "108",
+                "toAmount": "108",
+                "serviceFee": "0",
+                "status": "Success",
+                "createdTime": "1775179628"
+            },
+            {
+                "orderId": "63581995-4e3b-4ffa-9a20-c8415e7ed558",
+                "orderLinkId": "",
+                "orderType": "Mint",
+                "fromCoin": "USDT",
+                "toCoin": "BYUSDT",
+                "fromAmount": "588",
+                "toAmount": "588",
+                "serviceFee": "0",
+                "status": "Success",
+                "createdTime": "1775177332"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1775179790446
+}
+```

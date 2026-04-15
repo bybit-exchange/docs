@@ -1,0 +1,57 @@
+---
+title: Get Position Info
+sidebar_label: Get Position Info
+sidebar_position: 4
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/token/position" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|totalAmount|string|Total byUSDT holdings|
+|totalYield|string|Cumulative total yield earned|
+|yesterdayYield|string|Yesterday's yield|
+|aprE8|integer|Base APR in e8 precision. Divide by 10^8 to get the actual rate|
+|bonusAprE8|integer|Bonus APR in e8 precision (returned when user is eligible). Divide by 10^8 to get the actual rate|
+|bonusMaxAmount|string|Maximum principal eligible for bonus APR|
+|hasQuota|boolean|Whether there is remaining mintable quota|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/token/position?coin=BYUSDT HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "totalAmount": "696",
+        "totalYield": "0",
+        "yesterdayYield": "0",
+        "aprE8": "60000000",
+        "bonusAprE8": "0",
+        "bonusMaxAmount": "",
+        "hasQuota": true
+    },
+    "retExtInfo": {},
+    "time": 1775180113373
+}
+```

@@ -1,0 +1,66 @@
+---
+title: Get Hourly Yield Records
+sidebar_label: Get Hourly Yield Records
+sidebar_position: 6
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/token/hourly-yield" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|**true**|string|Token coin. Currently only `BYUSDT` is supported|
+|startTime|false|integer|Start timestamp in seconds|
+|endTime|false|integer|End timestamp in seconds|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+|limit|false|integer|Number of items per page. Default: `20`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Hourly yield record list|
+|> effectiveAmount|string|Principal amount used to calculate yield for this hour|
+|> yield|string|Yield amount for this hour|
+|> rewardType|integer|Yield type: `0` = base yield, `1` = bonus yield|
+|> aprE8|string|Actual APR applied for this hour in e8 precision. Divide by 10^8 to get the actual rate|
+|> hourlyDate|string|Start of the yield hour, unix timestamp in seconds|
+|> createdTime|string|Record creation time, unix timestamp in seconds|
+|nextPageCursor|string|Cursor for the next page. Empty string means no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/token/hourly-yield?coin=BYUSDT&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "effectiveAmount": "500.00",
+                "yield": "0.02",
+                "rewardType": 0,
+                "aprE8": "500000000",
+                "hourlyDate": "1710691200",
+                "createdTime": "1710694800"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1741651200000
+}
+```

@@ -1,0 +1,71 @@
+---
+title: Get Custom Product Quote
+sidebar_label: Get Custom Product Quote
+sidebar_position: 3
+---
+
+:::info
+* Requires Earn permission on the API key.
+* This endpoint is **only for RFQ products** (`isRfqProduct=true`). For fixed price range products, use [Get Fixed Product Quote](./product-quote) or subscribe to the WebSocket topic [`earn.doublewin.offers`](../websocket/double-win-offer).
+:::
+
+:::tip
+**How to use RFQ custom price range:**
+1. Call [Get Product Info](./product-info) to obtain `priceTickSize`, `minDeviationRatio`, and `maxDeviationRatio`.
+2. Choose a `lowerPrice` and `upperPrice` within the allowed deviation range, both must be multiples of `priceTickSize`.
+3. Call this endpoint with the chosen prices to get a `leverage` quote and its `expireTime`.
+4. Place the order before `expireTime` using the returned `leverage`.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/double-win-leverage" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|productId|**true**|string|Product ID|
+|initialPrice|**true**|string|Current index price of the underlying asset|
+|lowerPrice|**true**|string|Custom lower bound of price range. Must be a multiple of `priceTickSize` and less than `initialPrice`|
+|upperPrice|**true**|string|Custom upper bound of price range. Must be a multiple of `priceTickSize` and greater than `initialPrice`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|productId|string|Product ID|
+|initialPrice|string|Echo back of the submitted `initialPrice`|
+|lowerPrice|string|Echo back of the submitted `lowerPrice`|
+|upperPrice|string|Echo back of the submitted `upperPrice`|
+|leverage|string|Leverage multiplier for the given price range, e.g. `"3.2"`|
+|expireTime|string|Quote expiry time, Unix timestamp in ms. The order must be placed before this time|
+|maxInvestmentAmount|string|Maximum single order amount for this quote|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/double-win-leverage?productId=14092&initialPrice=66333.94&lowerPrice=63000&upperPrice=70000 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672280218882
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "14092",
+        "initialPrice": "66333.94",
+        "lowerPrice": "63000",
+        "upperPrice": "70000",
+        "leverage": "241.15",
+        "expireTime": "1775106748000",
+        "maxInvestmentAmount": "10000"
+    },
+    "retExtInfo": {},
+    "time": 1775106718961
+}
+```

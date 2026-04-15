@@ -229,6 +229,21 @@ const config = {
               {
                 to: '/faq',
                 label: 'FAQ',
+              },
+              {
+                type: 'doc',
+                docId: 'v5/smp',
+                label: 'Self Match Prevention',
+              },
+              {
+                type: 'doc',
+                docId: 'v5/copytrade',
+                label: 'How To Start Copy Trading',
+              },
+              {
+                type: 'doc',
+                docId: 'institutional/dmm-listing/spot',
+                label: 'DMM Listing',
               }
             ]
           },

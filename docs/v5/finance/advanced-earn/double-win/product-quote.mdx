@@ -1,0 +1,60 @@
+---
+title: Get Fixed Product Quote
+sidebar_label: Get Fixed Product Quote
+sidebar_position: 2
+---
+
+:::info
+Does not need authentication
+:::
+
+:::note
+This endpoint applies to **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Custom Product Quote](./leverage) to obtain a quote.
+
+You can also subscribe to the WebSocket topic [`earn.doublewin.offers`](../websocket/double-win-offer) to receive real-time quote updates.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/advance/product-extra-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category. `DoubleWin`|
+|productId|**true**|string|Product ID|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|category|string|`DoubleWin`|
+|productId|string|Product ID|
+|leverage|string|Current maximum leverage multiplier. Empty if no active quote|
+|expireTime|string|Quote expiry time, Unix timestamp in ms. The quote must be used before this time. Empty if no active quote|
+|maxInvestmentAmount|string|Maximum single order amount at current quote. Empty if no active quote|
+|currentPrice|string|Current index price of the underlying asset. Use as `initialPrice` when placing an order|
+
+### Request Example
+
+```http
+GET /v5/earn/advance/product-extra-info?category=DoubleWin&productId=20001 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "productId": "14084",
+        "leverage": "9.30452991038687184855947115",
+        "expireTime": "1775102611946",
+        "maxInvestmentAmount": "1000",
+        "currentPrice": "66628.76",
+        "category": "DoubleWin"
+    },
+    "retExtInfo": {},
+    "time": 1775102648543
+}
+```

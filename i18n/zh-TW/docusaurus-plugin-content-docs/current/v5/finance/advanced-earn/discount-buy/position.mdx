@@ -1,0 +1,92 @@
+---
+title: 查詢倉位資訊
+sidebar_label: 查詢倉位資訊
+sidebar_position: 4
+---
+
+:::info
+* API 金鑰需要具備 Earn（理財）權限。
+* 僅返回持倉中的倉位，已結算倉位不會包含在內。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/advance/position" />
+
+### 請求參數
+| 參數 | 必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別，`DiscountBuy`|
+|productId|false|string|按產品 ID 篩選|
+|coin|false|string|按標的資產篩選，例如：`BTC`|
+|limit|false|int|每頁返回數量|
+|cursor|false|string|分頁游標，使用上次響應中的 `nextPageCursor`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|nextPageCursor|string|下一頁游標，為空字串表示無更多資料|
+|list|array|列表|
+|> positionId|string|倉位 ID|
+|> productId|string|產品 ID|
+|> category|string|產品類別，`DiscountBuy`|
+|> coin|string|投資幣種，例如：`USDT`|
+|> underlyingAsset|string|標的資產，例如：`BTC`, `ETH`|
+|> amount|string|投資金額|
+|> purchasePrice|string|下單時鎖定的錨定買入價|
+|> knockoutPrice|string|敲出價|
+|> knockoutCouponE8|string|年化息率（e8 精度），實際利率 = `knockoutCouponE8` / 1e8|
+|> status|string|倉位狀態：`Active`（持倉中），`Settling`（結算處理中）|
+|> orderId|string|關聯訂單 ID|
+|> duration|string|產品期限，例如：`7d`|
+|> settlementTime|string|結算時間，毫秒級 Unix 時間戳|
+|> accountType|string|扣款帳戶：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）|
+|> toAccountType|string|結算入帳帳戶，固定為 `FUND`|
+|> settleType|string|行權結算方式：`Base` = 收取標的資產；`Quote` = 收取 USDT。敲出時此參數無效|
+|> expectReceiveAt|string|預計到帳時間，毫秒級 Unix 時間戳，等於 `settlementTime` + 15 分鐘|
+
+### 請求示例
+
+```http
+GET /v5/earn/advance/position?category=DiscountBuy&productId=7037 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1776154219022
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "category": "",
+        "list": [
+            {
+                "positionId": "11959",
+                "productId": "7037",
+                "category": "DiscountBuy",
+                "coin": "USDT",
+                "underlyingAsset": "BTC",
+                "amount": "200",
+                "purchasePrice": "74019",
+                "knockoutPrice": "76050",
+                "knockoutCouponE8": "1000000",
+                "status": "Active",
+                "orderId": "38f6f5ce-57e2-4d69-b4d3-c39464389ccb",
+                "duration": "1d",
+                "settlementTime": "1776240000000",
+                "accountType": "FUND",
+                "toAccountType": "FUND",
+                "settleType": "Base",
+                "expectReceiveAt": "1776240900000"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1776154219022
+}
+```
