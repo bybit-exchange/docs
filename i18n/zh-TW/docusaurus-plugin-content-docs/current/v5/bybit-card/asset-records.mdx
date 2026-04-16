@@ -7,7 +7,7 @@ sidebar_position: 1
 查詢卡交易歷史記錄，支持按狀態、卡號後幾位、商戶名、交易類型、時間範圍等條件篩選，返回分頁結果。
 
 ### HTTP 請求
-<APIEndpoint method="POST" url="/v5/card/transaction/asset-records" />
+<APIEndpoint method="POST" url="/v5/card/transaction/query-asset-records" />
 
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
@@ -36,12 +36,12 @@ sidebar_position: 1
 |> data |array |交易記錄列表|
 |>> pan4 |string |卡後 4 位|
 |>> pan6 |string |卡前 6 位（BIN 號）|
-|>> tradeStatus |string |交易狀態|
-|>> side |string |交易方向。`SIDE_QUERY_AUTH`: 授權交易, `SIDE_QUERY_FINANCIAL`: 清算交易, `SIDE_QUERY_REFUND`: 退款交易|
-|>> basicAmount |string |基礎金額|
-|>> basicCurrency |string |基礎貨幣代碼|
-|>> transactionAmount |string |交易金額|
-|>> transactionCurrency |string |交易貨幣代碼|
+|>> tradeStatus |string |交易狀態。`0`: 處理中, `1`: 已完成, `2`: 已拒絕, `3`: 已撤銷|
+|>> side |string |交易類型。`1`: 授權, `2`: 授權撤銷, `3`: 扣款, `4`: 退款（unDeduct）, `5`: 退款, `6`: 拒付, `7`: 直接扣款, `8`: 退款撤銷, `9`: 拒付撤銷, `10`: 退款請求, `11`: 退款撤銷請求, `12`: 拒付費, `13`: ATM 取款|
+|>> basicAmount |string |總金額|
+|>> basicCurrency |string |總金額幣種代碼|
+|>> transactionAmount |string |不含稅金額|
+|>> transactionCurrency |string |不含稅金額幣種代碼|
 |>> txnCreate |integer |交易創建時間（Unix 毫秒時間戳）|
 |>> merchCountry |string |商戶所在國家|
 |>> merchCity |string |商戶所在城市|
@@ -50,18 +50,18 @@ sidebar_position: 1
 |>> declinedReason |string |拒絕原因，僅當交易被拒絕時有值|
 |>> totalFees |string |總費用|
 |>> uid |integer |用戶 ID|
-|>> transactionCurrencyAmount |string |交易幣種金額|
-|>> fxPad |string |匯率補充信息|
-|>> interchangeFee |string |交換費（Interchange Fee）|
+|>> transactionCurrencyAmount |string |法幣交易金額|
+|>> fxPad |string |手續費|
+|>> interchangeFee |string |交換費（不叠加，與用戶無關，卡組相關）|
 |>> billAmount |string |賬單金額|
-|>> paidAmount |string |實付金額|
+|>> paidAmount |string |交易幣種金額|
 |>> paidCurrency |string |實付貨幣代碼|
-|>> bonusAmount |string |獎勵金額|
+|>> bonusAmount |string |體驗金|
 |>> foreignTransactionFee |string |外幣交易手續費|
 |>> totalTax |string |總稅費|
 |>> paidFiat |string |法幣支付金額|
 |>> withdrawalFee |string |提現手續費|
-|>> status |string |交易狀態。`pending`: 待處理, `cleared`: 已清算, `declined`: 已拒絕|
+|>> status |string |交易狀態。`-1`: 初始化, `0`: 待處理, `1`: 成功, `2`: 失敗|
 |>> orderNo |string |訂單號|
 |>> mccCode |string |商戶類別代碼（MCC Code）|
 |>> merchCategoryDesc |string |商戶類別描述|
@@ -74,7 +74,7 @@ sidebar_position: 1
 <TabItem value="http" label="HTTP">
 
 ```http
-POST /v5/card/transaction/asset-records?limit=10&page=1 HTTP/1.1
+POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -88,7 +88,7 @@ X-BAPI-RECV-WINDOW: 5000
 ```python
 import requests
 
-url = "https://api-testnet.bybit.com/v5/card/transaction/asset-records"
+url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"
 headers = {
     "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
     "X-BAPI-SIGN": "XXXXX",
@@ -109,7 +109,7 @@ print(response.json())
 ```n4js
 const axios = require('axios');
 
-const url = 'https://api-testnet.bybit.com/v5/card/transaction/asset-records';
+const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';
 const headers = {
   'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
   'X-BAPI-SIGN': 'XXXXX',
@@ -140,9 +140,9 @@ axios.post(url, {}, { headers, params })
             {
                 "pan4": "1234",
                 "pan6": "456789",
-                "tradeStatus": "cleared",
-                "side": "SIDE_QUERY_FINANCIAL",
-                "basicAmount": "100.00",
+                "tradeStatus": "1",
+                "side": "3",
+                "basicAmount": "101.50",
                 "basicCurrency": "USD",
                 "transactionAmount": "100.00",
                 "transactionCurrency": "USD",
@@ -162,10 +162,10 @@ axios.post(url, {}, { headers, params })
                 "paidCurrency": "USDT",
                 "bonusAmount": "0",
                 "foreignTransactionFee": "0",
-                "totalTax": "0",
+                "totalTax": "1.50",
                 "paidFiat": "0",
                 "withdrawalFee": "0",
-                "status": "cleared",
+                "status": "1",
                 "orderNo": "ORD20230101001",
                 "mccCode": "5411",
                 "merchCategoryDesc": "Grocery Stores"

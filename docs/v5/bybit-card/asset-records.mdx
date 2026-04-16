@@ -7,7 +7,7 @@ sidebar_position: 1
 Query card transaction history. Supports filtering by status, last digits of card number, merchant name, transaction type, time range, etc. Results are paginated.
 
 ### HTTP Request
-<APIEndpoint method="POST" url="/v5/card/transaction/asset-records" />
+<APIEndpoint method="POST" url="/v5/card/transaction/query-asset-records" />
 
 ### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -36,12 +36,12 @@ Query card transaction history. Supports filtering by status, last digits of car
 |> data |array |Transaction record list|
 |>> pan4 |string |Last 4 digits of card number|
 |>> pan6 |string |First 6 digits of card number (BIN)|
-|>> tradeStatus |string |Trade status|
-|>> side |string |Transaction direction. `SIDE_QUERY_AUTH`: Authorization, `SIDE_QUERY_FINANCIAL`: Clearing, `SIDE_QUERY_REFUND`: Refund|
-|>> basicAmount |string |Basic amount|
-|>> basicCurrency |string |Basic currency code|
-|>> transactionAmount |string |Transaction amount|
-|>> transactionCurrency |string |Transaction currency code|
+|>> tradeStatus |string |Trade status. `0`: In_Progress, `1`: Completed, `2`: Declined, `3`: Reversal|
+|>> side |string |Transaction type. `1`: Authorization, `2`: Authorization Reversal, `3`: Transaction, `4`: Refund (unDeduct), `5`: Refund, `6`: Chargeback, `7`: Transaction (Direct), `8`: Refund Reversal, `9`: Chargeback Reversal, `10`: Refund Request, `11`: Refund Reversal Request, `12`: Chargeback Fee, `13`: ATM Withdrawal|
+|>> basicAmount |string |Total amount|
+|>> basicCurrency |string |Total amount currency code|
+|>> transactionAmount |string |Amount before tax|
+|>> transactionCurrency |string |Amount before tax currency code|
 |>> txnCreate |integer |Transaction creation time (Unix ms timestamp)|
 |>> merchCountry |string |Merchant country|
 |>> merchCity |string |Merchant city|
@@ -50,18 +50,18 @@ Query card transaction history. Supports filtering by status, last digits of car
 |>> declinedReason |string |Declined reason. Only populated when transaction is declined|
 |>> totalFees |string |Total fees|
 |>> uid |integer |User ID|
-|>> transactionCurrencyAmount |string |Transaction currency amount|
-|>> fxPad |string |FX supplementary information|
-|>> interchangeFee |string |Interchange fee|
+|>> transactionCurrencyAmount |string |Fiat transaction amount|
+|>> fxPad |string |Fee|
+|>> interchangeFee |string |Interchange fee (non-cumulative, unrelated to users, card network related)|
 |>> billAmount |string |Bill amount|
-|>> paidAmount |string |Paid amount|
+|>> paidAmount |string |Transaction currency amount|
 |>> paidCurrency |string |Paid currency code|
-|>> bonusAmount |string |Bonus amount|
+|>> bonusAmount |string |Trial bonus|
 |>> foreignTransactionFee |string |Foreign transaction fee|
 |>> totalTax |string |Total tax|
 |>> paidFiat |string |Fiat paid amount|
 |>> withdrawalFee |string |Withdrawal fee|
-|>> status |string |Transaction status. `pending`: Pending, `cleared`: Cleared, `declined`: Declined|
+|>> status |string |Transaction status. `-1`: Init, `0`: Pending, `1`: Success, `2`: Fail|
 |>> orderNo |string |Order number|
 |>> mccCode |string |Merchant Category Code (MCC)|
 |>> merchCategoryDesc |string |Merchant category description|
@@ -74,7 +74,7 @@ Query card transaction history. Supports filtering by status, last digits of car
 <TabItem value="http" label="HTTP">
 
 ```http
-POST /v5/card/transaction/asset-records?limit=10&page=1 HTTP/1.1
+POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1
 Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -88,7 +88,7 @@ X-BAPI-RECV-WINDOW: 5000
 ```python
 import requests
 
-url = "https://api-testnet.bybit.com/v5/card/transaction/asset-records"
+url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"
 headers = {
     "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
     "X-BAPI-SIGN": "XXXXX",
@@ -109,7 +109,7 @@ print(response.json())
 ```n4js
 const axios = require('axios');
 
-const url = 'https://api-testnet.bybit.com/v5/card/transaction/asset-records';
+const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';
 const headers = {
   'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
   'X-BAPI-SIGN': 'XXXXX',
@@ -140,9 +140,9 @@ axios.post(url, {}, { headers, params })
             {
                 "pan4": "1234",
                 "pan6": "456789",
-                "tradeStatus": "cleared",
-                "side": "SIDE_QUERY_FINANCIAL",
-                "basicAmount": "100.00",
+                "tradeStatus": "1",
+                "side": "3",
+                "basicAmount": "101.50",
                 "basicCurrency": "USD",
                 "transactionAmount": "100.00",
                 "transactionCurrency": "USD",
@@ -162,10 +162,10 @@ axios.post(url, {}, { headers, params })
                 "paidCurrency": "USDT",
                 "bonusAmount": "0",
                 "foreignTransactionFee": "0",
-                "totalTax": "0",
+                "totalTax": "1.50",
                 "paidFiat": "0",
                 "withdrawalFee": "0",
-                "status": "cleared",
+                "status": "1",
                 "orderNo": "ORD20230101001",
                 "mccCode": "5411",
                 "merchCategoryDesc": "Grocery Stores"
