@@ -1,0 +1,154 @@
+---
+title: Query Point Records
+sidebar_label: Query Point Records
+sidebar_position: 2
+---
+
+Query the user's card reward point transaction records. Supports pagination and filtering by time range, type, and direction.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/card/reward/points/records" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|type |false |string |Point type filter|
+|pageSize |false |integer |Number of items per page. Default: `10`. Min: `1`|
+|pageNo |false |integer |Page number. Default: `1`. Min: `1`|
+|startTime |false |integer |Start time (Unix timestamp)|
+|endTime |false |integer |End time (Unix timestamp)|
+|outOrderId |false |string |External order ID|
+|bizId |false |string |Point order ID|
+|bizTxnId |false |string |consumeIdLifecycle|
+|side |false |string |Point direction. `1`: Earn points, `2`: Deduct points|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Business return code. `0`: success; non-zero: failure|
+|retMsg |string |Return message|
+|result |object | |
+|> pageSize |integer |Number of items per page|
+|> pageNo |integer |Current page number|
+|> totalCount |integer |Total number of records|
+|> data |array |Point record list|
+|>> outOrderId |string |External order ID|
+|>> point |integer |Point amount|
+|>> side |string |Point direction|
+|>> type |string |Type|
+|>> subType |string |Sub-type|
+|>> createTime |integer |Creation time (Unix ms timestamp)|
+|>> updateTime |integer |Update time (Unix ms timestamp)|
+|>> bizId |string |Point order ID|
+|>> bizTxnId |string |consumeIdLifecycle|
+|>> transactionDate |string |Transaction date and time|
+|>> transactionId |string |Transaction ID|
+|>> transactionAmount |string |Transaction amount / Paid with fiat|
+|>> basicCurrency |string |Transaction currency|
+|>> merchCategoryDesc |string |Merchant category|
+|>> merchName |string |Merchant name|
+|>> merchCountry |string |Location (country)|
+|>> merchCity |string |Location (city)|
+|>> pan4 |string |Card's last 4 digits|
+|>> payFiatAmount |string |Pay with fiat|
+|>> transactionCurrencyAmount |string |Pay with crypto|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/reward/points/records?pageSize=10&pageNo=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/reward/points/records"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+params = {
+    "pageSize": 10,
+    "pageNo": 1
+}
+response = requests.post(url, headers=headers, params=params)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/reward/points/records';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+const params = { pageSize: 10, pageNo: 1 };
+
+axios.post(url, {}, { headers, params })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pageSize": 10,
+        "pageNo": 1,
+        "totalCount": 50,
+        "data": [
+            {
+                "outOrderId": "ORD20230101001",
+                "point": 100,
+                "side": "1",
+                "type": "CASHBACK",
+                "subType": "",
+                "createTime": 1672211918471,
+                "updateTime": 1672211918471,
+                "bizId": "BIZ20230101001",
+                "bizTxnId": "TXN20230101001",
+                "transactionDate": "2023-01-01 12:00:00",
+                "transactionId": "TXN20230101001",
+                "transactionAmount": "100.00",
+                "basicCurrency": "USD",
+                "merchCategoryDesc": "Grocery Stores",
+                "merchName": "Amazon",
+                "merchCountry": "US",
+                "merchCity": "New York",
+                "pan4": "1234",
+                "payFiatAmount": "0",
+                "transactionCurrencyAmount": "100.00"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

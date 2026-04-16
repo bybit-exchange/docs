@@ -1,0 +1,178 @@
+---
+title: 查詢資產記錄
+sidebar_label: 查詢資產記錄
+sidebar_position: 1
+---
+
+查詢卡交易歷史記錄，支持按狀態、卡號後幾位、商戶名、交易類型、時間範圍等條件篩選，返回分頁結果。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/card/transaction/query-asset-records" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|statusCode |false |string |交易狀態碼。`0`: 待處理, `1`: 已清算, `2`: 已拒絕|
+|limit |false |integer |每頁條目數，默認 `100`，範圍：[`1`, `500`]|
+|page |false |integer |頁碼，默認 `1`，最小值 `1`|
+|pan4 |false |string |卡後 2/4 位，用於篩選特定卡片的交易|
+|createBeginTime |false |integer |交易開始時間（Unix 毫秒時間戳）|
+|createEndTime |false |integer |交易截止時間（Unix 毫秒時間戳）|
+|merchName |false |string |商戶名稱，支持模糊搜索|
+|type |false |string |查詢類型。`SIDE_QUERY_AUTH`: 授權交易, `SIDE_QUERY_FINANCIAL`: 清算交易, `SIDE_QUERY_REFUND`: 退款交易|
+|txnId |false |string |交易 ID，精確匹配|
+|cardToken |false |string |卡 Token，用於標識特定卡片|
+|orderNo |false |string |訂單號，精確匹配|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|retCode |integer |業務返回碼。`0`: 成功；非零: 失敗|
+|retMsg |string |返回消息|
+|result |object | |
+|> pageSize |integer |每頁條數|
+|> pageNo |integer |當前頁碼|
+|> totalCount |integer |總記錄數|
+|> data |array |交易記錄列表|
+|>> pan4 |string |卡後 4 位|
+|>> pan6 |string |卡前 6 位（BIN 號）|
+|>> tradeStatus |string |交易狀態。`0`: 處理中, `1`: 已完成, `2`: 已拒絕, `3`: 已撤銷|
+|>> side |string |交易類型。`1`: 授權, `2`: 授權撤銷, `3`: 扣款, `4`: 退款（unDeduct）, `5`: 退款, `6`: 拒付, `7`: 直接扣款, `8`: 退款撤銷, `9`: 拒付撤銷, `10`: 退款請求, `11`: 退款撤銷請求, `12`: 拒付費, `13`: ATM 取款|
+|>> basicAmount |string |總金額|
+|>> basicCurrency |string |總金額幣種代碼|
+|>> transactionAmount |string |不含稅金額|
+|>> transactionCurrency |string |不含稅金額幣種代碼|
+|>> txnCreate |integer |交易創建時間（Unix 毫秒時間戳）|
+|>> merchCountry |string |商戶所在國家|
+|>> merchCity |string |商戶所在城市|
+|>> merchName |string |商戶名稱|
+|>> txnId |string |交易 ID|
+|>> declinedReason |string |拒絕原因，僅當交易被拒絕時有值|
+|>> totalFees |string |總費用|
+|>> uid |integer |用戶 ID|
+|>> transactionCurrencyAmount |string |法幣交易金額|
+|>> fxPad |string |手續費|
+|>> interchangeFee |string |交換費（不叠加，與用戶無關，卡組相關）|
+|>> billAmount |string |賬單金額|
+|>> paidAmount |string |交易幣種金額|
+|>> paidCurrency |string |實付貨幣代碼|
+|>> bonusAmount |string |體驗金|
+|>> foreignTransactionFee |string |外幣交易手續費|
+|>> totalTax |string |總稅費|
+|>> paidFiat |string |法幣支付金額|
+|>> withdrawalFee |string |提現手續費|
+|>> status |string |交易狀態。`-1`: 初始化, `0`: 待處理, `1`: 成功, `2`: 失敗|
+|>> orderNo |string |訂單號|
+|>> mccCode |string |商戶類別代碼（MCC Code）|
+|>> merchCategoryDesc |string |商戶類別描述|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+params = {
+    "limit": 10,
+    "page": 1
+}
+response = requests.post(url, headers=headers, params=params)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+const params = { limit: 10, page: 1 };
+
+axios.post(url, {}, { headers, params })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pageSize": 100,
+        "pageNo": 1,
+        "totalCount": 2,
+        "data": [
+            {
+                "pan4": "1234",
+                "pan6": "456789",
+                "tradeStatus": "1",
+                "side": "3",
+                "basicAmount": "101.50",
+                "basicCurrency": "USD",
+                "transactionAmount": "100.00",
+                "transactionCurrency": "USD",
+                "txnCreate": 1672211918471,
+                "merchCountry": "US",
+                "merchCity": "New York",
+                "merchName": "Amazon",
+                "txnId": "TXN20230101001",
+                "declinedReason": "",
+                "totalFees": "1.50",
+                "uid": 100001,
+                "transactionCurrencyAmount": "100.00",
+                "fxPad": "",
+                "interchangeFee": "0.50",
+                "billAmount": "101.50",
+                "paidAmount": "101.50",
+                "paidCurrency": "USDT",
+                "bonusAmount": "0",
+                "foreignTransactionFee": "0",
+                "totalTax": "1.50",
+                "paidFiat": "0",
+                "withdrawalFee": "0",
+                "status": "1",
+                "orderNo": "ORD20230101001",
+                "mccCode": "5411",
+                "merchCategoryDesc": "Grocery Stores"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

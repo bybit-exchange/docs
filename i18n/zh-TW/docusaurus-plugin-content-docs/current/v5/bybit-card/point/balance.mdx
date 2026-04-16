@@ -1,0 +1,100 @@
+---
+title: 查詢積分餘額
+sidebar_label: 查詢積分餘額
+sidebar_position: 1
+---
+
+查詢用戶卡片獎勵積分餘額，包含可用積分、凍結積分、賬戶狀態等信息。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/card/reward/points/balance" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|retCode |integer |業務返回碼。`0`: 成功；非零: 失敗|
+|retMsg |string |返回消息|
+|result |object | |
+|> accountId |string |賬戶 ID|
+|> availablePoint |string |可用積分|
+|> pendingPoint |string |凍結積分|
+|> status |string |賬戶狀態|
+|> updateTime |string |更新時間（Unix 毫秒時間戳）|
+|> settlementPeriod |integer |結算週期|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/reward/points/balance HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/reward/points/balance"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+response = requests.post(url, headers=headers)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/reward/points/balance';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+
+axios.post(url, {}, { headers })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "accountId": "100001",
+        "availablePoint": 5000,
+        "pendingPoint": 200,
+        "status": "active",
+        "updateTime": 1672211918471,
+        "settlementPeriod": 30
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

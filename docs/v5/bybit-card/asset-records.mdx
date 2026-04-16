@@ -1,0 +1,178 @@
+---
+title: Query Asset Records
+sidebar_label: Query Asset Records
+sidebar_position: 1
+---
+
+Query card transaction history. Supports filtering by status, last digits of card number, merchant name, transaction type, time range, etc. Results are paginated.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/card/transaction/query-asset-records" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|statusCode |false |string |Transaction status code. `0`: Pending, `1`: Cleared, `2`: Declined|
+|limit |false |integer |Number of items per page. Default: `100`. Range: [`1`, `500`]|
+|page |false |integer |Page number. Default: `1`. Min: `1`|
+|pan4 |false |string |Last 2/4 digits of card number, used to filter transactions of a specific card|
+|createBeginTime |false |integer |Start time of transaction (Unix ms timestamp)|
+|createEndTime |false |integer |End time of transaction (Unix ms timestamp)|
+|merchName |false |string |Merchant name. Supports fuzzy search|
+|type |false |string |Query type. `SIDE_QUERY_AUTH`: Authorization, `SIDE_QUERY_FINANCIAL`: Clearing, `SIDE_QUERY_REFUND`: Refund|
+|txnId |false |string |Transaction ID. Exact match|
+|cardToken |false |string |Card token, used to identify a specific card|
+|orderNo |false |string |Order number. Exact match|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Business return code. `0`: success; non-zero: failure|
+|retMsg |string |Return message|
+|result |object | |
+|> pageSize |integer |Number of items per page|
+|> pageNo |integer |Current page number|
+|> totalCount |integer |Total number of records|
+|> data |array |Transaction record list|
+|>> pan4 |string |Last 4 digits of card number|
+|>> pan6 |string |First 6 digits of card number (BIN)|
+|>> tradeStatus |string |Trade status. `0`: In_Progress, `1`: Completed, `2`: Declined, `3`: Reversal|
+|>> side |string |Transaction type. `1`: Authorization, `2`: Authorization Reversal, `3`: Transaction, `4`: Refund (unDeduct), `5`: Refund, `6`: Chargeback, `7`: Transaction (Direct), `8`: Refund Reversal, `9`: Chargeback Reversal, `10`: Refund Request, `11`: Refund Reversal Request, `12`: Chargeback Fee, `13`: ATM Withdrawal|
+|>> basicAmount |string |Total amount|
+|>> basicCurrency |string |Total amount currency code|
+|>> transactionAmount |string |Amount before tax|
+|>> transactionCurrency |string |Amount before tax currency code|
+|>> txnCreate |integer |Transaction creation time (Unix ms timestamp)|
+|>> merchCountry |string |Merchant country|
+|>> merchCity |string |Merchant city|
+|>> merchName |string |Merchant name|
+|>> txnId |string |Transaction ID|
+|>> declinedReason |string |Declined reason. Only populated when transaction is declined|
+|>> totalFees |string |Total fees|
+|>> uid |integer |User ID|
+|>> transactionCurrencyAmount |string |Fiat transaction amount|
+|>> fxPad |string |Fee|
+|>> interchangeFee |string |Interchange fee (non-cumulative, unrelated to users, card network related)|
+|>> billAmount |string |Bill amount|
+|>> paidAmount |string |Transaction currency amount|
+|>> paidCurrency |string |Paid currency code|
+|>> bonusAmount |string |Trial bonus|
+|>> foreignTransactionFee |string |Foreign transaction fee|
+|>> totalTax |string |Total tax|
+|>> paidFiat |string |Fiat paid amount|
+|>> withdrawalFee |string |Withdrawal fee|
+|>> status |string |Transaction status. `-1`: Init, `0`: Pending, `1`: Success, `2`: Fail|
+|>> orderNo |string |Order number|
+|>> mccCode |string |Merchant Category Code (MCC)|
+|>> merchCategoryDesc |string |Merchant category description|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+params = {
+    "limit": 10,
+    "page": 1
+}
+response = requests.post(url, headers=headers, params=params)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+const params = { limit: 10, page: 1 };
+
+axios.post(url, {}, { headers, params })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pageSize": 100,
+        "pageNo": 1,
+        "totalCount": 2,
+        "data": [
+            {
+                "pan4": "1234",
+                "pan6": "456789",
+                "tradeStatus": "1",
+                "side": "3",
+                "basicAmount": "101.50",
+                "basicCurrency": "USD",
+                "transactionAmount": "100.00",
+                "transactionCurrency": "USD",
+                "txnCreate": 1672211918471,
+                "merchCountry": "US",
+                "merchCity": "New York",
+                "merchName": "Amazon",
+                "txnId": "TXN20230101001",
+                "declinedReason": "",
+                "totalFees": "1.50",
+                "uid": 100001,
+                "transactionCurrencyAmount": "100.00",
+                "fxPad": "",
+                "interchangeFee": "0.50",
+                "billAmount": "101.50",
+                "paidAmount": "101.50",
+                "paidCurrency": "USDT",
+                "bonusAmount": "0",
+                "foreignTransactionFee": "0",
+                "totalTax": "1.50",
+                "paidFiat": "0",
+                "withdrawalFee": "0",
+                "status": "1",
+                "orderNo": "ORD20230101001",
+                "mccCode": "5411",
+                "merchCategoryDesc": "Grocery Stores"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

@@ -1,0 +1,100 @@
+---
+title: Query Point Balance
+sidebar_label: Query Point Balance
+sidebar_position: 1
+---
+
+Query the user's card reward point balance, including available points, pending (frozen) points, account status, and related information.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/card/reward/points/balance" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Business return code. `0`: success; non-zero: failure|
+|retMsg |string |Return message|
+|result |object | |
+|> accountId |string |Account ID|
+|> availablePoint |string |Available points|
+|> pendingPoint |string |Pending (frozen) points|
+|> status |string |Account status|
+|> updateTime |string |Last update time (Unix ms timestamp)|
+|> settlementPeriod |integer |Settlement period|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/reward/points/balance HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/reward/points/balance"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+response = requests.post(url, headers=headers)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/reward/points/balance';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+
+axios.post(url, {}, { headers })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "accountId": "100001",
+        "availablePoint": 5000,
+        "pendingPoint": 200,
+        "status": "active",
+        "updateTime": 1672211918471,
+        "settlementPeriod": 30
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```
