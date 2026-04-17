@@ -7,14 +7,14 @@ import styles from './styles.module.css';
 const primaryCards = [
   {
     title: <Translate id="homepage.card.mcp.title">MCP Tool</Translate>,
-    eyebrow: <Translate id="homepage.card.mcp.eyebrow">Coming soon!</Translate>,
+    // eyebrow: <Translate id="homepage.card.mcp.eyebrow">Coming soon!</Translate>,
     description: (
       <Translate id="homepage.card.mcp.desc">
         Connect AI agents directly to Bybit through the official MCP server for trading workflows, market context, and faster tool-driven integration.
       </Translate>
     ),
-    link: 'https://github.com/bybit-exchange/bybit-mcp',
-    linkLabel: <Translate id="homepage.card.mcp.link">View repository</Translate>,
+    link: 'https://www.npmjs.com/package/bybit-official-trading-server',
+    linkLabel: <Translate id="homepage.card.mcp.link">View document</Translate>,
     external: true,
     tags: [
       <Translate id="homepage.card.mcp.tag.1">AI agents</Translate>,
