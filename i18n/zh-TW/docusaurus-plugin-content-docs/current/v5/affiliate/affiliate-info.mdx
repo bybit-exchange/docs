@@ -20,28 +20,33 @@ sidebar_position: 2
 | 參數 | 是否必須 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
 |uid |**true** |string |被代理用戶的母帳戶uid|
+|coin |false |string |幣種篩選，如 `USDT`|
+|business |false |string |業務線篩選。`1`: 衍生品，`2`: 現貨，`3`: ByFi，`4`: USDC，`5`: 期權|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |uid |string |帳戶uid|
-|vipLevel |string |VIP等級 |
-|takerVol30Day |string |過去30天的吃單交易量. 單位: USDT. 所有下方交易量相關的字段, 包含了期貨、期權和現貨的交易量 |
-|makerVol30Day |string |過去30天的掛單交易量. 單位: USDT |
-|tradeVol30Day |string |過去30天的總交易量. 單位: USDT |
-|depositAmount30Day |string |過去30天的入金金額, 5分鐘內更新. 單位: USDT |
-|takerVol365Day |string |過去一年的吃單交易量. 單位: USDT |
-|makerVol365Day |string |過去一年的掛單交易量. 單位: USDT |
-|tradeVol365Day |string |過去一年的總交易量. 單位: USDT |
-|depositAmount365Day |string |過去一年的總入金金額, 5分鐘內更新. 單位: USDT |
-|totalWalletBalance |string |資產餘額區間<ul><li>`1`: 少於100 USDT的價值</li><li>`2`: 100(含) ~ 250 USDT的價值</li><li>`3`: 250(含) ~ 500 USDT的價值</li><li>`4`: 大於 500USDT的價值</li></ul>  |
-|depositUpdateTime |string |入金數據更新時間. UTC時間 |
-|volUpdateTime |string |交易量數據更新時間. UTC時間 |
-|KycLevel |integer |KYC等級. `0`, `1`, `2` |
-|tradfiTradeVol30Day |string |過去 30 天的 tradfi 交易量（USDT）|
-|tradfiTradeVol365Day |string |過去一年的 tradfi 交易量（USDT）|
-|commissions30Day |json |過去 30 天的tradfi 交易佣金|
-|commissions365Day |json |過去一年的tradfi 交易佣金|
+|vipLevel |string |VIP等級。常見值：`0`（無VIP）、`1`、`2`、`3`、`4`、`99`（VVIP）|
+|takerVol30Day |string |過去30天的吃單交易量（USDT）。以下所有交易量字段均包含期貨、期權和現貨交易量|
+|makerVol30Day |string |過去30天的掛單交易量（USDT）|
+|tradeVol30Day |string |過去30天的總交易量（USDT）|
+|depositAmount30Day |string |過去30天的入金金額（USDT），5分鐘內更新|
+|takerVol365Day |string |成為代理直客以來的累計吃單交易量（USDT）|
+|makerVol365Day |string |成為代理直客以來的累計掛單交易量（USDT）|
+|tradeVol365Day |string |成為代理直客以來的累計總交易量（USDT）|
+|depositAmount365Day |string |成為代理直客以來的累計入金總額（USDT），包含所有帳戶及業務類型的入金|
+|totalWalletBalance |string |資產餘額區間<ul><li>`1`: 少於100 USDT</li><li>`2`: 100(含) ~ 250 USDT</li><li>`3`: 250(含) ~ 500 USDT</li><li>`4`: >= 500 USDT</li></ul>|
+|depositUpdateTime |string |入金數據最新更新時間（UTC毫秒時間戳）|
+|volUpdateTime |string |交易量數據最新更新時間（UTC毫秒時間戳）|
+|KycLevel |integer |KYC等級。`0`: 未認證，`1`: KYC Level 1，`2`: KYC Level 2|
+|tradfiTradeVol30Day |string |過去30天的TradFi交易量（USDT）|
+|tradfiTradeVol365Day |string |過去365天的TradFi交易量（USDT）|
+|commissions30Day |object |過去30天按幣種劃分的佣金明細（如BTC、ETH、USDT等）|
+|commissions365Day |object |過去365天按幣種劃分的佣金明細（如BTC、ETH、USDT等）|
+|paySendAmount30Day |string |最近30天的支付金額|
+|payFtt |string |Pay首次交易金額|
+|cardFtt |string |Card首次交易金額|
 
 <a href="/api-explorer/v5/user/affiliate-info"><Button>運行實例 >></Button></a>
 
@@ -131,7 +136,10 @@ client
             "MNT": "95.72886531",
             "USDC": "2.81382591",
             "USDT": "130.48078429"
-        }
+        },
+        "paySendAmount30Day": "1000.00",
+        "payFtt": "100.00",
+        "cardFtt": "50.00"
     },
     "retExtInfo": {},
     "time": 1770197061282
