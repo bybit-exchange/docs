@@ -105,7 +105,7 @@ GET /v5/market/index-price-components?indexName={symbol}
 
 響應包含每個成分的交易所名稱、現貨交易對、等價價格、乘數，以及在指數計算中所占的權重。
 
-## xStock 與大宗商品的可交易產品的規格信息
+## xStock、股票永續合約與大宗商品的可交易產品的規格信息
 
 請使用 [查詢可交易產品的規格信息](/v5/market/instrument) 介面，並搭配 `symbolType` 參數來取得 TradFi 可交易產品的配置規則信息。完整列舉值請參閱 [symbolType 列舉值](/v5/enum#symboltype)。
 
@@ -118,6 +118,16 @@ GET https://api.bybit.com/v5/market/instruments-info?category=spot&symbolType=xs
 ```
 
 響應參數中會包含 xStock 專屬欄位（例如 `xstockMultiplier`）以及 `symbolType: "xstocks"`。
+
+### 股票永續合約（Linear）
+
+使用 `category=linear` 及 `symbolType=stock` 查詢所有股票永續合約（如 `TSLAUSDT`、`TSMUSDT`、`INTCUSDT`、`HOODUSDT`）。
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
+```
+
+響應參數中會包含 `symbolType: "stock"`，以及標準的 linear 合約欄位（槓桿、最小價格變動單位、資金費率間隔等）。
 
 ### 大宗商品永續合約（Linear）
 
