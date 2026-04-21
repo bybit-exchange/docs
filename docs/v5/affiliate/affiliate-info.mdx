@@ -20,28 +20,33 @@ Affiliate site: https://affiliates.bybit.com
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
 |uid |**true** |string |The master account UID of affiliate's client|
+|coin |false |string |Coin type for filtering, e.g., `USDT`|
+|business |false |string |Business line filter. `1`: Derivatives, `2`: Spot, `3`: ByFi, `4`: USDC, `5`: Options|
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |uid |string |UID|
-|vipLevel |string |VIP level |
-|takerVol30Day |string |Taker volume in last 30 days (USDT). All volume related attributes below includes Derivatives, Option, Spot volume|
+|vipLevel |string |VIP tier. Common values: `0` (No VIP), `1`, `2`, `3`, `4`, `99` (VVIP)|
+|takerVol30Day |string |Taker volume in last 30 days (USDT). All volume fields below include Derivatives, Options, and Spot volume|
 |makerVol30Day |string |Maker volume in last 30 days (USDT)|
 |tradeVol30Day |string |Total trading volume in last 30 days (USDT)|
-|depositAmount30Day |string |Deposit amount in last 30 days (USDT), update in 5 mins|
-|takerVol365Day |string |Taker volume in the past year (USDT)|
-|makerVol365Day |string |Maker volume in the past year (USDT)|
-|tradeVol365Day |string |Total trading volume in the past year (USDT)|
-|depositAmount365Day |string |Total deposit amount in the past year (USDT), update in 5 mins|
-|totalWalletBalance |string |Wallet balance range <ul><li>`1`: less than 100 USDT value</li><li>`2`: [100, 250) USDT value</li><li>`3`: [250, 500) USDT value</li><li>`4`: greater than 500 USDT value</li></ul> |
-|depositUpdateTime |string |The update date time (UTC) of deposit data |
-|volUpdateTime |string |The update date of volume data time (UTC) |
-|KycLevel |integer |KYC level. `1`, `2`, `0`|
-|tradfiTradeVol30Day |string |tradfi trade volume in last 30 days (USDT).|
-|tradfiTradeVol365Day |string |tradfi trade volume in the past year (USDT).|
-|commissions30Day |json |tradfi commissions in last 30 days.|
-|commissions365Day |json |tradfi commissions in the past year.|
+|depositAmount30Day |string |Deposit amount in last 30 days (USDT), updated every 5 mins|
+|takerVol365Day |string |Lifetime taker volume since becoming affiliate's client (USDT)|
+|makerVol365Day |string |Lifetime maker volume since becoming affiliate's client (USDT)|
+|tradeVol365Day |string |Lifetime total trading volume since becoming affiliate's client (USDT)|
+|depositAmount365Day |string |Lifetime total deposit amount since becoming affiliate's client (USDT). Includes all deposit types regardless of account or business|
+|totalWalletBalance |string |Wallet balance range <ul><li>`1`: less than 100 USDT</li><li>`2`: [100, 250) USDT</li><li>`3`: [250, 500) USDT</li><li>`4`: >= 500 USDT</li></ul>|
+|depositUpdateTime |string |UTC timestamp (ms) of the latest deposit data update|
+|volUpdateTime |string |UTC timestamp (ms) of the latest trading volume data update|
+|KycLevel |integer |KYC level. `0`: No KYC, `1`: KYC Level 1, `2`: KYC Level 2|
+|tradfiTradeVol30Day |string |TradFi trade volume in last 30 days (USDT)|
+|tradfiTradeVol365Day |string |TradFi trade volume in last 365 days (USDT)|
+|commissions30Day |object |Commission breakdown by coin for the last 30 days (e.g., BTC, ETH, USDT)|
+|commissions365Day |object |Commission breakdown by coin for the last 365 days (e.g., BTC, ETH, USDT)|
+|paySendAmount30Day |string |Payment amount in the last 30 days|
+|payFtt |string |Pay first transaction amount|
+|cardFtt |string |Card first-time transaction amount|
 
 <a href="/api-explorer/v5/user/affiliate-info"><Button>RUN >></Button></a>
 
@@ -131,7 +136,10 @@ client
             "MNT": "95.72886531",
             "USDC": "2.81382591",
             "USDT": "130.48078429"
-        }
+        },
+        "paySendAmount30Day": "1000.00",
+        "payFtt": "100.00",
+        "cardFtt": "50.00"
     },
     "retExtInfo": {},
     "time": 1770197061282
