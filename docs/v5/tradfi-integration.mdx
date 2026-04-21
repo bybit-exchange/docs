@@ -53,8 +53,8 @@ POST /v5/user/agreement
 #### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|category | **true**|integer |`2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement<br/>`3`: Crude oil commodity contract<br/>_This field remains supported. However, new enum values will no longer be added here — use `categoryV2` instead._|
-|categoryV2 |false |integer |`1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement<br/>`2`: Crude oil commodity contract|
+|category |false |integer |`2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement<br/>`3`: Crude oil commodity contract<br/>_Either `category` or `categoryV2` is required. This field remains supported, but new enum values will no longer be added here — use `categoryV2` instead._|
+|categoryV2 |false |integer |`1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement<br/>`2`: Crude oil commodity contract<br/>_Either `category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._|
 |agree |**true** |boolean |`true`|
 
 :::info
@@ -105,7 +105,7 @@ GET /v5/market/index-price-components?indexName={symbol}
 
 The response includes each component's exchange, spot pair, equivalent price, multiplier, and weight used in the index calculation.
 
-## Instruments Info for xStock & Commodities
+## Instruments Info for xStock & Stock & Commodities
 
 Use the [Get Instruments Info](/v5/market/instrument) endpoint together with the `symbolType` filter to retrieve trading rules and metadata for TradFi instruments. See the [symbolType enum](/v5/enum#symboltype) for all supported values.
 
@@ -118,6 +118,16 @@ GET https://api.bybit.com/v5/market/instruments-info?category=spot&symbolType=xs
 ```
 
 The response includes xStock-specific fields such as `xstockMultiplier` and `symbolType: "xstocks"`.
+
+### Equity Perpetuals (Linear)
+
+Query with `category=linear` and `symbolType=stock` to list all equity perpetuals (e.g., `TSLAUSDT`, `TSMUSDT`, `INTCUSDT`, `HOODUSDT`).
+
+```
+GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
+```
+
+The response includes `symbolType: "stock"` along with standard linear contract fields (leverage, tick size, funding interval, etc.).
 
 ### Commodity Perpetuals (Linear)
 
