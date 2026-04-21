@@ -3,6 +3,9 @@ title: TradFi Integration
 sidebar_label: TradFi Integration
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 This guide explains how to integrate with Bybit's TradFi (Traditional Finance) products via the existing V5 API, including how to distinguish between MT5-based instruments and Bybit-native equity perpetuals, how to sign required agreements, and how to trade.
 
 ## Distinguish MT5 & Equity Perp Listing
@@ -16,8 +19,8 @@ Access via the Web UI: navigate to **Trade → TradFi**. This section covers for
 
 ### Bybit Platform (Native)
 Access via the main **Trade** menu. This includes all standard Bybit product types:
-- **Spot**: xStock tokens (e.g., TSLA, AAPL, GOOG)
-- **Futures**: Metals perpetuals (XAU, XAG), crude oil perpetuals
+- **Spot**: xStock tokens (e.g., TSLAX, AAPLX, GOOGLX)
+- **Futures**: Stock perpetuals (e.g., TSLAUSDT), metals perpetuals (XAU, XAG), crude oil perpetuals
 - **Options**: Options contracts settled in USDT, including tokenised gold options (XAUTUSDT-Options)
 
 ![Bybit Trading Menu](/img/tradfi-bybit-trading.png)
@@ -31,7 +34,7 @@ Before trading traditional asset perpetuals, please review the applicable terms 
 
 ## Sign Agreement by Main Account
 
-To trade commodity contracts (metals and crude oil), users must first sign the trading agreement. This can be done in two ways:
+To trade commodity contracts (metals and crude oil) or stock perpetuals, users must first sign the trading agreement. Stock perpetuals share the same agreement as metals. This can be done in two ways:
 
 ### Option 1: Via Web UI
 When attempting to trade for the first time, a **Trading Terms** pop-up will appear. Check the checkbox and click **Confirm** to accept.
@@ -45,10 +48,14 @@ Only the **master account** can sign the agreement via Web UI. Please ensure you
 ### Option 2: Via API
 Use the [Sign Agreement](/v5/user/sign-agreement) endpoint to sign programmatically.
 
+:::info
+* Only the **master account** can sign the agreement. Subaccounts are not supported for this action.
+* Once the master account has signed, all subaccounts will be eligible to trade.
+* The API key must have at least one of the following permissions: **Account Transfer**, **Subaccount Transfer**, or **Withdrawal**.
+:::
+
 #### HTTP Request
-```
-POST /v5/user/agreement
-```
+<APIEndpoint method="POST" url="/v5/user/agreement" />
 
 #### Request Parameters
 | Parameter | Required | Type | Comments|
@@ -57,13 +64,13 @@ POST /v5/user/agreement
 |categoryV2 |false |integer |`1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement<br/>`2`: Crude oil commodity contract<br/>_Either `category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._|
 |agree |**true** |boolean |`true`|
 
-:::info
-* Only the **master account** can sign the agreement. Subaccounts are not supported for this action.
-* Once the master account has signed, all subaccounts will be eligible to trade.
-* The API key must have at least one of the following permissions: **Account Transfer**, **Subaccount Transfer**, or **Withdrawal**.
-:::
+#### Response Parameters
+None
 
 #### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
 
 ```http
 POST /v5/user/agreement HTTP/1.1
@@ -73,6 +80,7 @@ X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1772695036541
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
+Content-Length: 40
 
 {
     "agree": true,
@@ -80,64 +88,94 @@ Content-Type: application/json
 }
 ```
 
-## Index Price Roll Mechanism
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.sign_agreement(
+    category=2,
+    agree=True
+))
+```
+
+</TabItem>
+</Tabs>
+
+#### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1772695037330
+}
+```
+
+## Index Price Rollover Mechanism
 
 The index price of perpetual futures is derived from the respective underlying futures contracts. As commodities do not have a traditional spot market, the external reference price is determined based on designated futures contracts.
 
-The underlying contracts will undergo a rollover (contract transition). During this period, the reference price will gradually shift from the current active contract to the next active contract.
+Before the underlying contract expires, a rollover (contract transition) is performed: the reference price gradually shifts from the front-month contract to the next-month contract over several days, according to a predefined weight schedule.
 
-For example, for `CLUSDT` (Crude Oil), the reference is currently based on the `WTIK6` contract and will transition to `WTIM6` according to the following schedule:
+The weight allocation during the rollover period follows this schedule:
 
-- **April 9, 2026** — 60% near-month contract, 40% next-month contract
-- **April 10, 2026** — 40% near-month contract, 60% next-month contract
-- **April 13, 2026** — 20% near-month contract, 80% next-month contract
-- **April 14, 2026** — 0% near-month contract, 100% next-month contract (rollover completed)
+<div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
+
+| Day | Front-Month Weight | Next-Month Weight |
+|:---|:---|:---|
+| Day 1 | 80% | 20% |
+| Day 2 | 60% | 40% |
+| Day 3 | 40% | 60% |
+| Day 4 | 20% | 80% |
+| Day 5 | 0% | 100% (Rollover Completed) |
+
+</div>
+
+For example, `CLUSDT` (Crude Oil) uses this mechanism to transition between its designated underlying futures contracts (e.g., from `WTIK6` to `WTIM6`).
 
 :::info
-This mechanism is continuously refined. For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
+For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
 :::
 
 To query the current components and their weights contributing to an index price, use the [Get Index Price Components](/v5/market/index-components) endpoint:
 
-```
-GET /v5/market/index-price-components?indexName={symbol}
-```
+<APIEndpoint method="GET" url="/v5/market/index-price-components" />
+
+Query parameter: `indexName={symbol}`
 
 The response includes each component's exchange, spot pair, equivalent price, multiplier, and weight used in the index calculation.
 
-## Instruments Info for xStock & Stock & Commodities
+## Instruments Info for xStock, Stock & Commodities
 
 Use the [Get Instruments Info](/v5/market/instrument) endpoint together with the `symbolType` filter to retrieve trading rules and metadata for TradFi instruments. See the [symbolType enum](/v5/enum#symboltype) for all supported values.
 
-### xStock tokens (Spot)
+<APIEndpoint method="GET" url="/v5/market/instruments-info" />
 
-Query with `category=spot` and `symbolType=xstocks` to list all xStock tokens (e.g., `TSLAXUSDT`, `AAPLXUSDT`, `NVDAXUSDT`).
+<div style={{width: 'fit-content'}}>
 
-```
-GET https://api.bybit.com/v5/market/instruments-info?category=spot&symbolType=xstocks&limit=1000
-```
+| Product | `category` | `symbolType` | Example Symbols | Notable Fields |
+|:---|:---|:---|:---|:---|
+| xStock tokens | `spot` | `xstocks` | `TSLAXUSDT`, `AAPLXUSDT`, `NVDAXUSDT` | `xstockMultiplier` |
+| Stock perpetuals | `linear` | `stock` | `TSLAUSDT` | — |
+| Commodity perpetuals | `linear` | `commodity` | `XAUUSDT`, `XAGUSDT`, `CLUSDT` | — |
 
-The response includes xStock-specific fields such as `xstockMultiplier` and `symbolType: "xstocks"`.
+</div>
 
-### Equity Perpetuals (Linear)
+Stock and commodity perpetuals return standard linear contract fields (leverage, tick size, funding interval, etc.).
 
-Query with `category=linear` and `symbolType=stock` to list all equity perpetuals (e.g., `TSLAUSDT`, `TSMUSDT`, `INTCUSDT`, `HOODUSDT`).
-
-```
-GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
-```
-
-The response includes `symbolType: "stock"` along with standard linear contract fields (leverage, tick size, funding interval, etc.).
-
-### Commodity Perpetuals (Linear)
-
-Query with `category=linear` and `symbolType=commodity` to list all commodity perpetuals (e.g., `XAUUSDT`, `XAGUSDT`, `CLUSDT`).
+Example request:
 
 ```
-GET https://api.bybit.com/v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
 ```
-
-The response includes `symbolType: "commodity"` along with standard linear contract fields (leverage, tick size, funding interval, etc.).
 
 ## Trade via Existing API
 
@@ -156,4 +194,9 @@ After signing the agreement, you can trade TradFi-related instruments (metals pe
 - [Get Borrow Quota (Spot)](/v5/order/spot-borrow-quota)
 - [Pre Check Order](/v5/order/pre-check-order)
 
-Simply pass the appropriate `symbol` (e.g., `XAUUSDT`, `XAGUSDT` for metals; oil-related symbols for crude oil contracts) and `category` in your request.
+Simply pass the appropriate `category` and `symbol` in your request:
+
+- **xStock tokens**: `category=spot`, `symbol` e.g., `TSLAXUSDT`, `AAPLXUSDT`
+- **Stock perpetuals**: `category=linear`, `symbol` e.g., `TSLAUSDT`
+- **Metals perpetuals**: `category=linear`, `symbol` e.g., `XAUUSDT`, `XAGUSDT`
+- **Crude oil perpetual**: `category=linear`, `symbol`: `CLUSDT`
