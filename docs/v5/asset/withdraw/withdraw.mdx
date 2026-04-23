@@ -39,12 +39,12 @@ Note that, although the API rate limit for this endpoint is 5 req/s, there is al
 |accountType|**true**|string |Select the wallet to be withdrawn from <ul><li>`FUND`: Funding wallet</li><li>`UTA`: System transfers the funds to Funding wallet to withdraw</li><li>`EARN`: some coins may not support to be withdrawn via Earn account, please transfer it to Funding wallet then withdraw</li><li>`FUND,UTA,EARN`: For combo withdrawals, funds will be deducted from the Funding wallet first. If the balance is insufficient, the remaining amount will be deducted from the UTA wallet and Earn account.</li></ul>|
 |feeType|false|integer |Handling fee option <ul><li>`0`(default): input amount is the actual amount received, so you have to calculate handling fee manually</li><li>`1`: input amount is not the actual amount you received, the system will help to deduct the handling fee automatically</li></ul> |
 |requestId |false |string |Customised ID, globally unique, it is used for idempotent verification <ul><li>A combination of letters (case sensitive) and numbers, which can be pure letters or pure numbers and the length must be between 1 and 32 digits</li></ul> |
+|transactionPurpose |false |string |Purpose of the withdrawal transaction, need at least 20 characters, <b>Required for Bybit Turkey site users</b> |
 <table border="0.8">
  <details>
     <summary>
       <tr><td>beneficiary</td><td>false</td><td>Object</td><td>Travel rule info. It is <b>required</b> for kyc/kyb=KOR (Korean), kyc=IND (India) users, and users who registered in <a href="https://www.bybit-tr.com/en-TR/">Bybit Turkey(TR)</a>, <a href="https://www.bybit.kz/kk-KAZ/">Bybit Kazakhstan(KZ)</a>, Bybit Indonesia (ID)</td></tr>
     </summary>
-      <tr><td>> transactionPurpose</td><td>false</td><td>string</td><td>Purpose of the withdrawal transaction, need at least 20 characters, <b>Required for Bybit Turkey site users</b></td></tr>
       <tr><td>> beneficiaryTransactionPurpose</td><td>false</td><td>string</td><td>Purpose of the withdrawal transaction, <b>Required</b> when KR users withdraw funds to a company via Korean CODE channel</td></tr>
       <tr><td>> beneficiaryRepresentativeFirstName</td><td>false</td><td>string</td><td>First name of the beneficiary company's representative, <b>Required</b> when KR users withdraw funds to a company via Korean CODE channel</td></tr>
       <tr><td>> beneficiaryRepresentativeLastName</td><td>false</td><td>string</td><td>Last name of the beneficiary company's representative, <b>Required</b> when KR users withdraw funds to a company via Korean CODE channel</td></tr>
