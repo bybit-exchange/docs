@@ -1,0 +1,1094 @@
+---
+title: SBE Order Entry Integration
+sidebar_label: SBE Order Entry Integration
+sidebar_position: 2
+---
+
+## Overview
+
+- **Channel:** Private MM WebSocket only (not available on public WS).
+- **Transport:** WebSocket binary frames — each frame contains exactly one SBE message (no JSON).
+- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 1`.
+- **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
+- **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
+
+---
+
+## Connection
+
+### Endpoints
+
+| Environment | URL |
+|-------------|-----|
+| Mainnet     | `wss://xxxxxxx.aws.bybit.com` |
+| Testnet     | `wss://stream-testnet.bybit.com/v5/sbe/trade` |
+
+### Connection Lifecycle
+
+1. Open WebSocket connection.
+2. Send **AuthReq** (`templateId = 1`).
+3. Receive **AuthResp** (`templateId = 2`) — proceed only if `retCode = 0`.
+4. Send order requests (**CreateOrderReqV5**, **ReplaceOrderReqV5**, **CancelOrderReqV5**, or batch variants).
+5. Receive the corresponding response for each request.
+6. Send **PingReq** (`templateId = 3`) periodically; expect **PongResp** (`templateId = 4`) in return.
+
+### Heartbeat
+
+- Send a **PingReq** every **10 s** to keep the connection alive.
+- If no data is received within **2 × heartbeat interval**, reconnect and re-authenticate.
+
+### Reconnect Strategy
+
+- Use exponential backoff with jitter.
+- Re-authenticate immediately after reconnect before resuming order flow.
+- Use `orderLinkId` for client-side idempotency — query order status before resubmitting.
+
+---
+
+## Authentication Flow
+
+### Send AuthReq
+
+Signature: HMAC-SHA256 over `"apiKey:expires"`, where `expires` is a future Unix timestamp in milliseconds.
+
+```python
+import hashlib, hmac, struct, time
+
+def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
+    message = f"{api_key}:{expires}"
+    return hmac.new(
+        api_secret.encode("utf-8"),
+        message.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+```
+
+### Receive AuthResp
+
+```json
+{
+  "header": {
+    "block_length": 132,
+    "template_id": 2,
+    "schema_id": 2,
+    "version": 1
+  },
+  "reqId": "req_00000000001",
+  "retCode": 0,
+  "connId": "d30fdpbboasp1pjbe7r0",
+  "retMsg": "OK"
+}
+```
+
+- `retCode = 0` — authentication succeeded.
+- Any non-zero `retCode` is a failure; read `retMsg` for the cause.
+
+---
+
+## Order Operations
+
+### Create Order
+
+Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`templateId = 6`).
+
+- `price` and `qty` use **Decimal64**: `value = mantissa × 10^exponent`.
+- `orderLinkId` is a fixed 64-byte char field (null-padded); used for client-side deduplication.
+
+**CreateOrderRespV5 decode example:**
+
+```json
+{
+  "header": {
+    "block_length": 364,
+    "template_id": 6,
+    "schema_id": 2,
+    "version": 1
+  },
+  "respHeader": {
+    "reqId": "req_00000000002",
+    "connId": "d30fdpbboasp1pjbe7r0",
+    "traceId": "abc123def456789",
+    "timeNow": 1757497309814,
+    "inTime": 1757497309800,
+    "bapiLimit": 1000,
+    "bapiLimitStatus": 999,
+    "bapiLimitResetTimestamp": 1757497370000
+  },
+  "retCode": 0,
+  "result": {
+    "orderId": "1912284048591699456",
+    "orderLinkId": "cli_order_001"
+  },
+  "retMsg": "OK"
+}
+```
+
+### Replace Order
+
+Send **ReplaceOrderReqV5** (`templateId = 7`), receive **ReplaceOrderRespV5** (`templateId = 8`).
+
+- Identify the order to replace by `orderId` **or** `orderLinkId` (at least one required).
+- Submit new `qty` and/or `price` as Decimal64.
+
+### Cancel Order
+
+Send **CancelOrderReqV5** (`templateId = 9`), receive **CancelOrderRespV5** (`templateId = 10`).
+
+- Identify the order to cancel by `orderId` **or** `orderLinkId`.
+
+---
+
+## Batch Operations
+
+All batch requests embed an **ApiRequestHeader** at the top, followed by the `category` field, then a **repeating group** of order items. The group is prefixed by a `groupSize16Encoding` header (uint16 `blockLength` + uint16 `numInGroup`).
+
+| Operation | Request Template ID | Response Template ID |
+|-----------|--------------------|--------------------|
+| Batch Create | 11 | 12 |
+| Batch Replace | 13 | 14 |
+| Batch Cancel  | 15 | 16 |
+
+Each response group item carries its own `code` and `msg` (varString8), plus `orderId` / `orderLinkId` for the acknowledged order. A top-level `retMsg` (varString8) follows all groups.
+
+---
+
+## Error Handling
+
+**CommonErrResp** (`templateId = 17`) is returned when the server cannot associate an error with a specific request message.
+
+Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
+
+---
+
+## SBE Message Structure
+
+### SBE XML Schema
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
+                   package="order.trading.api.sbe"
+                   id="2"
+                   version="1"
+                   semanticVersion="1.0.0"
+                   description="Order Trading API SBE Schema"
+                   byteOrder="littleEndian">
+  <types>
+    <composite name="messageHeader" description="Standard message header">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="templateId"  primitiveType="uint16"/>
+      <type name="schemaId"    primitiveType="uint16"/>
+      <type name="version"     primitiveType="uint16"/>
+    </composite>
+    <composite name="groupSize16Encoding" description="Repeating group dimensions">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="numInGroup"  primitiveType="uint16"/>
+    </composite>
+    <type name="String8"  primitiveType="char" length="8"/>
+    <type name="String16" primitiveType="char" length="16"/>
+    <type name="String32" primitiveType="char" length="32"/>
+    <type name="String64" primitiveType="char" length="64"/>
+    <composite name="varString8" description="Variable length UTF-8 string">
+      <type name="length"  primitiveType="uint8"/>
+      <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
+    </composite>
+    <composite name="Decimal64" description="Decimal floating point: value = mantissa × 10^exponent">
+      <type name="exponent" primitiveType="int8"/>
+      <type name="mantissa" primitiveType="int64"/>
+    </composite>
+    <enum name="CategoryType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="SPOT">1</validValue>
+      <validValue name="LINEAR">2</validValue>
+      <validValue name="INVERSE">3</validValue>
+      <validValue name="OPTION">4</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="PositionIdxType" encodingType="uint8">
+      <validValue name="ONE_WAY">0</validValue>
+      <validValue name="HEDGE_BUY">1</validValue>
+      <validValue name="HEDGE_SELL">2</validValue>
+      <validValue name="UNKNOWN">253</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="OrderType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="MARKET">1</validValue>
+      <validValue name="LIMIT">2</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="SideType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="BUY">1</validValue>
+      <validValue name="SELL">2</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="TimeInForceType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="GOOD_TILL_CANCEL">1</validValue>
+      <validValue name="POST_ONLY">2</validValue>
+      <validValue name="IMMEDIATE_OR_CANCEL">3</validValue>
+      <validValue name="FILL_OR_KILL">4</validValue>
+      <validValue name="RPI">5</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="SmpType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="CANCEL_TAKER">1</validValue>
+      <validValue name="CANCEL_MAKER">2</validValue>
+      <validValue name="CANCEL_BOTH">3</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="MarketUnitType" encodingType="uint8">
+      <validValue name="UNKNOWN">0</validValue>
+      <validValue name="BASE_COIN">1</validValue>
+      <validValue name="QUOTE_COIN">2</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <enum name="BoolEnum" encodingType="uint8">
+      <validValue name="FALSE">0</validValue>
+      <validValue name="TRUE">1</validValue>
+      <validValue name="NON_REPRESENTABLE">254</validValue>
+    </enum>
+    <composite name="ApiRequestHeader" description="API Request header">
+      <type name="reqId"      primitiveType="char"   length="64"/>
+      <type name="timestamp"  primitiveType="uint64"/>
+      <type name="recvWindow" primitiveType="uint32"/>
+      <type name="referer"    primitiveType="char"   length="64"/>
+    </composite>
+    <composite name="ApiRespHeader" description="Response header">
+      <type name="reqId"                      primitiveType="char"  length="64"/>
+      <type name="connId"                     primitiveType="char"  length="64"/>
+      <type name="traceId"                    primitiveType="char"  length="64"/>
+      <type name="timeNow"                    primitiveType="int64"/>
+      <type name="inTime"                     primitiveType="int64"/>
+      <type name="bapiLimit"                  primitiveType="int64"/>
+      <type name="bapiLimitStatus"            primitiveType="int64"/>
+      <type name="bapiLimitResetTimestamp"    primitiveType="int64"/>
+    </composite>
+    <composite name="CommonOrderRespData" description="Common order response data">
+      <type name="orderId"     primitiveType="char" length="64"/>
+      <type name="orderLinkId" primitiveType="char" length="64"/>
+    </composite>
+  </types>
+
+  <message name="AuthReq" id="1" description="Authentication request">
+    <field name="reqId"     id="1" type="String64"/>
+    <field name="apiKey"    id="2" type="String64"/>
+    <field name="expires"   id="3" type="uint64"/>
+    <field name="signature" id="4" type="String64"/>
+  </message>
+  <message name="AuthResp" id="2" description="Authentication response">
+    <field name="reqId"   id="1" type="String64"/>
+    <field name="retCode" id="2" type="int32"/>
+    <field name="connId"  id="3" type="String64"/>
+    <data  name="retMsg"  id="20" type="varString8"/>
+  </message>
+  <message name="PingReq" id="3" description="Ping request">
+    <field name="timestamp" id="1" type="uint64"/>
+  </message>
+  <message name="PongResp" id="4" description="Pong response">
+    <field name="timestamp" id="1" type="uint64"/>
+    <field name="pongTime"  id="2" type="uint64"/>
+  </message>
+  <message name="CreateOrderReqV5" id="5" description="Create order request">
+    <field name="header"         id="1"  type="ApiRequestHeader"/>
+    <field name="category"       id="2"  type="CategoryType"/>
+    <field name="symbolId"       id="3"  type="int64"/>
+    <field name="side"           id="4"  type="SideType"/>
+    <field name="orderType"      id="5"  type="OrderType"/>
+    <field name="qty"            id="6"  type="Decimal64"/>
+    <field name="price"          id="7"  type="Decimal64"/>
+    <field name="orderLinkId"    id="8"  type="String64"/>
+    <field name="timeInForce"    id="9"  type="TimeInForceType"/>
+    <field name="positionIdx"    id="10" type="PositionIdxType"/>
+    <field name="marketUnit"     id="11" type="MarketUnitType"/>
+    <field name="isLeverage"     id="12" type="BoolEnum"/>
+    <field name="reduceOnly"     id="13" type="BoolEnum"/>
+    <field name="closeOnTrigger" id="14" type="BoolEnum"/>
+    <field name="mmp"            id="15" type="BoolEnum"/>
+    <field name="smpType"        id="16" type="SmpType"/>
+  </message>
+  <message name="CreateOrderRespV5" id="6" description="Create order response">
+    <field name="respHeader" id="1"  type="ApiRespHeader"/>
+    <field name="retCode"    id="2"  type="int32"/>
+    <field name="result"     id="3"  type="CommonOrderRespData"/>
+    <data  name="retMsg"     id="20" type="varString8"/>
+  </message>
+  <message name="ReplaceOrderReqV5" id="7" description="Replace order request">
+    <field name="header"      id="1" type="ApiRequestHeader"/>
+    <field name="category"    id="2" type="CategoryType"/>
+    <field name="symbolId"    id="3" type="int64"/>
+    <field name="orderId"     id="4" type="String64"/>
+    <field name="orderLinkId" id="5" type="String64"/>
+    <field name="qty"         id="6" type="Decimal64"/>
+    <field name="price"       id="7" type="Decimal64"/>
+  </message>
+  <message name="ReplaceOrderRespV5" id="8" description="Replace order response">
+    <field name="respHeader" id="1"  type="ApiRespHeader"/>
+    <field name="retCode"    id="2"  type="int32"/>
+    <field name="result"     id="3"  type="CommonOrderRespData"/>
+    <data  name="retMsg"     id="20" type="varString8"/>
+  </message>
+  <message name="CancelOrderReqV5" id="9" description="Cancel order request">
+    <field name="header"      id="1" type="ApiRequestHeader"/>
+    <field name="category"    id="2" type="CategoryType"/>
+    <field name="symbolId"    id="3" type="int64"/>
+    <field name="orderId"     id="4" type="String64"/>
+    <field name="orderLinkId" id="5" type="String64"/>
+  </message>
+  <message name="CancelOrderRespV5" id="10" description="Cancel order response">
+    <field name="respHeader" id="1"  type="ApiRespHeader"/>
+    <field name="retCode"    id="2"  type="int32"/>
+    <field name="result"     id="3"  type="CommonOrderRespData"/>
+    <data  name="retMsg"     id="20" type="varString8"/>
+  </message>
+  <message name="BatchCreateOrderReqV5" id="11" description="Batch create order request">
+    <field name="header"   id="1" type="ApiRequestHeader"/>
+    <field name="category" id="2" type="CategoryType"/>
+    <group name="request"  id="200" dimensionType="groupSize16Encoding">
+      <field name="symbolId"       id="1"  type="int64"/>
+      <field name="side"           id="2"  type="SideType"/>
+      <field name="orderType"      id="3"  type="OrderType"/>
+      <field name="qty"            id="4"  type="Decimal64"/>
+      <field name="price"          id="5"  type="Decimal64"/>
+      <field name="orderLinkId"    id="6"  type="String64"/>
+      <field name="timeInForce"    id="7"  type="TimeInForceType"/>
+      <field name="positionIdx"    id="8"  type="PositionIdxType"/>
+      <field name="marketUnit"     id="9"  type="MarketUnitType"/>
+      <field name="isLeverage"     id="10" type="BoolEnum"/>
+      <field name="reduceOnly"     id="11" type="BoolEnum"/>
+      <field name="closeOnTrigger" id="12" type="BoolEnum"/>
+      <field name="mmp"            id="13" type="BoolEnum"/>
+      <field name="smpType"        id="14" type="SmpType"/>
+    </group>
+  </message>
+  <message name="BatchCreateOrderRespV5" id="12" description="Batch create order response">
+    <field name="respHeader" id="1"   type="ApiRespHeader"/>
+    <field name="retCode"    id="2"   type="int32"/>
+    <group name="list"       id="100" dimensionType="groupSize16Encoding">
+      <field name="code"        id="1" type="int32"/>
+      <field name="category"    id="2" type="CategoryType"/>
+      <field name="symbolId"    id="3" type="int64"/>
+      <field name="orderId"     id="4" type="String64"/>
+      <field name="orderLinkId" id="5" type="String64"/>
+      <data  name="msg"         id="20" type="varString8"/>
+      <data  name="createAt"    id="21" type="varString8"/>
+    </group>
+    <data name="retMsg" id="200" type="varString8"/>
+  </message>
+  <message name="BatchReplaceOrderReqV5" id="13" description="Batch replace order request">
+    <field name="header"   id="1" type="ApiRequestHeader"/>
+    <field name="category" id="2" type="CategoryType"/>
+    <group name="request"  id="200" dimensionType="groupSize16Encoding">
+      <field name="symbolId"    id="1" type="int64"/>
+      <field name="orderId"     id="2" type="String64"/>
+      <field name="orderLinkId" id="3" type="String64"/>
+      <field name="qty"         id="4" type="Decimal64"/>
+      <field name="price"       id="5" type="Decimal64"/>
+    </group>
+  </message>
+  <message name="BatchReplaceOrderRespV5" id="14" description="Batch replace order response">
+    <field name="respHeader" id="1"   type="ApiRespHeader"/>
+    <field name="retCode"    id="2"   type="int32"/>
+    <group name="list"       id="100" dimensionType="groupSize16Encoding">
+      <field name="code"        id="1" type="int32"/>
+      <field name="category"    id="2" type="CategoryType"/>
+      <field name="symbolId"    id="3" type="int64"/>
+      <field name="orderId"     id="4" type="String64"/>
+      <field name="orderLinkId" id="5" type="String64"/>
+      <data  name="msg"         id="20" type="varString8"/>
+    </group>
+    <data name="retMsg" id="200" type="varString8"/>
+  </message>
+  <message name="BatchCancelOrderReqV5" id="15" description="Batch cancel order request">
+    <field name="header"   id="1" type="ApiRequestHeader"/>
+    <field name="category" id="2" type="CategoryType"/>
+    <group name="request"  id="200" dimensionType="groupSize16Encoding">
+      <field name="symbolId"    id="1" type="int64"/>
+      <field name="orderId"     id="2" type="String64"/>
+      <field name="orderLinkId" id="3" type="String64"/>
+    </group>
+  </message>
+  <message name="BatchCancelOrderRespV5" id="16" description="Batch cancel order response">
+    <field name="respHeader" id="1"   type="ApiRespHeader"/>
+    <field name="retCode"    id="2"   type="int32"/>
+    <group name="list"       id="100" dimensionType="groupSize16Encoding">
+      <field name="code"        id="1" type="int32"/>
+      <field name="category"    id="2" type="CategoryType"/>
+      <field name="symbolId"    id="3" type="int64"/>
+      <field name="orderId"     id="4" type="String64"/>
+      <field name="orderLinkId" id="5" type="String64"/>
+      <data  name="msg"         id="20" type="varString8"/>
+    </group>
+    <data name="retMsg" id="200" type="varString8"/>
+  </message>
+  <message name="CommonErrResp" id="17" description="Common error response">
+    <field name="respHeader" id="1"  type="ApiRespHeader"/>
+    <field name="retCode"    id="2"  type="int32"/>
+    <data  name="retMsg"     id="20" type="varString8"/>
+  </message>
+</sbe:messageSchema>
+```
+
+### Message Templates
+
+| Template ID | Name | Direction | Description |
+|-------------|------|-----------|-------------|
+| 1  | `AuthReq`                | Client → Server | Authentication request |
+| 2  | `AuthResp`               | Server → Client | Authentication response |
+| 3  | `PingReq`                | Client → Server | Heartbeat ping |
+| 4  | `PongResp`               | Server → Client | Heartbeat pong |
+| 5  | `CreateOrderReqV5`       | Client → Server | Create single order |
+| 6  | `CreateOrderRespV5`      | Server → Client | Create order response |
+| 7  | `ReplaceOrderReqV5`      | Client → Server | Replace single order |
+| 8  | `ReplaceOrderRespV5`     | Server → Client | Replace order response |
+| 9  | `CancelOrderReqV5`       | Client → Server | Cancel single order |
+| 10 | `CancelOrderRespV5`      | Server → Client | Cancel order response |
+| 11 | `BatchCreateOrderReqV5`  | Client → Server | Batch create orders |
+| 12 | `BatchCreateOrderRespV5` | Server → Client | Batch create response |
+| 13 | `BatchReplaceOrderReqV5` | Client → Server | Batch replace orders |
+| 14 | `BatchReplaceOrderRespV5`| Server → Client | Batch replace response |
+| 15 | `BatchCancelOrderReqV5`  | Client → Server | Batch cancel orders |
+| 16 | `BatchCancelOrderRespV5` | Server → Client | Batch cancel response |
+| 17 | `CommonErrResp`          | Server → Client | Generic error response |
+
+### Message Header (8 bytes)
+
+| Field       | Type   | Size (bytes) | Description             |
+|-------------|--------|--------------|-------------------------|
+| blockLength | uint16 | 2            | Fixed-body length       |
+| templateId  | uint16 | 2            | Message type identifier |
+| schemaId    | uint16 | 2            | Fixed = 2               |
+| version     | uint16 | 2            | Fixed = 1               |
+
+### Composite Types
+
+#### `ApiRequestHeader` (140 bytes)
+
+Embedded at the start of every request message.
+
+| Field      | Type      | Size (bytes) | Description |
+|------------|-----------|--------------|-------------|
+| reqId      | char[64]  | 64           | Client request ID (optional; echoed in response) |
+| timestamp  | uint64    | 8            | Client timestamp (ms); must satisfy: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
+| recvWindow | uint32    | 4            | Acceptable time window (ms); default 5000 |
+| referer    | char[64]  | 64           | Broker / source identifier |
+
+#### `ApiRespHeader` (232 bytes)
+
+Embedded at the start of every response message.
+
+| Field                    | Type     | Size (bytes) | Description |
+|--------------------------|----------|--------------|-------------|
+| reqId                    | char[64] | 64           | Echoed client request ID |
+| connId                   | char[64] | 64           | Connection identifier |
+| traceId                  | char[64] | 64           | Trace ID for diagnostics |
+| timeNow                  | int64    | 8            | Server timestamp (ms) |
+| inTime                   | int64    | 8            | Message ingress timestamp (ms) |
+| bapiLimit                | int64    | 8            | Total rate limit |
+| bapiLimitStatus          | int64    | 8            | Remaining rate limit tokens |
+| bapiLimitResetTimestamp  | int64    | 8            | Rate-limit reset timestamp (ms) |
+
+#### `CommonOrderRespData` (128 bytes)
+
+| Field       | Type     | Size (bytes) | Description |
+|-------------|----------|--------------|-------------|
+| orderId     | char[64] | 64           | Exchange-assigned order ID |
+| orderLinkId | char[64] | 64           | Echoed client order ID |
+
+#### `Decimal64` (9 bytes)
+
+| Field    | Type  | Size (bytes) | Description |
+|----------|-------|--------------|-------------|
+| exponent | int8  | 1            | Power of 10 |
+| mantissa | int64 | 8            | Significand |
+
+`actual_value = mantissa × 10^exponent`. Example: price 69000.00 → `exponent=0, mantissa=69000`; qty 0.01 → `exponent=-2, mantissa=1`.
+
+### Enumerations
+
+| Enum | Values (uint8) |
+|------|----------------|
+| `CategoryType`    | 0=UNKNOWN, 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION, 254=NON_REPRESENTABLE |
+| `SideType`        | 0=UNKNOWN, 1=BUY, 2=SELL, 254=NON_REPRESENTABLE |
+| `OrderType`       | 0=UNKNOWN, 1=MARKET, 2=LIMIT, 254=NON_REPRESENTABLE |
+| `TimeInForceType` | 0=UNKNOWN, 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI, 254=NON_REPRESENTABLE |
+| `PositionIdxType` | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL, 253=UNKNOWN, 254=NON_REPRESENTABLE |
+| `MarketUnitType`  | 0=UNKNOWN, 1=BASE_COIN, 2=QUOTE_COIN, 254=NON_REPRESENTABLE |
+| `SmpType`         | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH, 254=NON_REPRESENTABLE |
+| `BoolEnum`        | 0=FALSE, 1=TRUE, 254=NON_REPRESENTABLE |
+
+### Message Field Tables
+
+#### `AuthReq` (id=1, blockLength=200)
+
+| ID | Field     | Type     | Size (bytes) | Description |
+|----|-----------|----------|--------------|-------------|
+| 1  | reqId     | char[64] | 64           | Client request ID |
+| 2  | apiKey    | char[64] | 64           | API Key (null-padded) |
+| 3  | expires   | uint64   | 8            | Expiry timestamp (ms); must be in future |
+| 4  | signature | char[64] | 64           | HMAC-SHA256 over `"apiKey:expires"` |
+
+#### `AuthResp` (id=2, blockLength=132)
+
+| ID | Field   | Type      | Size (bytes) | Description |
+|----|---------|-----------|--------------|-------------|
+| 1  | reqId   | char[64]  | 64           | Echoed request ID |
+| 2  | retCode | int32     | 4            | 0 = OK |
+| 3  | connId  | char[64]  | 64           | Connection identifier |
+| 20 | retMsg  | varString8| variable     | `"OK"` on success; error text otherwise |
+
+#### `PingReq` (id=3, blockLength=8)
+
+| ID | Field     | Type   | Size (bytes) | Description |
+|----|-----------|--------|--------------|-------------|
+| 1  | timestamp | uint64 | 8            | Client timestamp (ms) |
+
+#### `PongResp` (id=4, blockLength=16)
+
+| ID | Field     | Type   | Size (bytes) | Description |
+|----|-----------|--------|--------------|-------------|
+| 1  | timestamp | uint64 | 8            | Echoed client timestamp (ms) |
+| 2  | pongTime  | uint64 | 8            | Server pong timestamp (ms) |
+
+#### `CreateOrderReqV5` (id=5, blockLength=241)
+
+| ID | Field          | Type            | Size (bytes) | Description |
+|----|----------------|-----------------|--------------|-------------|
+| 1  | header         | ApiRequestHeader| 140          | Request header |
+| 2  | category       | CategoryType    | 1            | 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION |
+| 3  | symbolId       | int64           | 8            | Internal numeric symbol ID |
+| 4  | side           | SideType        | 1            | 1=BUY, 2=SELL |
+| 5  | orderType      | OrderType       | 1            | 1=MARKET, 2=LIMIT |
+| 6  | qty            | Decimal64       | 9            | Order quantity |
+| 7  | price          | Decimal64       | 9            | Order price; set mantissa=0 for MARKET orders |
+| 8  | orderLinkId    | char[64]        | 64           | Client order ID (null-padded) |
+| 9  | timeInForce    | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
+| 10 | positionIdx    | PositionIdxType | 1            | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL |
+| 11 | marketUnit     | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
+| 12 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 13 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 14 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 15 | mmp            | BoolEnum        | 1            | Market Maker Protection |
+| 16 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
+
+#### `CreateOrderRespV5` (id=6, blockLength=364)
+
+| ID | Field      | Type               | Size (bytes) | Description |
+|----|------------|--------------------|--------------|-------------|
+| 1  | respHeader | ApiRespHeader      | 232          | Response header |
+| 2  | retCode    | int32              | 4            | 0 = accepted |
+| 3  | result     | CommonOrderRespData| 128          | Order identifiers |
+| 20 | retMsg     | varString8         | variable     | `"OK"` on success |
+
+#### `ReplaceOrderReqV5` (id=7, blockLength=295)
+
+| ID | Field       | Type             | Size (bytes) | Description |
+|----|-------------|------------------|--------------|-------------|
+| 1  | header      | ApiRequestHeader | 140          | Request header |
+| 2  | category    | CategoryType     | 1            | Product category |
+| 3  | symbolId    | int64            | 8            | Internal numeric symbol ID |
+| 4  | orderId     | char[64]         | 64           | Order to replace (use orderId or orderLinkId) |
+| 5  | orderLinkId | char[64]         | 64           | Client order ID of the order to replace |
+| 6  | qty         | Decimal64        | 9            | New quantity |
+| 7  | price       | Decimal64        | 9            | New price |
+
+#### `ReplaceOrderRespV5` (id=8, blockLength=364)
+
+Same layout as `CreateOrderRespV5`.
+
+#### `CancelOrderReqV5` (id=9, blockLength=277)
+
+| ID | Field       | Type             | Size (bytes) | Description |
+|----|-------------|------------------|--------------|-------------|
+| 1  | header      | ApiRequestHeader | 140          | Request header |
+| 2  | category    | CategoryType     | 1            | Product category |
+| 3  | symbolId    | int64            | 8            | Internal numeric symbol ID |
+| 4  | orderId     | char[64]         | 64           | Order to cancel (use orderId or orderLinkId) |
+| 5  | orderLinkId | char[64]         | 64           | Client order ID of the order to cancel |
+
+#### `CancelOrderRespV5` (id=10, blockLength=364)
+
+Same layout as `CreateOrderRespV5`.
+
+#### `BatchCreateOrderReqV5` (id=11)
+
+Fixed body (141 bytes): `header` (ApiRequestHeader, 140 bytes) + `category` (uint8, 1 byte).
+
+Followed by repeating group `request` (groupSize16Encoding header + items):
+
+| ID | Field          | Type            | Size (bytes) | Description |
+|----|----------------|-----------------|--------------|-------------|
+| 1  | symbolId       | int64           | 8            | Internal numeric symbol ID |
+| 2  | side           | SideType        | 1            | 1=BUY, 2=SELL |
+| 3  | orderType      | OrderType       | 1            | 1=MARKET, 2=LIMIT |
+| 4  | qty            | Decimal64       | 9            | Order quantity |
+| 5  | price          | Decimal64       | 9            | Order price |
+| 6  | orderLinkId    | char[64]        | 64           | Client order ID |
+| 7  | timeInForce    | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
+| 8  | positionIdx    | PositionIdxType | 1            | Position mode |
+| 9  | marketUnit     | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
+| 10 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
+| 11 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
+| 12 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
+| 13 | mmp            | BoolEnum        | 1            | Market Maker Protection|
+| 14 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH|
+
+Per-item blockLength = 100 bytes.
+
+#### `BatchCreateOrderRespV5` (id=12)
+
+Fixed body (236 bytes): `respHeader` (232 bytes) + `retCode` (int32, 4 bytes).
+
+Followed by repeating group `list` (per-item blockLength = 141 bytes):
+
+| ID | Field       | Type       | Size (bytes) | Description |
+|----|-------------|------------|--------------|-------------|
+| 1  | code        | int32      | 4            | Per-order result code |
+| 2  | category    | CategoryType| 1           | |
+| 3  | symbolId    | int64      | 8            | |
+| 4  | orderId     | char[64]   | 64           | Exchange order ID |
+| 5  | orderLinkId | char[64]   | 64           | Client order ID |
+| 20 | msg         | varString8 | variable     | Per-order message |
+| 21 | createAt    | varString8 | variable     | Creation timestamp string |
+
+Followed by top-level `retMsg` (varString8).
+
+#### `BatchReplaceOrderReqV5` (id=13)
+
+Fixed body (141 bytes): same as BatchCreateOrderReqV5.
+
+Repeating group `request` (per-item blockLength = 154 bytes):
+
+| ID | Field       | Type      | Size (bytes) | Description |
+|----|-------------|-----------|--------------|-------------|
+| 1  | symbolId    | int64     | 8            | |
+| 2  | orderId     | char[64]  | 64           | Order to replace |
+| 3  | orderLinkId | char[64]  | 64           | |
+| 4  | qty         | Decimal64 | 9            | New quantity |
+| 5  | price       | Decimal64 | 9            | New price |
+
+#### `BatchReplaceOrderRespV5` (id=14)
+
+Fixed body (236 bytes). Repeating group `list` (per-item blockLength = 141 bytes, same fields as BatchCreateOrderRespV5 minus `createAt`). Followed by `retMsg` (varString8).
+
+#### `BatchCancelOrderReqV5` (id=15)
+
+Fixed body (141 bytes). Repeating group `request` (per-item blockLength = 136 bytes):
+
+| ID | Field       | Type     | Size (bytes) | Description |
+|----|-------------|----------|--------------|-------------|
+| 1  | symbolId    | int64    | 8            | |
+| 2  | orderId     | char[64] | 64           | Order to cancel |
+| 3  | orderLinkId | char[64] | 64           | |
+
+#### `BatchCancelOrderRespV5` (id=16)
+
+Same layout as `BatchReplaceOrderRespV5`.
+
+#### `CommonErrResp` (id=17, blockLength=236)
+
+| ID | Field      | Type          | Size (bytes) | Description |
+|----|------------|---------------|--------------|-------------|
+| 1  | respHeader | ApiRespHeader | 232          | Response header |
+| 2  | retCode    | int32         | 4            | Error code |
+| 20 | retMsg     | varString8    | variable     | Error description |
+
+---
+
+## Integration Example
+
+```python
+import hashlib
+import hmac
+import json
+import logging
+import struct
+import threading
+import time
+from typing import Any, Dict, Optional, Tuple
+
+import websocket
+
+logging.basicConfig(
+    filename="logfile_order_entry.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+
+WS_URL = "wss://stream-testnet.bybit.com/v5/sbe/trade"
+API_KEY = "your_api_key"
+API_SECRET = "your_api_secret"
+RECV_WINDOW = 5000
+
+SCHEMA_ID = 2
+VERSION = 1
+
+# Template IDs
+TMPL_AUTH_REQ     = 1
+TMPL_AUTH_RESP    = 2
+TMPL_PING_REQ     = 3
+TMPL_PONG_RESP    = 4
+TMPL_CREATE_REQ   = 5
+TMPL_CREATE_RESP  = 6
+TMPL_REPLACE_REQ  = 7
+TMPL_REPLACE_RESP = 8
+TMPL_CANCEL_REQ   = 9
+TMPL_CANCEL_RESP  = 10
+TMPL_ERR_RESP     = 17
+
+# Enum values
+CATEGORY_LINEAR  = 2
+SIDE_BUY         = 1
+SIDE_SELL        = 2
+ORDER_TYPE_LIMIT  = 2
+ORDER_TYPE_MARKET = 1
+TIF_GTC          = 1
+POSITION_ONE_WAY = 0
+MARKET_UNIT_BASE = 1
+BOOL_FALSE       = 0
+BOOL_TRUE        = 1
+SMP_NONE         = 0
+
+# Struct formats (little-endian, no padding)
+HDR_FMT         = "<HHHH"   # messageHeader: 8 bytes
+HDR_SZ          = struct.calcsize(HDR_FMT)
+
+API_REQ_HDR_FMT = "<64sQI64s"   # ApiRequestHeader: 140 bytes
+API_REQ_HDR_SZ  = struct.calcsize(API_REQ_HDR_FMT)
+
+API_RESP_HDR_FMT = "<64s64s64sqqqqq"  # ApiRespHeader: 232 bytes
+API_RESP_HDR_SZ  = struct.calcsize(API_RESP_HDR_FMT)
+
+COMMON_RESP_FMT = "<64s64s"   # CommonOrderRespData: 128 bytes
+COMMON_RESP_SZ  = struct.calcsize(COMMON_RESP_FMT)
+
+DECIMAL64_FMT = "<bq"         # Decimal64: 9 bytes
+DECIMAL64_SZ  = struct.calcsize(DECIMAL64_FMT)
+
+_req_counter = 0
+
+
+def _next_req_id() -> str:
+    global _req_counter
+    _req_counter += 1
+    return f"req_{_req_counter:012d}"
+
+
+def _encode_sbe_header(block_length: int, template_id: int) -> bytes:
+    return struct.pack(HDR_FMT, block_length, template_id, SCHEMA_ID, VERSION)
+
+
+def _parse_sbe_header(data: bytes) -> Dict[str, Any]:
+    bl, tid, sid, ver = struct.unpack_from(HDR_FMT, data, 0)
+    return {"block_length": bl, "template_id": tid, "schema_id": sid, "version": ver}
+
+
+def _encode_str(s: str, length: int) -> bytes:
+    return s.encode("utf-8").ljust(length, b"\x00")[:length]
+
+
+def _decode_str(b: bytes) -> str:
+    return b.rstrip(b"\x00").decode("utf-8")
+
+
+def _encode_decimal64(mantissa: int, exponent: int) -> bytes:
+    """Pack a Decimal64. value = mantissa × 10^exponent."""
+    return struct.pack(DECIMAL64_FMT, exponent, mantissa)
+
+
+def _parse_varstring8(data: bytes, offset: int) -> Tuple[str, int]:
+    """Parse a varString8: uint8 length prefix + UTF-8 data."""
+    (length,) = struct.unpack_from("<B", data, offset)
+    offset += 1
+    s = data[offset: offset + length].decode("utf-8")
+    offset += length
+    return s, offset
+
+
+def _encode_api_req_header(req_id: str = "", referer: str = "") -> bytes:
+    ts = int(time.time() * 1000)
+    return struct.pack(
+        API_REQ_HDR_FMT,
+        _encode_str(req_id, 64),
+        ts,
+        RECV_WINDOW,
+        _encode_str(referer, 64),
+    )
+
+
+def _parse_api_resp_header(data: bytes, offset: int) -> Tuple[Dict[str, Any], int]:
+    (req_id, conn_id, trace_id,
+     time_now, in_time,
+     bapi_limit, bapi_limit_status, bapi_limit_reset) = struct.unpack_from(
+        API_RESP_HDR_FMT, data, offset
+    )
+    offset += API_RESP_HDR_SZ
+    return {
+        "reqId":                    _decode_str(req_id),
+        "connId":                   _decode_str(conn_id),
+        "traceId":                  _decode_str(trace_id),
+        "timeNow":                  time_now,
+        "inTime":                   in_time,
+        "bapiLimit":                bapi_limit,
+        "bapiLimitStatus":          bapi_limit_status,
+        "bapiLimitResetTimestamp":  bapi_limit_reset,
+    }, offset
+
+
+# ----------------------------- Encoders -----------------------------
+
+def encode_auth_req(api_key: str, api_secret: str) -> bytes:
+    req_id  = _next_req_id()
+    expires = int(time.time() * 1000) + 10_000
+    message = f"{api_key}:{expires}"
+    signature = hmac.new(
+        api_secret.encode("utf-8"),
+        message.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+    body = struct.pack(
+        "<64s64sQ64s",
+        _encode_str(req_id, 64),
+        _encode_str(api_key, 64),
+        expires,
+        _encode_str(signature, 64),
+    )
+    return _encode_sbe_header(200, TMPL_AUTH_REQ) + body
+
+
+def encode_ping_req() -> bytes:
+    body = struct.pack("<Q", int(time.time() * 1000))
+    return _encode_sbe_header(8, TMPL_PING_REQ) + body
+
+
+def encode_create_order(
+    category: int,
+    symbol_id: int,
+    side: int,
+    order_type: int,
+    qty_mantissa: int,
+    qty_exponent: int,
+    price_mantissa: int,
+    price_exponent: int,
+    order_link_id: str,
+    time_in_force: int = TIF_GTC,
+    position_idx: int = POSITION_ONE_WAY,
+    market_unit: int = MARKET_UNIT_BASE,
+    is_leverage: int = BOOL_FALSE,
+    reduce_only: int = BOOL_FALSE,
+    close_on_trigger: int = BOOL_FALSE,
+    mmp: int = BOOL_FALSE,
+    smp_type: int = SMP_NONE,
+    req_id: str = "",
+    referer: str = "",
+) -> bytes:
+    body = (
+        _encode_api_req_header(req_id or _next_req_id(), referer)  # 140 bytes
+        + struct.pack("<Bq", category, symbol_id)                   # 9 bytes
+        + struct.pack("<BB", side, order_type)                      # 2 bytes
+        + _encode_decimal64(qty_mantissa, qty_exponent)             # 9 bytes
+        + _encode_decimal64(price_mantissa, price_exponent)         # 9 bytes
+        + _encode_str(order_link_id, 64)                            # 64 bytes
+        + struct.pack("<BBBBBBBBB",
+                      time_in_force, position_idx, market_unit,
+                      is_leverage, reduce_only, close_on_trigger,
+                      mmp, smp_type, 0)                             # 9 bytes (last byte pad to reach 241)
+    )
+    return _encode_sbe_header(241, TMPL_CREATE_REQ) + body
+
+
+def encode_cancel_order(
+    category: int,
+    symbol_id: int,
+    order_id: str = "",
+    order_link_id: str = "",
+    req_id: str = "",
+    referer: str = "",
+) -> bytes:
+    body = (
+        _encode_api_req_header(req_id or _next_req_id(), referer)
+        + struct.pack("<Bq", category, symbol_id)
+        + _encode_str(order_id, 64)
+        + _encode_str(order_link_id, 64)
+    )
+    return _encode_sbe_header(277, TMPL_CANCEL_REQ) + body
+
+
+# ----------------------------- Parsers -----------------------------
+
+def parse_auth_resp(data: bytes) -> Dict[str, Any]:
+    hdr = _parse_sbe_header(data)
+    offset = HDR_SZ
+    req_id_b, ret_code, conn_id_b = struct.unpack_from("<64si64s", data, offset)
+    offset += 132
+    ret_msg, _ = _parse_varstring8(data, offset)
+    return {
+        "header":  hdr,
+        "reqId":   _decode_str(req_id_b),
+        "retCode": ret_code,
+        "connId":  _decode_str(conn_id_b),
+        "retMsg":  ret_msg,
+    }
+
+
+def parse_order_resp(data: bytes) -> Dict[str, Any]:
+    """Handles CreateOrderRespV5, ReplaceOrderRespV5, CancelOrderRespV5 (same layout)."""
+    hdr = _parse_sbe_header(data)
+    offset = HDR_SZ
+    resp_header, offset = _parse_api_resp_header(data, offset)
+    (ret_code,) = struct.unpack_from("<i", data, offset)
+    offset += 4
+    order_id_b, order_link_id_b = struct.unpack_from(COMMON_RESP_FMT, data, offset)
+    offset += COMMON_RESP_SZ
+    ret_msg, _ = _parse_varstring8(data, offset)
+    return {
+        "header":     hdr,
+        "respHeader": resp_header,
+        "retCode":    ret_code,
+        "result": {
+            "orderId":     _decode_str(order_id_b),
+            "orderLinkId": _decode_str(order_link_id_b),
+        },
+        "retMsg": ret_msg,
+    }
+
+
+def parse_pong_resp(data: bytes) -> Dict[str, Any]:
+    hdr = _parse_sbe_header(data)
+    ts, pong_time = struct.unpack_from("<QQ", data, HDR_SZ)
+    return {"header": hdr, "timestamp": ts, "pongTime": pong_time}
+
+
+PARSERS = {
+    TMPL_AUTH_RESP:    parse_auth_resp,
+    TMPL_CREATE_RESP:  parse_order_resp,
+    TMPL_REPLACE_RESP: parse_order_resp,
+    TMPL_CANCEL_RESP:  parse_order_resp,
+    TMPL_PONG_RESP:    parse_pong_resp,
+}
+
+# ----------------------------- WebSocket handlers -----------------------------
+
+def on_message(ws, message):
+    try:
+        if not isinstance(message, (bytes, bytearray)):
+            logging.warning("unexpected text frame: %r", message)
+            return
+
+        data = bytes(message)
+        hdr  = _parse_sbe_header(data)
+        tid  = hdr["template_id"]
+        parser = PARSERS.get(tid)
+
+        if parser is None:
+            logging.warning("unhandled templateId=%s", tid)
+            return
+
+        decoded = parser(data)
+        logging.info("templateId=%s %s", tid, decoded)
+
+        if tid == TMPL_AUTH_RESP:
+            print("auth:", decoded)
+            if decoded["retCode"] == 0:
+                # Send a sample limit buy order after successful auth
+                # qty=0.01 → mantissa=1, exponent=-2
+                # price=69000 → mantissa=69000, exponent=0
+                order = encode_create_order(
+                    category=CATEGORY_LINEAR,
+                    symbol_id=123456,
+                    side=SIDE_BUY,
+                    order_type=ORDER_TYPE_LIMIT,
+                    qty_mantissa=1,
+                    qty_exponent=-2,
+                    price_mantissa=69000,
+                    price_exponent=0,
+                    order_link_id=_next_req_id(),
+                    referer="my_broker",
+                )
+                ws.send(order)
+            else:
+                logging.error("auth failed retCode=%s retMsg=%s",
+                              decoded["retCode"], decoded["retMsg"])
+
+        elif tid in (TMPL_CREATE_RESP, TMPL_REPLACE_RESP, TMPL_CANCEL_RESP):
+            print(
+                f"order resp templateId={tid} retCode={decoded['retCode']} "
+                f"orderId={decoded['result']['orderId']} "
+                f"orderLinkId={decoded['result']['orderLinkId']} "
+                f"retMsg={decoded['retMsg']}"
+            )
+
+        elif tid == TMPL_PONG_RESP:
+            print("pong:", decoded)
+
+    except Exception as e:
+        logging.exception("decode error: %s", e)
+        print("decode error:", e)
+
+
+def on_error(ws, error):
+    print("WS error:", error)
+    logging.error("WS error: %s", error)
+
+
+def on_close(ws, *_):
+    print("### connection closed ###")
+    logging.info("connection closed")
+
+
+def on_open(ws):
+    print("opened")
+    ws.send(encode_auth_req(API_KEY, API_SECRET))
+    print("auth request sent")
+    threading.Thread(target=_ping_loop, args=(ws,), daemon=True).start()
+
+
+def _ping_loop(ws):
+    while True:
+        try:
+            ws.send(encode_ping_req())
+        except Exception:
+            return
+        time.sleep(10)
+
+
+def connWS():
+    ws = websocket.WebSocketApp(
+        WS_URL,
+        on_open=on_open,
+        on_message=on_message,
+        on_error=on_error,
+        on_close=on_close,
+    )
+    ws.run_forever(ping_interval=20, ping_timeout=10)
+
+
+if __name__ == "__main__":
+    websocket.enableTrace(False)
+    connWS()
+```
+
+---
+
+## Limits & Errors
+
+- **Rate limits** are surfaced in every response's `ApiRespHeader` (`bapiLimit`, `bapiLimitStatus`, `bapiLimitResetTimestamp`).
+- Non-zero `retCode` in any response indicates failure; read `retMsg` (varString8) for the diagnostic message.
+- **CommonErrResp** (`templateId = 17`) is sent when the server cannot associate the error with a specific request.
+- In batch responses, each group item carries its own `code` and `msg` — check per-item codes individually.
+- On socket close, reconnect and re-authenticate before resuming; use `orderLinkId` to detect duplicates.
+
+---
+
+## Compatibility Notes
+
+- **Byte order:** little-endian for all numeric primitives.
+- **Decimal64:** packed as `int8 (exponent) + int64 (mantissa)` = 9 bytes, no alignment padding. `value = mantissa × 10^exponent`.
+- **BoolEnum:** encoded as `uint8`; valid values are 0 (FALSE) and 1 (TRUE). Value 254 signals a non-representable state.
+- **Fixed-length strings:** null-padded to declared length; strip trailing `\x00` on decode.
+- **varString8:** prefixed by a 1-byte `uint8` length; follows all fixed fields in the message body.
+- **Repeating groups:** prefixed by `groupSize16Encoding` (uint16 `blockLength` + uint16 `numInGroup`), before the group items.
+- Client clock must be NTP/PTP-synchronized; server rejects frames where the timestamp falls outside the `recvWindow`.
