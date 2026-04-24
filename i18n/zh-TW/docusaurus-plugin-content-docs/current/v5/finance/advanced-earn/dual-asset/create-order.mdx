@@ -8,7 +8,7 @@ sidebar_position: 3
 * API 金鑰需要具備 Earn (理財) 權限。
 * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)來追蹤訂單狀態（Pending → Success）。
 * `selectPrice` 和 `apyE8` 必須與[查詢產品報價](./product-quote)或 WebSocket 頻道的有效報價相匹配。過期的報價將被拒絕。
-* `orderLinkId` 用於保證冪等性（Idempotency）——在 30 分鐘內重複提交相同的 `orderLinkId`，將返回相同的 `orderId`，而不會創建重複的訂單。
+* `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
 :::
 
 ### HTTP 請求
@@ -23,7 +23,7 @@ POST `/v5/earn/advance/place-order`
 |amount|**true**|string|訂單數量（字串格式的數字）|
 |accountType|**true**|string|帳戶類型：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)|
 |coin|**true**|string|幣種名稱|
-|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元）|
 |dualAssetsExtra|**true**|Object|雙幣投資專屬參數|
 |> orderDirection|**true**|string|方向：`BuyLow` (低買), `SellHigh` (高賣)|
 |> selectPrice|**true**|string|用戶選擇的目標價格（掛鉤價）。必須與有效報價相匹配|

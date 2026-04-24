@@ -8,7 +8,7 @@ sidebar_position: 4
 * 需要身份驗證。每個 UID 每秒**最多 5 次請求**。API 金鑰需要具備 Earn（理財）權限。
 * 將指定持倉的可領取收益再投入流動性池。
 * 訂單為非同步處理。成功響應表示訂單已被接受。請使用[查詢訂單資訊](./order)追蹤訂單狀態。
-* `orderLinkId` 提供冪等性保障——30 分鐘內提交相同 `orderLinkId` 將返回相同 `orderId`，不會建立重複訂單。
+* `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
 * 每個持倉同一時間只允許存在一筆待處理訂單。
 :::
 
@@ -19,7 +19,7 @@ sidebar_position: 4
 | 參數 | 必填 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
 |productId|**true**|string|產品 ID|
-|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 40 個字元）|
 |positionId|**true**|string|要執行再投資的持倉 ID。可從[查詢持倉資訊](./position)獲取|
 
 ### 響應參數

@@ -8,7 +8,7 @@ sidebar_position: 5
 * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
 * Adds additional margin (in quoteCoin) to a leveraged position to reduce liquidation risk.
 * Orders are processed asynchronously. A successful response means the order was accepted. Use [Get Order Info](./order) to track order status.
-* `orderLinkId` provides idempotency — submitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * Only one pending order is allowed per position at a time.
 :::
 
@@ -19,7 +19,7 @@ sidebar_position: 5
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
 |productId|**true**|string|Product ID|
-|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency|
+|orderLinkId|**true**|string|User-customised order ID (max 40 characters)|
 |positionId|**true**|string|Position ID to add margin to. Obtain from [Get Position Info](./position)|
 |amount|**true**|string|Amount of quoteCoin to add as margin (e.g. USDT)|
 |quoteAccountType|**true**|string|Source account for the margin: `FUND`, `UNIFIED`|

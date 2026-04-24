@@ -8,7 +8,7 @@ sidebar_position: 3
 * Requires Earn permission on the API key.
 * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order)  to track the order status (Pending → Success).
 * The `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](./product-quote) or the WebSocket channel. Stale quotes will be rejected.
-* orderLinkId is used for idempotency — resubmitting the same orderLinkId within 30 minutes returns the same orderId without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 :::
 
 
@@ -25,7 +25,7 @@ POST `/v5/earn/advance/place-order`
 |amount|**true**|string|Order amount (decimal string)|
 |accountType|**true**|string|Account type: `FUND`, `UNIFIED`|
 |coin|**true**|string|Coin name|
-|orderLinkId|**true**|string|User customised order ID (max 36 characters), used for idempotency|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters)|
 |dualAssetsExtra|**true**|Object|Dual Assets specific parameters|
 |> orderDirection|**true**|string|Direction: `BuyLow`, `SellHigh`|
 |> selectPrice|**true**|string|Target price selected by user. Must match a valid quote|

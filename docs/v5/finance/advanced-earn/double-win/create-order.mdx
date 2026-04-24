@@ -7,7 +7,7 @@ sidebar_position: 4
 :::info
 * Requires Earn permission on the API key.
 * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (`Pending` → `Success`).
-* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * **Stake**: must pass `doubleWinStakeExtra`. For fixed range products, use the `leverage` from [Get Fixed Product Quote](./product-quote). For RFQ products, use the `leverage` from [Get Custom Product Quote](./leverage) and include `lowerPrice` / `upperPrice`. The order must be placed before the quote's `expireTime`.
 * **Redeem**: must call [Get Redeem Estimated Amount](./est-redeem) first to obtain `estRedeemAmount`, then pass it in `doubleWinRedeemExtra`.
 :::
@@ -24,7 +24,7 @@ sidebar_position: 4
 |amount|false|string|Order amount. **Required** for `Stake`|
 |accountType|**true**|string|Account type: `FUND` or `UNIFIED`. Not required for `Redeem`|
 |coin|**true**|string|Coin name, e.g. `USDT`. Not required for `Redeem`|
-|orderLinkId|**true**|string|User customised order ID (max 64 characters, alphanumeric and `_-`), used for idempotency|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters, alphanumeric and `_-`)|
 |doubleWinStakeExtra|false|Object|Required when `orderType=Stake`|
 |> leverage|**true**|string|Leverage multiplier obtained from [Get Fixed Product Quote](./product-quote) or [Get Custom Product Quote](./leverage). Maximum 2 decimal places, must not exceed the quoted maximum|
 |> initialPrice|**true**|string|Current index price of the underlying asset at order time. Recommend using `currentPrice` from [Get Fixed Product Quote](./product-quote)|
