@@ -1,55 +1,55 @@
 ---
-title: SBE Order Entry Integration
-sidebar_label: SBE Order Entry Integration
+title: SBE Order Entry 接入指南
+sidebar_label: SBE Order Entry 接入指南
 sidebar_position: 2
 ---
 
-## Overview
+## 總覽
 
-- **Channel:** Private MM WebSocket only (not available on public WS).
-- **Transport:** WebSocket binary frames — each frame contains exactly one SBE message (no JSON).
+- **Channel:** 僅支援私有 MM WebSocket, 不開放於 public WS.
+- **Transport:** WebSocket 二進制 frames — 每個 frame 包含一則 SBE 信息 (無 JSON).
 - **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 1`.
-- **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
-- **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
+- **Purpose:** 高效能低延遲下單 — 單筆或批次建立、修改、取消訂單.
+- **Compression:** 停用壓縮以避免隊頭阻塞與 CPU 開銷.
 
 ---
 
-## Connection
+## 連接
 
-### Endpoints
+### 連線端點
 
-| Environment | URL |
-|-------------|-----|
-| Mainnet     | `wss://xxxxxxx.aws.bybit.com` |
-| Testnet     | `wss://stream-testnet.bybit.com/v5/sbe/trade` |
+| 環境 | URL |
+|------|-----|
+| 正式環境 (Mainnet) | `wss://xxxxxxx.aws.bybit.com` |
+| 測試環境 (Testnet) | `wss://stream-testnet.bybit.com/v5/sbe/trade` |
 
-### Connection Lifecycle
+### 連線生命週期
 
-1. Open WebSocket connection.
-2. Send **AuthReq** (`templateId = 1`).
-3. Receive **AuthResp** (`templateId = 2`) — proceed only if `retCode = 0`.
-4. Send order requests (**CreateOrderReqV5**, **ReplaceOrderReqV5**, **CancelOrderReqV5**, or batch variants).
-5. Receive the corresponding response for each request.
-6. Send **PingReq** (`templateId = 3`) periodically; expect **PongResp** (`templateId = 4`) in return.
+1. 建立 WebSocket 連線.
+2. 送出 **AuthReq** (`templateId = 1`).
+3. 接收 **AuthResp** (`templateId = 2`) — 僅在 `retCode = 0` 時繼續.
+4. 送出訂單請求 (**CreateOrderReqV5**、**ReplaceOrderReqV5**、**CancelOrderReqV5** 或批次變體).
+5. 接收每筆請求的對應回應.
+6. 定期送出 **PingReq** (`templateId = 3`); 預期收到 **PongResp** (`templateId = 4`).
 
-### Heartbeat
+### 心跳 (Heartbeat)
 
-- Send a **PingReq** every **10 s** to keep the connection alive.
-- If no data is received within **2 × heartbeat interval**, reconnect and re-authenticate.
+- 每 **10 秒** 送出一次 **PingReq** 以維持連線.
+- 若 **2 × 心跳間隔** 內未收到任何資料, 請重新連線並重新驗證身份.
 
-### Reconnect Strategy
+### 重連策略
 
-- Use exponential backoff with jitter.
-- Re-authenticate immediately after reconnect before resuming order flow.
-- Use `orderLinkId` for client-side idempotency — query order status before resubmitting.
+- 使用指數退避加抖動 (exponential backoff with jitter).
+- 重連後立即重新驗證身份, 再恢復下單流程.
+- 使用 `orderLinkId` 進行客戶端冪等性控制 — 重新提交前先查詢訂單狀態.
 
 ---
 
-## Authentication Flow
+## 驗證流程
 
-### Send AuthReq
+### 送出 AuthReq
 
-Signature: HMAC-SHA256 over `"apiKey:expires"`, where `expires` is a future Unix timestamp in milliseconds.
+簽名: 對 `"apiKey:expires"` 執行 HMAC-SHA256, 其中 `expires` 為未來的 Unix 時間戳 (毫秒).
 
 ```python
 import hashlib, hmac, struct, time
@@ -63,7 +63,7 @@ def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
     ).hexdigest()
 ```
 
-### Receive AuthResp
+### 接收 AuthResp
 
 ```json
 {
@@ -80,21 +80,21 @@ def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
 }
 ```
 
-- `retCode = 0` — authentication succeeded.
-- Any non-zero `retCode` is a failure; read `retMsg` for the cause.
+- `retCode = 0` — 驗證成功.
+- 任何非零 `retCode` 均為失敗; 請讀取 `retMsg` 了解原因.
 
 ---
 
-## Order Operations
+## 訂單操作
 
-### Create Order
+### 建立訂單 (Create Order)
 
-Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`templateId = 6`).
+送出 **CreateOrderReqV5** (`templateId = 5`), 接收 **CreateOrderRespV5** (`templateId = 6`).
 
-- `price` and `qty` use **Decimal64**: `value = mantissa × 10^exponent`.
-- `orderLinkId` is a fixed 64-byte char field (null-padded); used for client-side deduplication.
+- `price` 與 `qty` 使用 **Decimal64**: `value = mantissa × 10^exponent`.
+- `orderLinkId` 為固定 64 位元組 char 欄位 (補 null); 用於客戶端去重.
 
-**CreateOrderRespV5 decode example:**
+**CreateOrderRespV5 解碼示例:**
 
 ```json
 {
@@ -123,44 +123,44 @@ Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`te
 }
 ```
 
-### Replace Order
+### 修改訂單 (Replace Order)
 
-Send **ReplaceOrderReqV5** (`templateId = 7`), receive **ReplaceOrderRespV5** (`templateId = 8`).
+送出 **ReplaceOrderReqV5** (`templateId = 7`), 接收 **ReplaceOrderRespV5** (`templateId = 8`).
 
-- Identify the order to replace by `orderId` **or** `orderLinkId` (at least one required).
-- Submit new `qty` and/or `price` as Decimal64.
+- 透過 `orderId` **或** `orderLinkId` 識別要修改的訂單 (至少提供一個).
+- 以 Decimal64 格式提交新的 `qty` 及/或 `price`.
 
-### Cancel Order
+### 取消訂單 (Cancel Order)
 
-Send **CancelOrderReqV5** (`templateId = 9`), receive **CancelOrderRespV5** (`templateId = 10`).
+送出 **CancelOrderReqV5** (`templateId = 9`), 接收 **CancelOrderRespV5** (`templateId = 10`).
 
-- Identify the order to cancel by `orderId` **or** `orderLinkId`.
-
----
-
-## Batch Operations
-
-All batch requests embed an **ApiRequestHeader** at the top, followed by the `category` field, then a **repeating group** of order items. The group is prefixed by a `groupSize16Encoding` header (uint16 `blockLength` + uint16 `numInGroup`).
-
-| Operation | Request Template ID | Response Template ID |
-|-----------|--------------------|--------------------|
-| Batch Create | 11 | 12 |
-| Batch Replace | 13 | 14 |
-| Batch Cancel  | 15 | 16 |
-
-Each response group item carries its own `code` and `msg` (varString8), plus `orderId` / `orderLinkId` for the acknowledged order. A top-level `retMsg` (varString8) follows all groups.
+- 透過 `orderId` **或** `orderLinkId` 識別要取消的訂單.
 
 ---
 
-## Error Handling
+## 批次操作
 
-**CommonErrResp** (`templateId = 17`) is returned when the server cannot associate an error with a specific request message.
+所有批次請求在最前面嵌入一個 **ApiRequestHeader**, 接著是 `category` 欄位, 然後是一個**重複群組 (repeating group)** 的訂單項目。群組前綴為 `groupSize16Encoding` 標頭 (uint16 `blockLength` + uint16 `numInGroup`).
 
-Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
+| 操作 | 請求 Template ID | 回應 Template ID |
+|------|-----------------|-----------------|
+| 批次建立 (Batch Create)  | 11 | 12 |
+| 批次修改 (Batch Replace) | 13 | 14 |
+| 批次取消 (Batch Cancel)  | 15 | 16 |
+
+每筆回應群組項目包含各自的 `code` 與 `msg` (varString8), 以及已確認訂單的 `orderId` / `orderLinkId`。所有群組之後附有頂層 `retMsg` (varString8).
 
 ---
 
-## SBE Message Structure
+## 錯誤處理
+
+**CommonErrResp** (`templateId = 17`) 用於伺服器無法將錯誤關聯至特定請求信息時回傳。
+
+欄位: `respHeader` (ApiRespHeader)、`retCode` (int32)、`retMsg` (varString8).
+
+---
+
+## SBE 信息結構
 
 ### SBE XML Schema
 
@@ -431,82 +431,82 @@ Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
 </sbe:messageSchema>
 ```
 
-### Message Templates
+### 信息模板
 
 | Template ID | Name | Direction | Description |
 |-------------|------|-----------|-------------|
-| 1  | `AuthReq`                | Client → Server | Authentication request |
-| 2  | `AuthResp`               | Server → Client | Authentication response |
-| 3  | `PingReq`                | Client → Server | Heartbeat ping |
-| 4  | `PongResp`               | Server → Client | Heartbeat pong |
-| 5  | `CreateOrderReqV5`       | Client → Server | Create single order |
-| 6  | `CreateOrderRespV5`      | Server → Client | Create order response |
-| 7  | `ReplaceOrderReqV5`      | Client → Server | Replace single order |
-| 8  | `ReplaceOrderRespV5`     | Server → Client | Replace order response |
-| 9  | `CancelOrderReqV5`       | Client → Server | Cancel single order |
-| 10 | `CancelOrderRespV5`      | Server → Client | Cancel order response |
-| 11 | `BatchCreateOrderReqV5`  | Client → Server | Batch create orders |
-| 12 | `BatchCreateOrderRespV5` | Server → Client | Batch create response |
-| 13 | `BatchReplaceOrderReqV5` | Client → Server | Batch replace orders |
-| 14 | `BatchReplaceOrderRespV5`| Server → Client | Batch replace response |
-| 15 | `BatchCancelOrderReqV5`  | Client → Server | Batch cancel orders |
-| 16 | `BatchCancelOrderRespV5` | Server → Client | Batch cancel response |
-| 17 | `CommonErrResp`          | Server → Client | Generic error response |
+| 1  | `AuthReq`                | Client → Server | 驗證請求 Authentication request |
+| 2  | `AuthResp`               | Server → Client | 驗證回應 Authentication response |
+| 3  | `PingReq`                | Client → Server | 心跳 ping Heartbeat ping |
+| 4  | `PongResp`               | Server → Client | 心跳 pong Heartbeat pong |
+| 5  | `CreateOrderReqV5`       | Client → Server | 建立單筆訂單 Create single order |
+| 6  | `CreateOrderRespV5`      | Server → Client | 建立訂單回應 Create order response |
+| 7  | `ReplaceOrderReqV5`      | Client → Server | 修改單筆訂單 Replace single order |
+| 8  | `ReplaceOrderRespV5`     | Server → Client | 修改訂單回應 Replace order response |
+| 9  | `CancelOrderReqV5`       | Client → Server | 取消單筆訂單 Cancel single order |
+| 10 | `CancelOrderRespV5`      | Server → Client | 取消訂單回應 Cancel order response |
+| 11 | `BatchCreateOrderReqV5`  | Client → Server | 批次建立訂單 Batch create orders |
+| 12 | `BatchCreateOrderRespV5` | Server → Client | 批次建立回應 Batch create response |
+| 13 | `BatchReplaceOrderReqV5` | Client → Server | 批次修改訂單 Batch replace orders |
+| 14 | `BatchReplaceOrderRespV5`| Server → Client | 批次修改回應 Batch replace response |
+| 15 | `BatchCancelOrderReqV5`  | Client → Server | 批次取消訂單 Batch cancel orders |
+| 16 | `BatchCancelOrderRespV5` | Server → Client | 批次取消回應 Batch cancel response |
+| 17 | `CommonErrResp`          | Server → Client | 通用錯誤回應 Generic error response |
 
-### Message Header (8 bytes)
+### 信息標頭 (8 bytes)
 
 | Field       | Type   | Size (bytes) | Description             |
 |-------------|--------|--------------|-------------------------|
-| blockLength | uint16 | 2            | Fixed-body length       |
-| templateId  | uint16 | 2            | Message type identifier |
-| schemaId    | uint16 | 2            | Fixed = 2               |
-| version     | uint16 | 2            | Fixed = 1               |
+| blockLength | uint16 | 2            | 固定主體長度 Fixed-body length |
+| templateId  | uint16 | 2            | 信息型別識別碼 Message type identifier |
+| schemaId    | uint16 | 2            | 固定值 = 2 Fixed = 2 |
+| version     | uint16 | 2            | 固定值 = 1 Fixed = 1 |
 
-### Composite Types
+### 複合型別 (Composite Types)
 
 #### `ApiRequestHeader` (140 bytes)
 
-Embedded at the start of every request message.
+每則請求信息開頭嵌入此結構。
 
 | Field      | Type      | Size (bytes) | Description |
 |------------|-----------|--------------|-------------|
-| reqId      | char[64]  | 64           | Client request ID (optional; echoed in response) |
-| timestamp  | uint64    | 8            | Client timestamp (ms); must satisfy: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
-| recvWindow | uint32    | 4            | Acceptable time window (ms); default 5000 |
-| referer    | char[64]  | 64           | Broker / source identifier |
+| reqId      | char[64]  | 64           | 客戶端請求 ID (選填; 回應中會回傳) Client request ID (optional; echoed in response) |
+| timestamp  | uint64    | 8            | 客戶端時間戳 (ms); 須滿足: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
+| recvWindow | uint32    | 4            | 可接受的時間窗口 (ms); 預設 5000 Acceptable time window (ms); default 5000 |
+| referer    | char[64]  | 64           | 券商 / 來源識別碼 Broker / source identifier |
 
 #### `ApiRespHeader` (232 bytes)
 
-Embedded at the start of every response message.
+每則回應信息開頭嵌入此結構。
 
 | Field                    | Type     | Size (bytes) | Description |
 |--------------------------|----------|--------------|-------------|
-| reqId                    | char[64] | 64           | Echoed client request ID |
-| connId                   | char[64] | 64           | Connection identifier |
-| traceId                  | char[64] | 64           | Trace ID for diagnostics |
-| timeNow                  | int64    | 8            | Server timestamp (ms) |
-| inTime                   | int64    | 8            | Message ingress timestamp (ms) |
-| bapiLimit                | int64    | 8            | Total rate limit |
-| bapiLimitStatus          | int64    | 8            | Remaining rate limit tokens |
-| bapiLimitResetTimestamp  | int64    | 8            | Rate-limit reset timestamp (ms) |
+| reqId                    | char[64] | 64           | 回傳的客戶端請求 ID Echoed client request ID |
+| connId                   | char[64] | 64           | 連線識別碼 Connection identifier |
+| traceId                  | char[64] | 64           | 診斷用 Trace ID Trace ID for diagnostics |
+| timeNow                  | int64    | 8            | 伺服器時間戳 (ms) Server timestamp (ms) |
+| inTime                   | int64    | 8            | 信息接收時間戳 (ms) Message ingress timestamp (ms) |
+| bapiLimit                | int64    | 8            | 總速率限制 Total rate limit |
+| bapiLimitStatus          | int64    | 8            | 剩餘速率限制 token Remaining rate limit tokens |
+| bapiLimitResetTimestamp  | int64    | 8            | 速率限制重置時間戳 (ms) Rate-limit reset timestamp (ms) |
 
 #### `CommonOrderRespData` (128 bytes)
 
 | Field       | Type     | Size (bytes) | Description |
 |-------------|----------|--------------|-------------|
-| orderId     | char[64] | 64           | Exchange-assigned order ID |
-| orderLinkId | char[64] | 64           | Echoed client order ID |
+| orderId     | char[64] | 64           | 交易所指定的訂單 ID Exchange-assigned order ID |
+| orderLinkId | char[64] | 64           | 回傳的客戶端訂單 ID Echoed client order ID |
 
 #### `Decimal64` (9 bytes)
 
 | Field    | Type  | Size (bytes) | Description |
 |----------|-------|--------------|-------------|
-| exponent | int8  | 1            | Power of 10 |
-| mantissa | int64 | 8            | Significand |
+| exponent | int8  | 1            | 10 的次方 Power of 10 |
+| mantissa | int64 | 8            | 有效數字 Significand |
 
-`actual_value = mantissa × 10^exponent`. Example: price 69000.00 → `exponent=0, mantissa=69000`; qty 0.01 → `exponent=-2, mantissa=1`.
+`actual_value = mantissa × 10^exponent`. 示例: 價格 69000.00 → `exponent=0, mantissa=69000`; 數量 0.01 → `exponent=-2, mantissa=1`.
 
-### Enumerations
+### 枚舉型別 (Enumerations)
 
 | Enum | Values (uint8) |
 |------|----------------|
@@ -519,185 +519,185 @@ Embedded at the start of every response message.
 | `SmpType`         | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH, 254=NON_REPRESENTABLE |
 | `BoolEnum`        | 0=FALSE, 1=TRUE, 254=NON_REPRESENTABLE |
 
-### Message Field Tables
+### 信息欄位表
 
 #### `AuthReq` (id=1, blockLength=200)
 
 | ID | Field     | Type     | Size (bytes) | Description |
 |----|-----------|----------|--------------|-------------|
-| 1  | reqId     | char[64] | 64           | Client request ID |
-| 2  | apiKey    | char[64] | 64           | API Key (null-padded) |
-| 3  | expires   | uint64   | 8            | Expiry timestamp (ms); must be in future |
-| 4  | signature | char[64] | 64           | HMAC-SHA256 over `"apiKey:expires"` |
+| 1  | reqId     | char[64] | 64           | 客戶端請求 ID Client request ID |
+| 2  | apiKey    | char[64] | 64           | API Key (補 null) API Key (null-padded) |
+| 3  | expires   | uint64   | 8            | 到期時間戳 (ms); 必須為未來時間 Expiry timestamp (ms); must be in future |
+| 4  | signature | char[64] | 64           | HMAC-SHA256 of `"apiKey:expires"` |
 
 #### `AuthResp` (id=2, blockLength=132)
 
-| ID | Field   | Type      | Size (bytes) | Description |
-|----|---------|-----------|--------------|-------------|
-| 1  | reqId   | char[64]  | 64           | Echoed request ID |
-| 2  | retCode | int32     | 4            | 0 = OK |
-| 3  | connId  | char[64]  | 64           | Connection identifier |
-| 20 | retMsg  | varString8| variable     | `"OK"` on success; error text otherwise |
+| ID | Field   | Type       | Size (bytes) | Description |
+|----|---------|------------|--------------|-------------|
+| 1  | reqId   | char[64]   | 64           | 回傳的請求 ID Echoed request ID |
+| 2  | retCode | int32      | 4            | 0 = 成功 0 = OK |
+| 3  | connId  | char[64]   | 64           | 連線識別碼 Connection identifier |
+| 20 | retMsg  | varString8 | variable     | 成功時為 `"OK"`; 否則為錯誤描述 `"OK"` on success; error text otherwise |
 
 #### `PingReq` (id=3, blockLength=8)
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | Client timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | 客戶端時間戳 (ms) Client timestamp (ms) |
 
 #### `PongResp` (id=4, blockLength=16)
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | Echoed client timestamp (ms) |
-| 2  | pongTime  | uint64 | 8            | Server pong timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | 回傳的客戶端時間戳 (ms) Echoed client timestamp (ms) |
+| 2  | pongTime  | uint64 | 8            | 伺服器 pong 時間戳 (ms) Server pong timestamp (ms) |
 
 #### `CreateOrderReqV5` (id=5, blockLength=241)
 
-| ID | Field          | Type            | Size (bytes) | Description |
-|----|----------------|-----------------|--------------|-------------|
-| 1  | header         | ApiRequestHeader| 140          | Request header |
-| 2  | category       | CategoryType    | 1            | 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION |
-| 3  | symbolId       | int64           | 8            | Internal numeric symbol ID |
-| 4  | side           | SideType        | 1            | 1=BUY, 2=SELL |
-| 5  | orderType      | OrderType       | 1            | 1=MARKET, 2=LIMIT |
-| 6  | qty            | Decimal64       | 9            | Order quantity |
-| 7  | price          | Decimal64       | 9            | Order price; set mantissa=0 for MARKET orders |
-| 8  | orderLinkId    | char[64]        | 64           | Client order ID (null-padded) |
-| 9  | timeInForce    | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
-| 10 | positionIdx    | PositionIdxType | 1            | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL |
-| 11 | marketUnit     | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
-| 12 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 13 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 14 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 15 | mmp            | BoolEnum        | 1            | Market Maker Protection |
-| 16 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
+| ID | Field          | Type             | Size (bytes) | Description |
+|----|----------------|------------------|--------------|-------------|
+| 1  | header         | ApiRequestHeader | 140          | 請求標頭 Request header |
+| 2  | category       | CategoryType     | 1            | 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION |
+| 3  | symbolId       | int64            | 8            | 內部數字型 symbol ID Internal numeric symbol ID |
+| 4  | side           | SideType         | 1            | 1=BUY, 2=SELL |
+| 5  | orderType      | OrderType        | 1            | 1=MARKET, 2=LIMIT |
+| 6  | qty            | Decimal64        | 9            | 訂單數量 Order quantity |
+| 7  | price          | Decimal64        | 9            | 訂單價格; MARKET 單設 mantissa=0 Order price; set mantissa=0 for MARKET orders |
+| 8  | orderLinkId    | char[64]         | 64           | 客戶端訂單 ID (補 null) Client order ID (null-padded) |
+| 9  | timeInForce    | TimeInForceType  | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
+| 10 | positionIdx    | PositionIdxType  | 1            | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL |
+| 11 | marketUnit     | MarketUnitType   | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
+| 12 | isLeverage     | BoolEnum         | 1            | 0=FALSE, 1=TRUE |
+| 13 | reduceOnly     | BoolEnum         | 1            | 0=FALSE, 1=TRUE |
+| 14 | closeOnTrigger | BoolEnum         | 1            | 0=FALSE, 1=TRUE |
+| 15 | mmp            | BoolEnum         | 1            | 造市商保護 Market Maker Protection |
+| 16 | smpType        | SmpType          | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
 
 #### `CreateOrderRespV5` (id=6, blockLength=364)
 
-| ID | Field      | Type               | Size (bytes) | Description |
-|----|------------|--------------------|--------------|-------------|
-| 1  | respHeader | ApiRespHeader      | 232          | Response header |
-| 2  | retCode    | int32              | 4            | 0 = accepted |
-| 3  | result     | CommonOrderRespData| 128          | Order identifiers |
-| 20 | retMsg     | varString8         | variable     | `"OK"` on success |
+| ID | Field      | Type                | Size (bytes) | Description |
+|----|------------|---------------------|--------------|-------------|
+| 1  | respHeader | ApiRespHeader       | 232          | 回應標頭 Response header |
+| 2  | retCode    | int32               | 4            | 0 = 已接受 0 = accepted |
+| 3  | result     | CommonOrderRespData | 128          | 訂單識別碼 Order identifiers |
+| 20 | retMsg     | varString8          | variable     | 成功時為 `"OK"` `"OK"` on success |
 
 #### `ReplaceOrderReqV5` (id=7, blockLength=295)
 
 | ID | Field       | Type             | Size (bytes) | Description |
 |----|-------------|------------------|--------------|-------------|
-| 1  | header      | ApiRequestHeader | 140          | Request header |
-| 2  | category    | CategoryType     | 1            | Product category |
-| 3  | symbolId    | int64            | 8            | Internal numeric symbol ID |
-| 4  | orderId     | char[64]         | 64           | Order to replace (use orderId or orderLinkId) |
-| 5  | orderLinkId | char[64]         | 64           | Client order ID of the order to replace |
-| 6  | qty         | Decimal64        | 9            | New quantity |
-| 7  | price       | Decimal64        | 9            | New price |
+| 1  | header      | ApiRequestHeader | 140          | 請求標頭 Request header |
+| 2  | category    | CategoryType     | 1            | 產品類別 Product category |
+| 3  | symbolId    | int64            | 8            | 內部數字型 symbol ID Internal numeric symbol ID |
+| 4  | orderId     | char[64]         | 64           | 要修改的訂單 (使用 orderId 或 orderLinkId) Order to replace (use orderId or orderLinkId) |
+| 5  | orderLinkId | char[64]         | 64           | 要修改訂單的客戶端訂單 ID Client order ID of the order to replace |
+| 6  | qty         | Decimal64        | 9            | 新數量 New quantity |
+| 7  | price       | Decimal64        | 9            | 新價格 New price |
 
 #### `ReplaceOrderRespV5` (id=8, blockLength=364)
 
-Same layout as `CreateOrderRespV5`.
+與 `CreateOrderRespV5` 結構相同。
 
 #### `CancelOrderReqV5` (id=9, blockLength=277)
 
 | ID | Field       | Type             | Size (bytes) | Description |
 |----|-------------|------------------|--------------|-------------|
-| 1  | header      | ApiRequestHeader | 140          | Request header |
-| 2  | category    | CategoryType     | 1            | Product category |
-| 3  | symbolId    | int64            | 8            | Internal numeric symbol ID |
-| 4  | orderId     | char[64]         | 64           | Order to cancel (use orderId or orderLinkId) |
-| 5  | orderLinkId | char[64]         | 64           | Client order ID of the order to cancel |
+| 1  | header      | ApiRequestHeader | 140          | 請求標頭 Request header |
+| 2  | category    | CategoryType     | 1            | 產品類別 Product category |
+| 3  | symbolId    | int64            | 8            | 內部數字型 symbol ID Internal numeric symbol ID |
+| 4  | orderId     | char[64]         | 64           | 要取消的訂單 (使用 orderId 或 orderLinkId) Order to cancel (use orderId or orderLinkId) |
+| 5  | orderLinkId | char[64]         | 64           | 要取消訂單的客戶端訂單 ID Client order ID of the order to cancel |
 
 #### `CancelOrderRespV5` (id=10, blockLength=364)
 
-Same layout as `CreateOrderRespV5`.
+與 `CreateOrderRespV5` 結構相同。
 
 #### `BatchCreateOrderReqV5` (id=11)
 
-Fixed body (141 bytes): `header` (ApiRequestHeader, 140 bytes) + `category` (uint8, 1 byte).
+固定主體 (141 bytes): `header` (ApiRequestHeader, 140 bytes) + `category` (uint8, 1 byte).
 
-Followed by repeating group `request` (groupSize16Encoding header + items):
+後接重複群組 `request` (groupSize16Encoding 標頭 + 群組項目):
 
 | ID | Field          | Type            | Size (bytes) | Description |
 |----|----------------|-----------------|--------------|-------------|
-| 1  | symbolId       | int64           | 8            | Internal numeric symbol ID |
+| 1  | symbolId       | int64           | 8            | 內部數字型 symbol ID Internal numeric symbol ID |
 | 2  | side           | SideType        | 1            | 1=BUY, 2=SELL |
 | 3  | orderType      | OrderType       | 1            | 1=MARKET, 2=LIMIT |
-| 4  | qty            | Decimal64       | 9            | Order quantity |
-| 5  | price          | Decimal64       | 9            | Order price |
-| 6  | orderLinkId    | char[64]        | 64           | Client order ID |
+| 4  | qty            | Decimal64       | 9            | 訂單數量 Order quantity |
+| 5  | price          | Decimal64       | 9            | 訂單價格 Order price |
+| 6  | orderLinkId    | char[64]        | 64           | 客戶端訂單 ID Client order ID |
 | 7  | timeInForce    | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
-| 8  | positionIdx    | PositionIdxType | 1            | Position mode |
+| 8  | positionIdx    | PositionIdxType | 1            | 倉位模式 Position mode |
 | 9  | marketUnit     | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
-| 10 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
-| 11 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
-| 12 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE|
-| 13 | mmp            | BoolEnum        | 1            | Market Maker Protection|
-| 14 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH|
+| 10 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 11 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 12 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 13 | mmp            | BoolEnum        | 1            | 造市商保護 Market Maker Protection |
+| 14 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
 
-Per-item blockLength = 100 bytes.
+每項目 blockLength = 100 bytes。
 
 #### `BatchCreateOrderRespV5` (id=12)
 
-Fixed body (236 bytes): `respHeader` (232 bytes) + `retCode` (int32, 4 bytes).
+固定主體 (236 bytes): `respHeader` (232 bytes) + `retCode` (int32, 4 bytes).
 
-Followed by repeating group `list` (per-item blockLength = 141 bytes):
+後接重複群組 `list` (每項目 blockLength = 141 bytes):
 
-| ID | Field       | Type       | Size (bytes) | Description |
-|----|-------------|------------|--------------|-------------|
-| 1  | code        | int32      | 4            | Per-order result code |
-| 2  | category    | CategoryType| 1           | |
-| 3  | symbolId    | int64      | 8            | |
-| 4  | orderId     | char[64]   | 64           | Exchange order ID |
-| 5  | orderLinkId | char[64]   | 64           | Client order ID |
-| 20 | msg         | varString8 | variable     | Per-order message |
-| 21 | createAt    | varString8 | variable     | Creation timestamp string |
+| ID | Field       | Type        | Size (bytes) | Description |
+|----|-------------|-------------|--------------|-------------|
+| 1  | code        | int32       | 4            | 每筆訂單結果碼 Per-order result code |
+| 2  | category    | CategoryType| 1            | |
+| 3  | symbolId    | int64       | 8            | |
+| 4  | orderId     | char[64]    | 64           | 交易所訂單 ID Exchange order ID |
+| 5  | orderLinkId | char[64]    | 64           | 客戶端訂單 ID Client order ID |
+| 20 | msg         | varString8  | variable     | 每筆訂單訊息 Per-order message |
+| 21 | createAt    | varString8  | variable     | 建立時間戳字串 Creation timestamp string |
 
-Followed by top-level `retMsg` (varString8).
+後接頂層 `retMsg` (varString8).
 
 #### `BatchReplaceOrderReqV5` (id=13)
 
-Fixed body (141 bytes): same as BatchCreateOrderReqV5.
+固定主體 (141 bytes): 與 BatchCreateOrderReqV5 相同.
 
-Repeating group `request` (per-item blockLength = 154 bytes):
+重複群組 `request` (每項目 blockLength = 154 bytes):
 
 | ID | Field       | Type      | Size (bytes) | Description |
 |----|-------------|-----------|--------------|-------------|
 | 1  | symbolId    | int64     | 8            | |
-| 2  | orderId     | char[64]  | 64           | Order to replace |
+| 2  | orderId     | char[64]  | 64           | 要修改的訂單 Order to replace |
 | 3  | orderLinkId | char[64]  | 64           | |
-| 4  | qty         | Decimal64 | 9            | New quantity |
-| 5  | price       | Decimal64 | 9            | New price |
+| 4  | qty         | Decimal64 | 9            | 新數量 New quantity |
+| 5  | price       | Decimal64 | 9            | 新價格 New price |
 
 #### `BatchReplaceOrderRespV5` (id=14)
 
-Fixed body (236 bytes). Repeating group `list` (per-item blockLength = 141 bytes, same fields as BatchCreateOrderRespV5 minus `createAt`). Followed by `retMsg` (varString8).
+固定主體 (236 bytes). 重複群組 `list` (每項目 blockLength = 141 bytes, 欄位同 BatchCreateOrderRespV5 但不含 `createAt`). 後接 `retMsg` (varString8).
 
 #### `BatchCancelOrderReqV5` (id=15)
 
-Fixed body (141 bytes). Repeating group `request` (per-item blockLength = 136 bytes):
+固定主體 (141 bytes). 重複群組 `request` (每項目 blockLength = 136 bytes):
 
 | ID | Field       | Type     | Size (bytes) | Description |
 |----|-------------|----------|--------------|-------------|
 | 1  | symbolId    | int64    | 8            | |
-| 2  | orderId     | char[64] | 64           | Order to cancel |
+| 2  | orderId     | char[64] | 64           | 要取消的訂單 Order to cancel |
 | 3  | orderLinkId | char[64] | 64           | |
 
 #### `BatchCancelOrderRespV5` (id=16)
 
-Same layout as `BatchReplaceOrderRespV5`.
+與 `BatchReplaceOrderRespV5` 結構相同。
 
 #### `CommonErrResp` (id=17, blockLength=236)
 
 | ID | Field      | Type          | Size (bytes) | Description |
 |----|------------|---------------|--------------|-------------|
-| 1  | respHeader | ApiRespHeader | 232          | Response header |
-| 2  | retCode    | int32         | 4            | Error code |
-| 20 | retMsg     | varString8    | variable     | Error description |
+| 1  | respHeader | ApiRespHeader | 232          | 回應標頭 Response header |
+| 2  | retCode    | int32         | 4            | 錯誤碼 Error code |
+| 20 | retMsg     | varString8    | variable     | 錯誤描述 Error description |
 
 ---
 
-## Integration Example
+## 接入示例
 
 ```python
 import hashlib
@@ -1073,22 +1073,22 @@ if __name__ == "__main__":
 
 ---
 
-## Limits & Errors
+## 速率限制與錯誤
 
-- **Rate limits** are surfaced in every response's `ApiRespHeader` (`bapiLimit`, `bapiLimitStatus`, `bapiLimitResetTimestamp`).
-- Non-zero `retCode` in any response indicates failure; read `retMsg` (varString8) for the diagnostic message.
-- **CommonErrResp** (`templateId = 17`) is sent when the server cannot associate the error with a specific request.
-- In batch responses, each group item carries its own `code` and `msg` — check per-item codes individually.
-- On socket close, reconnect and re-authenticate before resuming; use `orderLinkId` to detect duplicates.
+- **速率限制** 體現在每筆回應的 `ApiRespHeader` 中 (`bapiLimit`、`bapiLimitStatus`、`bapiLimitResetTimestamp`).
+- 任何回應中非零的 `retCode` 表示失敗; 請讀取 `retMsg` (varString8) 了解診斷訊息.
+- **CommonErrResp** (`templateId = 17`) 在伺服器無法將錯誤關聯至特定請求時回傳.
+- 在批次回應中, 每個群組項目包含各自的 `code` 與 `msg` — 請逐項檢查.
+- 連線關閉時, 重連並重新驗證後再恢復下單; 使用 `orderLinkId` 偵測重複.
 
 ---
 
-## Compatibility Notes
+## 相容性說明
 
-- **Byte order:** little-endian for all numeric primitives.
-- **Decimal64:** packed as `int8 (exponent) + int64 (mantissa)` = 9 bytes, no alignment padding. `value = mantissa × 10^exponent`.
-- **BoolEnum:** encoded as `uint8`; valid values are 0 (FALSE) and 1 (TRUE). Value 254 signals a non-representable state.
-- **Fixed-length strings:** null-padded to declared length; strip trailing `\x00` on decode.
-- **varString8:** prefixed by a 1-byte `uint8` length; follows all fixed fields in the message body.
-- **Repeating groups:** prefixed by `groupSize16Encoding` (uint16 `blockLength` + uint16 `numInGroup`), before the group items.
-- Client clock must be NTP/PTP-synchronized; server rejects frames where the timestamp falls outside the `recvWindow`.
+- **位元組順序:** 所有數值基本型別均為 little-endian.
+- **Decimal64:** 打包格式為 `int8 (exponent) + int64 (mantissa)` = 9 bytes, 無對齊填充. `value = mantissa × 10^exponent`.
+- **BoolEnum:** 編碼為 `uint8`; 有效值為 0 (FALSE) 與 1 (TRUE). 值 254 表示不可表示的狀態.
+- **固定長度字串:** 補 null 至宣告長度; 解碼時去除尾部 `\x00`.
+- **varString8:** 以 1 位元組 `uint8` 長度前綴; 位於信息主體所有固定欄位之後.
+- **重複群組:** 前綴為 `groupSize16Encoding` (uint16 `blockLength` + uint16 `numInGroup`), 在群組項目之前.
+- 客戶端時鐘必須與 NTP/PTP 同步; 伺服器會拒絕時間戳落在 `recvWindow` 範圍外的 frame.
