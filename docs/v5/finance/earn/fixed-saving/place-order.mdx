@@ -8,7 +8,7 @@ API rate limit: 5 reqs / sec
 
 :::info
 * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order List](./order) to track order status.
-* `orderLinkId` provides idempotency — submitting the same `orderLinkId` returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * `auto_invest` is only applicable when `category` is `FundPool`; it is ignored for other product types.
 * Supported account types: `FUND`, `UNIFIED`.
 :::
