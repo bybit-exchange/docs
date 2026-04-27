@@ -7,7 +7,7 @@ sidebar_position: 2
 :::info
 * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
 * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order Info](./order) to track order status (`Processing` → `Success`).
-* `orderLinkId` provides idempotency — submitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * At least one of `quoteAmount` or `baseAmount` must be provided.
 :::
 
@@ -18,7 +18,7 @@ sidebar_position: 2
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
 |productId|**true**|string|Product ID|
-|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency|
+|orderLinkId|**true**|string|User-customised order ID (max 40 characters)|
 |quoteAmount|false|string|Amount of quoteCoin to inject (e.g. USDT). At least one of `quoteAmount` or `baseAmount` is required|
 |baseAmount|false|string|Amount of baseCoin to inject (e.g. BTC). At least one of `quoteAmount` or `baseAmount` is required|
 |quoteAccountType|false|string|Source account for quoteCoin: `FUND`, `UNIFIED`. Required when providing `quoteAmount`|

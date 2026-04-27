@@ -8,7 +8,7 @@ API 頻率限制：每秒5次
 
 :::info
 * 訂單非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[取得訂單列表](./order)追蹤訂單狀態。
-* `orderLinkId` 提供冪等性——提交相同的 `orderLinkId` 會返回相同的 `orderId`，不會重複建立訂單。
+* `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
 * `autoInvest` 僅在 `category` 為 `FundPool` 時有效，對其他產品類型無效。
 * 支持的帳戶類型：`FUND`、`UNIFIED`。
 :::

@@ -7,7 +7,7 @@ sidebar_position: 3
 :::info
 * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
 * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been completed. Use [Get Order Info](./order) to track order status.
-* `orderLinkId` provides idempotency — submitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * Only one pending order is allowed per position at a time.
 :::
 
@@ -18,7 +18,7 @@ sidebar_position: 3
 | Parameter | Required | Type | Comments |
 |:----- |:-------|:-----|------ |
 |productId|**true**|string|Product ID|
-|orderLinkId|**true**|string|User-customised order ID (max 36 characters). Used for idempotency|
+|orderLinkId|**true**|string|User-customised order ID (max 40 characters)|
 |positionId|**true**|string|Position ID to remove liquidity from. Obtain from [Get Position Info](./position)|
 |removeRate|false|integer|Withdrawal percentage (integer, 1–100). Defaults to `100` (full withdrawal) if not provided or set to `0`|
 |removeType|false|string|Withdrawal mode: `Normal` (default, returns both coins proportionally), `SingleQuoteCoin` (returns quoteCoin only), `SingleBaseCoin` (returns baseCoin only)|

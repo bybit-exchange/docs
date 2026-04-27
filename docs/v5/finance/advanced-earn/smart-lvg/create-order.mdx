@@ -8,7 +8,7 @@ sidebar_position: 3
 * Need authentication. **Up to 5 requests** per second.
 * Requires Earn permission on the API key.
 * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](./order) to track the order status (Pending → Success).
-* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` within 30 minutes returns the same `orderId` without creating a duplicate order.
+* `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 * **Stake**: must pass `smartLeverageStakeExtra` with `initialPrice` and `breakevenPrice`. Stake slippage protection is enforced: order fails if actual price deviates more than ±5% from `initialPrice` (error code 180030).
 * **Redeem**: must call [Get Redeem Estimated Amount](./est-redeem) first to obtain `estRedeemAmount`. The result is cached for 10 minutes and validated server-side when placing the redeem order.
 :::
@@ -25,7 +25,7 @@ sidebar_position: 3
 |amount|false|string|Order amount. **Required** for `Stake`|
 |accountType|**true**|string|Account type: `FUND`, `UNIFIED`|
 |coin|**true**|string|Coin name. Not required for `Redeem` orders|
-|orderLinkId|**true**|string|User customised order ID (max 36 characters), used for idempotency|
+|orderLinkId|**true**|string|User customised order ID (max 36 characters)|
 |smartLeverageStakeExtra|false|Object|Required when `orderType=Stake`|
 |> initialPrice|**true**|string|Underlying asset price at order time, used for slippage protection (±5%). Recommend using `currentPrice` from [Get Product Quote](./product-quote)|
 |> breakevenPrice|**true**|string|Breakeven price selected by user. Obtain from [Get Product Quote](./product-quote)|

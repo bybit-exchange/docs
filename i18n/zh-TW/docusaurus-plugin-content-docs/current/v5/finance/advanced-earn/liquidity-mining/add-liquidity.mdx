@@ -7,7 +7,7 @@ sidebar_position: 2
 :::info
 * 需要身份驗證。每個 UID 每秒**最多 5 次請求**。API 金鑰需要具備 Earn（理財）權限。
 * 訂單為非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[查詢訂單資訊](./order)追蹤訂單狀態（`Processing` → `Success`）。
-* `orderLinkId` 提供冪等性保障——30 分鐘內提交相同 `orderLinkId` 將返回相同 `orderId`，不會建立重複訂單。
+* `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
 * `quoteAmount` 與 `baseAmount` 至少須提供其中一個。
 :::
 
@@ -18,7 +18,7 @@ sidebar_position: 2
 | 參數 | 必填 | 類型 | 說明 |
 |:----- |:-------|:-----|------ |
 |productId|**true**|string|產品 ID|
-|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制|
+|orderLinkId|**true**|string|用戶自定義訂單 ID（最多 40 個字元）|
 |quoteAmount|false|string|注入的計價幣種金額（例如 USDT）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個|
 |baseAmount|false|string|注入的基礎幣種金額（例如 BTC）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個|
 |quoteAccountType|false|string|計價幣種來源帳戶：`FUND`、`UNIFIED`。提供 `quoteAmount` 時必填|
