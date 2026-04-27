@@ -1,0 +1,272 @@
+---
+title: 創建策略訂單
+sidebar_label: 創建策略訂單
+sidebar_position: 1
+---
+
+創建策略訂單。支援的策略類型：`chaseOrder`、`twap`、`iceberg`。
+
+## 策略類型
+
+### TWAP（時間加權平均價格）
+將大額訂單拆分為等量子訂單，按固定時間間隔執行，降低市場衝擊並使成交均價接近時間加權平均值。
+
+**執行邏輯：** `子訂單數量 = 執行時間（秒）÷ 頻率`。未成交子訂單將重試一次；若仍未成功，則取消並繼續執行後續子訂單。
+
+請參閱 [TWAP 策略介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) 了解更多細節。
+
+| 參數 | 限制條件 |
+|:---|:---|
+|總數量（`size`） |必須 ≥ Max(最小名義價值 × 子訂單數 ÷ 最新價格 × 1.1, 最小數量 × 子訂單數) |
+|執行時間（`duration`） |5 分鐘 – 24 小時 |
+|子訂單間隔（`interval`） |5 – 120 秒 |
+|子訂單數量 |≤ 交易所單筆最大下單量的 50%（永續/交割） |
+|隨機數量波動 |若啟用 `isRandom`，波動範圍 ±20% |
+
+---
+
+### 追蹤委託（Chase Limit Order）
+持續在最優買一/賣一價格掛出並調整限價單，跟蹤市場行情直至訂單完全成交、取消或達到最大追蹤距離。
+
+**執行邏輯：** 訂單價格每秒更新一次。所有追蹤委託默認為 **Post Only**（僅掛單成交）。若連續 5 次被 Post Only 條件拒絕，策略將取消。
+
+請參閱 [追蹤委託](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) 了解更多細節。
+
+---
+
+### 冰山委託（Iceberg Order）
+將大額訂單拆分為多個較小子訂單並依序掛出，每次僅向市場展示一小部分訂單量。
+
+**執行邏輯：** 每筆子訂單進入訂單簿 → 成交後自動掛出下一筆子訂單 → 重複直至全部數量成交。
+
+請參閱 [冰山委託](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) 了解更多細節。
+
+**訂單偏好：**
+
+| 偏好 | 執行行為 |
+|:---|:---|
+|`追逐限價單 (Taker)` |買入掛賣一價 / 賣出掛買一價；優先速度 |
+|`追逐限價單` |買入掛買一價 / 賣出掛賣一價；掛單成交 |
+|`追逐限價單 (跟價差)` |與賣一/買一保持固定距離；兼顧速度與成本 |
+|`固定價格` |所有子訂單以固定單一價格掛出 |
+
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/strategy/create" />
+
+### 請求參數
+<Tabs groupId="strategy-type">
+<TabItem value="twap" label="TWAP" default>
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>是否必需</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_SPOT</code>（現貨）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>交易對名稱，例如 <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>、<code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>總下單數量</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>策略類型。<code>twap</code></td>
+        </tr>
+        <tr>
+            <td>duration</td><td><b>true</b></td><td>integer</td><td>總執行時間（秒）。範圍：[300, 86400]，必須能被 <code>interval</code> 整除</td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>是否為只減倉訂單，減倉時需設為 <code>true</code>。<code>true</code>、<code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>持倉方向索引。<code>0</code>：單向持倉，<code>1</code>：雙向持倉多頭，<code>2</code>：雙向持倉空頭。雙向持倉模式下<b>必填</b></td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>現貨槓桿類型。<code>0</code>：普通，<code>1</code>：槓桿交易（僅 <code>UTA_SPOT</code>）</td>
+        </tr>
+        <tr>
+            <td>interval</td><td>false</td><td>integer</td><td>子訂單掛出間隔（秒）。<code>5</code>、<code>10</code>、<code>15</code>、<code>30</code>（默認）、<code>60</code>、<code>120</code></td>
+        </tr>
+        <tr>
+            <td>isRandom</td><td>false</td><td>boolean</td><td>隨機訂單: 是否對每筆子訂單數量進行 ±20% 隨機化</td>
+        </tr>
+        <tr>
+            <td>triggerPrice</td><td>false</td><td>string</td><td>高級設置（觸發價格）: 市場價格達到此值時策略啟動</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>高級設置（停止價格）: 達到此值時策略終止</td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td>高級設置 - 訂單類型設置為限價（默認市價）: 與最優買一/賣一的價格距離（絕對值），例如 <code>"0.5"</code>。與 <code>chasePercentE4</code> 互斥；若兩者均設置，<code>chaseDistance</code> 優先</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td>高級設置 - 訂單類型設置為限價（默認市價）: 與最優買一/賣一的價格偏移（基點，1/10000），例如 <code>100</code> = 1%。與 <code>chaseDistance</code> 互斥</td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="chaseOrder" label="追逐限價單">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>是否必需</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_SPOT</code>（現貨）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>交易對名稱，例如 <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>、<code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>總下單數量</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>策略類型。<code>chaseOrder</code></td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>是否為只減倉訂單，減倉時需設為 <code>true</code>。<code>true</code>、<code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>持倉方向索引。<code>0</code>：單向持倉，<code>1</code>：雙向持倉多頭，<code>2</code>：雙向持倉空頭。雙向持倉模式下<b>必填</b></td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td>追逐價格方式（默認追逐買一賣一價）：與最優買一/賣一的價格距離（絕對值），例如 <code>"0.5"</code>。與 <code>chasePercentE4</code> 互斥；若兩者均設置，<code>chaseDistance</code> 優先</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td>追逐價格方式（默認追逐買一賣一價）：與最優買一/賣一的價格偏移（基點，1/10000），例如 <code>100</code> = 1%, 範圍: [0, 500]。與 <code>chaseDistance</code> 互斥</td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>現貨槓桿類型。<code>0</code>：普通，<code>1</code>：槓桿交易（僅 <code>UTA_SPOT</code>）</td>
+        </tr>
+        <tr>
+            <td>triggerPrice</td><td>false</td><td>string</td><td>高級設置（觸發價格）。市場價格達到此值時策略啟動</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>高級設置（最大追逐價格） - 最新成交價達到此值時停止追蹤</td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="iceberg" label="冰山委託">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>是否必需</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_SPOT</code>（現貨）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>交易對名稱，例如 <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>、<code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>總下單數量</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>策略類型。<code>iceberg</code></td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>是否為只減倉訂單，減倉時需設為 <code>true</code>。<code>true</code>、<code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>持倉方向索引。<code>0</code>：單向持倉，<code>1</code>：雙向持倉多頭，<code>2</code>：雙向持倉空頭。雙向持倉模式下<b>必填</b></td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>現貨槓桿類型。<code>0</code>：普通，<code>1</code>：槓桿交易（僅 <code>UTA_SPOT</code>）</td>
+        </tr>
+        <tr>
+            <td>subSize</td><td>false</td><td>string</td><td>每筆子訂單數量。與 <code>orderCount</code> 互斥；若兩者均設置，<code>subSize</code> 優先</td>
+        </tr>
+        <tr>
+            <td>orderCount</td><td>false</td><td>integer</td><td>子訂單筆數。與 <code>subSize</code> 互斥</td>
+        </tr>
+        <tr>
+            <td>postOnly</td><td>false</td><td>integer</td><td>掛單模式。<code>0</code>：Post Only（僅掛單），<code>1</code>：允許吃單</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>作為價格限制參數，買入訂單僅在價格低於或等於此限制時掛出，價格高於此限制時暫停；賣出訂單僅在價格高於或等於此限制時掛出，價格低於此限制時暫停</td>
+        </tr>
+        <tr>
+            <td>limitPrice</td><td>false</td><td>string</td><td><b>掛單偏好: 固定價格</b>，應用於所有子訂單的固定限價</td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td><b>掛單偏好: 追逐限價單（跟價差）參數，按價差</b>, 與最優買一/賣一的價格距離（絕對值），例如 <code>"0.5"</code>。與 <code>chasePercentE4</code> 互斥；若兩者均設置，<code>chaseDistance</code> 優先。<br/><b>掛單偏好: 追逐限價單（Taker）參數</b><code>"-1"</code> 表示以對手方價格立即成交</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td><b>掛單偏好: 追逐限價單（跟價差）參數，按比例</b>, 與最優買一/賣一的價格偏移（基點，1/10000），例如 <code>100</code> = 1%，範圍: [0, 100]。與 <code>chaseDistance</code> 互斥</td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|strategyId |string |策略 ID（UUID 格式） |
+|result |string |執行結果。創建成功時為 `null` |
+
+### 請求示例
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/strategy/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773711467000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "side": "Buy",
+    "symbol": "BTCUSDT",
+    "reduceOnly": false,
+    "category": "UTA_USDT",
+    "size": "0.1",
+    "positionIdx": 1,
+    "strategyType": "chaseOrder",
+    "chasePrice": "75967.7",
+    "maxChasePrice": "83564.5",
+    "triggerPrice": "75000.0"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+        "result": null
+    },
+    "retExtInfo": {},
+    "time": 1773711467052
+}
+```

@@ -1,0 +1,147 @@
+---
+title: 查詢策略訂單列表
+sidebar_label: 查詢策略訂單列表
+sidebar_position: 3
+---
+查詢指定策略產生的子訂單列表。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/strategy/order-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|strategyId |**true** |string |策略 ID |
+|status |false |string |訂單狀態篩選。`2`：創建成功，`3`：創建失敗，`4`：部分成交，`5`：全部成交，`6`：拒絕，`7`：已取消 |
+|symbol |false |string |交易對名稱，例如 `BTCUSDT` |
+|strategyType |false |string |策略類型。`twap`、`chaseOrder`、`iceberg` |
+|beginTimeE0 |false |int64 |起始時間（Unix 時間戳，秒） |
+|endTimeE0 |false |int64 |結束時間（Unix 時間戳，秒） |
+|pageSize |false |integer |每頁資料筆數。默認：`20` |
+|cursor |false |string |分頁游標，從上一次響應中返回 |
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list |array |物件 |
+|> strategyId |string |所屬策略 ID |
+|> orderId |string |訂單 ID（交易所分配） |
+|> symbol |string |交易對名稱 |
+|> side |string |`Buy`、`Sell` |
+|> size |string |訂單數量 |
+|> price |string |訂單價格 |
+|> status |string |訂單狀態。`2`：創建成功，`3`：創建失敗，`4`：部分成交，`5`：全部成交，`6`：拒絕，`7`：已取消 |
+|> executedSize |string |已成交數量 |
+|> dealTimeE3 |int64 |成交時間（毫秒）。`0` 表示尚未成交 |
+|> parentOrderId |string |父訂單 ID。用於補單場景，標識原始訂單 |
+|> createdTimeE3 |int64 |訂單創建時間（毫秒） |
+|> updatedTimeE3 |int64 |訂單最後更新時間（毫秒） |
+|> code |integer |錯誤碼。`0` 表示成功 |
+|> msg |string |錯誤信息 |
+|> category |string |產品類型 |
+|> positionIdx |integer |持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭 |
+|> orderType |integer |訂單類型。`1`：市價單，`2`：限價單 |
+|> leverageType |integer |槓桿類型。`0`：普通，`1`：借貸 |
+|> tpPrice |string |訂單止盈價格 |
+|> slPrice |string |訂單止損價格 |
+|> orderPriceOffset |string |限價單價格偏移百分比 |
+|> positionValue |string |總持倉價值 |
+|> filledPositionValue |string |已成交持倉價值 |
+|nextCursor |string |下一頁游標。空字串表示無更多資料 |
+|prevCursor |string |上一頁游標 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/strategy/order-list?strategyId=119b6211-2611-461b-be5e-5ac557099e82&pageSize=2 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773718074685
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+                "orderId": "d67e97b1-7a6e-4a89-b9d7-098756e8b86f",
+                "symbol": "BTCUSDT",
+                "side": "Buy",
+                "size": "0.004",
+                "price": "",
+                "status": "3",
+                "executedSize": "0",
+                "dealTimeE3": "0",
+                "parentOrderId": "276a053f-fedf-4834-bbab-d5fc3bc0dc94",
+                "createdTimeE3": "1773713015709",
+                "updatedTimeE3": "1773713020768",
+                "code": 30208,
+                "msg": "Failed to submit order(s). The order price is higher than the maximum buying price.",
+                "category": "UTA_USDT",
+                "positionIdx": 0,
+                "leverageType": 0,
+                "tpPrice": "",
+                "slPrice": "",
+                "orderType": "UNKNOWN",
+                "orderPriceOffset": "0",
+                "positionValue": "",
+                "filledPositionValue": ""
+            },
+            {
+                "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+                "orderId": "276a053f-fedf-4834-bbab-d5fc3bc0dc94",
+                "symbol": "BTCUSDT",
+                "side": "Buy",
+                "size": "0.004",
+                "price": "",
+                "status": "7",
+                "executedSize": "0",
+                "dealTimeE3": "0",
+                "parentOrderId": "",
+                "createdTimeE3": "1773713015400",
+                "updatedTimeE3": "1773713015701",
+                "code": 60068,
+                "msg": "",
+                "category": "UTA_USDT",
+                "positionIdx": 0,
+                "leverageType": 0,
+                "tpPrice": "",
+                "slPrice": "",
+                "orderType": "UNKNOWN",
+                "orderPriceOffset": "0",
+                "positionValue": "",
+                "filledPositionValue": ""
+            }
+        ],
+        "nextCursor": "eyJPZmZzZXQiOjIwMzM3MjU5MDU4MjU4NTM0NDAsIlBhZ2VTaXplIjoyLCJycGNDdXJzb3IiOiIifQ==",
+        "prevCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1774590281733
+}
+```

@@ -1,0 +1,73 @@
+---
+title: Stop Strategy
+sidebar_label: Stop Strategy
+sidebar_position: 4
+---
+
+Stop a running strategy. Once stopped, the strategy cannot be resumed.
+
+**Effects upon stopping:**
+- Strategy status changes to `Terminated`
+- Unfilled orders are automatically canceled
+- Partially filled orders have their remaining quantity canceled
+- Already-filled orders are not affected
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/strategy/stop" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|strategyId |**true** |string |ID of the strategy to stop |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|strategyId |string |ID of the stopped strategy |
+
+### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/strategy/stop HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773711467000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"
+    },
+    "retExtInfo": {},
+    "time": 1773711467052
+}
+```

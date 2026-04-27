@@ -1,0 +1,163 @@
+---
+title: 查詢策略列表
+sidebar_label: 查詢策略列表
+sidebar_position: 2
+---
+查詢策略列表。支援依策略 ID、交易對、狀態、產品類型及策略類型進行篩選。您也可以通過訂閱[strategy](../websocket/private/strategy)流獲得實時更新
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/strategy/list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|strategyId |false |string |策略 ID（精確匹配） |
+|symbol |false |string |交易對名稱，例如 `BTCUSDT` |
+|status |false |string |策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交, `5`：已暫停，`6`：待觸發 |
+|category |false |string |產品類型。`UTA_USDT`、`UTA_USDC`、`UTA_USDC_FUTURE`、`UTA_SPOT`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE` |
+|strategyType |false |string |策略類型。`twap`、`chaseOrder`、`iceberg` |
+|beginTimeE0 |false |int64 |起始時間（Unix 時間戳，秒） |
+|endTimeE0 |false |int64 |結束時間（Unix 時間戳，秒） |
+|pageSize |false |integer |每頁資料筆數。默認：`20`，最大：`50` |
+|cursor |false |string |分頁游標，從上一次響應中返回 |
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|list |array |物件 |
+|> strategyId |string |策略 ID（UUID 格式） |
+|> category |string |產品類型 |
+|> symbol |string |交易對名稱 |
+|> side |string |`Buy`、`Sell` |
+|> size |string |總下單數量 |
+|> strategyType |string |策略類型。`twap`、`chaseOrder`、`iceberg` |
+|> status |integer |策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交，`5`：已暫停，`6`：待觸發 |
+|> executedSize |string |已成交數量 |
+|> executedAvgPrice |string |平均成交價格 |
+|> executedStartTimeE3 |int64 |執行開始時間（毫秒） |
+|> executedEndTimeE3 |int64 |執行結束時間（毫秒）。`0` 表示尚未結束 |
+|> createdTimeE3 |int64 |策略創建時間（毫秒） |
+|> updatedTimeE3 |int64 |策略最後更新時間（毫秒） |
+|> reduceOnly |boolean |是否為只減倉訂單 |
+|> triggerPrice |string |觸發價格 |
+|> isTriggered |boolean |策略是否已被觸發 |
+|> leverageType |integer |槓桿類型。`0`：普通，`1`：借貸 |
+|> terminateType |integer |終止原因代碼。`0`：未知，`1`：使用者停止，`2`：正常完成，`3`：餘額不足，`4`：持倉模式變更，`5`：UID 被封禁，`6`：觸發強平，`7`：只減倉但無持倉，`8`：升級至 UTA，`9`：OI 超限，`10`：用戶交易被禁，`11`：超過風險限額，`12`：交易對交割停止，`13`：交易對下架，`14`：連續下單失敗，`15`：缺少模板參數，`16`：信號延遲，`17`：交易對不匹配，`18`：超出最大追蹤價格，`19`：子訂單數量超限，`20`：訂單已取消，`21`：超出最大風險限額，`22`：風險限額最大槓桿超限，`23`：幣種非抵押品，`24`：達到限價，`25`：只減倉狀態下有待處理的 UTA 升級，`26`：用戶處於冷靜期 |
+|> terminateRemark |string |終止原因說明 |
+|> triggerCount |integer |觸發嘗試次數 |
+|> tradingCount |integer |實際下單筆數 |
+|> realizedPnl |string |已實現盈虧（僅合約） |
+|> strategyName |string |策略自訂名稱 |
+|> strategyPrefer |string |執行偏好。`limit`、`priceSpeedBalance`、`fastestExecution`、`quickExecution` |
+|> duration |integer |計劃總執行時間（秒）。_僅 TWAP_ |
+|> executedDuration |integer |實際已執行時間（秒）。_僅 TWAP_ |
+|> isRandom |boolean |是否啟用子訂單數量隨機化。_僅 TWAP_ |
+|> interval |integer |子訂單掛出間隔（秒）。_僅 TWAP_ |
+|> limitPrice |string |固定限價。訂單不會在此價格以外掛出 |
+|> chasePercentE4 |int64 |追蹤價格偏移（基點，1/10000）。_Chase / Iceberg_ |
+|> chaseDistance |string |追蹤價格距離（絕對值）。_Chase / Iceberg_ |
+|> maxChasePrice |string |最大追蹤價格保護。_Chase / Iceberg_ |
+|> chaseOrderPrice |string |當前追蹤委託價格（實時）。_僅 Chase_ |
+|> chasePrice |string |追蹤委託的參考價格方向，例如 `Bid1`、`Ask1`。_Chase / Iceberg_ |
+|> postOnly |integer |掛單模式。`0`：允許吃單，`1`：僅掛單。_僅 Iceberg_ |
+|> isRebalance |boolean |是否啟用再平衡 |
+|> orderType |integer |訂單類型。`1`：市價單，`2`：限價單 |
+|> orderPriceOffset |string |限價單價格偏移百分比。_僅 TWAP_ |
+|> strategySl |string |策略止損價格 |
+|> strategyTp |string |策略止盈價格 |
+|> arbitrageOrders |array |關聯套利訂單列表 |
+|> positionValue |string |總持倉價值 |
+|> filledPositionValue |string |已成交持倉價值 |
+|nextCursor |string |下一頁游標。空字串表示無更多資料 |
+|prevCursor |string |上一頁游標 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/strategy/list?strategyId=119b6211-2611-461b-be5e-5ac557099e82 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773718018000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+                "category": "UTA_USDT",
+                "symbol": "BTCUSDT",
+                "side": "Buy",
+                "size": "0.05",
+                "duration": 1560,
+                "status": 3,
+                "executedDuration": 1608,
+                "executedSize": "0.046",
+                "executedAvgPrice": "76695.48",
+                "executedStartTimeE3": "1773711467045",
+                "executedEndTimeE3": "1773713075628",
+                "createdTimeE3": "1773711467045",
+                "updatedTimeE3": "1773713075628",
+                "isRandom": false,
+                "limitPrice": "",
+                "reduceOnly": false,
+                "terminateType": 2,
+                "terminateRemark": "RunningStop",
+                "strategyName": "",
+                "triggerCount": "26",
+                "tradingCount": "0",
+                "realizedPnl": "0",
+                "strategyType": "twap",
+                "chasePrice": "Bid1",
+                "chasePercentE4": "0",
+                "chaseDistance": "0",
+                "maxChasePrice": "",
+                "chaseOrderPrice": "",
+                "arbitrageOrders": [],
+                "strategyPrefer": "quickExecution",
+                "isRebalance": false,
+                "interval": 60,
+                "leverageType": 0,
+                "postOnly": 0,
+                "triggerPrice": "0",
+                "isTriggered": false,
+                "strategyTp": "",
+                "strategySl": "",
+                "orderType": "UNKNOWN",
+                "orderPriceOffset": "",
+                "positionValue": "",
+                "filledPositionValue": ""
+            }
+        ],
+        "nextCursor": "",
+        "prevCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1774583153599
+}
+```

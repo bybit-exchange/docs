@@ -1,0 +1,272 @@
+---
+title: Create Strategy Order
+sidebar_label: Create Strategy Order
+sidebar_position: 1
+---
+
+Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`.
+
+## Strategy Types
+
+### TWAP (Time-Weighted Average Price)
+Splits a large order into equal-sized sub-orders executed at fixed time intervals, minimizing market impact and achieving a price close to the time-weighted average.
+
+**Execution logic:** `Number of sub-orders = Running Time (seconds) ÷ Frequency`. Sub-orders that fail to fill are retried once; if unsuccessful, they are canceled and the strategy continues.
+
+Please refer to [Introduction to TWAP Strategy](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) to get more details.
+
+| Parameter | Constraint |
+|:---|:---|
+|Total quantity (`size`) |Must be ≥ Max(MinNotional × subOrders ÷ LastPrice × 1.1, MinSize × subOrders) |
+|Running time (`duration`) |5 minutes – 24 hours |
+|Sub-order interval (`interval`) |5 – 120 seconds |
+|Sub-order quantity |≤ 50% of the exchange's maximum single order size (Perpetual/Futures) |
+|Random quantity variance |±20% if `isRandom` is enabled |
+
+---
+
+### Chase Order (Chase Limit Order)
+Continuously places and adjusts a limit order at the best bid/ask price to track market movements until the order is fully filled, canceled, or reaches the maximum chase distance.
+
+**Execution logic:** The order price updates every second. All Chase Limit Orders are **Post Only** by default (maker execution). If the order is rejected by the Post Only condition 5 consecutive times, the strategy is canceled.
+
+Please refer to [Chase Limit Order](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) to get more details.
+
+---
+
+### Iceberg Order
+Splits a large order into multiple smaller sub-orders that are placed sequentially, revealing only a small portion of the total order size to the market at any one time.
+
+**Execution logic:** Each sub-order enters the order book → upon fill, the next sub-order is automatically placed → repeats until the full quantity is executed.
+
+Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) to get more details.
+
+**Order preferences:**
+
+| Preference | Execution behavior |
+|:---|:---|
+|`Chase Limit (Taker)` |Buy at Ask1 / Sell at Bid1; prioritizes speed |
+|`Chase Limit` |Buy at Bid1 / Sell at Ask1; maker execution |
+|`Chase Limit (offset)` |Fixed distance from Ask1/Bid1; balances speed and cost |
+|`Fixed Prices` |All sub-orders placed at a single fixed price |
+
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/strategy/create" />
+
+### Request Parameters
+<Tabs groupId="strategy-type">
+<TabItem value="twap" label="TWAP" default>
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Required</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_SPOT</code>(Spot), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>Symbol name, e.g. <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>, <code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>Total order quantity</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>Strategy type. <code>twap</code></td>
+        </tr>
+        <tr>
+            <td>duration</td><td><b>true</b></td><td>integer</td><td>Total execution duration in seconds. Range: [300, 86400]. Must be divisible by <code>interval</code></td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>Reduce-only order, must set <code>true</code> when reducing the position. <code>true</code>, <code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>Position index. <code>0</code>: one-way mode, <code>1</code>: buy side of hedge mode, <code>2</code>: sell side of hedge mode. <b>Required</b> for hedge mode</td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>Spot leverage type. <code>0</code>: normal, <code>1</code>: borrow to trade (<code>UTA_SPOT</code> only)</td>
+        </tr>
+        <tr>
+            <td>interval</td><td>false</td><td>integer</td><td>Sub-order placement interval in seconds. <code>5</code>, <code>10</code>, <code>15</code>, <code>30</code>(default), <code>60</code>, <code>120</code></td>
+        </tr>
+        <tr>
+            <td>isRandom</td><td>false</td><td>boolean</td><td>Whether to randomize each sub-order quantity by ±20%</td>
+        </tr>
+        <tr>
+            <td>triggerPrice</td><td>false</td><td>string</td><td>Advanced settings (Trigger price): Strategy activates when the market price reaches this value</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>Advanced settings (Stop Price): Strategy terminates when the last traded price reaches this value</td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td>Advanced settings - ordertype=Limit (default: market): Price distance from best bid/ask (absolute value), e.g. <code>"0.5"</code>. Mutually exclusive with <code>chasePercentE4</code>; <code>chaseDistance</code> takes priority if both are set</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td>Advanced settings - ordertype=Limit (default: market): Price offset from best bid/ask in basis points (1/10000), e.g. <code>100</code> = 1%. Mutually exclusive with <code>chaseDistance</code></td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="chaseOrder" label="Chase Order">
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Required</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_SPOT</code>(Spot), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>Symbol name, e.g. <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>, <code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>Total order quantity</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>Strategy type. <code>chaseOrder</code></td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>Reduce-only order, must set <code>true</code> when reducing the position. <code>true</code>, <code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>Position index. <code>0</code>: one-way mode, <code>1</code>: buy side of hedge mode, <code>2</code>: sell side of hedge mode. <b>Required</b> for hedge mode</td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>Spot leverage type. <code>0</code>: normal, <code>1</code>: borrow to trade (<code>UTA_SPOT</code> only)</td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td>Price distance from best bid/ask (absolute value), e.g. <code>"0.5"</code>. Mutually exclusive with <code>chasePercentE4</code>; <code>chaseDistance</code> takes priority if both are set</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td>Price offset from best bid/ask in basis points (1/10000), e.g. <code>100</code> = 1%, range: [0, 500]. Mutually exclusive with <code>chaseDistance</code></td>
+        </tr>
+        <tr>
+            <td>triggerPrice</td><td>false</td><td>string</td><td>Advanced setting (Trigger price): Strategy activates when the market price reaches this value</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>Advanced setting (Max chase price): Stop chasing when the last traded price reaches this value</td>
+        </tr>
+    </table>
+</TabItem>
+
+<TabItem value="iceberg" label="Iceberg">
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Required</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_SPOT</code>(Spot), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>Symbol name, e.g. <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>, <code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td><b>true</b></td><td>string</td><td>Total order quantity</td>
+        </tr>
+        <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>Strategy type. <code>iceberg</code></td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>Reduce-only order, must set <code>true</code> when reducing the position. <code>true</code>, <code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>Position index. <code>0</code>: one-way mode, <code>1</code>: buy side of hedge mode, <code>2</code>: sell side of hedge mode. <b>Required</b> for hedge mode</td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>Spot leverage type. <code>0</code>: normal, <code>1</code>: borrow to trade (<code>UTA_SPOT</code> only)</td>
+        </tr>
+        <tr>
+            <td>subSize</td><td>false</td><td>string</td><td>Quantity per sub-order. Mutually exclusive with <code>orderCount</code>; <code>subSize</code> takes priority if both are set</td>
+        </tr>
+        <tr>
+            <td>orderCount</td><td>false</td><td>integer</td><td>Number of sub-orders. Mutually exclusive with <code>subSize</code></td>
+        </tr>
+        <tr>
+            <td>postOnly</td><td>false</td><td>integer</td><td>Maker-only mode. <code>0</code>: post-only (maker only), <code>1</code>: taker allowed</td>
+        </tr>
+        <tr>
+            <td>maxChasePrice</td><td>false</td><td>string</td><td>Price limit parameter. Buy orders are only placed when the price is at or below this limit and pause if the price rises above it. Sell orders are only placed when the price is at or above this limit and pause if the price falls below it</td>
+        </tr>
+         <tr>
+            <td>limitPrice</td><td>false</td><td>string</td><td><b>Order preferences: Limit Price</b>, limit price applied to all sub-orders</td>
+        </tr>
+        <tr>
+            <td>chaseDistance</td><td>false</td><td>string</td><td><b>Order preferences: Chase Limit (offset)</b>, Price distance from best bid/ask (absolute value), e.g. <code>"0.5"</code>. Mutually exclusive with <code>chasePercentE4</code>; <code>chaseDistance</code> takes priority if both are set. <br/><b>Order preferences: Chase Limit (Taker)</b>, <code>"-1"</code> means immediate fill at counterparty price</td>
+        </tr>
+        <tr>
+            <td>chasePercentE4</td><td>false</td><td>integer</td><td><b>Order preferences: Chase Limit (offset)</b>, Price offset from best bid/ask in basis points (1/10000), e.g. <code>100</code> = 1%, range: [0, 100]. Mutually exclusive with <code>chaseDistance</code></td>
+        </tr>
+    </table>
+</TabItem>
+</Tabs>
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|strategyId |string |Strategy ID (UUID format) |
+|result |string |Execution result. `null` if creation succeeded |
+
+### Request Example
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/strategy/create HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1773711467000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "side": "Buy",
+    "symbol": "BTCUSDT",
+    "reduceOnly": false,
+    "category": "UTA_USDT",
+    "size": "0.1",
+    "positionIdx": 1,
+    "strategyType": "chaseOrder",
+    "chasePrice": "75967.7",
+    "maxChasePrice": "83564.5",
+    "triggerPrice": "75000.0"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",
+        "result": null
+    },
+    "retExtInfo": {},
+    "time": 1773711467052
+}
+```
