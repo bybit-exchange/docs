@@ -1,29 +1,26 @@
 ---
-title: SBE BBO 接入指南
-sidebar_label: SBE BBO 接入指南
+title: SBE BBO Integration
+sidebar_label: BBO
 sidebar_position: 1
 ---
 
-## 總覽
-
-- **Channel:** 僅支援私有 MMWS, 不開放於 public WS.
+## Overview
+- **Channel:** Private MM WebSocket only (not available on public WS).
 - **Topic:** `ob.rpi.1.sbe.{symbol}`.
-- **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-- **Depth:** 提供即時 Level 1 訂單簿資料.
-- **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
+- **Format:** SBE binary frames (`opcode = 2`), little-endian.
+- **Depth:** Real-time Level 1 Orderbook data.
+- **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
 
----
+## Connection
 
-## 連接
+- Field `u` increases **monotonically**.
+- Field `u` **does not reset**, unless there is a system restart or precision change, `u` would be reset to **1**.
+- If BBO does not change within **3 seconds**, the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
+- Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, continuity of `u` is **not guaranteed**.
 
-- 字段 `u` 總是**單調遞增**.
-- 字段 `u` 通常**不會重置**, 除非系統重啟或精度 (precision) 改變, 則重置成**1**.
-- 如果 3 秒內BBO沒有變化, 會強推一個 snapshot 信息, 字段 `u` 會與前一則信息保持相同。
-- 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
+## Subscription Flow
 
-## 訂閱流程(JSON 控制 frame)
-
-### 送出訂閱請求
+### Send subscription request
 
 ```json
 {
@@ -32,10 +29,10 @@ sidebar_position: 1
 }
 ```
 
-- Topic 格式: `ob.rpi.1.sbe.<symbol>`
-- 範例 symbol: `BTCUSDT`, `ETHUSDT` 等。
+- Topic format: `ob.rpi.1.sbe.<symbol>`
+- Example symbols: `BTCUSDT`, `ETHUSDT`, etc.
 
-### 訂閱確認
+### Subscription confirmation
 
 ```json
 {
@@ -47,13 +44,13 @@ sidebar_position: 1
 }
 ```
 
-### 接收數據
+### Receive data
 
 ```text
 b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"
 ```
 
-### 解碼示例
+### Decode example
 
 ```json
 {
@@ -82,115 +79,115 @@ b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00
 
 ---
 
-## SBE 信息結構
+## SBE Message Structure
 
 ### SBE XML Schema
 
-- `templateId = 20000` 用來識別信息型別。
-- 驗證 `templateId = 20000` 以確認這是一則 Level 1 訂單簿事件。
-- [sbe xml template](../sbe-basic-info#sbe-xml-template)
+- The `templateId = 20000` identifies the message type.
+- Validate that `templateId = 20000` to confirm it is a Level 1 Orderbook event.
+- [sbe xml template](../sbe-basic-info#market-sbe-xml-template)
 
 
-### 信息結構細節
+### Message Structure Details
 
-#### 信息標頭 (8 bytes)
+#### Message Header (8 bytes)
 
-| Field       | Type   | Size (bytes) | Description             |
-|------------|--------|--------------|-------------------------|
-| blockLength| uint16 | 2            | 信息主體長度 Message body length |
-| templateId | uint16 | 2            | 固定值 = 20000 Fixed = 20000    |
-| schemaId   | uint16 | 2            | 固定值 = 1 Fixed = 1            |
-| version    | uint16 | 2            | 固定值 = 0 Fixed = 0            |
+| Field       | Type   | Size (bytes) | Description         |
+|------------|--------|--------------|---------------------|
+| blockLength| uint16 | 2            | Message body length |
+| templateId | uint16 | 2            | Fixed = 20000       |
+| schemaId   | uint16 | 2            | Fixed = 1           |
+| version    | uint16 | 2            | Fixed = 0           |
 
-#### 信息主體 (`BestOBRpiEvent`)
+#### Message Body (`BestOBRpiEvent`)
 
-| ID | Field           | Type  | Description                                       |
-|----|-----------------|-------|---------------------------------------------------|
-| 1  | ts              | int64 | Snapshot 時間戳 (µs) Snapshot timestamp (µs)      |
-| 2  | seq             | int64 | 唯一信息序號 Unique message sequence number       |
-| 3  | cts             | int64 | 交易時間戳 (µs) Trade timestamp (µs)             |
-| 4  | u               | int64 | 更新 ID Update ID                                |
-| 5  | askNormalPrice  | int64 | 最佳賣價 mantissa Best ask price mantissa        |
-| 6  | askNormalSize   | int64 | 最佳賣量 (normal) mantissa Best ask size (normal) mantissa |
-| 7  | askRpiPrice     | int64 | 最佳 RPI 賣價 mantissa Best RPI ask price mantissa |
-| 8  | askRpiSize      | int64 | 最佳 RPI 賣量 mantissa Best RPI ask size mantissa |
-| 9  | bidNormalPrice  | int64 | 最佳買價 mantissa Best bid price mantissa        |
-| 10 | bidNormalSize   | int64 | 最佳買量 (normal) mantissa Best bid size (normal) mantissa |
-| 11 | bidRpiPrice     | int64 | 最佳買價 (RPI) mantissa Best bid price (RPI) mantissa |
-| 12 | bidRpiSize      | int64 | 最佳買量 (RPI) mantissa Best bid size (RPI) mantissa |
-| 13 | priceExponent   | int8  | 價格 exponent Price exponent                     |
-| 14 | sizeExponent    | int8  | 數量 exponent Size exponent                      |
-| 55 | symbol          | varStr| 交易對 (例如 `BTCUSDT`) Trading pair (e.g., `BTCUSDT`) |
+| ID | Field           | Type  | Description                             |
+|----|-----------------|-------|-----------------------------------------|
+| 1  | ts              | int64 | Snapshot timestamp (µs)                 |
+| 2  | seq             | int64 | Unique message sequence number          |
+| 3  | cts             | int64 | Trade timestamp (µs)                    |
+| 4  | u               | int64 | Update ID                               |
+| 5  | askNormalPrice  | int64 | Best ask price mantissa                 |
+| 6  | askNormalSize   | int64 | Best ask size (normal) mantissa         |
+| 7  | askRpiPrice     | int64 | Best RPI ask price mantissa             |
+| 8  | askRpiSize      | int64 | Best RPI ask size mantissa              |
+| 9  | bidNormalPrice  | int64 | Best bid price mantissa                 |
+| 10 | bidNormalSize   | int64 | Best bid size (normal) mantissa         |
+| 11 | bidRpiPrice     | int64 | Best bid price (RPI) mantissa           |
+| 12 | bidRpiSize      | int64 | Best bid size (RPI) mantissa            |
+| 13 | priceExponent   | int8  | Price exponent                          |
+| 14 | sizeExponent    | int8  | Size exponent                           |
+| 55 | symbol          | varStr| Trading pair (e.g., `BTCUSDT`)          |
 
 ---
 
-## 相關優化
+## Optimisation
 
-新的欄位定義 (以賣方為例, 買方邏輯相同):
+New field definitions (sell side as example; buy side is analogous):
 
-| Field          | Definition                                  |
-|----------------|---------------------------------------------|
-| askNormalPrice | 無 RPI 訂單的最佳賣價 No RPI order best ask price |
-| askNormalSize  | 無 RPI 訂單的最佳賣量 No RPI order best ask size  |
-| askRpiPrice    | RPI 訂單的最佳賣價 RPI order best ask price       |
-| askRpiSize     | RPI 訂單的最佳賣量 RPI order best ask size        |
+| Field          | Definition                       |
+|----------------|----------------------------------|
+| askNormalPrice | No RPI order best ask price      |
+| askNormalSize  | No RPI order best ask size       |
+| askRpiPrice    | RPI order best ask price         |
+| askRpiSize     | RPI order best ask size          |
 
-目前的邏輯可能出現以下狀況:
+The current logic might result in:
 
 | Price | normalQty | rpiQty |
 |-------|-----------|--------|
 | 1000  | 0         | 100    |
 
-這表示沒有 RPI 權限的使用者無法得知實際可成交的價格, 導致這則信息對他們沒有實際意義。為了解決此問題, 我們對信息內容做了上述調整。
+This means that users without RPI permissions won't know at what price they can take their orders, making this message useless. To address this, we adjust the message content as follows.
 
-#### 情況 1: `askNormalSize != 0 && askRpiSize != 0`
+#### Case 1: `askNormalSize != 0 && askRpiSize != 0`
 
-這是基於實際市場情況的正常回應, 與原先信息表達的含義相同。
+This is a normal response based on the actual situation. This case conveys the same meaning as the original message.
 
-示例:
+Example:
 
-| Field         | Definition                                  | Example |
-|---------------|---------------------------------------------|---------|
-| askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price | 1000    |
-| askNormalSize | 無 RPI 訂單的最佳賣量 No RPI order best ask size  | 200     |
-| askRpiPrice   | RPI 訂單的最佳賣價 RPI order best ask price       | 1000    |
-| askRpiSize    | RPI 訂單的最佳賣量 RPI order best ask size        | 300     |
+| Field         | Definition                       | Example |
+|---------------|----------------------------------|---------|
+| askNormalPrice| No RPI order best ask price      | 1000    |
+| askNormalSize | No RPI order best ask size       | 200     |
+| askRpiPrice   | RPI order best ask price         | 1000    |
+| askRpiSize    | RPI order best ask size          | 300     |
 
-#### 情況 2: `askNormalSize != 0 && askRpiSize == 0`
+#### Case 2: `askNormalSize != 0 && askRpiSize == 0`
 
-`askRpiPrice` 會被指定為 `askNormalPrice`, 並且 `askRpiSize = 0`。  
-在此情況下, 不會再向更深的價位搜尋 `askRpiPrice`。
+`askRpiPrice` is assigned the value `askNormalPrice`, and `askRpiSize = 0`.  
+In this case, the `askRpiPrice` value will not be searched further.
 
-示例:
+Example:
 
-| Field         | Definition                                  | Example | Note                                                                 |
-|---------------|---------------------------------------------|---------|----------------------------------------------------------------------|
-| askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price | 1000    |                                                                      |
-| askNormalSize | 無 RPI 訂單的最佳賣量 No RPI order best ask size  | 200     |                                                                      |
-| askRpiPrice   | RPI 訂單的最佳賣價 RPI order best ask price       | 1000    | This itself has no meaning. The price field is assigned a non-RPI sell price. |
-| askRpiSize    | RPI 訂單的最佳賣量 RPI order best ask size        | 0       |                                                                      |
+| Field         | Definition                       | Example | Note                                                                 |
+|---------------|----------------------------------|---------|----------------------------------------------------------------------|
+| askNormalPrice| No RPI order best ask price      | 1000    |                                                                      |
+| askNormalSize | No RPI order best ask size       | 200     |                                                                      |
+| askRpiPrice   | RPI order best ask price         | 1000    | This itself has no meaning. The price field is assigned a non-RPI sell price. |
+| askRpiSize    | RPI order best ask size          | 0       |                                                                      |
 
-#### 情況 3: `askNormalSize == 0 && askRpiSize != 0`
+#### Case 3: `askNormalSize == 0 && askRpiSize != 0`
 
-此時 `askNormalPrice =` 真正的非 RPI 最佳賣價。  
-在這種情況下, 會回傳並使用 `askNormalPrice`。
+`askNormalPrice =` the actual non-RPI asking price.  
+In this case, `askNormalPrice` is retrieved and returned.
 
-示例:
+Example:
 
-| Field         | Definition                                  | Example |
-|---------------|---------------------------------------------|---------|
-| askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price | 1200    |
-| askNormalSize | 無 RPI 訂單的最佳賣量 No RPI order best ask size  | 100     |
-| askRpiPrice   | RPI 訂單的最佳賣價 RPI order best ask price       | 1000    |
-| askRpiSize    | RPI 訂單的最佳賣量 RPI order best ask size        | 20      |
+| Field         | Definition                       | Example |
+|---------------|----------------------------------|---------|
+| askNormalPrice| No RPI order best ask price      | 1200    |
+| askNormalSize | No RPI order best ask size       | 100     |
+| askRpiPrice   | RPI order best ask price         | 1000    |
+| askRpiSize    | RPI order best ask size          | 20      |
 
-#### 情況 4
+#### Case 4
 
-當市場極度冷清, 完全沒有流動性時, **不會推送任何 BBO 信息**。
+When the market is so bad that there is no liquidity, **no message is pushed**.
 
 ---
 
-## 接入示例
+## Integration Example
 
 ```python
 import json
