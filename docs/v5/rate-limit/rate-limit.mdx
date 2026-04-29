@@ -49,7 +49,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <th>inverse</th><th>linear</th><th>option</th><th>spot</th>
     </tr>
     <tr>
-        <td rowSpan="8">POST</td><td>/v5/order/create</td><td colSpan="2" align="center">10/s</td><td align="center">10/s</td><td>20/s</td><td align="center">Y</td>
+        <td rowSpan="9">POST</td><td>/v5/order/create</td><td colSpan="2" align="center">10/s</td><td align="center">10/s</td><td>20/s</td><td align="center">Y</td>
     </tr>
     <tr>
         <td>/v5/order/amend</td><td colSpan="2" align="center">10/s</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">Y</td>
@@ -71,6 +71,9 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     </tr>
     <tr>
         <td>/v5/order/disconnected-cancel-all</td><td colSpan="4" align="center">5/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/order/pre-check</td><td colSpan="2" align="center">10/s</td><td align="center">10/s</td><td>20/s</td><td align="center">Y</td>
     </tr>
     <tr>
         <td rowSpan="4">GET</td><td>/v5/order/realtime</td><td colSpan="4" align="center">50/s</td><td align="center">N</td>
@@ -164,7 +167,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <th>Method</th><th>Path</th><th>Limit</th><th>upgradable</th>
     </tr>
     <tr>
-        <td rowSpan="13">GET</td><td>/v5/asset/transfer/query-asset-info</td><td>60 req/min</td><td>N</td>
+        <td rowSpan="31">GET</td><td>/v5/asset/transfer/query-asset-info</td><td>60 req/min</td><td>N</td>
     </tr>
     <tr>
         <td>/v5/asset/transfer/query-transfer-coin-list</td><td>60 req/min</td><td>N</td>
@@ -180,6 +183,15 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     </tr>
     <tr>
         <td>/v5/asset/transfer/query-account-coins-balance</td><td>5 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/transfer/query-account-coin-balance</td><td>450 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/asset-overview</td><td>50 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/withdrawable-amount</td><td>300 req/s</td><td>N</td>
     </tr>
     <tr>
         <td>/v5/asset/deposit/query-record</td><td>100 req/min</td><td>N</td>
@@ -203,7 +215,52 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <td>/v5/asset/exchange/order-record</td><td>600 req/min</td><td>N</td>
     </tr>
     <tr>
-        <td rowSpan="5">POST</td><td>/v5/asset/transfer/inter-transfer</td><td>60 req/min</td><td>N</td>
+        <td>/v5/asset/exchange/query-coin-list</td><td>30 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/covert/small-balance-history</td><td>5 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/covert/small-balance-list</td><td>10 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/delivery-record</td><td>50 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/query-internal-record</td><td>300 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/balance-query</td><td>100 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/query-coin-list</td><td>100 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/trade-query</td><td>100 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/query-trade-history</td><td>100 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/fundinghistory</td><td>30 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/portfolio-margin</td><td>50 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/settlement-record</td><td>50 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/total-members-assets</td><td>50 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/vasp/list</td><td>1 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/withdraw/query-address</td><td>300 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td rowSpan="12">POST</td><td>/v5/asset/transfer/inter-transfer</td><td>60 req/min</td><td>N</td>
     </tr>
     <tr>
         <td>/v5/asset/transfer/save-transfer-sub-member</td><td>20 req/s</td><td>N</td>
@@ -216,6 +273,27 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
     </tr>
     <tr>
         <td>/v5/asset/withdraw/cancel</td><td>60 req/min</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/exchange/quote-apply</td><td>20 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/exchange/convert-execute</td><td>20 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/covert/small-balance-execute</td><td>5 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/covert/get-quote</td><td>5 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/asset/deposit/deposit-to-account</td><td>300 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/trade-execute</td><td>20 req/s</td><td>N</td>
+    </tr>
+    <tr>
+        <td>/v5/fiat/quote-apply</td><td>100 req/s</td><td>N</td>
     </tr>
 </table>
 </span>
