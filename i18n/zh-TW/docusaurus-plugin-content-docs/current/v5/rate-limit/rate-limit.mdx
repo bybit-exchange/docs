@@ -98,13 +98,37 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <th>inverse</th><th>linear</th><th>option</th><th>spot</th>
     </tr>
     <tr>
-        <td rowSpan="2">GET</td><td>/v5/position/list</td><td colSpan="3" align="center">50/s</td><td align="center">-</td><td align="center">N</td>
+        <td rowSpan="4">GET</td><td>/v5/position/list</td><td colSpan="3" align="center">50/s</td><td align="center">-</td><td align="center">N</td>
     </tr>
     <tr>
         <td>/v5/position/closed-pnl</td><td colSpan="2" align="center">50/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
     </tr>
     <tr>
-        <td rowSpan="2">POST</td><td>/v5/position/set-leverage</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+        <td>/v5/position/get-closed-positions</td><td align="center">-</td><td align="center">-</td><td align="center">50/s</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/move-history</td><td colSpan="4" align="center">10/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td rowSpan="7">POST</td><td>/v5/position/set-leverage</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/switch-mode</td><td align="center">-</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/trading-stop</td><td colSpan="3" align="center">10/s</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/set-auto-add-margin</td><td align="center">-</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/add-margin</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/confirm-pending-mmr</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/move-positions</td><td colSpan="4" align="center">10/s</td><td align="center">N</td>
     </tr>
 </table>
 </span>
@@ -343,7 +367,7 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 |POST |[全倉槓桿開關](spot-margin-uta/switch-mode) | 5 req/s| N |
 |POST |[全倉槓桿設置](spot-margin-uta/set-leverage) | 5 req/s| N |
 |GET |[查詢開關狀態和倍數](spot-margin-uta/status) | 50 req/s| N |
-|GET |[查詢最大可藉數](spot-margin-uta/max-borrowable) | 50 req/s| N |
+|GET |[查詢最大可借數](spot-margin-uta/max-borrowable) | 50 req/s| N |
 |GET |[查詢幣種槓桿](spot-margin-uta/coinstate) | 50 req/s| N |
 |GET |[查詢負債幣種可還款金額](spot-margin-uta/repayment-available-amount) | 50 req/s| N |
 |POST |[設定現貨自動還款模式](spot-margin-uta/set-auto-repay-mode) | 5 req/s| N |
@@ -354,6 +378,11 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 |GET |[查詢固定利率借款訂單信息](spot-margin-uta/fixedborrow-order-info) | 5 req/s| N |
 |GET |[查詢固定利率借款合約信息](spot-margin-uta/fixedborrow-contract-info) | 5 req/s| N |
 |GET |[查詢負債信息](spot-margin-uta/liability) | 5 req/s| N |
+|GET |[查詢借幣幣種數據](spot-margin-uta/currency-data) | - | N |
+|GET |[查詢借貸歷史利率](spot-margin-uta/historical-interest) | - | N |
+|GET |[查詢借貸倉位風險訊息](spot-margin-uta/position-tiers) | - | N |
+|GET |[查詢階梯價值率](spot-margin-uta/tier-collateral-ratio) | - | N |
+|GET |[查詢不同VIP的槓桿數據](spot-margin-uta/vip-margin) | - | N |
 
 </span>
 
@@ -369,6 +398,32 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 |GET |[查詢價差活動單](spread/trade/open-order) | 50 req/s| N |
 |GET |[查詢價差訂單歷史](spread/trade/order-history) | 50 req/s| N |
 |GET |[查詢價差成交歷史](spread/trade/trade-history) | 50 req/s| N |
+|GET |[查詢最大下單數量](spread/trade/max-qty) | 50 req/s| N |
+
+</span>
+
+#### RFQ
+<span class="blocky_table">
+
+|請求方式 |路徑 |頻率 |是否可提頻 |
+|:----|:----:|----|----|
+|POST |[取消所有報價單](rfq/trade/cancel-all-quotes) | 50 req/s| N |
+|POST |[取消報價單](rfq/trade/cancel-quote) | 50 req/s| N |
+|POST |[接受非 LP 報價](rfq/trade/accept-other-quote) | 50 req/s| N |
+|POST |[取消所有詢價單](rfq/trade/cancel-all-rfq) | 50 req/s| N |
+|POST |[報價](rfq/trade/create-quote) | 50 req/s| N |
+|POST |[詢價](rfq/trade/create-rfq) | 50 req/s| N |
+|POST |[執行報價](rfq/trade/execute-quote) | 50 req/s| N |
+|POST |[取消詢價單](rfq/trade/cancel-rfq) | 50 req/s| N |
+|GET |[獲取rfq公共成交數據](rfq/trade/public-trades) | 50 req/s| N |
+|GET |[獲取歷史報價](rfq/trade/quote-list) | 50 req/s| N |
+|GET |[獲取即時報價](rfq/trade/quote-realtime) | 50 req/s| N |
+|GET |[rfq配寘資訊](rfq/trade/rfq-config) | 50 req/s| N |
+|GET |[獲取歷史詢價資訊](rfq/trade/rfq-list) | 50 req/s| N |
+|GET |[獲取實时的詢價單資訊](rfq/trade/rfq-realtime) | 50 req/s| N |
+|GET |[獲取交易資訊](rfq/trade/trade-list) | 50 req/s| N |
+
+</span>
 
 #### 機構借貸
 <span class="blocky_table">
@@ -382,8 +437,6 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 |GET |[查詢風險率](otc/ltv-convert) | 20 req/s| N |
 |GET |[綁定/解綁UID](otc/bind-uid) | 1 req/s| N |
 |GET |[還款](otc/repay) | 1 req/s| N |
-
-</span>
 
 </span>
 

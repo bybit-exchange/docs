@@ -100,13 +100,37 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
         <th>inverse</th><th>linear</th><th>option</th><th>spot</th>
     </tr>
     <tr>
-        <td rowSpan="2">GET</td><td>/v5/position/list</td><td colSpan="3" align="center">50/s</td><td align="center">-</td><td align="center">N</td>
+        <td rowSpan="1">GET</td><td>/v5/position/list</td><td colSpan="3" align="center">50/s</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td rowSpan="7">POST</td><td>/v5/position/set-leverage</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/switch-mode</td><td align="center">-</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/trading-stop</td><td colSpan="3" align="center">10/s</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/set-auto-add-margin</td><td align="center">-</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/add-margin</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/confirm-pending-mmr</td><td colSpan="2" align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td>/v5/position/move-positions</td><td colSpan="4" align="center">10/s</td><td align="center">N</td>
+    </tr>
+    <tr>
+        <td rowSpan="3">GET</td><td>/v5/position/move-history</td><td colSpan="4" align="center">10/s</td><td align="center">N</td>
     </tr>
     <tr>
         <td>/v5/position/closed-pnl</td><td colSpan="2" align="center">50/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
     </tr>
     <tr>
-        <td rowSpan="2">POST</td><td>/v5/position/set-leverage</td><td align="center">10/s</td><td align="center">10/s</td><td align="center">-</td><td align="center">-</td><td align="center">N</td>
+        <td>/v5/position/get-closed-positions</td><td align="center">-</td><td align="center">-</td><td align="center">50/s</td><td align="center">-</td><td align="center">N</td>
     </tr>
 </table>
 </span>
@@ -356,6 +380,11 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 |GET |[Get Fixed-Rate Borrow Order Info](spot-margin-uta/fixedborrow-order-info) | 5 req/s| N |
 |GET |[Get Fixed-Rate Borrow Contract Info](spot-margin-uta/fixedborrow-contract-info) | 5 req/s| N |
 |GET |[Get Liability Info](spot-margin-uta/liability) | 5 req/s| N |
+|GET |[Get Currency Data](spot-margin-uta/currency-data) | - | N |
+|GET |[Get Historical Interest Rate](spot-margin-uta/historical-interest) | - | N |
+|GET |[Get Position Tiers](spot-margin-uta/position-tiers) | - | N |
+|GET |[Get Tiered Collateral Ratio](spot-margin-uta/tier-collateral-ratio) | - | N |
+|GET |[Get VIP Margin Data](spot-margin-uta/vip-margin) | - | N |
 
 </span>
 
@@ -364,13 +393,37 @@ X-Bapi-Limit-Reset-Timestamp: 1672738134824
 
 |Method |Path |Limit |Upgradable|
 |:----|:----:|----|----|
-|POST |[Create Spread Order](spread/trade/create-order) | 20 req/s| N |
-|POST |[Amend Spread Order](spread/trade/amend-order) | 20 req/s| N |
-|POST |[Cancel Spread Order](spread/trade/cancel-order) | 20 req/s| N |
-|POST |[Cancel All Spread Orders](spread/trade/cancel-all) | 5 req/s| N |
-|GET |[Get Spread Open Orders](spread/trade/open-order) | 50 req/s| N |
-|GET |[Get Spread Order History](spread/trade/order-history) | 50 req/s| N |
-|GET |[Get Spread Trade History](spread/trade/trade-history) | 50 req/s| N |
+|POST |[Create Order](spread/trade/create-order) | 20 req/s| N |
+|POST |[Amend Order](spread/trade/amend-order) | 20 req/s| N |
+|POST |[Cancel Order](spread/trade/cancel-order) | 20 req/s| N |
+|POST |[Cancel All Orders](spread/trade/cancel-all) | 5 req/s| N |
+|GET |[Get Open Orders](spread/trade/open-order) | 50 req/s| N |
+|GET |[Get Order History](spread/trade/order-history) | 50 req/s| N |
+|GET |[Get Trade History](spread/trade/trade-history) | 50 req/s| N |
+|GET |[Get Max Qty](spread/trade/max-qty) | 50 req/s | N |
+
+</span>
+
+#### RFQ
+<span class="blocky_table">
+
+|Method |Path |Limit |Upgradable|
+|:----|:----:|----|----|
+|POST |[Cancel All Quotes](rfq/trade/cancel-all-quotes) | 50 req/s | N |
+|POST |[Cancel Quote](rfq/trade/cancel-quote) | 50 req/s | N |
+|POST |[Accept non-LP Quote](rfq/trade/accept-other-quote) | 50 req/s | N |
+|POST |[Cancel All RFQs](rfq/trade/cancel-all-rfq) | 50 req/s | N |
+|POST |[Create Quote](rfq/trade/create-quote) | 50 req/s | N |
+|POST |[Create RFQ](rfq/trade/create-rfq) | 50 req/s | N |
+|POST |[Execute Quote](rfq/trade/execute-quote) | 50 req/s | N |
+|POST |[Cancel RFQ](rfq/trade/cancel-rfq) | 50 req/s | N |
+|GET |[Get Public Trades](rfq/trade/public-trades) | 50 req/s | N |
+|GET |[Get Quotes](rfq/trade/quote-list) | 50 req/s | N |
+|GET |[Get Quotes (real-time)](rfq/trade/quote-realtime) | 50 req/s | N |
+|GET |[Get RFQ Configuration](rfq/trade/rfq-config) | 50 req/s | N |
+|GET |[Get RFQs](rfq/trade/rfq-list) | 50 req/s | N |
+|GET |[Get RFQs (real-time)](rfq/trade/rfq-realtime) | 50 req/s | N |
+|GET |[Get Trade History](rfq/trade/trade-list) | 50 req/s | N |
 
 </span>
 
