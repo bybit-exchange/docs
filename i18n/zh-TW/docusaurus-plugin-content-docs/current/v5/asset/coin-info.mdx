@@ -20,7 +20,6 @@ sidebar_position: 13.5
 |rows |array|Object |
 |> name |integer |幣種名稱 |
 |> coin |string |幣種 |
-|> remainAmount |string |單筆提現最大數量|
 |> chains |array |Object |
 |>> chain |string |鏈名 |
 |>> chainType |string |鏈類型 |
@@ -34,6 +33,8 @@ sidebar_position: 13.5
 |>> withdrawPercentageFee|string|提現手續費百分比. 該字段的值是實際數字，即0.022表示為2.2%|
 |>> contractAddress |string |合約地址. `""` 表示沒有合約地址|
 |>> safeConfirmNumber |string |風險高度數, 當入金抵達這個高度後, 風險完全解鎖, USD等值的資金允許提走|
+|>> withdrawMax |string |該鏈允許的最大的單筆提幣金額, `-1`表示無上限|
+|> remainAmount |string |**廢棄**字段, 請忽視|
 
 <a href="/api-explorer/v5/asset/coin-info"><Button>運行實例 >></Button></a>
 
@@ -119,7 +120,8 @@ client
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
                         "contractAddress": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
-                        "safeConfirmNumber": "65"
+                        "safeConfirmNumber": "65",
+                        "withdrawMax": "10000000"
                     },
                     {
                         "chainType": "Mantle Network",
@@ -133,7 +135,8 @@ client
                         "minAccuracy": "8",
                         "withdrawPercentageFee": "0",
                         "contractAddress": "",
-                         "safeConfirmNumber": "100"
+                        "safeConfirmNumber": "100",
+                        "withdrawMax": "10000000"
                     }
                 ]
             }
