@@ -39,6 +39,10 @@ For Onchain, only active position will be returned in the response
 |> estimateInterestCalculationTime|string |Estimated Interest accrual time, in milliseconds. Only for Onchain |
 |> settlementTime|string |Settlement time, in milliseconds. Only has value for Onchain `Fixed` product|
 |> autoReinvest|string |Auto-reinvest status. `Enable`: enabled, `Disable`: disabled. See [Modify Position](modify-position.mdx)|
+|> availableAmount|string |Redeemable amount|
+|> freezeDetails|array |Freeze detail list|
+|>> amount|string |Frozen amount|
+|>> description|string |Reason for freeze|
 
 ### Request Example
 
@@ -103,7 +107,14 @@ print(session.get_staked_position(
                 "estimateStakeTime": "",
                 "estimateInterestCalculationTime": "1744243200000",
                 "settlementTime": "1744675200000",
-                "autoReinvest": "Enable"
+                "autoReinvest": "Enable",
+                "availableAmount": "4900",
+                "freezeDetails": [
+                    {
+                        "amount": "100",
+                        "description": "Locked in Fixed-Rate Loan"
+                    }
+                ]
             }
         ]
     },
