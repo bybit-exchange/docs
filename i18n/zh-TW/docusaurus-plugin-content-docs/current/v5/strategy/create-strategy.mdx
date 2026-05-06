@@ -218,6 +218,55 @@ sidebar_position: 1
         </tr>
     </table>
 </TabItem>
+<TabItem value="pov" label="POV">
+    <table border="0.8">
+        <tr>
+            <th>參數</th><th>是否必需</th><th>類型</th><th>說明</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
+        </tr>
+         <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>策略類型。<code>pov</code></td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>交易對名稱，例如 <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>、<code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td>false</td><td>string</td><td>總下單數量（幣）。"size" 和 "duration" <b>二選一</b></td>
+        </tr>
+        <tr>
+            <td>duration</td><td>false</td><td>integer</td><td>總執行時間（秒）。範圍：[900, 86400]。"size" 和 "duration" <b>二選一</b></td>
+        </tr>
+        <tr>
+            <td>interval</td><td>false</td><td>integer</td><td>子訂單掛出間隔（秒）。<code>"0"</code>：單次執行；否則範圍：[5, 3600]</td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>是否為只減倉訂單，減倉時需設為 <code>true</code>。<code>true</code>、<code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>持倉方向索引。<code>0</code>：單向持倉，<code>1</code>：雙向持倉多頭，<code>2</code>：雙向持倉空頭。雙向持倉模式下<b>必填</b></td>
+        </tr>
+        <tr>
+            <td>povParams</td><td><b>true</b></td><td>object</td><td>參數物件</td>
+        </tr>
+        <tr>
+            <td>> mode</td><td><b>true</b></td><td>string</td><td>執行模式。<code>TradeVolume</code>：根據歷史成交量下市價單；<br/><code>OppositeSideLiquidity</code>：根據對手方深度在最優買賣價以吃單限價掛出；<code>SameSideLiquidity</code>：根據訂單方向在最優買賣價以 Post Only 限價掛出</td>
+        </tr>
+        <tr>
+            <td>> participationRate</td><td><b>true</b></td><td>string</td><td>參與率，範圍：[1, 100]，支援 1 位小數。例如 <code>"25.1"</code>=25.1%</td>
+        </tr>
+        <tr>
+            <td>> referenceWindow</td><td>false</td><td>string</td><td>當 "mode"=<code>TradeVolume</code> 時<b>必填</b>，歷史成交量的參考時間窗口（秒），範圍：[60, 14400]</td>
+        </tr>
+        <tr>
+            <td>> depthReference</td><td>false</td><td>integer</td><td>當 "mode"=<code>OppositeSideLiquidity</code> 或 <code>SameSideLiquidity</code> 時<b>必填</b>，參考深度檔位，範圍：[1, 10]</td>
+        </tr>
+    </table>
+</TabItem>
 </Tabs>
 
 ### 響應參數
