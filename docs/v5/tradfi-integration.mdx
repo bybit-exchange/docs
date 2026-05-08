@@ -139,10 +139,35 @@ The weight allocation during the rollover period follows this schedule:
 
 </div>
 
+For example, a rollover schedule for `CLUSDT` may look like:
+
+<div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
+
+| Expiry Date (CL/WTIOIL) | Time (UTC+0) | Near-Month Contract Weight (%) | Far-Month Contract Weight (%) |
+|:---|:---|:---|:---|
+| 2026-05-08 | 1:00 AM | 80 | 20 |
+| 2026-05-09 | 1:00 AM | 60 | 40 |
+| 2026-05-12 | 1:00 AM | 40 | 60 |
+| 2026-05-13 | 1:00 AM | 20 | 80 |
+| 2026-05-14 | 1:00 AM | 0 | 100 |
+
+</div>
+
 For example, `CLUSDT` (Crude Oil) uses this mechanism to transition between its designated underlying futures contracts (e.g., from `WTIK6` to `WTIM6`).
 
+In addition, `CLUSDT` undergoes a monthly **Pyth index rollover**, starting from the **fifth trading day** of each month. This rollover only updates the Pyth index components. 
+
+For example, the following shows the `CLUSDT` index components on **Day 1** of the rollover:
+![CLUSDT Index Component](/img/tradfi-index-component.jpg)
+
 :::info
-For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
+1. For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
+
+2. The underlying of Pyth is West Texas Intermediate (WTI) crude oil; Pyth price data for the contract can be referenced at [Pyth Data Explorer](https://pythdata.app/explore/Commodities.WTIM6%2FUSD).
+
+3. On weekends when Pyth markets are closed, Friday's closing price is used as the index price component.
+
+4. For `CLUSDT`, the anchor price used in index price calculation is Pyth WTI.
 :::
 
 To query the current components and their weights contributing to an index price, use the [Get Index Price Components](/v5/market/index-components) endpoint:
