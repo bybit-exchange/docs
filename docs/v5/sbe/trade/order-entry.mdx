@@ -44,13 +44,13 @@ The estimated available date is 7 May, 2026. URL: `wss://stream-testnet.bybits.o
 
 ### Send AuthReq
 
-Signature: HMAC-SHA256 over `"apiKey:expires"`, where `expires` is a future Unix timestamp in milliseconds.
+Signature: HMAC-SHA256 over `"GET/realtime{expires}"`, where `expires` is a future Unix timestamp in milliseconds.
 
 ```python
 import hashlib, hmac, struct, time
 
-def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
-    message = f"{api_key}:{expires}"
+def generate_signature(api_secret: str, expires: int) -> str:
+    message = f"GET/realtime{expires}"
     return hmac.new(
         api_secret.encode("utf-8"),
         message.encode("utf-8"),
@@ -224,7 +224,7 @@ Embedded at the start of every response message.
 | 1  | reqId     | char[64] | 64           | Client request ID |
 | 2  | apiKey    | char[64] | 64           | API Key (null-padded) |
 | 3  | expires   | uint64   | 8            | Expiry timestamp (ms); must be in future |
-| 4  | signature | char[64] | 64           | HMAC-SHA256 over `"apiKey:expires"` |
+| 4  | signature | char[64] | 64           | HMAC-SHA256 over `"GET/realtime{expires}"` |
 
 #### `AuthResp` (id=2, blockLength=132)
 
@@ -536,7 +536,7 @@ def _parse_api_resp_header(data: bytes, offset: int) -> Tuple[Dict[str, Any], in
 def encode_auth_req(api_key: str, api_secret: str) -> bytes:
     req_id  = _next_req_id()
     expires = int(time.time() * 1000) + 10_000
-    message = f"{api_key}:{expires}"
+    message = f"GET/realtime{expires}"
     signature = hmac.new(
         api_secret.encode("utf-8"),
         message.encode("utf-8"),

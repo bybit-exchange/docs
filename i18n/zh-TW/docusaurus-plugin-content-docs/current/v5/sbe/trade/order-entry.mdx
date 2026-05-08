@@ -44,13 +44,13 @@ sidebar_position: 1
 
 ### 送出 AuthReq
 
-簽名: 對 `"apiKey:expires"` 執行 HMAC-SHA256, 其中 `expires` 為未來的 Unix 時間戳 (毫秒).
+簽名: 對 `"GET/realtime{expires}"` 執行 HMAC-SHA256, 其中 `expires` 為未來的 Unix 時間戳 (毫秒).
 
 ```python
 import hashlib, hmac, struct, time
 
-def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
-    message = f"{api_key}:{expires}"
+def generate_signature(api_secret: str, expires: int) -> str:
+    message = f"GET/realtime{expires}"
     return hmac.new(
         api_secret.encode("utf-8"),
         message.encode("utf-8"),
@@ -224,7 +224,7 @@ def generate_signature(api_key: str, api_secret: str, expires: int) -> str:
 | 1  | reqId     | char[64] | 64           | 客戶端請求 ID Client request ID |
 | 2  | apiKey    | char[64] | 64           | API Key (補 null) API Key (null-padded) |
 | 3  | expires   | uint64   | 8            | 到期時間戳 (ms); 必須為未來時間 Expiry timestamp (ms); must be in future |
-| 4  | signature | char[64] | 64           | HMAC-SHA256 of `"apiKey:expires"` |
+| 4  | signature | char[64] | 64           | HMAC-SHA256 of `"GET/realtime{expires}"` |
 
 #### `AuthResp` (id=2, blockLength=132)
 
@@ -536,7 +536,7 @@ def _parse_api_resp_header(data: bytes, offset: int) -> Tuple[Dict[str, Any], in
 def encode_auth_req(api_key: str, api_secret: str) -> bytes:
     req_id  = _next_req_id()
     expires = int(time.time() * 1000) + 10_000
-    message = f"{api_key}:{expires}"
+    message = f"GET/realtime{expires}"
     signature = hmac.new(
         api_secret.encode("utf-8"),
         message.encode("utf-8"),
