@@ -139,7 +139,26 @@ print(session.sign_agreement(
 
 </div>
 
+以 `CLUSDT` 為例，換月時間表如下：
+
+<div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
+
+| 到期日（CL/WTIOIL） | 時間（UTC+0） | 近月合約權重（%） | 遠月合約權重（%） |
+|:---|:---|:---|:---|
+| 2026-05-08 | 1:00 AM | 80 | 20 |
+| 2026-05-09 | 1:00 AM | 60 | 40 |
+| 2026-05-12 | 1:00 AM | 40 | 60 |
+| 2026-05-13 | 1:00 AM | 20 | 80 |
+| 2026-05-14 | 1:00 AM | 0 | 100 |
+
+</div>
+
 以 `CLUSDT`（原油）為例，即依循此機制在其指定的標的期貨合約之間過渡（例如由 `WTIK6` 過渡至 `WTIM6`）。
+
+此外，`CLUSDT` 每月會進行一次 **Pyth 指數成分換月**，從每月**第五個交易日**開始。此換月僅更新 Pyth 指數成分。
+
+以下為換月**第 1 日** `CLUSDT` 指數成分示例：
+![CLUSDT Index Component](/img/tradfi-index-component.jpg)
 
 :::info
 如需取得最新的展期時程與完整說明，請參閱幫助中心文章：[TradFi 永續合約介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8)。
