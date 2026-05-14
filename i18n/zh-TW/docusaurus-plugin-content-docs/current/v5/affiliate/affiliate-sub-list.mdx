@@ -1,0 +1,108 @@
+---
+title: 查詢子代理列表
+sidebar_label: 查詢子代理列表
+sidebar_position: 3
+---
+
+要使用此接口，您应该有一个代理商账户，并且在创建 API 密钥时仅勾选"代理商"权限。<br/>
+代理商網站: https://affiliates.bybit.com
+
+:::tip
+* 僅支持使用母帳戶uid
+* 若要查詢該接口, api key僅能擁有代理商權限, 若擁有任何其他權限想, 請移除
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/affiliate/affiliate-sub-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|cursor |false |string |游標，用於翻頁|
+|size |false |integer |每頁數量限制. [`0`, `100`]. 默認: `0`|
+|startDate |false |string |查詢時段開始日期，格式為 `YYYY-MM-DD`，開始時間和結束時間跨度最大為3個月|
+|endDate |false |string |查詢時段結束日期，格式為 `YYYY-MM-DD`，開始時間和結束時間要麼同時傳入要麼都不傳|
+|subAffId |false |integer |子代理 ID，用於精確查詢。傳入 `0` 或不傳則返回所有子代理|
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> subAffId |string |子代理 ID |
+|> userId |string |子代理帳戶 uid |
+|> name |string |子代理帳戶暱稱 |
+|> email |string |子代理電子郵件地址（部分遮蔽）|
+|> commissionsVol |json |查詢時段內各幣種佣金金額（固定五種幣種：BTC / ETH / MNT / USDC / USDT）|
+|> commissionsForUsdt |string |查詢時段內佣金總額折算為 USDT|
+|> becameAffTime |string |該用戶成為子代理的時間，格式為 `YYYY-MM-DD HH:mm:ss`（UTC）|
+|> startDate |string |從請求參數回傳的查詢起始時間，格式為 `YYYY-MM-DD HH:mm:ss`|
+|> endDate |string |從請求參數回傳的查詢結束時間，格式為 `YYYY-MM-DD HH:mm:ss`|
+|nextPageCursor |string |游標，用於翻頁 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/affiliate/affiliate-sub-list?cursor=&size=100&startDate=2024-01-01&endDate=2024-01-31 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1706745600000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: xxxxxx
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "subAffId": "10001",
+                "userId": "123456789",
+                "name": "sub_affiliate_nick",
+                "email": "sub***@example.com",
+                "commissionsVol": {
+                    "BTC": "0.005",
+                    "ETH": "0.2",
+                    "MNT": "40.0",
+                    "USDC": "100.0",
+                    "USDT": "400.0"
+                },
+                "commissionsForUsdt": "550.00",
+                "becameAffTime": "2023-06-01 10:00:00",
+                "startDate": "2024-01-01 00:00:00",
+                "endDate": "2024-01-31 23:59:59"
+            }
+        ],
+        "nextPageCursor": "eyJsYXN0SWQiOiIxMDAwMSJ9"
+    },
+    "retExtInfo": {},
+    "time": 1706745600000
+}
+```
