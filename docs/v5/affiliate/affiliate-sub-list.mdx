@@ -1,0 +1,108 @@
+---
+title: Get Affiliate Sub-Affiliate List
+sidebar_label: Get Affiliate Sub-Affiliate List
+sidebar_position: 3
+---
+
+To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.<br/>
+Affiliate site: https://affiliates.bybit.com
+
+:::tip
+* Use master UID only
+* The api key can only have "Affiliate" permission
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/affiliate/affiliate-sub-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
+|size |false |integer |Limit for data size per page. [`0`, `100`]. Default: `0`|
+|startDate |false |string |Start date of the query period, format `YYYY-MM-DD`. The range between "startDate" and "endTime" cannot exceed 3 months|
+|endDate |false |string |End date of the query period, format `YYYY-MM-DD`. "startDate" and "endDate" must either both be provided or both be omitted. If both are omitted, it returns T-1 data by default|
+|subAffId |false |integer |Sub-affiliate ID for exact lookup. Pass `0` or omit to return all sub-affiliates without filtering|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> subAffId |string |Sub-affiliate ID |
+|> userId |string |Sub-affiliate UID |
+|> name |string |Sub-affiliate account nickname |
+|> email |string |Sub-affiliate email address (partially masked) |
+|> commissionsVol |json |Commission amount per currency for the queried date range (fixed five currencies: BTC / ETH / MNT / USDC / USDT)|
+|> commissionsForUsdt |string |Total commission converted to USDT for the queried date range|
+|> becameAffTime |string |Time when this user became a sub-affiliate, format `YYYY-MM-DD HH:mm:ss` (UTC)|
+|> startDate |string |Query start time echoed from the request parameters, format `YYYY-MM-DD HH:mm:ss`|
+|> endDate |string |Query end time echoed from the request parameters, format `YYYY-MM-DD HH:mm:ss`|
+|nextPageCursor |string |Refer to the `cursor` request parameter|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/affiliate/affiliate-sub-list?cursor=&size=100&startDate=2024-01-01&endDate=2024-01-31 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1706745600000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: xxxxxx
+Content-Type: application/json
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "subAffId": "10001",
+                "userId": "123456789",
+                "name": "sub_affiliate_nick",
+                "email": "sub***@example.com",
+                "commissionsVol": {
+                    "BTC": "0.005",
+                    "ETH": "0.2",
+                    "MNT": "40.0",
+                    "USDC": "100.0",
+                    "USDT": "400.0"
+                },
+                "commissionsForUsdt": "550.00",
+                "becameAffTime": "2023-06-01 10:00:00",
+                "startDate": "2024-01-01 00:00:00",
+                "endDate": "2024-01-31 23:59:59"
+            }
+        ],
+        "nextPageCursor": "eyJsYXN0SWQiOiIxMDAwMSJ9"
+    },
+    "retExtInfo": {},
+    "time": 1706745600000
+}
+```
