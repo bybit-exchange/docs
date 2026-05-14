@@ -12,8 +12,8 @@ sidebar_position: 1
 - **Purpose:** 高效能低延遲下單 — 單筆或批次建立、修改、取消訂單.
 - **Compression:** 停用壓縮以避免隊頭阻塞與 CPU 開銷.
 
-## 測試網
-預計將於2026年5月7日發布到testnet. URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
+## 主網
+預計將於2026年6月初發布. 測試網URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
 ## SBE XML 模板 (交易)
 [sbe xml template](../sbe-basic-info#交易-sbe-xml-template)
@@ -139,13 +139,13 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | 批次修改 (Batch Replace) | 13 | 14 |
 | 批次取消 (Batch Cancel)  | 15 | 16 |
 
-每筆回應群組項目包含各自的 `code` 與 `msg` (varString8), 以及已確認訂單的 `orderId` / `orderLinkId`。所有群組之後附有頂層 `retMsg` (varString8).
+每筆回應群組項目包含各自的 `code` 與 `msg` (varString16), 以及已確認訂單的 `orderId` / `orderLinkId`。所有群組之後附有頂層 `retMsg` (varString16).
 
 ## 錯誤處理
 
 **CommonErrResp** (`templateId = 17`) 用於伺服器無法將錯誤關聯至特定請求信息時回傳。
 
-欄位: `respHeader` (ApiRespHeader)、`retCode` (int32)、`retMsg` (varString8).
+欄位: `respHeader` (ApiRespHeader)、`retCode` (int32)、`retMsg` (varString16).
 
 ## SBE 信息結構
 
@@ -233,7 +233,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | 1  | reqId   | char[64]   | 64           | 回傳的請求 ID Echoed request ID |
 | 2  | retCode | int32      | 4            | 0 = 成功 0 = OK |
 | 3  | connId  | char[64]   | 64           | 連線識別碼 Connection identifier |
-| 20 | retMsg  | varString8 | variable     | 成功時為 `"OK"`; 否則為錯誤描述 `"OK"` on success; error text otherwise |
+| 20 | retMsg  | varString16 | variable     | 成功時為 `"OK"`; 否則為錯誤描述 `"OK"` on success; error text otherwise |
 
 #### `PingReq` (id=3, blockLength=8)
 
@@ -276,7 +276,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | 1  | respHeader | ApiRespHeader       | 232          | 回應標頭 Response header |
 | 2  | retCode    | int32               | 4            | 0 = 已接受 0 = accepted |
 | 3  | result     | CommonOrderRespData | 128          | 訂單識別碼 Order identifiers |
-| 20 | retMsg     | varString8          | variable     | 成功時為 `"OK"` `"OK"` on success |
+| 20 | retMsg     | varString16          | variable     | 成功時為 `"OK"` `"OK"` on success |
 
 #### `ReplaceOrderReqV5` (id=7, blockLength=295)
 
@@ -346,10 +346,9 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | 3  | symbolId    | int64       | 8            | |
 | 4  | orderId     | char[64]    | 64           | 交易所訂單 ID Exchange order ID |
 | 5  | orderLinkId | char[64]    | 64           | 客戶端訂單 ID Client order ID |
-| 20 | msg         | varString8  | variable     | 每筆訂單訊息 Per-order message |
-| 21 | createAt    | varString8  | variable     | 建立時間戳字串 Creation timestamp string |
+| 20 | msg         | varString16  | variable     | 每筆訂單訊息 Per-order message |
 
-後接頂層 `retMsg` (varString8).
+後接頂層 `retMsg` (varString16).
 
 #### `BatchReplaceOrderReqV5` (id=13)
 
@@ -367,7 +366,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 
 #### `BatchReplaceOrderRespV5` (id=14)
 
-固定主體 (236 bytes). 重複群組 `list` (每項目 blockLength = 141 bytes, 欄位同 BatchCreateOrderRespV5 但不含 `createAt`). 後接 `retMsg` (varString8).
+固定主體 (236 bytes). 重複群組 `list` (每項目 blockLength = 141 bytes, 欄位同 BatchCreateOrderRespV5). 後接 `retMsg` (varString16).
 
 #### `BatchCancelOrderReqV5` (id=15)
 
@@ -389,7 +388,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 |----|------------|---------------|--------------|-------------|
 | 1  | respHeader | ApiRespHeader | 232          | 回應標頭 Response header |
 | 2  | retCode    | int32         | 4            | 錯誤碼 Error code |
-| 20 | retMsg     | varString8    | variable     | 錯誤描述 Error description |
+| 20 | retMsg     | varString16    | variable     | 錯誤描述 Error description |
 
 ## 接入示例
 
@@ -492,10 +491,10 @@ def _encode_decimal64(mantissa: int, exponent: int) -> bytes:
     return struct.pack(DECIMAL64_FMT, exponent, mantissa)
 
 
-def _parse_varstring8(data: bytes, offset: int) -> Tuple[str, int]:
-    """Parse a varString8: uint8 length prefix + UTF-8 data."""
-    (length,) = struct.unpack_from("<B", data, offset)
-    offset += 1
+def _parse_varstring16(data: bytes, offset: int) -> Tuple[str, int]:
+    """Parse a varString16: uint16 length prefix + UTF-8 data."""
+    (length,) = struct.unpack_from("<H", data, offset)
+    offset += 2
     s = data[offset: offset + length].decode("utf-8")
     offset += length
     return s, offset
@@ -618,7 +617,7 @@ def parse_auth_resp(data: bytes) -> Dict[str, Any]:
     offset = HDR_SZ
     req_id_b, ret_code, conn_id_b = struct.unpack_from("<64si64s", data, offset)
     offset += 132
-    ret_msg, _ = _parse_varstring8(data, offset)
+    ret_msg, _ = _parse_varstring16(data, offset)
     return {
         "header":  hdr,
         "reqId":   _decode_str(req_id_b),
@@ -637,7 +636,7 @@ def parse_order_resp(data: bytes) -> Dict[str, Any]:
     offset += 4
     order_id_b, order_link_id_b = struct.unpack_from(COMMON_RESP_FMT, data, offset)
     offset += COMMON_RESP_SZ
-    ret_msg, _ = _parse_varstring8(data, offset)
+    ret_msg, _ = _parse_varstring16(data, offset)
     return {
         "header":     hdr,
         "respHeader": resp_header,
@@ -768,7 +767,7 @@ if __name__ == "__main__":
 ## 速率限制與錯誤
 
 - **速率限制** 體現在每筆回應的 `ApiRespHeader` 中 (`bapiLimit`、`bapiLimitStatus`、`bapiLimitResetTimestamp`).
-- 任何回應中非零的 `retCode` 表示失敗; 請讀取 `retMsg` (varString8) 了解診斷訊息.
+- 任何回應中非零的 `retCode` 表示失敗; 請讀取 `retMsg` (varString16) 了解診斷訊息.
 - **CommonErrResp** (`templateId = 17`) 在伺服器無法將錯誤關聯至特定請求時回傳.
 - 在批次回應中, 每個群組項目包含各自的 `code` 與 `msg` — 請逐項檢查.
 - 連線關閉時, 重連並重新驗證後再恢復下單; 使用 `orderLinkId` 偵測重複.
@@ -779,6 +778,6 @@ if __name__ == "__main__":
 - **Decimal64:** 打包格式為 `int8 (exponent) + int64 (mantissa)` = 9 bytes, 無對齊填充. `value = mantissa × 10^exponent`.
 - **BoolEnum:** 編碼為 `uint8`; 有效值為 0 (FALSE) 與 1 (TRUE). 值 254 表示不可表示的狀態.
 - **固定長度字串:** 補 null 至宣告長度; 解碼時去除尾部 `\x00`.
-- **varString8:** 以 1 位元組 `uint8` 長度前綴; 位於信息主體所有固定欄位之後.
+- **varString16:** 以 2 位元組 `uint16` 長度前綴; 位於信息主體所有固定欄位之後.
 - **重複群組:** 前綴為 `groupSize16Encoding` (uint16 `blockLength` + uint16 `numInGroup`), 在群組項目之前.
 - 客戶端時鐘必須與 NTP/PTP 同步; 伺服器會拒絕時間戳落在 `recvWindow` 範圍外的 frame.

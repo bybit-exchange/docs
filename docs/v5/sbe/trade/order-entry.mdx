@@ -12,8 +12,8 @@ sidebar_position: 2
 - **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
 - **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
 
-## Testnet
-The estimated available date is 7 May, 2026. URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
+## Mainnet
+The estimated available date is the beginning of June, 2026. Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
 ## SBE XML Template
 [sbe xml template](../sbe-basic-info#ws-order-entry-sbe-xml-template)
@@ -233,7 +233,7 @@ Embedded at the start of every response message.
 | 1  | reqId   | char[64]  | 64           | Echoed request ID |
 | 2  | retCode | int32     | 4            | 0 = OK |
 | 3  | connId  | char[64]  | 64           | Connection identifier |
-| 20 | retMsg  | varString8| variable     | `"OK"` on success; error text otherwise |
+| 20 | retMsg  | varString16| variable     | `"OK"` on success; error text otherwise |
 
 #### `PingReq` (id=3, blockLength=8)
 
@@ -276,7 +276,7 @@ Embedded at the start of every response message.
 | 1  | respHeader | ApiRespHeader      | 232          | Response header |
 | 2  | retCode    | int32              | 4            | 0 = accepted |
 | 3  | result     | CommonOrderRespData| 128          | Order identifiers |
-| 20 | retMsg     | varString8         | variable     | `"OK"` on success |
+| 20 | retMsg     | varString16         | variable     | `"OK"` on success |
 
 #### `ReplaceOrderReqV5` (id=7, blockLength=295)
 
@@ -346,10 +346,9 @@ Followed by repeating group `list` (per-item blockLength = 141 bytes):
 | 3  | symbolId    | int64      | 8            | |
 | 4  | orderId     | char[64]   | 64           | Exchange order ID |
 | 5  | orderLinkId | char[64]   | 64           | Client order ID |
-| 20 | msg         | varString8 | variable     | Per-order message |
-| 21 | createAt    | varString8 | variable     | Creation timestamp string |
+| 20 | msg         | varString16 | variable     | Per-order message |
 
-Followed by top-level `retMsg` (varString8).
+Followed by top-level `retMsg` (varString16).
 
 #### `BatchReplaceOrderReqV5` (id=13)
 
@@ -367,7 +366,7 @@ Repeating group `request` (per-item blockLength = 154 bytes):
 
 #### `BatchReplaceOrderRespV5` (id=14)
 
-Fixed body (236 bytes). Repeating group `list` (per-item blockLength = 141 bytes, same fields as BatchCreateOrderRespV5 minus `createAt`). Followed by `retMsg` (varString8).
+Fixed body (236 bytes). Repeating group `list` (per-item blockLength = 141 bytes, same fields as BatchCreateOrderRespV5). Followed by `retMsg` (varString16).
 
 #### `BatchCancelOrderReqV5` (id=15)
 
@@ -389,7 +388,7 @@ Same layout as `BatchReplaceOrderRespV5`.
 |----|------------|---------------|--------------|-------------|
 | 1  | respHeader | ApiRespHeader | 232          | Response header |
 | 2  | retCode    | int32         | 4            | Error code |
-| 20 | retMsg     | varString8    | variable     | Error description |
+| 20 | retMsg     | varString16    | variable     | Error description |
 
 ## Integration Example
 
@@ -492,10 +491,10 @@ def _encode_decimal64(mantissa: int, exponent: int) -> bytes:
     return struct.pack(DECIMAL64_FMT, exponent, mantissa)
 
 
-def _parse_varstring8(data: bytes, offset: int) -> Tuple[str, int]:
-    """Parse a varString8: uint8 length prefix + UTF-8 data."""
-    (length,) = struct.unpack_from("<B", data, offset)
-    offset += 1
+def _parse_varstring16(data: bytes, offset: int) -> Tuple[str, int]:
+    """Parse a varString16: uint16 length prefix + UTF-8 data."""
+    (length,) = struct.unpack_from("<H", data, offset)
+    offset += 2
     s = data[offset: offset + length].decode("utf-8")
     offset += length
     return s, offset
@@ -618,7 +617,7 @@ def parse_auth_resp(data: bytes) -> Dict[str, Any]:
     offset = HDR_SZ
     req_id_b, ret_code, conn_id_b = struct.unpack_from("<64si64s", data, offset)
     offset += 132
-    ret_msg, _ = _parse_varstring8(data, offset)
+    ret_msg, _ = _parse_varstring16(data, offset)
     return {
         "header":  hdr,
         "reqId":   _decode_str(req_id_b),
@@ -637,7 +636,7 @@ def parse_order_resp(data: bytes) -> Dict[str, Any]:
     offset += 4
     order_id_b, order_link_id_b = struct.unpack_from(COMMON_RESP_FMT, data, offset)
     offset += COMMON_RESP_SZ
-    ret_msg, _ = _parse_varstring8(data, offset)
+    ret_msg, _ = _parse_varstring16(data, offset)
     return {
         "header":     hdr,
         "respHeader": resp_header,
@@ -768,7 +767,7 @@ if __name__ == "__main__":
 ## Limits & Errors
 
 - **Rate limits** are surfaced in every response's `ApiRespHeader` (`bapiLimit`, `bapiLimitStatus`, `bapiLimitResetTimestamp`).
-- Non-zero `retCode` in any response indicates failure; read `retMsg` (varString8) for the diagnostic message.
+- Non-zero `retCode` in any response indicates failure; read `retMsg` (varString16) for the diagnostic message.
 - **CommonErrResp** (`templateId = 17`) is sent when the server cannot associate the error with a specific request.
 - In batch responses, each group item carries its own `code` and `msg` — check per-item codes individually.
 - On socket close, reconnect and re-authenticate before resuming; use `orderLinkId` to detect duplicates.
@@ -779,6 +778,6 @@ if __name__ == "__main__":
 - **Decimal64:** packed as `int8 (exponent) + int64 (mantissa)` = 9 bytes, no alignment padding. `value = mantissa × 10^exponent`.
 - **BoolEnum:** encoded as `uint8`; valid values are 0 (FALSE) and 1 (TRUE). Value 254 signals a non-representable state.
 - **Fixed-length strings:** null-padded to declared length; strip trailing `\x00` on decode.
-- **varString8:** prefixed by a 1-byte `uint8` length; follows all fixed fields in the message body.
+- **varString16:** prefixed by a 2-byte `uint16` length; follows all fixed fields in the message body.
 - **Repeating groups:** prefixed by `groupSize16Encoding` (uint16 `blockLength` + uint16 `numInGroup`), before the group items.
 - Client clock must be NTP/PTP-synchronized; server rejects frames where the timestamp falls outside the `recvWindow`.
