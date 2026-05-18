@@ -4,7 +4,7 @@ sidebar_label: Create Strategy Order
 sidebar_position: 1
 ---
 
-Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`.
+Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`, `pov`.
 
 ## Strategy Types
 
@@ -49,6 +49,23 @@ Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Ice
 |`Chase Limit` |Buy at Bid1 / Sell at Ask1; maker execution |
 |`Chase Limit (offset)` |Fixed distance from Ask1/Bid1; balances speed and cost |
 |`Fixed Prices` |All sub-orders placed at a single fixed price |
+
+---
+
+### POV Order (Percentage of Volume)
+Participates in market volume at a fixed rate, dynamically sizing each sub-order as a percentage of observed trading activity or order book depth to minimize market impact.
+
+**Execution logic:** At each `interval`, the strategy samples market activity based on the selected mode → calculates sub-order quantity using `participationRate` → places the order → repeats until `maxQty` (`size`) is reached or `maxDuration` (`duration`) expires. Setting `interval` to `0` executes once immediately (OneTime mode).
+
+**Note:** POV supports Perpetuals only (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`). Spot is not supported. When `interval` > `0`, at least one of `size` or `duration` must be provided.
+
+**Execution modes (`povParams.mode`):**
+
+| Mode | Order type | Volume reference |
+|:---|:---|:---|
+|`TradedVolume` |Market order |Historical traded volume over `referenceWindow` seconds; range: [60, 14400] |
+|`OppositeSideLiquidity` |Taker limit at best bid/ask |Opposite-side book depth; Top-N levels via `depthReference` [1, 10] |
+|`SameSideLiquidity` |Post-Only limit at best bid/ask |Same-side book depth; Top-N levels via `depthReference` [1, 10]; maker execution only |
 
 ---
 

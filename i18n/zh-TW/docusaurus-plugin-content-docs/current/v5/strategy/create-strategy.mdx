@@ -4,7 +4,7 @@ sidebar_label: 創建策略訂單
 sidebar_position: 1
 ---
 
-創建策略訂單。支援的策略類型：`chaseOrder`、`twap`、`iceberg`。
+創建策略訂單。支援的策略類型：`chaseOrder`、`twap`、`iceberg`, `pov`。
 
 ## 策略類型
 
@@ -49,6 +49,23 @@ sidebar_position: 1
 |`追逐限價單` |買入掛買一價 / 賣出掛賣一價；掛單成交 |
 |`追逐限價單 (跟價差)` |與賣一/買一保持固定距離；兼顧速度與成本 |
 |`固定價格` |所有子訂單以固定單一價格掛出 |
+
+---
+
+### POV 委託（Percentage of Volume）
+以固定比例參與市場成交量，依據觀測到的市場交易活動或盤口深度動態計算每筆子訂單量，有效降低市場衝擊。
+
+**執行邏輯：** 每隔 `interval` 秒，策略依照所選模式對市場活動進行取樣 → 依據 `participationRate` 計算子訂單數量 → 下單 → 重複直至達到 `maxQty`（`size`）或 `maxDuration`（`duration`）到期為止。將 `interval` 設為 `0` 時，策略僅執行一次即終止（OneTime 模式）。
+
+**注意：** POV 僅支援永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`），不支援現貨。`interval` > `0` 時，`size` 與 `duration` 至少須填寫一項。
+
+**執行模式（`povParams.mode`）：**
+
+| 模式 | 訂單類型 | 成交量參考依據 |
+|:---|:---|:---|
+|`TradedVolume` |市價單 |`referenceWindow` 秒內的歷史成交量，範圍：[60, 14400] |
+|`OppositeSideLiquidity` |以最優買一／賣一價掛吃單限價單 |對手方盤口深度；`depthReference` Top-N 檔，範圍：[1, 10] |
+|`SameSideLiquidity` |以最優買一／賣一價掛 Post-Only 限價單 |同側盤口深度；`depthReference` Top-N 檔，範圍：[1, 10]；僅掛單成交 |
 
 ---
 
