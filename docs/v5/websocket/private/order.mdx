@@ -80,6 +80,8 @@ The first message tells you the order is executed, and the second message tells 
 |> createdTime |string |Order created timestamp (ms) |
 |> updatedTime |string |Order updated timestamp (ms) |
 |> cumFeeDetail |json |<ul><li>`linear`, `spot`: Cumulative trading fee details instead of `cumExecFee`</li></ul> |
+|> rpiTakerAccess |boolean |Whether the order has matched with an RPI order as the counterparty. `true`: the counterparty is an RPI order, `false`: the counterparty is not an RPI order. |
+|> rpiMatchedQty |string |Cumulative quantity matched against RPI orders as the counterparty. |
 
 ### Subscribe Example
 ```json
@@ -161,7 +163,9 @@ while True:
             "feeCurrency": "",
             "cumFeeDetail": {
                 "MNT": "0.00242968"
-            }
+            },
+            "rpiTakerAccess": false,
+            "rpiMatchedQty": "0"
         }
     ]
 }

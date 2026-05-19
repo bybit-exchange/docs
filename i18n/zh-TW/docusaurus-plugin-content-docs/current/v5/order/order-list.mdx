@@ -86,6 +86,8 @@ sidebar_position: 6
 |> updatedTime |string |訂單更新的時間戳 (毫秒) |
 |> extraFees |string |交易費率。目前，僅針對kyc=Indian用戶或在印尼網站的現貨訂單或在歐盟站的現貨法定貨幣訂單返回此數據。在其他情況下，傳回空字串。字段枚舉: [feeType](../enum#extrafeesfeetype), [subFeeType](../enum#extrafeessubfeetype) |
 |> cumFeeDetail |json |`linear`, `spot`: 累積交易費詳情, 替代`cumExecFee`|
+|> rpiTakerAccess |boolean |訂單的交易對手方是否為RPI訂單。`true`: 交易對手方為RPI訂單, `false`: 交易對手方非RPI訂單。|
+|> rpiMatchedQty |string |與RPI訂單作為交易對手方的累計成交數量。|
 
 <a href="/api-explorer/v5/trade/order-list"><Button>運行實例 >></Button></a>
 
@@ -218,7 +220,9 @@ client
                 "extraFees":"",
                 "cumFeeDetail": {
                     "MNT": "0.00242968"
-                }
+                },
+                "rpiTakerAccess": false,
+                "rpiMatchedQty": "0"
             }
         ],
         "nextPageCursor": "page_token%3D39380%26",
