@@ -1,0 +1,94 @@
+---
+title: Get Subscribable Product Cards (Direct Client)
+sidebar_label: Get Subscribable Product Cards
+sidebar_position: 0.5
+---
+
+:::info
+Does not need authentication.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/customize-plan/product" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|products|array|Product card list grouped by category|
+|> type|string|Product category: `equityFund` / `multiCoinEarning` / `onchainEarn` / `fixedYield`|
+|> cards|array|Product card list for this category|
+|>> category|string|Product type|
+|>> productId|string|Underlying product ID (available for flexible savings / fixed yield / on-chain earn products)|
+|>> fundName|string|Fund name in English (fund products)|
+|>> coin|string|Product coin|
+|>> apr|string|Current annualized return rate (flexible savings / fixed yield products)|
+|>> aprRangeLow|string|APR lower bound (fund products)|
+|>> aprRangeHigh|string|APR upper bound (fund products)|
+|>> tags|array[string]|Product tags|
+|>> introduction|string|Product introduction in English (fund products)|
+|>> aum|string|Assets under management (base coin)|
+|>> minInvestmentAmount|string|Minimum subscription amount|
+|>> maxInvestmentAmount|string|Maximum subscription amount|
+|>> duration|int|Lock-up period in days. `0` means flexible (fixed yield products)|
+|>> maxDrawdown|string|Historical maximum drawdown (fund products)|
+|>> sharpRatio|string|Sharpe ratio (fund products)|
+|>> estAPR|string|Estimated APR for the product|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/customize-plan/product HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "products": [
+            {
+                "type": "equityFund",
+                "cards": [
+                    {
+                        "category": "equityFund",
+                        "fundName": "Market Neutral Alpha",
+                        "coin": "USDT",
+                        "aprRangeLow": "0.08",
+                        "aprRangeHigh": "0.15",
+                        "tags": ["Delta Neutral"],
+                        "introduction": "A market-neutral strategy fund",
+                        "aum": "5000000",
+                        "minInvestmentAmount": "100000",
+                        "maxInvestmentAmount": "5000000",
+                        "maxDrawdown": "-0.035",
+                        "sharpRatio": "2.3",
+                        "estAPR": "0.06"
+                    }
+                ]
+            },
+            {
+                "type": "multiCoinEarning",
+                "cards": [
+                    {
+                        "category": "flexibleSavings",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "apr": "0.05",
+                        "duration": 0,
+                        "minInvestmentAmount": "10000",
+                        "maxInvestmentAmount": "10000000",
+                        "estAPR": "0.02"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```

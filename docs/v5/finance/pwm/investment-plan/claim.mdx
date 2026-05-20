@@ -1,0 +1,57 @@
+---
+title: Claim Withdrawable Funds
+sidebar_label: Claim Withdrawable Funds
+sidebar_position: 3
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/investment-plan/claim" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID. Must be in `Active` status|
+|toAccountType|false|string|Target account type. Default: `FUND`|
+|orderLinkId|**true**|string|User-defined order ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Investment plan ID|
+|toAccountType|int|Target account type for the transfer|
+|status|string|Claim status: `Success` / `processing`|
+|createdTime|string|Claim timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/investment-plan/claim HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10001",
+    "toAccountType": "FUND",
+    "orderLinkId": "claim-order-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10001",
+        "toAccountType": 6,
+        "status": "Success",
+        "createdTime": "1701400000000"
+    }
+}
+```

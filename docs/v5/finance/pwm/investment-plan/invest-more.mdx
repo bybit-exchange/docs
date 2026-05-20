@@ -1,0 +1,71 @@
+---
+title: Invest More
+sidebar_label: Invest More
+sidebar_position: 7
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/investment-plan/invest-more" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID. Must be in `Active` status|
+|accountType|false|string|Source account type. Default: `FUND`|
+|category|**true**|string|Product type|
+|productId|**true**|string|Product ID|
+|amount|**true**|string|Additional investment amount (base coin)|
+|orderLinkId|**true**|string|User-defined order ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Investment plan ID|
+|category|string|Product type|
+|productId|string|Product ID|
+|coin|string|Subscription coin|
+|amount|string|Additional investment amount (base coin)|
+|status|string|Subscription status: `Success` / `Pending` / `failed`|
+|orderLinkId|string|User-defined order ID|
+|orderId|string|System-generated order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/investment-plan/invest-more HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10001",
+    "accountType": "FUND",
+    "category": "equityFund",
+    "productId": "2001",
+    "amount": "20000.00",
+    "orderLinkId": "xxx"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10001",
+        "category": "equityFund",
+        "productId": "2001",
+        "coin": "USDT",
+        "amount": "20000.00",
+        "status": "Pending",
+        "orderId": "ORD20241115002",
+        "orderLinkId": "xxx"
+    }
+}
+```

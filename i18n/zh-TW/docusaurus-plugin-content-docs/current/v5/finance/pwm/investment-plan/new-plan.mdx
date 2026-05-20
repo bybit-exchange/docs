@@ -1,0 +1,156 @@
+---
+title: 查詢待投資計劃詳情
+sidebar_label: 查詢待投資計劃詳情
+sidebar_position: 2
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/pwm/investment-plan/new-plan" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|投資計劃ID（須為 `PendingSubscription` 狀態）|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|planId|string|投資計劃唯一標識|
+|planName|string|投資計劃名稱|
+|planType|string|計劃類型：`stable` / `advanced`|
+|status|string|計劃狀態，固定為 `PendingSubscription`|
+|source|string|創建來源：`consultant` / `direct` / `institution`|
+|totalConfiguredAmountUsd|string|計劃配置的總投資金額（USD估值）|
+|products|object|各產品類別配置詳情|
+|> multiCoinsEarning|object|活期理財配置|
+|>> configuredAmountUsd|string|該類別配置金額（USD）|
+|>> items|array|產品配置列表|
+|>>> category|string|產品類型|
+|>>> productId|string|產品ID|
+|>>> coin|string|幣種|
+|>>> configuredAmount|string|配置的投資金額（本位幣）|
+|>>> apr|string|當前年化收益率（參考值）|
+|> fixedYield|object|固定收益配置|
+|>> configuredAmountUsd|string|該類別配置金額（USD）|
+|>> items|array|產品配置列表|
+|>>> category|string|產品類型|
+|>>> productId|string|產品ID|
+|>>> coin|string|幣種|
+|>>> configuredAmount|string|配置的投資金額（本位幣）|
+|>>> apr|string|年化收益率|
+|>>> duration|int|鎖定期天數|
+|> equityFunds|object|淨值型基金配置|
+|>> configuredAmountUsd|string|該類別配置金額（USD）|
+|>> items|array|基金配置列表|
+|>>> category|string|產品類型|
+|>>> productId|string|基金ID|
+|>>> fundName|string|基金名稱|
+|>>> coin|string|基金計價幣種|
+|>>> configuredAmount|string|配置的投資金額（本位幣）|
+|>>> tags|array[string]|基金標籤|
+|>>> introduction|object|基金簡介信息|
+|>>>> description|string|基金簡介描述文案（英文版）|
+|>>>> historicalYieldRateMax|string|歷史收益率上界|
+|>>>> historicalYieldRateMin|string|歷史收益率下界|
+|>>>> sharpRatio|string|夏普比率|
+|>>>> maxDrawback|string|最大回撤（負數）|
+|>>>> lockupPeriod|string|鎖倉週期描述（英文版）|
+|> onchainEarn|object|鏈上賺幣配置|
+|>> configuredAmountUsd|string|該類別配置金額（USD）|
+|>> items|array|產品配置列表|
+|>>> category|string|產品類型|
+|>>> productId|string|產品ID|
+|>>> coin|string|幣種|
+|>>> configuredAmount|string|配置的投資金額（本位幣）|
+|>>> apr|string|當前年化收益率（參考值）|
+|createdTime|string|計劃創建時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/pwm/investment-plan/new-plan?planId=10003 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10003",
+        "planName": "Aggressive Growth Plan",
+        "planType": "advanced",
+        "status": "PendingSubscription",
+        "source": "consultant",
+        "totalConfiguredAmountUsd": "500000.00",
+        "products": {
+            "multiCoinsEarning": {
+                "configuredAmountUsd": "100000.00",
+                "items": [
+                    {
+                        "category": "flexibleSavings",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "100000.00",
+                        "apr": "0.05"
+                    }
+                ]
+            },
+            "fixedYield": {
+                "configuredAmountUsd": "80000.00",
+                "items": [
+                    {
+                        "category": "fundPoolPremium",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "80000.00",
+                        "apr": "0.08",
+                        "duration": 30
+                    }
+                ]
+            },
+            "equityFunds": {
+                "configuredAmountUsd": "270000.00",
+                "items": [
+                    {
+                        "category": "equityFund",
+                        "productId": "2005",
+                        "fundName": "Market Neutral Alpha",
+                        "coin": "USDT",
+                        "configuredAmount": "270000.00",
+                        "tags": ["Delta Neutral", "Funding Rate"],
+                        "introduction": {
+                            "description": "A market-neutral strategy fund that generates stable returns through long-short hedging",
+                            "historicalYieldRateMax": "0.15",
+                            "historicalYieldRateMin": "0.08",
+                            "sharpRatio": "2.3",
+                            "maxDrawback": "-0.035",
+                            "lockupPeriod": "30 days"
+                        }
+                    }
+                ]
+            },
+            "onchainEarn": {
+                "configuredAmountUsd": "50000.00",
+                "items": [
+                    {
+                        "category": "onchainEarn",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "50000.00",
+                        "apr": "0.075"
+                    }
+                ]
+            }
+        },
+        "createdTime": "1700800000000"
+    }
+}
+```

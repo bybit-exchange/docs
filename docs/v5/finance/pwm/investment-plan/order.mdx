@@ -1,0 +1,101 @@
+---
+title: Get Investment Plan Orders
+sidebar_label: Get Investment Plan Orders
+sidebar_position: 9
+---
+
+Query subscription / redemption / auto-reinvest orders under the current user's investment plans. Supports filtering by plan, product category, order type, status, and date range.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/investment-plan/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|false|string|Investment plan ID. Returns orders for all plans if omitted|
+|category|false|string|Product type filter: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`. Returns all if omitted|
+|type|false|string|Order type filter: `Subscribe` / `Redeem`. Returns all if omitted|
+|status|false|string|Order status filter: `Completed` / `Pending` / `Failed`. Returns all if omitted|
+|startTime|false|string|Start time in milliseconds. No lower limit if omitted|
+|endTime|false|string|End time in milliseconds. Defaults to current time if omitted|
+|limit|false|int|Page size. Default: `20`, max: `50`|
+|cursor|false|string|Pagination cursor|
+|orderLinkId|false|string|User-defined order ID, max 36 characters|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Order list|
+|> orderId|string|Unique order identifier (UUID format)|
+|> planId|string|Investment plan ID|
+|> type|string|Order type: `Subscribe` / `Redeem` / `AutoReinvest`|
+|> accountType|string|Source account type: `Funding` / `Unified`|
+|> coin|string|Order coin, e.g. `USDT`, `BTC`|
+|> amount|string|Order amount (base coin)|
+|> category|string|Product type: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`|
+|> productId|string|Product ID|
+|> status|string|Order status: `Completed` / `Pending` / `Failed`|
+|> orderTime|string|Order creation timestamp (milliseconds), UTC|
+|nextPageCursor|string|Next page cursor. Empty string indicates no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/investment-plan/order?planId=10001&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "list": [
+            {
+                "orderId": "a285b975-9968-4ba0-bd78-58430ead715f",
+                "planId": "10001",
+                "type": "Subscribe",
+                "accountType": "Funding",
+                "coin": "USDT",
+                "amount": "100.0000",
+                "category": "flexibleSavings",
+                "productId": "11123",
+                "status": "Completed",
+                "orderTime": "1739519687000"
+            },
+            {
+                "orderId": "f463ad6e-263c-499a-aff6-70c23be846ef",
+                "planId": "10001",
+                "type": "Subscribe",
+                "accountType": "Funding",
+                "coin": "BTC",
+                "amount": "0.002000",
+                "category": "equityFund",
+                "productId": "11123",
+                "status": "Completed",
+                "orderTime": "1739519687000"
+            },
+            {
+                "orderId": "98dc5a11-a578-49c2-830f-fc5d8c317ea7",
+                "planId": "10005",
+                "type": "AutoReinvest",
+                "accountType": "Funding",
+                "coin": "BTC",
+                "amount": "10.409201",
+                "category": "fundPool",
+                "productId": "11123",
+                "status": "Completed",
+                "orderTime": "1739498401000"
+            }
+        ],
+        "nextPageCursor": ""
+    }
+}
+```
