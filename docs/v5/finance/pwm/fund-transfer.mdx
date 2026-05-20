@@ -1,0 +1,62 @@
+---
+title: Fund Transfer Between Sub-Accounts
+sidebar_label: Fund Transfer Between Sub-Accounts
+sidebar_position: 0
+---
+
+:::info
+This endpoint must be called using the API key of the fund custodian sub-account.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/fund-transfer" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|transferId|**true**|string|Transfer request ID|
+|fromUserId|**true**|int64|Source UID. Must be a custodian sub-account of the current fund|
+|toUserId|**true**|int64|Destination UID. Must be a custodian sub-account of the current fund|
+|amount|**true**|string|Transfer amount|
+|coin|**true**|string|Coin name|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|transferId|string|Transfer ID|
+|status|string|Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/fund-transfer HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "transferId": "4fdf-re-4343-frewr",
+    "fromUserId": 800001,
+    "toUserId": 800002,
+    "amount": "1.00",
+    "coin": "BTC"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transferId": "4fdf-re-4343-frewr",
+        "status": "SUCCESS"
+    }
+}
+```

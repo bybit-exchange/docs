@@ -1,0 +1,70 @@
+---
+title: 處理申購/贖回訂單
+sidebar_label: 處理申購/贖回訂單
+sidebar_position: 7
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/manage-order" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|orderId|**true**|string|訂單ID，須為 `Pending Review` 狀態|
+|action|**true**|string|處理動作：`approve`（批准）/ `reject`（拒絕）|
+|reqLinkId|**true**|string|用戶自定義請求ID，最長36字符，用於冪等|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|orderId|string|訂單ID|
+|fundId|string|基金ID|
+|accountUid|string|基金主賬戶UID|
+|orderStatus|string|當前訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）。審批通過或拒絕後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態|
+|orderType|string|訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）|
+|action|string|執行的處理動作：`approve` / `reject`|
+|coin|string|幣種|
+|amount|string|訂單金額（本位幣），僅申購訂單有值，贖回訂單為空|
+|shares|string|訂單份額，僅贖回訂單有值，申購訂單為空|
+|updatedTime|string|訂單更新時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderId": "500002",
+    "action": "approve",
+    "reqLinkId": "manage-order-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "500002",
+        "fundId": "100001",
+        "accountUid": "800001",
+        "orderStatus": "PendingReview",
+        "orderType": "Subscribe",
+        "action": "Approve",
+        "coin": "BTC",
+        "amount": "10.00000000",
+        "shares": "",
+        "updatedTime": "1700100000000"
+    }
+}
+```

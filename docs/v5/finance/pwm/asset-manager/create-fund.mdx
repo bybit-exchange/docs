@@ -1,0 +1,71 @@
+---
+title: Create Fund (Pending Subscription)
+sidebar_label: Create Fund
+sidebar_position: 2
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-fund" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundName|**true**|string|Fund name, 1–50 characters|
+|coin|**true**|string|Base coin. Supported values: `BTC`, `ETH`, `USDT`, `USDC`, `SOL`, `MNT`, `XRP`|
+|profitShareRate|**true**|string|High-watermark profit sharing rate (%), range: 0–100|
+|managementFeeRate|**true**|string|Management fee rate (annualized %), range: 0–100|
+|fundIntroduction|false|string|Fund introduction ID (must be in the institution's allowed list)|
+|reqLinkId|**true**|string|User-defined request ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|fundId|string|Unique identifier of the newly created fund|
+|fundName|string|Fund name|
+|coin|string|Fund denomination coin|
+|status|string|Fund status. Fixed as `PendingSubscription` upon creation. Possible values: `PendingSubscribe` / `Active` / `Closing` / `Closed`|
+|profitShareRate|string|Profit sharing rate (%)|
+|managementFeeRate|string|Management fee rate (annualized %)|
+|accountUid|string|Fund main sub-account UID automatically created by the system|
+|createdTime|string|Creation timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundName": "BTC Alpha Fund",
+    "coin": "BTC",
+    "profitShareRate": "20.00",
+    "managementFeeRate": "2.00",
+    "reqLinkId": "create-fund-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "12345",
+        "fundName": "BTC Alpha Fund",
+        "coin": "BTC",
+        "status": "pending_subscribe",
+        "profitShareRate": "20.00",
+        "managementFeeRate": "2.00",
+        "accountUid": "0",
+        "createdTime": "1640000000000"
+    }
+}
+```

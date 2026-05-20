@@ -1,0 +1,56 @@
+---
+title: 創建基金子賬戶
+sidebar_label: 創建基金子賬戶
+sidebar_position: 8
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-sub-account" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|基金ID|
+|reqLinkId|**true**|string|用戶自定義請求ID，用於防止重複調用創建|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|fundId|string|基金ID|
+|subAccountUid|string|新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID|
+|createdTime|string|創建時間戳（毫秒）|
+|status|string|創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundId": "100001",
+    "reqLinkId": "create-sub-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "100001",
+        "subAccountUid": "0",
+        "createdTime": "1700600000000",
+        "status": "pending"
+    }
+}
+```

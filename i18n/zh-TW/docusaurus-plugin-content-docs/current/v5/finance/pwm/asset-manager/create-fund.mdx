@@ -1,0 +1,71 @@
+---
+title: 機構創建待申購基金
+sidebar_label: 機構創建待申購基金
+sidebar_position: 2
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-fund" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|fundName|**true**|string|基金名稱，長度1-50字符|
+|coin|**true**|string|本位幣，支持：`BTC`、`ETH`、`USDT`、`USDC`、`SOL`、`MNT`、`XRP`|
+|profitShareRate|**true**|string|高水位利潤分成比例（%），範圍0-100|
+|managementFeeRate|**true**|string|管理費率（年化%），範圍0-100|
+|fundIntroduction|false|string|基金簡介ID（需在機構允許列表中）|
+|reqLinkId|**true**|string|用戶自定義請求ID，最長36字符，用於冪等|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|fundId|string|新創建的基金唯一標識|
+|fundName|string|基金名稱|
+|coin|string|基金計價幣種|
+|status|string|基金狀態，創建後固定為 `PendingSubscription`（待申購）。枚舉值：`PendingSubscribe`（待申購）/ `Active`（運行中）/ `Closing`（關閉中）/ `Closed`（已關閉）|
+|profitShareRate|string|利潤分成比例（%）|
+|managementFeeRate|string|管理費率（年化%）|
+|accountUid|string|系統自動創建的基金主子賬戶UID|
+|createdTime|string|創建時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundName": "BTC Alpha Fund",
+    "coin": "BTC",
+    "profitShareRate": "20.00",
+    "managementFeeRate": "2.00",
+    "reqLinkId": "create-fund-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "12345",
+        "fundName": "BTC Alpha Fund",
+        "coin": "BTC",
+        "status": "pending_subscribe",
+        "profitShareRate": "20.00",
+        "managementFeeRate": "2.00",
+        "accountUid": "0",
+        "createdTime": "1640000000000"
+    }
+}
+```

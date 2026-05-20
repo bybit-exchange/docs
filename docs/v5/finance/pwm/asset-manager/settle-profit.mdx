@@ -1,0 +1,60 @@
+---
+title: Settle Fund Profit
+sidebar_label: Settle Fund Profit
+sidebar_position: 1
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/settle-profit" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|Fund ID|
+|reqLinkId|**true**|string|User-defined request ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|fundId|string|Fund ID|
+|status|string|Profit settlement status: `Processing` / `Completed` / `Failed`. After execution, the status of the current order can be queried using the same `reqLinkId`|
+|totalProfitShared|string|Total profit sharing amount settled in this round (base coin)|
+|instIncome|string|Institution income in this round (base coin)|
+|coin|string|Fund denomination coin|
+|createdTime|string|Settlement timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundId": "12323",
+    "reqLinkId": "settle-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "12323",
+        "status": "Processing",
+        "totalProfitShared": "2.73",
+        "instIncome": "1.5",
+        "coin": "BTC",
+        "createdTime": "1700000000000"
+    }
+}
+```

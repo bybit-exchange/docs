@@ -1,0 +1,82 @@
+---
+title: Manage Investment Plan
+sidebar_label: Manage Investment Plan
+sidebar_position: 5
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/manage-investment-plan" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID|
+|updateStatus|false|string|Update plan status. Options: `Closed` / `Deleted`. Status is unchanged if omitted|
+|updateFunds|false|array|Fund list to update. If a matching `fundId` exists, the amount is updated; otherwise a new fund is added. Max 10 entries. Returns an error if duplicate `fundId` entries are present|
+|> fundId|**true**|string|Fund ID|
+|> amount|**true**|string|Configured amount (base coin)|
+|reqLinkId|**true**|string|User-defined request ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Investment plan ID|
+|status|string|Current plan status: `PendingSubscription` / `Active` / `Closed` / `Deleted`|
+|updatedTime|string|Status update timestamp (milliseconds)|
+|updateFunds|array|Fund configuration bound to the investment plan after the update|
+|> fundId|string|Fund ID|
+|> amount|string|Configured amount (base coin)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10088",
+    "updateStatus": "Closed",
+    "updateFunds": [
+        {
+            "fundId": "430",
+            "amount": "100000"
+        },
+        {
+            "fundId": "2005",
+            "amount": "270000"
+        }
+    ],
+    "reqLinkId": "manage-plan-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "planId": "10088",
+        "status": "Closed",
+        "updateFunds": [
+            {
+                "fundId": "430",
+                "amount": "100000"
+            },
+            {
+                "fundId": "2005",
+                "amount": "270000"
+            }
+        ],
+        "updatedTime": "1701700000000"
+    }
+}
+```

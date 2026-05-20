@@ -1,0 +1,71 @@
+---
+title: Create Investment Plan
+sidebar_label: Create Investment Plan
+sidebar_position: 3
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-investment-plan" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|accountUid|**true**|string|Target user UID|
+|planName|**true**|string|Investment plan name, max 50 characters|
+|planType|**true**|string|Plan type: `stable` / `advanced`|
+|investmentDistribution|**true**|array|Fund configuration list. At least 1 fund required|
+|> productId|**true**|string|Fund ID (must be a fund under this institution's management)|
+|> amount|**true**|string|Configured amount (base coin)|
+|reqLinkId|**true**|string|User-defined request ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Unique identifier of the newly created investment plan|
+|planType|string|Plan type: `stable` / `advanced`|
+|accountUid|string|Target user UID|
+|status|string|Plan status. Fixed as `PendingSubscription` upon creation|
+|createdTime|string|Creation timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "accountUid": "800001",
+    "planName": "Conservative Growth Plan",
+    "planType": "stable",
+    "investmentDistribution": [
+        {
+            "productId": "12345",
+            "amount": "100000.00"
+        }
+    ],
+    "reqLinkId": "create-plan-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "planId": "10088",
+        "planType": "stable",
+        "accountUid": "800001",
+        "status": "pending_subscribe",
+        "createdTime": "1640000000000"
+    }
+}
+```

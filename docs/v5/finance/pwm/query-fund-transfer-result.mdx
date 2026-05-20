@@ -1,0 +1,58 @@
+---
+title: Get Fund Transfer Records
+sidebar_label: Get Fund Transfer Records
+sidebar_position: 1
+---
+
+:::info
+This endpoint must be called using the API key of the fund custodian sub-account.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/query-fund-transfer-result" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|transferId|false|string|Transfer request ID. If omitted, returns up to the 20 most recent non-terminal transfer records within the past month. Records older than one month may have been archived|
+|fromUserId|false|int64|Source UID|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|transferId|string|Transfer ID|
+|status|string|Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`|
+|fromUserId|int64|Source UID|
+|toUserId|int64|Destination UID|
+|amount|string|Transfer amount|
+|coin|string|Coin|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/query-fund-transfer-result?transferId=4fdf-re-4343-frewr HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "transferId": "4fdf-re-4343-frewr",
+        "status": "SUCCESS",
+        "fromUserId": 1237488,
+        "toUserId": 1237489,
+        "amount": "12.3456",
+        "coin": "USDT"
+    }
+}
+```

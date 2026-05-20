@@ -1,0 +1,56 @@
+---
+title: Create Fund Sub-Account
+sidebar_label: Create Fund Sub-Account
+sidebar_position: 8
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-sub-account" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|Fund ID|
+|reqLinkId|**true**|string|User-defined request ID, used to prevent duplicate creation|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|fundId|string|Fund ID|
+|subAccountUid|string|UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`|
+|createdTime|string|Creation timestamp (milliseconds)|
+|status|string|Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundId": "100001",
+    "reqLinkId": "create-sub-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "100001",
+        "subAccountUid": "0",
+        "createdTime": "1700600000000",
+        "status": "pending"
+    }
+}
+```

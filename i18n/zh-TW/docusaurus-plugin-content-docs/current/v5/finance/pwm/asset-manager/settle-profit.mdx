@@ -1,0 +1,60 @@
+---
+title: 執行指定基金的分潤
+sidebar_label: 執行指定基金的分潤
+sidebar_position: 1
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/settle-profit" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|基金ID|
+|reqLinkId|**true**|string|用戶自定義請求ID，最長36字符，用於冪等|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|fundId|string|基金ID|
+|status|string|分潤狀態：`Processing`（分潤處理中）/ `Completed`（分潤完成）/ `Failed`（分潤失敗）。執行分潤後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態|
+|totalProfitShared|string|本次利潤分成結算總額（本位幣）|
+|instIncome|string|機構本次收入（本位幣）|
+|coin|string|基金計價幣種|
+|createdTime|string|結算時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundId": "12323",
+    "reqLinkId": "settle-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "12323",
+        "status": "Processing",
+        "totalProfitShared": "2.73",
+        "instIncome": "1.5",
+        "coin": "BTC",
+        "createdTime": "1700000000000"
+    }
+}
+```

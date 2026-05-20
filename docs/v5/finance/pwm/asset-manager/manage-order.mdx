@@ -1,0 +1,70 @@
+---
+title: Manage Order
+sidebar_label: Manage Order
+sidebar_position: 7
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/manage-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|orderId|**true**|string|Order ID. Must be in `Pending Review` status|
+|action|**true**|string|Action to perform: `approve` / `reject`|
+|reqLinkId|**true**|string|User-defined request ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|Order ID|
+|fundId|string|Fund ID|
+|accountUid|string|Fund main account UID|
+|orderStatus|string|Current order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`. After approval or rejection, the execution status can be queried using the same `reqLinkId`|
+|orderType|string|Order type: `Subscribe` / `Redeem`|
+|action|string|Action performed: `approve` / `reject`|
+|coin|string|Coin|
+|amount|string|Order amount (base coin). Subscription orders only; empty for redemption orders|
+|shares|string|Order shares. Redemption orders only; empty for subscription orders|
+|updatedTime|string|Order update timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderId": "500002",
+    "action": "approve",
+    "reqLinkId": "manage-order-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "500002",
+        "fundId": "100001",
+        "accountUid": "800001",
+        "orderStatus": "PendingReview",
+        "orderType": "Subscribe",
+        "action": "Approve",
+        "coin": "BTC",
+        "amount": "10.00000000",
+        "shares": "",
+        "updatedTime": "1700100000000"
+    }
+}
+```

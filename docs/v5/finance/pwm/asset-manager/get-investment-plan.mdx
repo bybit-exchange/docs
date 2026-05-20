@@ -1,0 +1,83 @@
+---
+title: Get Investment Plans
+sidebar_label: Get Investment Plans
+sidebar_position: 4
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/asset-manager/get-investment-plan" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|false|string|Investment plan ID. Returns all plans if omitted. Only plans created by the institution via Open API can be queried|
+|status|false|string|Filter by status: `PendingSubscription` / `Active` / `Closed` / `Deleted`. Returns all if omitted|
+|subscriptionUid|false|string|UID of the user who subscribed to the investment plan|
+|limit|false|integer|Page size. Default: `20`, max: `50`|
+|cursor|false|string|Pagination cursor|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Investment plan list|
+|> planId|string|Investment plan ID|
+|> planName|string|Investment plan name|
+|> planType|string|Plan type: `stable` / `advanced`|
+|> subscriptionUid|string|UID of the user who subscribed to the investment plan|
+|> status|string|Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed) / `Deleted` (deleted)|
+|> source|string|Creation source: `consultant` / `direct` / `institution`|
+|> currentAssetUsd|string|Total current assets (USD valuation). When status is `PendingSubscription`, this is the configured amount|
+|> accumulateYieldUsd|string|Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`|
+|> investmentDistribution|array|Investment distribution list|
+|>> category|string|Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`|
+|>> coin|string|Denominated coin|
+|>> productId|string|Subscribed product ID. For funds, this corresponds to `fundId`|
+|>> currentAmount|string|Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount|
+|> createdTime|string|Creation timestamp (milliseconds)|
+|nextPageCursor|string|Next page cursor. Empty string indicates no more data (uses investment plan ID as cursor)|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/asset-manager/get-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "planId": "10001",
+                "planName": "Conservative Growth Plan",
+                "planType": "stable",
+                "status": "Active",
+                "source": "institution",
+                "subscriptionUid": "12323434",
+                "currentAssetUsd": "200137.50",
+                "accumulateYieldUsd": "2137.50",
+                "investmentDistribution": [
+                    {
+                        "category": "equityFund",
+                        "productId": "431",
+                        "coin": "USDT",
+                        "currentAmount": "50000.00"
+                    }
+                ],
+                "createdTime": "1700000000000"
+            }
+        ],
+        "nextPageCursor": ""
+    }
+}
+```

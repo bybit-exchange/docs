@@ -1,0 +1,71 @@
+---
+title: 機構創建投資計劃
+sidebar_label: 機構創建投資計劃
+sidebar_position: 3
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-investment-plan" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|accountUid|**true**|string|目標用戶UID|
+|planName|**true**|string|投資計劃名稱，最大50字符|
+|planType|**true**|string|計劃類型：`stable`（穩健增值）/ `advanced`（進階收益）|
+|investmentDistribution|**true**|array|基金配置列表，至少包含1個基金|
+|> productId|**true**|string|基金ID（必須是該機構管轄的基金）|
+|> amount|**true**|string|配置金額（本位幣）|
+|reqLinkId|**true**|string|用戶自定義請求ID，最長36字符，用於冪等|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|planId|string|新創建的投資計劃唯一標識|
+|planType|string|計劃類型：`stable` / `advanced`|
+|accountUid|string|目標用戶UID|
+|status|string|計劃狀態，創建後固定為 `PendingSubscription`|
+|createdTime|string|創建時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "accountUid": "800001",
+    "planName": "Conservative Growth Plan",
+    "planType": "stable",
+    "investmentDistribution": [
+        {
+            "productId": "12345",
+            "amount": "100000.00"
+        }
+    ],
+    "reqLinkId": "create-plan-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "planId": "10088",
+        "planType": "stable",
+        "accountUid": "800001",
+        "status": "pending_subscribe",
+        "createdTime": "1640000000000"
+    }
+}
+```
