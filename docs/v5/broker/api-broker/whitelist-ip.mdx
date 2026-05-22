@@ -1,0 +1,64 @@
+---
+title: Get Broker Whitelist IP
+sidebar_label: Get Whitelist IP
+sidebar_position: 3
+---
+
+:::info
+This endpoint must be queried from a whitelisted IP address.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/broker/whitelist/ip" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|result |array |Object |
+|> name |string |Client name |
+|> endpointDomain |string |Dedicated hostname assigned exclusively to this client |
+|> ipList |array |Array of whitelisted IP addresses |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/broker/whitelist/ip HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "name": "CoinXXX",
+            "endpointDomain": "cabxxx0bnh.bybit-aws.com",
+            "ipList": [
+                "13.112.01.101",
+                "35.78.100.1"
+            ]
+        },
+        {
+            "name": "CoinXXX",
+            "endpointDomain": "vgjzztjbx91ajfj.bybit.com",
+            "ipList": [
+                "13.112.01.101",
+                "35.78.100.1",
+                "35.78.100.2"
+            ]
+        }
+    ],
+    "time": 1779362854157
+}
+```
