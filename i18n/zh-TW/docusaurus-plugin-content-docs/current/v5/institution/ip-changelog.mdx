@@ -1,0 +1,77 @@
+---
+title: 查詢機構 IP 變更記錄
+sidebar_label: 查詢 IP 變更記錄
+sidebar_position: 1
+---
+
+:::info
+此接口必須使用主帳戶 API key 請求。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/ins/ip/changelog" />
+
+### 請求參數
+| 參數 | 是否必填 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|startTime |false |string |篩選起始時間，Unix 毫秒時間戳 |
+|endTime |false |string |篩選結束時間，Unix 毫秒時間戳 |
+|limit |false |integer |每頁記錄數。範圍: [1, 50]。預設: 20 |
+|cursor |false |string |分頁游標。使用上一頁響應中的 `nextPageCursor` 值 |
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|------ |
+|list |array |IP 變更記錄列表 |
+|> operationType |string |操作類型: `ADD`, `REMOVE`, `ENABLE`, 或 `DISABLE` |
+|> ipAddress |string |受該操作影響的 IP 位址 |
+|> domainType |string |連接協議。`GW` 表示 HTTP hostname，`WS` 表示 WebSocket hostname |
+|> operator |string |執行該操作的內部團隊成員 |
+|> createdAt |string |操作時間戳，UTC+0，ISO 8601 格式 |
+|nextPageCursor |string |用於查詢下一頁的不透明 token |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins/ip/changelog?limit=3 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1779362662315
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "operationType": "DISABLE",
+                "ipAddress": "193.118.167.247",
+                "domainType": "WS",
+                "operator": "wood.liang1",
+                "createdAt": "2026-05-21T06:02:36Z"
+            },
+            {
+                "operationType": "DISABLE",
+                "ipAddress": "18.99.43.128/25",
+                "domainType": "WS",
+                "operator": "wood.liang1",
+                "createdAt": "2026-05-21T06:02:36Z"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="
+    },
+    "time": 1779362027705
+}
+```

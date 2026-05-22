@@ -1,0 +1,64 @@
+---
+title: 查詢經紀商 IP 白名單
+sidebar_label: 查詢 IP 白名單
+sidebar_position: 3
+---
+
+:::info
+此接口必須從白名單 IP 位址發起請求。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/broker/whitelist/ip" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|------ |
+|result |array |Object |
+|> name |string |客戶名稱 |
+|> endpointDomain |string |分配給該客戶專用的 hostname |
+|> ipList |array |白名單 IP 位址列表 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/broker/whitelist/ip HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "name": "CoinXXX",
+            "endpointDomain": "cabxxx0bnh.bybit-aws.com",
+            "ipList": [
+                "13.112.01.101",
+                "35.78.100.1"
+            ]
+        },
+        {
+            "name": "CoinXXX",
+            "endpointDomain": "vgjzztjbx91ajfj.bybit.com",
+            "ipList": [
+                "13.112.01.101",
+                "35.78.100.1",
+                "35.78.100.2"
+            ]
+        }
+    ],
+    "time": 1779362854157
+}
+```
