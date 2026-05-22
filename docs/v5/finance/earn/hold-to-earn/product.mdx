@@ -22,7 +22,7 @@ None
 |> yields|array|Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)|
 |>> coinName|string|Yield coin name|
 |>> apy|string|Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin|
-|> status|string|Product stage. See [Product status](#product-status)|
+|> status|string|Product stage, `NotStarted`, `Online`, `Ended`|
 |> apy|string|Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday|
 |> announcementUrl|string|Activity rules announcement URL|
 
@@ -112,16 +112,3 @@ Host: api.bybit.com
     "time": 1779348459085
 }
 ```
-
----
-
-### Enums
-
-#### Product `status` {#product-status}
-`status` is computed dynamically by the server based on the product's time window.
-
-| Value | Condition | Comments |
-|:----- |:----------|:----- |
-|`NotStarted`|Current time < `subscribeStartAt`|Activity has not started|
-|`Online`|`subscribeStartAt` ≤ current time ≤ `subscribeEndAt`|Activity is in progress|
-|`Ended`|Current time > `subscribeEndAt`|Activity has ended|

@@ -22,7 +22,7 @@ sidebar_position: 1
 |> yields|string|**收益幣種**明細|
 |>> coinName|string|收益幣種|
 |>> apy|string|該收益幣種**昨日 APR**，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`|
-|> status|string|產品當前階段，詳見 [Product status](#product-status)|
+|> status|string|產品當前階段，`NotStarted`, `Online`, `Ended`|
 |> apy|string|**昨日綜合APR**，昨日無收益時返回 `"0%"`|
 |> announcementUrl|string|**活動規則連結**（公告頁 URL）|
 
@@ -112,16 +112,3 @@ Host: api.bybit.com
     "time": 1779348459085
 }
 ```
-
----
-
-### 枚舉值
-
-#### Product `status` {#product-status}
-`status` 由服務端根據產品時間窗動態計算。
-
-| 取值 | 判斷條件 | 說明 |
-|:----- |:----------|:----- |
-|`NotStarted`|當前時間 < `subscribeStartAt`|活動未開始|
-|`Online`|`subscribeStartAt` ≤ 當前時間 ≤ `subscribeEndAt`|活動進行中|
-|`Ended`|當前時間 > `subscribeEndAt`|活動已結束|
