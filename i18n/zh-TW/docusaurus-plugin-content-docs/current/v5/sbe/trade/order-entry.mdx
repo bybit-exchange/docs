@@ -8,7 +8,7 @@ sidebar_position: 1
 
 - **Channel:** 僅支援私有 MM WebSocket, 不開放於 public WS.
 - **Transport:** WebSocket 二進制 frames — 每個 frame 包含一則 SBE 信息 (無 JSON).
-- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 1`.
+- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 2`.
 - **Purpose:** 高效能低延遲下單 — 單筆或批次建立、修改、取消訂單.
 - **Compression:** 停用壓縮以避免隊頭阻塞與 CPU 開銷.
 
@@ -66,7 +66,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
     "block_length": 132,
     "template_id": 2,
     "schema_id": 2,
-    "version": 1
+    "version": 2
   },
   "reqId": "req_00000000001",
   "retCode": 0,
@@ -95,7 +95,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
     "block_length": 364,
     "template_id": 6,
     "schema_id": 2,
-    "version": 1
+    "version": 2
   },
   "respHeader": {
     "reqId": "req_00000000002",
@@ -156,7 +156,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | blockLength | uint16 | 2            | 固定主體長度 Fixed-body length |
 | templateId  | uint16 | 2            | 信息型別識別碼 Message type identifier |
 | schemaId    | uint16 | 2            | 固定值 = 2 Fixed = 2 |
-| version     | uint16 | 2            | 固定值 = 1 Fixed = 1 |
+| version     | uint16 | 2            | 固定值 = 2 Fixed = 2 |
 
 ### 複合型別 (Composite Types)
 
@@ -416,7 +416,7 @@ API_SECRET = "your_api_secret"
 RECV_WINDOW = 5000
 
 SCHEMA_ID = 2
-VERSION = 1
+VERSION = 2
 
 # Template IDs
 TMPL_AUTH_REQ     = 1

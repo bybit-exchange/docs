@@ -8,7 +8,7 @@ sidebar_position: 2
 
 - **Channel:** Private MM WebSocket only (not available on public WS).
 - **Transport:** WebSocket binary frames — each frame contains exactly one SBE message (no JSON).
-- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 1`.
+- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 2`.
 - **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
 - **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
 
@@ -66,7 +66,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
     "block_length": 132,
     "template_id": 2,
     "schema_id": 2,
-    "version": 1
+    "version": 2
   },
   "reqId": "req_00000000001",
   "retCode": 0,
@@ -95,7 +95,7 @@ Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`te
     "block_length": 364,
     "template_id": 6,
     "schema_id": 2,
-    "version": 1
+    "version": 2
   },
   "respHeader": {
     "reqId": "req_00000000002",
@@ -156,7 +156,7 @@ Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
 | blockLength | uint16 | 2            | Fixed-body length       |
 | templateId  | uint16 | 2            | Message type identifier |
 | schemaId    | uint16 | 2            | Fixed = 2               |
-| version     | uint16 | 2            | Fixed = 1               |
+| version     | uint16 | 2            | Fixed = 2               |
 
 ### Composite Types
 
@@ -416,7 +416,7 @@ API_SECRET = "your_api_secret"
 RECV_WINDOW = 5000
 
 SCHEMA_ID = 2
-VERSION = 1
+VERSION = 2
 
 # Template IDs
 TMPL_AUTH_REQ     = 1

@@ -1,0 +1,127 @@
+---
+title: 獲取空投產品列表
+sidebar_label: 獲取空投產品列表
+sidebar_position: 1
+---
+
+:::info
+不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/hold-to-earn/product" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|products|array|Object|
+|> coinName|string|**投資幣種**名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）|
+|> yields|string|**收益幣種**明細|
+|>> coinName|string|收益幣種|
+|>> apy|string|該收益幣種**昨日 APR**，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`|
+|> status|string|產品當前階段，詳見 [Product status](#product-status)|
+|> apy|string|**昨日綜合APR**，昨日無收益時返回 `"0%"`|
+|> announcementUrl|string|**活動規則連結**（公告頁 URL）|
+
+:::info
+* 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
+* 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
+* 結果按產品創建時間倒序排列（較新在前）。
+:::
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/hold-to-earn/product HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "products": [
+            {
+                "coinName": "USDE",
+                "yields": [
+                    {
+                        "coinName": "USDE",
+                        "apy": "0.210604%"
+                    }
+                ],
+                "status": "Online",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",
+                "apy": "0.210604%"
+            },
+            {
+                "coinName": "USDTB",
+                "yields": [
+                    {
+                        "coinName": "USDTB",
+                        "apy": "0.029978%"
+                    }
+                ],
+                "status": "Online",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",
+                "apy": "0.029978%"
+            },
+            {
+                "coinName": "USD1",
+                "yields": [
+                    {
+                        "coinName": "WLFI",
+                        "apy": "10%"
+                    }
+                ],
+                "status": "Ended",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",
+                "apy": "10%"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1779348459085
+}
+```
+
+---
+
+### 枚舉值
+
+#### Product `status` {#product-status}
+`status` 由服務端根據產品時間窗動態計算。
+
+| 取值 | 判斷條件 | 說明 |
+|:----- |:----------|:----- |
+|`NotStarted`|當前時間 < `subscribeStartAt`|活動未開始|
+|`Online`|`subscribeStartAt` ≤ 當前時間 ≤ `subscribeEndAt`|活動進行中|
+|`Ended`|當前時間 > `subscribeEndAt`|活動已結束|

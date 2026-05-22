@@ -1,0 +1,127 @@
+---
+title: Get Airdrop Products
+sidebar_label: Get Airdrop Products
+sidebar_position: 1
+---
+
+:::info
+Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/hold-to-earn/product" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|products|array|Object|
+|> coinName|string|Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`|
+|> yields|array|Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)|
+|>> coinName|string|Yield coin name|
+|>> apy|string|Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin|
+|> status|string|Product stage. See [Product status](#product-status)|
+|> apy|string|Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday|
+|> announcementUrl|string|Activity rules announcement URL|
+
+:::info
+* Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
+* When `coinName != yields.coinName`, it is a cross-coin airdrop
+* Results are sorted by product creation time, newest first.
+:::
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/hold-to-earn/product HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "products": [
+            {
+                "coinName": "USDE",
+                "yields": [
+                    {
+                        "coinName": "USDE",
+                        "apy": "0.210604%"
+                    }
+                ],
+                "status": "Online",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",
+                "apy": "0.210604%"
+            },
+            {
+                "coinName": "USDTB",
+                "yields": [
+                    {
+                        "coinName": "USDTB",
+                        "apy": "0.029978%"
+                    }
+                ],
+                "status": "Online",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",
+                "apy": "0.029978%"
+            },
+            {
+                "coinName": "USD1",
+                "yields": [
+                    {
+                        "coinName": "WLFI",
+                        "apy": "10%"
+                    }
+                ],
+                "status": "Ended",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",
+                "apy": "10%"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1779348459085
+}
+```
+
+---
+
+### Enums
+
+#### Product `status` {#product-status}
+`status` is computed dynamically by the server based on the product's time window.
+
+| Value | Condition | Comments |
+|:----- |:----------|:----- |
+|`NotStarted`|Current time < `subscribeStartAt`|Activity has not started|
+|`Online`|`subscribeStartAt` ≤ current time ≤ `subscribeEndAt`|Activity is in progress|
+|`Ended`|Current time > `subscribeEndAt`|Activity has ended|
