@@ -1,0 +1,93 @@
+---
+title: 查詢機構相關基金全部訂單列表
+sidebar_label: 查詢全部訂單列表
+sidebar_position: 6
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/pwm/asset-manager/all-order" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|fundId|false|string|篩選基金ID，不傳返回所有管轄基金的訂單|
+|orderType|false|string|訂單類型篩選：`Subscribe` / `Redeem`，不傳返回全部|
+|status|false|string|訂單狀態篩選：`Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`，不傳返回全部|
+|startTime|false|integer|起始時間毫秒時間戳，時間範圍規則見下方說明|
+|endTime|false|integer|結束時間毫秒時間戳，時間範圍規則見下方說明|
+|limit|false|integer|每頁數量，默認 `20`，最大 `50`|
+|cursor|false|string|分頁游標（使用訂單 `orderId` 作為游標）|
+
+:::info 時間範圍規則
+- `startTime` 和 `endTime` 都不傳：默認返回最近7天數據
+- 都傳入：查詢 `max(endTime - 7天, startTime)` 到 `endTime` 的數據
+- 只傳 `startTime`：查詢 `startTime` 到 `startTime + 7天` 的數據
+- 只傳 `endTime`：查詢 `endTime - 7天` 到 `endTime` 的數據
+:::
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|訂單列表|
+|> orderId|string|訂單唯一標識|
+|> fundId|string|基金ID|
+|> fundName|string|基金名稱|
+|> accountUid|string|基金主子賬戶UID|
+|> orderType|string|訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）|
+|> coin|string|幣種|
+|> amount|string|訂單金額（本位幣），僅申購訂單有值，贖回訂單為空|
+|> shares|string|訂單份額，僅贖回訂單有值，申購訂單為空|
+|> status|string|訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）|
+|> createdTime|string|訂單創建時間戳（毫秒）|
+|nextPageCursor|string|下一頁游標，為空表示無更多數據|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "orderId": "768",
+                "fundId": "100001",
+                "fundName": "Alpha BTC Strategy Fund",
+                "accountUid": "800001",
+                "orderType": "Subscribe",
+                "coin": "BTC",
+                "amount": "10.00000000",
+                "shares": "",
+                "status": "Completed",
+                "createdTime": "1700000000000"
+            },
+            {
+                "orderId": "769",
+                "fundId": "100001",
+                "fundName": "Alpha BTC Strategy Fund",
+                "accountUid": "800002",
+                "orderType": "Redeem",
+                "coin": "BTC",
+                "amount": "",
+                "shares": "5000.00",
+                "status": "Pending Review",
+                "createdTime": "1700100000000"
+            }
+        ],
+        "nextPageCursor": ""
+    }
+}
+```

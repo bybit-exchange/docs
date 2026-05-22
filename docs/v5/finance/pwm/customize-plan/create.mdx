@@ -1,0 +1,76 @@
+---
+title: Create Customize Investment Plan
+sidebar_label: Create Customize Investment Plan
+sidebar_position: 1
+---
+
+:::info
+The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/customize-plan/create" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|accountType|false|string|Source account type. Default: `FUND`|
+|products|**true**|array|Product configuration list. At least 1 item required|
+|> category|**true**|string|Pass through from product query result. Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`|
+|> productId|**true**|string|Pass through from product query result. May be `0`|
+|> fundName|**true**|string|Pass through from product query result. May be empty|
+|> amount|**true**|string|Subscription amount (base coin)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Newly created investment plan ID|
+|planName|string|Investment plan name, auto-generated in the format `PWM-{planId}`|
+|status|string|Plan status. Created and subscribed in one step — `Active` upon success|
+|orderLinkId|string|User-defined order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/customize-plan/create HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "accountType": "FUND",
+    "products": [
+        {
+            "category": "equityFund",
+            "productId": "2001",
+            "fundName": "Market Neutral Alpha",
+            "amount": "100000.00"
+        },
+        {
+            "category": "multiCoinEarning",
+            "productId": "430",
+            "fundName": "",
+            "amount": "50000.00"
+        }
+    ]
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10050",
+        "planName": "PWM-10050",
+        "status": "Active",
+        "orderLinkId": "xxx"
+    }
+}
+```

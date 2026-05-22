@@ -1,0 +1,67 @@
+---
+title: Get Fund Historical NAV
+sidebar_label: Get Fund Historical NAV
+sidebar_position: 5
+---
+
+:::info
+The maximum allowed time range between `startTime` and `endTime` is **180 days**.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/investment-plan/fund-nav" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|Fund ID|
+|startTime|false|int|Start timestamp (ms). Default: current time minus 7 days|
+|endTime|false|int|End timestamp (ms). Default: current time|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|fundId|string|Fund ID|
+|fundName|string|Fund name|
+|coin|string|Fund denomination coin|
+|currentNav|string|Latest NAV (= currentShareValue / initialShareValue)|
+|dataPoints|array|NAV data point list, sorted in ascending order by date|
+|> date|string|Date in `YYYY-MM-DD` format|
+|> nav|string|NAV for that day, taken from the daily settlement snapshot|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/investment-plan/fund-nav?fundId=2001 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "fundId": "2001",
+        "fundName": "Market Neutral Alpha",
+        "coin": "USDT",
+        "currentNav": "1.035",
+        "dataPoints": [
+            {
+                "date": "2024-11-01",
+                "nav": "1.028"
+            },
+            {
+                "date": "2024-11-02",
+                "nav": "1.031"
+            }
+        ]
+    }
+}
+```

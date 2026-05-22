@@ -1,0 +1,88 @@
+---
+title: 編輯投資計劃狀態和基金配置
+sidebar_label: 編輯投資計劃狀態和基金配置
+sidebar_position: 5
+---
+
+:::info
+1. 僅在投資計劃狀態為 **`Init`**、**`PendingSubscription`** 或 **`Active`** 時，才能修改基金配置（`updateFunds`）。
+2. 狀態為 **`Deleted`** 或 **`Closed`** 的投資計劃不允許添加基金。
+3. 添加或更新的基金必須處於 **`PendingSubscribe`**（待申購）狀態。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/manage-investment-plan" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|投資計劃ID|
+|updateStatus|false|string|更新投資計劃狀態，可選值：`Closed` / `Deleted`，不傳則不修改狀態|
+|updateFunds|false|array|更新的基金列表。若有對應 `fundId` 則更新 amount；若沒有則添加新基金。最多10條，若包含重複 `fundId` 直接報錯|
+|> fundId|**true**|string|基金ID|
+|> amount|**true**|string|配置金額（本位幣）|
+|reqLinkId|**true**|string|用戶自定義請求ID，最長36字符，用於防重|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|planId|string|投資計劃ID|
+|status|string|當前計劃狀態：`PendingSubscription`（待申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除）|
+|updatedTime|string|狀態更新時間戳（毫秒）|
+|updateFunds|array|更新後投資計劃綁定的基金信息|
+|> fundId|string|基金ID|
+|> amount|string|配置金額（本位幣）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10088",
+    "updateStatus": "Closed",
+    "updateFunds": [
+        {
+            "fundId": "430",
+            "amount": "100000"
+        },
+        {
+            "fundId": "2005",
+            "amount": "270000"
+        }
+    ],
+    "reqLinkId": "manage-plan-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "planId": "10088",
+        "status": "Closed",
+        "updateFunds": [
+            {
+                "fundId": "430",
+                "amount": "100000"
+            },
+            {
+                "fundId": "2005",
+                "amount": "270000"
+            }
+        ],
+        "updatedTime": "1701700000000"
+    }
+}
+```

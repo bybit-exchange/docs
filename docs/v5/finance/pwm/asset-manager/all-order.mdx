@@ -1,0 +1,93 @@
+---
+title: Get All Fund Orders
+sidebar_label: Get All Fund Orders
+sidebar_position: 6
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/asset-manager/all-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundId|false|string|Filter by fund ID. Returns orders for all managed funds if omitted|
+|orderType|false|string|Order type filter: `Subscribe` / `Redeem`. Returns all if omitted|
+|status|false|string|Order status filter: `Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`. Returns all if omitted|
+|startTime|false|integer|Start time in milliseconds. See time range rules below|
+|endTime|false|integer|End time in milliseconds. See time range rules below|
+|limit|false|integer|Page size. Default: `20`, max: `50`|
+|cursor|false|string|Pagination cursor (uses order `orderId` as cursor)|
+
+:::info Time Range Rules
+- Neither `startTime` nor `endTime` passed: returns data from the last 7 days
+- Both passed: returns data from `max(endTime - 7 days, startTime)` to `endTime`
+- Only `startTime` passed: returns data from `startTime` to `startTime + 7 days`
+- Only `endTime` passed: returns data from `endTime - 7 days` to `endTime`
+:::
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Order list|
+|> orderId|string|Unique order identifier|
+|> fundId|string|Fund ID|
+|> fundName|string|Fund name|
+|> accountUid|string|Fund main sub-account UID|
+|> orderType|string|Order type: `Subscribe` / `Redeem`|
+|> coin|string|Coin|
+|> amount|string|Order amount (base coin). Subscription orders only; empty for redemption orders|
+|> shares|string|Order shares. Redemption orders only; empty for subscription orders|
+|> status|string|Order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`|
+|> createdTime|string|Order creation timestamp (milliseconds)|
+|nextPageCursor|string|Next page cursor. Empty string indicates no more data|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "orderId": "768",
+                "fundId": "100001",
+                "fundName": "Alpha BTC Strategy Fund",
+                "accountUid": "800001",
+                "orderType": "Subscribe",
+                "coin": "BTC",
+                "amount": "10.00000000",
+                "shares": "",
+                "status": "Completed",
+                "createdTime": "1700000000000"
+            },
+            {
+                "orderId": "769",
+                "fundId": "100001",
+                "fundName": "Alpha BTC Strategy Fund",
+                "accountUid": "800002",
+                "orderType": "Redeem",
+                "coin": "BTC",
+                "amount": "",
+                "shares": "5000.00",
+                "status": "Pending Review",
+                "createdTime": "1700100000000"
+            }
+        ],
+        "nextPageCursor": ""
+    }
+}
+```
