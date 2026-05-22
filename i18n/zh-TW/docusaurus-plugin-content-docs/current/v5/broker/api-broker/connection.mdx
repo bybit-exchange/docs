@@ -1,0 +1,76 @@
+---
+title: 經紀商連線
+sidebar_label: 經紀商連線
+---
+
+Broker Dedicated Connection 是面向已批准經紀商與符合條件的高交易量 API 用戶的專屬連線解決方案。它適用於對延遲敏感的交易環境，提供更快速且更可靠的 API 接入。
+
+該服務透過專屬路由與優化基礎設施，提高連線穩定性，降低延遲波動，並支援高流量期間更一致的執行表現。
+
+## 優勢
+
+- 相較共享公共 API 路由，延遲更低且更穩定。
+- 提升下單、改單與撤單的執行一致性。
+- 改善私有 WebSocket 推送交付。
+- 在高流量期間改善低延遲行情資料接入。
+- 支援 SBE 下單與 SBE 行情資料流程。
+
+## 支援產品與路徑
+
+Broker Dedicated Connection 支援現貨、USDT/USDC 合約、幣本位合約與期權。
+
+| 版本 | 路徑 |
+| --- | --- |
+| V5 | `/v5/private/*` |
+| V5 | `/v5/private-sbe/*` |
+| V5 | `/v5/trade` |
+| V5 | `/v5/trade-sbe` |
+| V5 | `/v5/public/*` |
+| V5 | `/v5/public-sbe/*` |
+
+使用 Bybit 提供的專屬 hostname，並保持相同的 V5 WebSocket 路徑結構:
+
+```text
+wss://{dedicated hostname}/v5/trade
+wss://{dedicated hostname}/v5/private
+wss://{dedicated hostname}/v5/public-sbe/linear
+```
+
+## 申請資格
+
+Broker Dedicated Connection 面向已批准經紀商與符合條件的高交易量 API 用戶開放。
+
+申請人必須至少滿足以下任一要求:
+
+- 月現貨交易量達 10,000,000 USDT 或等值資產。
+- 月衍生品交易量達 500,000,000 USDT 或等值資產。
+- 至少有 60 名邀請用戶。
+
+如需諮詢經紀商資格，請聯繫 `broker_program@bybit.com`。
+
+## 申請流程
+
+經 Broker Account Manager 批准後，請聯繫 `api_services@bybit.com` 或您的專屬經紀商支援群組，並提供以下資料:
+
+- 實體名稱
+- 主 UID
+- 預估 API 吞吐量
+- IP 位址或 CIDR 範圍，最多 10 個條目
+
+申請通常會在 3 個工作日內完成審核。
+
+## 接入步驟
+
+1. 確認系統將透過專屬連線路由的產品與 V5 路徑。
+2. 準備生產基礎設施使用的源 IP 位址或 CIDR 範圍。
+3. 透過您的 Broker Account Manager、`api_services@bybit.com` 或專屬經紀商支援群組提交申請資料。
+4. 審核通過後，針對支援路徑，將公共 hostname 替換為 Bybit 提供的專屬 hostname。
+5. 保持每個標準 V5 API 路徑要求的相同鑑權、簽名、重試與重連邏輯。
+6. 遷移後監控延遲波動、重連行為、私有推送交付以及訂單流程一致性。
+
+## 運維注意事項
+
+- 對已分配的專屬 hostname 保密。
+- 在生產出口 IP 變更前，請先更新 IP 白名單。
+- 將不支援的路徑路由至標準 API hostname。
+- 關於經紀商 OAuth 配置，請參考 [OAuth 接入文檔](./guidance)。

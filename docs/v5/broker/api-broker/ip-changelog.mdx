@@ -1,0 +1,77 @@
+---
+title: Get Broker IP Change Log
+sidebar_label: Get IP Change Log
+sidebar_position: 2
+---
+
+:::info
+This endpoint must be queried from a whitelisted IP address.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/broker/ip/changelog" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|startTime |false |string |Filter start time, Unix timestamp in milliseconds |
+|endTime |false |string |Filter end time, Unix timestamp in milliseconds |
+|limit |false |integer |Records per page. Range: [1, 50]. Default: 20 |
+|cursor |false |string |Pagination cursor. Use the `nextPageCursor` value from the previous response |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|list |array |Array of IP change records |
+|> operationType |string |Action type: `ADD`, `REMOVE`, `ENABLE`, or `DISABLE` |
+|> ipAddress |string |The IP address affected by the operation |
+|> domainType |string |Connection protocol. `GW` for HTTP hostname, `WS` for WebSocket hostname |
+|> operator |string |Internal team member who performed the operation |
+|> createdAt |string |Operation timestamp in UTC+0, ISO 8601 format |
+|nextPageCursor |string |Opaque token for retrieving the next page of results |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/broker/ip/changelog?limit=3 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: 1779362662315
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "operationType": "DISABLE",
+                "ipAddress": "193.118.167.247",
+                "domainType": "WS",
+                "operator": "wood.liang1",
+                "createdAt": "2026-05-21T06:02:36Z"
+            },
+            {
+                "operationType": "DISABLE",
+                "ipAddress": "18.99.43.128/25",
+                "domainType": "WS",
+                "operator": "wood.liang1",
+                "createdAt": "2026-05-21T06:02:36Z"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="
+    },
+    "time": 1779362027705
+}
+```

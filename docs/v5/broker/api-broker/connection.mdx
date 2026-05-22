@@ -1,0 +1,76 @@
+---
+title: Broker Connection
+sidebar_label: Broker Connection
+---
+
+Broker Dedicated Connection is a dedicated connectivity solution for approved brokers and qualified high-volume API users. It is designed for faster and more reliable API access in latency-sensitive trading environments.
+
+The service uses dedicated routing and optimized infrastructure to improve connection stability, reduce latency fluctuations, and support consistent execution during periods of high traffic.
+
+## Benefits
+
+- Lower and more stable latency compared with shared public API routes.
+- Improved execution consistency for order placement, amendments, and cancellations.
+- Better private WebSocket push delivery.
+- Improved access to low-latency market data during high-traffic periods.
+- Support for SBE order entry and SBE market data workflows.
+
+## Supported products and paths
+
+Broker Dedicated Connection supports Spot, Linear Futures, Inverse Futures, and Options.
+
+| Version | Path |
+| --- | --- |
+| V5 | `/v5/private/*` |
+| V5 | `/v5/private-sbe/*` |
+| V5 | `/v5/trade` |
+| V5 | `/v5/trade-sbe` |
+| V5 | `/v5/public/*` |
+| V5 | `/v5/public-sbe/*` |
+
+Use the dedicated hostname provided by Bybit with the same V5 WebSocket path structure:
+
+```text
+wss://{dedicated hostname}/v5/trade
+wss://{dedicated hostname}/v5/private
+wss://{dedicated hostname}/v5/public-sbe/linear
+```
+
+## Eligibility
+
+Broker Dedicated Connection is available to approved brokers and qualified high-volume API users.
+
+Applicants must meet at least one of the following requirements:
+
+- Monthly Spot trading volume of 10,000,000 USDT or equivalent.
+- Monthly Derivatives trading volume of 500,000,000 USDT or equivalent.
+- At least 60 referred users.
+
+For questions about broker eligibility, contact `broker_program@bybit.com`.
+
+## Application process
+
+After approval from your Broker Account Manager, contact `api_services@bybit.com` or your dedicated broker support group with:
+
+- Entity name
+- Main UID
+- Estimated API throughput
+- IP addresses or CIDR ranges, up to 10 entries
+
+Applications are typically reviewed within 3 business days.
+
+## Integration steps
+
+1. Confirm the products and V5 paths your system will route through the dedicated connection.
+2. Prepare the source IP addresses or CIDR ranges used by your production infrastructure.
+3. Submit the application details through your Broker Account Manager, `api_services@bybit.com`, or your dedicated broker support group.
+4. After approval, replace the public hostname with the dedicated hostname provided by Bybit for supported paths.
+5. Keep the same authentication, signing, retry, and reconnect logic required by each standard V5 API path.
+6. Monitor latency variation, reconnect behavior, private push delivery, and order workflow consistency after migration.
+
+## Operational notes
+
+- Keep assigned dedicated hostnames confidential.
+- Update the IP whitelist before changing production egress IPs.
+- Route unsupported paths through the standard API hostname.
+- For broker OAuth setup, see [OAuth Integration Guidance](./guidance).

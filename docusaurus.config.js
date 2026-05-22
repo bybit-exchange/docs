@@ -232,17 +232,30 @@ const config = {
               },
               {
                 type: 'doc',
-                docId: 'v5/smp',
+                docId: 'v5/copytrade',
+                label: 'How To Start Copy Trading',
+              }
+            ]
+          },
+          {
+            type: 'dropdown',
+            position: 'right',
+            label: 'Institution',
+            items: [
+              {
+                to: '/v5/smp',
                 label: 'Self Match Prevention',
               },
               {
-                type: 'doc',
-                docId: 'v5/copytrade',
-                label: 'How To Start Copy Trading',
+                to: '/v5/institution/ip-changelog',
+                label: 'Institution IP Change Log',
               },
               {
-                type: 'doc',
-                docId: 'institutional/dmm-listing/spot',
+                to: '/v5/institution/whitelist-ip',
+                label: 'Institution Whitelist IP',
+              },
+              {
+                to: '/institutional/dmm-listing/spot',
                 label: 'DMM Listing',
               }
             ]
