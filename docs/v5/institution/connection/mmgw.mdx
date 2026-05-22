@@ -1,0 +1,53 @@
+---
+title: MMGW Integration
+sidebar_label: MMGW
+---
+
+Market Maker Gateway (MMGW) is a dedicated HTTP access path for market makers and institutional clients sending order-related API requests. It provides a stable route for latency-sensitive trading workflows and reduces dependence on shared public API routing.
+
+MMGW is designed for routing quality and connection stability. It can help reduce route drift, intermittent request timeouts, and unexpected HTTP session termination. It does not guarantee lower absolute latency than the regular public API route.
+
+## Supported paths
+
+MMGW supports the following V5 HTTP API paths:
+
+| Type | Path |
+| --- | --- |
+| Order APIs | `/v5/order/*` |
+| Position APIs | `/v5/position/*` |
+| Execution list | `/v5/execution/list` |
+| Wallet balance | `/v5/account/wallet-balance` |
+| Spread order APIs | `/v5/spread/order/*` |
+| Spread execution list | `/v5/spread/execution/list` |
+
+Use the dedicated hostname provided by Bybit with the same HTTP path structure:
+
+```text
+https://{MMGW hostname}/v5/order/create
+https://{MMGW hostname}/v5/order/amend
+https://{MMGW hostname}/v5/execution/list
+```
+
+For APIs that are not supported by MMGW, continue to use the standard API hostname.
+
+## Access setup
+
+To request MMGW access, provide the IP addresses or CIDR ranges that will send API requests through the gateway. Bybit supports up to 10 IP entries or CIDR ranges for whitelisting. CIDR ranges are recommended when your infrastructure may scale or rotate within a fixed network block.
+
+After approval, Bybit will provide private MMGW hostnames for your account. Keep these hostnames confidential. If malicious traffic is detected through the assigned hostnames, Bybit may disable them urgently.
+
+## Integration steps
+
+1. Confirm that your traffic uses only the MMGW-supported paths listed above.
+2. Send your source IP addresses or CIDR ranges to your Bybit contact for whitelisting.
+3. Replace the public API hostname with the dedicated MMGW hostname for supported endpoints.
+4. Keep the same request signing, timestamp, receive window, retry, and error handling logic used by the standard V5 REST API.
+5. Route unsupported endpoints through the standard API hostname.
+6. Monitor timeout rate, session stability, and route consistency after migration.
+
+## Operational notes
+
+- MMGW is a stability-focused access path, not a guaranteed latency shortcut.
+- Do not share the assigned MMGW hostnames outside your approved infrastructure.
+- If your source IP changes, update the whitelist before routing production traffic through the dedicated hostname.
+- Keep fallback routing available for unsupported API paths.

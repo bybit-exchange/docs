@@ -1,0 +1,54 @@
+---
+title: MMWS 接入指南
+sidebar_label: MMWS
+---
+
+Market Maker WebSocket (MMWS) 是面向做市商與機構客戶的專屬 WebSocket 接入路徑。它為私有頻道、交易頻道、公共行情頻道以及 SBE WebSocket 流量提供更穩定的入口。
+
+MMWS 的設計重點是連線穩定性。它可以減少非預期斷線、降低推送延遲發生率，並避免因頻繁重連而導致的握手失敗。不過，MMWS 並不保證相較標準公共 WebSocket endpoint 具備絕對延遲優勢。
+
+## 支援路徑
+
+MMWS 支援以下 V5 WebSocket 路徑:
+
+| 類型 | 路徑 |
+| --- | --- |
+| 私有頻道 | `/v5/private` |
+| 交易 | `/v5/trade` |
+| Linear 行情 | `/v5/public/linear` |
+| Inverse 行情 | `/v5/public/inverse` |
+| 現貨行情 | `/v5/public/spot` |
+| 期權行情 | `/v5/public/option` |
+| Spread 行情 | `/v5/public/spread` |
+| 現貨 SBE 行情 | `/v5/public-sbe/spot` |
+| Linear SBE 行情 | `/v5/public-sbe/linear` |
+| Inverse SBE 行情 | `/v5/public-sbe/inverse` |
+
+使用 Bybit 提供的專屬 hostname，並保持相同的 WebSocket 路徑結構:
+
+```text
+wss://{MMWS hostname}/v5/private
+wss://{MMWS hostname}/v5/trade
+wss://{MMWS hostname}/v5/public/linear
+```
+
+## 接入配置
+
+如需申請 MMWS 接入，請提供將連線至 MMWS 的 IP 位址或 CIDR 範圍。Bybit 支援最多 10 個 IP 條目或 CIDR 範圍用於白名單配置。若您的基礎設施可能在固定網段內擴展或輪換，建議使用 CIDR 範圍。
+
+審核通過後，Bybit 會為您的帳戶提供私有 MMWS hostname。請對這些 hostname 保密。若 Bybit 偵測到透過已分配 hostname 發起的惡意流量，Bybit 可能會緊急停用相關 hostname。
+
+## 接入步驟
+
+1. 確認系統需要使用的 WebSocket 路徑，包括是否需要 JSON 流、SBE 流，或透過 `/v5/trade` 進行下單。
+2. 將源 IP 位址或 CIDR 範圍提交給您的 Bybit 對接人，用於白名單配置。
+3. 將公共 WebSocket hostname 替換為 Bybit 提供的專屬 MMWS hostname。
+4. 保持與標準 V5 WebSocket API 相同的鑑權、訂閱、ping/pong、重連和消息解析邏輯。
+5. 遷移後監控斷線頻率、推送延遲事件以及重連行為。
+
+## 運維注意事項
+
+- MMWS 是以穩定性為重點的接入路徑，並不是保證低延遲的捷徑。
+- 不要在已批准的基礎設施之外分享已分配的 MMWS hostname。
+- 若源 IP 發生變更，請先更新白名單，再將生產流量路由到專屬 hostname。
+- 關於 SBE payload 結構和頻道詳情，請參考 [SBE 基本信息](../../sbe/sbe-basic-info)。

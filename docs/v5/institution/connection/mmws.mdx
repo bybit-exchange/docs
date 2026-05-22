@@ -1,0 +1,54 @@
+---
+title: MMWS Integration
+sidebar_label: MMWS
+---
+
+Market Maker WebSocket (MMWS) is a dedicated WebSocket access path for market makers and institutional clients. It provides a more stable portal for private, trade, public market data, and SBE WebSocket traffic.
+
+MMWS is designed for connection stability. It can reduce unexpected disconnects, reduce delayed pushes, and avoid handshake failures caused by frequent reconnect attempts. It does not guarantee lower absolute latency than the regular public WebSocket endpoint.
+
+## Supported paths
+
+MMWS supports the following V5 WebSocket paths:
+
+| Type | Path |
+| --- | --- |
+| Private stream | `/v5/private` |
+| Trade | `/v5/trade` |
+| Linear market data | `/v5/public/linear` |
+| Inverse market data | `/v5/public/inverse` |
+| Spot market data | `/v5/public/spot` |
+| Option market data | `/v5/public/option` |
+| Spread market data | `/v5/public/spread` |
+| Spot SBE market data | `/v5/public-sbe/spot` |
+| Linear SBE market data | `/v5/public-sbe/linear` |
+| Inverse SBE market data | `/v5/public-sbe/inverse` |
+
+Use the dedicated hostname provided by Bybit with the same WebSocket path structure:
+
+```text
+wss://{MMWS hostname}/v5/private
+wss://{MMWS hostname}/v5/trade
+wss://{MMWS hostname}/v5/public/linear
+```
+
+## Access setup
+
+To request MMWS access, provide the IP addresses or CIDR ranges that will connect to MMWS. Bybit supports up to 10 IP entries or CIDR ranges for whitelisting. CIDR ranges are recommended when your infrastructure may scale or rotate within a fixed network block.
+
+After approval, Bybit will provide private MMWS hostnames for your account. Keep these hostnames confidential. If malicious traffic is detected through the assigned hostnames, Bybit may disable them urgently.
+
+## Integration steps
+
+1. Confirm the WebSocket paths your system needs, including whether you require JSON streams, SBE streams, or order entry through `/v5/trade`.
+2. Send your source IP addresses or CIDR ranges to your Bybit contact for whitelisting.
+3. Replace the public WebSocket hostname with the dedicated MMWS hostname provided by Bybit.
+4. Keep the same authentication, subscription, ping/pong, reconnect, and message parsing logic used by the standard V5 WebSocket API.
+5. Monitor disconnect frequency, delayed push events, and reconnect behavior after migration.
+
+## Operational notes
+
+- MMWS is a stability-focused access path, not a guaranteed latency shortcut.
+- Do not share the assigned MMWS hostnames outside your approved infrastructure.
+- If your source IP changes, update the whitelist before routing production traffic through the dedicated hostname.
+- For SBE payload structure and channel details, see [SBE Basic Information](../../sbe/sbe-basic-info).

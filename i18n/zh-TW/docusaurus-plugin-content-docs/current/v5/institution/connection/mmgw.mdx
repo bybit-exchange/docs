@@ -1,0 +1,53 @@
+---
+title: MMGW 接入指南
+sidebar_label: MMGW
+---
+
+Market Maker Gateway (MMGW) 是面向做市商與機構客戶的專屬 HTTP 接入路徑，用於發送與訂單相關的 API 請求。它為延遲敏感的交易流程提供穩定路由，並降低對共享公共 API 路由的依賴。
+
+MMGW 的設計重點是路由品質與連線穩定性。它可以協助降低路由漂移、間歇性請求超時以及 HTTP session 非預期終止的情況。不過，MMGW 並不保證相較標準公共 API 路由具備絕對延遲優勢。
+
+## 支援路徑
+
+MMGW 支援以下 V5 HTTP API 路徑:
+
+| 類型 | 路徑 |
+| --- | --- |
+| 訂單 API | `/v5/order/*` |
+| 倉位 API | `/v5/position/*` |
+| 成交列表 | `/v5/execution/list` |
+| 錢包餘額 | `/v5/account/wallet-balance` |
+| Spread 訂單 API | `/v5/spread/order/*` |
+| Spread 成交列表 | `/v5/spread/execution/list` |
+
+使用 Bybit 提供的專屬 hostname，並保持相同的 HTTP 路徑結構:
+
+```text
+https://{MMGW hostname}/v5/order/create
+https://{MMGW hostname}/v5/order/amend
+https://{MMGW hostname}/v5/execution/list
+```
+
+對於 MMGW 不支援的 API，請繼續使用標準 API hostname。
+
+## 接入配置
+
+如需申請 MMGW 接入，請提供將透過 gateway 發送 API 請求的 IP 位址或 CIDR 範圍。Bybit 支援最多 10 個 IP 條目或 CIDR 範圍用於白名單配置。若您的基礎設施可能在固定網段內擴展或輪換，建議使用 CIDR 範圍。
+
+審核通過後，Bybit 會為您的帳戶提供私有 MMGW hostname。請對這些 hostname 保密。若 Bybit 偵測到透過已分配 hostname 發起的惡意流量，Bybit 可能會緊急停用相關 hostname。
+
+## 接入步驟
+
+1. 確認您的流量只使用上方列出的 MMGW 支援路徑。
+2. 將源 IP 位址或 CIDR 範圍提交給您的 Bybit 對接人，用於白名單配置。
+3. 將支援 endpoint 的公共 API hostname 替換為專屬 MMGW hostname。
+4. 保持與標準 V5 REST API 相同的請求簽名、timestamp、receive window、重試和錯誤處理邏輯。
+5. 將不支援的 endpoint 路由至標準 API hostname。
+6. 遷移後監控超時率、session 穩定性以及路由一致性。
+
+## 運維注意事項
+
+- MMGW 是以穩定性為重點的接入路徑，並不是保證低延遲的捷徑。
+- 不要在已批准的基礎設施之外分享已分配的 MMGW hostname。
+- 若源 IP 發生變更，請先更新白名單，再將生產流量路由到專屬 hostname。
+- 請為不支援的 API 路徑保留備用路由。
