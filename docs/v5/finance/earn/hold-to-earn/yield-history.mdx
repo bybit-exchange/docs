@@ -1,0 +1,115 @@
+---
+title: Get Airdrop Daily PnL Records
+sidebar_label: Get Airdrop Daily PnL Records
+sidebar_position: 2
+---
+
+You can query up to 3 months of historical data.
+
+:::info
+* API key permission: `Earn`
+* Only **completed** (already distributed) yield records are returned. Pending, failed, and zero-amount records are excluded.
+* Users with no byfi earn history will receive a successful response with an empty list.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/hold-to-earn/yield-history" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|timeStart|false|integer|Start time (Unix seconds). Cannot be earlier than current time minus 3 months, otherwise returns `INVALIDARGUMENTS`|
+|timeEnd|false|integer|End time (Unix seconds). Requires `timeStart ≤ timeEnd`|
+|limit|**true**|integer|Page size. Range: `1` to `49`. Returns `INVALIDARGUMENTS` if out of range|
+|cursor|false|string|Pagination cursor. Omit on the first request; pass the `nextCursor` value from the previous response for subsequent pages. Treat the cursor as opaque — do not parse or modify it|
+
+:::info
+When both `timeStart` and `timeEnd` are `0`, the query defaults to the last 3 months.
+:::
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|nextCursor|string|Next page cursor. Empty string indicates the last page. Pass it back as `cursor` in the next request|
+|airdropDailyPnls|array|Yield records list, sorted by distribution date newest first|
+|> coinName|string|Investment coin name|
+|> yieldCoinName|string|Yield coin name. Differs from `coinName` for cross-coin airdrops|
+|> effectiveAmount|string|Effective principal for that day, e.g., `"10000.00"`|
+|> pnl|string|Actual yield distributed that day, e.g., `"0.27397260"`|
+|> apy|string|Annualized yield for that day, e.g., `"10%"`|
+|> createdAt|integer|Yield distribution time (Unix seconds)|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/hold-to-earn/yield-history?timeStart=1739952000&timeEnd=1747728000&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "nextCursor": "eyJsYXN0SWQiOjEwMDE5MH0=",
+    "airdropDailyPnls": [
+        {
+            "coinName": "USDE",
+            "yieldCoinName": "USDE",
+            "effectiveAmount": "10000.00",
+            "pnl": "0.27397260",
+            "apy": "10%",
+            "createdAt": 1747641600
+        },
+        {
+            "coinName": "USDE",
+            "yieldCoinName": "USDE",
+            "effectiveAmount": "10000.00",
+            "pnl": "0.27397260",
+            "apy": "10%",
+            "createdAt": 1747555200
+        }
+    ]
+}
+```
+
+### Pagination Example
+
+To fetch the next page, pass the `nextCursor` from the previous response back as `cursor`:
+
+```http
+GET /v5/earn/hold-to-earn/yield-history?limit=20&cursor=eyJsYXN0SWQiOjEwMDE5MH0= HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+An empty `nextCursor` in the response indicates you have reached the last page.
