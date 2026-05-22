@@ -1,0 +1,55 @@
+---
+title: Subscribe Investment Plan
+sidebar_label: Subscribe Investment Plan
+sidebar_position: 6
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/investment-plan/subscribe" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID. Must be in `PendingSubscription` status|
+|accountType|false|string|Source account type. Default: `FUND`|
+|orderLinkId|**true**|string|User-defined order ID, max 36 characters, used for idempotency|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Investment plan ID|
+|status|string|Plan status after subscription. Changes to `Active` upon first successful subscription|
+|orderLinkId|string|User-defined order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/investment-plan/subscribe HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10001",
+    "accountType": "FUND",
+    "orderLinkId": "xxx"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10001",
+        "status": "Active",
+        "orderLinkId": "xxx"
+    }
+}
+```

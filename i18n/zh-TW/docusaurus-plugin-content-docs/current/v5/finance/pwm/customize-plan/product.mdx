@@ -1,0 +1,94 @@
+---
+title: 查詢可申購產品卡片（直客模式）
+sidebar_label: 查詢可申購產品卡片
+sidebar_position: 0.5
+---
+
+:::info
+無需身份驗證。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/pwm/customize-plan/product" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|products|array|按產品類別分組的卡片列表|
+|> type|string|產品類別：`equityFund` / `multiCoinEarning` / `onchainEarn` / `fixedYield`|
+|> cards|array|該類別下的產品卡片列表|
+|>> category|string|產品類型|
+|>> productId|string|對應的底層產品ID（活期 / 固收 / 鏈上賺幣產品有此字段）|
+|>> fundName|string|基金名稱英文（基金產品）|
+|>> coin|string|產品幣種|
+|>> apr|string|當前年化收益率（活期 / 固收產品）|
+|>> aprRangeLow|string|年化收益率下界（基金產品）|
+|>> aprRangeHigh|string|年化收益率上界（基金產品）|
+|>> tags|array[string]|產品標籤|
+|>> introduction|string|產品簡介英文（基金產品）|
+|>> aum|string|基金管理規模（本位幣）|
+|>> minInvestmentAmount|string|最小申購金額|
+|>> maxInvestmentAmount|string|最大申購金額|
+|>> duration|int|鎖定期天數，`0` 表示活期（固收產品）|
+|>> maxDrawdown|string|歷史最大回撤（基金產品）|
+|>> sharpRatio|string|夏普比率（基金產品）|
+|>> estAPR|string|產品預估APR|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/pwm/customize-plan/product HTTP/1.1
+Host: api.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "products": [
+            {
+                "type": "equityFund",
+                "cards": [
+                    {
+                        "category": "equityFund",
+                        "fundName": "Market Neutral Alpha",
+                        "coin": "USDT",
+                        "aprRangeLow": "0.08",
+                        "aprRangeHigh": "0.15",
+                        "tags": ["Delta Neutral"],
+                        "introduction": "A market-neutral strategy fund",
+                        "aum": "5000000",
+                        "minInvestmentAmount": "100000",
+                        "maxInvestmentAmount": "5000000",
+                        "maxDrawdown": "-0.035",
+                        "sharpRatio": "2.3",
+                        "estAPR": "0.06"
+                    }
+                ]
+            },
+            {
+                "type": "multiCoinEarning",
+                "cards": [
+                    {
+                        "category": "flexibleSavings",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "apr": "0.05",
+                        "duration": 0,
+                        "minInvestmentAmount": "10000",
+                        "maxInvestmentAmount": "10000000",
+                        "estAPR": "0.02"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```

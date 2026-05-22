@@ -1,0 +1,74 @@
+---
+title: Redeem
+sidebar_label: Redeem
+sidebar_position: 8
+---
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/investment-plan/redeem" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID|
+|category|**true**|string|Product type|
+|productId|**true**|string|Product ID. Pass `fundId` for fund products|
+|shares|Conditional|string|Number of shares to redeem. Required for fund products|
+|amount|Conditional|string|Redemption amount. Required for non-fund products|
+|orderLinkId|**true**|string|User-defined order ID, max 36 characters, used for idempotency|
+|positionId|Conditional|string|Position ID to redeem. Required for FundPool and On-chain Earn products|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|Redemption order ID|
+|planId|string|Investment plan ID|
+|category|string|Product type|
+|productId|string|Product ID|
+|shares|string|Number of shares redeemed (returned for fund products)|
+|amount|string|Redemption amount (returned for non-fund products)|
+|estimatedAmount|string|Estimated redemption amount based on current share value. Actual amount is subject to settlement|
+|coin|string|Redemption coin|
+|status|string|Redemption status: `Success` (non-fund products redeem instantly) / `Pending` (equity funds require approval)|
+|orderLinkId|string|User-defined order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/investment-plan/redeem HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10001",
+    "category": "equityFund",
+    "productId": "2001",
+    "shares": "3000",
+    "orderLinkId": "xxx"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "orderId": "ORD20241115003",
+        "planId": "10001",
+        "category": "equityFund",
+        "productId": "2001",
+        "shares": "3000",
+        "estimatedAmount": "3087.00",
+        "coin": "USDT",
+        "status": "Pending",
+        "orderLinkId": "xxx"
+    }
+}
+```

@@ -1,0 +1,156 @@
+---
+title: Get Pending Investment Plan Detail
+sidebar_label: Get Pending Investment Plan Detail
+sidebar_position: 2
+---
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/pwm/investment-plan/new-plan" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|Investment plan ID. Must be in `PendingSubscription` status|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|planId|string|Unique identifier of the investment plan|
+|planName|string|Investment plan name|
+|planType|string|Plan type: `stable` / `advanced`|
+|status|string|Plan status, always `PendingSubscription`|
+|source|string|Creation source: `consultant` / `direct` / `institution`|
+|totalConfiguredAmountUsd|string|Total configured investment amount for the plan (USD valuation)|
+|products|object|Configuration details by product category|
+|> multiCoinsEarning|object|Flexible savings configuration|
+|>> configuredAmountUsd|string|Configured amount for this category (USD)|
+|>> items|array|Product configuration list|
+|>>> category|string|Product type|
+|>>> productId|string|Product ID|
+|>>> coin|string|Coin|
+|>>> configuredAmount|string|Configured investment amount (base coin)|
+|>>> apr|string|Current annualized return rate (reference value)|
+|> fixedYield|object|Fixed yield configuration|
+|>> configuredAmountUsd|string|Configured amount for this category (USD)|
+|>> items|array|Product configuration list|
+|>>> category|string|Product type|
+|>>> productId|string|Product ID|
+|>>> coin|string|Coin|
+|>>> configuredAmount|string|Configured investment amount (base coin)|
+|>>> apr|string|Annualized return rate|
+|>>> duration|int|Lock-up period in days|
+|> equityFunds|object|Equity fund configuration|
+|>> configuredAmountUsd|string|Configured amount for this category (USD)|
+|>> items|array|Fund configuration list|
+|>>> category|string|Product type|
+|>>> productId|string|Fund ID|
+|>>> fundName|string|Fund name|
+|>>> coin|string|Fund denomination coin|
+|>>> configuredAmount|string|Configured investment amount (base coin)|
+|>>> tags|array[string]|Fund tags|
+|>>> introduction|object|Fund introduction info|
+|>>>> description|string|Fund introduction description (English)|
+|>>>> historicalYieldRateMax|string|Historical yield rate upper bound|
+|>>>> historicalYieldRateMin|string|Historical yield rate lower bound|
+|>>>> sharpRatio|string|Sharpe ratio|
+|>>>> maxDrawback|string|Maximum drawdown (negative value)|
+|>>>> lockupPeriod|string|Lock-up period description (English)|
+|> onchainEarn|object|On-chain earn configuration|
+|>> configuredAmountUsd|string|Configured amount for this category (USD)|
+|>> items|array|Product configuration list|
+|>>> category|string|Product type|
+|>>> productId|string|Product ID|
+|>>> coin|string|Coin|
+|>>> configuredAmount|string|Configured investment amount (base coin)|
+|>>> apr|string|Current annualized return rate (reference value)|
+|createdTime|string|Plan creation timestamp (milliseconds)|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/pwm/investment-plan/new-plan?planId=10003 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10003",
+        "planName": "Aggressive Growth Plan",
+        "planType": "advanced",
+        "status": "PendingSubscription",
+        "source": "consultant",
+        "totalConfiguredAmountUsd": "500000.00",
+        "products": {
+            "multiCoinsEarning": {
+                "configuredAmountUsd": "100000.00",
+                "items": [
+                    {
+                        "category": "flexibleSavings",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "100000.00",
+                        "apr": "0.05"
+                    }
+                ]
+            },
+            "fixedYield": {
+                "configuredAmountUsd": "80000.00",
+                "items": [
+                    {
+                        "category": "fundPoolPremium",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "80000.00",
+                        "apr": "0.08",
+                        "duration": 30
+                    }
+                ]
+            },
+            "equityFunds": {
+                "configuredAmountUsd": "270000.00",
+                "items": [
+                    {
+                        "category": "equityFund",
+                        "productId": "2005",
+                        "fundName": "Market Neutral Alpha",
+                        "coin": "USDT",
+                        "configuredAmount": "270000.00",
+                        "tags": ["Delta Neutral", "Funding Rate"],
+                        "introduction": {
+                            "description": "A market-neutral strategy fund that generates stable returns through long-short hedging",
+                            "historicalYieldRateMax": "0.15",
+                            "historicalYieldRateMin": "0.08",
+                            "sharpRatio": "2.3",
+                            "maxDrawback": "-0.035",
+                            "lockupPeriod": "30 days"
+                        }
+                    }
+                ]
+            },
+            "onchainEarn": {
+                "configuredAmountUsd": "50000.00",
+                "items": [
+                    {
+                        "category": "onchainEarn",
+                        "productId": "430",
+                        "coin": "USDT",
+                        "configuredAmount": "50000.00",
+                        "apr": "0.075"
+                    }
+                ]
+            }
+        },
+        "createdTime": "1700800000000"
+    }
+}
+```

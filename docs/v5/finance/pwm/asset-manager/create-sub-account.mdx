@@ -1,0 +1,63 @@
+---
+title: Create Fund Sub-Account
+sidebar_label: Create Fund Sub-Account
+sidebar_position: 8
+---
+
+:::info
+1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](all-funds), which returns the list of sub-account UIDs associated with the fund.
+2. The fund must be in **Active (Running)** status before a sub-account can be created.
+3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
+4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/pwm/asset-manager/create-sub-account" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|fundId|**true**|string|Fund ID|
+|reqLinkId|**true**|string|User-defined request ID, used to prevent duplicate creation|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|fundId|string|Fund ID|
+|subAccountUid|string|UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`|
+|createdTime|string|Creation timestamp (milliseconds)|
+|status|string|Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "fundId": "100001",
+    "reqLinkId": "create-sub-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "fundId": "100001",
+        "subAccountUid": "0",
+        "createdTime": "1700600000000",
+        "status": "pending"
+    }
+}
+```

@@ -1,0 +1,57 @@
+---
+title: 領取可提取資金
+sidebar_label: 領取可提取資金
+sidebar_position: 3
+---
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/pwm/investment-plan/claim" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|planId|**true**|string|投資計劃ID，須為 `Active` 狀態|
+|toAccountType|false|string|目標賬戶類型，默認 `FUND`|
+|orderLinkId|**true**|string|用戶自定義訂單ID，最長36字符，用於防重|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|planId|string|投資計劃ID|
+|toAccountType|int|到賬目標賬戶類型|
+|status|string|提取狀態：`Success`（成功）/ `processing`（處理中）|
+|createdTime|string|提取時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/pwm/investment-plan/claim HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "planId": "10001",
+    "toAccountType": "FUND",
+    "orderLinkId": "claim-order-001"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "result": {
+        "planId": "10001",
+        "toAccountType": 6,
+        "status": "Success",
+        "createdTime": "1701400000000"
+    }
+}
+```

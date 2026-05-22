@@ -1,0 +1,83 @@
+---
+title: 機構查詢為客戶創建的投資計劃列表
+sidebar_label: 機構查詢投資計劃列表
+sidebar_position: 4
+---
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/pwm/asset-manager/get-investment-plan" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|planId|false|string|投資計劃ID，不傳返回全部（該接口只能查詢機構 Open API 創建的投資計劃）|
+|status|false|string|篩選狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除），不傳返回全部|
+|subscriptionUid|false|string|申購投資計劃的用戶UID|
+|limit|false|integer|每頁數量，默認 `20`，最大 `50`|
+|cursor|false|string|分頁游標|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|投資計劃列表|
+|> planId|string|投資計劃ID|
+|> planName|string|投資計劃名稱|
+|> planType|string|計劃類型：`stable`（穩健）/ `advanced`（激進）|
+|> subscriptionUid|string|申購投資計劃的用戶UID|
+|> status|string|計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除）|
+|> source|string|創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）|
+|> currentAssetUsd|string|當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額|
+|> accumulateYieldUsd|string|累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`|
+|> investmentDistribution|array|投資分佈比例列表|
+|>> category|string|產品類別：`multiCoinEarning`（靈活理財）/ `fixedYield`（固定收益）/ `equityFund`（淨值型基金）/ `onchainEarn`（鏈上賺幣）|
+|>> coin|string|本位幣種|
+|>> productId|string|申購的對應產品ID，基金對應為 `fundId`|
+|>> currentAmount|string|投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量|
+|> createdTime|string|創建時間戳（毫秒）|
+|nextPageCursor|string|下一頁游標，為空表示無更多數據（使用投資計劃ID作為游標）|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/pwm/asset-manager/get-investment-plan HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741651200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "planId": "10001",
+                "planName": "Conservative Growth Plan",
+                "planType": "stable",
+                "status": "Active",
+                "source": "institution",
+                "subscriptionUid": "12323434",
+                "currentAssetUsd": "200137.50",
+                "accumulateYieldUsd": "2137.50",
+                "investmentDistribution": [
+                    {
+                        "category": "equityFund",
+                        "productId": "431",
+                        "coin": "USDT",
+                        "currentAmount": "50000.00"
+                    }
+                ],
+                "createdTime": "1700000000000"
+            }
+        ],
+        "nextPageCursor": ""
+    }
+}
+```
