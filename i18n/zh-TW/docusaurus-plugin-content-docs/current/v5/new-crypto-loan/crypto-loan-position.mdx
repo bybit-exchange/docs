@@ -34,6 +34,7 @@ None
 |totalCollateral|string|抵押總金額（USD）|
 |totalDebt|string|總負債金額（定期 + 活期，USD）|
 |totalSupply|string|出借總金額（USD）|
+|colRes|string|平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。|
 
 ### 請求示例
 
@@ -130,7 +131,8 @@ print(session.get_position_new_crypto_loan())
         ],
         "totalCollateral": "18381.41",
         "totalDebt": "9638.17",
-        "totalSupply": "800.13"
+        "totalSupply": "800.13",
+        "colRes": "0"
     },
     "retExtInfo": {},
     "time": 1752627962000

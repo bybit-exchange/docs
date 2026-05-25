@@ -34,6 +34,7 @@ None
 |totalCollateral|string|Total collateral amount (USD)|
 |totalDebt|string|Total debt (fixed + flexible, in USD)|
 |totalSupply|string|Total supply amount (USD) |
+|colRes|string|Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.|
 
 ### Request Example
 
@@ -130,7 +131,8 @@ print(session.get_position_new_crypto_loan())
         ],
         "totalCollateral": "18381.41",
         "totalDebt": "9638.17",
-        "totalSupply": "800.13"
+        "totalSupply": "800.13",
+        "colRes": "0"
     },
     "retExtInfo": {},
     "time": 1752627962000
