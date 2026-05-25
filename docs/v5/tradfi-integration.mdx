@@ -168,6 +168,8 @@ For example, the following shows the `CLUSDT` index components on **Day 1** of t
 3. On weekends when Pyth markets are closed, Friday's closing price is used as the index price component.
 
 4. For `CLUSDT`, the anchor price used in index price calculation is Pyth WTI.
+
+5. When Pyth markets are closed on weekends, the Pyth weight is automatically excluded from the index price calculation. The remaining components' weights are then proportionally rescaled to calculate the index price. This applies to all commodity perpetuals (e.g., crude oil, metals) and stock perpetuals.
 :::
 
 To query the current components and their weights contributing to an index price, use the [Get Index Price Components](/v5/market/index-components) endpoint:
