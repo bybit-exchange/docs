@@ -52,6 +52,7 @@ sidebar_position: 4
 |>> bonus |string |體驗金|
 |>> marginCollateral |boolean |是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 <ul><li>當marginCollateral=false時, 則collateralSwitch無意義</li></ul>|
 |>> collateralSwitch |boolean |用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 <ul><li>僅當marginCollateral=true時, 才能主動選擇開關抵押</li></ul>|
+|>> colRes |string |平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。|
 |>> spotBorrow |string |現貨槓桿交易借入金額以及手工借貸金額（不包含現貨槓桿活躍訂單借入金額）。現貨負債對應的`spotBorrow`, 請詳見<a href="https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/">公告</a>. |
 |>> free |string |**廢棄**, 不再有現貨錢包|
 |>> availableToWithdraw |string |該字段從2025年1月9日起已經**廢棄** <ul><li>可劃轉餘額: 可以使用[查詢可劃轉餘額(统一账户)](../v5/account/unified-trans-amnt#) 或 [查詢賬戶所有幣種余額](../v5/asset/balance/all-balance#)</li><li>合約可用餘額: <br/><b>逐倉</b>: walletBalance - totalPositionIM - totalOrderIM - locked - bonus<br/><b>全倉/組合保證金</b>: 使用字段`totalAvailableBalance`(USD), 但需要通過index price来轉換成對應幣種的可用餘額</li><li>現貨(槓桿)可用餘額: 可以使用[查詢用戶可用額度 (現貨)](../v5/order/spot-borrow-quota#)</li></ul>|
