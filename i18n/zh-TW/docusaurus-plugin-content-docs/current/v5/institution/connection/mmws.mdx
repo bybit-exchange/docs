@@ -5,16 +5,17 @@ sidebar_label: MMWS
 
 Market Maker WebSocket (MMWS) 是面向做市商與機構客戶的專屬 WebSocket 接入路徑。它為私有頻道、交易頻道、公共行情頻道以及 SBE WebSocket 流量提供更穩定的入口。
 
-MMWS 的設計重點是連線穩定性。它可以減少非預期斷線、降低推送延遲發生率，並避免因頻繁重連而導致的握手失敗。不過，MMWS 並不保證相較標準公共 WebSocket endpoint 具備絕對延遲優勢。
+MMWS 的設計重點是連線穩定性。它可以減少非預期斷線、降低推送延遲發生率，並避免因頻繁重連而導致的握手失敗。不過，MMWS 並不保證相較標準 stream.bybit.com 具備絕對延遲優勢。
 
 ## 支援路徑
 
-MMWS 支援以下 V5 WebSocket 路徑:
+MMWS 支援以下 WebSocket 路徑:
 
 | 類型 | 路徑 |
 | --- | --- |
 | 私有頻道 | `/v5/private` |
 | 交易 | `/v5/trade` |
+| SBE交易 | `/v5/trade/-sbe` (6月主網) |
 | Linear 行情 | `/v5/public/linear` |
 | Inverse 行情 | `/v5/public/inverse` |
 | 現貨行情 | `/v5/public/spot` |
@@ -42,8 +43,8 @@ wss://{MMWS hostname}/v5/public/linear
 
 1. 確認系統需要使用的 WebSocket 路徑，包括是否需要 JSON 流、SBE 流，或透過 `/v5/trade` 進行下單。
 2. 將源 IP 位址或 CIDR 範圍提交給您的 Bybit 對接人，用於白名單配置。
-3. 將公共 WebSocket hostname 替換為 Bybit 提供的專屬 MMWS hostname。
-4. 保持與標準 V5 WebSocket API 相同的鑑權、訂閱、ping/pong、重連和消息解析邏輯。
+3. 將 stream.bybit.com 替換為 Bybit 提供的專屬 MMWS hostname。
+4. 保持與 stream.bybit.com 相同的鑑權、訂閱、ping/pong、重連和消息解析邏輯。
 5. 遷移後監控斷線頻率、推送延遲事件以及重連行為。
 
 ## 運維注意事項
