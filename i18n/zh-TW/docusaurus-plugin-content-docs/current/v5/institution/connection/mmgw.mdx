@@ -5,7 +5,7 @@ sidebar_label: MMGW
 
 Market Maker Gateway (MMGW) 是面向做市商與機構客戶的專屬 HTTP 接入路徑，用於發送與訂單相關的 API 請求。它為延遲敏感的交易流程提供穩定路由，並降低對共享公共 API 路由的依賴。
 
-MMGW 的設計重點是路由品質與連線穩定性。它可以協助降低路由漂移、間歇性請求超時以及 HTTP session 非預期終止的情況。不過，MMGW 並不保證相較標準公共 API 路由具備絕對延遲優勢。
+MMGW 的設計重點是路由品質與連線穩定性。它可以協助降低路由漂移、間歇性請求超時以及 HTTP session 非預期終止的情況。不過，MMGW 並不保證相較標準的 api.bybit.com 具備絕對延遲優勢。
 
 ## 支援路徑
 
@@ -17,6 +17,7 @@ MMGW 支援以下 V5 HTTP API 路徑:
 | 倉位 API | `/v5/position/*` |
 | 成交列表 | `/v5/execution/list` |
 | 錢包餘額 | `/v5/account/wallet-balance` |
+| unified可提現金額 | `/v5/account/withdrawal` |
 | Spread 訂單 API | `/v5/spread/order/*` |
 | Spread 成交列表 | `/v5/spread/execution/list` |
 
@@ -28,7 +29,7 @@ https://{MMGW hostname}/v5/order/amend
 https://{MMGW hostname}/v5/execution/list
 ```
 
-對於 MMGW 不支援的 API，請繼續使用標準 API hostname。
+對於 MMGW 不支援的 API，請繼續使用標準的 api.bybit.com。
 
 ## 接入配置
 
@@ -40,7 +41,7 @@ https://{MMGW hostname}/v5/execution/list
 
 1. 確認您的流量只使用上方列出的 MMGW 支援路徑。
 2. 將源 IP 位址或 CIDR 範圍提交給您的 Bybit 對接人，用於白名單配置。
-3. 將支援 endpoint 的公共 API hostname 替換為專屬 MMGW hostname。
+3. 將支援 endpoint 的 api.bybit.com 替換為專屬 MMGW hostname。
 4. 保持與標準 V5 REST API 相同的請求簽名、timestamp、receive window、重試和錯誤處理邏輯。
 5. 將不支援的 endpoint 路由至標準 API hostname。
 6. 遷移後監控超時率、session 穩定性以及路由一致性。
