@@ -15,7 +15,7 @@ sidebar_position: 2
 |symbol |false |string |交易對名稱，例如 `BTCUSDT` |
 |status |false |string |策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交, `5`：已暫停，`6`：待觸發 |
 |category |false |string |產品類型。`UTA_USDT`、`UTA_USDC`、`UTA_USDC_FUTURE`、`UTA_SPOT`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE` |
-|strategyType |false |string |策略類型。`twap`、`chaseOrder`、`iceberg` |
+|strategyType |false |string |策略類型。`twap`、`chaseOrder`、`iceberg`、`pov` |
 |beginTimeE0 |false |int64 |起始時間（Unix 時間戳，秒） |
 |endTimeE0 |false |int64 |結束時間（Unix 時間戳，秒） |
 |pageSize |false |integer |每頁資料筆數。默認：`20`，最大：`50` |
@@ -30,7 +30,7 @@ sidebar_position: 2
 |> symbol |string |交易對名稱 |
 |> side |string |`Buy`、`Sell` |
 |> size |string |總下單數量 |
-|> strategyType |string |策略類型。`twap`、`chaseOrder`、`iceberg` |
+|> strategyType |string |策略類型。`twap`、`chaseOrder`、`iceberg`、`pov` |
 |> status |integer |策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交，`5`：已暫停，`6`：待觸發 |
 |> executedSize |string |已成交數量 |
 |> executedAvgPrice |string |平均成交價格 |
@@ -49,10 +49,10 @@ sidebar_position: 2
 |> realizedPnl |string |已實現盈虧（僅合約） |
 |> strategyName |string |策略自訂名稱 |
 |> strategyPrefer |string |執行偏好。`limit`、`priceSpeedBalance`、`fastestExecution`、`quickExecution` |
-|> duration |integer |計劃總執行時間（秒）。_僅 TWAP_ |
-|> executedDuration |integer |實際已執行時間（秒）。_僅 TWAP_ |
+|> duration |integer |計劃總執行時間（秒）。_僅 TWAP/POV_ |
+|> executedDuration |integer |實際已執行時間（秒）。_僅 TWAP/POV_ |
 |> isRandom |boolean |是否啟用子訂單數量隨機化。_僅 TWAP_ |
-|> interval |integer |子訂單掛出間隔（秒）。_僅 TWAP_ |
+|> interval |integer |子訂單掛出間隔（秒）。_僅 TWAP/POV_ |
 |> limitPrice |string |固定限價。訂單不會在此價格以外掛出 |
 |> chasePercentE4 |int64 |追蹤價格偏移（基點，1/10000）。_Chase / Iceberg_ |
 |> chaseDistance |string |追蹤價格距離（絕對值）。_Chase / Iceberg_ |
@@ -68,6 +68,10 @@ sidebar_position: 2
 |> arbitrageOrders |array |關聯套利訂單列表 |
 |> positionValue |string |總持倉價值 |
 |> filledPositionValue |string |已成交持倉價值 |
+|> mode |string |執行模式, `TradeVolume` `OppositeSideLiquidity` `SameSideLiquidity`, _僅 POV_ |
+|> participationRate |string |參與率, _僅 POV_|
+|> referenceWindow |string |歷史成交量的參考窗口, _僅 POV_|
+|> depthReference |string |參考深度, _僅 POV_|
 |nextCursor |string |下一頁游標。空字串表示無更多資料 |
 |prevCursor |string |上一頁游標 |
 

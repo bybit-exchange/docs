@@ -4,7 +4,7 @@ sidebar_label: Create Strategy Order
 sidebar_position: 1
 ---
 
-Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`.
+Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`, `pov`.
 
 ## Strategy Types
 
@@ -49,6 +49,23 @@ Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Ice
 |`Chase Limit` |Buy at Bid1 / Sell at Ask1; maker execution |
 |`Chase Limit (offset)` |Fixed distance from Ask1/Bid1; balances speed and cost |
 |`Fixed Prices` |All sub-orders placed at a single fixed price |
+
+---
+
+### POV Order (Percentage of Volume)
+Participates in market volume at a fixed rate, dynamically sizing each sub-order as a percentage of observed trading activity or order book depth to minimize market impact.
+
+**Execution logic:** At each `interval`, the strategy samples market activity based on the selected mode → calculates sub-order quantity using `participationRate` → places the order → repeats until `maxQty` (`size`) is reached or `maxDuration` (`duration`) expires. Setting `interval` to `0` executes once immediately (OneTime mode).
+
+**Note:** POV supports Perpetuals only (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`). Spot is not supported. When `interval` > `0`, at least one of `size` or `duration` must be provided.
+
+**Execution modes (`povParams.mode`):**
+
+| Mode | Order type | Volume reference |
+|:---|:---|:---|
+|`TradedVolume` |Market order |Historical traded volume over `referenceWindow` seconds; range: [60, 14400] |
+|`OppositeSideLiquidity` |Taker limit at best bid/ask |Opposite-side book depth; Top-N levels via `depthReference` [1, 10] |
+|`SameSideLiquidity` |Post-Only limit at best bid/ask |Same-side book depth; Top-N levels via `depthReference` [1, 10]; maker execution only |
 
 ---
 
@@ -215,6 +232,55 @@ Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Ice
         </tr>
         <tr>
             <td>chasePercentE4</td><td>false</td><td>integer</td><td><b>Order preferences: Chase Limit (offset)</b>, Price offset from best bid/ask in basis points (1/10000), e.g. <code>100</code> = 1%, range: [0, 100]. Mutually exclusive with <code>chaseDistance</code></td>
+        </tr>
+    </table>
+</TabItem>
+<TabItem value="pov" label="POV">
+    <table border="0.8">
+        <tr>
+            <th>Parameter</th><th>Required</th><th>Type</th><th>Comments</th>
+        </tr>
+        <tr>
+            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
+        </tr>
+         <tr>
+            <td>strategyType</td><td><b>true</b></td><td>string</td><td>Strategy type. <code>pov</code></td>
+        </tr>
+        <tr>
+            <td>symbol</td><td><b>true</b></td><td>string</td><td>Symbol name, e.g. <code>BTCUSDT</code></td>
+        </tr>
+        <tr>
+            <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>, <code>Sell</code></td>
+        </tr>
+        <tr>
+            <td>size</td><td>false</td><td>string</td><td>Total order quantity (coin). <b>Required</b> either "size" or "duration"</td>
+        </tr>
+        <tr>
+            <td>duration</td><td>false</td><td>integer</td><td>Total execution duration in seconds. Range: [900, 86400]. <b>Required</b> either "size" or "duration"</td>
+        </tr>
+        <tr>
+            <td>interval</td><td>false</td><td>integer</td><td>Sub-order placement interval in seconds. "0": one time execution, otherwise, range: [5, 3600]</td>
+        </tr>
+        <tr>
+            <td>reduceOnly</td><td>false</td><td>boolean</td><td>Reduce-only order, must set <code>true</code> when reducing the position. <code>true</code>, <code>false</code></td>
+        </tr>
+        <tr>
+            <td>positionIdx</td><td>false</td><td>integer</td><td>Position index. <code>0</code>: one-way mode, <code>1</code>: buy side of hedge mode, <code>2</code>: sell side of hedge mode. <b>Required</b> for hedge mode</td>
+        </tr>
+        <tr>
+            <td>povParams</td><td><b>true</b></td><td>object</td><td>Param object</td>
+        </tr>
+        <tr>
+            <td>> mode</td><td><b>true</b></td><td>string</td><td>Execution modes, <code>TradedVolume</code>: places a market order based on historical volume<br/><code>OppositeSideLiquidity</code>: places a taker limit at BBO based on the counterparty depth, <code>SameSideLiquidity</code>: places a post-only order at BBO based on the order side</td>
+        </tr>
+        <tr>
+            <td>> participationRate</td><td><b>true</b></td><td>string</td><td>Participation rate, range: [1, 100], support 1 decimal. e.g, <code>"25.1"</code>=25.1%</td>
+        </tr>
+        <tr>
+            <td>> referenceWindow</td><td>false</td><td>string</td><td><b>Required</b> when "mode"=<code>TradedVolume</code>, reference window for historical trading volume, range: [60, 14400]</td>
+        </tr>
+        <tr>
+            <td>> depthReference</td><td>false</td><td>integer</td><td><b>Required</b> when "mode"=<code>OppositeSideLiquidity</code> or <code>SameSideLiquidity</code>, reference depths, range: [1, 10]</td>
         </tr>
     </table>
 </TabItem>

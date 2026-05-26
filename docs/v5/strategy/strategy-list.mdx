@@ -16,7 +16,7 @@ You can also subscribe [strategy](../websocket/private/strategy) stream to recei
 |symbol |false |string |Symbol name, e.g. `BTCUSDT` |
 |status |false |string |Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: untriggered |
 |category |false |string |Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE` |
-|strategyType |false |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
+|strategyType |false |string |Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov` |
 |beginTimeE0 |false |int64 |Start time in seconds (Unix timestamp) |
 |endTimeE0 |false |int64 |End time in seconds (Unix timestamp) |
 |pageSize |false |integer |Limit for data size per page. Default: `20`, max: `50` |
@@ -31,7 +31,7 @@ You can also subscribe [strategy](../websocket/private/strategy) stream to recei
 |> symbol |string |Symbol name |
 |> side |string |`Buy`, `Sell` |
 |> size |string |Total order quantity |
-|> strategyType |string |Strategy type. `twap`, `chaseOrder`, `iceberg` |
+|> strategyType |string |Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov` |
 |> status |integer |Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: untriggered |
 |> executedSize |string |Executed quantity |
 |> executedAvgPrice |string |Average executed price |
@@ -50,10 +50,10 @@ You can also subscribe [strategy](../websocket/private/strategy) stream to recei
 |> realizedPnl |string |Realized PnL (futures only) |
 |> strategyName |string |Strategy custom name |
 |> strategyPrefer |string |Execution preference. `limit`, `priceSpeedBalance`, `fastestExecution`, `quickExecution` |
-|> duration |integer |Total planned execution duration in seconds. _TWAP only_ |
-|> executedDuration |integer |Actual executed duration in seconds. _TWAP only_ |
+|> duration |integer |Total planned execution duration in seconds. _TWAP/POV only_ |
+|> executedDuration |integer |Actual executed duration in seconds. _TWAP/POV only_ |
 |> isRandom |boolean |Whether sub-order quantity randomization is enabled. _TWAP only_ |
-|> interval |integer |Sub-order placement interval in seconds. _TWAP only_ |
+|> interval |integer |Sub-order placement interval in seconds. _TWAP/POV only_ |
 |> limitPrice |string |Fixed limit price. Orders will not be placed beyond this price |
 |> chasePercentE4 |int64 |Chase price offset in basis points (1/10000). _Chase / Iceberg_ |
 |> chaseDistance |string |Chase price distance (absolute value). _Chase / Iceberg_ |
@@ -69,6 +69,10 @@ You can also subscribe [strategy](../websocket/private/strategy) stream to recei
 |> arbitrageOrders |array |List of associated arbitrage orders |
 |> positionValue |string |Total position value |
 |> filledPositionValue |string |Filled position value |
+|> mode |string |Execution modes, `TradeVolume` `OppositeSideLiquidity` `SameSideLiquidity`, _POV only_ |
+|> participationRate |string |Participation rate, _POV only_|
+|> referenceWindow |string |Reference window for historical trading volume, _POV only_|
+|> depthReference |string |Reference depths, _POV only_|
 |nextCursor |string |Cursor for the next page. Empty string means no more data |
 |prevCursor |string |Cursor for the previous page |
 
