@@ -1,0 +1,294 @@
+---
+title: Fast Order Response SBE
+sidebar_label: Fast Order Response
+sidebar_position: 1
+---
+
+:::info MMWS only
+This channel is available **only** via your **dedicated Market Maker WebSocket (MMWS)** host. It is not accessible from standard WebSocket endpoints.
+:::
+
+## Overview
+
+The Fast Order SBE channel provides ultra-low-latency order push updates for HFT clients through the Market Maker WebSocket (MMWS). It delivers binary-encoded SBE messages directly from the matching engine for fast order submission, amendment, and cancellation acknowledgements.
+
+This channel is designed for speed and efficiency — prioritizing the latest updates and omitting passive events such as fills or system-initiated cancellations.
+
+## Release Schedule
+
+| Product | Testnet | Mainnet |
+|:---|:---|:---|
+| Spot | May 27, 2026 | June 23, 2026 |
+| Futures (linear & inverse) | June 9, 2026 | July 9, 2026 |
+| Options | June 16, 2026 | July 21, 2026 |
+
+## Connection
+
+| Environment | URL |
+|:---|:---|
+| Testnet | `wss://stream-testnet.bybits.org/v5/private-sbe` |
+| Mainnet | `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe` |
+
+- SBE messages are sent as **binary frames** (`opcode = 2`).
+- Control frames (auth, ping/pong, subscribe/unsubscribe) use the standard **Bybit V5 API JSON format**.
+
+## Authentication
+
+Authentication is required immediately after establishing a connection.
+
+### Auth Request
+
+```json
+{
+    "req_id": "10001",
+    "op": "auth",
+    "args": [
+        "api_key",
+        1662350400000,
+        "signature"
+    ]
+}
+```
+
+| Field | Description |
+|:---|:---|
+| req_id | Optional client identifier |
+| args[1] | Timestamp — must be greater than current time |
+| args[2] | Generated using the [Bybit API signing algorithm](../../v5/guide#authentication) |
+
+### Auth Success Response
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "op": "auth",
+    "conn_id": "cejreaspqfh3sjdnldmg-p"
+}
+```
+
+## Heartbeat
+
+### Send Ping
+
+```json
+{"req_id": "100001", "op": "ping"}
+```
+
+### Receive Pong
+
+```json
+{
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",
+    "req_id": "100001",
+    "op": "ping"
+}
+```
+
+## Subscription
+
+### Available Topics
+
+| Topic | Description |
+|:---|:---|
+| `order.sbe.resp.spot` | Spot fast order response |
+| `order.sbe.resp.linear` | Linear (USDT/USDC) fast order response |
+| `order.sbe.resp.inverse` | Inverse fast order response |
+| `order.sbe.resp.option` | Options fast order response |
+
+### Subscribe Example
+
+```json
+{
+    "op": "subscribe",
+    "args": ["order.sbe.resp.linear", "order.sbe.resp.spot", "order.sbe.resp.option"]
+}
+```
+
+### Subscription Acknowledgment
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "d30fdpbboasp1pjbe7r0",
+    "req_id": "abc123",
+    "op": "subscribe"
+}
+```
+
+## Push Logic
+
+`fast.resp.order` messages are actively pushed to clients when the order is initiated by the user (active trading actions: place, amend, cancel).
+
+:::info
+Upon channel restart or re-subscription, pushes start from the latest matching event — the focus is **speed**, not backfill.
+:::
+
+| Scenario / Event | Push via Fast Order Channel | Notes |
+|:---|:---:|:---|
+| Maker order new (accepted / ack) | ✅ Yes | All active actions initiated by client (place / amend / cancel / reject). |
+| Maker order filled / partial filled | ✅ Yes | All active actions initiated by client (place / amend / cancel / reject). |
+| Taker order (active side) | ✅ Yes | All active actions initiated by client (place / amend / cancel / reject). |
+| COT (CloseOnTrigger) order | ✅ Yes (for triggered order) | Triggered COT order acts like a new taker order; if it opens opposite side, `orderLinkId=""`. |
+| RO / ReduceOnly order | ✅ Yes | Normal push; if rejected due to cost or position box, `rejectReason` populated. |
+| Condition / TP-SL triggered order | ✅ Yes | Once condition triggers and order becomes active, it's pushed. `orderLinkId=""` (empty). |
+| DCP (Disconnect All Protection) | ✅ Yes | Pushes when DCP forcibly cancels orders on disconnect. |
+| SMP cancel-taker / Cancel Both (Self Match Protection) | ✅ Yes | Both taker/maker side cancellations will be pushed. |
+| SMP cancel-maker | ✅ Yes | Both taker/maker side cancellations will be pushed. |
+| MMP (Market Maker Protection) | ✅ Yes | MMP trigger cancels also pushed in fast order channel. |
+| Delist / Contract expiry / Option delivery | ❌ No | System-initiated close; no fast order push. |
+| Order reject (matching / validation reject) | ✅ Yes | Pushed immediately with `rejectReason`. |
+| Amend success / reject | ✅ Yes | Active amend ack / reject are pushed. |
+| Cancel success / reject | ✅ Yes | Active cancel ack / reject are pushed. |
+
+## OrderLinkId Behavior by Version
+
+| Scenario | 2026 Testnet / Mainnet | Notes |
+|:---|:---:|:---|
+| Active new order (user-initiated) | ✅ Present | Client-initiated place includes user's `orderLinkId`. |
+| Amend / Cancel (user-initiated) | ✅ Present | Client-initiated place includes user's `orderLinkId`. |
+| Maker→Taker transition (e.g. price amend crosses book) | ✅ Present | Client-initiated place includes user's `orderLinkId`. |
+| Active new conditional order (user-initiated) | ✅ Present | Client-initiated place includes user's `orderLinkId`. |
+| Position set trading stop order | ❌ Empty | System-created, no `orderLinkId`. |
+
+## Message Structure (SBE)
+
+`templateId = 21000` (`FastOrderResp`)
+
+### Message Header (8 bytes)
+
+| Field | Type | Size (bytes) | Description |
+|:---|:---|:---|:---|
+| blockLength | uint16 | 2 | Message body length |
+| templateId | uint16 | 2 | Fixed = `21000` |
+| schemaId | uint16 | 2 | Fixed = `1` |
+| version | uint16 | 2 | Fixed = `0` |
+
+### Message Body
+
+| ID | Field | Type | Description |
+|:---|:---|:---|:---|
+| 1 | category | uint8 | `1`=spot, `2`=linear, `3`=inverse, `4`=option |
+| 2 | side | uint8 | `1`=Buy, `2`=Sell |
+| 3 | orderStatus | uint8 | Order state enum. `0`=Others, `4`=PartiallyFilledAndCancelled, `5`=Rejected, `6`=New, `7`=Cancelled, `8`=PartiallyFilled, `9`=Filled |
+| 4 | priceExponent | int8 | Decimal places for price. `price = mantissa / 10^priceExponent` |
+| 5 | sizeExponent | int8 | Decimal places for size |
+| 6 | valueExponent | int8 | Decimal places for value |
+| 7 | rejectReason | uint16 | `0` if N/A. See [rejectReason mapping](#rejectreason-mapping) |
+| 8 | price | int64 | Price mantissa (apply `priceExponent`) |
+| 9 | leavesQty | int64 | Remaining quantity mantissa (apply `sizeExponent`) |
+| 10 | leavesValue | int64 | Spot market buy only; otherwise `0` (apply `valueExponent`) |
+| 11 | creationTime | int64 | Order creation timestamp in Fast Order channel (microseconds) |
+| 12 | updatedTime | int64 | Matching timestamp (microseconds) |
+| 13 | seq | int64 | Cross sequence ID |
+| 14 | symbolID | int32 | Symbol ID |
+| 100 | orderId | varString8 | Order ID (UUID) |
+| 101 | orderLinkId | varString8 | Optional; present for user-initiated orders |
+
+## rejectReason Mapping
+
+| Code | Name |
+|:---|:---|
+| 0 | EC_NoError |
+| 1 | EC_Others |
+| 2 | EC_UnknownMessageType |
+| 3 | EC_MissingClOrdID |
+| 4 | EC_OrderNotExist |
+| 5 | EC_MissingOrigClOrdID |
+| 6 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 7 | EC_OrigClOrdIDDoesNotExist |
+| 8 | EC_TooLateToCancel |
+| 9 | EC_UnknownOrderType |
+| 10 | EC_UnknownSide |
+| 11 | EC_UnknownTimeInForce |
+| 12 | EC_WronglyRouted |
+| 13 | EC_MarketOrderPriceIsNotZero |
+| 14 | EC_LimitOrderInvalidPrice |
+| 15 | EC_NoEnoughQtyToFill |
+| 16 | EC_NoImmediateQtyToFill |
+| 17 | EC_QtyCannotBeZero |
+| 18 | EC_PerCancelRequest |
+| 19 | EC_MarketOrderCannotBePostOnly |
+| 20 | EC_PostOnlyWillTakeLiquidity |
+| 21 | EC_CancelReplaceOrder |
+| 22 | EC_InvalidSymbolStatus |
+| 23 | EC_MarketOrderNoSupportTIF |
+| 24 | EC_ReachMaxTradeNum |
+| 25 | EC_InvalidPriceScale |
+| 28 | EC_BySelfMatch |
+| 29 | EC_InvalidSmpType |
+| 30 | EC_CancelByMMP |
+| 31 | EC_InCallAuctionStatus |
+| 34 | EC_InvalidUserType |
+| 35 | EC_InvalidMirrorOid |
+| 36 | EC_InvalidMirrorUid |
+| 100 | EC_EcInvalidQty |
+| 101 | EC_InvalidAmount |
+| 102 | EC_LoadOrderCancel |
+| 103 | EC_CancelForNoFullFill |
+| 104 | EC_MarketQuoteNoSuppSell |
+| 105 | EC_DisorderOrderID |
+| 106 | EC_InvalidBaseValue |
+| 107 | EC_LoadOrderCanMatch |
+| 108 | EC_SecurityStatusFail |
+| 110 | EC_ReachRiskPriceLimit |
+| 111 | EC_CancelByOrderValueZero |
+| 112 | EC_CancelByMatchValueZero |
+| 113 | EC_CancelByMatchValueZero |
+| 200 | EC_ReachMarketPriceLimit |
+
+## SBE XML Template (Fast Order Response)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
+                   xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"
+                   package="order.fast.sbe"
+                   id="1"
+                   version="0"
+                   semanticVersion="1.0.0"
+                   description="Bybit fast order response SBE schema"
+                   byteOrder="littleEndian"
+                   headerType="messageHeader">
+  <types>
+    <composite name="messageHeader" description="Template ID and length of message root">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="templateId" primitiveType="uint16"/>
+      <type name="schemaId" primitiveType="uint16"/>
+      <type name="version" primitiveType="uint16"/>
+    </composite>
+    <composite name="varString8" description="Variable length UTF-8 string">
+      <type name="length" primitiveType="uint8"/>
+      <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
+    </composite>
+  </types>
+  <!-- Fast order response: active place/cancel/amend acknowledgements -->
+  <sbe:message name="FastOrderResp" id="21000">
+    <!-- Routing / classification -->
+    <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>
+    <!-- Side / status / rejection -->
+    <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>
+    <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>
+    <!-- Price / size (mantissas) with exponents -->
+    <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>
+    <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>
+    <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>
+    <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>
+    <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>
+    <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>
+    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>
+    <!-- Timing -->
+    <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>
+    <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>
+    <field id="13" name="seq" type="int64" description="Cross sequence ID"/>
+    <!-- SymbolID -->
+    <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
+    <!-- Order identifiers -->
+    <data id="100" name="orderId" type="varString8" description="Order ID"/>
+    <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
+  </sbe:message>
+</sbe:messageSchema>
+```
