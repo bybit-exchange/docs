@@ -12,6 +12,12 @@ sidebar_position: 1
 - **Purpose:** 高效能低延遲下單 — 單筆或批次建立、修改、取消訂單.
 - **Compression:** 停用壓縮以避免隊頭阻塞與 CPU 開銷.
 
+:::note 版本相容性說明
+在 version 2 中，我們新增了一個 boolean 型別的請求參數。但對於某些程式語言，若未在請求 payload 中明確包含該欄位，可能會導致問題。
+目前建議繼續使用 `version=1` 發送請求。在回應端，您可能仍會看到 `version=2`，這是目前的內部測試版本，尚未正式發布。
+目前的 `version=1` 已完全穩定，可用於生產環境。
+:::
+
 ## 主網
 預計將於2026年6月初發布. 測試網URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
@@ -156,7 +162,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | blockLength | uint16 | 2            | 固定主體長度 Fixed-body length |
 | templateId  | uint16 | 2            | 信息型別識別碼 Message type identifier |
 | schemaId    | uint16 | 2            | 固定值 = 2 Fixed = 2 |
-| version     | uint16 | 2            | 固定值 = 2 Fixed = 2 |
+| version     | uint16 | 2            | 固定值 = 1 Fixed = 1 |
 
 ### 複合型別 (Composite Types)
 
@@ -416,7 +422,7 @@ API_SECRET = "your_api_secret"
 RECV_WINDOW = 5000
 
 SCHEMA_ID = 2
-VERSION = 2
+VERSION = 1
 
 # Template IDs
 TMPL_AUTH_REQ     = 1
