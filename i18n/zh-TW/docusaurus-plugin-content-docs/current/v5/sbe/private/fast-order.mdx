@@ -1,0 +1,294 @@
+---
+title: Fast Order Response SBE
+sidebar_label: Fast Order Response
+sidebar_position: 1
+---
+
+:::info 僅限 MMWS
+此頻道**僅**可透過您的**專屬 Market Maker WebSocket（MMWS）** 主機訪問，標準 WebSocket 端點無法使用。
+:::
+
+## 概述
+
+Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HFT）客戶提供超低延遲的訂單推送。它直接從撮合引擎推送 SBE（Simple Binary Encoding）二進位編碼訊息，用於下單、改單和撤單的確認回執。
+
+本頻道以速度和效率為核心設計，**僅推送用戶主動操作觸發的事件**，不包含成交通知、系統撤單等被動事件。
+
+## 上線時間表
+
+| 產品 | 測試網 | 主網 |
+|:---|:---|:---|
+| 現貨 | 2026年5月27日 | 2026年6月23日 |
+| 期貨（線性 & 反向） | 2026年6月9日 | 2026年7月9日 |
+| 期權 | 2026年6月16日 | 2026年7月21日 |
+
+## 連接
+
+| 環境 | URL |
+|:---|:---|
+| 測試網 | `wss://stream-testnet.bybits.org/v5/private-sbe` |
+| 主網 | `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe` |
+
+- SBE 訊息以**二進位幀**（`opcode = 2`）發送。
+- 控制幀（鑒權、ping/pong、訂閱/取消訂閱）使用標準 **Bybit V5 API JSON 格式**。
+
+## 鑒權
+
+建立連接後必須立即進行鑒權。
+
+### 鑒權請求
+
+```json
+{
+    "req_id": "10001",
+    "op": "auth",
+    "args": [
+        "api_key",
+        1662350400000,
+        "signature"
+    ]
+}
+```
+
+| 欄位 | 說明 |
+|:---|:---|
+| req_id | 可選的客戶端標識符 |
+| args[1] | 時間戳，必須大於當前時間 |
+| args[2] | 使用 [Bybit API 簽名算法](../../v5/guide#authentication) 生成 |
+
+### 鑒權成功響應
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "op": "auth",
+    "conn_id": "cejreaspqfh3sjdnldmg-p"
+}
+```
+
+## 心跳
+
+### 發送 Ping
+
+```json
+{"req_id": "100001", "op": "ping"}
+```
+
+### 接收 Pong
+
+```json
+{
+    "success": true,
+    "ret_msg": "pong",
+    "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",
+    "req_id": "100001",
+    "op": "ping"
+}
+```
+
+## 訂閱
+
+### 可用 Topic
+
+| Topic | 說明 |
+|:---|:---|
+| `order.sbe.resp.spot` | 現貨快速訂單響應 |
+| `order.sbe.resp.linear` | 線性合約（USDT/USDC）快速訂單響應 |
+| `order.sbe.resp.inverse` | 反向合約快速訂單響應 |
+| `order.sbe.resp.option` | 期權快速訂單響應 |
+
+### 訂閱示例
+
+```json
+{
+    "op": "subscribe",
+    "args": ["order.sbe.resp.linear", "order.sbe.resp.spot", "order.sbe.resp.option"]
+}
+```
+
+### 訂閱確認
+
+```json
+{
+    "success": true,
+    "ret_msg": "",
+    "conn_id": "d30fdpbboasp1pjbe7r0",
+    "req_id": "abc123",
+    "op": "subscribe"
+}
+```
+
+## 推送邏輯
+
+當用戶主動發起操作（下單、改單、撤單）時，`fast.resp.order` 訊息將主動推送給客戶端。
+
+:::info
+頻道重啟或重新訂閱後，推送從最新的撮合事件開始——核心是**速度**，不支持補發歷史數據。
+:::
+
+| 場景 / 事件 | 是否推送 | 備註 |
+|:---|:---:|:---|
+| Maker 訂單新建（已接受 / ack） | ✅ 是 | 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。 |
+| Maker 訂單成交 / 部分成交 | ✅ 是 | 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。 |
+| Taker 訂單（主動方） | ✅ 是 | 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。 |
+| COT（CloseOnTrigger）訂單 | ✅ 是（針對觸發後訂單） | 觸發的 COT 訂單行為類似新的 Taker 訂單；若開反向倉位，`orderLinkId=""`。 |
+| RO / ReduceOnly 訂單 | ✅ 是 | 正常推送；若因保證金不足或倉位限制被拒絕，`rejectReason` 將有值。 |
+| 條件單 / TP-SL 觸發訂單 | ✅ 是 | 條件觸發且訂單變為活躍後推送，`orderLinkId=""` （為空）。 |
+| DCP（斷線全部保護） | ✅ 是 | DCP 在斷線時強制撤單時推送。 |
+| SMP 撤 Taker / 同時撤兩方（自成交保護） | ✅ 是 | Taker / Maker 兩側撤單均會推送。 |
+| SMP 撤 Maker | ✅ 是 | Taker / Maker 兩側撤單均會推送。 |
+| MMP（做市商保護） | ✅ 是 | MMP 觸發的撤單也會在 Fast Order 頻道推送。 |
+| 下架 / 合約到期 / 期權交割 | ❌ 否 | 系統主動平倉，不推送 Fast Order。 |
+| 訂單被拒（撮合 / 驗證拒絕） | ✅ 是 | 立即推送，附帶 `rejectReason`。 |
+| 改單成功 / 拒絕 | ✅ 是 | 主動改單的 ack / 拒絕均推送。 |
+| 撤單成功 / 拒絕 | ✅ 是 | 主動撤單的 ack / 拒絕均推送。 |
+
+## OrderLinkId 各版本行為說明
+
+| 場景 | 2026 測試網 / 主網 | 備註 |
+|:---|:---:|:---|
+| 主動新建訂單（用戶發起） | ✅ 有值 | 客戶端發起的下單包含用戶的 `orderLinkId`。 |
+| 改單 / 撤單（用戶發起） | ✅ 有值 | 客戶端發起的下單包含用戶的 `orderLinkId`。 |
+| Maker→Taker 轉變（如價格改單穿越盤口） | ✅ 有值 | 客戶端發起的下單包含用戶的 `orderLinkId`。 |
+| 主動新建條件單（用戶發起） | ✅ 有值 | 客戶端發起的下單包含用戶的 `orderLinkId`。 |
+| 倉位設置止盈止損訂單 | ❌ 為空 | 系統創建，無 `orderLinkId`。 |
+
+## 消息結構（SBE）
+
+`templateId = 21000`（`FastOrderResp`）
+
+### 消息頭（8 字節）
+
+| 欄位 | 類型 | 大小（字節） | 說明 |
+|:---|:---|:---|:---|
+| blockLength | uint16 | 2 | 消息體長度 |
+| templateId | uint16 | 2 | 固定 = `21000` |
+| schemaId | uint16 | 2 | 固定 = `1` |
+| version | uint16 | 2 | 固定 = `0` |
+
+### 消息體
+
+| ID | 欄位 | 類型 | 說明 |
+|:---|:---|:---|:---|
+| 1 | category | uint8 | `1`=現貨, `2`=線性, `3`=反向, `4`=期權 |
+| 2 | side | uint8 | `1`=買, `2`=賣 |
+| 3 | orderStatus | uint8 | 訂單狀態枚舉。`0`=Others, `4`=PartiallyFilledAndCancelled, `5`=Rejected, `6`=New, `7`=Cancelled, `8`=PartiallyFilled, `9`=Filled |
+| 4 | priceExponent | int8 | 價格小數位數。`price = mantissa / 10^priceExponent` |
+| 5 | sizeExponent | int8 | 數量小數位數 |
+| 6 | valueExponent | int8 | 金額小數位數 |
+| 7 | rejectReason | uint16 | 無拒絕時為 `0`，詳見 [rejectReason 映射](#rejectreason-映射) |
+| 8 | price | int64 | 價格尾數（需應用 `priceExponent`） |
+| 9 | leavesQty | int64 | 剩餘數量尾數（需應用 `sizeExponent`） |
+| 10 | leavesValue | int64 | 僅現貨市價買單有效，其他情況為 `0`（需應用 `valueExponent`） |
+| 11 | creationTime | int64 | 訂單在 Fast Order 頻道的創建時間戳（微秒） |
+| 12 | updatedTime | int64 | 撮合時間戳（微秒） |
+| 13 | seq | int64 | 跨序列 ID |
+| 14 | symbolID | int32 | 交易對 ID |
+| 100 | orderId | varString8 | 訂單 ID（UUID） |
+| 101 | orderLinkId | varString8 | 可選；用戶主動操作時存在 |
+
+## rejectReason 映射
+
+| 代碼 | 名稱 |
+|:---|:---|
+| 0 | EC_NoError |
+| 1 | EC_Others |
+| 2 | EC_UnknownMessageType |
+| 3 | EC_MissingClOrdID |
+| 4 | EC_OrderNotExist |
+| 5 | EC_MissingOrigClOrdID |
+| 6 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 7 | EC_OrigClOrdIDDoesNotExist |
+| 8 | EC_TooLateToCancel |
+| 9 | EC_UnknownOrderType |
+| 10 | EC_UnknownSide |
+| 11 | EC_UnknownTimeInForce |
+| 12 | EC_WronglyRouted |
+| 13 | EC_MarketOrderPriceIsNotZero |
+| 14 | EC_LimitOrderInvalidPrice |
+| 15 | EC_NoEnoughQtyToFill |
+| 16 | EC_NoImmediateQtyToFill |
+| 17 | EC_QtyCannotBeZero |
+| 18 | EC_PerCancelRequest |
+| 19 | EC_MarketOrderCannotBePostOnly |
+| 20 | EC_PostOnlyWillTakeLiquidity |
+| 21 | EC_CancelReplaceOrder |
+| 22 | EC_InvalidSymbolStatus |
+| 23 | EC_MarketOrderNoSupportTIF |
+| 24 | EC_ReachMaxTradeNum |
+| 25 | EC_InvalidPriceScale |
+| 28 | EC_BySelfMatch |
+| 29 | EC_InvalidSmpType |
+| 30 | EC_CancelByMMP |
+| 31 | EC_InCallAuctionStatus |
+| 34 | EC_InvalidUserType |
+| 35 | EC_InvalidMirrorOid |
+| 36 | EC_InvalidMirrorUid |
+| 100 | EC_EcInvalidQty |
+| 101 | EC_InvalidAmount |
+| 102 | EC_LoadOrderCancel |
+| 103 | EC_CancelForNoFullFill |
+| 104 | EC_MarketQuoteNoSuppSell |
+| 105 | EC_DisorderOrderID |
+| 106 | EC_InvalidBaseValue |
+| 107 | EC_LoadOrderCanMatch |
+| 108 | EC_SecurityStatusFail |
+| 110 | EC_ReachRiskPriceLimit |
+| 111 | EC_CancelByOrderValueZero |
+| 112 | EC_CancelByMatchValueZero |
+| 113 | EC_CancelByMatchValueZero |
+| 200 | EC_ReachMarketPriceLimit |
+
+## SBE XML 模板（Fast Order Response）
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
+                   xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"
+                   package="order.fast.sbe"
+                   id="1"
+                   version="0"
+                   semanticVersion="1.0.0"
+                   description="Bybit fast order response SBE schema"
+                   byteOrder="littleEndian"
+                   headerType="messageHeader">
+  <types>
+    <composite name="messageHeader" description="Template ID and length of message root">
+      <type name="blockLength" primitiveType="uint16"/>
+      <type name="templateId" primitiveType="uint16"/>
+      <type name="schemaId" primitiveType="uint16"/>
+      <type name="version" primitiveType="uint16"/>
+    </composite>
+    <composite name="varString8" description="Variable length UTF-8 string">
+      <type name="length" primitiveType="uint8"/>
+      <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>
+    </composite>
+  </types>
+  <!-- Fast order response: active place/cancel/amend acknowledgements -->
+  <sbe:message name="FastOrderResp" id="21000">
+    <!-- Routing / classification -->
+    <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>
+    <!-- Side / status / rejection -->
+    <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>
+    <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>
+    <!-- Price / size (mantissas) with exponents -->
+    <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>
+    <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>
+    <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>
+    <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>
+    <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>
+    <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>
+    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>
+    <!-- Timing -->
+    <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>
+    <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>
+    <field id="13" name="seq" type="int64" description="Cross sequence ID"/>
+    <!-- SymbolID -->
+    <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
+    <!-- Order identifiers -->
+    <data id="100" name="orderId" type="varString8" description="Order ID"/>
+    <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
+  </sbe:message>
+</sbe:messageSchema>
+```
