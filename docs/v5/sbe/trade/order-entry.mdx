@@ -12,6 +12,14 @@ sidebar_position: 2
 - **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
 - **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
 
+:::note Version Compatibility
+In version 2, we introduced a new boolean request parameter. However, for some programming languages, this may cause issues if the field is not explicitly included in the request payload.
+
+For now, we recommend continuing to send requests using `version=1`. On the response side, you may still see `version=2`, as this is currently an internal testing version and has not been fully released yet.
+
+The current `version=1` is fully stable and ready for production use.
+:::
+
 ## Mainnet
 The estimated available date is the beginning of June, 2026. Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
@@ -156,7 +164,7 @@ Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
 | blockLength | uint16 | 2            | Fixed-body length       |
 | templateId  | uint16 | 2            | Message type identifier |
 | schemaId    | uint16 | 2            | Fixed = 2               |
-| version     | uint16 | 2            | Fixed = 2               |
+| version     | uint16 | 2            | Fixed = 1               |
 
 ### Composite Types
 
@@ -416,7 +424,7 @@ API_SECRET = "your_api_secret"
 RECV_WINDOW = 5000
 
 SCHEMA_ID = 2
-VERSION = 2
+VERSION = 1
 
 # Template IDs
 TMPL_AUTH_REQ     = 1
