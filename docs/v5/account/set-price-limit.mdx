@@ -16,8 +16,12 @@ Spot
 * **Minimum sell price**: *Max[Min(Index Price, Index Price × (1 – x%) + 2-Minute Average Premium), Index Price × (1 – y%)]*
 
 Futures
-* **Maximum buy price**: *Min (Max (Index Price, Mark Price × (1 + x%)), Mark Price × (1 + y%))*
-* **Minimum sell price**: *Max (Min (Index Price, Mark Price × (1 - x%)), Mark Price × (1 - y%))*
+* **Maximum Buy Price** = *min(Mark × (1 + Y), max(Index, Mark × (1 + X) + α × max(0, Premium_avg)))*
+* **Minimum Sell Price** = *max(Mark × (1 - Y), min(Index, Mark × (1 - X) + α × min(0, Premium_avg)))*
+
+Where:
+* **Premium_avg**: Average order book premium over the past 30 seconds, calculated every second: *avg((Best Ask Price + Best Bid Price) / 2 − Mark Price)*
+* **α**: Weighting factor applied to the premium average. The default value is `1`. Bybit may dynamically adjust this parameter based on market conditions.
 
 :::info Default Setting
 *	Spot:
