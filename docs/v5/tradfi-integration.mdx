@@ -119,6 +119,21 @@ print(session.sign_agreement(
 }
 ```
 
+## Index Price Calculation Rule
+
+The index price of a perpetual contract is the **volume-weighted sum** of the top six (6) spot trading pairs across major exchanges. Weights are refreshed hourly based on each pair's 24-hour trading volume.
+
+Key mechanisms:
+- **Price source**: live last-traded price; if liquidity is low or the trade price is abnormal, an orderbook-weighted price is used instead.
+- **Median deviation filter**: if a component deviates from the cross-exchange median by more than 5% (1% for BTC/ETH, 3% for XAU/XAG), it is temporarily excluded and its weight is smoothly redistributed to the remaining components.
+- **Inactivity rule**: a pair with no trades for over 15 minutes is dropped until trading resumes.
+- **Extreme market fallback**: when no reasonable spot price is available, the index is derived from the perpetual's last traded price and orderbook depth (EMA-smoothed).
+- **Special assets**: BBSOL, CMETH, METH, USDE, etc. additionally reference a redemption price with a minimum price floor.
+
+For full formulas and worked examples, refer to the Help Center: [Index Price Calculation](https://www.bybit.com/en/help-center/article/Index-Price-Calculation).
+
+For index component additions, weight adjustments, and other index-related changes, see the [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price) page.
+
 ## Index Price Rollover Mechanism
 
 The index price of perpetual futures is derived from the respective underlying futures contracts. As commodities do not have a traditional spot market, the external reference price is determined based on designated futures contracts.
