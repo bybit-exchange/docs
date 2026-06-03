@@ -144,6 +144,21 @@ Upon channel restart or re-subscription, pushes start from the latest matching e
 | Amend success / reject | ✅ Yes | Active amend ack / reject are pushed. |
 | Cancel success / reject | ✅ Yes | Active cancel ack / reject are pushed. |
 
+## Differences from Standard WebSocket Order Channel
+
+The table below highlights behavioral differences between the Fast Order SBE channel (`order.sbe.resp.*`) and the standard private WebSocket [Order](../../websocket/private/order) channel.
+
+| Scenario | Fast Order Channel | Standard WS Order Channel | Notes |
+|:---|:---:|:---:|:---|
+| Conditional order — place / amend / cancel (before trigger) | ❌ No push | ✅ Push | Conditional orders are not sent to the matching engine before being triggered; the matching engine has no pre-trigger order state to push. |
+| TP/SL order — place / amend / cancel (before trigger) | ❌ No push | ✅ Push | Same reason as above. |
+| Trailing stop order — place / amend / cancel (before trigger) | ❌ No push | ✅ Push | Same reason as above. |
+| Position liquidation order | ❌ No push | ✅ Push | Note: liquidation-triggered cancellations are consistent between both channels. |
+| Contract delist cancellation | ❌ No push | ✅ Push | Delist cancellations are handled internally and not forwarded to the matching engine. |
+| Amend / cancel an order that was fully filled before the request arrived | Fast Order: `orderStatus=Rejected` | Standard WS: `orderStatus=Filled` | e.g. qty=10, amend to 12, but 10 lots already filled — Fast Order returns the amend/cancel as `Rejected`; Standard WS returns `Filled`. |
+| Normal place / amend / cancel — `leavesValue` field | No value (`0`) | Has value | Fast Order always returns `0` for `leavesValue` on non-spot-market-buy-order-by-value orders. |
+| Pre-market call auction — cancel rejected | `orderStatus=Rejected` | `orderStatus=New` | During the pre-market call auction phase, cancel requests are rejected; Fast Order reflects `Rejected` while Standard WS reflects `New`. |
+
 ## OrderLinkId Behavior by Version
 
 | Scenario | 2026 Testnet / Mainnet | Notes |
@@ -196,9 +211,9 @@ Upon channel restart or re-subscription, pushes start from the latest matching e
 | 1 | EC_Others |
 | 2 | EC_UnknownMessageType |
 | 3 | EC_MissingClOrdID |
-| 4 | EC_OrderNotExist |
-| 5 | EC_MissingOrigClOrdID |
-| 6 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 4 | EC_MissingOrigClOrdID |
+| 5 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 6 | EC_DuplicatedClOrdID |
 | 7 | EC_OrigClOrdIDDoesNotExist |
 | 8 | EC_TooLateToCancel |
 | 9 | EC_UnknownOrderType |
@@ -218,6 +233,8 @@ Upon channel restart or re-subscription, pushes start from the latest matching e
 | 23 | EC_MarketOrderNoSupportTIF |
 | 24 | EC_ReachMaxTradeNum |
 | 25 | EC_InvalidPriceScale |
+| 26 | EC_BitIndexInvalid |
+| 27 | EC_StopBySelfMatch |
 | 28 | EC_BySelfMatch |
 | 29 | EC_InvalidSmpType |
 | 30 | EC_CancelByMMP |
@@ -225,6 +242,9 @@ Upon channel restart or re-subscription, pushes start from the latest matching e
 | 34 | EC_InvalidUserType |
 | 35 | EC_InvalidMirrorOid |
 | 36 | EC_InvalidMirrorUid |
+| 37 | EC_SymbolNotExist |
+| 38 | EC_CancelNoActiveOrders |
+| 39 | EC_MissingUID |
 | 100 | EC_EcInvalidQty |
 | 101 | EC_InvalidAmount |
 | 102 | EC_LoadOrderCancel |
@@ -235,8 +255,8 @@ Upon channel restart or re-subscription, pushes start from the latest matching e
 | 107 | EC_LoadOrderCanMatch |
 | 108 | EC_SecurityStatusFail |
 | 110 | EC_ReachRiskPriceLimit |
-| 111 | EC_CancelByOrderValueZero |
-| 112 | EC_CancelByMatchValueZero |
+| 111 | EC_OrderNotExist |
+| 112 | EC_CancelByOrderValueZero |
 | 113 | EC_CancelByMatchValueZero |
 | 200 | EC_ReachMarketPriceLimit |
 

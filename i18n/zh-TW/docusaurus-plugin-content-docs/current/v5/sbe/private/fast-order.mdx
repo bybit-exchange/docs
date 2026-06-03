@@ -144,6 +144,21 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 改單成功 / 拒絕 | ✅ 是 | 主動改單的 ack / 拒絕均推送。 |
 | 撤單成功 / 拒絕 | ✅ 是 | 主動撤單的 ack / 拒絕均推送。 |
 
+## 与标准 WebSocket 订单频道的差异
+
+下表列出了 Fast Order SBE 频道（`order.sbe.resp.*`）与标准私有 WebSocket [订单](../../websocket/private/order)频道在行为上的差异。
+
+| 场景 | Fast Order 频道 | 标准 WS 订单频道 | 说明 |
+|:---|:---:|:---:|:---|
+| 条件单下改撤（触发前） | ❌ 无推送 | ✅ 有推送 | 条件单在触发前不会发送到撮合引擎，撮合引擎无法获取触发前的订单状态。 |
+| TP/SL 订单下改撤（触发前） | ❌ 无推送 | ✅ 有推送 | 原因同上。 |
+| Trailing Stop 订单下改撤（触发前） | ❌ 无推送 | ✅ 有推送 | 原因同上。 |
+| 仓位强平订单 | ❌ 无推送 | ✅ 有推送 | 注：强平触发的撤单两者推送一致。 |
+| 合约下架撤单 | ❌ 无推送 | ✅ 有推送 | 下架撤单由内部处理，不发送到撮合引擎。 |
+| 改单/撤单请求到达前订单已完全成交 | `orderStatus=Rejected` | `orderStatus=Filled` | 例如 qty=10，改成 12，但 10 手已成交 — Fast Order 返回 `Rejected`，标准 WS 返回 `Filled`。 |
+| 正常下改撤 — `leavesValue` 字段 | 无值（`0`） | 有值 | Fast Order 对非现货市价按金额买单（non-spot-market-buy-order-by-value）的 `leavesValue` 始终返回 `0`。 |
+| 盘前集合竞价阶段 — 撤单被拒 | `orderStatus=Rejected` | `orderStatus=New` | 盘前集合竞价阶段不允许撤单，Fast Order 返回 `Rejected`，标准 WS 返回 `New`。 |
+
 ## OrderLinkId 各版本行為說明
 
 | 場景 | 2026 測試網 / 主網 | 備註 |
@@ -196,9 +211,9 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 1 | EC_Others |
 | 2 | EC_UnknownMessageType |
 | 3 | EC_MissingClOrdID |
-| 4 | EC_OrderNotExist |
-| 5 | EC_MissingOrigClOrdID |
-| 6 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 4 | EC_MissingOrigClOrdID |
+| 5 | EC_ClOrdIDOrigClOrdIDAreTheSame |
+| 6 | EC_DuplicatedClOrdID |
 | 7 | EC_OrigClOrdIDDoesNotExist |
 | 8 | EC_TooLateToCancel |
 | 9 | EC_UnknownOrderType |
@@ -218,6 +233,8 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 23 | EC_MarketOrderNoSupportTIF |
 | 24 | EC_ReachMaxTradeNum |
 | 25 | EC_InvalidPriceScale |
+| 26 | EC_BitIndexInvalid |
+| 27 | EC_StopBySelfMatch |
 | 28 | EC_BySelfMatch |
 | 29 | EC_InvalidSmpType |
 | 30 | EC_CancelByMMP |
@@ -225,6 +242,9 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 34 | EC_InvalidUserType |
 | 35 | EC_InvalidMirrorOid |
 | 36 | EC_InvalidMirrorUid |
+| 37 | EC_SymbolNotExist |
+| 38 | EC_CancelNoActiveOrders |
+| 39 | EC_MissingUID |
 | 100 | EC_EcInvalidQty |
 | 101 | EC_InvalidAmount |
 | 102 | EC_LoadOrderCancel |
@@ -235,8 +255,8 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 107 | EC_LoadOrderCanMatch |
 | 108 | EC_SecurityStatusFail |
 | 110 | EC_ReachRiskPriceLimit |
-| 111 | EC_CancelByOrderValueZero |
-| 112 | EC_CancelByMatchValueZero |
+| 111 | EC_OrderNotExist |
+| 112 | EC_CancelByOrderValueZero |
 | 113 | EC_CancelByMatchValueZero |
 | 200 | EC_ReachMarketPriceLimit |
 
