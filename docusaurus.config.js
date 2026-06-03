@@ -247,17 +247,29 @@ const config = {
                 label: 'Self Match Prevention',
               },
               {
-                to: '/v5/institution/ip-changelog',
-                label: 'Institution IP Change Log',
+                to: '/institutional/dmm-listing/spot',
+                label: 'Spot DMM Listing Integration',
+              },
+              {
+                to: '/v5/institution/connection/mmws',
+                label: 'MMWS',
               },
               {
                 to: '/v5/institution/whitelist-ip',
-                label: 'Institution Whitelist IP',
+                label: 'Get Whitelist IP',
               },
               {
-                to: '/institutional/dmm-listing/spot',
-                label: 'DMM Listing',
-              }
+                to: '/v5/institution/ip-changelog',
+                label: 'Get IP Change Log',
+              },
+              {
+                to: '/v5/otc/margin-product-info',
+                label: 'Institutional Loan',
+              },
+              {
+                to: '/v5/sbe/sbe-basic-info',
+                label: 'SBE',
+              },
             ]
           },
           {
