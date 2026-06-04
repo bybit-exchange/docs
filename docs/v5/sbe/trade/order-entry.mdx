@@ -8,20 +8,12 @@ sidebar_position: 2
 
 - **Channel:** Private MM WebSocket only (not available on public WS).
 - **Transport:** WebSocket binary frames — each frame contains exactly one SBE message (no JSON).
-- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 1`.
+- **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 2`.
 - **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
 - **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
 
-:::note Version Compatibility
-In version 2, we introduced a new boolean request parameter. However, for some programming languages, this may cause issues if the field is not explicitly included in the request payload.
-
-For now, we recommend continuing to send requests using `version=1`. On the response side, you may still see `version=2`, as this is currently an internal testing version and has not been fully released yet.
-
-The current `version=1` is fully stable and ready for production use.
-:::
-
-## Mainnet
-The estimated available date is the beginning of June, 2026. Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
+## Testnet
+Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
 ## SBE XML Template
 [sbe xml template](../sbe-basic-info#ws-order-entry-sbe-xml-template)
@@ -164,7 +156,7 @@ Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
 | blockLength | uint16 | 2            | Fixed-body length       |
 | templateId  | uint16 | 2            | Message type identifier |
 | schemaId    | uint16 | 2            | Fixed = 2               |
-| version     | uint16 | 2            | Fixed = 1               |
+| version     | uint16 | 2            | Fixed = 2               |
 
 ### Composite Types
 
@@ -256,26 +248,27 @@ Embedded at the start of every response message.
 | 1  | timestamp | uint64 | 8            | Echoed client timestamp (ms) |
 | 2  | pongTime  | uint64 | 8            | Server pong timestamp (ms) |
 
-#### `CreateOrderReqV5` (id=5, blockLength=241)
+#### `CreateOrderReqV5` (id=5, blockLength=242)
 
-| ID | Field          | Type            | Size (bytes) | Description |
-|----|----------------|-----------------|--------------|-------------|
-| 1  | header         | ApiRequestHeader| 140          | Request header |
-| 2  | category       | CategoryType    | 1            | 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION |
-| 3  | symbolId       | int64           | 8            | Internal numeric symbol ID |
-| 4  | side           | SideType        | 1            | 1=BUY, 2=SELL |
-| 5  | orderType      | OrderType       | 1            | 1=MARKET, 2=LIMIT |
-| 6  | qty            | Decimal64       | 9            | Order quantity |
-| 7  | price          | Decimal64       | 9            | Order price; set mantissa=0 for MARKET orders |
-| 8  | orderLinkId    | char[64]        | 64           | Client order ID (null-padded) |
-| 9  | timeInForce    | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
-| 10 | positionIdx    | PositionIdxType | 1            | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL |
-| 11 | marketUnit     | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
-| 12 | isLeverage     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 13 | reduceOnly     | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 14 | closeOnTrigger | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
-| 15 | mmp            | BoolEnum        | 1            | Market Maker Protection |
-| 16 | smpType        | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
+| ID | Field           | Type            | Size (bytes) | Description |
+|----|-----------------|-----------------|--------------|-------------|
+| 1  | header          | ApiRequestHeader| 140          | Request header |
+| 2  | category        | CategoryType    | 1            | 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION |
+| 3  | symbolId        | int64           | 8            | Internal numeric symbol ID |
+| 4  | side            | SideType        | 1            | 1=BUY, 2=SELL |
+| 5  | orderType       | OrderType       | 1            | 1=MARKET, 2=LIMIT |
+| 6  | qty             | Decimal64       | 9            | Order quantity |
+| 7  | price           | Decimal64       | 9            | Order price; set mantissa=0 for MARKET orders |
+| 8  | orderLinkId     | char[64]        | 64           | Client order ID (null-padded) |
+| 9  | timeInForce     | TimeInForceType | 1            | 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI |
+| 10 | positionIdx     | PositionIdxType | 1            | 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL |
+| 11 | marketUnit      | MarketUnitType  | 1            | 1=BASE_COIN, 2=QUOTE_COIN |
+| 12 | isLeverage      | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 13 | reduceOnly      | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 14 | closeOnTrigger  | BoolEnum        | 1            | 0=FALSE, 1=TRUE |
+| 15 | mmp             | BoolEnum        | 1            | Market Maker Protection |
+| 16 | smpType         | SmpType         | 1            | 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH |
+| 17 | rpiTakerAccess  | BoolEnum        | 1            | 0=FALSE, 1=TRUE; added in schema version 2; this feature is currently in a gradual rollout phase and will be fully available on 12 June. See [announcement](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)|
 
 #### `CreateOrderRespV5` (id=6, blockLength=364)
 
@@ -583,6 +576,7 @@ def encode_create_order(
     close_on_trigger: int = BOOL_FALSE,
     mmp: int = BOOL_FALSE,
     smp_type: int = SMP_NONE,
+    rpi_taker_access: int = BOOL_FALSE,
     req_id: str = "",
     referer: str = "",
 ) -> bytes:
@@ -593,12 +587,13 @@ def encode_create_order(
         + _encode_decimal64(qty_mantissa, qty_exponent)             # 9 bytes
         + _encode_decimal64(price_mantissa, price_exponent)         # 9 bytes
         + _encode_str(order_link_id, 64)                            # 64 bytes
-        + struct.pack("<BBBBBBBBB",
+        + struct.pack("<BBBBBBBB",
                       time_in_force, position_idx, market_unit,
                       is_leverage, reduce_only, close_on_trigger,
-                      mmp, smp_type, 0)                             # 9 bytes (last byte pad to reach 241)
+                      mmp, smp_type)                                # 8 bytes
+        + struct.pack("<B", rpi_taker_access)                       # 1 byte (sinceVersion=2)
     )
-    return _encode_sbe_header(241, TMPL_CREATE_REQ) + body
+    return _encode_sbe_header(242, TMPL_CREATE_REQ) + body
 
 
 def encode_cancel_order(
