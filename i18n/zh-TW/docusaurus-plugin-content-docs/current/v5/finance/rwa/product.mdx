@@ -1,0 +1,87 @@
+---
+title: 獲取產品列表
+sidebar_label: 獲取產品列表
+sidebar_position: 1
+---
+
+:::info
+* 無需身份驗證。`userQuota` 欄位僅在已驗證請求時返回。
+* **頻率限制：** 20 次/秒（IP）
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/rwa/product" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|coin|false|string|結算幣種篩選（大寫），例如 `USDC`。不填則返回所有|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|list|array|產品列表|
+|> productId|integer|產品 ID|
+|> coin|string|結算幣種（如 `USDC`）|
+|> assetSymbol|string|標的資產代號（如 `IGBF`），同時作為資產名稱|
+|> manager|string|資產管理方名稱|
+|> baseApr|string|基礎年化利率，十進制字符串（如 `"0.055"` = 5.5%）|
+|> bonusApr|string|額外獎勵年化利率（所有生效獎勵項之和）；無獎勵時為空字符串|
+|> savingType|string|產品類型：`Flexible`（活期）、`Fixed`（定期）|
+|> duration|integer|鎖倉天數；活期產品為 `0`|
+|> nav|string|最新 NAV（單份淨值），精度截斷至 `sharePrecision`|
+|> minStakeAmount|string|最低認購金額（結算幣種）|
+|> maxStakeAmount|string|單筆最高認購金額；空字符串 = 無限制|
+|> userMaxAmount|string|用戶最大持有金額；空字符串 = 無限制|
+|> userQuota|string|用戶剩餘可認購額度；空字符串 = 無限制或未驗證請求|
+|> minRedeemShare|string|最低贖回份額|
+|> redeemFeeRate|string|贖回費率，十進制字符串（如 `"0.001"` = 0.1%）|
+|> subscriptionFee|string|認購費率，十進制字符串（如 `"0.001"` = 0.1%）|
+|> extLink|string|資產詳情頁外部鏈接|
+|> amountPrecision|integer|結算幣種金額精度（小數位數）|
+|> sharePrecision|integer|資產份額精度（小數位數）|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/rwa/product?coin=USDC HTTP/1.1
+Host: api.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "productId": 1001,
+                "coin": "USDC",
+                "assetSymbol": "IGBF",
+                "manager": "BlackRock",
+                "baseApr": "0.055",
+                "bonusApr": "0.02",
+                "savingType": "Flexible",
+                "duration": 0,
+                "nav": "1.025",
+                "minStakeAmount": "10",
+                "maxStakeAmount": "100000",
+                "userMaxAmount": "50000",
+                "userQuota": "49500",
+                "minRedeemShare": "1",
+                "redeemFeeRate": "0.001",
+                "subscriptionFee": "0",
+                "extLink": "https://example.com/igbf",
+                "amountPrecision": 2,
+                "sharePrecision": 6
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```
