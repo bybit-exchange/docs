@@ -1,0 +1,71 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 2
+---
+
+:::info
+* Orders are processed asynchronously. A successful response means the order was accepted, not settled. Use [Get Order List](./order) to track order status.
+* `orderLinkId` is **required** and must be unique per UID within RWA business scope. Reusing a previous `orderLinkId` returns error `180025 ORDER_ALREADY_EXISTS`.
+* **Stake**: deducts settlement coin from `accountType` and allocates shares at next NAV.
+* **Redeem**: locks shares and refunds settlement coin to `accountType` after settlement (T+N).
+* **Rate Limit:** 5 req/s (UID)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/rwa/place-order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|Product ID|
+|orderType|**true**|string|Order type: `Stake` (subscription), `Redeem` (redemption)|
+|coin|**true**|string|Settlement coin (uppercase), e.g. `USDC`|
+|orderLinkId|**true**|string|User-defined idempotency key. Max 36 characters, allowed charset `[a-zA-Z0-9-_]`. Must be unique per UID within RWA scope|
+|stakeAmount|false|string|Stake amount in settlement coin (decimal string). **Required when `orderType=Stake`**, ignored otherwise|
+|redeemShares|false|string|Redeem share quantity (decimal string). **Required when `orderType=Redeem`**, ignored otherwise|
+|accountType|false|string|Source/destination account: `FUND`, `UNIFIED`. Default: `FUND`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|orderId|string|System-generated order ID (UUID)|
+|orderLinkId|string|User-defined order ID (echoed back)|
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/rwa/place-order HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1710691200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "productId": 1001,
+    "orderType": "Stake",
+    "coin": "USDC",
+    "stakeAmount": "100",
+    "accountType": "FUND",
+    "orderLinkId": "my-stake-001"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "orderId": "550e8400-e29b-41d4-a716-446655440000",
+        "orderLinkId": "my-stake-001"
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```

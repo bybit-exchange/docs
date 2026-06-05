@@ -1,0 +1,87 @@
+---
+title: Get Order List
+sidebar_label: Get Order List
+sidebar_position: 4
+---
+
+:::info
+* Pass `orderId` or `orderLinkId` alone to perform an exact lookup; other filters are ignored.
+* For paginated listing: `startTime` defaults to 7 days ago, `endTime` defaults to now. The earliest accessible time is 180 days ago.
+* **Rate Limit:** 10 req/s (UID)
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/rwa/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|orderId|false|string|System order ID for exact lookup (highest priority)|
+|orderLinkId|false|string|User-defined order ID for exact lookup (used when `orderId` is empty)|
+|orderType|false|string|Order type filter: `Stake`, `Redeem`|
+|productId|false|integer|Product ID filter|
+|startTime|false|integer|Start timestamp (Unix seconds). Default: 7 days ago; earliest: 180 days ago|
+|endTime|false|integer|End timestamp (Unix seconds). Default: now|
+|limit|false|integer|Number of records per page. Default: `20`, max: `50`|
+|cursor|false|string|Pagination cursor. Use `nextPageCursor` from the previous response|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Order list|
+|> orderId|string|System order ID|
+|> orderLinkId|string|User-defined idempotency key|
+|> orderType|string|Order type: `Stake`, `Redeem`|
+|> productId|integer|Product ID|
+|> coin|string|Settlement coin|
+|> stakeAmount|string|Stake amount (only present for Stake orders)|
+|> redeemShares|string|Redeem share quantity (only present for Redeem orders)|
+|> status|string|Order status: `Processing`, `Success`, `Failed`|
+|> accountType|string|Source/destination account: `FUND`, `UNIFIED`|
+|> createdTime|integer|Creation timestamp (Unix seconds)|
+|> updatedTime|integer|Last update timestamp (Unix seconds)|
+|> settledShares|string|Final confirmed share quantity (only present for successful Stake orders)|
+|> settledAmount|string|Final settled amount (only present for successful Redeem orders)|
+|nextPageCursor|string|Cursor for the next page; empty string indicates the last page|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/rwa/order?orderType=Stake&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1710691200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "orderId": "550e8400-e29b-41d4-a716-446655440000",
+                "orderLinkId": "my-stake-001",
+                "orderType": "Stake",
+                "productId": 1001,
+                "coin": "USDC",
+                "stakeAmount": "100",
+                "status": "Success",
+                "accountType": "FUND",
+                "createdTime": 1710691200,
+                "updatedTime": 1710694800,
+                "settledShares": "97.560975"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```

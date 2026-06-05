@@ -1,0 +1,63 @@
+---
+title: Get NAV Chart
+sidebar_label: Get NAV Chart
+sidebar_position: 5
+---
+
+:::info
+* Authentication is not required.
+* `startTime` defaults to 7 days before `endTime`. `endTime` defaults to current time.
+* The time span (`endTime - startTime`) must not exceed 180 days.
+* **Rate Limit:** 20 req/s (IP)
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/rwa/nav-chart" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|Product ID|
+|startTime|false|integer|Start timestamp (Unix seconds). Default: `endTime - 7 days`|
+|endTime|false|integer|End timestamp (Unix seconds). Default: now|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|productId|integer|Product ID|
+|list|array|NAV data points in ascending order by date|
+|> date|string|Date in `YYYY-MM-DD` format (UTC)|
+|> nav|string|NAV (Net Asset Value per share) on the given date|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/rwa/nav-chart?productId=1001 HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "productId": 1001,
+        "list": [
+            {
+                "date": "2024-03-10",
+                "nav": "1.024"
+            },
+            {
+                "date": "2024-03-11",
+                "nav": "1.025"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```

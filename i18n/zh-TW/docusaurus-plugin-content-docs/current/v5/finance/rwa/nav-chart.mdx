@@ -1,0 +1,63 @@
+---
+title: 獲取NAV歷史數據
+sidebar_label: 獲取NAV歷史數據
+sidebar_position: 5
+---
+
+:::info
+* 無需身份驗證。
+* `startTime` 默認為 `endTime` 的 7 天前；`endTime` 默認為當前時間。
+* 時間跨度（`endTime - startTime`）不得超過 180 天。
+* **頻率限制：** 20 次/秒（IP）
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/rwa/nav-chart" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|productId|**true**|integer|產品 ID|
+|startTime|false|integer|起始時間戳（Unix 秒）。默認：`endTime - 7 天`|
+|endTime|false|integer|結束時間戳（Unix 秒）。默認：當前時間|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|productId|integer|產品 ID|
+|list|array|NAV 數據點列表，按日期升序排列|
+|> date|string|日期，格式 `YYYY-MM-DD`（UTC）|
+|> nav|string|當日 NAV（單份淨值）|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/rwa/nav-chart?productId=1001 HTTP/1.1
+Host: api.bybit.com
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "productId": 1001,
+        "list": [
+            {
+                "date": "2024-03-10",
+                "nav": "1.024"
+            },
+            {
+                "date": "2024-03-11",
+                "nav": "1.025"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```

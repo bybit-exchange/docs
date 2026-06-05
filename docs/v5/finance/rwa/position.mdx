@@ -1,0 +1,70 @@
+---
+title: Get Position List
+sidebar_label: Get Position List
+sidebar_position: 3
+---
+
+:::info
+* **Rate Limit:** 10 req/s (UID)
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/rwa/position" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Position list|
+|> productId|integer|Product ID|
+|> coin|string|Settlement coin|
+|> assetSymbol|string|Underlying asset symbol|
+|> effectiveShare|string|Effective (redeemable) share quantity|
+|> processingStakeAmount|string|Stake amount pending settlement (during T+N window)|
+|> processingRedeemShare|string|Share quantity pending redemption settlement|
+|> bonusEarned|string|Cumulative bonus earned (in settlement coin)|
+|> nav|string|Current NAV (Net Asset Value per share)|
+|> holdAmount|string|Hold value (`effectiveShare × nav`, in settlement coin)|
+|> duration|integer|Lock-up duration in days; `0` for Flexible products|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/rwa/position HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1710691200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "productId": 1001,
+                "coin": "USDC",
+                "assetSymbol": "IGBF",
+                "effectiveShare": "100",
+                "processingStakeAmount": "50",
+                "processingRedeemShare": "10",
+                "bonusEarned": "1.25",
+                "nav": "1.025",
+                "holdAmount": "102.50",
+                "duration": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```

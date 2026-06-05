@@ -1,0 +1,87 @@
+---
+title: Get Product List
+sidebar_label: Get Product List
+sidebar_position: 1
+---
+
+:::info
+* Authentication is optional. The `userQuota` field is only populated for authenticated requests.
+* **Rate Limit:** 20 req/s (IP)
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/rwa/product" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|coin|false|string|Settlement coin filter (uppercase), e.g. `USDC`. Returns all if omitted|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|list|array|Product list|
+|> productId|integer|Product ID|
+|> coin|string|Settlement coin name (e.g. `USDC`)|
+|> assetSymbol|string|Underlying asset symbol (e.g. `IGBF`); also serves as the asset name|
+|> manager|string|Asset manager name|
+|> baseApr|string|Base APR as decimal string (e.g. `"0.055"` = 5.5%)|
+|> bonusApr|string|Bonus APR (sum of all active bonus items); empty string when no bonus is active|
+|> savingType|string|Saving type: `Flexible`, `Fixed`|
+|> duration|integer|Lock-up duration in days; `0` for Flexible products|
+|> nav|string|Latest NAV (Net Asset Value per share), truncated to `sharePrecision`|
+|> minStakeAmount|string|Minimum stake amount (in settlement coin)|
+|> maxStakeAmount|string|Per-order maximum stake amount; empty string = unlimited|
+|> userMaxAmount|string|Per-user maximum holding amount; empty string = unlimited|
+|> userQuota|string|User's remaining stake quota for this product; empty string = unlimited or unauthenticated request|
+|> minRedeemShare|string|Minimum redeem share quantity|
+|> redeemFeeRate|string|Redeem fee rate as decimal string (e.g. `"0.001"` = 0.1%)|
+|> subscriptionFee|string|Subscription fee rate as decimal string (e.g. `"0.001"` = 0.1%)|
+|> extLink|string|External link to asset details page|
+|> amountPrecision|integer|Settlement-coin amount precision (decimal places)|
+|> sharePrecision|integer|Asset share precision (decimal places)|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/rwa/product?coin=USDC HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "productId": 1001,
+                "coin": "USDC",
+                "assetSymbol": "IGBF",
+                "manager": "BlackRock",
+                "baseApr": "0.055",
+                "bonusApr": "0.02",
+                "savingType": "Flexible",
+                "duration": 0,
+                "nav": "1.025",
+                "minStakeAmount": "10",
+                "maxStakeAmount": "100000",
+                "userMaxAmount": "50000",
+                "userQuota": "49500",
+                "minRedeemShare": "1",
+                "redeemFeeRate": "0.001",
+                "subscriptionFee": "0",
+                "extLink": "https://example.com/igbf",
+                "amountPrecision": 2,
+                "sharePrecision": 6
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1710691200000
+}
+```
