@@ -101,11 +101,11 @@ Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`te
     "reqId": "req_00000000002",
     "connId": "d30fdpbboasp1pjbe7r0",
     "traceId": "abc123def456789",
-    "timeNow": 1757497309814,
-    "inTime": 1757497309800,
+    "timeNow": 1780902835759344,
+    "inTime": 1780902835758533,
     "bapiLimit": 1000,
     "bapiLimitStatus": 999,
-    "bapiLimitResetTimestamp": 1757497370000
+    "bapiLimitResetTimestamp": 1780902835758
   },
   "retCode": 0,
   "result": {
@@ -167,8 +167,8 @@ Embedded at the start of every request message.
 | Field      | Type      | Size (bytes) | Description |
 |------------|-----------|--------------|-------------|
 | reqId      | char[64]  | 64           | Client request ID (optional; echoed in response) |
-| timestamp  | uint64    | 8            | Client timestamp (ms); must satisfy: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
-| recvWindow | uint32    | 4            | Acceptable time window (ms); default 5000 |
+| timestamp  | uint64    | 8            | Client timestamp (milliseconds); must satisfy: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
+| recvWindow | uint32    | 4            | Acceptable time window (milliseconds); default 5000 |
 | referer    | char[64]  | 64           | Broker / source identifier |
 
 #### `ApiRespHeader` (232 bytes)
@@ -180,11 +180,11 @@ Embedded at the start of every response message.
 | reqId                    | char[64] | 64           | Echoed client request ID |
 | connId                   | char[64] | 64           | Connection identifier |
 | traceId                  | char[64] | 64           | Trace ID for diagnostics |
-| timeNow                  | int64    | 8            | Server timestamp (ms) |
-| inTime                   | int64    | 8            | Message ingress timestamp (ms) |
+| timeNow                  | int64    | 8            | Server timestamp (microseconds) |
+| inTime                   | int64    | 8            | Message ingress timestamp (microseconds) |
 | bapiLimit                | int64    | 8            | Total rate limit |
 | bapiLimitStatus          | int64    | 8            | Remaining rate limit tokens |
-| bapiLimitResetTimestamp  | int64    | 8            | Rate-limit reset timestamp (ms) |
+| bapiLimitResetTimestamp  | int64    | 8            | Rate-limit reset timestamp (milliseconds) |
 
 #### `CommonOrderRespData` (128 bytes)
 
@@ -223,7 +223,7 @@ Embedded at the start of every response message.
 |----|-----------|----------|--------------|-------------|
 | 1  | reqId     | char[64] | 64           | Client request ID |
 | 2  | apiKey    | char[64] | 64           | API Key (null-padded) |
-| 3  | expires   | uint64   | 8            | Expiry timestamp (ms); must be in future |
+| 3  | expires   | uint64   | 8            | Expiry timestamp (milliseconds); must be in future |
 | 4  | signature | char[64] | 64           | HMAC-SHA256 over `"GET/realtime{expires}"` |
 
 #### `AuthResp` (id=2, blockLength=132)
@@ -239,14 +239,14 @@ Embedded at the start of every response message.
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | Client timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | Client timestamp (milliseconds) |
 
 #### `PongResp` (id=4, blockLength=16)
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | Echoed client timestamp (ms) |
-| 2  | pongTime  | uint64 | 8            | Server pong timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | Echoed client timestamp (milliseconds) |
+| 2  | pongTime  | uint64 | 8            | Server pong timestamp (milliseconds) |
 
 #### `CreateOrderReqV5` (id=5, blockLength=242)
 
