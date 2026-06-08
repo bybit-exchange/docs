@@ -167,8 +167,8 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | Field      | Type      | Size (bytes) | Description |
 |------------|-----------|--------------|-------------|
 | reqId      | char[64]  | 64           | 客戶端請求 ID (選填; 回應中會回傳) Client request ID (optional; echoed in response) |
-| timestamp  | uint64    | 8            | 客戶端時間戳 (ms); 須滿足: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
-| recvWindow | uint32    | 4            | 可接受的時間窗口 (ms); 預設 5000 Acceptable time window (ms); default 5000 |
+| timestamp  | uint64    | 8            | 客戶端時間戳 (毫秒); 須滿足: `server_time − recvWindow ≤ timestamp < server_time + 1000` |
+| recvWindow | uint32    | 4            | 可接受的時間窗口 (毫秒); 預設 5000 Acceptable time window (milliseconds); default 5000 |
 | referer    | char[64]  | 64           | 券商 / 來源識別碼 Broker / source identifier |
 
 #### `ApiRespHeader` (232 bytes)
@@ -180,11 +180,11 @@ def generate_signature(api_secret: str, expires: int) -> str:
 | reqId                    | char[64] | 64           | 回傳的客戶端請求 ID Echoed client request ID |
 | connId                   | char[64] | 64           | 連線識別碼 Connection identifier |
 | traceId                  | char[64] | 64           | 診斷用 Trace ID Trace ID for diagnostics |
-| timeNow                  | int64    | 8            | 伺服器時間戳 (ms) Server timestamp (ms) |
-| inTime                   | int64    | 8            | 信息接收時間戳 (ms) Message ingress timestamp (ms) |
+| timeNow                  | int64    | 8            | 伺服器時間戳 (微秒) Server timestamp (microseconds) |
+| inTime                   | int64    | 8            | 信息接收時間戳 (微秒) Message ingress timestamp (microseconds) |
 | bapiLimit                | int64    | 8            | 總速率限制 Total rate limit |
 | bapiLimitStatus          | int64    | 8            | 剩餘速率限制 token Remaining rate limit tokens |
-| bapiLimitResetTimestamp  | int64    | 8            | 速率限制重置時間戳 (ms) Rate-limit reset timestamp (ms) |
+| bapiLimitResetTimestamp  | int64    | 8            | 速率限制重置時間戳 (毫秒) Rate-limit reset timestamp (milliseconds) |
 
 #### `CommonOrderRespData` (128 bytes)
 
@@ -223,7 +223,7 @@ def generate_signature(api_secret: str, expires: int) -> str:
 |----|-----------|----------|--------------|-------------|
 | 1  | reqId     | char[64] | 64           | 客戶端請求 ID Client request ID |
 | 2  | apiKey    | char[64] | 64           | API Key (補 null) API Key (null-padded) |
-| 3  | expires   | uint64   | 8            | 到期時間戳 (ms); 必須為未來時間 Expiry timestamp (ms); must be in future |
+| 3  | expires   | uint64   | 8            | 到期時間戳 (毫秒); 必須為未來時間 Expiry timestamp (milliseconds); must be in future |
 | 4  | signature | char[64] | 64           | HMAC-SHA256 of `"GET/realtime{expires}"` |
 
 #### `AuthResp` (id=2, blockLength=132)
@@ -239,14 +239,14 @@ def generate_signature(api_secret: str, expires: int) -> str:
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | 客戶端時間戳 (ms) Client timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | 客戶端時間戳 (毫秒) Client timestamp (milliseconds) |
 
 #### `PongResp` (id=4, blockLength=16)
 
 | ID | Field     | Type   | Size (bytes) | Description |
 |----|-----------|--------|--------------|-------------|
-| 1  | timestamp | uint64 | 8            | 回傳的客戶端時間戳 (ms) Echoed client timestamp (ms) |
-| 2  | pongTime  | uint64 | 8            | 伺服器 pong 時間戳 (ms) Server pong timestamp (ms) |
+| 1  | timestamp | uint64 | 8            | 回傳的客戶端時間戳 (毫秒) Echoed client timestamp (milliseconds) |
+| 2  | pongTime  | uint64 | 8            | 伺服器 pong 時間戳 (毫秒) Server pong timestamp (milliseconds) |
 
 #### `CreateOrderReqV5` (id=5, blockLength=242)
 
