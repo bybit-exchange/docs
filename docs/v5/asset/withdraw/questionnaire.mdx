@@ -1,0 +1,154 @@
+---
+title: Questionnaire
+sidebar_label: Questionnaire
+sidebar_position: 19
+---
+
+The `questionnaire` field is a JSON string used to carry Travel Rule compliance information in both the [Submit Deposit Originator Info](submit-info) and [Withdraw](withdraw) endpoints. It replaces the legacy `beneficiary` + `transactionPurpose` combination for new integrations.
+
+:::info
+- Max length: **16384 bytes**
+- When both `questionnaire` and the legacy `beneficiary`/`transactionPurpose` fields are present, **`questionnaire` takes precedence**
+- Field names use **lowerCamelCase** (e.g. `walletType`, `poiIssuingCountry`)
+- Country codes follow **ISO 3166-1 alpha-3** (e.g. `JPN`, `TUR`, `KAZ`, `IND`)
+- Dates follow **ISO 8601** short format `YYYY-MM-DD`
+:::
+
+### Common Fields
+
+The following fields apply to all compliance zones.
+
+| Field | Type | Required | Comments |
+|:----- |:-----|:---------|:---------|
+|walletType |integer |**true** |Wallet type. `0`: custodial/VASP wallet. `1`: non-custodial (personal) wallet |
+|legalType |string |**true** |Entity type. `individual`: natural person. `company`: legal entity / institution |
+|vaspCode |string(64) |Conditional |Counterparty VASP code. **Required** when `walletType=0`. Use `others` if not matched. Retrieve valid codes via the VASP List API |
+|isSelfWallet |bool |false |Whether the wallet belongs to the user themselves. For non-custodial wallets only |
+|firstName |string(128) |Conditional |First name. **Required** when `legalType=individual`|
+|lastName |string(128) |Conditional |Last name. **Required** when `legalType=individual`|
+|companyName |string(256) |Conditional |Company / institution name. **Required** when `legalType=company` |
+
+### Regional Field Differences
+
+#### EU (MiCA / TFR)
+
+Common fields plus:
+
+| Field | Type | Required | Comments |
+|:----- |:-----|:---------|:---------|
+|transactionPurpose |string(20,500) |**true** |Transaction purpose. Minimum 20 characters |
+
+#### TUR — Turkey (MASAK)
+
+Common fields plus all four POI document fields:
+
+| Field | Type | Required | Comments |
+|:----- |:-----|:---------|:---------|
+|poiType |string(32) |**true** |Document type. `ID_CARD` / `PASSPORT` / `DRIVERS` / `RESIDENCE_PERMIT` / `OTHER` |
+|poiNumber |string(64) |**true** |Document number |
+|poiIssuingCountry |string(10) |**true** |Document issuing country, three-letter country code |
+|poiExpiredDate |string(20) |**true** |Document expiry date, `YYYY-MM-DD` |
+|transactionPurpose |string(20,500) |**true** |Transaction purpose. Minimum 20 characters |
+
+#### KAZ — Kazakhstan (AFSA)
+
+Common fields plus all four POI document fields:
+
+| Field | Type | Required | Comments |
+|:----- |:-----|:---------|:---------|
+|poiType |string(32) |**true** |Document type. `ID_CARD` / `PASSPORT` / `DRIVERS` / `RESIDENCE_PERMIT` / `OTHER` |
+|poiNumber |string(64) |**true** |Document number |
+|poiIssuingCountry |string(10) |**true** |Document issuing country, three-letter country code |
+|poiExpiredDate |string(20) |**true** |Document expiry date, `YYYY-MM-DD` |
+
+#### BYBIT-IND — India (FIU-IND)
+
+Common fields only. No additional required fields.
+
+#### BYBIT-KOR — Korea (SAFA) — Withdrawal only
+
+Common fields plus:
+
+| Field | Type | Required | Comments |
+|:----- |:-----|:---------|:---------|
+|representativeFirstName |string(128) |Conditional |Company representative first name. **Required when `legalType=company`** (Korean SAFA requirement) |
+|representativeLastName |string(128) |Conditional |Company representative last name. **Required when `legalType=company`** (Korean SAFA requirement) |
+
+:::note
+Korean entity **deposit side** does not use this questionnaire — it is handled separately via the local bank / CTP channel.
+:::
+
+### Compliance Zone Coverage
+
+| Entity Code | Region | Withdrawal | Deposit | Notes |
+|:----------- |:-------|:----------:|:-------:|:------|
+|EU |EU |✓ |✓ |MiCA / TFR |
+|TUR |Turkey |✓ |✓ |MASAK — POI required |
+|KAZ |Kazakhstan |✓ |✓ |AFSA — POI required |
+|BYBIT-IND |India |✓ |✓ |FIU-IND |
+|BYBIT-KOR |Korea |✓ |✗ |SAFA — company representative required for withdrawal; deposit handled via local bank / CTP |
+
+### Examples
+
+#### EU — Individual + Custodial Wallet
+```json
+{
+  "walletType": 0,
+  "vaspCode": "BINANCEUS_VASP",
+  "legalType": "individual",
+  "firstName": "John",
+  "lastName": "Smith",
+  "transactionPurpose": "Personal investment in long-term holdings"
+}
+```
+
+#### TUR — Individual + Non-Custodial Wallet
+```json
+{
+  "walletType": 1,
+  "legalType": "individual",
+  "firstName": "Ahmet",
+  "lastName": "Yilmaz",
+  "poiType": "ID_CARD",
+  "poiNumber": "12345678901",
+  "poiIssuingCountry": "TUR",
+  "poiExpiredDate": "2030-06-15",
+  "transactionPurpose": "Long-term holding for retirement savings purpose"
+}
+```
+
+#### KAZ — Company + Custodial Wallet
+```json
+{
+  "walletType": 0,
+  "vaspCode": "EXAMPLE_VASP",
+  "legalType": "company",
+  "companyName": "Example LLC",
+  "poiType": "OTHER",
+  "poiNumber": "BIN1234567890",
+  "poiIssuingCountry": "KAZ",
+  "poiExpiredDate": "2099-12-31"
+}
+```
+
+#### BYBIT-IND — Individual + Non-Custodial Wallet
+```json
+{
+  "walletType": 1,
+  "legalType": "individual",
+  "firstName": "Rahul",
+  "lastName": "Sharma"
+}
+```
+
+#### BYBIT-KOR — Company + Custodial Wallet (Withdrawal only)
+```json
+{
+  "walletType": 0,
+  "vaspCode": "EXAMPLE_VASP",
+  "legalType": "company",
+  "companyName": "Example Co., Ltd.",
+  "representativeFirstName": "Min-jun",
+  "representativeLastName": "Kim"
+}
+```
