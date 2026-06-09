@@ -1,0 +1,107 @@
+---
+title: 提交入金發起人信息
+sidebar_label: 提交入金發起人信息
+sidebar_position: 18
+---
+
+當入金記錄觸發 Travel Rule 審核時，由用戶提交發起人（Originator）合規信息，供應商完成審核後返回結果狀態。
+
+:::info
+當入金記錄命中合規策略且當前 `travel_rule_status` 為 `1`（待提交對手方信息）時調用本接口。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/asset/travel-rule/deposit/submit" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|depositId |**true** |integer |入金記錄 ID，從入金查詢接口獲得，必須大於 `0` |
+|subAccountId |false |integer |Broker 場景：目標子帳號 UID。傳 `0` 或不傳表示當前帳號本人 |
+|questionnaire |**true** |string |Travel Rule 問卷信息，JSON 字符串，最大 16384 字節。不同合規區結構不同，詳見[問卷說明](../withdraw/questionnaire) |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|travelRuleStatus |integer|Travel Rule 審核狀態 <ul><li>`0`: Approved — 已通過，可繼續後續流程</li><li>`1`: CollectInfo — 需補充對手方信息，請重新提交問卷</li><li>`2`: Pending — 審核中，請輪詢入金查詢接口</li><li>`3`: Rejected — 已拒絕或失敗（含取消）</li></ul> |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/asset/travel-rule/deposit/submit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672197227732
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "depositId": 1234567890,
+    "subAccountId": 0,
+    "questionnaire": "{\"walletType\":0,\"vaspCode\":\"BINANCEUS_VASP\",\"legalType\":\"individual\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"transactionPurpose\":\"Personal investment in long-term holdings\"}"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.submit_deposit_originator_info(
+    depositId=1234567890,
+    subAccountId=0,
+    questionnaire='{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',
+))
+```
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const { RestClientV5 } = require('bybit-api');
+
+const client = new RestClientV5({
+  testnet: true,
+  key: 'xxxxxxxxxxxxxxxxxx',
+  secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+});
+
+client
+  .submitDepositOriginatorInfo({
+    depositId: 1234567890,
+    subAccountId: 0,
+    questionnaire: '{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',
+  })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "travelRuleStatus": 2
+    },
+    "retExtInfo": {},
+    "time": 1672197228408
+}
+```
