@@ -1,0 +1,122 @@
+---
+title: Get Coupon List
+sidebar_label: Get Coupon List
+sidebar_position: 8
+---
+:::info
+* Authentication required.
+* **Rate Limit:** 10 req/s (UID)
+:::
+
+Query the user's interest-rate coupons (`interestCards`) and Dual Assets reward cards (`awardCards`, e.g. trial funds / zero-cost vouchers) for the given product category.
+
+Returned cards include all states: `InUse`, `NotUse`, `Expired`, and `AlreadyUsed`.
+
+To apply a coupon when placing an order, pass its `awardId` and `specCode` in the `interestCard` field of the corresponding place-order request:
+- `FlexibleSaving` → [Place Order](./create-order)
+- `DualAssets` → [Place Order](../../advanced-earn/dual-asset/create-order)
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/coupons" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|Product category: `FlexibleSaving`, `DualAssets`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:---------|
+|interestCards|array|Interest-rate coupon list|
+|> awardId|integer|Coupon unique ID|
+|> specCode|string|Coupon spec code|
+|> coin|string|Coin name, e.g. `USDT`, `BTC`|
+|> apy|string|Bonus APY rate as a decimal string, e.g. `"0.03"` = 3%|
+|> duration|integer|Coupon validity period (days)|
+|> claimedAt|integer|Claim time (Unix seconds)|
+|> expireAt|integer|Expiry time (Unix seconds)|
+|> usedAt|integer|Use time (Unix seconds); `0` if not yet used|
+|> status|string|Coupon status. `InUse`: currently in use, `NotUse`: claimed but not yet used, `Expired`: expired without being used, `AlreadyUsed`: used and settled|
+|> currentPnl|string|Bonus interest accrued so far|
+|> limitPnl|string|Bonus interest cap|
+|> positionEffectiveAmount|string|Effective principal amount for the bonus calculation|
+|> productId|integer|Linked product ID; populated for `InUse` / `AlreadyUsed`, `0` otherwise|
+|> category|string|Product category the coupon applies to: `FlexibleSaving`, `DualAssets`|
+|awardCards|array|Dual Assets reward card list (trial fund / zero-cost voucher)|
+|> awardId|integer|Reward card unique ID|
+|> specCode|string|Reward card spec code|
+|> claimedAt|integer|Claim time (Unix seconds)|
+|> usedAt|integer|Use time (Unix seconds); `0` if not yet used|
+|> expireAt|integer|Expiry time (Unix seconds)|
+|> status|string|Card status. Same semantics as `interestCards > status`|
+|> amount|string|Trial / zero-cost voucher amount|
+|> limitPnlPercentage|string|PnL percentage cap, e.g. `"0.23"` = 23%|
+|> baseCoin|string|Base coin name|
+|> quoteCoin|string|Quote coin name|
+|> direction|integer|Dual Assets direction: `1` = BuyLow, `2` = SellHigh|
+|> category|string|Product category the card applies to: `FlexibleSaving`, `DualAssets`|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1759983699446
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "interestCards": [
+            {
+                "awardId": 1001,
+                "specCode": "FS_APY_3PCT_30D",
+                "coin": "USDT",
+                "apy": "0.03",
+                "duration": 30,
+                "claimedAt": 1759900800,
+                "expireAt": 1762492800,
+                "usedAt": 0,
+                "status": "NotUse",
+                "currentPnl": "0",
+                "limitPnl": "100",
+                "positionEffectiveAmount": "0",
+                "productId": 0,
+                "category": "FlexibleSaving"
+            }
+        ],
+        "awardCards": []
+    },
+    "retExtInfo": {},
+    "time": 1759983699446
+}
+```

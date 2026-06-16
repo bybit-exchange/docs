@@ -1,0 +1,122 @@
+---
+title: 查詢優惠券列表
+sidebar_label: 查詢優惠券列表
+sidebar_position: 8
+---
+:::info
+* 需要身份驗證。
+* **頻率限制：** 10 次/秒（UID）
+:::
+
+查詢用戶在指定產品類別下的利率優惠券（`interestCards`）和雙幣投資獎勵卡（`awardCards`，如體驗金/零成本券）。
+
+返回所有狀態的卡券：`InUse`（使用中）、`NotUse`（未使用）、`Expired`（已過期）、`AlreadyUsed`（已使用）。
+
+下單時如需使用優惠券，請在對應下單請求的 `interestCard` 字段中傳入 `awardId` 和 `specCode`：
+- `FlexibleSaving` → [下單](./create-order)
+- `DualAssets` → [下單](../../advanced-earn/dual-asset/create-order)
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/coupons" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|category|**true**|string|產品類別：`FlexibleSaving`、`DualAssets`|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:---------|
+|interestCards|array|利率優惠券列表|
+|> awardId|integer|優惠券唯一ID|
+|> specCode|string|優惠券規格碼|
+|> coin|string|幣種名稱，如 `USDT`、`BTC`|
+|> apy|string|加成APY（小數字符串），如 `"0.03"` = 3%|
+|> duration|integer|優惠券有效期（天）|
+|> claimedAt|integer|領取時間（Unix秒）|
+|> expireAt|integer|到期時間（Unix秒）|
+|> usedAt|integer|使用時間（Unix秒）；未使用時為 `0`|
+|> status|string|狀態。`InUse`：使用中，`NotUse`：未使用，`Expired`：已過期，`AlreadyUsed`：已使用|
+|> currentPnl|string|已累計加成利息|
+|> limitPnl|string|加成利息上限|
+|> positionEffectiveAmount|string|計算加成的有效本金|
+|> productId|integer|關聯產品ID；`InUse`/`AlreadyUsed` 時有值，否則為 `0`|
+|> category|string|優惠券適用的產品類別：`FlexibleSaving`、`DualAssets`|
+|awardCards|array|雙幣投資獎勵卡列表（體驗金/零成本券）|
+|> awardId|integer|獎勵卡唯一ID|
+|> specCode|string|獎勵卡規格碼|
+|> claimedAt|integer|領取時間（Unix秒）|
+|> usedAt|integer|使用時間（Unix秒）；未使用時為 `0`|
+|> expireAt|integer|到期時間（Unix秒）|
+|> status|string|狀態，語義同 `interestCards > status`|
+|> amount|string|體驗金/零成本券金額|
+|> limitPnlPercentage|string|收益上限比例，如 `"0.23"` = 23%|
+|> baseCoin|string|標的幣種|
+|> quoteCoin|string|計價幣種|
+|> direction|integer|雙幣方向：`1` = 低買（BuyLow），`2` = 高賣（SellHigh）|
+|> category|string|獎勵卡適用的產品類別：`FlexibleSaving`、`DualAssets`|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1759983699446
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "interestCards": [
+            {
+                "awardId": 1001,
+                "specCode": "FS_APY_3PCT_30D",
+                "coin": "USDT",
+                "apy": "0.03",
+                "duration": 30,
+                "claimedAt": 1759900800,
+                "expireAt": 1762492800,
+                "usedAt": 0,
+                "status": "NotUse",
+                "currentPnl": "0",
+                "limitPnl": "100",
+                "positionEffectiveAmount": "0",
+                "productId": 0,
+                "category": "FlexibleSaving"
+            }
+        ],
+        "awardCards": []
+    },
+    "retExtInfo": {},
+    "time": 1759983699446
+}
+```
