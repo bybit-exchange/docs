@@ -1,0 +1,95 @@
+---
+title: 查詢合約槓桿
+sidebar_label: 查詢合約槓桿
+sidebar_position: 2.5
+---
+查詢合約交易對的逐倉槓桿設置。與[查詢持倉](v5/position)不同，此接口無需持有倉位即可查詢槓桿設置。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/position/symbol-info" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型 `linear`(USDT合約, USDC合約), `inverse`|
+|symbol |false |string |合約名稱，如 `BTCUSDT`，僅支持大寫|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|[category](../enum#category) |string |產品類型 |
+|list |array |Object |
+|> symbol |string |合約名稱 |
+|> leverage |string |槓桿倍數 |
+|> side |string |無意義, 可以忽略 `Buy`, `Sell`, `""`|
+|> positionIdx |integer |持倉模式。`0`: 單向持倉；`1`: 雙向持倉-多頭；`2`: 雙向持倉-空頭 |
+
+:::info
+在組合保證金模式下，此接口會返回錯誤。
+:::
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672284128523
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "MNTUSDT",
+                "leverage": "10",
+                "side": "Sell",
+                "positionIdx": 2
+            },
+            {
+                "symbol": "MNTUSDT",
+                "leverage": "10",
+                "side": "Sell",
+                "positionIdx": 1
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1781518340920
+}
+```

@@ -1,0 +1,95 @@
+---
+title: Get Futures Leverage
+sidebar_label: Get Futures Leverage
+sidebar_position: 2.5
+---
+Query isolated leverage setting for futures symbols. Unlike [Get Position Info](v5/position), this endpoint does not require an open position to retrieve the leverage setting.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/position/symbol-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |Product type `linear`(USDT Contract, USDC Contract), `inverse`|
+|symbol |false |string |Symbol name, like `BTCUSDT`, uppercase only|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|[category](../enum#category) |string |Product type |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> leverage |string |Leverage |
+|> side |string |Meaningless field, pls ignore. `Buy`, `Sell`, `""`|
+|> positionIdx |integer |Position mode. `0`: one-way; `1`: two-way Buy; `2`: two-way Sell |
+
+:::info
+Under Portfolio Margin mode, this endpoint returns an error.
+:::
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672284128523
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "category": "linear",
+        "list": [
+            {
+                "symbol": "MNTUSDT",
+                "leverage": "10",
+                "side": "Sell",
+                "positionIdx": 2
+            },
+            {
+                "symbol": "MNTUSDT",
+                "leverage": "10",
+                "side": "Sell",
+                "positionIdx": 1
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1781518340920
+}
+```
