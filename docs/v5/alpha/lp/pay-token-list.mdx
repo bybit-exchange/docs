@@ -1,0 +1,112 @@
+---
+title: Get LP Pay Token List
+sidebar_label: Get LP Pay Token List
+sidebar_position: 4
+---
+
+Query the list of supported payment tokens for LP staking, including user's available balance for each.
+
+:::info
+- Call this before staking to verify which tokens are available and check balances
+- **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/pay-token-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|chainCode |false |string |Filter by blockchain identifier|
+|tokenAddress |false |string |Filter by token contract address|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|tokens |array |Payment token list|
+|> tokenCode |string |Token identifier, e.g. `CEX_1`|
+|> tokenSymbol |string |Token symbol, e.g. `USDT`|
+|> chainCode |string |Blockchain identifier|
+|> chainIconUrl |string |Blockchain icon URL|
+|> decimals |integer |Token decimal precision|
+|> availableBalance |string |User's available balance for this token|
+|> tokenIconUrlDay |string |Token icon URL (light mode)|
+|> tokenIconUrlNight |string |Token icon URL (dark mode)|
+|> minStakeAmount |string |Minimum stake amount for this token|
+|> maxStakeAmount |string |Maximum stake amount for this token|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pay-token-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tokens": [
+            {
+                "tokenCode": "CEX_1",
+                "tokenSymbol": "USDT",
+                "chainCode": "ETH",
+                "chainIconUrl": "",
+                "decimals": 6,
+                "availableBalance": "1000",
+                "tokenIconUrlDay": "",
+                "tokenIconUrlNight": "",
+                "minStakeAmount": "",
+                "maxStakeAmount": ""
+            },
+            {
+                "tokenCode": "CEX_2",
+                "tokenSymbol": "USDC",
+                "chainCode": "ETH",
+                "chainIconUrl": "",
+                "decimals": 6,
+                "availableBalance": "500",
+                "tokenIconUrlDay": "",
+                "tokenIconUrlNight": "",
+                "minStakeAmount": "",
+                "maxStakeAmount": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

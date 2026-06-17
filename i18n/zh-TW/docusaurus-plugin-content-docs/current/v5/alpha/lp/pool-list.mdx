@@ -1,0 +1,108 @@
+---
+title: 查詢 LP 礦池列表
+sidebar_label: 查詢 LP 礦池列表
+sidebar_position: 7
+---
+
+查詢可用的流動性礦池列表，支持按代幣符號過濾。
+
+:::info
+- 可用本接口幫助用戶發現和比較可用的 LP 礦池
+- 傳入 `tokenSymbol` 可篩選包含指定代幣的礦池
+- **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/lp/pool-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenSymbol |false |string |按代幣符號搜索包含該代幣的礦池，如 `ETH`、`USDC`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|pools |array |礦池列表|
+|> poolAddress |string |礦池合約地址|
+|> poolName |string |礦池名稱|
+|> poolTag |string |礦池分類標籤|
+|> apy |string |年化收益率|
+|> tvl |string |總鎖倉價值（USD）|
+|> token0Symbol |string |第一個代幣符號|
+|> token0IconUrlDay |string |第一個代幣圖標 URL（亮色模式）|
+|> token0IconUrlNight |string |第一個代幣圖標 URL（暗色模式）|
+|> token1Symbol |string |第二個代幣符號|
+|> token1IconUrlDay |string |第二個代幣圖標 URL（亮色模式）|
+|> token1IconUrlNight |string |第二個代幣圖標 URL（暗色模式）|
+|> chainCode |string |區塊鏈標識符|
+|> chainIconUrl |string |區塊鏈圖標 URL|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pool-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenSymbol": "ETH"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pools": [
+            {
+                "poolAddress": "0x1234567890abcdef",
+                "poolName": "ETH-USDC Pool",
+                "poolTag": "Trending",
+                "apy": "12.5",
+                "tvl": "1000000",
+                "token0Symbol": "ETH",
+                "token0IconUrlDay": "",
+                "token0IconUrlNight": "",
+                "token1Symbol": "USDC",
+                "token1IconUrlDay": "",
+                "token1IconUrlNight": "",
+                "chainCode": "",
+                "chainIconUrl": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

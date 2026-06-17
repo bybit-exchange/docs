@@ -1,0 +1,118 @@
+---
+title: 查詢 LP 倉位列表
+sidebar_label: 查詢 LP 倉位列表
+sidebar_position: 8
+---
+
+查詢用戶的 LP 倉位，包含實時估值、已獲收益和 APY。
+
+:::info
+- 可用本接口展示用戶的 LP 持倉，或在執行 [執行 LP 質押](./stake) / [執行 LP 贖回](./redeem) 後確認倉位變更
+- 查詢礦池詳情請使用 [查詢 LP 礦池詳情](./pool-info)
+- **頻率限制：** 3 次/秒（用戶），2000 次/秒（全局）
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/lp/position-list" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|positions |array |倉位列表|
+|> positionId |integer |倉位標識符|
+|> poolAddress |string |礦池合約地址|
+|> poolName |string |礦池名稱|
+|> stakedAmount |string |支付代幣的總質押數量|
+|> stakedTokenCode |string |質押代幣代碼|
+|> stakedTokenSymbol |string |質押代幣符號|
+|> currentValueUsd |string |倉位當前 USD 價值|
+|> earnedRewardsUsd |string |已獲總收益（USD）|
+|> unrealizedPnl |string |未實現盈虧|
+|> realizedPnl |string |已實現盈虧|
+|> apy |string |當前倉位 APY|
+|> token0Amount |string |倉位中 token0 的數量|
+|> token0Symbol |string |token0 符號|
+|> token1Amount |string |倉位中 token1 的數量|
+|> token1Symbol |string |token1 符號|
+|> rangeUpper |string |倉位價格/範圍上限|
+|> rangeLower |string |倉位價格/範圍下限|
+|> createTime |integer |倉位創建時間（Unix 秒）|
+|> updateTime |integer |最近更新時間（Unix 秒）|
+|> status |integer |倉位狀態。`1`: 活躍，`2`: 已關閉，`3`: 處理中|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/position-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positions": [
+            {
+                "positionId": 12345,
+                "poolAddress": "0x1234567890abcdef",
+                "poolName": "ETH-USDC Pool",
+                "stakedAmount": "1000",
+                "stakedTokenCode": "CEX_1",
+                "stakedTokenSymbol": "USDT",
+                "currentValueUsd": "1050.25",
+                "earnedRewardsUsd": "50.25",
+                "unrealizedPnl": "30.00",
+                "realizedPnl": "20.25",
+                "apy": "12.5",
+                "token0Amount": "0.3",
+                "token0Symbol": "ETH",
+                "token1Amount": "600",
+                "token1Symbol": "USDC",
+                "rangeUpper": "2000",
+                "rangeLower": "1800",
+                "createTime": 1704067200,
+                "updateTime": 1704067260,
+                "status": 1
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067300000
+}
+```

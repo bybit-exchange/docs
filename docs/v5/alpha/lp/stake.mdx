@@ -1,0 +1,97 @@
+---
+title: Execute LP Stake
+sidebar_label: Execute LP Stake
+sidebar_position: 1
+---
+
+Stake tokens into a liquidity pool to provide liquidity and earn rewards.
+
+:::info
+- Must call [Get Pay Token List](../pay-token-list) to verify available balance before staking
+- Must display stake details (amount, fees, expected APY) to user and obtain explicit confirmation before calling this endpoint
+- `200` response is only an ACK — use [Get Order List](../order-list) to check final position status
+- Supports new position creation (`positionId=0`) or adding liquidity to an existing position
+- Either use `rangeLower`/`rangeUpper` OR `priceLower`/`priceUpper`, not both
+- Position activation typically takes 10–60 seconds for on-chain confirmation
+- **Rate Limit:** 1 req/s (per user), 2000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/stake" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|positionId |**true** |integer |Position ID. Use `0` to create a new position, or provide an existing position ID to add liquidity|
+|poolAddress |**true** |string |Pool contract address|
+|payTokenAmount |**true** |string |Payment token amount (positive decimal as string)|
+|payTokenCode |**true** |string |Payment token code, e.g. `CEX_1` for USDT|
+|rangeUpper |false |string |Range order upper limit. Use this OR `priceUpper`, not both|
+|rangeLower |false |string |Range order lower limit. Use this OR `priceLower`, not both|
+|priceUpper |false |string |Price order upper limit (price priority). Use this OR `rangeUpper`, not both|
+|priceLower |false |string |Price order lower limit (price priority). Use this OR `rangeLower`, not both|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|positionId |integer |Position ID (new or existing)|
+|orderNo |string |Order number for this stake operation|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/stake HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "positionId": 0,
+    "poolAddress": "0x1234567890abcdef",
+    "payTokenAmount": "1000",
+    "payTokenCode": "CEX_1",
+    "rangeUpper": "2000",
+    "rangeLower": "1800"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positionId": 12345,
+        "orderNo": "LP_ORD_20240101_001"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

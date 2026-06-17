@@ -1,0 +1,141 @@
+---
+title: Get LP Order List
+sidebar_label: Get LP Order List
+sidebar_position: 3
+---
+
+Query the user's LP order history (stake and redeem operations) with optional filters.
+
+:::info
+- Use this endpoint after executing [Execute LP Stake](./stake) or [Execute LP Redeem](./redeem) to confirm order status
+- Orders are sorted by creation time descending
+- Maximum query range: 365 days
+- For current position details, use Get LP Position List instead
+- **Rate Limit:** 3 req/s (per user), 2000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/order-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderType |false |integer |Filter by order type. `0`: All (default), `1`: Stake, `2`: Redeem|
+|tokenCode |false |string |Filter by token code|
+|orderStatus |false |array |Filter by order status (multiple values allowed). `1`: Processing, `2`: Success, `3`: Failed|
+|days |false |integer |Query last N days. Default: `90`, Max: `365`|
+|limit |false |integer |Results per page. Default: `20`, Max: `100`|
+|pageIndex |false |integer |Page number (1-based). Default: `1`|
+|poolAddress |false |string |Filter by pool contract address|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|total |integer |Total order count matching the filter|
+|pageIndex |integer |Current page number|
+|orders |array |Order list|
+|> orderType |integer |Order type. `1`: Stake, `2`: Redeem|
+|> orderNo |string |System order number|
+|> orderStatus |integer |Order status. `1`: Processing, `2`: Success, `3`: Failed|
+|> poolAddress |string |Pool contract address|
+|> poolName |string |Pool name|
+|> positionId |integer |Associated position ID|
+|> tokenCode |string |Payment token code|
+|> tokenSymbol |string |Payment token symbol|
+|> tokenIconUrlDay |string |Token icon URL (light mode)|
+|> tokenIconUrlNight |string |Token icon URL (dark mode)|
+|> amount |string |Order amount|
+|> chainCode |string |Blockchain identifier|
+|> chainIconUrl |string |Blockchain icon URL|
+|> gasTokenSymbol |string |Gas token symbol|
+|> gasOnchain |string |On-chain gas fee|
+|> gasUsd |string |Gas fee in USD|
+|> platformFee |string |Platform fee|
+|> platformFeeUsd |string |Platform fee in USD|
+|> createTime |integer |Order creation time (Unix seconds)|
+|> executionTime |integer |Order completion time (Unix seconds)|
+|> failureReason |string |Failure reason; only present when `orderStatus` = `3`|
+|> dercRatio |string |Reduction ratio; only applicable for redeem orders|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/order-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderType": 0,
+    "days": 7,
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "total": 1,
+        "pageIndex": 1,
+        "orders": [
+            {
+                "orderType": 1,
+                "orderNo": "LP_ORD_20240101_001",
+                "orderStatus": 2,
+                "poolAddress": "0x1234567890abcdef",
+                "poolName": "ETH-USDC Pool",
+                "positionId": 12345,
+                "tokenCode": "CEX_1",
+                "tokenSymbol": "USDT",
+                "tokenIconUrlDay": "",
+                "tokenIconUrlNight": "",
+                "amount": "1000",
+                "chainCode": "",
+                "chainIconUrl": "",
+                "gasTokenSymbol": "",
+                "gasOnchain": "",
+                "gasUsd": null,
+                "platformFee": "",
+                "platformFeeUsd": null,
+                "createTime": 1704067200,
+                "executionTime": 1704067230,
+                "failureReason": "",
+                "dercRatio": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067300000
+}
+```
