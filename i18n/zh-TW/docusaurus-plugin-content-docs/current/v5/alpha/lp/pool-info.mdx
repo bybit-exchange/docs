@@ -1,0 +1,101 @@
+---
+title: 查詢 LP 礦池詳情
+sidebar_label: 查詢 LP 礦池詳情
+sidebar_position: 6
+---
+
+查詢指定流動性礦池的詳細信息，包括 APY、手續費率、代幣儲備及價格區間。
+
+:::info
+- 質押前調用本接口，向用戶展示完整的礦池詳情
+- `poolAddress` 需從礦池列表接口獲取
+- **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/lp/pool-info" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|poolAddress |**true** |string |礦池合約地址|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|poolAddress |string |礦池合約地址|
+|poolName |string |礦池名稱|
+|apy |string |年化收益率|
+|tvl |string |總鎖倉價值|
+|feeRate |string |礦池手續費率，如 `"0.003"` = 0.3%|
+|token0Symbol |string |Token0 符號|
+|token0Reserve |string |Token0 儲備量|
+|token1Symbol |string |Token1 符號|
+|token1Reserve |string |Token1 儲備量|
+|priceRangeLower |string |價格區間下限|
+|priceRangeUpper |string |價格區間上限|
+|currentPrice |string |當前礦池價格|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pool-info HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "poolAddress": "0x1234567890abcdef"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "poolAddress": "0x1234567890abcdef",
+        "poolName": "ETH-USDC Pool",
+        "apy": "12.5",
+        "tvl": "1000000",
+        "feeRate": "0.003",
+        "token0Symbol": "ETH",
+        "token0Reserve": "500",
+        "token1Symbol": "USDC",
+        "token1Reserve": "1000000",
+        "priceRangeLower": "",
+        "priceRangeUpper": "",
+        "currentPrice": ""
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

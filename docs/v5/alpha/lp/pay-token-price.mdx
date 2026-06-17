@@ -1,0 +1,100 @@
+---
+title: Get LP Pay Token Price
+sidebar_label: Get LP Pay Token Price
+sidebar_position: 5
+---
+
+Query current USD prices for one or more payment tokens. Supports batch queries in a single request.
+
+:::info
+- Supports up to 50 token codes per request
+- Use this to calculate USD value of stake amounts before confirming with users
+- **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/pay-token-price" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenCode |**true** |array |Array of token codes to query, e.g. `["CEX_1", "CEX_2"]`. Max 50 items|
+|chainCode |false |string |Filter by blockchain identifier|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|prices |array |Token price list|
+|> tokenCode |string |Token identifier|
+|> tokenSymbol |string |Token symbol|
+|> priceUsd |string |Current price in USD|
+|> chainCode |string |Blockchain identifier|
+|> updateTime |integer |Price update timestamp (Unix seconds)|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pay-token-price HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenCode": ["CEX_1", "CEX_2"]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "prices": [
+            {
+                "tokenCode": "CEX_1",
+                "tokenSymbol": "USDT",
+                "priceUsd": "1.00",
+                "chainCode": "ETH",
+                "updateTime": 1704067200
+            },
+            {
+                "tokenCode": "CEX_2",
+                "tokenSymbol": "USDC",
+                "priceUsd": "0.9998",
+                "chainCode": "ETH",
+                "updateTime": 1704067200
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

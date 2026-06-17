@@ -1,0 +1,100 @@
+---
+title: 查詢 LP 支付代幣價格
+sidebar_label: 查詢 LP 支付代幣價格
+sidebar_position: 5
+---
+
+查詢一種或多種支付代幣的當前 USD 價格，支持批量查詢。
+
+:::info
+- 每次請求最多支持 50 個代幣代碼
+- 可在用戶確認質押前調用本接口計算質押金額的 USD 價值
+- **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/lp/pay-token-price" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenCode |**true** |array |待查詢的代幣代碼數組，如 `["CEX_1", "CEX_2"]`，最多 50 個|
+|chainCode |false |string |按區塊鏈標識符過濾|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|prices |array |代幣價格列表|
+|> tokenCode |string |代幣標識符|
+|> tokenSymbol |string |代幣符號|
+|> priceUsd |string |當前 USD 價格|
+|> chainCode |string |區塊鏈標識符|
+|> updateTime |integer |價格更新時間（Unix 秒）|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pay-token-price HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenCode": ["CEX_1", "CEX_2"]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "prices": [
+            {
+                "tokenCode": "CEX_1",
+                "tokenSymbol": "USDT",
+                "priceUsd": "1.00",
+                "chainCode": "ETH",
+                "updateTime": 1704067200
+            },
+            {
+                "tokenCode": "CEX_2",
+                "tokenSymbol": "USDC",
+                "priceUsd": "0.9998",
+                "chainCode": "ETH",
+                "updateTime": 1704067200
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

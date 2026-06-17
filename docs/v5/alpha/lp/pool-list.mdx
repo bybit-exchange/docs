@@ -1,0 +1,108 @@
+---
+title: Get LP Pool List
+sidebar_label: Get LP Pool List
+sidebar_position: 7
+---
+
+Query available liquidity pools with optional filtering by token symbol.
+
+:::info
+- Use this to help users discover and compare available LP pools
+- Filter by `tokenSymbol` to find pools containing a specific token
+- **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/pool-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|tokenSymbol |false |string |Search pools containing this token symbol, e.g. `ETH`, `USDC`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|pools |array |Pool list|
+|> poolAddress |string |Pool contract address|
+|> poolName |string |Pool name|
+|> poolTag |string |Pool category tag|
+|> apy |string |Annual percentage yield|
+|> tvl |string |Total value locked (USD)|
+|> token0Symbol |string |First token symbol|
+|> token0IconUrlDay |string |First token icon URL (light mode)|
+|> token0IconUrlNight |string |First token icon URL (dark mode)|
+|> token1Symbol |string |Second token symbol|
+|> token1IconUrlDay |string |Second token icon URL (light mode)|
+|> token1IconUrlNight |string |Second token icon URL (dark mode)|
+|> chainCode |string |Blockchain identifier|
+|> chainIconUrl |string |Blockchain icon URL|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pool-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenSymbol": "ETH"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pools": [
+            {
+                "poolAddress": "0x1234567890abcdef",
+                "poolName": "ETH-USDC Pool",
+                "poolTag": "Trending",
+                "apy": "12.5",
+                "tvl": "1000000",
+                "token0Symbol": "ETH",
+                "token0IconUrlDay": "",
+                "token0IconUrlNight": "",
+                "token1Symbol": "USDC",
+                "token1IconUrlDay": "",
+                "token1IconUrlNight": "",
+                "chainCode": "",
+                "chainIconUrl": ""
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

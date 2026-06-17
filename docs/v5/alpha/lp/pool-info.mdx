@@ -1,0 +1,101 @@
+---
+title: Get LP Pool Info
+sidebar_label: Get LP Pool Info
+sidebar_position: 6
+---
+
+Query detailed information for a specific liquidity pool, including APY, fees, token reserves, and price range.
+
+:::info
+- Call this before staking to show users complete pool details
+- `poolAddress` must be obtained from the pool list
+- **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/lp/pool-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|poolAddress |**true** |string |Pool contract address|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|poolAddress |string |Pool contract address|
+|poolName |string |Pool name|
+|apy |string |Annual percentage yield|
+|tvl |string |Total value locked|
+|feeRate |string |Pool fee rate, e.g. `"0.003"` = 0.3%|
+|token0Symbol |string |Token0 symbol|
+|token0Reserve |string |Token0 reserve amount|
+|token1Symbol |string |Token1 symbol|
+|token1Reserve |string |Token1 reserve amount|
+|priceRangeLower |string |Price range lower bound|
+|priceRangeUpper |string |Price range upper bound|
+|currentPrice |string |Current pool price|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/lp/pool-info HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "poolAddress": "0x1234567890abcdef"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "poolAddress": "0x1234567890abcdef",
+        "poolName": "ETH-USDC Pool",
+        "apy": "12.5",
+        "tvl": "1000000",
+        "feeRate": "0.003",
+        "token0Symbol": "ETH",
+        "token0Reserve": "500",
+        "token1Symbol": "USDC",
+        "token1Reserve": "1000000",
+        "priceRangeLower": "",
+        "priceRangeUpper": "",
+        "currentPrice": ""
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```
