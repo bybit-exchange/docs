@@ -310,7 +310,10 @@ _closed status_
 * `2`&emsp;processing
 * `3`&emsp;success (finalised status of a success deposit)
 * `4`&emsp;deposit failed
-* `7`&emsp;A chain rollback occurs after the deposit is credited. Note: convert status from “3” to “7” when there is a chain rollback. In this case, the funds may or may not have been deducted.
+* `7`&emsp;Rollback processing — a chain rollback occurred after the deposit was credited. The status converts from “3” to “7”. System deduction or manual review is pending.
+* `70011`&emsp;Rollback: deducted — funds have been clawed back from the account; this deposit will not be credited.
+* `70012`&emsp;Success (3) — no deduction required; review completed and determined no clawback is needed.
+* `70013`&emsp;Success (3) — manually processed; original status “7” converted to “70013” with no deduction, treated as a normal successful deposit.
 * `10011`&emsp;pending to be credited to funding pool
 * `10012`&emsp;Credited to funding pool successfully
 
