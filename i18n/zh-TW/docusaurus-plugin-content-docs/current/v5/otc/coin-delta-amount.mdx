@@ -1,0 +1,91 @@
+---
+title: 查詢幣種 Delta 額度
+sidebar_label: 查詢幣種 Delta 額度
+sidebar_position: 9
+---
+查詢機構借貸對沖產品的幣種 Delta 額度詳情。
+
+:::info
+- 僅支持統一帳戶
+- `coin` 為可選篩選參數，若不傳則返回所有幣種
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/ins-loan/coin-delta-amount" />
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|coin | false | string | 幣種名稱，僅大寫。如 `BTC`。若不傳，返回所有幣種 |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|riskUnitDeltaAmount | string | 風險單元 Delta 總額度限制（USD）|
+|riskUnitDeltaAvailableAmount | string | 風險單元可用 Delta 額度（USD）|
+|list | array | Object |
+|> coin | string | 幣種名稱 |
+|> coinDeltaSize | string | 幣種 Delta 數量 |
+|> coinDeltaAvailableAmount | string | 幣種可用 Delta 額度（USD）|
+|> coinDeltaAmount | string | 幣種 Delta 總額度限制（USD）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1716192000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "riskUnitDeltaAmount": "500000",
+        "riskUnitDeltaAvailableAmount": "350000",
+        "list": [
+            {
+                "coin": "BTC",
+                "coinDeltaSize": "10",
+                "coinDeltaAvailableAmount": "200000",
+                "coinDeltaAmount": "300000"
+            },
+            {
+                "coin": "ETH",
+                "coinDeltaSize": "100",
+                "coinDeltaAvailableAmount": "150000",
+                "coinDeltaAmount": "200000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1716192000000
+}
+```
