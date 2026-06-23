@@ -1,0 +1,503 @@
+---
+title: Full Orderbook
+sidebar_label: Full Orderbook
+sidebar_position: 2
+---
+
+Subscribe to the full orderbook stream. Delivers **delta-only** updates for deep, full-depth market data.
+
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
+
+:::info
+* [Retail Price Improvement (RPI)](https://www.bybit.com/en/help-center/article/Retail-Price-Improvement-RPI-Order) orders will not be included in the messages.
+* This stream pushes **delta updates only** — there is no initial snapshot message. You must initialize your local order book via the [REST full orderbook snapshot](../../market/full-ob) before applying deltas.
+:::
+
+### Push frequency
+
+**Linear, inverse & spot:**<br/>
+Full depth data, push frequency: **200ms**<br/>
+
+**Topic:**<br/>
+`orderbook.full.{symbol}` e.g., `orderbook.full.BTCUSDT`
+
+:::info Reset scenarios (`u=1`)
+
+| Scenario | WS payload | REST snapshot | Client action |
+|:---------|:-----------|:--------------|:--------------|
+| Service restart | `u=1` | `u` may also reset to `1` | Overwrite local book with snapshot |
+| Symbol delist | `u=1`, `b=[]`, `a=[]` | Returns empty | Clear local book, mark as **unavailable** |
+| Before pre-market auction | `u=1`, delta empty | May return empty | Keep book empty, treat as **NO_BOOK** |
+| Auction → continuous trading | `u=1`, delta empty | Returns valid snapshot | Pull snapshot, then continue with deltas |
+| Lot / tick configuration change | `u=1`, delta can be empty | Snapshot ready when applicable | Clear and re-sync local book |
+
+:::
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. Always `delta` |
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |object |Object |
+|> s |string |Symbol name |
+|> b |array |Bid delta entries. Sorted by price in descending order |
+|>> b[0] |string |Bid price |
+|>> b[1] |string |Bid size. `0` means this price level should be deleted |
+|> a |array |Ask delta entries. Sorted by price in ascending order |
+|>> a[0] |string |Ask price |
+|>> a[1] |string |Ask size. `0` means this price level should be deleted |
+|> u |integer |Update ID<ul><li>Always incremental within a session</li><li>When `u=1`, it is a re-initialization signal — overwrite your local order book with a fresh [REST snapshot](../../market/full-ob)</li></ul>|
+|> seq |integer |Cross sequence. Use this to compare across different orderbook levels — a smaller `seq` means the data was generated earlier |
+|cts |number |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
+
+### Subscribe Example
+
+```python
+
+```
+
+### Response Example
+
+```json
+
+```
+
+### How to maintain the local order book
+
+1. Subscribe to `orderbook.full.{symbol}`.
+2. Fetch an initial snapshot from [GET /v5/market/full_orderbook](../../market/full-ob) and build your local order book.
+3. Apply incoming delta messages to the local book:
+   * If the size is `0`, **delete** that price level.
+   * If the price level does not exist, **insert** it.
+   * If the price level exists, **update** its size.
+4. When `u=1` is received, it is a **re-initialization signal** — immediately pull a fresh REST snapshot and overwrite the local book before applying further deltas.
+
+### Code Examples 
+
+<Tabs groupId="programming-languages">
+<TabItem value="python" label="Python">
+
+```python
+import asyncio
+import json
+from dataclasses import dataclass, field
+from typing import Dict, Optional, Tuple
+
+import aiohttp
+import websockets
+
+
+@dataclass
+class LocalOrderBook:
+    symbol: str
+    bids: Dict[str, str] = field(default_factory=dict)  # price -> size
+    asks: Dict[str, str] = field(default_factory=dict)  # price -> size
+    u: int = 0
+    seq: int = 0
+    cts: int = 0
+    no_book: bool = False
+
+    def clear(self, no_book: bool = False):
+        self.bids.clear()
+        self.asks.clear()
+        self.u = 0
+        self.seq = 0
+        self.cts = 0
+        self.no_book = no_book
+
+    def apply_level(self, side: str, price: str, size: str):
+        # size=0 => delete this price level
+        if size == "0" or size == "0.0" or size == "":
+            if side == "b":
+                self.bids.pop(price, None)
+            else:
+                self.asks.pop(price, None)
+            return
+
+        if side == "b":
+            self.bids[price] = size
+        else:
+            self.asks[price] = size
+
+    def apply_delta(self, b_updates, a_updates, u: int, seq: int, cts: int):
+        if self.seq and seq < self.seq:
+            return
+        if self.u and u < self.u:
+            return
+
+        for price, size in b_updates:
+            self.apply_level("b", price, size)
+        for price, size in a_updates:
+            self.apply_level("a", price, size)
+
+        self.u = u
+        self.seq = seq
+        self.cts = cts
+
+
+async def rest_snapshot(session: aiohttp.ClientSession, base_url: str, category: str, symbol: str, limit: int) -> Optional[Tuple[dict, int, int]]:
+    url = f"{base_url}/v5/market/full_orderbook"
+    params = {"category": category, "symbol": symbol, "limit": str(limit)}
+    async with session.get(url, params=params, timeout=5) as resp:
+        payload = await resp.json()
+
+    result = payload.get("result") or {}
+    if not result or (isinstance(result, list) and len(result) == 0):
+        return None
+
+    if isinstance(result, dict):
+        u = int(result.get("u", 0))
+        seq = int(result.get("seq", 0))
+        return (result, u, seq)
+
+    return None
+
+
+async def build_from_snapshot(book: LocalOrderBook, snapshot: dict):
+    book.clear(no_book=False)
+    for price, size in snapshot.get("b", []):
+        if size and size != "0":
+            book.bids[price] = size
+    for price, size in snapshot.get("a", []):
+        if size and size != "0":
+            book.asks[price] = size
+    book.u = int(snapshot.get("u", 0))
+    book.seq = int(snapshot.get("seq", 0))
+    book.cts = int(snapshot.get("cts", 0))
+
+
+async def ws_consumer():
+    category = "linear"   # spot / linear / inverse
+    symbol = "BTCUSDT"
+    topic = f"orderbook.full.{symbol}"
+
+    ws_url = "wss://stream.bybit.com/v5/public/linear"
+    rest_base = "https://api.bybit.com"
+    snapshot_limit = 10000
+
+    book = LocalOrderBook(symbol=symbol)
+
+    async with aiohttp.ClientSession() as session:
+        # Initial snapshot
+        snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
+        if not snap:
+            book.clear(no_book=True)
+            print("NO_BOOK on initial snapshot (auction/delist/unavailable)")
+        else:
+            snapshot_data, _, _ = snap
+            await build_from_snapshot(book, snapshot_data)
+            print(f"Initialized from snapshot: u={book.u} seq={book.seq}")
+
+        async with websockets.connect(ws_url, ping_interval=20, ping_timeout=20) as ws:
+            sub_msg = {"op": "subscribe", "args": [topic]}
+            await ws.send(json.dumps(sub_msg))
+
+            while True:
+                raw = await ws.recv()
+                msg = json.loads(raw)
+
+                if msg.get("op") in ("subscribe", "pong", "ping"):
+                    continue
+                if msg.get("topic") != topic:
+                    continue
+
+                data = msg.get("data") or {}
+                u = int(data.get("u", 0))
+                seq = int(data.get("seq", 0))
+                cts = int(msg.get("cts", 0) or data.get("cts", 0) or 0)
+
+                b = data.get("b", [])
+                a = data.get("a", [])
+
+                # Reset condition: u=1 signals re-initialization
+                if u == 1:
+                    snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
+                    if not snap:
+                        book.clear(no_book=True)
+                        print("Reset u=1 but REST empty => NO_BOOK")
+                        continue
+                    snapshot_data, _, _ = snap
+                    await build_from_snapshot(book, snapshot_data)
+                    print(f"Resynced snapshot on u=1: u={book.u} seq={book.seq}")
+                    continue
+
+                if book.no_book and (not b and not a):
+                    continue
+
+                if book.no_book and (b or a):
+                    snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
+                    if snap:
+                        snapshot_data, _, _ = snap
+                        await build_from_snapshot(book, snapshot_data)
+                        print("Recovered from NO_BOOK via snapshot")
+                        continue
+
+                book.apply_delta(b, a, u=u, seq=seq, cts=cts)
+
+
+if __name__ == "__main__":
+    asyncio.run(ws_consumer())
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"strconv"
+	"time"
+
+	"github.com/gorilla/websocket"
+)
+
+type WsMsg struct {
+	Topic string          `json:"topic"`
+	Type  string          `json:"type"`
+	Ts    int64           `json:"ts"`
+	Cts   int64           `json:"cts"`
+	Data  json.RawMessage `json:"data"`
+	Op    string          `json:"op"`
+	Args  []string        `json:"args"`
+}
+
+type WsData struct {
+	S   string     `json:"s"`
+	B   [][]string `json:"b"`
+	A   [][]string `json:"a"`
+	U   int64      `json:"u"`
+	Seq int64      `json:"seq"`
+	Cts int64      `json:"cts"`
+}
+
+type RestResult struct {
+	S   string     `json:"s"`
+	B   [][]string `json:"b"`
+	A   [][]string `json:"a"`
+	Ts  int64      `json:"ts"`
+	U   int64      `json:"u"`
+	Seq int64      `json:"seq"`
+	Cts int64      `json:"cts"`
+}
+
+type RestResp struct {
+	Result *RestResult `json:"result"`
+}
+
+type OrderBook struct {
+	Symbol string
+	Bids   map[string]string // price -> size
+	Asks   map[string]string // price -> size
+	U      int64
+	Seq    int64
+	Cts    int64
+	NoBook bool
+}
+
+func NewOrderBook(symbol string) *OrderBook {
+	return &OrderBook{
+		Symbol: symbol,
+		Bids:   map[string]string{},
+		Asks:   map[string]string{},
+	}
+}
+
+func (ob *OrderBook) Clear(noBook bool) {
+	ob.Bids = map[string]string{}
+	ob.Asks = map[string]string{}
+	ob.U, ob.Seq, ob.Cts = 0, 0, 0
+	ob.NoBook = noBook
+}
+
+func isZeroSize(sz string) bool {
+	return sz == "" || sz == "0" || sz == "0.0"
+}
+
+func (ob *OrderBook) applyLevel(side string, price, size string) {
+	if isZeroSize(size) {
+		if side == "b" {
+			delete(ob.Bids, price)
+		} else {
+			delete(ob.Asks, price)
+		}
+		return
+	}
+	if side == "b" {
+		ob.Bids[price] = size
+	} else {
+		ob.Asks[price] = size
+	}
+}
+
+func (ob *OrderBook) ApplyDelta(b, a [][]string, u, seq, cts int64) {
+	if ob.Seq != 0 && seq < ob.Seq {
+		return
+	}
+	if ob.U != 0 && u < ob.U {
+		return
+	}
+	for _, lv := range b {
+		if len(lv) < 2 {
+			continue
+		}
+		ob.applyLevel("b", lv[0], lv[1])
+	}
+	for _, lv := range a {
+		if len(lv) < 2 {
+			continue
+		}
+		ob.applyLevel("a", lv[0], lv[1])
+	}
+	ob.U, ob.Seq, ob.Cts = u, seq, cts
+}
+
+func fetchSnapshot(ctx context.Context, httpClient *http.Client, baseURL, category, symbol string, limit int) (*RestResult, error) {
+	u, _ := url.Parse(baseURL + "/v5/market/full_orderbook")
+	q := u.Query()
+	q.Set("category", category)
+	q.Set("symbol", symbol)
+	q.Set("limit", strconv.Itoa(limit))
+	u.RawQuery = q.Encode()
+
+	req, _ := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	var rr RestResp
+	if err := json.Unmarshal(body, &rr); err != nil {
+		return nil, err
+	}
+	return rr.Result, nil
+}
+
+func buildFromSnapshot(ob *OrderBook, snap *RestResult) {
+	ob.Clear(false)
+	for _, lv := range snap.B {
+		if len(lv) < 2 {
+			continue
+		}
+		if !isZeroSize(lv[1]) {
+			ob.Bids[lv[0]] = lv[1]
+		}
+	}
+	for _, lv := range snap.A {
+		if len(lv) < 2 {
+			continue
+		}
+		if !isZeroSize(lv[1]) {
+			ob.Asks[lv[0]] = lv[1]
+		}
+	}
+	ob.U, ob.Seq, ob.Cts = snap.U, snap.Seq, snap.Cts
+}
+
+func main() {
+	category := "linear"
+	symbol := "BTCUSDT"
+	topic := fmt.Sprintf("orderbook.full.%s", symbol)
+
+	wsURL := "wss://stream.bybit.com/v5/public/linear"
+	restBase := "https://api.bybit.com"
+	snapshotLimit := 10000
+
+	ob := NewOrderBook(symbol)
+	httpClient := &http.Client{Timeout: 5 * time.Second}
+	ctx := context.Background()
+
+	// Initial snapshot
+	snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
+	if err != nil {
+		panic(err)
+	}
+	if snap == nil {
+		ob.Clear(true)
+		fmt.Println("NO_BOOK on initial snapshot (auction/delist/unavailable)")
+	} else {
+		buildFromSnapshot(ob, snap)
+		fmt.Printf("Init snapshot: u=%d seq=%d\n", ob.U, ob.Seq)
+	}
+
+	dialer := websocket.Dialer{HandshakeTimeout: 10 * time.Second}
+	conn, _, err := dialer.Dial(wsURL, nil)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
+	sub := map[string]any{"op": "subscribe", "args": []string{topic}}
+	_ = conn.WriteJSON(sub)
+
+	for {
+		_, buf, err := conn.ReadMessage()
+		if err != nil {
+			panic(err)
+		}
+
+		var m WsMsg
+		if err := json.Unmarshal(buf, &m); err != nil {
+			continue
+		}
+
+		if m.Op != "" || m.Topic != topic {
+			continue
+		}
+
+		var d WsData
+		if err := json.Unmarshal(m.Data, &d); err != nil {
+			continue
+		}
+		cts := m.Cts
+		if cts == 0 {
+			cts = d.Cts
+		}
+
+		// Reset condition: u=1 signals re-initialization
+		if d.U == 1 {
+			snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
+			if err != nil {
+				fmt.Println("snapshot error on reset:", err)
+				continue
+			}
+			if snap == nil {
+				ob.Clear(true)
+				fmt.Println("Reset u=1 but REST empty => NO_BOOK")
+				continue
+			}
+			buildFromSnapshot(ob, snap)
+			fmt.Printf("Resynced snapshot on u=1: u=%d seq=%d\n", ob.U, ob.Seq)
+			continue
+		}
+
+		if ob.NoBook && len(d.B) == 0 && len(d.A) == 0 {
+			continue
+		}
+
+		if ob.NoBook && (len(d.B) > 0 || len(d.A) > 0) {
+			snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
+			if err == nil && snap != nil {
+				buildFromSnapshot(ob, snap)
+				fmt.Println("Recovered from NO_BOOK via snapshot")
+				continue
+			}
+		}
+
+		ob.ApplyDelta(d.B, d.A, d.U, d.Seq, cts)
+	}
+}
+```
+
+</TabItem>
+</Tabs>
