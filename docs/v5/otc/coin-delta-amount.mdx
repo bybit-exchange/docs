@@ -1,0 +1,91 @@
+---
+title: Get Coin Delta Amount
+sidebar_label: Get Coin Delta Amount
+sidebar_position: 9
+---
+Query coin delta amount details for institutional loan hedge product.
+
+:::info
+- Unified account only
+- Optional `coin` filter; if omitted, returns all coins
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/ins-loan/coin-delta-amount" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|coin | false | string | Coin name, uppercase only. e.g. `BTC`. If not passed, returns all coins |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|riskUnitDeltaAmount | string | Risk unit total delta amount limit (USD) |
+|riskUnitDeltaAvailableAmount | string | Risk unit available delta amount (USD) |
+|list | array | Object |
+|> coin | string | Coin name |
+|> coinDeltaSize | string | Coin delta size (quantity) |
+|> coinDeltaAvailableAmount | string | Coin delta available amount (USD) |
+|> coinDeltaAmount | string | Coin delta total amount limit (USD) |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1716192000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "riskUnitDeltaAmount": "500000",
+        "riskUnitDeltaAvailableAmount": "350000",
+        "list": [
+            {
+                "coin": "BTC",
+                "coinDeltaSize": "10",
+                "coinDeltaAvailableAmount": "200000",
+                "coinDeltaAmount": "300000"
+            },
+            {
+                "coin": "ETH",
+                "coinDeltaSize": "100",
+                "coinDeltaAvailableAmount": "150000",
+                "coinDeltaAmount": "200000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1716192000000
+}
+```
