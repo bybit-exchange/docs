@@ -15,6 +15,13 @@ sidebar_position: 6
 * 零售價格優化（RPI）訂單不會包含在響應中。
 :::
 
+## 上線時間表
+
+| 產品 | 測試網 | 主網 |
+|:---|:---|:---|
+| 現貨 | 2026年7月6日 | 2026年7月16日 |
+| 期貨（線性 & 反向） | 預計2026年7月13日 | 未定 |
+
 ### HTTP請求
 <APIEndpoint method="GET" url="/v5/market/full_orderbook" />
 
@@ -35,7 +42,6 @@ sidebar_position: 6
 |> a[0] |string |賣方報價 |
 |> a[1] |string |賣方數量 |
 |ts |integer |行情服務生成數據時間戳（毫秒） |
-|u |integer |表示數據連續性的id，始終有序，對應全深度 [WebSocket 訂單簿](../websocket/public/full-ob) 中的 `u`|
 |seq |integer |撮合版本號 <ul><li>該字段可以用於關聯不同檔位的 orderbook，如果值越小，則說明數據生成越早</li></ul>|
 |cts |integer |產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](../websocket/public/trade#)頻道中的`T`進行關聯|
 

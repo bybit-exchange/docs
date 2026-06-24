@@ -15,6 +15,13 @@ Query for full orderbook depth data.
 * Retail Price Improvement (RPI) orders will not be included in the response.
 :::
 
+## Release Schedule
+
+| Product | Testnet | Mainnet |
+|:---|:---|:---|
+| Spot | July 6, 2026 | July 16, 2026 |
+| Futures (linear & inverse) | Est.July 13, 2026 | not determined |
+
 ### HTTP Request
 <APIEndpoint method="GET" url="/v5/market/full_orderbook" />
 
@@ -35,7 +42,6 @@ Query for full orderbook depth data.
 |> a[0] |string |Ask price |
 |> a[1] |string |Ask size |
 |ts |integer |The timestamp (ms) that the system generates the data |
-|u |integer |Update ID, is always in sequence, corresponds to `u` in the full ob [WebSocket orderbook stream](../websocket/public/full-ob)|
 |seq |integer |Cross sequence <ul><li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier.</li></ul>|
 |cts |integer |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](../websocket/public/trade#)|
 

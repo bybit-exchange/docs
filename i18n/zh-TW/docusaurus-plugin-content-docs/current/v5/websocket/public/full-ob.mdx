@@ -13,6 +13,13 @@ sidebar_position: 2
 * 此頻道**僅推送增量數據**，不會推送初始全量快照。請先通過 [REST 全深度訂單簿接口](../../market/full-ob) 初始化本地訂單簿，再應用增量更新。
 :::
 
+## 上線時間表
+
+| 產品 | 測試網 | 主網 |
+|:---|:---|:---|
+| 現貨 | 2026年7月6日 | 2026年7月16日 |
+| 期貨（線性 & 反向） | 預計2026年7月13日 | 未定 |
+
 ### 推送頻率
 
 **USDT合約、反向合約 & 現貨:**<br/>
@@ -63,441 +70,40 @@ sidebar_position: 2
 
 ```
 
-### 如何維護本地訂單簿
-
-1. 訂閱 `orderbook.full.{symbol}`。
-2. 通過 [GET /v5/market/full_orderbook](../../market/full-ob) 獲取初始快照，構建本地訂單簿。
-3. 將接收到的增量消息應用到本地訂單簿：
-   * 若數量為 `0`，**刪除**該價位。
-   * 若該價位不存在，**插入**該價位。
-   * 若該價位已存在，**更新**其數量。
-4. 當接收到 `u=1` 時，為**重置信號**——請立即拉取新的 REST 快照並覆蓋本地訂單簿，之後再繼續應用增量數據。
-
-### 代碼示例
-
-<Tabs groupId="programming-languages">
-<TabItem value="python" label="Python">
-
-```python
-import asyncio
-import json
-from dataclasses import dataclass, field
-from typing import Dict, Optional, Tuple
-
-import aiohttp
-import websockets
-
-
-@dataclass
-class LocalOrderBook:
-    symbol: str
-    bids: Dict[str, str] = field(default_factory=dict)  # price -> size
-    asks: Dict[str, str] = field(default_factory=dict)  # price -> size
-    u: int = 0
-    seq: int = 0
-    cts: int = 0
-    no_book: bool = False
-
-    def clear(self, no_book: bool = False):
-        self.bids.clear()
-        self.asks.clear()
-        self.u = 0
-        self.seq = 0
-        self.cts = 0
-        self.no_book = no_book
-
-    def apply_level(self, side: str, price: str, size: str):
-        # size=0 => 刪除該價位
-        if size == "0" or size == "0.0" or size == "":
-            if side == "b":
-                self.bids.pop(price, None)
-            else:
-                self.asks.pop(price, None)
-            return
-
-        if side == "b":
-            self.bids[price] = size
-        else:
-            self.asks[price] = size
-
-    def apply_delta(self, b_updates, a_updates, u: int, seq: int, cts: int):
-        if self.seq and seq < self.seq:
-            return
-        if self.u and u < self.u:
-            return
-
-        for price, size in b_updates:
-            self.apply_level("b", price, size)
-        for price, size in a_updates:
-            self.apply_level("a", price, size)
-
-        self.u = u
-        self.seq = seq
-        self.cts = cts
-
-
-async def rest_snapshot(session: aiohttp.ClientSession, base_url: str, category: str, symbol: str, limit: int) -> Optional[Tuple[dict, int, int]]:
-    url = f"{base_url}/v5/market/full_orderbook"
-    params = {"category": category, "symbol": symbol, "limit": str(limit)}
-    async with session.get(url, params=params, timeout=5) as resp:
-        payload = await resp.json()
-
-    result = payload.get("result") or {}
-    if not result or (isinstance(result, list) and len(result) == 0):
-        return None
-
-    if isinstance(result, dict):
-        u = int(result.get("u", 0))
-        seq = int(result.get("seq", 0))
-        return (result, u, seq)
-
-    return None
-
-
-async def build_from_snapshot(book: LocalOrderBook, snapshot: dict):
-    book.clear(no_book=False)
-    for price, size in snapshot.get("b", []):
-        if size and size != "0":
-            book.bids[price] = size
-    for price, size in snapshot.get("a", []):
-        if size and size != "0":
-            book.asks[price] = size
-    book.u = int(snapshot.get("u", 0))
-    book.seq = int(snapshot.get("seq", 0))
-    book.cts = int(snapshot.get("cts", 0))
-
-
-async def ws_consumer():
-    category = "linear"   # spot / linear / inverse
-    symbol = "BTCUSDT"
-    topic = f"orderbook.full.{symbol}"
-
-    ws_url = "wss://stream.bybit.com/v5/public/linear"
-    rest_base = "https://api.bybit.com"
-    snapshot_limit = 10000
-
-    book = LocalOrderBook(symbol=symbol)
-
-    async with aiohttp.ClientSession() as session:
-        # 初始快照
-        snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
-        if not snap:
-            book.clear(no_book=True)
-            print("NO_BOOK on initial snapshot (auction/delist/unavailable)")
-        else:
-            snapshot_data, _, _ = snap
-            await build_from_snapshot(book, snapshot_data)
-            print(f"Initialized from snapshot: u={book.u} seq={book.seq}")
-
-        async with websockets.connect(ws_url, ping_interval=20, ping_timeout=20) as ws:
-            sub_msg = {"op": "subscribe", "args": [topic]}
-            await ws.send(json.dumps(sub_msg))
-
-            while True:
-                raw = await ws.recv()
-                msg = json.loads(raw)
-
-                if msg.get("op") in ("subscribe", "pong", "ping"):
-                    continue
-                if msg.get("topic") != topic:
-                    continue
-
-                data = msg.get("data") or {}
-                u = int(data.get("u", 0))
-                seq = int(data.get("seq", 0))
-                cts = int(msg.get("cts", 0) or data.get("cts", 0) or 0)
-
-                b = data.get("b", [])
-                a = data.get("a", [])
-
-                # 重置條件：u=1 為重初始化信號
-                if u == 1:
-                    snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
-                    if not snap:
-                        book.clear(no_book=True)
-                        print("Reset u=1 but REST empty => NO_BOOK")
-                        continue
-                    snapshot_data, _, _ = snap
-                    await build_from_snapshot(book, snapshot_data)
-                    print(f"Resynced snapshot on u=1: u={book.u} seq={book.seq}")
-                    continue
-
-                if book.no_book and (not b and not a):
-                    continue
-
-                if book.no_book and (b or a):
-                    snap = await rest_snapshot(session, rest_base, category, symbol, snapshot_limit)
-                    if snap:
-                        snapshot_data, _, _ = snap
-                        await build_from_snapshot(book, snapshot_data)
-                        print("Recovered from NO_BOOK via snapshot")
-                        continue
-
-                book.apply_delta(b, a, u=u, seq=seq, cts=cts)
-
-
-if __name__ == "__main__":
-    asyncio.run(ws_consumer())
-```
-
-</TabItem>
-<TabItem value="Go" label="Go">
-
-```go
-package main
-
-import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
-	"strconv"
-	"time"
-
-	"github.com/gorilla/websocket"
-)
-
-type WsMsg struct {
-	Topic string          `json:"topic"`
-	Type  string          `json:"type"`
-	Ts    int64           `json:"ts"`
-	Cts   int64           `json:"cts"`
-	Data  json.RawMessage `json:"data"`
-	Op    string          `json:"op"`
-	Args  []string        `json:"args"`
-}
-
-type WsData struct {
-	S   string     `json:"s"`
-	B   [][]string `json:"b"`
-	A   [][]string `json:"a"`
-	U   int64      `json:"u"`
-	Seq int64      `json:"seq"`
-	Cts int64      `json:"cts"`
-}
-
-type RestResult struct {
-	S   string     `json:"s"`
-	B   [][]string `json:"b"`
-	A   [][]string `json:"a"`
-	Ts  int64      `json:"ts"`
-	U   int64      `json:"u"`
-	Seq int64      `json:"seq"`
-	Cts int64      `json:"cts"`
-}
-
-type RestResp struct {
-	Result *RestResult `json:"result"`
-}
-
-type OrderBook struct {
-	Symbol string
-	Bids   map[string]string // price -> size
-	Asks   map[string]string // price -> size
-	U      int64
-	Seq    int64
-	Cts    int64
-	NoBook bool
-}
-
-func NewOrderBook(symbol string) *OrderBook {
-	return &OrderBook{
-		Symbol: symbol,
-		Bids:   map[string]string{},
-		Asks:   map[string]string{},
-	}
-}
-
-func (ob *OrderBook) Clear(noBook bool) {
-	ob.Bids = map[string]string{}
-	ob.Asks = map[string]string{}
-	ob.U, ob.Seq, ob.Cts = 0, 0, 0
-	ob.NoBook = noBook
-}
-
-func isZeroSize(sz string) bool {
-	return sz == "" || sz == "0" || sz == "0.0"
-}
-
-func (ob *OrderBook) applyLevel(side string, price, size string) {
-	if isZeroSize(size) {
-		if side == "b" {
-			delete(ob.Bids, price)
-		} else {
-			delete(ob.Asks, price)
-		}
-		return
-	}
-	if side == "b" {
-		ob.Bids[price] = size
-	} else {
-		ob.Asks[price] = size
-	}
-}
-
-func (ob *OrderBook) ApplyDelta(b, a [][]string, u, seq, cts int64) {
-	if ob.Seq != 0 && seq < ob.Seq {
-		return
-	}
-	if ob.U != 0 && u < ob.U {
-		return
-	}
-	for _, lv := range b {
-		if len(lv) < 2 {
-			continue
-		}
-		ob.applyLevel("b", lv[0], lv[1])
-	}
-	for _, lv := range a {
-		if len(lv) < 2 {
-			continue
-		}
-		ob.applyLevel("a", lv[0], lv[1])
-	}
-	ob.U, ob.Seq, ob.Cts = u, seq, cts
-}
-
-func fetchSnapshot(ctx context.Context, httpClient *http.Client, baseURL, category, symbol string, limit int) (*RestResult, error) {
-	u, _ := url.Parse(baseURL + "/v5/market/full_orderbook")
-	q := u.Query()
-	q.Set("category", category)
-	q.Set("symbol", symbol)
-	q.Set("limit", strconv.Itoa(limit))
-	u.RawQuery = q.Encode()
-
-	req, _ := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, _ := io.ReadAll(resp.Body)
-
-	var rr RestResp
-	if err := json.Unmarshal(body, &rr); err != nil {
-		return nil, err
-	}
-	return rr.Result, nil
-}
-
-func buildFromSnapshot(ob *OrderBook, snap *RestResult) {
-	ob.Clear(false)
-	for _, lv := range snap.B {
-		if len(lv) < 2 {
-			continue
-		}
-		if !isZeroSize(lv[1]) {
-			ob.Bids[lv[0]] = lv[1]
-		}
-	}
-	for _, lv := range snap.A {
-		if len(lv) < 2 {
-			continue
-		}
-		if !isZeroSize(lv[1]) {
-			ob.Asks[lv[0]] = lv[1]
-		}
-	}
-	ob.U, ob.Seq, ob.Cts = snap.U, snap.Seq, snap.Cts
-}
-
-func main() {
-	category := "linear"
-	symbol := "BTCUSDT"
-	topic := fmt.Sprintf("orderbook.full.%s", symbol)
-
-	wsURL := "wss://stream.bybit.com/v5/public/linear"
-	restBase := "https://api.bybit.com"
-	snapshotLimit := 10000
-
-	ob := NewOrderBook(symbol)
-	httpClient := &http.Client{Timeout: 5 * time.Second}
-	ctx := context.Background()
-
-	// 初始快照
-	snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
-	if err != nil {
-		panic(err)
-	}
-	if snap == nil {
-		ob.Clear(true)
-		fmt.Println("NO_BOOK on initial snapshot (auction/delist/unavailable)")
-	} else {
-		buildFromSnapshot(ob, snap)
-		fmt.Printf("Init snapshot: u=%d seq=%d\n", ob.U, ob.Seq)
-	}
-
-	dialer := websocket.Dialer{HandshakeTimeout: 10 * time.Second}
-	conn, _, err := dialer.Dial(wsURL, nil)
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
-
-	sub := map[string]any{"op": "subscribe", "args": []string{topic}}
-	_ = conn.WriteJSON(sub)
-
-	for {
-		_, buf, err := conn.ReadMessage()
-		if err != nil {
-			panic(err)
-		}
-
-		var m WsMsg
-		if err := json.Unmarshal(buf, &m); err != nil {
-			continue
-		}
-
-		if m.Op != "" || m.Topic != topic {
-			continue
-		}
-
-		var d WsData
-		if err := json.Unmarshal(m.Data, &d); err != nil {
-			continue
-		}
-		cts := m.Cts
-		if cts == 0 {
-			cts = d.Cts
-		}
-
-		// 重置條件：u=1 為重初始化信號
-		if d.U == 1 {
-			snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
-			if err != nil {
-				fmt.Println("snapshot error on reset:", err)
-				continue
-			}
-			if snap == nil {
-				ob.Clear(true)
-				fmt.Println("Reset u=1 but REST empty => NO_BOOK")
-				continue
-			}
-			buildFromSnapshot(ob, snap)
-			fmt.Printf("Resynced snapshot on u=1: u=%d seq=%d\n", ob.U, ob.Seq)
-			continue
-		}
-
-		if ob.NoBook && len(d.B) == 0 && len(d.A) == 0 {
-			continue
-		}
-
-		if ob.NoBook && (len(d.B) > 0 || len(d.A) > 0) {
-			snap, err := fetchSnapshot(ctx, httpClient, restBase, category, symbol, snapshotLimit)
-			if err == nil && snap != nil {
-				buildFromSnapshot(ob, snap)
-				fmt.Println("Recovered from NO_BOOK via snapshot")
-				continue
-			}
-		}
-
-		ob.ApplyDelta(d.B, d.A, d.U, d.Seq, cts)
-	}
-}
-```
-
-</TabItem>
-</Tabs>
+### 全深度訂單簿同步流程
+1. 開啟行情 WebSocket 連接並訂閱全深度訂單簿頻道。
+2. 緩存從串流中接收到的所有增量，記錄第一個增量的 `seq` 值。
+    * 若偵測到 `u` 不連續，清空緩存區並重新開始緩存。
+3. 從Rest接口獲取[全深度訂單簿快照](../../market/full-ob)
+4. 將快照的 `seq` 與緩存增量進行比對：
+    * 若快照的 `seq` 嚴格小於第一個緩存增量的 `seq`，重複步驟 3，直到獲得足夠新的快照。
+5. 在緩存增量中，丟棄所有 `seq` 小於快照 `seq` 的增量。
+6. 使用快照初始化本地訂單簿，本地訂單簿版本應設定為快照的 `seq` 值。
+7. 按照以下的說明將所有剩餘的緩存增量應用至本地訂單簿，然後繼續處理後續到來的即時增量。
+
+#### 訂單簿更新流程
+
+針對每個收到的增量（delta）事件：
+
+1. 驗證增量連續性
+
+* 若增量的 `u` 小於本地訂單簿的 `u`，忽略該增量。
+* 若增量的 `u` 大於本地訂單簿的 `u` + 1，表示遺漏了一個或多個增量，此時：
+    * 丟棄本地訂單簿。
+    * 從頭重新啟動同步流程。
+* 正常情況下，下一個增量的 u 應等於上一個增量的 u + 1。
+* 若增量的 `u` 變成1，則重新啟動同步流程。
+
+2. 應用價位更新
+
+對買方（b）和賣方（a）中的每個價位：
+
+* 若該價位不存在於本地訂單簿中，以指定數量插入該價位。
+* 若數量為零，從本地訂單簿中移除該價位。
+* 否則，更新現有價位的數量。
+
+:::info
+REST 快照接口每側最多返回 10,000 個價位。因此，超出初始快照範圍的價位在增量更新中出現之前，其狀態是未知的。
+
+這意味著超出快照深度的價位數量，可能無法完整反映訂單簿的實際狀態。不過，對於大多數交易和市場分析場景而言，可用深度（每側通常超過 10,000 個價位）已足以提供準確的市場流動性與交易狀況視圖。
+:::
