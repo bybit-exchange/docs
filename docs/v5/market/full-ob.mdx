@@ -1,0 +1,85 @@
+---
+title: Get Full Depth Orderbook
+sidebar_label: Get Full Depth Orderbook
+sidebar_position: 6
+---
+
+Query for full orderbook depth data.
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
+
+* Return up to **10,000** levels per side.
+
+:::info
+* The response is in the snapshot format.
+* Use this REST endpoint to initialize your local order book, then apply delta updates from the [WebSocket full orderbook stream](../websocket/public/full-ob).
+* Retail Price Improvement (RPI) orders will not be included in the response.
+:::
+
+## Release Schedule
+
+| Product | Testnet | Mainnet |
+|:---|:---|:---|
+| Spot | July 6, 2026 | July 16, 2026 |
+| Futures (linear & inverse) | Est.July 13, 2026 | not determined |
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/market/full_orderbook" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |Product type. `spot`, `linear`, `inverse` |
+|symbol |**true** |string |Symbol name, like `BTCUSDT`|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|s |string |Symbol name |
+|b |array |Bid, buyer. Sorted by price in descending order |
+|> b[0] |string |Bid price |
+|> b[1] |string |Bid size |
+|a |array |Ask, seller. Sorted by price in ascending order |
+|> a[0] |string |Ask price |
+|> a[1] |string |Ask size |
+|ts |integer |The timestamp (ms) that the system generates the data |
+|seq |integer |Cross sequence <ul><li>You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier.</li></ul>|
+|cts |integer |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](../websocket/public/trade#)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+<TabItem value="Go" label="Go">
+
+```go
+
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+
+```

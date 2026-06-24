@@ -1,0 +1,112 @@
+---
+title: Full Orderbook
+sidebar_label: Full Orderbook
+sidebar_position: 2
+---
+
+Subscribe to the full orderbook stream. Delivers **delta-only** updates for deep, full-depth market data.
+
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
+
+:::info
+* [Retail Price Improvement (RPI)](https://www.bybit.com/en/help-center/article/Retail-Price-Improvement-RPI-Order) orders will not be included in the messages.
+* This stream pushes **delta updates only** — there is no initial snapshot message. You must initialize your local order book via the [REST full orderbook snapshot](../../market/full-ob) before applying deltas.
+:::
+
+## Release Schedule
+
+| Product | Testnet | Mainnet |
+|:---|:---|:---|
+| Spot | July 6, 2026 | July 16, 2026 |
+| Futures (linear & inverse) | Est.July 13, 2026 | not determined |
+
+### Push frequency
+
+**Linear, inverse & spot:**<br/>
+Full depth data, push frequency: **200ms**<br/>
+
+**Topic:**<br/>
+`orderbook.full.{symbol}` e.g., `orderbook.full.BTCUSDT`
+
+:::info Reset scenarios (`u=1`)
+
+| Scenario | WS payload | REST snapshot | Client action |
+|:---------|:-----------|:--------------|:--------------|
+| Service restart | `u=1` | `u` may also reset to `1` | Overwrite local book with snapshot |
+| Symbol delist | `u=1`, `b=[]`, `a=[]` | Returns empty | Clear local book, mark as **unavailable** |
+| Before pre-market auction | `u=1`, delta empty | May return empty | Keep book empty, treat as **NO_BOOK** |
+| Auction → continuous trading | `u=1`, delta empty | Returns valid snapshot | Pull snapshot, then continue with deltas |
+| Lot / tick configuration change | `u=1`, delta can be empty | Snapshot ready when applicable | Clear and re-sync local book |
+
+:::
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name |
+|type |string |Data type. Always `delta` |
+|ts |number |The timestamp (ms) that the system generates the data |
+|data |object |Object |
+|> s |string |Symbol name |
+|> b |array |Bid delta entries. Sorted by price in descending order |
+|>> b[0] |string |Bid price |
+|>> b[1] |string |Bid size. `0` means this price level should be deleted |
+|> a |array |Ask delta entries. Sorted by price in ascending order |
+|>> a[0] |string |Ask price |
+|>> a[1] |string |Ask size. `0` means this price level should be deleted |
+|> u |integer |Update ID<ul><li>Always incremental within a session</li><li>When `u=1`, it is a re-initialization signal — overwrite your local order book with a fresh [REST snapshot](../../market/full-ob)</li></ul>|
+|> seq |integer |Cross sequence. Use this to compare across different orderbook levels — a smaller `seq` means the data was generated earlier |
+|cts |number |The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](trade#) |
+
+### Subscribe Example
+
+```python
+
+```
+
+### Response Example
+
+```json
+
+```
+
+### Full Order Book Synchronization Procedure
+1. Open a Market Data WebSocket connection and subscribe to the Full Order Book channel.
+2. Buffer all events received from the stream. Record the seq value of the first event received.
+    * If you detect that u is not continuous, clear the buffer and start buffering again.
+3. Retrieve a full order book snapshot from [Get Full Depth Orderbook](../../market/full-ob)
+4. Compare the snapshot `seq` with the buffered events:
+    * If the snapshot `seq` is strictly less than the first buffered event's `seq`, repeat Step 3 until you obtain a sufficiently recent snapshot.
+5. From the buffered events, discard any event whose `seq` is less than the snapshot `seq`.
+6. Initialize your local order book using the snapshot. The local order book version should be set to the snapshot seq.
+7. Apply all remaining buffered events to the local order book based on below procedure, then continue processing subsequent real-time events as they arrive.
+
+#### Order Book Update Procedure
+
+For each incoming delta event:
+
+1. Validate Event Continuity
+
+* If the event's `u` is less than the local order book's `u`, ignore the event.
+* If the event's `u` is greater than the local order book's `u` + 1, one or more events have been missed. In this case:
+    * Discard the local order book.
+    * Restart the synchronization process from the beginning.
+* Under normal circumstances, the next event's u should equal the previous event's u + 1.
+* If the event's `u` = 1, then restart the sync procedure
+
+2. Apply Price Level Updates
+
+For every price level in bids (b) and asks (a):
+
+* If the price level does not exist in the local order book, insert it with the specified quantity.
+* If the quantity is zero, remove the price level from the local order book.
+* Otherwise, update the quantity of the existing price level.
+
+:::info
+The REST snapshot endpoint returns a maximum of 10,000 price levels per side. As a result, price levels outside the initial snapshot 
+range are unknown unless they subsequently appear in delta updates.
+
+Therefore, quantities for levels beyond the snapshot depth may not represent the complete state of the order book. For most trading 
+and market analysis use cases, however, the available depth (typically more than 10,000 levels per side) is sufficient to provide an 
+accurate view of market liquidity and trading conditions.
+:::
