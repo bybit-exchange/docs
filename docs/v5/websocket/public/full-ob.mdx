@@ -71,15 +71,22 @@ Full depth data, push frequency: **200ms**<br/>
 ```
 
 ### Full Order Book Synchronization Procedure
-1. Open a Market Data WebSocket connection and subscribe to the Full Order Book channel.
-2. Buffer all events received from the stream. Record the seq value of the first event received.
-    * If you detect that u is not continuous, clear the buffer and start buffering again.
-3. Retrieve a full order book snapshot from [Get Full Depth Orderbook](../../market/full-ob)
-4. Compare the snapshot `seq` with the buffered events:
-    * If the snapshot `seq` is strictly less than the first buffered event's `seq`, repeat Step 3 until you obtain a sufficiently recent snapshot.
-5. From the buffered events, discard any event whose `seq` is less than the snapshot `seq`.
-6. Initialize your local order book using the snapshot. The local order book version should be set to the snapshot seq.
-7. Apply all remaining buffered events to the local order book based on below procedure, then continue processing subsequent real-time events as they arrive.
+Use the REST endpoint to fetch an Order Book (OB) snapshot, then subscribe to OB delta updates via WebSocket to maintain a complete local order book. Both the OB snapshot and OB delta messages include two fields — `seq` and `u` — for data matching and sequencing.
+
+* `seq`: The matching engine version number. It is monotonically increasing but not guaranteed to be consecutive — adjacent delta packets for the same symbol may have non-contiguous `seq` values.
+* `u`: The update ID. It is consecutive — the `u` value of each delta packet increments by one from the previous (`u+1`). However, when the system restarts or the tick size is adjusted, `u` resets to `1` and delta numbering starts over.
+
+1. Open a market data WebSocket connection and subscribe to the full-depth order book channel.
+2. Buffer all deltas received from the stream, recording the `seq` and `u` values of the first delta.
+  - If a discontinuity in `u` is detected, clear the buffer and restart buffering.
+  - If `seq` is detected to have decreased, discard that delta packet.
+3. Fetch the [full-depth order book snapshot](../../market/full-ob) from the REST endpoint.
+4. Compare the snapshot's `seq` and `u` against the buffered deltas:
+  - If the snapshot's `seq` is strictly less than the first buffered delta's `seq`, repeat step 3 until a sufficiently recent snapshot is obtained.
+  - In the buffered deltas, discard all deltas whose `seq` is less than the snapshot's `seq`.
+  - If the snapshot's `seq` equals the delta's `seq` but their `u` values differ, repeat step 3 until a sufficiently recent snapshot is obtained.
+5. Once the snapshot's `seq` and `u` both match the delta's `seq` and `u`, initialize the local order book with the snapshot. Set the local order book version to the snapshot's `u` value.
+7. Apply all remaining buffered deltas to the local order book as described below, then continue processing subsequent real-time deltas.
 
 #### Order Book Update Procedure
 
