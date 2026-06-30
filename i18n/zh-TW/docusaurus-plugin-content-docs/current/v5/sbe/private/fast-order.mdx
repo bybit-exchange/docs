@@ -19,7 +19,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 產品 | 測試網 | 主網 |
 |:---|:---|:---|
 | 現貨 | 2026年5月27日 | 2026年6月23日 |
-| 期貨（線性 & 反向） | 2026年6月10日 | 2026年7月9日 |
+| 期貨（線性 & 反向） | 2026年6月10日 | 2026年7月7日 ~ 7月14日 |
 | 期權 | 2026年6月16日 | 2026年7月21日 |
 
 ## 連接
@@ -180,7 +180,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | blockLength | uint16 | 2 | 消息體長度 |
 | templateId | uint16 | 2 | 固定 = `21000` |
 | schemaId | uint16 | 2 | 固定 = `1` |
-| version | uint16 | 2 | 固定 = `0` |
+| version | uint16 | 2 | 固定 = `1` |
 
 ### 消息體
 
@@ -195,11 +195,12 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 7 | rejectReason | uint16 | 無拒絕時為 `0`，詳見 [rejectReason 映射](#rejectreason-映射) |
 | 8 | price | int64 | 價格尾數（需應用 `priceExponent`） |
 | 9 | leavesQty | int64 | 剩餘數量尾數（需應用 `sizeExponent`） |
-| 10 | leavesValue | int64 | 僅現貨市價買單有效，其他情況為 `0`（需應用 `valueExponent`） |
+| 10 | leavesValue | int64 | 僅當現貨訂單類型為市價單且 `marketUnit=quoteCoin` 時有效，其他情況為 `0`（需應用 `valueExponent`） |
 | 11 | creationTime | int64 | 訂單在 Fast Order 頻道的創建時間戳（微秒） |
 | 12 | updatedTime | int64 | 撮合時間戳（微秒） |
 | 13 | seq | int64 | 跨序列 ID |
 | 14 | symbolID | int32 | 交易對 ID |
+| 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 |
 | 100 | orderId | varString8 | 訂單 ID（UUID） |
 | 101 | orderLinkId | varString8 | 可選；用戶主動操作時存在 |
 
@@ -264,15 +265,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
-                   xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"
-                   package="order.fast.sbe"
-                   id="1"
-                   version="0"
-                   semanticVersion="1.0.0"
-                   description="Bybit fast order response SBE schema"
-                   byteOrder="littleEndian"
-                   headerType="messageHeader">
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="1" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
   <types>
     <composite name="messageHeader" description="Template ID and length of message root">
       <type name="blockLength" primitiveType="uint16"/>
@@ -299,13 +292,15 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
     <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>
     <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>
     <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>
-    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>
+    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Active only when spot order type is market and marketUnit=quoteCoin; otherwise 0."/>
     <!-- Timing -->
     <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>
     <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>
     <field id="13" name="seq" type="int64" description="Cross sequence ID"/>
     <!-- SymbolID -->
     <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
+    <!-- Liquidity -->
+    <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>
     <!-- Order identifiers -->
     <data id="100" name="orderId" type="varString8" description="Order ID"/>
     <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
@@ -459,6 +454,7 @@ type FastOrderSBEResp struct {
 	Seq          int64 `json:"seq"`
 
 	SymbolID    int32  `json:"symbolID"`
+	Liquidity   int8   `json:"liquidity"`
 	OrderID     string `json:"orderId"`
 	OrderLinkID string `json:"orderLinkId"`
 
@@ -495,6 +491,8 @@ func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) 
 	resp.SBEHeader.TemplateID = templateID
 	resp.SBEHeader.SchemaID = schemaID
 	resp.SBEHeader.Version = version
+
+	bodyStart := off // fixed block begins here; var-length fields follow at bodyStart+blockLen
 
 	if resp.Category, err = readU8(payload, &off); err != nil {
 		return nil, err
@@ -538,6 +536,14 @@ func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) 
 	if resp.SymbolID, err = readI32LE(payload, &off); err != nil {
 		return nil, err
 	}
+	// field 15 liquidity (sinceVersion=1) — present when blockLen covers it
+	if off-bodyStart < int(blockLen) {
+		if resp.Liquidity, err = readI8(payload, &off); err != nil {
+			return nil, err
+		}
+	}
+	// skip any future fixed fields we don't know about
+	off = bodyStart + int(blockLen)
 	if resp.OrderID, err = readVarString8(payload, &off); err != nil {
 		return nil, err
 	}
@@ -763,6 +769,8 @@ def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any
     if template_id != 21000:
         return {"_warn": f"unexpected_template_id:{template_id}", "_raw": payload.hex()}
 
+    body_start = off  # fixed block begins here; var-length fields follow at body_start+block_len
+
     category, off = read_u8(mv, off)
     side, off = read_u8(mv, off)
     order_status, off = read_u8(mv, off)
@@ -778,6 +786,14 @@ def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any
     updated_time_us, off = read_i64_le(mv, off)
     seq, off = read_i64_le(mv, off)
     symbol_id, off = read_i32_le(mv, off)
+
+    # field 15 liquidity (sinceVersion=1) — present when block_len covers it
+    liquidity = 0
+    if off - body_start < block_len:
+        liquidity, off = read_i8(mv, off)
+
+    # skip any future fixed fields we don't know about
+    off = body_start + block_len
 
     order_id, off = read_varstring8(mv, off)
     order_link_id, off = read_varstring8(mv, off)
@@ -806,6 +822,7 @@ def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any
         "updatedTime": updated_time_us,
         "seq": seq,
         "symbolID": symbol_id,
+        "liquidity": liquidity,
         "orderId": order_id,
         "orderLinkId": order_link_id,
         "_raw_offset_end": off
