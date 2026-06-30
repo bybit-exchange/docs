@@ -414,15 +414,7 @@ Compared with JSON WebSocket feeds, SBE provides:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
-                   xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"
-                   package="order.fast.sbe"
-                   id="1"
-                   version="0"
-                   semanticVersion="1.0.0"
-                   description="Bybit fast order response SBE schema"
-                   byteOrder="littleEndian"
-                   headerType="messageHeader">
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="1" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
   <types>
     <composite name="messageHeader" description="Template ID and length of message root">
       <type name="blockLength" primitiveType="uint16"/>
@@ -449,13 +441,15 @@ Compared with JSON WebSocket feeds, SBE provides:
     <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>
     <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>
     <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>
-    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>
+    <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Active only when spot order type is market and marketUnit=quoteCoin; otherwise 0."/>
     <!-- Timing -->
     <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>
     <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>
     <field id="13" name="seq" type="int64" description="Cross sequence ID"/>
     <!-- SymbolID -->
     <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
+    <!-- Liquidity -->
+    <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>
     <!-- Order identifiers -->
     <data id="100" name="orderId" type="varString8" description="Order ID"/>
     <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
