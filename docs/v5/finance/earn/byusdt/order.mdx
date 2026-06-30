@@ -29,12 +29,15 @@ sidebar_position: 2
 |list|array|Order list|
 |> orderId|string|System order ID|
 |> orderLinkId|string|User-customised order ID|
-|> orderType|string|Order type: `Mint`, `Redeem`|
+|> orderType|string|Order type: `Mint`, `Redeem`. Note: TradFi-originated balance changes (e.g. close-PnL, commission, dividend) are also surfaced under `Redeem`. Use `externalEventType` to distinguish a TradFi-driven redemption from a user-initiated one|
 |> fromCoin|string|Source coin|
 |> toCoin|string|Destination coin|
 |> fromAmount|string|Source amount|
 |> toAmount|string|Amount credited (after deducting fees)|
 |> serviceFee|string|Service fee|
+|> fromAccount|string|Source account type. `Mint`: `FlexibleSaving`; `Redeem`: `UNIFIED`; `Redeem` (TradFi-originated): `TRADFI`|
+|> toAccount|string|Destination account type. `Mint`: `UNIFIED`; `Redeem`: `FlexibleSaving`; `Redeem` (TradFi-originated): `TRADFI`|
+|> externalEventType|string|External event that triggered the order. Empty for user-initiated orders. Populated only for TradFi (MT5) account events: `RPL_CLOSE` (realised PnL on position close, includes swap/overnight fee), `COMMISSION` (position-open commission), `DIVIDEND` (index dividend), `ROLLOVER` (contract rollover), `RISK_ADJUSTMENT` (risk-control adjustment)|
 |> status|string|Order status: `Success`, `Processing`, `Fail`|
 |> createdTime|string|Order creation time, unix timestamp in seconds|
 |nextPageCursor|string|Cursor for the next page. Empty string means no more data|
