@@ -29,12 +29,15 @@ sidebar_position: 2
 |list|array|訂單列表|
 |> orderId|string|系統訂單 ID|
 |> orderLinkId|string|用戶自定義訂單 ID|
-|> orderType|string|訂單類型：`Mint`、`Redeem`|
+|> orderType|string|訂單類型：`Mint`、`Redeem`。注意：TradFi 產生的餘額變動（如平倉盈虧、佣金、分紅等）也會以 `Redeem` 呈現，可透過 `externalEventType` 區分 TradFi 觸發的贖回與用戶主動贖回|
 |> fromCoin|string|來源幣種|
 |> toCoin|string|目標幣種|
 |> fromAmount|string|來源金額|
 |> toAmount|string|到帳金額（扣除手續費後）|
 |> serviceFee|string|服務費|
+|> fromAccount|string|資金來源帳戶類型。`Mint`：`FlexibleSaving`；`Redeem`：`UNIFIED`；`Redeem`（TradFi 觸發）：`TRADFI`|
+|> toAccount|string|資金目標帳戶類型。`Mint`：`UNIFIED`；`Redeem`：`FlexibleSaving`；`Redeem`（TradFi 觸發）：`TRADFI`|
+|> externalEventType|string|觸發訂單的外部事件類型。用戶主動操作時為空。僅在 TradFi（MT5）帳戶事件觸發時填入：`RPL_CLOSE`（平倉實現盈虧，含隔夜/掉期費）、`COMMISSION`（開倉佣金）、`DIVIDEND`（指數分紅）、`ROLLOVER`（合約換倉）、`RISK_ADJUSTMENT`（風控調整）|
 |> status|string|訂單狀態：`Success`（成功）、`Processing`（處理中）、`Fail`（失敗）|
 |> createdTime|string|訂單建立時間，秒級 Unix 時間戳|
 |nextPageCursor|string|下一頁游標，為空表示無更多資料|
