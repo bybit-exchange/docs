@@ -1,0 +1,79 @@
+---
+title: 獲取資產概覽
+sidebar_label: 獲取資產概覽
+sidebar_position: 13
+---
+
+查詢已登錄用戶的預測市場資產概覽，包含持倉總市值、最大盈利及勝率統計。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/portfolio-summary" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|eventType |false |integer |按賽事類型篩選。參考 [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|positionValue |string |所有開倉持倉的當前總市值（USDC）|
+|positionValueUsd |string |所有開倉持倉的當前總市值（USD）|
+|biggestWin |string |單筆最大已實現盈利（USDC）|
+|winRate |string |勝率（小數比率，如 `"0.67"` = 67%）|
+|winCount |integer |盈利平倉持倉數量|
+|lossCount |integer |虧損平倉持倉數量|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/portfolio-summary HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positionValue": "580.00",
+        "positionValueUsd": "580.00",
+        "biggestWin": "120.00",
+        "winRate": "0.67",
+        "winCount": 10,
+        "lossCount": 5
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

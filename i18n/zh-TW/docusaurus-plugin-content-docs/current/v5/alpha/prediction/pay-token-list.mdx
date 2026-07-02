@@ -1,0 +1,80 @@
+---
+title: 獲取支付代幣列表
+sidebar_label: 獲取支付代幣列表
+sidebar_position: 2
+---
+
+查詢預測市場可用的支付代幣。第一階段僅支持 USDC。
+
+:::info
+- 需要 API Key 認證
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/alpha/prediction/pay-token-list" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|tokenCode |string |支付代幣代碼，如 `USDC`|
+|symbol |string |代幣符號|
+|tokenDecimals |integer |代幣小數精度|
+|tokenIconUrlDay |string |代幣圖標 URL（淺色模式）|
+|tokenIconUrlNight |string |代幣圖標 URL（深色模式）|
+|supportChains |array |支持的區塊鏈代碼列表，如 `["POLYGON"]`|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/pay-token-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenCode": "USDC",
+            "symbol": "USDC",
+            "tokenDecimals": 6,
+            "tokenIconUrlDay": "https://example.com/usdc-day.png",
+            "tokenIconUrlNight": "https://example.com/usdc-night.png",
+            "supportChains": ["POLYGON"]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

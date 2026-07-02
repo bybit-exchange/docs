@@ -1,0 +1,69 @@
+---
+title: Get Engine Status
+sidebar_label: Get Engine Status
+sidebar_position: 1
+---
+
+Query the availability status of the prediction market matching engine. When the engine is unavailable, buy and sell orders cannot be submitted.
+
+:::info
+- Call this endpoint before placing any buy or sell order to verify the engine is available
+- If `available=false`, do not proceed with trading
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/alpha/prediction/engine-status" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|available |boolean |Whether the matching engine is currently available for trading|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/engine-status HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "available": true
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

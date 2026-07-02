@@ -1,0 +1,93 @@
+---
+title: Get Order Book
+sidebar_label: Get Order Book
+sidebar_position: 8
+---
+
+Query the full order book snapshot (bid/ask depth) for prediction outcome tokens. Useful for estimating price impact before placing a large order.
+
+:::info
+- Maximum 20 token IDs per request
+- Returns all price levels with available quantity
+- For current best price only, use [Get Token Price](token-price) instead
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-book" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenIds |**true** |array |List of outcome token IDs. Maximum 20|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|tokenId |string |Outcome token ID|
+|bids |array |Buy orders sorted by price descending|
+|> price |string |Bid price|
+|> size |string |Available quantity (shares)|
+|asks |array |Sell orders sorted by price ascending|
+|> price |string |Ask price|
+|> size |string |Available quantity (shares)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-book HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenIds": ["token_yes_123"]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenId": "token_yes_123",
+            "bids": [
+                {"price": "0.64", "size": "1000"},
+                {"price": "0.63", "size": "2500"}
+            ],
+            "asks": [
+                {"price": "0.66", "size": "800"},
+                {"price": "0.67", "size": "1500"}
+            ]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

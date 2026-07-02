@@ -1,0 +1,69 @@
+---
+title: 獲取撮合引擎狀態
+sidebar_label: 獲取撮合引擎狀態
+sidebar_position: 1
+---
+
+查詢預測市場撮合引擎的可用狀態。當引擎不可用時，無法提交買入或賣出委托。
+
+:::info
+- 在提交任何買入或賣出委托前，請先調用此接口確認引擎可用
+- 若 `available=false`，請勿進行交易
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/alpha/prediction/engine-status" />
+
+### 請求參數
+無
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|available |boolean |撮合引擎當前是否可用於交易|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/engine-status HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "available": true
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

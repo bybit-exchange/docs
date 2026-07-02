@@ -1,0 +1,79 @@
+---
+title: Get Portfolio Summary
+sidebar_label: Get Portfolio Summary
+sidebar_position: 13
+---
+
+Query the authenticated user's overall prediction market portfolio summary, including total invested value, current value, realized and unrealized P&L.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/portfolio-summary" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventType |false |integer |Filter by event type. Refer to [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|positionValue |string |Current total market value of all open positions (USDC)|
+|positionValueUsd |string |Current total market value denominated in USD|
+|biggestWin |string |Largest single realized profit (USDC)|
+|winRate |string |Win rate as decimal ratio (e.g. `"0.67"` = 67%)|
+|winCount |integer |Number of winning closed positions|
+|lossCount |integer |Number of losing closed positions|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/portfolio-summary HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positionValue": "580.00",
+        "positionValueUsd": "580.00",
+        "biggestWin": "120.00",
+        "winRate": "0.67",
+        "winCount": 10,
+        "lossCount": 5
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

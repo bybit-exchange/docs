@@ -1,0 +1,116 @@
+---
+title: 獲取賽事詳情
+sidebar_label: 獲取賽事詳情
+sidebar_position: 3
+---
+
+查詢預測市場賽事的完整信息，包括所有可交易市場及其結果代幣。在買入前需先調用此接口獲取 `tokenId` 並確認市場處於開放狀態。
+
+:::info
+- 通過 `eventId` 查詢單個賽事
+- 響應中包含該賽事下所有市場及其代幣，每個代幣代表一種可購買的預測結果
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/event-detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|eventId |**true** |string |賽事 ID|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|eventId |string |賽事 ID|
+|eventName |string |賽事名稱|
+|eventType |integer |賽事類型。參考 [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)|
+|startTime |integer |賽事開始時間戳（UTC 毫秒）|
+|endTime |integer |賽事結束時間戳（UTC 毫秒）|
+|status |integer |賽事狀態。`1`=開放，`2`=已關閉，`3`=已結算|
+|markets |array |該賽事下的市場列表|
+|> marketId |string |市場 ID|
+|> marketType |integer |市場類型。參考 [predictionMarketType](../../enum#predictionmarkettype-prediction-market--market-type)|
+|> question |string |市場問題（如「阿根廷能贏得 2026 年世界杯嗎？」）|
+|> tokens |array |該市場可交易的結果代幣|
+|>> tokenId |string |結果代幣 ID，用於委托接口|
+|>> outcome |string |結果標籤（如 `YES`、`NO` 或隊伍名稱）|
+|>> price |string |當前價格（0–1，代表隱含概率）|
+|>> liquidity |string |可用流動性（USDC）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/event-detail HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventId": "event_123"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "eventId": "event_123",
+        "eventName": "2026 FIFA World Cup",
+        "eventType": 1,
+        "startTime": 1748995200000,
+        "endTime": 1753228800000,
+        "status": 1,
+        "markets": [
+            {
+                "marketId": "market_001",
+                "marketType": 1,
+                "question": "Will Argentina win the 2026 FIFA World Cup?",
+                "tokens": [
+                    {
+                        "tokenId": "token_yes_123",
+                        "outcome": "YES",
+                        "price": "0.65",
+                        "liquidity": "100000"
+                    },
+                    {
+                        "tokenId": "token_no_123",
+                        "outcome": "NO",
+                        "price": "0.35",
+                        "liquidity": "95000"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

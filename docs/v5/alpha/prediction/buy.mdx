@@ -1,0 +1,90 @@
+---
+title: Execute Buy
+sidebar_label: Execute Buy
+sidebar_position: 5
+---
+
+Execute a buy order for prediction outcome tokens, paying USDC to receive outcome token shares.
+
+:::info
+- Must call [Get Engine Status](engine-status) first to verify the engine is available
+- Must call [Get Event Detail](event-detail) to obtain `tokenId` and verify the market is open
+- Must call [Get Order Estimate](order-estimate) to preview the order
+- Must display the estimate to the user and obtain explicit confirmation before calling this endpoint
+- Phase 1 supports `orderType=1` (FOK) only — orders that cannot be fully filled are cancelled
+- A `200` response is an acknowledgment only — use [Get Order List](order-list) to check the final fill status
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/buy" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |Outcome token ID to buy (from [Get Event Detail](event-detail))|
+|amount |**true** |string |USDC amount to invest (positive decimal as string)|
+|payTokenCode |**true** |string |Payment token code. Phase 1 fixed to `USDC`|
+|orderType |**true** |integer |Order type. Refer to [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only|
+|slippage |**true** |string |Maximum acceptable price slippage as decimal. `0.05` = 5% tolerance|
+|eventId |**true** |string |Event ID associated with the token|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|orderNo |string |Order number. Use with [Get Order List](order-list) to check fill status|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/buy HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "amount": "100",
+    "payTokenCode": "USDC",
+    "orderType": 1,
+    "slippage": "0.05",
+    "eventId": "event_123"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderNo": "ord_buy_20240101_001"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

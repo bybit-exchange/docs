@@ -1,0 +1,96 @@
+---
+title: Get Token Price
+sidebar_label: Get Token Price
+sidebar_position: 9
+---
+
+Query the current best bid/ask prices for prediction outcome tokens. Use this for quick price checks; for full depth, see [Get Order Book](order-book).
+
+:::info
+- Maximum 20 token IDs per request
+- Prices are on a 0–1 scale representing implied probability (e.g., `0.65` = 65% chance)
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/token-price" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenIds |**true** |array |List of outcome token IDs to query. Maximum 20|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|tokenId |string |Outcome token ID|
+|bestBid |string |Best bid price (0–1)|
+|bestAsk |string |Best ask price (0–1)|
+|lastPrice |string |Last traded price (0–1)|
+|volume24h |string |24-hour trading volume in USDC|
+|updateTime |integer |Price last update timestamp (UTC milliseconds)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/token-price HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenIds": ["token_yes_123", "token_no_123"]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenId": "token_yes_123",
+            "bestBid": "0.64",
+            "bestAsk": "0.66",
+            "lastPrice": "0.65",
+            "volume24h": "50000",
+            "updateTime": 1704067200000
+        },
+        {
+            "tokenId": "token_no_123",
+            "bestBid": "0.34",
+            "bestAsk": "0.36",
+            "lastPrice": "0.35",
+            "volume24h": "48000",
+            "updateTime": 1704067200000
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

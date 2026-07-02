@@ -1,0 +1,106 @@
+---
+title: 獲取委托預估
+sidebar_label: 獲取委托預估
+sidebar_position: 4
+---
+
+在執行前預估預測市場買入或賣出委托的結果。這是**必填步驟**——在調用 [買入](buy) 或 [賣出](sell) 前，必須先向用戶展示預估結果並取得明確確認。
+
+:::info
+- **買入**：設置 `side=1`，`amount` 為投入的 USDC，需包含 `payTokenCode="USDC"`
+- **賣出**：設置 `side=2`，`amount` 為賣出的份額數量
+- 第一階段僅支持 `orderType=1`（FOK）
+- 向用戶展示 `estimatedCost`、`estimatedReceive`、`feeAmount`，買入時還需展示 `toWin`
+- 未取得用戶明確確認前，請勿調用 [買入](buy) 或 [賣出](sell)
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-estimate" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |結果代幣 ID（從 [獲取賽事詳情](event-detail) 獲取）|
+|side |**true** |integer |交易方向。參考 [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|eventId |**true** |string |代幣對應的賽事 ID|
+|amount |**true** |string |買入：投入的 USDC；賣出：賣出的份額數量（正數字符串）|
+|orderType |**true** |integer |委托類型。參考 [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type)。第一階段：`1`（FOK）|
+|payTokenCode |false |string |支付代幣代碼。買入時必填，第一階段固定為 `USDC`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|avgPrice |string |預估平均成交價格（0–1）|
+|estimatedCost |string |買入：需支付的 USDC；賣出：賣出的份額|
+|estimatedReceive |string |買入：預估獲得的份額；賣出：預估獲得的 USDC|
+|toWin |string |僅限買入：若結果正確可獲得的金額（份額 × 1 USDC）|
+|feeAmount |string |總手續費（USDC）= `serverFee` + `polymarketFee`|
+|feeDetail |object |手續費明細|
+|> serverFee |string |平台服務費（USDC）|
+|> polymarketFee |string |Polymarket 協議費（USDC）|
+|slippage |string |本次預估所用的滑點|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-estimate HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "side": 1,
+    "eventId": "event_123",
+    "amount": "100",
+    "orderType": 1,
+    "payTokenCode": "USDC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "avgPrice": "0.65",
+        "estimatedCost": "100",
+        "estimatedReceive": "153.84",
+        "toWin": "153.84",
+        "feeAmount": "1.00",
+        "feeDetail": {
+            "serverFee": "0.70",
+            "polymarketFee": "0.30"
+        },
+        "slippage": "0.05"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

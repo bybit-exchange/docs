@@ -1,0 +1,123 @@
+---
+title: Get Sports Timeline Stages
+sidebar_label: Get Sports Timeline Stages
+sidebar_position: 16
+---
+
+Query the tournament timeline stages for a sports prediction event. Returns all stages with their status (Done, Active, Upcoming) and associated match counts. Useful for displaying tournament bracket progress.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/alpha/prediction/sports/timeline-stages" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventType |**true** |integer |Sports event type. Refer to [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|eventType |integer |Sports event type|
+|stages |array |Tournament stage timeline|
+|> stageCode |string |Stage code. Refer to [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|> stageName |string |Localized stage display name|
+|> status |integer |Stage status. Refer to [predictionTimelineStatus](../../enum#predictiontimelinestatus-prediction-market--timeline-status)|
+|> matchCount |integer |Total number of matches in this stage|
+|> startTime |integer |Stage start timestamp (UTC milliseconds)|
+|> endTime |integer |Stage end timestamp (UTC milliseconds)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/sports/timeline-stages?eventType=1 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "eventType": 1,
+        "stages": [
+            {
+                "stageCode": "Groups",
+                "stageName": "Group Stage",
+                "status": 2,
+                "matchCount": 48,
+                "startTime": 1748995200000,
+                "endTime": 1751500800000
+            },
+            {
+                "stageCode": "R32",
+                "stageName": "Round of 32",
+                "status": 3,
+                "matchCount": 16,
+                "startTime": 1751587200000,
+                "endTime": 1752192000000
+            },
+            {
+                "stageCode": "R16",
+                "stageName": "Round of 16",
+                "status": 3,
+                "matchCount": 8,
+                "startTime": 1752278400000,
+                "endTime": 1752624000000
+            },
+            {
+                "stageCode": "QF",
+                "stageName": "Quarter-Finals",
+                "status": 3,
+                "matchCount": 4,
+                "startTime": 1752710400000,
+                "endTime": 1752883200000
+            },
+            {
+                "stageCode": "SF",
+                "stageName": "Semi-Finals",
+                "status": 3,
+                "matchCount": 2,
+                "startTime": 1752969600000,
+                "endTime": 1753056000000
+            },
+            {
+                "stageCode": "Final",
+                "stageName": "Final",
+                "status": 3,
+                "matchCount": 1,
+                "startTime": 1753142400000,
+                "endTime": 1753228800000
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```
