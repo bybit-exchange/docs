@@ -1,0 +1,107 @@
+---
+title: 獲取歷史持倉
+sidebar_label: 獲取歷史持倉
+sidebar_position: 12
+---
+
+查詢已登錄用戶的預測市場已平倉記錄，包含已結算賽事的結果（WIN/LOSE）。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/position-history" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenId |false |string |按結果代幣 ID 篩選|
+|eventId |false |string |按賽事 ID 篩選|
+|result |false |integer |按倉位結果篩選。參考 [predictionPositionResult](../../enum#predictionpositionresult-prediction-market--position-result)|
+|days |false |integer |回溯天數，最大 `90`|
+|limit |false |integer |每頁記錄數|
+|pageIndex |false |integer |頁碼，從 `1` 開始|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|positions |array |已平倉記錄|
+|> positionId |string |持倉 ID|
+|> tokenId |string |結果代幣 ID|
+|> eventId |string |賽事 ID|
+|> outcomeName |string |結果標籤（如 `YES`、`NO`）|
+|> shares |string |持有的總份額|
+|> cost |string |本倉位的總 USDC 成本|
+|> avgPrice |string |每份額的平均成本價|
+|> exitPrice |string |平倉價格|
+|> realizedPnl |string |已實現盈虧（USDC），正數為盈利|
+|> realizedPnlRate |string |已實現盈虧比率|
+|> result |integer |倉位結果。參考 [predictionPositionResult](../../enum#predictionpositionresult-prediction-market--position-result)|
+|> closedAt |integer |平倉時間戳（UTC 毫秒）|
+|total |integer |符合條件的總記錄數|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/position-history HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "limit": 20,
+    "pageIndex": 1,
+    "days": 30
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positions": [
+            {
+                "positionId": "pos_456",
+                "tokenId": "token_yes_456",
+                "eventId": "event_456",
+                "outcomeName": "YES",
+                "shares": "200",
+                "cost": "140.00",
+                "avgPrice": "0.70",
+                "exitPrice": "1.00",
+                "realizedPnl": "60.00",
+                "realizedPnlRate": "0.429",
+                "result": 1,
+                "closedAt": 1704153600000
+            }
+        ],
+        "total": 1
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

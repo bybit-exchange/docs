@@ -1,0 +1,91 @@
+---
+title: 執行賣出
+sidebar_label: 執行賣出
+sidebar_position: 6
+---
+
+執行預測市場結果代幣份額的賣出委托，將份額兌換為 USDC。
+
+:::info
+- 必須先調用 [獲取撮合引擎狀態](engine-status) 確認引擎可用
+- 必須先調用 [獲取持倉列表](position-list) 確認持倉存在並查看可用 `shares`
+- 必須先調用 [獲取委托預估](order-estimate) 預覽賣出委托
+- 必須向用戶展示預估結果並取得明確確認後，方可調用本接口
+- 第一階段僅支持 `orderType=1`（FOK）——無法完全成交的委托將被取消
+- `size` 為份額數量，非 USDC 金額
+- `200` 響應僅表示委托已受理，請調用 [獲取委托記錄](order-list) 查詢最終成交狀態
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/sell" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |要賣出的結果代幣 ID（從 [獲取持倉列表](position-list) 獲取）|
+|size |**true** |string |賣出的份額數量（正數字符串）|
+|orderType |**true** |integer |委托類型。參考 [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type)。第一階段：`1`（FOK）|
+|slippage |**true** |string |最大可接受滑點（小數）。`0.05` = 5% 容忍度|
+|eventId |**true** |string |代幣對應的賽事 ID|
+|toTokenCode |false |string |目標代幣代碼，第一階段固定為 `USDC`|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |委托號。請調用 [獲取委托記錄](order-list) 查詢成交狀態|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/sell HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "size": "50",
+    "orderType": 1,
+    "slippage": "0.05",
+    "eventId": "event_123",
+    "toTokenCode": "USDC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderNo": "ord_sell_20240101_001"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

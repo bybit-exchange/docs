@@ -1,0 +1,110 @@
+---
+title: 獲取委托記錄
+sidebar_label: 獲取委托記錄
+sidebar_position: 7
+---
+
+查詢已登錄用戶的預測市場委托歷史。在下達買入或賣出委托後，可調用此接口查詢最終成交狀態。FOK 委托將顯示為 `FILLED` 或 `CANCELLED`。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|status |false |integer |按委托狀態篩選。參考 [predictionOrderStatus](../../enum#predictionorderstatus-prediction-market--order-status)|
+|tokenId |false |string |按結果代幣 ID 篩選|
+|eventId |false |string |按賽事 ID 篩選|
+|side |false |integer |按交易方向篩選。參考 [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|days |false |integer |回溯天數，最大 `90`|
+|limit |false |integer |每頁記錄數|
+|pageIndex |false |integer |頁碼，從 `1` 開始|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orders |array |委托記錄|
+|> orderNo |string |委托號|
+|> tokenId |string |結果代幣 ID|
+|> eventId |string |賽事 ID|
+|> side |integer |交易方向。參考 [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|> orderType |integer |委托類型。參考 [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type)|
+|> orderAmount |string |買入：投入的 USDC；賣出：賣出的份額|
+|> filledSize |string |已成交份額（買入）或已賣出份額（賣出）|
+|> filledPrice |string |平均成交價格|
+|> totalFee |string |總手續費（USDC）|
+|> status |integer |委托狀態。參考 [predictionOrderStatus](../../enum#predictionorderstatus-prediction-market--order-status)|
+|> createdAt |integer |委托創建時間戳（UTC 毫秒）|
+|> updatedAt |integer |最後更新時間戳（UTC 毫秒）|
+|total |integer |符合條件的總記錄數|
+|pageIndex |integer |當前頁碼|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "limit": 20,
+    "pageIndex": 1,
+    "days": 7
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orders": [
+            {
+                "orderNo": "ord_buy_20240101_001",
+                "tokenId": "token_yes_123",
+                "eventId": "event_123",
+                "side": 1,
+                "orderType": 1,
+                "orderAmount": "100",
+                "filledSize": "153.84",
+                "filledPrice": "0.65",
+                "totalFee": "1.00",
+                "status": 2,
+                "createdAt": 1704067200000,
+                "updatedAt": 1704067205000
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

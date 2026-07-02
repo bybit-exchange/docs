@@ -1,0 +1,136 @@
+---
+title: Get Sports Group Stage Detail
+sidebar_label: Get Sports Group Stage Detail
+sidebar_position: 17
+---
+
+Query the group stage standings and match schedule detail for a sports prediction event. Returns all groups with team standings (points, goal difference, W/D/L) and associated matches.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/sports/group-stage-detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventType |**true** |integer |Sports event type. Refer to [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)|
+|groupName |false |string |Filter by group name (e.g., `A`, `B`, … `L` for FIFA 2026)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|groups |array |Group stage data|
+|> groupName |string |Group identifier (e.g., `A`)|
+|> standings |array |Team standings for this group, sorted by rank|
+|>> rank |integer |Current rank within the group|
+|>> teamName |string |Team name|
+|>> played |integer |Matches played|
+|>> won |integer |Matches won|
+|>> drawn |integer |Matches drawn|
+|>> lost |integer |Matches lost|
+|>> goalsFor |integer |Goals scored|
+|>> goalsAgainst |integer |Goals conceded|
+|>> goalDifference |integer |Goal difference (goalsFor − goalsAgainst)|
+|>> points |integer |Total points|
+|> matches |array |Matches in this group|
+|>> matchId |string |Match ID|
+|>> homeTeam |string |Home team name|
+|>> awayTeam |string |Away team name|
+|>> matchTime |integer |Match start timestamp (UTC milliseconds)|
+|>> status |integer |Match status. Refer to [predictionMatchStatus](../../enum#predictionmatchstatus-prediction-market--match-status)|
+|>> homeScore |integer |Home team score (`-1` if not yet played)|
+|>> awayScore |integer |Away team score (`-1` if not yet played)|
+|>> eventId |string |Linked prediction event ID (if markets are available)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventType": 1,
+    "groupName": "A"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "groups": [
+            {
+                "groupName": "A",
+                "standings": [
+                    {
+                        "rank": 1,
+                        "teamName": "Argentina",
+                        "played": 3,
+                        "won": 3,
+                        "drawn": 0,
+                        "lost": 0,
+                        "goalsFor": 7,
+                        "goalsAgainst": 1,
+                        "goalDifference": 6,
+                        "points": 9
+                    },
+                    {
+                        "rank": 2,
+                        "teamName": "Brazil",
+                        "played": 3,
+                        "won": 2,
+                        "drawn": 0,
+                        "lost": 1,
+                        "goalsFor": 5,
+                        "goalsAgainst": 3,
+                        "goalDifference": 2,
+                        "points": 6
+                    }
+                ],
+                "matches": [
+                    {
+                        "matchId": "match_001",
+                        "homeTeam": "Argentina",
+                        "awayTeam": "Brazil",
+                        "matchTime": 1750000000000,
+                        "status": 3,
+                        "homeScore": 2,
+                        "awayScore": 0,
+                        "eventId": "event_123"
+                    }
+                ]
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

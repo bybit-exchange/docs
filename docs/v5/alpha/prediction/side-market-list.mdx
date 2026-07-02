@@ -1,0 +1,125 @@
+---
+title: Get Side Market List
+sidebar_label: Get Side Market List
+sidebar_position: 14
+---
+
+Query the list of available prediction markets (side markets) for a given event. Returns all outcome tokens with current prices, liquidity, and trading status. Use this to discover which outcomes can be traded within an event.
+
+:::info
+- Results can be sorted by `volume`, `liquidity`, or `endDate`
+- For full event detail including related markets, use [Get Event Detail](event-detail) instead
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/side-market-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventId |**true** |string |Event ID to query markets for|
+|sortBy |false |string |Sort field. Refer to [predictionSortBy](../../enum#predictionsortby-prediction-market--sort-field)|
+|marketType |false |integer |Filter by market type. Refer to [predictionMarketType](../../enum#predictionmarkettype-prediction-market--market-type)|
+|limit |false |integer |Number of records per page|
+|pageIndex |false |integer |Page number starting from `1`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|list |array |Side market records|
+|> marketId |string |Side market ID|
+|> eventId |string |Parent event ID|
+|> marketType |integer |Market type. Refer to [predictionMarketType](../../enum#predictionmarkettype-prediction-market--market-type)|
+|> question |string |Market question (e.g., "Will Argentina win the 2026 FIFA World Cup?")|
+|> tokens |array |Outcome tokens available in this market|
+|>> tokenId |string |Outcome token ID|
+|>> outcome |string |Outcome label (e.g., "YES", "NO", team name)|
+|>> price |string |Current price (0–1 implied probability)|
+|>> liquidity |string |Available liquidity in USDC|
+|> volume24h |string |24-hour trading volume in USDC|
+|> endDate |integer |Market resolution timestamp (UTC milliseconds)|
+|> status |integer |Market status. `1`=Open, `2`=Closed, `3`=Resolved|
+|total |integer |Total matching records|
+|pageIndex |integer |Current page number|
+|pageSize |integer |Items per page|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/side-market-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventId": "event_123",
+    "sortBy": "volume",
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "marketId": "market_001",
+                "eventId": "event_123",
+                "marketType": 1,
+                "question": "Will Argentina win the 2026 FIFA World Cup?",
+                "tokens": [
+                    {
+                        "tokenId": "token_yes_123",
+                        "outcome": "YES",
+                        "price": "0.65",
+                        "liquidity": "100000"
+                    },
+                    {
+                        "tokenId": "token_no_123",
+                        "outcome": "NO",
+                        "price": "0.35",
+                        "liquidity": "95000"
+                    }
+                ],
+                "volume24h": "50000",
+                "endDate": 1750000000000,
+                "status": 1
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1,
+        "pageSize": 20
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

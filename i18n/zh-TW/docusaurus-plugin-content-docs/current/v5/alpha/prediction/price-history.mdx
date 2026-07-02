@@ -1,0 +1,100 @@
+---
+title: 獲取歷史價格
+sidebar_label: 獲取歷史價格
+sidebar_position: 10
+---
+
+查詢預測市場結果代幣的歷史價格數據，返回 OHLC K 線數據，用於圖表展示與分析。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/price-history" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |結果代幣 ID|
+|interval |**true** |string |時間週期。參考 [predictionPriceInterval](../../enum#predictionpriceinterval-prediction-market--price-interval)|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|tokenId |string |結果代幣 ID|
+|interval |string |所用時間週期|
+|list |array |OHLC K 線記錄，最新在前|
+|> openTime |integer |K 線開盤時間戳（UTC 毫秒）|
+|> open |string |開盤價|
+|> high |string |最高價|
+|> low |string |最低價|
+|> close |string |收盤價|
+|> volume |string |該 K 線交易量（USDC）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/price-history HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "interval": "1H"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tokenId": "token_yes_123",
+        "interval": "1H",
+        "list": [
+            {
+                "openTime": 1704067200000,
+                "open": "0.63",
+                "high": "0.68",
+                "low": "0.62",
+                "close": "0.65",
+                "volume": "12500"
+            },
+            {
+                "openTime": 1704063600000,
+                "open": "0.60",
+                "high": "0.64",
+                "low": "0.59",
+                "close": "0.63",
+                "volume": "9800"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

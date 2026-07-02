@@ -1,0 +1,120 @@
+---
+title: Get Event Detail
+sidebar_label: Get Event Detail
+sidebar_position: 3
+---
+
+Get detailed information for a prediction market event, including all outcome markets and current prices. Call this before placing orders to obtain `tokenId` and verify market status.
+
+:::info
+- `slug` takes priority over `eventId` when both are provided
+- Set `hasMoreMarkets=true` to include markets from related sub-events
+- `price` represents probability (0–1): a price of `0.65` means ~65% chance of that outcome
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/event-detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventId |false |string |Event ID. Use `slug` when available|
+|slug |false |string |URL-friendly event slug. Takes priority over `eventId`|
+|hasMoreMarkets |false |boolean |Whether to include markets from related sub-events. Default: `false`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|eventId |string |Event ID|
+|slug |string |URL-friendly slug|
+|title |string |Event question|
+|description |string |Event description and resolution criteria|
+|category |string |Event category|
+|endDate |integer |Resolution timestamp (UTC milliseconds)|
+|resolved |boolean |Whether the event has been resolved|
+|volume |string |Total trading volume (USD)|
+|liquidity |string |Total available liquidity (USD)|
+|markets |array |Outcome markets within this event|
+|> tokenId |string |Outcome token ID. Used in buy/sell/estimate requests|
+|> outcome |string |Outcome label, e.g. `YES`, `NO`, or team name|
+|> price |string |Current price (0–1, represents probability)|
+|> side |integer |Trade direction. Refer to [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|> volume |string |Token trading volume (USD)|
+|> liquidity |string |Token available liquidity (USD)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/event-detail HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "slug": "will-argentina-win-world-cup-2026"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "eventId": "event_123",
+        "slug": "will-argentina-win-world-cup-2026",
+        "title": "Will Argentina win the 2026 World Cup?",
+        "description": "Argentina must win the FIFA 2026 World Cup final.",
+        "category": "Sports",
+        "endDate": 1750000000000,
+        "resolved": false,
+        "volume": "1500000",
+        "liquidity": "500000",
+        "markets": [
+            {
+                "tokenId": "token_yes_123",
+                "outcome": "YES",
+                "price": "0.65",
+                "side": 1,
+                "volume": "900000",
+                "liquidity": "300000"
+            },
+            {
+                "tokenId": "token_no_123",
+                "outcome": "NO",
+                "price": "0.35",
+                "side": 2,
+                "volume": "600000",
+                "liquidity": "200000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

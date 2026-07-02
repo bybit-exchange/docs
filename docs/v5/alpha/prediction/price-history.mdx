@@ -1,0 +1,100 @@
+---
+title: Get Price History
+sidebar_label: Get Price History
+sidebar_position: 10
+---
+
+Query historical price data for a prediction outcome token. Returns OHLC candlestick data for charting and analysis.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/price-history" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |Outcome token ID|
+|interval |**true** |string |Time interval. Refer to [predictionPriceInterval](../../enum#predictionpriceinterval-prediction-market--price-interval)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|tokenId |string |Outcome token ID|
+|interval |string |Time interval used|
+|list |array |OHLC candlestick records, newest first|
+|> openTime |integer |Candle open timestamp (UTC milliseconds)|
+|> open |string |Open price|
+|> high |string |High price|
+|> low |string |Low price|
+|> close |string |Close price|
+|> volume |string |Trading volume in USDC for this candle|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/price-history HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "interval": "1H"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "tokenId": "token_yes_123",
+        "interval": "1H",
+        "list": [
+            {
+                "openTime": 1704067200000,
+                "open": "0.63",
+                "high": "0.68",
+                "low": "0.62",
+                "close": "0.65",
+                "volume": "12500"
+            },
+            {
+                "openTime": 1704063600000,
+                "open": "0.60",
+                "high": "0.64",
+                "low": "0.59",
+                "close": "0.63",
+                "volume": "9800"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

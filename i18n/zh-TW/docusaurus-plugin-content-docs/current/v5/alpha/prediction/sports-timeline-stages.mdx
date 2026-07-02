@@ -1,0 +1,91 @@
+---
+title: 獲取賽事時間軸階段
+sidebar_label: 獲取賽事時間軸階段
+sidebar_position: 16
+---
+
+查詢體育預測賽事的賽制時間軸階段，返回每個階段的狀態（已完成、進行中、即將開始）及關聯比賽場數，用於展示賽制進程。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/alpha/prediction/sports/timeline-stages" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|eventType |**true** |integer |體育賽事類型。參考 [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|eventType |integer |體育賽事類型|
+|stages |array |賽制時間軸階段列表|
+|> stageCode |string |階段代碼。參考 [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|> stageName |string |階段本地化顯示名稱|
+|> status |integer |階段狀態。參考 [predictionTimelineStatus](../../enum#predictiontimelinestatus-prediction-market--timeline-status)|
+|> matchCount |integer |該階段的總比賽場數|
+|> startTime |integer |階段開始時間戳（UTC 毫秒）|
+|> endTime |integer |階段結束時間戳（UTC 毫秒）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/sports/timeline-stages?eventType=1 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "eventType": 1,
+        "stages": [
+            {
+                "stageCode": "Groups",
+                "stageName": "Group Stage",
+                "status": 2,
+                "matchCount": 48,
+                "startTime": 1748995200000,
+                "endTime": 1751500800000
+            },
+            {
+                "stageCode": "Final",
+                "stageName": "Final",
+                "status": 3,
+                "matchCount": 1,
+                "startTime": 1753142400000,
+                "endTime": 1753228800000
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

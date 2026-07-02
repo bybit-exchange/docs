@@ -1,0 +1,106 @@
+---
+title: Get Order Estimate
+sidebar_label: Get Order Estimate
+sidebar_position: 4
+---
+
+Estimate the outcome of a prediction market buy or sell order before execution. This is a **mandatory** step — always show the estimate to the user and obtain explicit confirmation before calling [Buy](buy) or [Sell](sell).
+
+:::info
+- **BUY**: set `side=1`, `amount` = USDC to invest, include `payTokenCode="USDC"`
+- **SELL**: set `side=2`, `amount` = number of shares to sell
+- Phase 1 supports `orderType=1` (FOK) only
+- Always display `estimatedCost`, `estimatedReceive`, `feeAmount`, and `toWin` (BUY only) to the user before proceeding
+- Do NOT call [Buy](buy) or [Sell](sell) without explicit user confirmation after viewing the estimate
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-estimate" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |Outcome token ID (from [Get Event Detail](event-detail))|
+|side |**true** |integer |Trade direction. Refer to [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|eventId |**true** |string |Event ID associated with the token|
+|amount |**true** |string |BUY: USDC to invest. SELL: number of shares to sell (positive decimal as string)|
+|orderType |**true** |integer |Order type. Refer to [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only|
+|payTokenCode |false |string |Payment token code. Required for BUY. Phase 1 fixed to `USDC`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|avgPrice |string |Estimated average execution price per share (0–1)|
+|estimatedCost |string |BUY: USDC to pay. SELL: shares to sell|
+|estimatedReceive |string |BUY: estimated shares received. SELL: estimated USDC received|
+|toWin |string |BUY only: amount to win if outcome is correct (shares × 1 USDC)|
+|feeAmount |string |Total platform fee (USDC) = `serverFee` + `polymarketFee`|
+|feeDetail |object |Fee breakdown|
+|> serverFee |string |Platform service fee (USDC)|
+|> polymarketFee |string |Polymarket protocol fee (USDC)|
+|slippage |string |Slippage applied to this estimate|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-estimate HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "side": 1,
+    "eventId": "event_123",
+    "amount": "100",
+    "orderType": 1,
+    "payTokenCode": "USDC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "avgPrice": "0.65",
+        "estimatedCost": "100",
+        "estimatedReceive": "153.84",
+        "toWin": "153.84",
+        "feeAmount": "1.00",
+        "feeDetail": {
+            "serverFee": "0.70",
+            "polymarketFee": "0.30"
+        },
+        "slippage": "0.05"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

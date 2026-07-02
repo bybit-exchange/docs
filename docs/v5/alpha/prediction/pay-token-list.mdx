@@ -1,0 +1,80 @@
+---
+title: Get Payment Token List
+sidebar_label: Get Payment Token List
+sidebar_position: 2
+---
+
+Query available payment tokens for prediction market trading. Phase 1 supports USDC only.
+
+:::info
+- Requires API key authentication
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/alpha/prediction/pay-token-list" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|tokenCode |string |Payment token code, e.g. `USDC`|
+|symbol |string |Token symbol|
+|tokenDecimals |integer |Token decimal precision|
+|tokenIconUrlDay |string |Token icon URL (light mode)|
+|tokenIconUrlNight |string |Token icon URL (dark mode)|
+|supportChains |array |Supported blockchain codes, e.g. `["POLYGON"]`|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/alpha/prediction/pay-token-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenCode": "USDC",
+            "symbol": "USDC",
+            "tokenDecimals": 6,
+            "tokenIconUrlDay": "https://example.com/usdc-day.png",
+            "tokenIconUrlNight": "https://example.com/usdc-night.png",
+            "supportChains": ["POLYGON"]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

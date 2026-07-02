@@ -1,0 +1,105 @@
+---
+title: Get Sports Match List
+sidebar_label: Get Sports Match List
+sidebar_position: 15
+---
+
+Query the list of sports matches available in the prediction market. Supports filtering by competition type, match status, and date range. Phase 1 supports FIFA 2026 World Cup (`eventType=1`).
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/sports/match-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|eventType |**true** |integer |Sports event type. Refer to [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)|
+|status |false |integer |Match status filter. Refer to [predictionMatchStatus](../../enum#predictionmatchstatus-prediction-market--match-status)|
+|startTime |false |integer |Filter matches starting after this timestamp (UTC milliseconds)|
+|endTime |false |integer |Filter matches starting before this timestamp (UTC milliseconds)|
+|stageCode |false |string |Filter by tournament stage. Refer to [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|limit |false |integer |Number of records per page|
+|pageIndex |false |integer |Page number starting from `1`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|list |array |Match records|
+|> matchId |string |Match ID|
+|> eventType |integer |Sports event type. Refer to [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)|
+|> stageCode |string |Tournament stage. Refer to [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|> homeTeam |string |Home team name|
+|> awayTeam |string |Away team name|
+|> matchTime |integer |Match start timestamp (UTC milliseconds)|
+|> status |integer |Match status. Refer to [predictionMatchStatus](../../enum#predictionmatchstatus-prediction-market--match-status)|
+|> eventId |string |Linked prediction event ID (if markets are available)|
+|total |integer |Total matching records|
+|pageIndex |integer |Current page number|
+|pageSize |integer |Items per page|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/sports/match-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventType": 1,
+    "status": 2,
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "matchId": "match_001",
+                "eventType": 1,
+                "stageCode": "Groups",
+                "homeTeam": "Argentina",
+                "awayTeam": "Brazil",
+                "matchTime": 1750000000000,
+                "status": 2,
+                "eventId": "event_123"
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1,
+        "pageSize": 20
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

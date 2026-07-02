@@ -1,0 +1,125 @@
+---
+title: 獲取市場列表
+sidebar_label: 獲取市場列表
+sidebar_position: 14
+---
+
+查詢指定賽事下的可用預測市場（子市場）列表，返回所有結果代幣的當前價格、流動性及交易狀態，用於發現某賽事內可交易的預測結果。
+
+:::info
+- 結果可按 `volume`（交易量）、`liquidity`（流動性）或 `endDate`（結束時間）排序
+- 如需包含關聯市場的完整賽事詳情，請使用 [獲取賽事詳情](event-detail)
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/side-market-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|eventId |**true** |string |要查詢的賽事 ID|
+|sortBy |false |string |排序字段。參考 [predictionSortBy](../../enum#predictionsortby-prediction-market--sort-field)|
+|marketType |false |integer |按市場類型篩選。參考 [predictionMarketType](../../enum#predictionmarkettype-prediction-market--market-type)|
+|limit |false |integer |每頁記錄數|
+|pageIndex |false |integer |頁碼，從 `1` 開始|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |子市場記錄|
+|> marketId |string |子市場 ID|
+|> eventId |string |父賽事 ID|
+|> marketType |integer |市場類型。參考 [predictionMarketType](../../enum#predictionmarkettype-prediction-market--market-type)|
+|> question |string |市場問題（如「阿根廷能贏得 2026 年世界杯嗎？」）|
+|> tokens |array |該市場可交易的結果代幣|
+|>> tokenId |string |結果代幣 ID|
+|>> outcome |string |結果標籤（如 `YES`、`NO` 或隊伍名稱）|
+|>> price |string |當前價格（0–1 隱含概率）|
+|>> liquidity |string |可用流動性（USDC）|
+|> volume24h |string |24 小時交易量（USDC）|
+|> endDate |integer |市場結算時間戳（UTC 毫秒）|
+|> status |integer |市場狀態。`1`=開放，`2`=已關閉，`3`=已結算|
+|total |integer |符合條件的總記錄數|
+|pageIndex |integer |當前頁碼|
+|pageSize |integer |每頁記錄數|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/side-market-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventId": "event_123",
+    "sortBy": "volume",
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "marketId": "market_001",
+                "eventId": "event_123",
+                "marketType": 1,
+                "question": "Will Argentina win the 2026 FIFA World Cup?",
+                "tokens": [
+                    {
+                        "tokenId": "token_yes_123",
+                        "outcome": "YES",
+                        "price": "0.65",
+                        "liquidity": "100000"
+                    },
+                    {
+                        "tokenId": "token_no_123",
+                        "outcome": "NO",
+                        "price": "0.35",
+                        "liquidity": "95000"
+                    }
+                ],
+                "volume24h": "50000",
+                "endDate": 1750000000000,
+                "status": 1
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1,
+        "pageSize": 20
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

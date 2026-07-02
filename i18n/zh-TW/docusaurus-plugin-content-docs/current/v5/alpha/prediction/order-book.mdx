@@ -1,0 +1,92 @@
+---
+title: 獲取盤口
+sidebar_label: 獲取盤口
+sidebar_position: 8
+---
+
+查詢預測市場結果代幣的完整盤口快照（買賣深度）。適合在下大單前預估價格衝擊。如僅需當前最優價格，請使用 [獲取代幣價格](token-price)。
+
+:::info
+- 每次請求最多 20 個代幣 ID
+- 返回所有可用數量的價格檔位
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-book" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|tokenIds |**true** |array |結果代幣 ID 列表，最多 20 個|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|tokenId |string |結果代幣 ID|
+|bids |array |買單，按價格降序排列|
+|> price |string |買入價格|
+|> size |string |可用數量（份額）|
+|asks |array |賣單，按價格升序排列|
+|> price |string |賣出價格|
+|> size |string |可用數量（份額）|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-book HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenIds": ["token_yes_123"]
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "tokenId": "token_yes_123",
+            "bids": [
+                {"price": "0.64", "size": "1000"},
+                {"price": "0.63", "size": "2500"}
+            ],
+            "asks": [
+                {"price": "0.66", "size": "800"},
+                {"price": "0.67", "size": "1500"}
+            ]
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

@@ -1,0 +1,91 @@
+---
+title: Execute Sell
+sidebar_label: Execute Sell
+sidebar_position: 6
+---
+
+Execute a sell order for prediction outcome token shares, exchanging shares for USDC.
+
+:::info
+- Must call [Get Engine Status](engine-status) first to verify the engine is available
+- Must call [Get Position List](position-list) to confirm the position exists and check available `shares`
+- Must call [Get Order Estimate](order-estimate) to preview the sell order
+- Must display the estimate to the user and obtain explicit confirmation before calling this endpoint
+- Phase 1 supports `orderType=1` (FOK) only — orders that cannot be fully filled are cancelled
+- `size` is in shares, not USDC
+- A `200` response is an acknowledgment only — use [Get Order List](order-list) to check the final fill status
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/sell" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenId |**true** |string |Outcome token ID to sell (from [Get Position List](position-list))|
+|size |**true** |string |Number of shares to sell (positive decimal as string)|
+|orderType |**true** |integer |Order type. Refer to [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only|
+|slippage |**true** |string |Maximum acceptable price slippage as decimal. `0.05` = 5% tolerance|
+|eventId |**true** |string |Event ID associated with the token|
+|toTokenCode |false |string |Destination token code. Phase 1 fixed to `USDC`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|orderNo |string |Order number. Use with [Get Order List](order-list) to check fill status|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/sell HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "tokenId": "token_yes_123",
+    "size": "50",
+    "orderType": 1,
+    "slippage": "0.05",
+    "eventId": "event_123",
+    "toTokenCode": "USDC"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderNo": "ord_sell_20240101_001"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

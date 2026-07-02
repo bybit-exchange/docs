@@ -1,0 +1,108 @@
+---
+title: Get Position List
+sidebar_label: Get Position List
+sidebar_position: 11
+---
+
+Query the authenticated user's active prediction market positions. Call this before placing a sell order to confirm the position exists.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/position-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|tokenId |false |string |Filter by outcome token ID|
+|eventId |false |string |Filter by event ID|
+|limit |false |integer |Number of records per page|
+|pageIndex |false |integer |Page number starting from `1`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|positions |array |Active position records|
+|> positionId |string |Position ID|
+|> tokenId |string |Outcome token ID|
+|> eventId |string |Event ID|
+|> outcomeName |string |Outcome label (e.g., `YES`, `NO`, or team name)|
+|> shares |string |Total shares held|
+|> cost |string |Total USDC cost of this position|
+|> avgPrice |string |Average cost price per share|
+|> currentPrice |string |Current market price per share (0–1)|
+|> value |string |Current market value of the position (USDC)|
+|> unrealizedPnl |string |Unrealized profit/loss (USDC)|
+|> unrealizedPnlRate |string |Unrealized P&L as decimal ratio (e.g. `0.107` = 10.7%)|
+|> createdAt |integer |Position open timestamp (UTC milliseconds)|
+|> finished |boolean |Whether the associated event has ended|
+|total |integer |Total matching records|
+|totalAssetUsd |string |Total asset value across all positions (USD)|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/position-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "positions": [
+            {
+                "positionId": "pos_001",
+                "tokenId": "token_yes_123",
+                "eventId": "event_123",
+                "outcomeName": "YES",
+                "shares": "153.84",
+                "cost": "100.00",
+                "avgPrice": "0.65",
+                "currentPrice": "0.72",
+                "value": "110.77",
+                "unrealizedPnl": "10.77",
+                "unrealizedPnlRate": "0.107",
+                "createdAt": 1704067200000,
+                "finished": false
+            }
+        ],
+        "total": 1,
+        "totalAssetUsd": "110.77"
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

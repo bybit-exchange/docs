@@ -1,0 +1,105 @@
+---
+title: 獲取體育賽事列表
+sidebar_label: 獲取體育賽事列表
+sidebar_position: 15
+---
+
+查詢預測市場中的體育賽事列表，支持按賽制類型、賽事狀態及時間範圍篩選。第一階段支持 2026 FIFA 世界杯（`eventType=1`）。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/alpha/prediction/sports/match-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|eventType |**true** |integer |體育賽事類型。參考 [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）|
+|status |false |integer |賽事狀態篩選。參考 [predictionMatchStatus](../../enum#predictionmatchstatus-prediction-market--match-status)|
+|startTime |false |integer |篩選此時間戳之後開始的賽事（UTC 毫秒）|
+|endTime |false |integer |篩選此時間戳之前開始的賽事（UTC 毫秒）|
+|stageCode |false |string |按賽制階段篩選。參考 [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|limit |false |integer |每頁記錄數|
+|pageIndex |false |integer |頁碼，從 `1` 開始|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |賽事記錄|
+|> matchId |string |比賽 ID|
+|> eventType |integer |體育賽事類型。參考 [predictionEventType](../../enum#predictioneventtype-prediction-market--event-type)|
+|> stageCode |string |賽制階段。參考 [predictionStageCode](../../enum#predictionstagecode-prediction-market--stage-code)|
+|> homeTeam |string |主隊名稱|
+|> awayTeam |string |客隊名稱|
+|> matchTime |integer |比賽開始時間戳（UTC 毫秒）|
+|> status |integer |賽事狀態。參考 [predictionMatchStatus](../../enum#predictionmatchstatus-prediction-market--match-status)|
+|> eventId |string |關聯的預測賽事 ID（如有開放市場）|
+|total |integer |符合條件的總記錄數|
+|pageIndex |integer |當前頁碼|
+|pageSize |integer |每頁記錄數|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/sports/match-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "eventType": 1,
+    "status": 2,
+    "limit": 20,
+    "pageIndex": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "matchId": "match_001",
+                "eventType": 1,
+                "stageCode": "Groups",
+                "homeTeam": "Argentina",
+                "awayTeam": "Brazil",
+                "matchTime": 1750000000000,
+                "status": 2,
+                "eventId": "event_123"
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1,
+        "pageSize": 20
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```

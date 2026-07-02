@@ -1,0 +1,110 @@
+---
+title: Get Order List
+sidebar_label: Get Order List
+sidebar_position: 7
+---
+
+Query the authenticated user's prediction market order history. Use this after placing a buy or sell order to check the final execution status. FOK orders will show as `FILLED` or `CANCELLED`.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/alpha/prediction/order-list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|status |false |integer |Filter by order status. Refer to [predictionOrderStatus](../../enum#predictionorderstatus-prediction-market--order-status)|
+|tokenId |false |string |Filter by outcome token ID|
+|eventId |false |string |Filter by event ID|
+|side |false |integer |Filter by trade direction. Refer to [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|days |false |integer |Look back N days. Max: `90`|
+|limit |false |integer |Number of records per page|
+|pageIndex |false |integer |Page number starting from `1`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|orders |array |Order records|
+|> orderNo |string |Order number|
+|> tokenId |string |Outcome token ID|
+|> eventId |string |Event ID|
+|> side |integer |Trade direction. Refer to [predictionSide](../../enum#predictionside-prediction-market--trade-direction)|
+|> orderType |integer |Order type. Refer to [predictionOrderType](../../enum#predictionordertype-prediction-market--order-type)|
+|> orderAmount |string |BUY: USDC invested. SELL: shares sold|
+|> filledSize |string |Filled shares (BUY) or shares sold (SELL)|
+|> filledPrice |string |Average execution price|
+|> totalFee |string |Total platform fee charged (USDC)|
+|> status |integer |Order status. Refer to [predictionOrderStatus](../../enum#predictionorderstatus-prediction-market--order-status)|
+|> createdAt |integer |Order creation timestamp (UTC milliseconds)|
+|> updatedAt |integer |Last update timestamp (UTC milliseconds)|
+|total |integer |Total matching records|
+|pageIndex |integer |Current page number|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/alpha/prediction/order-list HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1704067200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "limit": 20,
+    "pageIndex": 1,
+    "days": 7
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orders": [
+            {
+                "orderNo": "ord_buy_20240101_001",
+                "tokenId": "token_yes_123",
+                "eventId": "event_123",
+                "side": 1,
+                "orderType": 1,
+                "orderAmount": "100",
+                "filledSize": "153.84",
+                "filledPrice": "0.65",
+                "totalFee": "1.00",
+                "status": 2,
+                "createdAt": 1704067200000,
+                "updatedAt": 1704067205000
+            }
+        ],
+        "total": 1,
+        "pageIndex": 1
+    },
+    "retExtInfo": {},
+    "time": 1704067200000
+}
+```
