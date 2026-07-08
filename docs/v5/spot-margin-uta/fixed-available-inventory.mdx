@@ -1,0 +1,82 @@
+---
+title: Get Fixed-Rate Available Inventory
+sidebar_label: Get Fixed-Rate Available Inventory
+sidebar_position: 20
+---
+Query available inventory for fixed-rate borrowing by specifying currency, term, and annual rate. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit), rounded down to borrow precision.
+
+:::info
+- Unified account only
+- All three parameters (`currency`, `term`, `annualRate`) are required
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixed-available-inventory" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |Coin name, uppercase only. e.g. `USDT`, `BTC` |
+|term |**true** |string |Loan term in days. e.g. `7`, `14`, `30`, `90`, `180` |
+|annualRate |**true** |string |Annual interest rate. e.g. `0.02` means 2% |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|currency |string |Coin name |
+|term |string |Loan term in days |
+|annualRate |string |Annual interest rate |
+|availableInventory |string |Available inventory for borrowing. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit) |
+|updateTime |string |Last update timestamp in seconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixed-available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1699272487000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "currency": "USDT",
+        "term": "7",
+        "annualRate": "0.02",
+        "availableInventory": "500000",
+        "updateTime": "1699272487"
+    },
+    "retExtInfo": {},
+    "time": 1672221263862
+}
+```

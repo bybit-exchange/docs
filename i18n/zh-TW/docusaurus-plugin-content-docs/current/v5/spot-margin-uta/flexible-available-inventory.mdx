@@ -1,0 +1,75 @@
+---
+title: 查詢靈活借貸可借額度
+sidebar_label: 查詢靈活借貸可借額度
+sidebar_position: 19
+---
+查詢現貨槓桿交易中指定幣種的靈活借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限）。
+
+:::info
+- 僅支持統一帳戶
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/flexible-available-inventory" />
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |幣種名稱，僅大寫。如 `BTC` |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency |string |幣種名稱 |
+|availableInventory |string |指定幣種的可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限）|
+|updateTime |string |最後更新時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/flexible-available-inventory?currency=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1756261353733
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "currency": "BTC",
+        "availableInventory": "17.54689892",
+        "updateTime": "1756261353733"
+    },
+    "retExtInfo": {},
+    "time": 1756261353733
+}
+```
