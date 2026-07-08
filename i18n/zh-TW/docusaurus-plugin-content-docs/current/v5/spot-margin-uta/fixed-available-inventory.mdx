@@ -1,0 +1,82 @@
+---
+title: 查詢定期借貸可借額度
+sidebar_label: 查詢定期借貸可借額度
+sidebar_position: 20
+---
+查詢指定幣種、借款期限及年化利率下的定期借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限），向下取整至借幣精度。
+
+:::info
+- 僅支持統一帳戶
+- `currency`、`term`、`annualRate` 三個參數均為必填
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixed-available-inventory" />
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |幣種名稱，僅大寫。如 `USDT`、`BTC` |
+|term |**true** |string |借款天數。如 `7`、`14`、`30`、`90`、`180` |
+|annualRate |**true** |string |年化利率。如 `0.02` 表示 2% |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency |string |幣種名稱 |
+|term |string |借款天數 |
+|annualRate |string |年化利率 |
+|availableInventory |string |可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限）|
+|updateTime |string |最後更新時間戳（秒）|
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixed-available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1699272487000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "currency": "USDT",
+        "term": "7",
+        "annualRate": "0.02",
+        "availableInventory": "500000",
+        "updateTime": "1699272487"
+    },
+    "retExtInfo": {},
+    "time": 1672221263862
+}
+```

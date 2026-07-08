@@ -1,0 +1,75 @@
+---
+title: Get Flexible Available Inventory
+sidebar_label: Get Flexible Available Inventory
+sidebar_position: 19
+---
+Retrieve the flexible available inventory for a specified cryptocurrency in spot margin trading. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit).
+
+:::info
+- Unified account only
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/flexible-available-inventory" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|currency |**true** |string |Coin name, uppercase only. e.g. `BTC` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|currency |string |Coin name |
+|availableInventory |string |Available inventory for the specified coin. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit) |
+|updateTime |string |Last update timestamp in milliseconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/flexible-available-inventory?currency=BTC HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1756261353733
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "Success",
+    "result": {
+        "currency": "BTC",
+        "availableInventory": "17.54689892",
+        "updateTime": "1756261353733"
+    },
+    "retExtInfo": {},
+    "time": 1756261353733
+}
+```
