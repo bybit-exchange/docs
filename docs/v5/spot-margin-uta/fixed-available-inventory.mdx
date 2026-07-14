@@ -3,7 +3,7 @@ title: Get Fixed-Rate Available Inventory
 sidebar_label: Get Fixed-Rate Available Inventory
 sidebar_position: 20
 ---
-Query available inventory for fixed-rate borrowing by specifying currency, term, and annual rate. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit), rounded down to borrow precision.
+Query available inventory for fixed-rate borrowing by specifying currency, term, and annual rate. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](position-tiers)), rounded down to borrow precision.
 
 :::info
 - Unified account only
@@ -26,7 +26,7 @@ Query available inventory for fixed-rate borrowing by specifying currency, term,
 |currency |string |Coin name |
 |term |string |Loan term in days |
 |annualRate |string |Annual interest rate |
-|availableInventory |string |Available inventory for borrowing. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit) |
+|availableInventory |string |Available inventory for borrowing. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](position-tiers)) |
 |updateTime |string |Last update timestamp in seconds |
 
 ---
