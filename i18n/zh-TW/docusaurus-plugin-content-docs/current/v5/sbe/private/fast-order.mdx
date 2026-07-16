@@ -200,10 +200,10 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 12 | updatedTime | int64 | 撮合時間戳（微秒） |
 | 13 | seq | int64 | 跨序列 ID |
 | 14 | symbolID | int32 | 交易對 ID |
-| 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 |
+| 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 <li>對於盤前永續合約，僅支持連續交易階段</li>|
 | 16 | amendFlag | int8 | `0`=不是改單請求觸發的推送，`1`=是改單請求觸發的推送。版本 2 新增欄位（7月21日主網） |
-| 17 | fillQty | int64 | 訂單已成交數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）<li>不支持盤前永續合約集合競價階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的累計的成交數量</li>|
-| 18 | fillPrice | int64 | 訂單成交價格尾數（需應用 `priceExponent`）。版本 2 新增欄位（7月21日主網）<li>不支持盤前永續合約集合競價階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的最後一筆成交價格</li>|
+| 17 | fillQty | int64 | 訂單已成交數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）<li>對於盤前永續合約，僅支持連續交易階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的累計的成交數量</li>|
+| 18 | fillPrice | int64 | 訂單成交價格尾數（需應用 `priceExponent`）。版本 2 新增欄位（7月21日主網）<li>對於盤前永續合約，僅支持連續交易階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的最後一筆成交價格</li>|
 | 19 | originalQty | int64 | 訂單數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）  |
 | 100 | orderId | varString8 | 訂單 ID（UUID） |
 | 101 | orderLinkId | varString8 | 可選；用戶主動操作時存在 |

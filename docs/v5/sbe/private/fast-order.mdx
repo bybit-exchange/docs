@@ -200,10 +200,10 @@ The table below highlights behavioral differences between the Fast Order SBE cha
 | 12 | updatedTime | int64 | Matching timestamp (microseconds) |
 | 13 | seq | int64 | Cross sequence ID |
 | 14 | symbolID | int32 | Symbol ID |
-| 15 | liquidity | int8 | `1`=taker, `2`=maker when trade, otherwise `0`. Added in schema version 1 |
+| 15 | liquidity | int8 | `1`=taker, `2`=maker when trade, otherwise `0`. Added in schema version 1 <li>For pre-market perps, only applied to Continuous Trading stage</li> |
 | 16 | amendFlag | int8 | `0`=the feed is not triggered by amend action, `1`=triggered by amend action. Added in schema version 2 (prod 21 July) |
-| 17 | fillQty | int64 | Order filled quantity mantissa (apply `sizeExponent`). Added in schema version 2 (prod 21 July) <li>not applied to pre-market perps CallAuction stage</li><li>Provides the accumulated filled quantity across multiple executions within a single taker fill</li>|
-| 18 | fillPrice | int64 | Order fill price mantissa (apply `priceExponent`). Added in schema version 2 (prod 21 July) <li>not applied to pre-market perps CallAuction stage</li><li>Provides the last filled price of execution across multiple executions within a single taker fill</li>|
+| 17 | fillQty | int64 | Order filled quantity mantissa (apply `sizeExponent`). Added in schema version 2 (prod 21 July) <li>For pre-market perps, only applied to Continuous Trading stage</li><li>Provides the accumulated filled quantity across multiple executions within a single taker fill</li>|
+| 18 | fillPrice | int64 | Order fill price mantissa (apply `priceExponent`). Added in schema version 2 (prod 21 July) <li>For pre-market perps, only applied to Continuous Trading stage</li><li>Provides the last filled price of execution across multiple executions within a single taker fill</li>|
 | 19 | originalQty | int64 | Order quantity mantissa (apply `sizeExponent`). Added in schema version 2 (prod 21 July)|
 | 100 | orderId | varString8 | Order ID (UUID) |
 | 101 | orderLinkId | varString8 | Optional; present for user-initiated orders |
