@@ -309,12 +309,12 @@ _closed status_
 * `0`&emsp;unknown
 * `1`&emsp;toBeConfirmed
 * `2`&emsp;processing
-* `3`&emsp;success (finalised status of a success deposit)
+* `3`&emsp;success (this is final status reflected by the finalized deposit status. If a blockchain rollback occurs, the deposit will be assigned a 7XXXX status, which represents the finalized outcome of that rollback case.)
 * `4`&emsp;deposit failed
-* `7`&emsp;Rollback processing — a chain rollback occurred after the deposit was credited. The status converts from “3” to “7”. System deduction or manual review is pending.
-* `70011`&emsp;Rollback: deducted — funds have been clawed back from the account; this deposit will not be credited.
-* `70012`&emsp;Success (3) — no deduction required; review completed and determined no clawback is needed.
-* `70013`&emsp;Success (3) — manually processed; original status “7” converted to “70013” with no deduction, treated as a normal successful deposit.
+* `7`&emsp;**Rollback processing**: A blockchain rollback occurred after the deposit had already been credited.
+* `70011`&emsp;**Deposit rolled back**: A blockchain rollback occurred, and the deposit has been reversed. The credited funds have been deducted, and no final credit remains.
+* `70012`&emsp;**Deposit remains successful after rollback review**: Although a blockchain rollback occurred, the deposit remains valid. After review, it was determined that no clawback or deduction is required.
+* `70013`&emsp;**Deposit rollback faill**: The deposit was initially credited, but the backend system failed to process the blockchain rollback automatically. The case is pending manual review.
 * `10011`&emsp;pending to be credited to funding pool
 * `10012`&emsp;Credited to funding pool successfully
 
