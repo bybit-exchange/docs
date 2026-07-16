@@ -18,8 +18,8 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 
 | 產品 | 測試網 | 主網 |
 |:---|:---|:---|
-| 現貨 | 2026年5月27日 | 2026年6月23日 |
-| 期貨（線性 & 反向） | 2026年6月10日 | 2026年7月7日 ~ 7月14日 |
+| 現貨 | ✅ | ✅ |
+| 期貨（線性 & 反向） | ✅ | ✅ |
 | 期權 | 2026年6月16日 | 2026年7月21日 |
 
 ## 連接
@@ -180,7 +180,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | blockLength | uint16 | 2 | 消息體長度 |
 | templateId | uint16 | 2 | 固定 = `21000` |
 | schemaId | uint16 | 2 | 固定 = `1` |
-| version | uint16 | 2 | 固定 = `1` |
+| version | uint16 | 2 | 固定 = `2` |
 
 ### 消息體
 
@@ -200,7 +200,11 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 12 | updatedTime | int64 | 撮合時間戳（微秒） |
 | 13 | seq | int64 | 跨序列 ID |
 | 14 | symbolID | int32 | 交易對 ID |
-| 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 |
+| 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 <li>對於盤前永續合約，僅支持連續交易階段</li>|
+| 16 | amendFlag | int8 | `0`=不是改單請求觸發的推送，`1`=是改單請求觸發的推送。版本 2 新增欄位（7月21日主網） |
+| 17 | fillQty | int64 | 訂單已成交數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）<li>對於盤前永續合約，僅支持連續交易階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的累計的成交數量</li>|
+| 18 | fillPrice | int64 | 訂單成交價格尾數（需應用 `priceExponent`）。版本 2 新增欄位（7月21日主網）<li>對於盤前永續合約，僅支持連續交易階段</li><li>對於taker有多筆成交時, 該字段給的是多筆成交的最後一筆成交價格</li>|
+| 19 | originalQty | int64 | 訂單數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）  |
 | 100 | orderId | varString8 | 訂單 ID（UUID） |
 | 101 | orderLinkId | varString8 | 可選；用戶主動操作時存在 |
 
@@ -265,7 +269,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="1" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="2" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
   <types>
     <composite name="messageHeader" description="Template ID and length of message root">
       <type name="blockLength" primitiveType="uint16"/>
@@ -301,6 +305,11 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
     <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
     <!-- Liquidity -->
     <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>
+    <!-- Version 2 add new fields-->
+    <field id="16" name="amendFlag" type="int8" sinceVersion="2" description="0=not amended, 1=amended"/>
+    <field id="17" name="fillQty" type="int64" sinceVersion="2" description="order Filled quantity mantissa"/>
+    <field id="18" name="fillPrice" type="int64" sinceVersion="2" description="order fill price mantissa"/>
+    <field id="19" name="originalQty" type="int64" sinceVersion="2" description="order originalorder quantity mantissa"/>
     <!-- Order identifiers -->
     <data id="100" name="orderId" type="varString8" description="Order ID"/>
     <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
@@ -455,12 +464,21 @@ type FastOrderSBEResp struct {
 
 	SymbolID    int32  `json:"symbolID"`
 	Liquidity   int8   `json:"liquidity"`
+
+	AmendFlag           int8  `json:"amendFlag,omitempty"`
+	FillQtyMantissa     int64 `json:"fillQtyMantissa,omitempty"`
+	FillPriceMantissa   int64 `json:"fillPriceMantissa,omitempty"`
+	OriginalQtyMantissa int64 `json:"originalQtyMantissa,omitempty"`
+
 	OrderID     string `json:"orderId"`
 	OrderLinkID string `json:"orderLinkId"`
 
 	Price       float64 `json:"price"`
 	LeavesQty   float64 `json:"leavesQty"`
 	LeavesValue float64 `json:"leavesValue"`
+	FillQty     float64 `json:"fillQty,omitempty"`
+	FillPrice   float64 `json:"fillPrice,omitempty"`
+	OriginalQty float64 `json:"originalQty,omitempty"`
 
 	RawOffsetEnd int `json:"_raw_offset_end"`
 }
@@ -542,6 +560,30 @@ func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) 
 			return nil, err
 		}
 	}
+	// field 16 amendFlag (sinceVersion=2)
+	if off-bodyStart < int(blockLen) {
+		if resp.AmendFlag, err = readI8(payload, &off); err != nil {
+			return nil, err
+		}
+	}
+	// field 17 fillQty (sinceVersion=2)
+	if off-bodyStart+8 <= int(blockLen) {
+		if resp.FillQtyMantissa, err = readI64LE(payload, &off); err != nil {
+			return nil, err
+		}
+	}
+	// field 18 fillPrice (sinceVersion=2)
+	if off-bodyStart+8 <= int(blockLen) {
+		if resp.FillPriceMantissa, err = readI64LE(payload, &off); err != nil {
+			return nil, err
+		}
+	}
+	// field 19 originalQty (sinceVersion=2)
+	if off-bodyStart+8 <= int(blockLen) {
+		if resp.OriginalQtyMantissa, err = readI64LE(payload, &off); err != nil {
+			return nil, err
+		}
+	}
 	// skip any future fixed fields we don't know about
 	off = bodyStart + int(blockLen)
 	if resp.OrderID, err = readVarString8(payload, &off); err != nil {
@@ -554,6 +596,9 @@ func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) 
 	resp.Price = applyExp(resp.PriceMantissa, resp.PriceExponent)
 	resp.LeavesQty = applyExp(resp.LeavesQtyMantissa, resp.SizeExponent)
 	resp.LeavesValue = applyExp(resp.LeavesValueMantissa, resp.ValExponent)
+	resp.FillQty = applyExp(resp.FillQtyMantissa, resp.SizeExponent)
+	resp.FillPrice = applyExp(resp.FillPriceMantissa, resp.PriceExponent)
+	resp.OriginalQty = applyExp(resp.OriginalQtyMantissa, resp.SizeExponent)
 	resp.RawOffsetEnd = off
 
 	return resp, nil
@@ -792,13 +837,33 @@ def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any
     if off - body_start < block_len:
         liquidity, off = read_i8(mv, off)
 
+    # field 16 amendFlag (sinceVersion=2)
+    amend_flag = 0
+    if off - body_start < block_len:
+        amend_flag, off = read_i8(mv, off)
+
+    # field 17 fillQty (sinceVersion=2)
+    fill_qty = 0
+    if off - body_start + 8 <= block_len:
+        fill_qty, off = read_i64_le(mv, off)
+
+    # field 18 fillPrice (sinceVersion=2)
+    fill_price = 0
+    if off - body_start + 8 <= block_len:
+        fill_price, off = read_i64_le(mv, off)
+
+    # field 19 originalQty (sinceVersion=2)
+    original_qty = 0
+    if off - body_start + 8 <= block_len:
+        original_qty, off = read_i64_le(mv, off)
+
     # skip any future fixed fields we don't know about
     off = body_start + block_len
 
     order_id, off = read_varstring8(mv, off)
     order_link_id, off = read_varstring8(mv, off)
 
-    return {
+    result = {
         "_sbe_header": {
             "blockLength": block_len,
             "templateId": template_id,
@@ -827,6 +892,15 @@ def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any
         "orderLinkId": order_link_id,
         "_raw_offset_end": off
     }
+    if amend_flag or fill_qty or fill_price or original_qty:
+        result["amendFlag"] = amend_flag
+        result["fillQtyMantissa"] = fill_qty
+        result["fillPriceMantissa"] = fill_price
+        result["originalQtyMantissa"] = original_qty
+        result["fillQty"] = apply_exp(fill_qty, size_exp)
+        result["fillPrice"] = apply_exp(fill_price, price_exp)
+        result["originalQty"] = apply_exp(original_qty, size_exp)
+    return result
 
 async def send_json(ws, obj):
     await ws.send(json.dumps(obj, separators=(",", ":")))
