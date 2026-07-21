@@ -430,7 +430,7 @@ Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)**:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="1" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="2" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">
   <types>
     <composite name="messageHeader" description="Template ID and length of message root">
       <type name="blockLength" primitiveType="uint16"/>
@@ -466,10 +466,14 @@ Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)**:
     <field id="14" name="symbolID" type="int32" description="Symbol ID"/>
     <!-- Liquidity -->
     <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>
+    <!-- Version 2 add new fields-->
+    <field id="16" name="amendFlag" type="int8" sinceVersion="2" description="0=not amended, 1=amended"/>
+    <field id="17" name="fillQty" type="int64" sinceVersion="2" description="order Filled quantity mantissa"/>
+    <field id="18" name="fillPrice" type="int64" sinceVersion="2" description="order fill price mantissa"/>
+    <field id="19" name="originalQty" type="int64" sinceVersion="2" description="order originalorder quantity mantissa"/>
     <!-- Order identifiers -->
     <data id="100" name="orderId" type="varString8" description="Order ID"/>
     <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>
   </sbe:message>
 </sbe:messageSchema>
-```
 ```
