@@ -197,7 +197,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 | 9 | leavesQty | int64 | 剩餘數量尾數（需應用 `sizeExponent`） |
 | 10 | leavesValue | int64 | 僅當現貨訂單類型為市價單且 `marketUnit=quoteCoin` 時有效，其他情況為 `0`（需應用 `valueExponent`） |
 | 11 | creationTime | int64 | 訂單在 Fast Order 頻道的創建時間戳（微秒） |
-| 12 | updatedTime | int64 | 撮合時間戳（微秒） |
+| 12 | updatedTime | int64 | 撮合時間戳（微秒）<br/> <i>撮合時間戳並不代表交易的端到端處理完成時間。如需獲取最終完成時間戳，請參考[訂單流](../../websocket/private/order)裡的 `updatedTime`字段</i> |
 | 13 | seq | int64 | 跨序列 ID |
 | 14 | symbolID | int32 | 交易對 ID |
 | 15 | liquidity | int8 | `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 <li>對於盤前永續合約，僅支持連續交易階段</li>|
