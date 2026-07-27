@@ -1,0 +1,96 @@
+---
+title: Get Launchpool Current Staking
+sidebar_label: Get Launchpool Current Staking
+sidebar_position: 3
+---
+Query the authenticated user's active staking positions across all ongoing Launchpool activities, including a USD-denominated portfolio summary and per-position details.
+
+:::info
+- Authentication is required
+- Returns up to **30** positions, covering all active staking positions without pagination
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-x/launchpool/user/current-staking" />
+
+### Request Parameters
+No request parameters required.
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|totalInvestmentUsd |string |Total USD value of all active staking positions |
+|totalEarningsUsd |string |Total USD value of accumulated earnings across all positions |
+|todayEarningsUsd |string |Today's earnings across all positions, in USD |
+|list |array |Per-position staking details. Up to 30 items |
+|> stakeCoin |string |The coin staked into this position |
+|> rewardCoin |string |The coin earned as reward |
+|> stakeAmount |string |Total amount currently staked |
+|> totalReward |string |Accumulated reward earned so far |
+|> autoRedeemDate |string |Auto-redeem time, Unix timestamp in milliseconds. The principal will be automatically returned on this date. Empty string if not set |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-x/launchpool/user/current-staking HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1705000000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "totalInvestmentUsd": "15000.00",
+        "totalEarningsUsd": "120.50",
+        "todayEarningsUsd": "8.20",
+        "list": [
+            {
+                "stakeCoin": "USDT",
+                "rewardCoin": "BTC",
+                "stakeAmount": "10000",
+                "totalReward": "0.00120",
+                "autoRedeemDate": "1706745600000"
+            },
+            {
+                "stakeCoin": "MNT",
+                "rewardCoin": "BTC",
+                "stakeAmount": "50000",
+                "totalReward": "0.00050",
+                "autoRedeemDate": "1706745600000"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

@@ -1,0 +1,116 @@
+---
+title: Get Launchpool Project List
+sidebar_label: Get Launchpool Project List
+sidebar_position: 1
+---
+Query the Launchpool activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
+
+:::info
+- Authentication is **not** required
+- Only online, main-site public activities are returned
+- `nextPageCursor` being an empty string indicates the last page
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-x/launchpool/project/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|status |**true** |integer |Activity phase filter. `0`: Upcoming; `1`: Ongoing; `2`: Ended |
+|activityCoin |false |string |Filter by reward coin symbol (case-insensitive), e.g. `BTC`, `ETH` |
+|projectId |false |string |Exact activity code. Use to query a single project |
+|cursor |false |string |Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page |
+|limit |false |integer |Number of items per page. Default: `10`. Max: `10` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |List of Launchpool activity objects |
+|> projectId |string |Unique activity code |
+|> activityCoin |string |The reward coin of the activity |
+|> rewardCoin |string |The coin distributed as the reward |
+|> status |integer |Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended |
+|> totalReward |string |Sum of all pool reward amounts |
+|> stakeStartTime |string |Staking start time, Unix timestamp in milliseconds |
+|> stakeEndTime |string |Staking end time (auto-redeem time), Unix timestamp in milliseconds |
+|> totalParticipantCount |string |Total number of participants across all pools |
+|> pools |array |Per-pool staking details for this activity |
+|>> poolId |string |Unique pool code |
+|>> stakeCoin |string |The coin users stake into this pool |
+|>> apr |string |Calculated annual percentage rate for this pool |
+|>> totalStakedAmount |string |Total amount currently staked in this pool |
+|>> participantCount |string |Number of participants in this pool |
+|nextPageCursor |string |Cursor for the next page. Empty string means last page |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-x/launchpool/project/list?status=1&limit=10 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "projectId": "LAUNCHPOOL_BTC_2024Q1",
+                "activityCoin": "BTC",
+                "rewardCoin": "BTC",
+                "status": 1,
+                "totalReward": "10",
+                "stakeStartTime": "1704067200000",
+                "stakeEndTime": "1706745600000",
+                "totalParticipantCount": "5000",
+                "pools": [
+                    {
+                        "poolId": "POOL_BTC_USDT",
+                        "stakeCoin": "USDT",
+                        "apr": "15.50",
+                        "totalStakedAmount": "1000000",
+                        "participantCount": "3000"
+                    },
+                    {
+                        "poolId": "POOL_BTC_MNT",
+                        "stakeCoin": "MNT",
+                        "apr": "20.00",
+                        "totalStakedAmount": "500000",
+                        "participantCount": "2000"
+                    }
+                ]
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzfQ=="
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

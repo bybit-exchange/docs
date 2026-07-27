@@ -1,0 +1,111 @@
+---
+title: Get Launchpool User Activity Log
+sidebar_label: Get Launchpool User Activity Log
+sidebar_position: 2
+---
+Query the authenticated user's Launchpool staking operation records (stake-in, redeem, interest, etc.).
+
+:::info
+- Authentication is required
+- `startTime` and `endTime` must be provided **together** (both or neither)
+- All filter fields are optional; omitting all fields returns all records
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/spot-x/launchpool/user/activity-log" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|stakeCoin |false |string |Filter by stake coin symbol, e.g. `USDT` |
+|type |false |integer |Filter by operation type. `0`: PLEDGE (manual stake-in); `1`: REDEEM (manual redeem); `2`: INTEREST (reward credit); `3`: AUTO_REDEEM (auto principal return); `4`: LOAN_PLEDGE (leveraged stake-in); `5`: LOAN_REDEEM (manual leveraged redeem); `6`: LOAN_AUTO_REDEEM (auto leveraged maturity redemption); `7`: LOAN_RISKRATE_AUTO_REDEEM (leveraged liquidation); `8`: RISK_USER_AUTO_REDEEM (risk-control forced redeem, non-leveraged); `9`: LOAN_RISK_USER_AUTO_REDEEM (risk-control forced redeem, leveraged); `10`: EARN_REWARD (earn product reward credit) |
+|status |false |integer |Filter by record status. `0`: Pending; `1`: Success; `2`: Failed |
+|startTime |false |string |Query start time, 13-digit Unix timestamp in milliseconds. Must be used together with `endTime` |
+|endTime |false |string |Query end time, 13-digit Unix timestamp in milliseconds. Must be used together with `startTime` |
+|pageSize |false |integer |Number of records per page. Default: `10`. Max: `10` |
+|current |false |integer |Page number (1-based). Default: `1`. Max: `100` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Operation records for the current page |
+|> stakeCoin |string |The coin that was staked or redeemed |
+|> rewardCoin |string |The reward coin associated with this operation |
+|> amount |string |Operation amount |
+|> type |integer |Operation type code. See request `type` field for full mapping |
+|> status |integer |Record status. `0`: Pending; `1`: Success; `2`: Failed |
+|> createdTime |string |Record creation time, Unix timestamp in milliseconds |
+|> orderId |string |Unique order/operation identifier |
+|total |integer |Total number of records matching the filter |
+|pageSize |integer |Page size used for this response |
+|current |integer |Current page number |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1705000000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "stakeCoin": "USDT",
+    "type": 0,
+    "status": 1,
+    "pageSize": 10,
+    "current": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "stakeCoin": "USDT",
+                "rewardCoin": "BTC",
+                "amount": "1000",
+                "type": 0,
+                "status": 1,
+                "createdTime": "1704067200000",
+                "orderId": "ORDER_123456"
+            }
+        ],
+        "total": 25,
+        "pageSize": 10,
+        "current": 1
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

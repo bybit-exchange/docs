@@ -1,0 +1,112 @@
+---
+title: 查詢 Launchpool 用戶歷史倉位
+sidebar_label: 查詢 Launchpool 用戶歷史倉位
+sidebar_position: 4
+---
+查詢當前用戶已完成的 Launchpool 質押倉位歷史記錄。
+
+:::info
+- 需要鑒權
+- 返回已結束的質押倉位記錄，而非單筆操作流水
+- `startTime` 和 `endTime` 按質押期間篩選（非記錄創建時間），必須同時傳入
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/spot-x/launchpool/user/history" />
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|stakeCoin |false |string |按質押幣種篩選，如 `USDT` |
+|rewardCoin |false |string |按獎勵幣種篩選，如 `BTC` |
+|startTime |false |string |質押期間開始篩選，13 位毫秒級 Unix 時間戳。篩選質押開始時間大於等於該值的倉位。必須與 `endTime` 同時傳入 |
+|endTime |false |string |質押期間結束篩選，13 位毫秒級 Unix 時間戳。篩選質押結束時間小於等於該值的倉位。必須與 `startTime` 同時傳入 |
+|pageSize |false |integer |每頁記錄數，默認 `10`，最大 `10` |
+|current |false |integer |頁碼（從 1 開始），默認 `1`，最大 `100` |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |當前頁的已完成質押倉位記錄 |
+|> stakeCoin |string |該倉位質押的幣種 |
+|> rewardCoin |string |該倉位獲得獎勵的幣種 |
+|> totalReward |string |該已完成倉位的累計獎勵總量 |
+|> stakeStartTime |string |倉位質押開始時間，毫秒級 Unix 時間戳 |
+|> stakeEndTime |string |倉位質押結束時間（自動贖回時間），毫秒級 Unix 時間戳 |
+|total |integer |符合篩選條件的記錄總數 |
+|pageSize |integer |本次響應使用的每頁條數 |
+|current |integer |當前頁碼 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-x/launchpool/user/history HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1705000000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "stakeCoin": "USDT",
+    "rewardCoin": "BTC",
+    "pageSize": 10,
+    "current": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "stakeCoin": "USDT",
+                "rewardCoin": "BTC",
+                "totalReward": "0.00250",
+                "stakeStartTime": "1704067200000",
+                "stakeEndTime": "1706745600000"
+            },
+            {
+                "stakeCoin": "MNT",
+                "rewardCoin": "BTC",
+                "totalReward": "0.00080",
+                "stakeStartTime": "1701388800000",
+                "stakeEndTime": "1704067200000"
+            }
+        ],
+        "total": 12,
+        "pageSize": 10,
+        "current": 1
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```
