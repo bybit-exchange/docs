@@ -1,0 +1,84 @@
+---
+title: Get Referral Code
+sidebar_label: Get Referral Code
+sidebar_position: 11
+---
+Query the referral codes owned by the current user and their corresponding referral registration links.
+
+:::info
+- Sub-accounts will return the master account's referral codes
+- Only active (non-expired) referral codes are returned
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/user/invitation/code" />
+
+### Request Parameters
+No request parameters required. User identity is derived from the API Key.
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|referralCodes |array |List of referral codes owned by the user |
+|> referralCode |string |The referral code string |
+|> referralLink |string |The referral registration link for the user's site. URL structure: `https://{domain}/{lang}/invite/?ref={referralCode}` |
+|> scene |integer |Referral code scene type. `1`: Affiliate; `2`: Friend |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/user/invitation/code HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "referralCodes": [
+            {
+                "referralCode": "AFFIL001",
+                "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",
+                "scene": 1
+            },
+            {
+                "referralCode": "FRIEND01",
+                "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",
+                "scene": 2
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1753286400000
+}
+```

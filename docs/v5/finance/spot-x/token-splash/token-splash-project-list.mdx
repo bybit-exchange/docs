@@ -1,0 +1,96 @@
+---
+title: Get Token Splash Project List
+sidebar_label: Get Token Splash Project List
+sidebar_position: 1
+---
+Query the Token Splash activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
+
+:::info
+- Authentication is **not** required
+- Only released, main-site public activities are returned
+- `nextPageCursor` being an empty string indicates the last page
+- `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
+- `registrationStartTime` = min of non-zero values among `signUpBeginTime` and `tradeSignUpBeginTime`
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-x/token-splash/project/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|status |**true** |integer |Activity phase filter. `0`: Upcoming (registration not yet started); `1`: Ongoing; `2`: Ended (announcement time has passed) |
+|projectId |false |string |Exact activity code. Use to query a single project |
+|activityCoin |false |string |Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH` |
+|cursor |false |string |Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page |
+|limit |false |integer |Number of items per page. Default: `10`. Max: `10` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Activity items for the current page |
+|> status |integer |Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended |
+|> projectId |string |Unique activity code |
+|> activityCoin |string |The coin that the activity is centered on |
+|> rewardCoin |string |The coin distributed as the reward. Resolved in priority order: new pool token → old pool token → trade pool token |
+|> totalReward |string |Total reward pool size (sum of new, old, and trade prize pool amounts) |
+|> participantCount |string |Total number of registered participants |
+|> registrationStartTime |string |Earliest registration start time, Unix timestamp in milliseconds. Equals `min(signUpBeginTime, tradeSignUpBeginTime)`, ignoring zero values |
+|> activityEndTime |string |Activity end time, Unix timestamp in milliseconds. Equals `max(announceTime, tradeAnnounceTime)` |
+|nextPageCursor |string |Cursor for the next page. Empty string means last page |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "status": 1,
+                "projectId": "TOKENSPLASH_BTC_2024Q1",
+                "activityCoin": "BTC",
+                "rewardCoin": "USDT",
+                "totalReward": "100000",
+                "participantCount": "3456",
+                "registrationStartTime": "1704067200000",
+                "activityEndTime": "1706745600000"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzfQ=="
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

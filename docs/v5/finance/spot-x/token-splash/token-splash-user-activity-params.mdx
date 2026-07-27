@@ -1,0 +1,98 @@
+---
+title: Get Token Splash User Activity Params
+sidebar_label: Get Token Splash User Activity Params
+sidebar_position: 2
+---
+Query the authenticated user's participation details and trade-task progress for Token Splash activities.
+
+:::info
+- Authentication is required
+- Only returns activities where the user has already registered
+- Only trade-task activities are returned (deposit-only task types are excluded)
+- Only activities that have not yet reached their announcement time are returned (rewards not yet distributed)
+- Estimated reward formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`, truncated to 4 decimal places
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-x/token-splash/user/activity-params" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|projectId |false |string |Filter by exact activity code. Returns data for a single project when provided |
+|activityCoin |false |string |Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |User activity items. Empty array if the user has not registered for any matching activity |
+|> projectId |string |Unique activity code |
+|> activityCoin |string |The coin that the activity is centered on |
+|> tradeTask |object |Trade task details and the user's current progress |
+|>> tradeRequiredAmount |string |Total trade volume required to earn the full reward |
+|>> tradeUnit |string |The coin unit for the trade task |
+|>> tradedAmount |string |Trade volume the user has accumulated so far |
+|>> maxRewardAmount |string |Maximum reward the user can earn if the full required volume is traded |
+|>> estimatedRewardAmount |string |Estimated reward based on current progress, truncated to 4 decimal places. Formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount` |
+|>> rewardCoin |string |Coin in which the trade-task reward is distributed |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-x/token-splash/user/activity-params HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1705000000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "projectId": "TOKENSPLASH_BTC_2024Q1",
+                "activityCoin": "BTC",
+                "tradeTask": {
+                    "tradeRequiredAmount": "0.5",
+                    "tradeUnit": "BTC",
+                    "tradedAmount": "0.3",
+                    "maxRewardAmount": "200",
+                    "estimatedRewardAmount": "120.0000",
+                    "rewardCoin": "USDT"
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

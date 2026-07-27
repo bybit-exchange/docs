@@ -1,0 +1,94 @@
+---
+title: Get Puzzle Project List
+sidebar_label: Get Puzzle Project List
+sidebar_position: 1
+---
+Query the Spot-X Puzzle activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
+
+:::info
+- Authentication is **not** required
+- Only main-site public activities are returned
+- `nextPageCursor` being an empty string indicates the last page
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-x/puzzle/project/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|status |**true** |integer |Activity phase filter. `0`: Upcoming; `1`: Ongoing; `2`: Ended |
+|projectId |false |string |Exact activity code. Use to query a single project |
+|activityCoin |false |string |Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH` |
+|cursor |false |string |Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page |
+|limit |false |integer |Number of items per page. Default: `10`. Max: `10` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Activity items for the current page |
+|> projectId |string |Unique activity code |
+|> activityCoin |string |The coin that the activity is centered on |
+|> rewardCoin |string |The coin distributed as the reward |
+|> status |integer |Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended |
+|> startTime |string |Activity start time, Unix timestamp in milliseconds |
+|> endTime |string |Activity end time, Unix timestamp in milliseconds |
+|> totalReward |string |Total reward pool size |
+|> participantCount |string |Total number of registered participants |
+|nextPageCursor |string |Cursor for the next page. Empty string means last page |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-x/puzzle/project/list?status=1&limit=10 HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "projectId": "PUZZLE_BTC_2024Q1",
+                "activityCoin": "BTC",
+                "rewardCoin": "USDT",
+                "status": 1,
+                "startTime": "1704067200000",
+                "endTime": "1706745600000",
+                "totalReward": "50000",
+                "participantCount": "1234"
+            }
+        ],
+        "nextPageCursor": "eyJpZCI6MTIzfQ=="
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

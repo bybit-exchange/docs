@@ -1,0 +1,111 @@
+---
+title: 查詢 Launchpool 用戶操作記錄
+sidebar_label: 查詢 Launchpool 用戶操作記錄
+sidebar_position: 2
+---
+查詢當前用戶的 Launchpool 質押操作記錄（質押、贖回、利息等）。
+
+:::info
+- 需要鑒權
+- `startTime` 和 `endTime` 必須同時傳入（要麼都傳，要麼都不傳）
+- 所有篩選字段均為可選；不傳任何字段時返回全部記錄
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/spot-x/launchpool/user/activity-log" />
+
+### 請求參數
+| 參數 | 是否必須 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|stakeCoin |false |string |按質押幣種篩選，如 `USDT` |
+|type |false |integer |按操作類型篩選。`0`: PLEDGE（手動質押）；`1`: REDEEM（手動贖回）；`2`: INTEREST（獎勵發放）；`3`: AUTO_REDEEM（到期自動還本）；`4`: LOAN_PLEDGE（槓桿質押）；`5`: LOAN_REDEEM（手動槓桿贖回）；`6`: LOAN_AUTO_REDEEM（槓桿到期自動贖回）；`7`: LOAN_RISKRATE_AUTO_REDEEM（槓桿強平）；`8`: RISK_USER_AUTO_REDEEM（風控強制贖回，非槓桿）；`9`: LOAN_RISK_USER_AUTO_REDEEM（風控強制贖回，槓桿）；`10`: EARN_REWARD（理財產品獎勵） |
+|status |false |integer |按記錄狀態篩選。`0`: 處理中；`1`: 成功；`2`: 失敗 |
+|startTime |false |string |查詢開始時間，13 位毫秒級 Unix 時間戳字符串。必須與 `endTime` 同時傳入 |
+|endTime |false |string |查詢結束時間，13 位毫秒級 Unix 時間戳字符串。必須與 `startTime` 同時傳入 |
+|pageSize |false |integer |每頁記錄數，默認 `10`，最大 `10` |
+|current |false |integer |頁碼（從 1 開始），默認 `1`，最大 `100` |
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |當前頁的操作記錄 |
+|> stakeCoin |string |質押或贖回的幣種 |
+|> rewardCoin |string |該操作關聯的獎勵幣種 |
+|> amount |string |操作金額 |
+|> type |integer |操作類型代碼，詳見請求參數 `type` 說明 |
+|> status |integer |記錄狀態。`0`: 處理中；`1`: 成功；`2`: 失敗 |
+|> createdTime |string |記錄創建時間，毫秒級 Unix 時間戳 |
+|> orderId |string |唯一訂單/操作標識符 |
+|total |integer |符合篩選條件的記錄總數 |
+|pageSize |integer |本次響應使用的每頁條數 |
+|current |integer |當前頁碼 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1705000000000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "stakeCoin": "USDT",
+    "type": 0,
+    "status": 1,
+    "pageSize": 10,
+    "current": 1
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "stakeCoin": "USDT",
+                "rewardCoin": "BTC",
+                "amount": "1000",
+                "type": 0,
+                "status": 1,
+                "createdTime": "1704067200000",
+                "orderId": "ORDER_123456"
+            }
+        ],
+        "total": 25,
+        "pageSize": 10,
+        "current": 1
+    },
+    "retExtInfo": {},
+    "time": 1705000000000
+}
+```

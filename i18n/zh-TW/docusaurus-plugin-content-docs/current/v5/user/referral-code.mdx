@@ -1,0 +1,84 @@
+---
+title: 查詢邀請碼
+sidebar_label: 查詢邀請碼
+sidebar_position: 11
+---
+查詢當前用戶持有的邀請碼及其對應站點的邀請注冊鏈接。
+
+:::info
+- 子帳號將返回母帳號的邀請碼
+- 僅返回有效期內（未過期）的邀請碼
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/user/invitation/code" />
+
+### 請求參數
+無請求參數。用戶身份從 API Key 中獲取。
+
+### 返回參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|referralCodes |array |用戶持有的邀請碼列表 |
+|> referralCode |string |邀請碼字符串 |
+|> referralLink |string |對應站點的邀請注冊鏈接。URL 結構：`https://{domain}/{lang}/invite/?ref={referralCode}` |
+|> scene |integer |邀請碼場景類型。`1`: 代理商（Affiliate）；`2`: 好友（Friend） |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/user/invitation/code HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "referralCodes": [
+            {
+                "referralCode": "AFFIL001",
+                "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",
+                "scene": 1
+            },
+            {
+                "referralCode": "FRIEND01",
+                "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",
+                "scene": 2
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1753286400000
+}
+```
