@@ -23,6 +23,23 @@ const primaryCards = [
     ],
   },
   {
+    title: <Translate id="homepage.card.cli.title">CLI</Translate>,
+    // eyebrow: <Translate id="homepage.card.cli.eyebrow">Coming soon!</Translate>,
+    description: (
+      <Translate id="homepage.card.cli.desc">
+        Trade and manage your Bybit account from the terminal with the official CLI for scripting, automation, and quick command-line workflows.
+      </Translate>
+    ),
+    link: 'https://www.npmjs.com/package/bybit-official-trading-cli',
+    linkLabel: <Translate id="homepage.card.cli.link">View document</Translate>,
+    external: true,
+    tags: [
+      <Translate id="homepage.card.cli.tag.1">Command line</Translate>,
+      <Translate id="homepage.card.cli.tag.2">Automation</Translate>,
+      <Translate id="homepage.card.cli.tag.3">Scripting</Translate>,
+    ],
+  },
+  {
     title: <Translate id="homepage.card.unified.title">Unified V5 APIs</Translate>,
     description: (
       <Translate id="homepage.card.unified.desc">
@@ -65,11 +82,13 @@ const primaryCards = [
     linkLabel: <Translate id="homepage.card.sdks.link">pybit quickstart</Translate>,
     external: true,
     links: [
-      {label: 'Python', href: 'https://github.com/bybit-exchange/pybit'},
-      {label: 'TypeScript', href: 'https://www.npmjs.com/package/bybit-api'},
-      {label: 'Java', href: 'https://github.com/bybit-exchange/bybit-java-api'},
-      {label: 'C#', href: 'https://github.com/bybit-exchange/bybit.net.api'},
-      {label: 'Go', href: 'https://github.com/bybit-exchange/bybit.go.api'},
+      { label: 'Python', href: 'https://github.com/bybit-exchange/pybit' },
+      { label: 'TypeScript', href: 'https://www.npmjs.com/package/bybit-api' },
+      { label: 'Java', href: 'https://github.com/bybit-exchange/bybit-java-api' },
+      { label: 'C#', href: 'https://github.com/bybit-exchange/bybit.net.api' },
+      { label: 'Go', href: 'https://github.com/bybit-exchange/bybit.go.api' },
+      { label: 'Rust', href: 'https://github.com/bybit-exchange/bybit-rust-api' },
+      { label: 'Ruby', href: 'https://github.com/bybit-exchange/bybit.ruby.api' }
     ],
   },
 ];
@@ -99,10 +118,10 @@ const secondaryCards = [
   },
 ];
 
-function Card({title, eyebrow, description, link, linkLabel, external, internal, tags = [], links = [], secondary = false}) {
+function Card({ title, eyebrow, description, link, linkLabel, external, internal, tags = [], links = [], secondary = false }) {
   const linkProps = internal
-    ? {to: link}
-    : {href: link, ...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})};
+    ? { to: link }
+    : { href: link, ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}) };
   const LinkComponent = internal ? Link : 'a';
 
   return (
