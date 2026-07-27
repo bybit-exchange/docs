@@ -88,7 +88,8 @@ const primaryCards = [
       { label: 'C#', href: 'https://github.com/bybit-exchange/bybit.net.api' },
       { label: 'Go', href: 'https://github.com/bybit-exchange/bybit.go.api' },
       { label: 'Rust', href: 'https://github.com/bybit-exchange/bybit-rust-api' },
-      { label: 'Ruby', href: 'https://github.com/bybit-exchange/bybit.ruby.api' }
+      { label: 'Ruby', href: 'https://github.com/bybit-exchange/bybit.ruby.api' },
+      { label: 'PHP', href: 'https://github.com/bybit-exchange/bybit.php.api' }
     ],
   },
 ];
