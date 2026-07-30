@@ -1,0 +1,52 @@
+---
+title: Get Session ID
+sidebar_label: Get Session ID
+sidebar_position: 2
+---
+
+### HTTP Request
+POST `/v5/p2p/chat/session/getSessionId`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|userMaskId|**true** |string |Counterparty user mask ID, obtained from order detail `targetUserMaskId` field |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|sessionId |string |AES encrypted session ID |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/p2p/chat/session/getSessionId HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741832094881
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "userMaskId": "sb731f42293f74b278dc37d482bc5ff72"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "",
+    "result": {
+        "sessionId": "aes_encrypted_session_id"
+    }
+}
+```
