@@ -37,6 +37,7 @@ sidebar_position: 12
 |>> quoteLinkId |string |自定義報價單 ID，客戶敏感資訊不會公開，僅返回給詢價方 |
 |>> expiresAt |string |詢價單的過期時間，Unix 時間戳的毫秒格式 |
 |>> deskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見 |
+|>> anonymous |boolean |是否匿名 |
 |>> status |string |詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed` |
 |>> execQuoteSide |string |執行報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然 |
 |>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
@@ -46,11 +47,13 @@ sidebar_position: 12
 |>>> symbol |string |唯一的交易品種 ID|
 |>>> price |string |報價貨幣中的訂單價格|
 |>>> qty |string |交易品種的訂單數量 |
+|>>> isHedge |boolean |是否對冲腿 |
 |>> quoteSellList |array of objects |報價 `Sell` 方向 |
 |>>> category |string |產品類型：`spot`、`linear`、`option` |
 |>>> symbol |string |唯一的交易品種 ID|
 |>>> price |string |報價貨幣中的訂單價格|
 |>>> qty |string |交易品種的訂單數量 |
+|>>> isHedge |boolean |是否對冲腿 |
 
 ### 請求示例
 
@@ -80,13 +83,15 @@ X-BAPI-SIGN: XXXXXX
                 "expiresAt": "1757405993126",
                 "status": "Expired",
                 "deskCode": "test0904",
+                "anonymous": false,
                 "execQuoteSide": "",
                 "quoteBuyList": [
                     {
                         "category": "linear",
                         "symbol": "BTCUSDT",
                         "price": "113790",
-                        "qty": "0.5"
+                        "qty": "0.5",
+                        "isHedge": false
                     }
                 ],
                 "quoteSellList": [
@@ -94,7 +99,8 @@ X-BAPI-SIGN: XXXXXX
                         "category": "linear",
                         "symbol": "BTCUSDT",
                         "price": "110500",
-                        "qty": "0.5"
+                        "qty": "0.5",
+                        "isHedge": false
                     }
                 ],
                 "createdAt": "1757405933126",

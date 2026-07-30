@@ -19,13 +19,19 @@ sidebar_position: 1
 |:----- |:-------|:-----|------ |
 |counterparties |**true** |Array of deskCode |希望接收詢價的報價方列表,可透過 `/v5/rfq/config`獲取|
 |rfqLinkId |false |string |自定義詢價單 ID： <ul><li>長度應介於 1-32 位 </li> <li>字母（區分大小寫）與數字的組合，可以是純字母或純數字 </li> <li>指定 rfqLinkId 僅檢查最近 3 個月的資料 </li><li>非終端狀態僅能保證在 24 小時內的唯一性，而終端狀態不保證唯一性 </li></ul>|
-|anonymous |false |boolean |是否為匿名詢價，`true` 表示匿名詢價，`false` 表示公開詢價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給報價方。|
+|anonymous |false |boolean |是否為匿名詢價，`true` 表示匿名詢價，`false` 表示公開詢價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給報價方。當 `anonymous` 為 `true` 時，[獲取詢價單](/docs/zh-TW/v5/rfq/trade/rfq-list) 返回的 `deskCode` 為空字串|
 |strategyType |false |string |策略類型，若為自定義詢價，strategyType 為 `custom`，若為系統提供的產品，則為組合類型；預設為 `custom`；非自定義組合具有費率優化，目前為 50%；LP 之間的交易費率目前為 30%|
 |list |true |array of objects |組合交易清單 <ul><li>通過 <a href="/docs/zh-TW/v5/rfq/trade/rfq-config">rfq配寘資訊</a> 確認所提供的最大腿數 (`maxLegs`)</li><li>所有組合的 basecoin 和 settleCoin 必須相同</li><li>同類型下的 symbol 必須唯一</li></ul>|
 |> category |true |string |產品類型：統一帳戶：`spot`, `linear`, `option` |
 |> symbol |true |string |交易合約名稱，合約結算前 30 分鐘不允許詢價 |
 |> side |true |string |詢價交易方向：`Buy` , `Sell` |
 |> qty |true |string |交易數量，超過倉位的Size，則反向開倉 |
+|hedge |false |array of objects |Delta Hedge 腿對象（單個對象，非陣列）；整個 `hedge` 對象均為可選，不填則本筆 RFQ 無 hedge 腿|
+|> category |**true** |string |產品類型，初期僅支持 `linear`（永續合約 / 線性交割期貨）|
+|> symbol |**true** |string |對冲合約名稱，如 `BTCUSDT`（永續）或 `BTC-27JUN25`（線性交割期貨）。底層資產須與主策略腿（`list`）一致，不支持跨資產對冲|
+|> side |**true** |string |詢價單交易方向：`Buy`, `Sell`|
+|> qty |**true** |string |交易數量，超過倉位的 Size，則反向開倉|
+|> price |false |string |Taker 期望的 Delta Hedge 執行價格，僅作為參考透傳給做市商；Maker 可在 `create-quote` 中覆蓋此價格。價格校驗復用主網現有衍生品限價邏輯，超限自動修正|
 
 ### 響應參數
 | 參數 | 類型 | 說明 |
@@ -51,28 +57,25 @@ Content-Type: application/json
 Content-Length: 115
 
 {
-    "counterparties": ["LP4","LP5"],
-    "rfqLinkId":"rfq00993",
+    "counterparties": ["SPMAKERTEST"],
+    "rfqLinkId": "V2-Integration-Test-RFQ",
     "anonymous": false,
     "strategyType": "custom",
     "list": [
         {
+            "category": "option",
+            "symbol": "BTC-25JUL25-100000-C",
+            "side": "Buy",
+            "qty": "100"
+        }
+    ],
+    "hedge": [
+        {
             "category": "linear",
             "symbol": "BTCUSDT",
-            "side":"buy",
-            "qty":"2"
-        },
-        {
-            "category": "spot",
-            "symbol": "BTCUSDT",
-            "side":"buy",
-            "qty":"2"
-        },
-        {
-            "category": "option",
-            "symbol": "BTCUSDT",
-            "side":"sell",
-            "qty":"2"
+            "side": "Sell",
+            "qty": "46",
+            "price": "121500.0"
         }
     ]
 }

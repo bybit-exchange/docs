@@ -38,6 +38,7 @@ Obtain historical quote information. **Up to 50 requests per second **
 |>> quoteLinkId |string |Custom quote ID. Not publicly disclosed. |
 |>> expiresAt |string |The quote's expiration time (ms) |
 |>> deskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the quote was created|
+|>> anonymous |boolean |Whether the RFQ is anonymous |
 |>> status |string |Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
 |>> execQuoteSide |string |Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies |
 |>> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
@@ -47,11 +48,13 @@ Obtain historical quote information. **Up to 50 requests per second **
 |>>> symbol |string |The unique instrument ID|
 |>>> price |string |Order price in the quote currency of the instrument.|
 |>>> qty |string |Order quantity of the instrument. |
+|>>> isHedge |boolean |Whether this leg is a hedge leg |
 |>> quoteSellList |array of objects |Quote `Sell` Direction |
 |>>> category |string |Product type: `spot`,`linear`,`option` |
 |>>> symbol |string |The unique instrument ID|
 |>>> price |string |Order price in the quote currency of the instrument.|
 |>>> qty |string |Order quantity of the instrument. |
+|>>> isHedge |boolean |Whether this leg is a hedge leg |
 
 ### Request Example
 
@@ -102,13 +105,15 @@ print(session.get_quote_list())
                 "expiresAt": "1757405993126",
                 "status": "Expired",
                 "deskCode": "test0904",
+                "anonymous": false,
                 "execQuoteSide": "",
                 "quoteBuyList": [
                     {
                         "category": "linear",
                         "symbol": "BTCUSDT",
                         "price": "113790",
-                        "qty": "0.5"
+                        "qty": "0.5",
+                        "isHedge": false
                     }
                 ],
                 "quoteSellList": [
@@ -116,7 +121,8 @@ print(session.get_quote_list())
                         "category": "linear",
                         "symbol": "BTCUSDT",
                         "price": "110500",
-                        "qty": "0.5"
+                        "qty": "0.5",
+                        "isHedge": false
                     }
                 ],
                 "createdAt": "1757405933126",

@@ -37,6 +37,7 @@ sidebar_position: 10
 |>> status |string |詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed` |
 |> acceptOtherQuoteStatus |string |是否接受非 LP 報價. 預設值是 `false`.`false`: 不接受非 LP 報價. `true`: 接受非 LP 報價|
 |>> deskCode |string |詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見 |
+|>> anonymous |boolean |是否匿名 |
 |>> createdAt |string |交易創建的時間（毫秒），例如 1650380963 |
 |>> updatedAt |string |交易更新的時間（毫秒），例如 1650380964 |
 |>> legs |Array of objects |組合交易 |
@@ -44,6 +45,12 @@ sidebar_position: 10
 |>>> symbol |string |唯一的交易品種 ID|
 |>>> side |string |詢價方向，有效值包括 `Buy` 和 `Sell` |
 |>>> qty |string |交易品種的訂單數量|
+|>> hedge |Array of objects |Delta Hedge 腿對象 |
+|>>> category |string |產品類型：統一帳戶：`spot`, `linear`, `option` |
+|>>> symbol |string |交易合約的名稱 |
+|>>> side |string |詢價單交易方向：`Buy`, `Sell` |
+|>>> qty |string |交易數量，超過倉位的 Size，則反向開倉 |
+|>>> price |string |Taker 期望的 Delta Hedge 執行價格，僅作為訴求透傳給做市商參考；Maker 不一定會對 hedge 腿報價。Taker 若填寫了此價格且 hedge 腿最終成交，以此價格執行 |
 
 ### 請求示例
 
@@ -76,14 +83,24 @@ X-BAPI-SIGN: XXXXXX
                 "status": "Active",
                 "acceptOtherQuoteStatus":"false",
                 "deskCode": "1nu9d1",
+                "anonymous": false,
                 "createdAt": "1756885055801",
                 "updatedAt": "1756885055801",
                 "legs": [
                     {
+                        "category": "option",
+                        "symbol": "BTC-25JUL25-100000-C",
+                        "side": "Buy",
+                        "qty": "100"
+                    }
+                ],
+                "hedge": [
+                    {
                         "category": "linear",
                         "symbol": "BTCUSDT",
-                        "side": "Buy",
-                        "qty": "1"
+                        "side": "Sell",
+                        "qty": "46",
+                        "price": "121500.0"
                     }
                 ]
             },
