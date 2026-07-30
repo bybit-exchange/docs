@@ -35,6 +35,7 @@ Obtain real-time inquiry information. **Up to 50 requests per second **
 |> status |string |Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed` |
 |> acceptOtherQuoteStatus |string |Whether to accept non-LP quotes. The default value is `false`: `false`: Default value, do not accept non-LP quotes. `true`: Accept non-LP quotes|
 |> deskCode |string |The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created |
+|> anonymous |boolean |Whether the RFQ is anonymous |
 |> createdAt |string |Time (ms) when the trade is created in epoch, such as 1650380963 |
 |> updatedAt |string |Time (ms) when the trade is updated in epoch, such as 1650380964 |
 |> legs |array of objects |Combination transaction |
@@ -42,6 +43,12 @@ Obtain real-time inquiry information. **Up to 50 requests per second **
 |>> symbol |string |The unique instrument ID|
 |>> side |string |Inquiry direction: Valid values are `Buy` and `Sell` . |
 |>> qty |string |Order quantity of the instrument. |
+|> hedge |array of objects |Delta Hedge leg object |
+|>> category |string |Product type. Unified account: `spot`, `linear`, `option` |
+|>> symbol |string |Name of the trading contract |
+|>> side |string |Inquiry transaction direction: `Buy`, `Sell` |
+|>> qty |string |Trade quantity. If it exceeds the position size, the position will open in the reverse direction |
+|>> price |string |Taker's desired Delta Hedge execution price, passed to the market maker for reference only. The maker is not obligated to quote the hedge leg. If the taker sets this price and the hedge leg is ultimately executed, it will be filled at this price |
 
 ### Request Example
 
@@ -94,14 +101,24 @@ print(session.get_rfq_realtime())
                 "status": "Active",
                 "acceptOtherQuoteStatus":"false",
                 "deskCode": "1nu9d1",
+                "anonymous": false,
                 "createdAt": "1756885055801",
                 "updatedAt": "1756885055801",
                 "legs": [
                     {
+                        "category": "option",
+                        "symbol": "BTC-25JUL25-100000-C",
+                        "side": "Buy",
+                        "qty": "100"
+                    }
+                ],
+                "hedge": [
+                    {
                         "category": "linear",
                         "symbol": "BTCUSDT",
-                        "side": "Buy",
-                        "qty": "1"
+                        "side": "Sell",
+                        "qty": "46",
+                        "price": "121500.0"
                     }
                 ]
             }

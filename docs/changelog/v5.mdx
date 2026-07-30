@@ -16,6 +16,23 @@ import '/src/css/changelog.css';
     - Updated the RPI permission model from account-level to symbol-level. Users can now submit RPI orders on any symbol that supports RPI, without requiring account-specific RPI permissions. Check the definition of `isPublicRpiand ` and `myRpiPermission`
 - [Get Coin Delta Amount](../v5/otc/coin-delta-amount) [UPDATE]
     - Add new response field `riskUnitDelta` (risk unit delta value)
+- [Create RFQ](../v5/rfq/trade/create-rfq) [UPDATE]
+    - Added `hedge` request parameter: optional Delta Hedge leg for `linear` perpetual / linear delivery futures. Supports `category`, `symbol`, `side`, `qty`, and optional `price`
+    - When `anonymous` is `false`, the `deskCode` returned by Get RFQs is an empty string
+- [Create Quote](../v5/rfq/trade/create-quote) [UPDATE]
+    - Quoting the hedge leg is optional. Include it in `quoteBuyList` or `quoteSellList`. If the RFQ carries a hedge `price`, omitting the price when quoting will fall back to the RFQ price
+- [Execute Quote](../v5/rfq/trade/execute-quote) [UPDATE]
+    - Added `isHedge` request parameter: set to `true` to simultaneously execute the hedge leg in the RFQ. Direction is determined by `quoteSide`. Default: `false`
+- [Get RFQs (real-time)](../v5/rfq/trade/rfq-realtime) [UPDATE]
+    - Added response fields: `anonymous` (boolean), `hedge` (array of objects with `category`, `symbol`, `side`, `qty`, `price`)
+- [Get RFQs](../v5/rfq/trade/rfq-list) [UPDATE]
+    - Added response fields: `anonymous` (boolean), `hedge` (array of objects with `category`, `symbol`, `side`, `qty`, `price`)
+- [Get Quotes (real-time)](../v5/rfq/trade/quote-realtime) [UPDATE]
+    - Added response field `anonymous` (boolean); added `isHedge` (boolean) to each item in `quoteBuyList` and `quoteSellList`
+- [Get Quotes](../v5/rfq/trade/quote-list) [UPDATE]
+    - Added response field `anonymous` (boolean); added `isHedge` (boolean) to each item in `quoteBuyList` and `quoteSellList`
+- [Get RFQ Details](../v5/rfq/trade/rfq-detail-list) [NEW]
+    - New endpoint to retrieve historical RFQ information with full details including active quotes (`quoteList`) and trade execution results (`tradeLegs`)
 
 ## 2026-07-28
 ### REST API

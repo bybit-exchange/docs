@@ -17,6 +17,23 @@ import '/src/css/changelog.css';
  和 `myRpiPermission`
 - [查詢幣種 Delta 額度](../v5/otc/coin-delta-amount) [更新]
     - 新增返回字段 `riskUnitDelta`（風險單元 Delta 值）
+- [詢價](../v5/rfq/trade/create-rfq) [更新]
+    - 新增 `hedge` 入參：可選的 Delta Hedge 腿，僅支持 `linear`（永續合約 / 線性交割期貨），包含 `category`、`symbol`、`side`、`qty` 及可選的 `price`
+    - `anonymous` 為 `false` 時，獲取詢價單返回的 `deskCode` 為空字串
+- [報價](../v5/rfq/trade/create-quote) [更新]
+    - 對 hedge 腿報價為可選項，可加入 `quoteBuyList` 或 `quoteSellList`；若詢價單已攜帶 hedge 腿的 `price`，報價時不傳價格則自動使用詢價中的 `price`
+- [執行報價](../v5/rfq/trade/execute-quote) [更新]
+    - 新增入參 `isHedge`：設為 `true` 時同時執行詢價單中的 hedge 腿，執行方向取決於 `quoteSide`，預設為 `false`
+- [獲取實時的詢價單資訊](../v5/rfq/trade/rfq-realtime) [更新]
+    - 新增返回字段：`anonymous`（boolean）、`hedge`（含 `category`、`symbol`、`side`、`qty`、`price` 的對象陣列）
+- [獲取歷史詢價資訊](../v5/rfq/trade/rfq-list) [更新]
+    - 新增返回字段：`anonymous`（boolean）、`hedge`（含 `category`、`symbol`、`side`、`qty`、`price` 的對象陣列）
+- [獲取即時報價](../v5/rfq/trade/quote-realtime) [更新]
+    - 新增返回字段 `anonymous`（boolean）；`quoteBuyList` 和 `quoteSellList` 各子項新增 `isHedge`（boolean）
+- [獲取歷史報價](../v5/rfq/trade/quote-list) [更新]
+    - 新增返回字段 `anonymous`（boolean）；`quoteBuyList` 和 `quoteSellList` 各子項新增 `isHedge`（boolean）
+- [獲取歷史詢價詳情](../v5/rfq/trade/rfq-detail-list) [新增]
+    - 新增接口，返回歷史詢價單的完整資訊，包含有效報價列表（`quoteList`）及成交腿詳情（`tradeLegs`）
 
 ## 2026-07-28
 ### REST API

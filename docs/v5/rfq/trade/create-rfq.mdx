@@ -19,13 +19,19 @@ Create RFQ. **Up to 50 requests** per second.
 |:----- |:-------|:-----|------ |
 |counterparties |**true** |array|Spread combination symbol name|
 |rfqLinkId |false |string |Custom RFQ ID<ul><li>The length should be between 1-32 bits </li> <li>Combination of letters (case sensitive) and numbers</li> <li>An rfqLinkId expires after three months – after which it can be reused</li><li>Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. </li></ul>|
-|anonymous |false |boolean |Whether or not it is anonymous inquiry. The default value is `false`. When it is `true` the identity of the inquiring party will not be revealed even after the transaction is concluded.|
+|anonymous |false |boolean |Whether or not it is anonymous inquiry. The default value is `false`. When it is `true` the identity of the inquiring party will not be revealed even after the transaction is concluded. When `anonymous` is `false`, the `deskCode` field returned by [Get RFQ](/docs/v5/rfq/trade/rfq-list) will be an empty string|
 |strategyType |false |string |Strategy type, if it is a custom inquiry, strategyType is `custom`, if it is a product combination provided by the system, it is the combination type; the default is `custom`; non-custom combinations have rate optimization, currently 50%; the transaction rate between LPs is currently 30%|
 |list |**true** |array of objects |Combination transaction list <ul><li>Use <a href="/docs/v5/rfq/trade/rfq-config">Get RFQ Configuration</a> to confirm the maximum length of the combination (`maxLegs`)</li><li>The base coin and settle coin of all combinations must be the same</li><li>Symbols under the same category must be unique</li></ul>|
 |> category |**true** |string |Product type: Unified account:  `spot`, `linear`,`option` |
 |> symbol |**true** |string |Name of the transaction contract. No inquiries are allowed in the last 30 minutes before contract settlement |
 |> side |**true** |string |Inquiry transaction direction: `Buy` , `Sell` |
 |> qty |**true** |string |If the number of transactions exceeds the position size, the position will then open in the reverse direction |
+|hedge |false |array of objects |Delta Hedge leg object (single object, not an array). The entire `hedge` object is optional; if omitted, this RFQ has no hedge leg|
+|> category |**true** |string |Product type. Only `linear` is supported initially (perpetual / linear delivery futures)|
+|> symbol |**true** |string |Hedge contract name, e.g. `BTCUSDT` (perpetual) or `BTC-27JUN25` (linear delivery futures). The underlying asset must match the main strategy legs (`list`). Cross-asset hedging is not supported|
+|> side |**true** |string |Inquiry transaction direction: `Buy`, `Sell`|
+|> qty |**true** |string |Trade quantity. If it exceeds the position size, the position will open in the reverse direction|
+|> price |false |string |Taker's desired Delta Hedge execution price, passed to the market maker for reference only. The maker may override this price in `create-quote`. Price validation reuses the existing derivatives limit-price logic; out-of-range values are automatically corrected|
 
 
 ### Response Parameters
@@ -55,28 +61,25 @@ Content-Type: application/json
 Content-Length: 115
 
 {
-    "counterparties": ["LP4","LP5"],
-    "rfqLinkId":"rfq00993",
+    "counterparties": ["SPMAKERTEST"],
+    "rfqLinkId": "V2-Integration-Test-RFQ",
     "anonymous": false,
     "strategyType": "custom",
     "list": [
         {
+            "category": "option",
+            "symbol": "BTC-25JUL25-100000-C",
+            "side": "Buy",
+            "qty": "100"
+        }
+    ],
+    "hedge": [
+        {
             "category": "linear",
             "symbol": "BTCUSDT",
-            "side":"buy",
-            "qty":"2"
-        },
-        {
-            "category": "spot",
-            "symbol": "BTCUSDT",
-            "side":"buy",
-            "qty":"2"
-        },
-        {
-            "category": "option",
-            "symbol": "BTCUSDT",
-            "side":"sell",
-            "qty":"2"
+            "side": "Sell",
+            "qty": "46",
+            "price": "121500.0"
         }
     ]
 }
@@ -94,28 +97,25 @@ session = HTTP(
     api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 print(session.create_rfq(
-    counterparties=["LP4", "LP5"],
-    rfqLinkId="rfq00993",
+    counterparties=["SPMAKERTEST"],
+    rfqLinkId="V2-Integration-Test-RFQ",
     anonymous=False,
     strategyType="custom",
     list=[
         {
+            "category": "option",
+            "symbol": "BTC-25JUL25-100000-C",
+            "side": "Buy",
+            "qty": "100"
+        }
+    ],
+    hedge=[
+        {
             "category": "linear",
             "symbol": "BTCUSDT",
-            "side": "Buy",
-            "qty": "2"
-        },
-        {
-            "category": "spot",
-            "symbol": "BTCUSDT",
-            "side": "Buy",
-            "qty": "2"
-        },
-        {
-            "category": "option",
-            "symbol": "BTCUSDT",
             "side": "Sell",
-            "qty": "2"
+            "qty": "46",
+            "price": "121500.0"
         }
     ]
 ))
