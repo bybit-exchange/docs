@@ -26,7 +26,7 @@ Returns 90 days of orders by default. Orders are accessible up to 180 days in th
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |count |integer |Total order number |
-|items |Object ||
+|items |array&lt;object&gt; |Order list |
 |> id|string|Order ID|
 |> side|integer|Order trade type. 0: BUY, 1: SELL|
 |> tokenId|string|token ID|
@@ -37,13 +37,14 @@ Returns 90 days of orders by default. Orders are accessible up to 180 days in th
 |> fee|string|Tading fee|
 |> targetNickName|string|Counterparty nickname|
 |> targetUserId|string|Counterparty UID|
+|> targetUserMaskId|string|Counterparty user mask ID|
 |> status|integer|Order status <ul><li>`5`: waiting for chain (only web3)</li><li>`10`: waiting for buy pay</li><li>`20`: waiting for seller release</li><li>`30`: Appealing</li><li>`90`: waiting buyer select tokenId</li><li>`100`: objectioning</li><li>`110`: Waiting for the user to raise an objection</li></ul>|
 |> createDate|string|Order created time|
 |> transferLastSeconds|string|Buyer's remaining transfer time|
 |> userId|string|The UID of the current query user|
 |> sellerRealName|string|Seller's real name|
 |> buyerRealName|string|Buyer's real name|
-|> Extension|Object|Order extended information|
+|> extension|object|Order extended information|
 |>> isDelayWithdraw|boolean|If the withdrawal is delayed|
 |>> delayTime|string|Delay time|
 |>> startTime|string|Delay start time|
@@ -114,6 +115,7 @@ print(api.get_pending_orders(
                 "fee": "0",
                 "targetNickName": "test",
                 "targetUserId": "290118",
+                "targetUserMaskId": "sb731f42293f74b278dc37d482bc5ff72",
                 "status": 10,
                 "selfUnreadMsgCount": "0",
                 "createDate": "1741831397000",

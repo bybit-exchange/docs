@@ -1,0 +1,53 @@
+---
+title: Send Chat Message
+sidebar_label: Send Chat Message
+sidebar_position: 5
+---
+
+### HTTP Request
+POST `/v5/p2p/chat/message/send_v1`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|message|**true** |string |Chat message content. Max length 1000 characters |
+|contentType|**true** |string |Message type <ul><li>`str`: text</li><li>`pic`: image</li><li>`pdf`: PDF</li><li>`video`: video</li></ul>|
+|sessionId|**true** |string |Session ID, AES encrypted, obtained from Get Session ID |
+|orderId|**true** |string |Order ID, used to validate order parties |
+
+### Response Parameters
+None
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/p2p/chat/message/send_v1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741832094881
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "message": "Hello, I have paid.",
+    "contentType": "str",
+    "sessionId": "aes_encrypted_session_id",
+    "orderId": "1900004704665923584"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": ""
+}
+```

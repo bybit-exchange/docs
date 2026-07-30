@@ -1,0 +1,76 @@
+---
+title: Get Chat Message List
+sidebar_label: Get Chat Message List
+sidebar_position: 6
+---
+
+### HTTP Request
+POST `/v5/p2p/chat/message/listpage_v1`
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|lastId|**true** |integer |Cursor for pagination. Pass `0` to query from the latest message |
+|limit|**true** |integer |Page size, max is 30 |
+|sessionId|**true** |string |Session ID, AES encrypted |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|messages |array&lt;object&gt; |Message list, ordered by create time desc |
+|> id |integer |Message ID, used as cursor for next page |
+|> sendUserNickName |string |Sender's nickname |
+|> contentType |string |Message type <ul><li>`str`: text</li><li>`pic`: image</li><li>`pdf`: PDF</li><li>`video`: video</li></ul>|
+|> message |string |Message content, JSON string containing `content`, `msgCode`, `msgType`, `fileName`, `size` |
+|> createDate |integer |Message create time, timestamp ms |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/p2p/chat/message/listpage_v1 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1741832094881
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "lastId": 0,
+    "limit": 10,
+    "sessionId": "aes_encrypted_session_id"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "ret_code": 0,
+    "ret_msg": "",
+    "result": {
+        "messages": [
+            {
+                "id": "1920001234567890",
+                "sendUserNickName": "Saaaul",
+                "contentType": "str",
+                "message": "{\"content\":\"Hello, I have paid.\",\"msgCode\":\"\",\"msgType\":\"\",\"fileName\":\"\",\"size\":\"\"}",
+                "createDate": "1741832094000"
+            },
+            {
+                "id": "1920001234567889",
+                "sendUserNickName": "TestUser",
+                "contentType": "pic",
+                "message": "{\"content\":\"/fiat/p2p/oss/showObj/otc/9001/payment-proof.png\",\"msgCode\":\"\",\"msgType\":\"\",\"fileName\":\"payment-proof.png\",\"size\":\"102400\"}",
+                "createDate": "1741831997000"
+            }
+        ]
+    }
+}
+```
