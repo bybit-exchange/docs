@@ -10,6 +10,14 @@ import '/src/css/changelog.css';
     - 哈薩克斯坦（KAZ）衍生品：強制開啟 SMP，所有衍生品訂單均強制啟用
     - 土耳其（TUR）、哈薩克斯坦（KAZ）、格魯吉亞（GEO）現貨：`smpType` 為 `None`、非法值或未傳值時，自動設為 `CancelMaker`
 
+## 2026-07-30
+### REST API
+- [查詢用户可交易產品的規格信息](../v5/account/instrument) [更新]
+    - 已將 RPI 權限模型從帳戶層級（account-level）調整為交易對層級（symbol-level）。現在，只要交易對支援 RPI，所有使用者都可以提交 RPI 訂單，無需再具備帳戶層級的 RPI 權限。參考字段含義更新 `isPublicRpi`
+ 和 `myRpiPermission`
+- [查詢幣種 Delta 額度](../v5/otc/coin-delta-amount) [更新]
+    - 新增返回字段 `riskUnitDelta`（風險單元 Delta 值）
+
 ## 2026-07-28
 ### REST API
 **Spot-X Launchpool — 新增接口**
@@ -155,6 +163,12 @@ import '/src/css/changelog.css';
     - 這是一個問卷頁面用於入金和出金時有travel rule要求時參考的參數說明.
 - [提交入金發起人信息](../v5/asset/deposit/submit-info) [新增]
     - 新增接口當入金記錄觸發 Travel Rule 審核時，由用戶提交發起人（Originator）合規信息，供應商完成審核後返回結果狀態
+- [查詢充值紀錄 (鏈上)](../v5/asset/deposit/deposit-record) [更新]
+    - 新增 `travelRuleStatus`
+- [查詢子帳號的充值紀錄 (鏈上)](../v5/asset/deposit/sub-deposit-record) [更新]
+    - 新增 `travelRuleStatus`
+- [查詢子帳號充值紀錄](../v5/broker/exchange-broker/sub-deposit-record) [更新]
+    - 新增 `travelRuleStatus`
 - [查詢分組手續費结构](../v5/market/fee-group-info) [更新]
     - 新增一個手續費分組 `groupId`="9", G9(TradFi). 該分組一直到6月16日才會有symbols
 
