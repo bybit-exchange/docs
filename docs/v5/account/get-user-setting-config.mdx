@@ -40,6 +40,7 @@ None
 |> deltaEnable |boolean |Whether [Delta Neutral mode](/docs/v5/account/set-delta-mode) is enabled. `true`: enabled; `false`: disabled|
 |> smsef |boolean |Whether Spot MNT fee deduction is enabled. `true`: enabled; `false`: disabled|
 |> fmsef |boolean |Whether Futures MNT fee deduction is enabled. `true`: enabled; `false`: disabled|
+|> smpType |integer |User SMP (Self-Match Prevention) type configuration. `0`: Default, does not trigger self-match prevention; `1`: Cancel Taker order when self-match detected; `2`: Cancel Maker order when self-match detected; `3`: Cancel both Maker and Taker orders when self-match detected|
 
 
 ### Request Example
@@ -92,7 +93,8 @@ print(session.get_user_setting_config())
         "lpaSpot": false,
         "lpaPerp": false,
         "smsef": false,
-        "fmsef": false
+        "fmsef": false,
+        "smpType": 0
     },
     "retExtInfo": {},
     "time": 1773234932707
