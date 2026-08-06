@@ -1,0 +1,78 @@
+---
+title: 查詢活期可借存量
+sidebar_label: 查詢活期可借存量
+sidebar_position: 0.5
+---
+> 權限: "現貨"<br/>
+> 頻率: 5次/秒
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/crypto-loan-flexible/available-inventory" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|currency|**true**|string|幣種名稱，僅限大寫|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|currency|string|幣種名稱|
+|availableInventory|string|借貸池可用存量|
+|updateTime|string|更新時間戳|
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXXX
+X-BAPI-API-KEY: XXXXXX
+X-BAPI-TIMESTAMP: XXXXXX
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+session = HTTP(
+    testnet=True,
+    api_key="xxxxxxxxxxxxxxxxxx",
+    api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+)
+print(session.get_available_inventory_flexible_crypto_loan(
+    currency="USDT",
+))
+```
+
+</TabItem>
+
+<TabItem value="Node" label="Node.js">
+
+```n4js
+
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "currency": "USDT",
+        "availableInventory": "100000000",
+        "updateTime": "1699272487"
+    },
+    "retExtInfo": {},
+    "time": 1678886400000
+}
+```

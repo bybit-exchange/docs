@@ -4,12 +4,41 @@ title: V5
 
 import '/src/css/changelog.css';
 
+## 2026-08-11
+### REST API
+- [查詢交易日誌](../v5/account/transaction-log) [更新]
+    - 新增響應字段 `displayType`：交易記錄顯示類型，與 UI 界面顯示保持一致
+
+## 2026-08-07
+### REST API
+**定期加密貸款**
+- [查詢定期可借存量](../v5/new-crypto-loan/fixed/available-inventory) [新增]
+    - 新增接口，查詢定期借貸池可用存量
+- [創建借款單](../v5/new-crypto-loan/fixed/borrow) [更新]
+    - 新增請求參數 `strategyType`：`PARTIAL`（允許部分成交，預設）；`FULL`（僅允許全部成交）
+- [查詢個人借款訂單](../v5/new-crypto-loan/fixed/borrow-order) [更新]
+    - 新增響應字段 `strategyType`：`PARTIAL`（允許部分成交，預設）；`FULL`（僅允許全部成交）
+
+**活期加密貸款**
+- [查詢活期可借存量](../v5/new-crypto-loan/flexible/available-inventory) [新增]
+    - 新增接口，查詢活期借貸池可用存量
+
 ## 2026-08-06
 ### REST API
 - [移倉](../v5/position/move-position) [更新]
     - 新增支持 TradFi 永續合約（包括外匯、股票及大宗商品）
 - [切換持倉模式](../v5/position/position-mode) [更新]
     - USDT 交割、USDC 永續、USDC 交割、反向永續、反向交割均新增支持雙向持倉模式
+- [查詢歷史委託](../v5/order/order-list) [更新]
+    - `smpGroup` 字段類型由 `integer` 變更為 `string`
+- [查詢實時委託](../v5/order/open-order) [更新]
+    - `smpGroup` 字段類型由 `integer` 變更為 `string`
+- [查詢交易行為設置](../v5/account/get-user-setting-config) [更新]
+    - 新增響應字段 `smpType`：用戶 SMP 自成交攔截類型配置。`0`: 默認；`1`: 取消 Taker；`2`: 取消 Maker；`3`: 同時取消
+
+### Websocket API
+- [訂單](../v5/websocket/private/order) [更新]
+    - `smpGroup` 字段類型由 `integer` 變更為 `string`
 
 ## 2026-08-04
 ### REST API
