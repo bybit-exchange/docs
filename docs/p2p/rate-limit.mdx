@@ -13,10 +13,12 @@ We do not recommend running your application at the very edge of these limits in
 in an unexpected violation.
 
 ## API Rate Limit
-The API rate limit is based on the **rolling time window per second and UID**. In other words, it is per second per UID.
+The API rate limit is based on the **rolling time window per second and UID**. In other words, it is per second per UID, counted separately per endpoint.
 
-The default ratelimit for read operations is 10 requests per second, and for write operations it is 5 requests per second.
+You can learn more about the precise function of V5 API ratelimit here: <a href="https://bybit-exchange.github.io/docs/v5/rate-limit">V5 API Rate Limit Rules</a>
 
-Kindly keep in mind that additional ratelimits apply for different endpoints which are subject to change depending on market situation. Here is a list of currently disclosed limits:
+The default ratelimits for read and write is 10 rps and 5 rps. However, kindly refer to `X-Bapi-Limit` HTTP header contents as the authoritative source of ratelimit information for your account.
+
+Current page lists additional ratelimits that apply specifically to P2P API. Precise ratelimits are subject to change at any time:
 
 1) A single advertisement can be modified no more than 10 times within 5 minutes
