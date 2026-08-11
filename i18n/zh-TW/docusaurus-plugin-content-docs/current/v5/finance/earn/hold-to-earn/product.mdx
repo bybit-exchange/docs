@@ -22,8 +22,11 @@ sidebar_position: 1
 |> yields|string|**收益幣種**明細|
 |>> coinName|string|收益幣種|
 |>> apy|string|該收益幣種**昨日 APR**，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`|
+|>> personalApy|string|該收益幣種的個人 APR，含 `%` 後綴，如 `"5.285982%"`。反映用戶套用個人倍率後的實際利率|
+|>> multiplier|string|個人係數，適用於基礎 APR。未持倉時返回 `"1"`|
 |> status|string|產品當前階段，`NotStarted`, `Online`, `Ended`|
 |> apy|string|**昨日綜合APR**，昨日無收益時返回 `"0%"`|
+|> personalApy|string|所有收益幣種個人 APR 之和，含 `%` 後綴，如 `"6.52459%"`|
 |> announcementUrl|string|**活動規則連結**（公告頁 URL）|
 
 :::info
@@ -75,36 +78,45 @@ Host: api.bybit.com
                 "yields": [
                     {
                         "coinName": "USDE",
-                        "apy": "0.210604%"
+                        "apy": "0.210604%",
+                        "personalApy": "0.421208%",
+                        "multiplier": "2"
                     }
                 ],
                 "status": "Online",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",
-                "apy": "0.210604%"
+                "apy": "0.210604%",
+                "personalApy": "0.421208%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"
             },
             {
                 "coinName": "USDTB",
                 "yields": [
                     {
                         "coinName": "USDTB",
-                        "apy": "0.029978%"
+                        "apy": "0.029978%",
+                        "personalApy": "0.029978%",
+                        "multiplier": "1"
                     }
                 ],
                 "status": "Online",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",
-                "apy": "0.029978%"
+                "apy": "0.029978%",
+                "personalApy": "0.029978%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"
             },
             {
                 "coinName": "USD1",
                 "yields": [
                     {
                         "coinName": "WLFI",
-                        "apy": "10%"
+                        "apy": "10%",
+                        "personalApy": "10%",
+                        "multiplier": "1"
                     }
                 ],
                 "status": "Ended",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",
-                "apy": "10%"
+                "apy": "10%",
+                "personalApy": "10%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"
             }
         ]
     },
