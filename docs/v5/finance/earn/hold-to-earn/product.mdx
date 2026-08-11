@@ -22,8 +22,11 @@ None
 |> yields|array|Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)|
 |>> coinName|string|Yield coin name|
 |>> apy|string|Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin|
+|>> personalApy|string|Personal APR for this yield coin, formatted for direct display including the `%` suffix, e.g., `"5.285982%"`. Reflects the user's individual rate after applying their personal multiplier|
+|>> multiplier|string|Personal coefficient applied to the base APR. Returns `"1"` when the user has no position in this product|
 |> status|string|Product stage, `NotStarted`, `Online`, `Ended`|
 |> apy|string|Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday|
+|> personalApy|string|Sum of personal APR across all yield coins, formatted for direct display including the `%` suffix, e.g., `"6.52459%"`|
 |> announcementUrl|string|Activity rules announcement URL|
 
 :::info
@@ -75,36 +78,45 @@ Host: api.bybit.com
                 "yields": [
                     {
                         "coinName": "USDE",
-                        "apy": "0.210604%"
+                        "apy": "0.210604%",
+                        "personalApy": "0.421208%",
+                        "multiplier": "2"
                     }
                 ],
                 "status": "Online",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",
-                "apy": "0.210604%"
+                "apy": "0.210604%",
+                "personalApy": "0.421208%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"
             },
             {
                 "coinName": "USDTB",
                 "yields": [
                     {
                         "coinName": "USDTB",
-                        "apy": "0.029978%"
+                        "apy": "0.029978%",
+                        "personalApy": "0.029978%",
+                        "multiplier": "1"
                     }
                 ],
                 "status": "Online",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",
-                "apy": "0.029978%"
+                "apy": "0.029978%",
+                "personalApy": "0.029978%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"
             },
             {
                 "coinName": "USD1",
                 "yields": [
                     {
                         "coinName": "WLFI",
-                        "apy": "10%"
+                        "apy": "10%",
+                        "personalApy": "10%",
+                        "multiplier": "1"
                     }
                 ],
                 "status": "Ended",
-                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",
-                "apy": "10%"
+                "apy": "10%",
+                "personalApy": "10%",
+                "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"
             }
         ]
     },
