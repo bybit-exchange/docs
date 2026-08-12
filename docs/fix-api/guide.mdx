@@ -74,27 +74,51 @@ Generate your API key at:
 - **Testnet:** https://testnet.bybit.com/app/user/api-management
 - **Mainnet:** https://www.bybit.com/app/user/api-management
 
-Two key types are supported, matching the REST V5 API:
-- **System-generated keys** — use HMAC-SHA256 signing
-- **Self-generated (RSA) keys** — use RSA-SHA256 signing
+Only **Self-generated (RSA) keys is supported, use RSA-SHA256 signing
 
 ### Signature
 
+:::info
+FIX API supports only **self-generated (RSA) keys**. When creating an API key, select "Self-generated API Key", upload your RSA public key (2048 or 4096 bits), and enable "FIX API".
+:::
+
 Compute the signature before sending `Logon (A)`:
 
+**Step 1 — Construct the plaintext**
+
+`expires` is the Unix millisecond timestamp at which this authentication token expires. Set it to your current time plus the validity window (default `+5000 ms`):
+
 ```
-payload = BapiTimestamp + Username + BapiRecvWindow
+expires   = current_unix_ms + 5000
+plaintext = "GET/realtime" + expires
 ```
 
-| Key Type | Algorithm | `RawData` encoding |
-|---|---|---|
-| HMAC | HMAC-SHA256 | Lowercase hex string |
-| RSA | RSA-SHA256 | Base64 string |
+For example, if the current time is `1704096000000`:
 
-Set `RawDataLength (95)` to the byte length of the resulting `RawData (96)` string.
+```
+expires   = 1704096005000
+plaintext = "GET/realtime1704096005000"
+```
+
+**Step 2 — Sign and Base64-encode**
+
+Sign the plaintext using RSA-SHA256 with your RSA private key, then Base64-encode the result:
+
+```
+signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
+```
+
+**Step 3 — Populate Logon fields**
+
+| Field | Value |
+|-------|----|
+| `Username (553)` | Your API Key |
+| `RawData (96)` | Base64-encoded signature from Step 2 |
+| `RawDataLength (95)` | Byte length of the `RawData` string |
+| `BapiTimestamp (30002)` | The current Unix ms timestamp used to derive `expires` (i.e. `expires − 5000`, **not** `expires` itself) |
 
 :::caution
-The `BapiTimestamp (30002)` in the Logon header must satisfy:
+`BapiTimestamp (30002)` is your current timestamp — **not** `expires`. The server validates:
 
 ```
 server_time - recv_window <= BapiTimestamp < server_time + 1000

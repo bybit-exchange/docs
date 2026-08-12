@@ -74,27 +74,51 @@ Client                              Server
 - **測試環境：** https://testnet.bybit.com/app/user/api-management
 - **正式環境：** https://www.bybit.com/app/user/api-management
 
-支援兩種金鑰類型，與 REST V5 API 相同：
-- **系統產生金鑰** — 使用 HMAC-SHA256 簽名
-- **自行產生（RSA）金鑰** — 使用 RSA-SHA256 簽名
+僅支援**自行產生（RSA）金鑰** — 使用 RSA-SHA256 簽名
 
 ### 簽名
 
-在發送 `Logon (A)` 前計算簽名：
+:::info
+FIX API 僅支援**自行產生（RSA）金鑰**進行身分驗證。請在 API 管理頁面建立金鑰時選擇「自行產生的 API 密鑰」，上傳您的 RSA 公鑰（2048 或 4096 bits），並勾選「啟用 FIX API」。
+:::
+
+在發送 `Logon (A)` 前，依照以下步驟計算簽名：
+
+**步驟一：決定 `expires` 並組合待簽名字串**
+
+`expires` 為此次認證的到期時間，單位為 Unix 毫秒時間戳。建議取當前時間加上有效視窗（預設 `+5000 ms`）：
 
 ```
-payload = BapiTimestamp + Username + BapiRecvWindow
+expires   = 當前 Unix 毫秒時間戳 + 5000
+plaintext = "GET/realtime" + expires
 ```
 
-| 金鑰類型 | 演算法 | `RawData` 編碼 |
-|---|---|---|
-| HMAC | HMAC-SHA256 | 小寫十六進位字串 |
-| RSA | RSA-SHA256 | Base64 字串 |
+例如，若當前時間為 `1704096000000`：
 
-將 `RawDataLength (95)` 設為 `RawData (96)` 字串的位元組長度。
+```
+expires   = 1704096005000
+plaintext = "GET/realtime1704096005000"
+```
+
+**步驟二：以 RSA 私鑰簽名並 Base64 編碼**
+
+使用 RSA-SHA256 演算法，以您的私鑰對 `plaintext` 進行簽名，並將結果進行 Base64 編碼：
+
+```
+signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
+```
+
+**步驟三：填入 Logon 欄位**
+
+| 欄位 | 值 |
+|------|----|
+| `Username (553)` | 您的 API Key |
+| `RawData (96)` | 上一步產生的 Base64 簽名字串 |
+| `RawDataLength (95)` | `RawData` 字串的位元組長度 |
+| `BapiTimestamp (30002)` | 計算 `expires` 時使用的當前 Unix 毫秒時間戳（即 `expires - 5000`，**非** `expires` 本身） |
 
 :::caution
-`Logon` 標頭中的 `BapiTimestamp (30002)` 必須滿足：
+`BapiTimestamp (30002)` 為當前時間戳（非 `expires`），伺服器將驗證其滿足：
 
 ```
 server_time - recv_window <= BapiTimestamp < server_time + 1000
