@@ -115,17 +115,6 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | `Username (553)` | Your API Key |
 | `RawData (96)` | Base64-encoded signature from Step 2 |
 | `RawDataLength (95)` | Byte length of the `RawData` string |
-| `BapiTimestamp (30002)` | The current Unix ms timestamp used to derive `expires` (i.e. `expires − 5000`, **not** `expires` itself) |
-
-:::caution
-`BapiTimestamp (30002)` is your current timestamp — **not** `expires`. The server validates:
-
-```
-server_time - recv_window <= BapiTimestamp < server_time + 1000
-```
-
-Use your local NTP-synced clock. Default `BapiRecvWindow (30001)` is `5000` ms, maximum is `60000` ms.
-:::
 
 ## Message Header
 
@@ -153,6 +142,16 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 | 30001 | BapiRecvWindow | N | Validity window in ms (default: `5000`, max: `60000`) |
 | 30004 | Referer | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
 
+:::caution
+`BapiTimestamp (30002)` is your current timestamp — **not** `expires`. The server validates:
+
+```
+server_time - recv_window <= BapiTimestamp < server_time + 1000
+```
+
+Use your local NTP-synced clock. Default `BapiRecvWindow (30001)` is `5000` ms, maximum is `60000` ms.
+:::
+
 **Server → Client (returned in every response):**
 
 | Tag | Field | Description |
@@ -177,10 +176,10 @@ The client sends `Logon` to initiate a session. The server responds with its own
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|
 | 98 | EncryptMethod | Y | Must be `0` (None) |
-| 108 | HeartBtInt | Y | Heartbeat interval in seconds |
-| 553 | Username | N | Your API key |
-| 95 | RawDataLength | N | Byte length of `RawData` |
-| 96 | RawData | N | Signature (see [Signature](#signature)) |
+| 108 | HeartBtInt | Y | Idle timeout in seconds. If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
+| 553 | Username | **Y** | Your API key |
+| 95 | RawDataLength | **Y** | Byte length of `RawData` |
+| 96 | RawData | **Y** | Signature (see [Signature](#signature)) |
 | 141 | ResetSeqNumFlag | N | `Y` to reset sequence numbers on this logon |
 | 25036 | ResponseMode | N | `1` = Everything (default); `2` = OnlyAcks |
 | 30023 | Expires | N | API key expiry timestamp (ms), if applicable |
@@ -200,7 +199,15 @@ The client sends `Logon` to initiate a session. The server responds with its own
 
 ### Heartbeat (MsgType = 0)
 
-Exchanged at the interval negotiated in `HeartBtInt`. If a `TestRequest` is received, the responding `Heartbeat` must echo the same `TestReqID`.
+`Heartbeat` is an idle-keepalive message, not a periodic beacon. It is only needed when no other message has been sent within the `HeartBtInt` window.
+
+**How the idle timer works:**
+
+- Any message sent to the server (order, cancel, amend, etc.) resets the idle timer.
+- Only when the entire `HeartBtInt` window passes with no outbound message should the client send a `Heartbeat`.
+- The server applies the same logic in the other direction: if it receives nothing within `HeartBtInt` seconds, it sends a `TestRequest (1)` to probe liveness.
+- Upon receiving a `TestRequest`, the client must reply with a `Heartbeat` that echoes the same `TestReqID`.
+- If no reply arrives, the server may terminate the session.
 
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|

@@ -115,17 +115,6 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | `Username (553)` | 您的 API Key |
 | `RawData (96)` | 上一步產生的 Base64 簽名字串 |
 | `RawDataLength (95)` | `RawData` 字串的位元組長度 |
-| `BapiTimestamp (30002)` | 計算 `expires` 時使用的當前 Unix 毫秒時間戳（即 `expires - 5000`，**非** `expires` 本身） |
-
-:::caution
-`BapiTimestamp (30002)` 為當前時間戳（非 `expires`），伺服器將驗證其滿足：
-
-```
-server_time - recv_window <= BapiTimestamp < server_time + 1000
-```
-
-請使用本地已同步 NTP 的時鐘。`BapiRecvWindow (30001)` 預設值為 `5000` ms，最大值為 `60000` ms。
-:::
 
 ## 訊息標頭
 
@@ -153,6 +142,16 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | 30001 | BapiRecvWindow | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
 | 30004 | Referer | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
 
+:::caution
+`BapiTimestamp (30002)` 為當前時間戳，伺服器將驗證其滿足：
+
+```
+server_time - recv_window <= BapiTimestamp < server_time + 1000
+```
+
+請使用本地已同步 NTP 的時鐘。`BapiRecvWindow (30001)` 預設值為 `5000` ms，最大值為 `60000` ms。
+:::
+
 **伺服器 → 用戶端（每個回應均包含）：**
 
 | Tag | 欄位 | 說明 |
@@ -177,10 +176,10 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | Tag | 欄位 | 必填 | 說明 |
 |-----|-------|----------|-------------|
 | 98 | EncryptMethod | Y | 必須為 `0`（None）|
-| 108 | HeartBtInt | Y | 心跳間隔（秒）|
-| 553 | Username | N | 您的 API 金鑰 |
-| 95 | RawDataLength | N | `RawData` 的位元組長度 |
-| 96 | RawData | N | 簽名（參見[簽名](#簽名)）|
+| 108 | HeartBtInt | Y | 空閒逾時閾值（秒）。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
+| 553 | Username | **Y** | 您的 API 金鑰 |
+| 95 | RawDataLength | **Y** | `RawData` 的位元組長度 |
+| 96 | RawData | **Y** | 簽名（參見[簽名](#簽名)）|
 | 141 | ResetSeqNumFlag | N | `Y` 表示在此次登入時重置序列號 |
 | 25036 | ResponseMode | N | `1` = Everything（預設）；`2` = OnlyAcks |
 | 30023 | Expires | N | API 金鑰到期時間戳（ms，如適用）|
@@ -200,7 +199,15 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 
 ### Heartbeat（MsgType = 0）
 
-依據 `HeartBtInt` 協商的間隔週期性交換。若收到 `TestRequest`，回應的 `Heartbeat` 必須回傳相同的 `TestReqID`。
+`Heartbeat` 是空閒保活訊息，**不是定時發送的心跳包**。只有在 `HeartBtInt` 時間視窗內沒有發送任何其他訊息時，才需要主動發送。
+
+**空閒計時器的運作方式：**
+
+- 任何傳送給伺服器的訊息（下單、撤單、改單等）都會重置空閒計時器。
+- 只有在整個 `HeartBtInt` 視窗內沒有發出任何訊息時，用戶端才需要發送 `Heartbeat`。
+- 伺服器以相同的邏輯反向監控用戶端：若在 `HeartBtInt` 秒內未收到任何訊息，將發送 `TestRequest (1)` 探測連線狀態。
+- 收到 `TestRequest` 後，用戶端必須回傳帶有相同 `TestReqID` 的 `Heartbeat`。
+- 若無回應，伺服器可能終止連線。
 
 | Tag | 欄位 | 必填 | 說明 |
 |-----|-------|----------|-------------|
