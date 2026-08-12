@@ -1,0 +1,191 @@
+---
+title: Execution Report
+sidebar_label: Execution Report
+sidebar_position: 4
+---
+
+`ExecutionReport (8)` is the central response message in Bybit FIX API. It serves three distinct roles:
+
+| Role | Trigger | `ExecType` |
+|------|---------|-----------|
+| **Order ACK** | Direct response to `NewOrderSingle (D)` | `0` (New) or `8` (Rejected) |
+| **Fill notification** | Order matched (partially or fully) | `F` (Trade) |
+| **Order status push** | Passive order state change | `4`, `5`, `C`, etc. |
+
+Roles 2 and 3 are only delivered when `ResponseMode=1` (Everything). See [ResponseMode](../guide#responsemode).
+
+---
+
+## Order-Level Fields
+
+These fields describe the overall order state and are present in every `ExecutionReport`.
+
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 150 | ExecType | Execution event type (see [ExecType Values](#exectype-values)) |
+| 39 | OrdStatus | Current order status (see [OrdStatus Values](#ordstatus-values)) |
+| 37 | OrderID | Server-assigned order ID. Absent when order creation is rejected |
+| 11 | ClOrdID | Client order ID (`orderLinkId`) |
+| 103 | OrdRejReason | Rejection reason code (when `ExecType=8`) |
+| 58 | Text | Error message or notes |
+| 30010 | Category | Product type (`spot`) |
+| 55 | Symbol | Symbol name |
+| 54 | Side | `1` = Buy; `2` = Sell |
+| 40 | OrdType | `1` = Market; `2` = Limit |
+| 38 | OrderQty | Original order quantity |
+| 44 | Price | Order price |
+| 59 | TimeInForce | Time-in-force |
+| 151 | LeavesQty | Remaining unfilled quantity |
+| 30041 | LeavesValue | Remaining unfilled value |
+| 14 | CumQty | Cumulative filled quantity |
+| 6 | AvgPx | Average fill price |
+| 30038 | CumValue | Cumulative filled value |
+| 60 | TransactTime | Last update timestamp |
+| 30039 | CreateTime | Order creation timestamp |
+| 30040 | CancelType | Cancellation reason (e.g. `CancelByUser`, `CancelBySmp`, `CancelByMMP`) |
+| 30013 | MarketUnit | Market order qty unit (`baseCoin` / `quoteCoin`) |
+| 30014 | IsLeverage | Whether order uses margin (`Y`/`N`) |
+
+**Conditional order / TP-SL fields (echoed from order state):**
+
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 30042 | StopOrderType | `Stop`, `TakeProfit`, `StopLoss`, `OcoOrder` |
+| 99 | StopPx | Trigger price |
+| 30026 | TakeProfitPrice | Take profit trigger price |
+| 30027 | StopLossPrice | Stop loss trigger price |
+| 30030 | TpLimitPrice | TP limit price |
+| 30031 | SlLimitPrice | SL limit price |
+| 30043 | OcoTriggerBy | OCO trigger condition (Spot OCO) |
+
+**SMP fields:**
+
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 30018 | SmpType | Self-Match Prevention type |
+| 30044 | SmpGroup | SMP group ID |
+| 30045 | SmpOrderId | Counterparty order ID that triggered SMP |
+
+**Other fields:**
+
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 30046 | LastPriceOnCreated | Market price at order submission |
+| 30019 | RpiTakerAccess | Whether order matched RPI quotes |
+| 30048 | RpiMatchedQty | Cumulative quantity matched via RPI |
+| 30047 | BlockTradeId | Block trade identifier |
+| 30022 | SlippageToleranceType | Slippage unit |
+| 30034 | SlippageTolerance | Slippage value |
+
+---
+
+## Fill Details Group (NoFills)
+
+Present only when `ExecType=F` (Trade). Each entry in the group represents one individual execution.
+
+`NoFills (30050)` contains the count of fill entries that follow.
+
+| Tag | Field | Required | Description |
+|-----|-------|----------|-------------|
+| 30051 | FillExecID | **Y** | Execution ID (`execId`) |
+| 30052 | FillQty | **Y** | Filled quantity in this execution |
+| 30053 | FillPx | **Y** | Fill price |
+| 30054 | FillTime | **Y** | Fill timestamp |
+| 30055 | FillCommission | N | Fee amount |
+| 30056 | FillCommCurr | N | Fee currency |
+| 30059 | FillCommRate | N | Fee rate |
+| 30057 | FillValue | N | Fill value |
+| 30058 | FillIsMaker | N | `Y` if this fill was the maker side |
+| 30063 | FillExecType | N | `Trade` or `BlockTrade` |
+| 30064 | FillLeavesQty | N | Remaining qty after this fill |
+| 30065 | FillSeq | N | Cross-sequence number for ordering across messages |
+| 30066 | FillBlockTradeId | N | Block trade ID if applicable |
+
+When an order generates multiple fills simultaneously (e.g. sweeps multiple price levels), the `ExecutionReport` contains a single message with `NoFills > 1`. The order-level `CumQty (14)` and `AvgPx (6)` reflect the aggregated state after all fills in the group.
+
+---
+
+## Cumulative Fee Details Group (NoFeeDetails)
+
+Optional. Provides per-coin fee aggregates at the order level.
+
+`NoFeeDetails (30060)` contains the count of fee entries.
+
+| Tag | Field | Required | Description |
+|-----|-------|----------|-------------|
+| 30061 | FeeCoin | **Y** | Fee currency |
+| 30062 | Fee | **Y** | Total fee amount in this currency |
+
+---
+
+## ExecType Values
+
+| Value | Name | Description |
+|-------|------|-------------|
+| `0` | New | Order accepted and resting |
+| `4` | Canceled | Order canceled |
+| `5` | Replaced | Order amended |
+| `6` | PendingCancel | Cancel in progress |
+| `8` | Rejected | Order or request rejected |
+| `A` | PendingNew | New order in progress |
+| `C` | Expired | Order expired |
+| `D` | Deactivated | Conditional order deactivated |
+| `E` | PendingReplace | Amend in progress |
+| `F` | Trade | Order filled (partial or full) |
+| `T` | Triggered | Conditional order triggered |
+| `U` | Untriggered | Conditional order awaiting trigger |
+
+---
+
+## OrdStatus Values
+
+| Value | Name | Description |
+|-------|------|-------------|
+| `0` | New | Active, unfilled |
+| `1` | PartiallyFilled | Partially filled, still active |
+| `2` | Filled | Fully filled |
+| `4` | Canceled | Canceled |
+| `6` | PendingCancel | Cancel request pending |
+| `8` | Rejected | Rejected |
+| `A` | PendingNew | Submission pending |
+| `D` | Deactivated | Conditional order deactivated |
+| `E` | PendingReplace | Amend request pending |
+| `F` | PartiallyFilledCanceled | Partially filled then canceled |
+| `T` | Triggered | Conditional order triggered |
+| `U` | Untriggered | Conditional order awaiting trigger |
+
+---
+
+## Examples
+
+### Order Accepted (ExecType=0)
+
+```
+8=FIX.4.4|9=210|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc123|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0.001|14=0|6=0|30038=0|60=20240101-08:00:01.005|30039=20240101-08:00:01.005|10=xxx|
+```
+
+### Fully Filled (ExecType=F, single fill)
+
+```
+8=FIX.4.4|9=280|35=8|49=BYBIT|56=CLIENT|34=3|52=20240101-08:00:02.050|
+30005=trace-abc124|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=F|39=2|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0|14=0.001|6=50000.00|30038=50.00|60=20240101-08:00:02.040|
+30050=1|30051=exec-001|30052=0.001|30053=50000.00|30054=20240101-08:00:02.040|
+30055=0.000035|30056=USDT|30057=50.00|30058=N|10=xxx|
+```
+
+### Order Rejected (ExecType=8)
+
+```
+8=FIX.4.4|9=130|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc125|30007=120|30008=119|30009=1704096060000|
+11=my-order-002|150=8|39=8|103=99|58=Insufficient balance|10=xxx|
+```
+
+_Note: `|` represents SOH (0x01) in actual wire format._

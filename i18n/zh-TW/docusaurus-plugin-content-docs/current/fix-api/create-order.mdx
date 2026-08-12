@@ -1,0 +1,101 @@
+---
+title: 建立委託單
+sidebar_label: 建立委託單
+sidebar_position: 1
+---
+
+:::info important
+- `Category (30010)` 為必填欄位，且必須為 `spot`。
+- 提供 `ClOrdID (11)` 可設定用戶端委託單 ID（`orderLinkId`），在連線內必須唯一。
+- 對於**市價委託**，請使用 `MarketUnit (30013)` 指定 `OrderQty` 的計價幣別為基礎幣或報價幣。
+- 對於**限價委託**，`Price (44)` 與 `TimeInForce (59)` 為必填。
+- 當委託單被**拒絕**（`ExecType=8`）時，`ExecutionReport` 中不包含 `OrderID (37)`。
+:::
+
+### 訊息類型
+
+`NewOrderSingle` — MsgType `D`
+
+### 請求欄位
+
+| Tag | 欄位 | 必填 | 類型 | 說明 |
+|-----|-------|----------|------|-------------|
+| 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`（大寫）|
+| 54 | Side | **Y** | Char | `1` = 買入；`2` = 賣出 |
+| 40 | OrdType | **Y** | Char | `1` = 市價；`2` = 限價 |
+| 38 | OrderQty | N | Qty | 委託數量，市價委託請參見 `MarketUnit` |
+| 44 | Price | N | Price | 委託價格，限價委託必填 |
+| 11 | ClOrdID | N | String | 用戶端委託單 ID（`orderLinkId`），最多 36 個字元 |
+| 59 | TimeInForce | N | Char | `1`=GTC；`3`=IOC；`4`=FOK；`P`=PostOnly；`R`=RPI，預設為 GTC |
+| 30013 | MarketUnit | N | String | 市價委託時 `OrderQty` 的單位：`baseCoin` 或 `quoteCoin` |
+| 30014 | IsLeverage | N | Boolean | `Y` = 保證金交易；`N` = 現貨（預設）|
+| 30018 | SmpType | N | String | 自我撮合防護：`None`、`CancelTaker`、`CancelMaker`、`CancelBoth` |
+| 30019 | RpiTakerAccess | N | Boolean | 此委託是否可與 RPI 報價撮合 |
+| 30022 | SlippageToleranceType | N | String | 市價委託滑點單位：`TickSize` 或 `Percent` |
+| 30034 | SlippageTolerance | N | String | 最大滑點值，與 `SlippageToleranceType` 搭配使用 |
+| 30024 | OrderFilter | N | String | `Order`（預設）；`tpslOrder`；`StopOrder` |
+| 99 | StopPx | N | Price | 條件委託觸發價格 |
+| 30026 | TakeProfitPrice | N | Price | 止盈觸發價格 |
+| 30027 | StopLossPrice | N | Price | 止損觸發價格 |
+| 30028 | TpOrderType | N | String | 止盈觸發後的委託類型：`Market` 或 `Limit` |
+| 30029 | SlOrderType | N | String | 止損觸發後的委託類型：`Market` 或 `Limit` |
+| 30030 | TpLimitPrice | N | Price | 止盈限價（當 `TpOrderType=Limit` 時必填）|
+| 30031 | SlLimitPrice | N | Price | 止損限價（當 `SlOrderType=Limit` 時必填）|
+
+### 回應
+
+伺服器回應 **`ExecutionReport (8)`**。`ExecType (150)` 欄位表示處理結果：
+
+| ExecType | OrdStatus | 含義 |
+|----------|-----------|---------|
+| `0`（New）| `0`（New）| 委託已接受並在掛單簿等待成交 |
+| `F`（Trade）| `1` / `2` | 委託立即成交（部分或全部）|
+| `8`（Rejected）| `8`（Rejected）| 委託被拒絕，請查看 `OrdRejReason (103)` 與 `Text (58)` |
+
+**主要回應欄位：**
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 37 | OrderID | 伺服器分配的委託單 ID，被拒絕時缺失 |
+| 11 | ClOrdID | 您的 `ClOrdID` 原樣回傳 |
+| 150 | ExecType | 執行事件類型 |
+| 39 | OrdStatus | 目前委託狀態 |
+| 103 | OrdRejReason | 拒絕原因代碼（`ExecType=8` 時）|
+| 58 | Text | 錯誤訊息（`ExecType=8` 時）|
+| 151 | LeavesQty | 剩餘未成交數量 |
+| 14 | CumQty | 累計已成交數量 |
+| 6 | AvgPx | 平均成交價格 |
+| 60 | TransactTime | 最後更新時間 |
+
+若委託立即成交（`ExecType=F`），成交明細請參見[成交回報](execution-report)。
+
+---
+
+### 請求範例
+
+```
+8=FIX.4.4|9=150|35=D|49=CLIENT|56=BYBIT|34=2|52=20240101-08:00:01.000|
+30002=1704096001000|30001=5000|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|11=my-order-001|59=1|10=xxx|
+```
+
+_注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_
+
+### 成功回應範例（已接受）
+
+```
+8=FIX.4.4|9=210|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc123|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0.001|14=0|6=0|30038=0|60=20240101-08:00:01.005|30039=20240101-08:00:01.005|10=xxx|
+```
+
+### 失敗回應範例（已拒絕）
+
+```
+8=FIX.4.4|9=160|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc124|30007=120|30008=119|30009=1704096060000|
+11=my-order-002|150=8|39=8|103=99|58=Insufficient balance|10=xxx|
+```

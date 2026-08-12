@@ -1,0 +1,101 @@
+---
+title: Place Order
+sidebar_label: Place Order
+sidebar_position: 1
+---
+
+:::info important
+- `Category (30010)` is required and must be `spot`.
+- Provide `ClOrdID (11)` to set a client order ID (`orderLinkId`). It must be unique within the session.
+- For **market orders**, use `MarketUnit (30013)` to specify whether `OrderQty` is denominated in base coin or quote coin.
+- For **limit orders**, `Price (44)` and `TimeInForce (59)` are required.
+- `OrderID (37)` is absent in the `ExecutionReport` when the order is **rejected** (`ExecType=8`).
+:::
+
+### Message Type
+
+`NewOrderSingle` — MsgType `D`
+
+### Request Fields
+
+| Tag | Field | Required | Type | Description |
+|-----|-------|----------|------|-------------|
+| 30010 | Category | **Y** | String | Product type. Currently `spot` only |
+| 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
+| 54 | Side | **Y** | Char | `1` = Buy; `2` = Sell |
+| 40 | OrdType | **Y** | Char | `1` = Market; `2` = Limit |
+| 38 | OrderQty | N | Qty | Order quantity. See `MarketUnit` for market orders |
+| 44 | Price | N | Price | Order price. Required for Limit orders |
+| 11 | ClOrdID | N | String | Client order ID (`orderLinkId`). Max 36 characters |
+| 59 | TimeInForce | N | Char | `1`=GTC; `3`=IOC; `4`=FOK; `P`=PostOnly; `R`=RPI. Defaults to GTC |
+| 30013 | MarketUnit | N | String | Unit for `OrderQty` in market orders: `baseCoin` or `quoteCoin` |
+| 30014 | IsLeverage | N | Boolean | `Y` = margin trading; `N` = spot (default) |
+| 30018 | SmpType | N | String | Self-Match Prevention: `None`, `CancelTaker`, `CancelMaker`, `CancelBoth` |
+| 30019 | RpiTakerAccess | N | Boolean | Whether this order may match against RPI quotes |
+| 30022 | SlippageToleranceType | N | String | Slippage unit for market orders: `TickSize` or `Percent` |
+| 30034 | SlippageTolerance | N | String | Max slippage value, used with `SlippageToleranceType` |
+| 30024 | OrderFilter | N | String | `Order` (default); `tpslOrder`; `StopOrder` |
+| 99 | StopPx | N | Price | Trigger price for conditional orders |
+| 30026 | TakeProfitPrice | N | Price | Take profit trigger price |
+| 30027 | StopLossPrice | N | Price | Stop loss trigger price |
+| 30028 | TpOrderType | N | String | TP order type when triggered: `Market` or `Limit` |
+| 30029 | SlOrderType | N | String | SL order type when triggered: `Market` or `Limit` |
+| 30030 | TpLimitPrice | N | Price | TP limit price (required when `TpOrderType=Limit`) |
+| 30031 | SlLimitPrice | N | Price | SL limit price (required when `SlOrderType=Limit`) |
+
+### Response
+
+The server responds with an **`ExecutionReport (8)`**. The `ExecType (150)` field indicates the outcome:
+
+| ExecType | OrdStatus | Meaning |
+|----------|-----------|---------|
+| `0` (New) | `0` (New) | Order accepted and resting on the book |
+| `F` (Trade) | `1` / `2` | Order immediately filled (partial or full) |
+| `8` (Rejected) | `8` (Rejected) | Order rejected; see `OrdRejReason (103)` and `Text (58)` |
+
+**Key response fields:**
+
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 37 | OrderID | Server-assigned order ID. Absent when rejected |
+| 11 | ClOrdID | Echo of your `ClOrdID` |
+| 150 | ExecType | Execution event type |
+| 39 | OrdStatus | Current order status |
+| 103 | OrdRejReason | Rejection reason code (when `ExecType=8`) |
+| 58 | Text | Error message (when `ExecType=8`) |
+| 151 | LeavesQty | Remaining unfilled quantity |
+| 14 | CumQty | Total filled quantity |
+| 6 | AvgPx | Average fill price |
+| 60 | TransactTime | Last update time |
+
+For fill details when the order is immediately matched (`ExecType=F`), see [ExecutionReport](execution-report).
+
+---
+
+### Request Example
+
+```
+8=FIX.4.4|9=150|35=D|49=CLIENT|56=BYBIT|34=2|52=20240101-08:00:01.000|
+30002=1704096001000|30001=5000|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|11=my-order-001|59=1|10=xxx|
+```
+
+_Note: `|` represents SOH (0x01) in actual wire format._
+
+### Response Example (Accepted)
+
+```
+8=FIX.4.4|9=210|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc123|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0.001|14=0|6=0|30038=0|60=20240101-08:00:01.005|30039=20240101-08:00:01.005|10=xxx|
+```
+
+### Response Example (Rejected)
+
+```
+8=FIX.4.4|9=160|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc124|30007=120|30008=119|30009=1704096060000|
+11=my-order-002|150=8|39=8|103=99|58=Insufficient balance|10=xxx|
+```

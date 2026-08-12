@@ -1,0 +1,191 @@
+---
+title: 成交回報
+sidebar_label: 成交回報
+sidebar_position: 4
+---
+
+`ExecutionReport (8)` 是 Bybit FIX API 的核心回應訊息，具有三種不同用途：
+
+| 用途 | 觸發條件 | `ExecType` |
+|------|---------|-----------|
+| **委託確認（Order ACK）** | `NewOrderSingle (D)` 的直接回應 | `0`（New）或 `8`（Rejected）|
+| **成交通知** | 委託成交（部分或全部）| `F`（Trade）|
+| **委託狀態推播** | 被動委託狀態變更 | `4`、`5`、`C` 等 |
+
+用途 2 與 3 僅在 `ResponseMode=1`（Everything）時推送。參見 [ResponseMode](../guide#responsemode)。
+
+---
+
+## 委託層級欄位
+
+這些欄位描述整體委託狀態，在每條 `ExecutionReport` 中均包含。
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 150 | ExecType | 執行事件類型（參見 [ExecType 值](#exectype-值)）|
+| 39 | OrdStatus | 目前委託狀態（參見 [OrdStatus 值](#ordstatus-值)）|
+| 37 | OrderID | 伺服器委託單 ID，委託建立被拒絕時缺失 |
+| 11 | ClOrdID | 用戶端委託單 ID（`orderLinkId`）|
+| 103 | OrdRejReason | 拒絕原因代碼（`ExecType=8` 時）|
+| 58 | Text | 錯誤訊息或備注 |
+| 30010 | Category | 產品類型（`spot`）|
+| 55 | Symbol | 交易對名稱 |
+| 54 | Side | `1` = 買入；`2` = 賣出 |
+| 40 | OrdType | `1` = 市價；`2` = 限價 |
+| 38 | OrderQty | 原始委託數量 |
+| 44 | Price | 委託價格 |
+| 59 | TimeInForce | 委託有效期 |
+| 151 | LeavesQty | 剩餘未成交數量 |
+| 30041 | LeavesValue | 剩餘未成交金額 |
+| 14 | CumQty | 累計已成交數量 |
+| 6 | AvgPx | 平均成交價格 |
+| 30038 | CumValue | 累計已成交金額 |
+| 60 | TransactTime | 最後更新時間 |
+| 30039 | CreateTime | 委託建立時間 |
+| 30040 | CancelType | 取消原因（如 `CancelByUser`、`CancelBySmp`、`CancelByMMP`）|
+| 30013 | MarketUnit | 市價委託數量單位（`baseCoin` / `quoteCoin`）|
+| 30014 | IsLeverage | 是否使用保證金（`Y`/`N`）|
+
+**條件委託 / 止盈止損欄位（回傳委託狀態）：**
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 30042 | StopOrderType | `Stop`、`TakeProfit`、`StopLoss`、`OcoOrder` |
+| 99 | StopPx | 觸發價格 |
+| 30026 | TakeProfitPrice | 止盈觸發價格 |
+| 30027 | StopLossPrice | 止損觸發價格 |
+| 30030 | TpLimitPrice | 止盈限價 |
+| 30031 | SlLimitPrice | 止損限價 |
+| 30043 | OcoTriggerBy | OCO 觸發條件（現貨 OCO）|
+
+**SMP 欄位：**
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 30018 | SmpType | 自我撮合防護類型 |
+| 30044 | SmpGroup | SMP 群組 ID |
+| 30045 | SmpOrderId | 觸發 SMP 的對手方委託單 ID |
+
+**其他欄位：**
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 30046 | LastPriceOnCreated | 委託提交時的市場價格 |
+| 30019 | RpiTakerAccess | 委託是否與 RPI 報價撮合 |
+| 30048 | RpiMatchedQty | 透過 RPI 撮合的累計數量 |
+| 30047 | BlockTradeId | 大宗交易識別碼 |
+| 30022 | SlippageToleranceType | 滑點單位 |
+| 30034 | SlippageTolerance | 滑點值 |
+
+---
+
+## 成交明細群組（NoFills）
+
+僅在 `ExecType=F`（Trade）時存在，群組中每一條目代表一次個別成交。
+
+`NoFills (30050)` 包含後續成交條目的數量。
+
+| Tag | 欄位 | 必填 | 說明 |
+|-----|-------|----------|-------------|
+| 30051 | FillExecID | **Y** | 執行 ID（`execId`）|
+| 30052 | FillQty | **Y** | 本次成交數量 |
+| 30053 | FillPx | **Y** | 成交價格 |
+| 30054 | FillTime | **Y** | 成交時間 |
+| 30055 | FillCommission | N | 手續費金額 |
+| 30056 | FillCommCurr | N | 手續費幣別 |
+| 30059 | FillCommRate | N | 手續費率 |
+| 30057 | FillValue | N | 成交金額 |
+| 30058 | FillIsMaker | N | `Y` 表示此次成交為掛單方 |
+| 30063 | FillExecType | N | `Trade` 或 `BlockTrade` |
+| 30064 | FillLeavesQty | N | 本次成交後的剩餘數量 |
+| 30065 | FillSeq | N | 用於跨訊息排序的跨序列號 |
+| 30066 | FillBlockTradeId | N | 大宗交易 ID（如適用）|
+
+當一筆委託同時產生多次成交（如掃過多個價位）時，`ExecutionReport` 包含單條訊息且 `NoFills > 1`。委託層級的 `CumQty (14)` 與 `AvgPx (6)` 反映群組內所有成交完成後的聚合狀態。
+
+---
+
+## 累計手續費群組（NoFeeDetails）
+
+選填，提供委託層級按幣別的手續費彙總。
+
+`NoFeeDetails (30060)` 包含手續費條目的數量。
+
+| Tag | 欄位 | 必填 | 說明 |
+|-----|-------|----------|-------------|
+| 30061 | FeeCoin | **Y** | 手續費幣別 |
+| 30062 | Fee | **Y** | 以此幣別計算的總手續費金額 |
+
+---
+
+## ExecType 值
+
+| 值 | 名稱 | 說明 |
+|-------|------|-------------|
+| `0` | New | 委託已接受並在掛單簿等待 |
+| `4` | Canceled | 委託已取消 |
+| `5` | Replaced | 委託已修改 |
+| `6` | PendingCancel | 取消中 |
+| `8` | Rejected | 委託或請求被拒絕 |
+| `A` | PendingNew | 新委託處理中 |
+| `C` | Expired | 委託已過期 |
+| `D` | Deactivated | 條件委託已停用 |
+| `E` | PendingReplace | 修改中 |
+| `F` | Trade | 委託成交（部分或全部）|
+| `T` | Triggered | 條件委託已觸發 |
+| `U` | Untriggered | 條件委託等待觸發 |
+
+---
+
+## OrdStatus 值
+
+| 值 | 名稱 | 說明 |
+|-------|------|-------------|
+| `0` | New | 有效，未成交 |
+| `1` | PartiallyFilled | 部分成交，仍有效 |
+| `2` | Filled | 全部成交 |
+| `4` | Canceled | 已取消 |
+| `6` | PendingCancel | 取消請求處理中 |
+| `8` | Rejected | 已拒絕 |
+| `A` | PendingNew | 委託提交處理中 |
+| `D` | Deactivated | 條件委託已停用 |
+| `E` | PendingReplace | 修改請求處理中 |
+| `F` | PartiallyFilledCanceled | 部分成交後取消 |
+| `T` | Triggered | 條件委託已觸發 |
+| `U` | Untriggered | 條件委託等待觸發 |
+
+---
+
+## 範例
+
+### 委託已接受（ExecType=0）
+
+```
+8=FIX.4.4|9=210|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc123|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0.001|14=0|6=0|30038=0|60=20240101-08:00:01.005|30039=20240101-08:00:01.005|10=xxx|
+```
+
+### 全部成交（ExecType=F，單筆成交）
+
+```
+8=FIX.4.4|9=280|35=8|49=BYBIT|56=CLIENT|34=3|52=20240101-08:00:02.050|
+30005=trace-abc124|30007=120|30008=119|30009=1704096060000|
+37=1234567890123456|11=my-order-001|150=F|39=2|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001|44=50000.00|59=1|
+151=0|14=0.001|6=50000.00|30038=50.00|60=20240101-08:00:02.040|
+30050=1|30051=exec-001|30052=0.001|30053=50000.00|30054=20240101-08:00:02.040|
+30055=0.000035|30056=USDT|30057=50.00|30058=N|10=xxx|
+```
+
+### 委託被拒絕（ExecType=8）
+
+```
+8=FIX.4.4|9=130|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+30005=trace-abc125|30007=120|30008=119|30009=1704096060000|
+11=my-order-002|150=8|39=8|103=99|58=Insufficient balance|10=xxx|
+```
+
+_注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_

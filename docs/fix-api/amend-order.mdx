@@ -1,0 +1,77 @@
+---
+title: Amend Order
+sidebar_label: Amend Order
+sidebar_position: 2
+---
+
+:::info important
+- Bybit uses `AtomicReplaceRequest (XAR)` for order amendment. The standard FIX `OrderCancelReplaceRequest (G)` is **not** supported.
+- Provide either `OrderID (37)` or `ClOrdID (11)` to identify the order. If both are provided and they conflict, `OrderID` takes precedence.
+- Only include fields that need to change. Omitted fields retain their current values.
+- Only **unfilled** or **partially filled** orders can be amended.
+:::
+
+### Message Type
+
+`AtomicReplaceRequest` — MsgType `XAR`
+
+### Request Fields
+
+| Tag | Field | Required | Type | Description |
+|-----|-------|----------|------|-------------|
+| 30010 | Category | **Y** | String | Product type. Currently `spot` only |
+| 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
+| 37 | OrderID | N | String | Server-assigned order ID. At least one of `OrderID` or `ClOrdID` required |
+| 11 | ClOrdID | N | String | Client order ID. At least one of `OrderID` or `ClOrdID` required |
+| 38 | OrderQty | N | Qty | New order quantity |
+| 44 | Price | N | Price | New order price |
+| 99 | StopPx | N | Price | New trigger price for conditional orders |
+| 30026 | TakeProfitPrice | N | Price | New take profit trigger price |
+| 30027 | StopLossPrice | N | Price | New stop loss trigger price |
+| 30030 | TpLimitPrice | N | Price | New TP limit price |
+| 30031 | SlLimitPrice | N | Price | New SL limit price |
+
+### Response
+
+The server responds with an **`OrderAmendAck (XAA)`**:
+
+| Tag | Field | Required | Description |
+|-----|-------|----------|-------------|
+| 37 | OrderID | N | Server-assigned order ID |
+| 11 | ClOrdID | N | Client order ID |
+| 150 | ExecType | **Y** | `5` = Replaced (success); `8` = Rejected |
+| 39 | OrdStatus | **Y** | Current order status |
+| 103 | OrdRejReason | N | Rejection reason code (when `ExecType=8`) |
+| 58 | Text | N | Error message (when `ExecType=8`) |
+
+:::info
+`OrderAmendAck` carries only minimal state fields. The server does not return full order details (qty, price, etc.) in the amend response. To verify the updated order state, rely on the subsequent `ExecutionReport` push (when `ResponseMode=1`) or query via REST.
+:::
+
+---
+
+### Request Example
+
+```
+8=FIX.4.4|9=120|35=XAR|49=CLIENT|56=BYBIT|34=3|52=20240101-08:01:00.000|
+30002=1704096060000|30001=5000|
+30010=spot|55=BTCUSDT|37=1234567890123456|44=51000.00|10=xxx|
+```
+
+_Note: `|` represents SOH (0x01) in actual wire format._
+
+### Response Example (Accepted)
+
+```
+8=FIX.4.4|9=100|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
+30005=trace-def456|30007=120|30008=118|30009=1704096120000|
+37=1234567890123456|150=5|39=0|10=xxx|
+```
+
+### Response Example (Rejected)
+
+```
+8=FIX.4.4|9=110|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
+30005=trace-def457|30007=120|30008=118|30009=1704096120000|
+37=1234567890123456|150=8|39=0|103=99|58=Order not found|10=xxx|
+```

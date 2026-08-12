@@ -1,0 +1,70 @@
+---
+title: 取消委託單
+sidebar_label: 取消委託單
+sidebar_position: 3
+---
+
+:::info important
+- 提供 `OrderID (37)` 或 `ClOrdID (11)` 其中之一來識別委託單。若兩者均提供且不一致，以 `OrderID` 為準。
+- 僅可取消**未成交**或**部分成交**的委託單。
+- 對於現貨交易，請使用 `OrderFilter (30024)` 區分普通委託、止盈止損委託與條件委託。
+:::
+
+### 訊息類型
+
+`OrderCancelRequest` — MsgType `F`
+
+### 請求欄位
+
+| Tag | 欄位 | 必填 | 類型 | 說明 |
+|-----|-------|----------|------|-------------|
+| 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`（大寫）|
+| 37 | OrderID | N | String | 伺服器委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
+| 11 | ClOrdID | N | String | 用戶端委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
+| 30024 | OrderFilter | N | String | 僅限現貨。`Order`（預設）；`tpslOrder`；`StopOrder` |
+
+### 回應
+
+伺服器回應 **`OrderCancelAck (XCA)`**：
+
+| Tag | 欄位 | 必填 | 說明 |
+|-----|-------|----------|-------------|
+| 37 | OrderID | N | 伺服器委託單 ID |
+| 11 | ClOrdID | N | 用戶端委託單 ID |
+| 150 | ExecType | **Y** | `4` = Canceled（成功）；`8` = Rejected |
+| 39 | OrdStatus | **Y** | 目前委託狀態 |
+| 103 | OrdRejReason | N | 拒絕原因代碼（`ExecType=8` 時）|
+| 58 | Text | N | 錯誤訊息（`ExecType=8` 時）|
+
+:::info
+`OrderCancelAck` 僅包含最小狀態欄位，不返回完整委託資訊。若 `ResponseMode=1`，後續會有 `ExecType=4`（Canceled）的 `ExecutionReport` 推播以確認最終委託狀態。
+:::
+
+---
+
+### 請求範例
+
+```
+8=FIX.4.4|9=105|35=F|49=CLIENT|56=BYBIT|34=4|52=20240101-08:02:00.000|
+30002=1704096120000|30001=5000|
+30010=spot|55=BTCUSDT|37=1234567890123456|10=xxx|
+```
+
+_注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_
+
+### 成功回應範例（已取消）
+
+```
+8=FIX.4.4|9=95|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
+30005=trace-ghi789|30007=120|30008=117|30009=1704096180000|
+37=1234567890123456|150=4|39=4|10=xxx|
+```
+
+### 失敗回應範例（已拒絕）
+
+```
+8=FIX.4.4|9=110|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
+30005=trace-ghi790|30007=120|30008=117|30009=1704096180000|
+37=1234567890123456|150=8|39=0|103=99|58=Order already filled|10=xxx|
+```

@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Order Domain FIX 4.4 Schema
+  Complete order lifecycle: requests (create/amend/cancel) + responses (ack/execution reports) + pushes (order updates)
+
+  Covers:
+    - Order requests: NewOrderSingle, AtomicReplaceRequest, OrderCancelRequest, BatchCancelOrderRequest
+    - Order responses: ExecutionReport (new order + fills), OrderCancelAck, OrderAmendAck, BatchCancelOrderAck
+    - Order pushes: Order status updates, trade fills
+
+  Design decisions:
+    - New order ACK + fills + order pushes → ExecutionReport (8) (full order state)
+    - Cancel ACK → OrderCancelAck (XCA), Amend ACK → OrderAmendAck (XAA) (minimal fields, server lacks full state)
+    - Batch cancel → XBX request + XBXA ACK (batch create/amend not supported)
+    - Rate limit fields moved to header (server fills on every response)
+    - Client order ID → ClOrdID (11)
+    - symbolId (SBE) → Symbol (55) STRING
+
+  Custom tag allocation:
+    30000-30009:  Session/connection fields
+      30001: BapiRecvWindow
+      30002: BapiTimestamp (X-BAPI-TIMESTAMP)
+      30003: ConnId
+      30004: Referer
+      30005: TraceId
+      30007: BapiLimit
+      30008: BapiLimitStatus
+      30009: BapiLimitResetTimestamp
+    30010-30034:  Order domain fields (request + shared)
+    30035-30049:  Execution report order-level fields
+      30040: CancelType
+      30041: LeavesValue
+      30042: StopOrderType
+      30043: OcoTriggerBy
+      30044: SmpGroup
+      30045: SmpOrderId
+      30046: LastPriceOnCreated
+      30047: BlockTradeId
+      30048: RpiMatchedQty
+    30050-30066:  Fill details group fields
+    30060-30062:  Cumulative fee details group fields
+    30100+:       Reserved for market domain (market.xml)
+
+  Currently supports: SPOT category only
+-->
+<fix type="FIX" major="4" minor="4" servicepack="0">
+
+  <header>
+    <field name="BeginString"             required="Y"/>
+    <field name="BodyLength"              required="Y"/>
+    <field name="MsgType"                 required="Y"/>
+    <field name="SenderCompID"            required="Y"/>
+    <field name="TargetCompID"            required="Y"/>
+    <field name="MsgSeqNum"               required="Y"/>
+    <field name="SendingTime"             required="Y"/>
+    <!-- client request -->
+    <field name="BapiTimestamp"           required="N"/>
+    <field name="BapiRecvWindow"          required="N"/>
+    <field name="Referer"                 required="N"/>
+    <!-- server response -->
+    <field name="TraceId"                 required="N"/>
+    <field name="BapiLimit"               required="N"/>
+    <field name="BapiLimitStatus"         required="N"/>
+    <field name="BapiLimitResetTimestamp" required="N"/>
+  </header>
+
+  <trailer>
+    <field name="CheckSum" required="Y"/>
+  </trailer>
+
+  <!-- ============================================================ -->
+  <!-- Components                                                    -->
+  <!-- ============================================================ -->
+  <components>
+
+
+    <!--
+      Base fields for ExecutionReport.
+
+      Maps to order pushes:
+        - Order push (order status changes) → ExecType: 0/4/5/8/A/C/E
+        - Execution push (trade fills)       → ExecType: F
+
+      Used in:
+        - ExecutionReport (8): new order ACK, order updates, and trade fills
+
+      Note: Cancel/Amend responses use the lighter OrderModifyAck (XMA)
+      since server cannot provide full order state for those operations.
+
+      Covers both FIX standard fields and custom extensions.
+    -->
+    <component name="ExecReportFields">
+      <!-- Identifiers -->
+      <field name="OrderID"       required="N"/>  <!-- Order field: orderId (absent when order creation rejected) -->
+      <field name="ClOrdID"       required="N"/>  <!-- Order field: orderLinkId -->
+
+      <!-- Status -->
+      <field name="ExecType"      required="Y"/>  <!-- New/Trade/Canceled/Replaced/Rejected/PendingNew/PendingCancel/PendingReplace -->
+      <field name="OrdStatus"     required="Y"/>  <!-- Order field: orderStatus (New/PartiallyFilled/Filled/Canceled/PartiallyFilledCanceled/Rejected) -->
+      <field name="OrdRejReason"  required="N"/>  <!-- Order field: rejectReason -->
+      <field name="CancelType"    required="N"/>  <!-- Order field: cancelType (CancelByUser/CancelBySmp/CancelByMMP/...) -->
+
+      <!-- Order details -->
+      <field name="Category"      required="N"/>  <!-- Order field: category (spot) -->
+      <field name="Symbol"        required="N"/>  <!-- Order field: symbol -->
+      <field name="Side"          required="N"/>  <!-- Order field: side (Buy/Sell) -->
+      <field name="OrdType"       required="N"/>  <!-- Order field: orderType (Market/Limit) -->
+      <field name="OrderQty"      required="N"/>  <!-- Order field: qty -->
+      <field name="Price"         required="N"/>  <!-- Order field: price (order price) -->
+      <field name="TimeInForce"   required="N"/>  <!-- Order field: timeInForce -->
+      <field name="MarketUnit"    required="N"/>  <!-- Order field: marketUnit -->
+      <field name="IsLeverage"    required="N"/>  <!-- Order field: isLeverage (0/1) -->
+      <field name="BlockTradeId"  required="N"/>  <!-- Order field: blockTradeId -->
+
+      <!-- Conditional order / TP-SL (echoed back from order state) -->
+      <field name="StopOrderType"      required="N"/>  <!-- Order field: stopOrderType (Stop/TakeProfit/StopLoss/OcoOrder) -->
+      <field name="StopPx"             required="N"/>  <!-- Order field: triggerPrice -->
+      <field name="TakeProfitPrice"    required="N"/>  <!-- Order field: takeProfit -->
+      <field name="StopLossPrice"      required="N"/>  <!-- Order field: stopLoss -->
+      <field name="TpLimitPrice"       required="N"/>  <!-- Order field: tpLimitPrice -->
+      <field name="SlLimitPrice"       required="N"/>  <!-- Order field: slLimitPrice -->
+      <field name="OcoTriggerBy"       required="N"/>  <!-- Order field: ocoTriggerBy (spot OCO) -->
+
+      <!-- Cumulative execution (order-level aggregates) -->
+      <field name="LeavesQty"     required="N"/>  <!-- Order field: leavesQty (remaining unfilled) -->
+      <field name="LeavesValue"   required="N"/>  <!-- Order field: leavesValue (remaining unfilled value) -->
+      <field name="CumQty"        required="N"/>  <!-- Order field: cumExecQty (total filled) -->
+      <field name="AvgPx"         required="N"/>  <!-- Order field: avgPrice (average fill price) -->
+      <field name="CumValue"      required="N"/>  <!-- Order field: cumExecValue (total value) -->
+
+      <!-- Timestamps -->
+      <field name="TransactTime"  required="N"/>  <!-- Order field: updatedTime -->
+      <field name="CreateTime"    required="N"/>  <!-- Order field: createdTime -->
+
+      <!-- SMP (Self-Match Prevention) -->
+      <field name="SmpType"       required="N"/>  <!-- Order field: smpType -->
+      <field name="SmpGroup"      required="N"/>  <!-- Order field: smpGroup -->
+      <field name="SmpOrderId"    required="N"/>  <!-- Order field: smpOrderId (counterparty order triggering SMP) -->
+
+      <!-- Slippage -->
+      <field name="SlippageToleranceType" required="N"/>  <!-- Order field: slippageToleranceType -->
+      <field name="SlippageTolerance"     required="N"/>  <!-- Order field: slippageTolerance -->
+
+      <!-- Reference prices -->
+      <field name="LastPriceOnCreated" required="N"/>  <!-- Order field: lastPriceOnCreated (market price at submission) -->
+
+      <!-- RPI -->
+      <field name="RpiTakerAccess"  required="N"/>  <!-- Order field: rpiTakerAccess -->
+      <field name="RpiMatchedQty"   required="N"/>  <!-- Order field: rpiMatchedQty (cumulative RPI matched qty) -->
+
+      <!-- Optional text -->
+      <field name="Text"          required="N"/>  <!-- Error message or notes -->
+    </component>
+
+  </components>
+
+  <!-- ============================================================ -->
+  <!-- Messages                                                      -->
+  <!-- ============================================================ -->
+  <messages>
+
+    <!-- ── Admin (aligned with Binance) ─────────────────────────── -->
+
+    <message name="Heartbeat" msgtype="0" msgcat="admin">
+      <field name="TestReqID" required="N"/>
+    </message>
+
+    <message name="TestRequest" msgtype="1" msgcat="admin">
+      <field name="TestReqID" required="Y"/>
+    </message>
+
+    <message name="Reject" msgtype="3" msgcat="admin">
+      <field name="RefSeqNum"          required="N"/>
+      <field name="RefTagID"           required="N"/>
+      <field name="RefMsgType"         required="N"/>
+      <field name="SessionRejectReason" required="N"/>
+      <field name="Text"               required="N"/>
+    </message>
+
+    <message name="Logout" msgtype="5" msgcat="admin">
+      <field name="Text" required="N"/>
+    </message>
+
+    <!--
+      Covers SBE AuthReq (id=1) / AuthResp (id=2).
+      Client sends: Username=apiKey, RawData=signature, ResponseMode.
+      Server acks with ConnId.
+    -->
+    <message name="Logon" msgtype="A" msgcat="admin">
+      <field name="EncryptMethod"    required="Y"/>
+      <field name="HeartBtInt"       required="Y"/>
+      <field name="Username"         required="N"/>
+      <field name="RawDataLength"    required="N"/>
+      <field name="RawData"          required="N"/>
+      <field name="ResetSeqNumFlag"  required="N"/>
+      <field name="ResponseMode"     required="N"/>
+      <field name="Expires"          required="N"/>
+      <field name="ConnId"           required="N"/>
+    </message>
+
+    <!-- ── Single order requests ─────────────────────────────────── -->
+
+    <!--
+      Create a new order.
+
+      Key fields:
+        - IsLeverage: whether to use leverage/margin trading
+        - MarketUnit: BaseCoin/QuoteCoin for market orders
+        - SmpType: Self-Match Prevention (CancelTaker/CancelMaker/CancelBoth)
+        - RpiTakerAccess: whether order can match with RPI quotes
+        - SlippageToleranceType/SlippageTolerance: slippage control for market orders
+        - OrderFilter: Order/tpslOrder/StopOrder
+        - StopPx: trigger price for conditional orders (FIX standard tag 99)
+        - TakeProfitPrice/StopLossPrice: TP/SL prices
+        - TpOrderType/SlOrderType: Market/Limit
+        - TpLimitPrice/SlLimitPrice: limit prices when TP/SL order type is Limit
+    -->
+    <message name="NewOrderSingle" msgtype="D" msgcat="app">
+      <field name="Category"      required="Y"/>
+      <field name="Symbol"           required="Y"/>
+      <field name="Side"             required="Y"/>
+      <field name="OrdType"          required="Y"/>
+      <field name="OrderQty"         required="N"/>
+      <field name="Price"            required="N"/>
+      <field name="ClOrdID"          required="N"/>
+      <field name="TimeInForce"      required="N"/>
+      <field name="MarketUnit"            required="N"/>
+      <field name="IsLeverage"            required="N"/>
+      <field name="SmpType"               required="N"/>
+      <field name="RpiTakerAccess"        required="N"/>
+      <field name="SlippageToleranceType" required="N"/>
+      <field name="SlippageTolerance"     required="N"/>
+      <!-- Conditional order and TP/SL fields -->
+      <field name="OrderFilter"      required="N"/>
+      <field name="StopPx"           required="N"/>
+      <field name="TakeProfitPrice"  required="N"/>
+      <field name="StopLossPrice"    required="N"/>
+      <field name="TpOrderType"      required="N"/>
+      <field name="SlOrderType"      required="N"/>
+      <field name="TpLimitPrice"     required="N"/>
+      <field name="SlLimitPrice"     required="N"/>
+    </message>
+
+    <!--
+      Atomic order replace (preserves queue priority when possible).
+      Covers order amendment for spot trading.
+
+      Must provide either OrderID or ClOrdID to identify the order.
+      Only include fields that need to be changed:
+        - OrderQty/Price: modify order quantity/price
+        - StopPx: modify conditional order trigger price
+        - TakeProfitPrice/StopLossPrice: modify TP/SL trigger prices
+        - TpLimitPrice/SlLimitPrice: modify TP/SL limit prices (when order type is Limit)
+
+      Note: FIX standard OrderCancelReplaceRequest (G) is NOT supported.
+      This is an atomic replace, not cancel-then-create.
+    -->
+    <message name="AtomicReplaceRequest" msgtype="XAR" msgcat="app">
+      <field name="Category"         required="Y"/>
+      <field name="Symbol"           required="Y"/>
+      <field name="OrderID"          required="N"/>
+      <field name="ClOrdID"          required="N"/>
+      <field name="OrderQty"         required="N"/>
+      <field name="Price"            required="N"/>
+      <field name="StopPx"           required="N"/>
+      <field name="TakeProfitPrice"  required="N"/>
+      <field name="StopLossPrice"    required="N"/>
+      <field name="TpLimitPrice"     required="N"/>
+      <field name="SlLimitPrice"     required="N"/>
+    </message>
+
+    <!--
+      Cancel an existing order.
+      Covers order cancellation for spot trading.
+
+      Must provide either OrderID or ClOrdID to identify the order.
+      If both provided and mismatched, OrderID takes precedence.
+
+      OrderFilter (spot only):
+        - Order: cancel normal order (default)
+        - tpslOrder: cancel TP/SL order
+        - StopOrder: cancel conditional order
+    -->
+    <message name="OrderCancelRequest" msgtype="F" msgcat="app">
+      <field name="Category"    required="Y"/>
+      <field name="Symbol"      required="Y"/>
+      <field name="OrderID"     required="N"/>
+      <field name="ClOrdID"     required="N"/>
+      <field name="OrderFilter" required="N"/>
+    </message>
+
+    <!--
+      Execution report with order state and fill details.
+
+      Structure:
+        - ExecReportFields: Order-level state (cumulative values, order status)
+        - NoFills group: Individual fill details (optional, only when ExecType=F)
+
+      Usage scenarios:
+        1. Order state change (New/Canceled/Rejected): ExecReportFields only, NoFills=0
+        2. Single fill: ExecReportFields + NoFills=1
+        3. Multiple fills (batch): ExecReportFields + NoFills=N (N > 1)
+
+      ExecType semantics:
+        - ExecType=0 (New): Order accepted, NoFills=0
+        - ExecType=F (Trade): Order filled, NoFills >= 1 (contains fill details)
+        - ExecType=4 (Canceled): Order canceled, NoFills=0
+        - ExecType=5 (Replaced): Order amended, NoFills=0
+        - ExecType=8 (Rejected): Order rejected, NoFills=0
+
+      The order-level CumQty/AvgPx in ExecReportFields reflects the final state
+      after all fills in the NoFills group are applied.
+    -->
+    <message name="ExecutionReport" msgtype="8" msgcat="app">
+      <component name="ExecReportFields"/>
+
+      <!-- Optional: Cumulative fee details by coin (order-level aggregates) -->
+      <group name="NoFeeDetails" required="N">
+        <field name="FeeCoin"         required="Y"/>  <!-- Fee currency/coin -->
+        <field name="Fee"             required="Y"/>  <!-- Fee amount in this coin -->
+      </group>
+
+      <!-- Optional: Individual fill details (maps to execution push) -->
+      <group name="NoFills" required="N">
+        <field name="FillExecID"      required="Y"/>  <!-- Execution field: execId -->
+        <field name="FillQty"         required="Y"/>  <!-- Execution field: execQty -->
+        <field name="FillPx"          required="Y"/>  <!-- Execution field: execPrice -->
+        <field name="FillTime"        required="Y"/>  <!-- Execution field: execTime -->
+        <field name="FillCommission"  required="N"/>  <!-- Execution field: execFee -->
+        <field name="FillCommCurr"    required="N"/>  <!-- Execution field: feeCurrency -->
+        <field name="FillCommRate"    required="N"/>  <!-- Execution field: feeRate -->
+        <field name="FillValue"       required="N"/>  <!-- Execution field: execValue -->
+        <field name="FillIsMaker"     required="N"/>  <!-- Execution field: isMaker -->
+        <field name="FillExecType"    required="N"/>  <!-- Execution field: execType (Trade/BlockTrade) -->
+        <field name="FillBlockTradeId" required="N"/> <!-- Execution field: blockTradeId -->
+        <field name="FillLeavesQty"   required="N"/>  <!-- Execution field: leavesQty (remaining after this fill) -->
+        <field name="FillSeq"         required="N"/>  <!-- Execution field: seq (cross sequence for ordering) -->
+      </group>
+    </message>
+
+    <!-- ── Cancel response ────────────────────────────────────────── -->
+
+    <!--
+      Response for OrderCancelRequest (F). Covers both success and rejection.
+
+      Server may not have full order state for cancel operations,
+      so only minimal fields are required (no Side/OrdType/OrderQty/LeavesQty/CumQty).
+
+      ExecType semantics:
+        - ExecType=4 (Canceled): Cancel succeeded
+        - ExecType=8 (Rejected): Cancel rejected, OrdRejReason + Text explain why
+    -->
+    <message name="OrderCancelAck" msgtype="XCA" msgcat="app">
+      <field name="OrderID"      required="N"/>
+      <field name="ClOrdID"      required="N"/>
+      <field name="ExecType"     required="Y"/>
+      <field name="OrdStatus"    required="Y"/>
+      <field name="OrdRejReason" required="N"/>
+      <field name="Text"         required="N"/>
+    </message>
+
+    <!-- ── Amend response ─────────────────────────────────────────── -->
+
+    <!--
+      Response for AtomicReplaceRequest (XAR). Covers both success and rejection.
+
+      Server may not have full order state for amend operations,
+      so only minimal fields are required (no Side/OrdType/OrderQty/LeavesQty/CumQty).
+
+      ExecType semantics:
+        - ExecType=5 (Replaced): Amend succeeded
+        - ExecType=8 (Rejected): Amend rejected, OrdRejReason + Text explain why
+    -->
+    <message name="OrderAmendAck" msgtype="XAA" msgcat="app">
+      <field name="OrderID"      required="N"/>
+      <field name="ClOrdID"      required="N"/>
+      <field name="ExecType"     required="Y"/>
+      <field name="OrdStatus"    required="Y"/>
+      <field name="OrdRejReason" required="N"/>
+      <field name="Text"         required="N"/>
+    </message>
+
+    <!-- ── Batch cancel request ──────────────────────────────────── -->
+
+    <!--
+      Batch cancel for multiple orders.
+      Covers batch order cancellation for spot trading.
+
+      Limits:
+        - Spot: maximum 10 orders per request
+        - Linear/Inverse: maximum 20 orders per request (not supported yet)
+        - Option: maximum 20 orders per request (not supported yet)
+
+      Each order in the group must provide:
+        - Symbol (required)
+        - Either OrderID or ClOrdID (at least one required)
+        - OrderFilter (optional): Order/tpslOrder/StopOrder
+
+      If both OrderID and ClOrdID provided but mismatched, OrderID takes precedence.
+      Response returns individual status for each order via BatchCancelOrderAck.
+    -->
+    <message name="BatchCancelOrderRequest" msgtype="XBX" msgcat="app">
+      <field name="Category" required="Y"/>
+      <group name="NoOrders" required="Y">
+        <field name="Symbol"      required="Y"/>
+        <field name="OrderID"     required="N"/>
+        <field name="ClOrdID"     required="N"/>
+        <field name="OrderFilter" required="N"/>
+      </group>
+    </message>
+
+    <!-- ── Batch cancel ACK ──────────────────────────────────────── -->
+
+    <!--
+      Covers SBE BatchCancelOrderRespV5 (id=16).
+      Outer RetCode/Text = whether the whole batch was accepted.
+      Per-item group uses minimal fields (same as OrderCancelAck) since
+      server cannot provide full order state for cancel operations.
+    -->
+    <message name="BatchCancelOrderAck" msgtype="XBXA" msgcat="app">
+      <field name="RetCode" required="Y"/>
+      <field name="Text"    required="N"/>
+      <group name="NoOrders" required="N">
+        <field name="ExecType"     required="Y"/>
+        <field name="OrdStatus"    required="Y"/>
+        <field name="OrderID"      required="N"/>
+        <field name="ClOrdID"      required="N"/>
+        <field name="OrdRejReason" required="N"/>
+        <field name="Text"         required="N"/>
+      </group>
+    </message>
+
+  </messages>
+
+  <!-- ============================================================ -->
+  <!-- Fields                                                        -->
+  <!-- number + type are the single source of truth for each field  -->
+  <!-- ============================================================ -->
+  <fields>
+
+    <!-- Standard FIX fields -->
+    <field number="8"   name="BeginString"   type="STRING"/>
+    <field number="9"   name="BodyLength"    type="LENGTH"/>
+    <field number="10"  name="CheckSum"      type="STRING"/>
+    <field number="11"  name="ClOrdID"       type="STRING"/>
+    <field number="17"  name="ExecID"        type="STRING"/>
+    <field number="34"  name="MsgSeqNum"     type="SEQNUM"/>
+    <field number="35"  name="MsgType"       type="STRING">
+      <value enum="0"    description="Heartbeat"/>
+      <value enum="1"    description="TestRequest"/>
+      <value enum="3"    description="Reject"/>
+      <value enum="5"    description="Logout"/>
+      <value enum="8"    description="ExecutionReport"/>
+      <value enum="A"    description="Logon"/>
+      <value enum="D"    description="NewOrderSingle"/>
+      <value enum="F"    description="OrderCancelRequest"/>
+      <value enum="XAR"  description="AtomicReplaceRequest"/>
+      <value enum="XCA"  description="OrderCancelAck"/>
+      <value enum="XAA"  description="OrderAmendAck"/>
+      <value enum="XBX"  description="BatchCancelOrderRequest"/>
+      <value enum="XBXA" description="BatchCancelOrderAck"/>
+    </field>
+    <field number="37"  name="OrderID"      type="STRING"/>
+    <field number="38"  name="OrderQty"     type="QTY"/>
+    <field number="39"  name="OrdStatus"    type="CHAR">
+      <value enum="0" description="New"/>
+      <value enum="1" description="PartiallyFilled"/>
+      <value enum="2" description="Filled"/>
+      <value enum="4" description="Canceled"/>
+      <value enum="6" description="PendingCancel"/>
+      <value enum="8" description="Rejected"/>
+      <value enum="A" description="PendingNew"/>
+      <value enum="D" description="Deactivated"/>
+      <value enum="E" description="PendingReplace"/>
+      <value enum="F" description="PartiallyFilledCanceled"/>
+      <value enum="T" description="Triggered"/>
+      <value enum="U" description="Untriggered"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="40"  name="OrdType"      type="CHAR">
+      <value enum="1" description="Market"/>
+      <value enum="2" description="Limit"/>
+      <value enum="B" description="BlockTradeLimit"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="44"  name="Price"        type="PRICE"/>
+    <field number="45"  name="RefSeqNum"    type="SEQNUM"/>
+    <field number="49"  name="SenderCompID" type="STRING"/>
+    <field number="52"  name="SendingTime"  type="UTCTIMESTAMP"/>
+    <field number="54"  name="Side"         type="CHAR">
+      <value enum="1" description="Buy"/>
+      <value enum="2" description="Sell"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="55"  name="Symbol"       type="STRING"/>
+    <field number="56"  name="TargetCompID" type="STRING"/>
+    <field number="58"  name="Text"         type="STRING"/>
+    <field number="59"  name="TimeInForce"  type="CHAR">
+      <value enum="1" description="GoodTillCancel"/>
+      <value enum="3" description="ImmediateOrCancel"/>
+      <value enum="4" description="FillOrKill"/>
+      <value enum="P" description="PostOnly"/>
+      <value enum="R" description="RPI"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="60"  name="TransactTime"    type="UTCTIMESTAMP"/>
+    <field number="95"  name="RawDataLength"   type="LENGTH"/>
+    <field number="96"  name="RawData"         type="DATA"/>
+    <field number="98"  name="EncryptMethod"   type="INT">
+      <value enum="0" description="None"/>
+    </field>
+    <field number="108" name="HeartBtInt"      type="INT"/>
+    <field number="112" name="TestReqID"       type="STRING"/>
+    <field number="141" name="ResetSeqNumFlag" type="BOOLEAN"/>
+    <field number="150" name="ExecType"        type="CHAR">
+      <value enum="0" description="New"/>
+      <value enum="4" description="Canceled"/>
+      <value enum="5" description="Replaced"/>
+      <value enum="6" description="PendingCancel"/>
+      <value enum="8" description="Rejected"/>
+      <value enum="A" description="PendingNew"/>
+      <value enum="D" description="Deactivated"/>
+      <value enum="E" description="PendingReplace"/>
+      <value enum="F" description="Trade"/>
+      <value enum="T" description="Triggered"/>
+      <value enum="U" description="Untriggered"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="151" name="LeavesQty"       type="QTY"/>
+    <field number="371" name="RefTagID"            type="INT"/>
+    <field number="372" name="RefMsgType"          type="STRING"/>
+    <field number="373" name="SessionRejectReason" type="INT"/>
+    <field number="553" name="Username"            type="STRING"/>
+
+    <!-- Additional FIX standard fields for execution reporting -->
+    <field number="6"   name="AvgPx"           type="PRICE"/>
+    <field number="12"  name="Commission"      type="AMT"/>
+    <field number="13"  name="CommType"        type="CHAR">
+      <value enum="1" description="PerUnit"/>
+      <value enum="3" description="Percent"/>
+      <value enum="6" description="AbsoluteValue"/>
+      <value enum="X" description="Unknown"/>
+    </field>
+    <field number="14"  name="CumQty"          type="QTY"/>
+    <field number="31"  name="LastPx"          type="PRICE"/>
+    <field number="32"  name="LastQty"         type="QTY"/>
+    <field number="103" name="OrdRejReason"    type="STRING"/>
+
+    <!-- FIX standard fields for conditional orders -->
+    <field number="99"  name="StopPx"       type="PRICE"/>
+
+    <!-- Binance-aligned session field -->
+    <field number="25036" name="ResponseMode"    type="INT">
+      <value enum="1" description="Everything"/>
+      <value enum="2" description="OnlyAcks"/>
+    </field>
+
+    <!-- Custom fields: Session/connection (30001-30009) -->
+    <field number="30001" name="BapiRecvWindow"          type="INT"/>
+    <field number="30002" name="BapiTimestamp"           type="INT"/>  <!-- ms时间戳，部分语言会超int32，需用int64解析 -->
+    <field number="30003" name="ConnId"                  type="STRING"/>
+    <field number="30004" name="Referer"                 type="STRING"/>
+    <field number="30005" name="TraceId"                 type="STRING"/>
+    <field number="30007" name="BapiLimit"               type="INT"/>
+    <field number="30008" name="BapiLimitStatus"         type="INT"/>
+    <field number="30009" name="BapiLimitResetTimestamp" type="INT"/>  <!-- ms时间戳，部分语言会超int32，需用int64解析 -->
+
+    <!-- Custom fields: Order domain (30010-30034) -->
+    <field number="30010" name="Category"        type="STRING">
+      <value enum="spot" description="Spot"/>
+      <value enum="UNKNOWN" description="Unknown"/>
+    </field>
+    <field number="30013" name="MarketUnit"      type="STRING">
+      <value enum="baseCoin"  description="BaseCoin"/>
+      <value enum="quoteCoin" description="QuoteCoin"/>
+      <value enum="UNKNOWN"   description="Unknown"/>
+    </field>
+    <field number="30014" name="IsLeverage"      type="BOOLEAN"/>
+    <field number="30018" name="SmpType"         type="STRING">
+      <value enum="None"        description="None"/>
+      <value enum="CancelTaker" description="CancelTaker"/>
+      <value enum="CancelMaker" description="CancelMaker"/>
+      <value enum="CancelBoth"  description="CancelBoth"/>
+      <value enum="UNKNOWN"     description="Unknown"/>
+    </field>
+    <field number="30019" name="RpiTakerAccess"       type="BOOLEAN"/>
+    <field number="30020" name="NoOrders"        type="NUMINGROUP"/>
+    <field number="30021" name="RetCode"         type="INT"/>
+    <field number="30022" name="SlippageToleranceType" type="STRING">
+      <value enum="TickSize" description="TickSize"/>
+      <value enum="Percent"  description="Percent"/>
+      <value enum="UNKNOWN"  description="Unknown"/>
+    </field>
+    <field number="30023" name="Expires"         type="INT"/>
+    <field number="30024" name="OrderFilter"      type="STRING">
+      <value enum="Order"     description="Order"/>
+      <value enum="tpslOrder" description="TpslOrder"/>
+      <value enum="StopOrder" description="StopOrder"/>
+      <value enum="UNKNOWN"   description="Unknown"/>
+    </field>
+    <field number="30026" name="TakeProfitPrice"  type="PRICE"/>
+    <field number="30027" name="StopLossPrice"    type="PRICE"/>
+    <field number="30028" name="TpOrderType"      type="STRING">
+      <value enum="Market" description="Market"/>
+      <value enum="Limit"  description="Limit"/>
+      <value enum="UNKNOWN" description="Unknown"/>
+    </field>
+    <field number="30029" name="SlOrderType"      type="STRING">
+      <value enum="Market" description="Market"/>
+      <value enum="Limit"  description="Limit"/>
+      <value enum="UNKNOWN" description="Unknown"/>
+    </field>
+    <field number="30030" name="TpLimitPrice"     type="PRICE"/>
+    <field number="30031" name="SlLimitPrice"     type="PRICE"/>
+    <field number="30034" name="SlippageTolerance"    type="STRING"/>  <!-- TODO: 暂时保留STRING，考虑是否换为FLOAT -->
+
+    <!-- Custom fields: Execution report (30035-30049) -->
+    <field number="30035" name="IsMaker"             type="BOOLEAN"/>
+    <field number="30036" name="CommRate"            type="STRING"/>
+    <field number="30037" name="GrossTradeAmt"       type="AMT"/>
+    <field number="30038" name="CumValue"            type="AMT"/>
+    <field number="30039" name="CreateTime"          type="UTCTIMESTAMP"/>
+    <field number="30040" name="CancelType"          type="STRING"/>
+    <field number="30041" name="LeavesValue"         type="AMT"/>
+    <field number="30042" name="StopOrderType"       type="STRING"/>
+    <field number="30043" name="OcoTriggerBy"        type="STRING"/>
+    <field number="30044" name="SmpGroup"            type="INT"/>
+    <field number="30045" name="SmpOrderId"          type="STRING"/>
+    <field number="30046" name="LastPriceOnCreated"  type="PRICE"/>
+    <field number="30047" name="BlockTradeId"        type="STRING"/>
+    <field number="30048" name="RpiMatchedQty"       type="QTY"/>
+
+    <!-- Custom fields: Fill details group (30050-30059, 30063-30065) -->
+    <field number="30050" name="NoFills"        type="NUMINGROUP"/>
+    <field number="30051" name="FillExecID"     type="STRING"/>
+    <field number="30052" name="FillQty"        type="QTY"/>
+    <field number="30053" name="FillPx"         type="PRICE"/>
+    <field number="30054" name="FillTime"       type="UTCTIMESTAMP"/>
+    <field number="30055" name="FillCommission" type="AMT"/>
+    <field number="30056" name="FillCommCurr"   type="STRING"/>
+    <field number="30057" name="FillValue"      type="AMT"/>
+    <field number="30058" name="FillIsMaker"    type="BOOLEAN"/>
+    <field number="30059" name="FillCommRate"   type="STRING"/>
+    <field number="30063" name="FillExecType"   type="STRING"/>
+    <field number="30064" name="FillLeavesQty"  type="QTY"/>
+    <field number="30065" name="FillSeq"        type="INT"/>
+    <field number="30066" name="FillBlockTradeId" type="STRING"/>
+
+    <!-- Custom fields: Cumulative fee details group (30060-30069) -->
+    <field number="30060" name="NoFeeDetails"   type="NUMINGROUP"/>
+    <field number="30061" name="FeeCoin"        type="STRING"/>
+    <field number="30062" name="Fee"            type="STRING"/>
+
+  </fields>
+
+</fix>
