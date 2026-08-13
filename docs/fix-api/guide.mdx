@@ -122,25 +122,25 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 
 ### Standard Header Fields
 
-| Tag | Field | Direction | Required | Description |
-|-----|-------|-----------|----------|-------------|
-| 8 | BeginString | Both | Y | Always `FIX.4.4` |
-| 9 | BodyLength | Both | Y | Message body length in bytes |
-| 35 | MsgType | Both | Y | Message type (see [Message Types](#message-types-reference)) |
-| 49 | SenderCompID | Both | Y | Set by client to any unique identifier (e.g. your API key) |
-| 56 | TargetCompID | Both | Y | Client sets to `BYBIT`; server sets to the client's `SenderCompID` |
-| 34 | MsgSeqNum | Both | Y | Monotonically increasing sequence number, starting from `1` |
-| 52 | SendingTime | Both | Y | UTC send time in `YYYYMMDD-HH:MM:SS.sss` format |
+| Tag | Field | Type | Direction | Required | Description |
+|-----|-------|------|-----------|----------|-------------|
+| 8 | BeginString | STRING | Both | Y | Always `FIX.4.4` |
+| 9 | BodyLength | LENGTH | Both | Y | Message body length in bytes |
+| 35 | MsgType | STRING | Both | Y | Message type (see [Message Types](#message-types-reference)) |
+| 49 | SenderCompID | STRING | Both | Y | A client-defined identifier for this connection. Can be any unique string; does not need to match the API key (which is sent separately in `Username (553)`). |
+| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT`; server sets to the client's `SenderCompID` |
+| 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number, starting from `1` |
+| 52 | SendingTime | UTCTIMESTAMP | Both | Y | UTC send time in `YYYYMMDD-HH:MM:SS.sss` format |
 
 ### Bybit Extension Header Fields
 
 **Client → Server (include in requests):**
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 30002 | BapiTimestamp | N | Unix timestamp in milliseconds. Required for authenticated order requests |
-| 30001 | BapiRecvWindow | N | Validity window in ms (default: `5000`, max: `60000`) |
-| 30004 | Referer | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds. Required for authenticated order requests |
+| 30001 | BapiRecvWindow | INT | N | Validity window in ms (default: `5000`, max: `60000`) |
+| 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
 
 :::caution
 `BapiTimestamp (30002)` is your current timestamp — **not** `expires`. The server validates:
@@ -154,12 +154,12 @@ Use your local NTP-synced clock. Default `BapiRecvWindow (30001)` is `5000` ms, 
 
 **Server → Client (returned in every response):**
 
-| Tag | Field | Description |
-|-----|-------|-------------|
-| 30005 | TraceId | Server-side trace identifier for support and debugging |
-| 30007 | BapiLimit | Total rate limit weight for the current window |
-| 30008 | BapiLimitStatus | Remaining weight in the current window |
-| 30009 | BapiLimitResetTimestamp | Unix timestamp (ms) when the current rate limit window resets |
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 30005 | TraceId | STRING | Server-side trace identifier for support and debugging |
+| 30007 | BapiLimit | INT | Total rate limit weight for the current window |
+| 30008 | BapiLimitStatus | INT | Remaining weight in the current window |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | Unix timestamp (ms) when the current rate limit window resets |
 
 :::caution
 `BapiTimestamp (30002)` and `BapiLimitResetTimestamp (30009)` are 64-bit integers. Some FIX libraries default to 32-bit INT parsing — ensure your parser uses `int64` for these fields.
@@ -173,22 +173,22 @@ The client sends `Logon` to initiate a session. The server responds with its own
 
 **Request fields (Client → Server):**
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 98 | EncryptMethod | Y | Must be `0` (None) |
-| 108 | HeartBtInt | Y | Idle timeout in seconds. If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
-| 553 | Username | **Y** | Your API key |
-| 95 | RawDataLength | **Y** | Byte length of `RawData` |
-| 96 | RawData | **Y** | Signature (see [Signature](#signature)) |
-| 141 | ResetSeqNumFlag | N | `Y` to reset sequence numbers on this logon |
-| 25036 | ResponseMode | N | `1` = Everything (default); `2` = OnlyAcks |
-| 30023 | Expires | N | API key expiry timestamp (ms), if applicable |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 98 | EncryptMethod | INT | Y | Must be `0` (None) |
+| 108 | HeartBtInt | INT | Y | Idle timeout in seconds. If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
+| 553 | Username | STRING | **Y** | Your API key |
+| 95 | RawDataLength | LENGTH | **Y** | Byte length of `RawData` |
+| 96 | RawData | DATA | **Y** | Signature (see [Signature](#signature)) |
+| 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` to reset sequence numbers on this logon |
+| 25036 | ResponseMode | INT | N | `1` = Everything (default); `2` = OnlyAcks |
+| 30023 | Expires | INT | N | API key expiry timestamp (ms), if applicable |
 
 **Response fields (Server → Client):**
 
-| Tag | Field | Description |
-|-----|-------|-------------|
-| 30003 | ConnId | Unique connection identifier assigned by the server |
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 30003 | ConnId | STRING | Unique connection identifier assigned by the server. Include this value in support requests for session-level debugging. Does not need to be echoed in subsequent messages. |
 
 **Request example:**
 
@@ -209,49 +209,49 @@ The client sends `Logon` to initiate a session. The server responds with its own
 - Upon receiving a `TestRequest`, the client must reply with a `Heartbeat` that echoes the same `TestReqID`.
 - If no reply arrives, the server may terminate the session.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 112 | TestReqID | N | Echo of the `TestReqID` from an incoming `TestRequest` |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | N | Echo of the `TestReqID` from an incoming `TestRequest` |
 
 ### TestRequest (MsgType = 1)
 
 Either side may send a `TestRequest` to verify the session is alive. The receiver must reply with a `Heartbeat` containing the same `TestReqID`.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 112 | TestReqID | Y | Arbitrary string echoed back in the response `Heartbeat` |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | Y | Arbitrary string echoed back in the response `Heartbeat` |
 
 ### Reject (MsgType = 3)
 
 Sent by the server when a message fails session-level validation (e.g. malformed header, unexpected sequence number). This is distinct from an application-level rejection.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 45 | RefSeqNum | N | `MsgSeqNum` of the rejected message |
-| 371 | RefTagID | N | Tag number that caused the rejection |
-| 372 | RefMsgType | N | `MsgType` of the rejected message |
-| 373 | SessionRejectReason | N | Numeric reason code |
-| 58 | Text | N | Human-readable rejection description |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 45 | RefSeqNum | SEQNUM | N | `MsgSeqNum` of the rejected message |
+| 371 | RefTagID | INT | N | Tag number that caused the rejection |
+| 372 | RefMsgType | STRING | N | `MsgType` of the rejected message |
+| 373 | SessionRejectReason | INT | N | Numeric reason code |
+| 58 | Text | STRING | N | Human-readable rejection description |
 
 ### Logout (MsgType = 5)
 
 Initiates session termination. The receiver should respond with its own `Logout`, after which the TCP connection may be closed.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 58 | Text | N | Optional reason for logout |
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 58 | Text | STRING | N | Optional reason for logout |
 
 ## Rate Limiting
 
 FIX API uses the same rate limit pool as REST V5. Every server response includes the current window status in its header:
 
-| Tag | Field | Description |
-|-----|-------|-------------|
-| 30007 | BapiLimit | Total weight limit for the current window |
-| 30008 | BapiLimitStatus | Remaining weight |
-| 30009 | BapiLimitResetTimestamp | Window reset time in Unix milliseconds |
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 30007 | BapiLimit | INT | Total weight limit for the current window |
+| 30008 | BapiLimitStatus | INT | Remaining weight |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | Window reset time in Unix milliseconds |
 
-When `BapiLimitStatus` reaches `0`, subsequent requests will be rejected until the window resets.
+When `BapiLimitStatus` reaches `0`, subsequent requests will be rejected until the window resets. Rejected requests receive an `ExecutionReport` with `ExecType=8`; the reason is returned in `Text (58)`.
 
 ## ResponseMode
 

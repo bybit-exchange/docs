@@ -5,9 +5,10 @@ sidebar_position: 3
 ---
 
 :::info important
-- 提供 `OrderID (37)` 或 `ClOrdID (11)` 其中之一來識別委託單。若兩者均提供且不一致，以 `OrderID` 為準。
+- 提供 `OrderID (37)` 或 `ClOrdID (11)` 其中之一來識別委託單。若兩者均提供，以 `OrderID` 為準。
 - 僅可取消**未成交**或**部分成交**的委託單。
 - 對於現貨交易，請使用 `OrderFilter (30024)` 區分普通委託、止盈止損委託與條件委託。
+- 最終 `OrdStatus` 取決於取消時的成交狀態：若無任何成交則為 `4`（Canceled）；若有部分成交則為 `F`（PartiallyFilledCanceled）。
 :::
 
 ### 訊息類型
@@ -19,7 +20,7 @@ sidebar_position: 3
 | Tag | 欄位 | 必填 | 類型 | 說明 |
 |-----|-------|----------|------|-------------|
 | 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
-| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`（大寫）|
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
 | 37 | OrderID | N | String | 伺服器委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
 | 11 | ClOrdID | N | String | 用戶端委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
 | 30024 | OrderFilter | N | String | 僅限現貨。`Order`（預設）；`tpslOrder`；`StopOrder` |

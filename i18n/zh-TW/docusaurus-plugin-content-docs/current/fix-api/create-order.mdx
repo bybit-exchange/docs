@@ -6,9 +6,8 @@ sidebar_position: 1
 
 :::info important
 - `Category (30010)` 為必填欄位，且必須為 `spot`。
-- 提供 `ClOrdID (11)` 可設定用戶端委託單 ID（`orderLinkId`），在連線內必須唯一。
 - 對於**市價委託**，請使用 `MarketUnit (30013)` 指定 `OrderQty` 的計價幣別為基礎幣或報價幣。
-- 對於**限價委託**，`Price (44)` 與 `TimeInForce (59)` 為必填。
+- 對於**限價委託**，`Price (44)` 為必填。
 - 當委託單被**拒絕**（`ExecType=8`）時，`ExecutionReport` 中不包含 `OrderID (37)`。
 :::
 
@@ -21,27 +20,27 @@ sidebar_position: 1
 | Tag | 欄位 | 必填 | 類型 | 說明 |
 |-----|-------|----------|------|-------------|
 | 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
-| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`（大寫）|
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
 | 54 | Side | **Y** | Char | `1` = 買入；`2` = 賣出 |
 | 40 | OrdType | **Y** | Char | `1` = 市價；`2` = 限價 |
-| 38 | OrderQty | N | Qty | 委託數量，市價委託請參見 `MarketUnit` |
+| 38 | OrderQty | **Y** | Qty | 委託數量，市價委託請參見 `MarketUnit` |
 | 44 | Price | N | Price | 委託價格，限價委託必填 |
-| 11 | ClOrdID | N | String | 用戶端委託單 ID（`orderLinkId`），最多 36 個字元 |
-| 59 | TimeInForce | N | Char | `1`=GTC；`3`=IOC；`4`=FOK；`P`=PostOnly；`R`=RPI，預設為 GTC |
-| 30013 | MarketUnit | N | String | 市價委託時 `OrderQty` 的單位：`baseCoin` 或 `quoteCoin` |
+| 11 | ClOrdID | N | String | 用戶端委託單 ID（`orderLinkId`），最多 36 個字元。以帳號（UID）為維度，而非 session——活動狀態的委託單（如 New）不可複用相同 ClOrdID；已進入終態的委託單，其 ClOrdID 可在 360 天後重新使用。|
+| 59 | TimeInForce | N | Char | `1`=GTC；`3`=IOC；`4`=FOK；`P`=PostOnly；`R`=RPI，預設為 GTC。另外，市價單總是IOC|
+| 30013 | MarketUnit | N | String | 市價委託時 `OrderQty` 的單位：`baseCoin`（賣單默認）或 `quoteCoin`（買單默認）  |
 | 30014 | IsLeverage | N | Boolean | `Y` = 保證金交易；`N` = 現貨（預設）|
 | 30018 | SmpType | N | String | 自我撮合防護：`None`、`CancelTaker`、`CancelMaker`、`CancelBoth` |
-| 30019 | RpiTakerAccess | N | Boolean | 此委託是否可與 RPI 報價撮合 |
+| 30019 | RpiTakerAccess | N | Boolean | 此委託是否可與 RPI 報價撮合，若設置為true，必須為市價單orderType=Market |
 | 30022 | SlippageToleranceType | N | String | 市價委託滑點單位：`TickSize` 或 `Percent` |
 | 30034 | SlippageTolerance | N | String | 最大滑點值，與 `SlippageToleranceType` 搭配使用 |
 | 30024 | OrderFilter | N | String | `Order`（預設）；`tpslOrder`；`StopOrder` |
-| 99 | StopPx | N | Price | 條件委託觸發價格 |
-| 30026 | TakeProfitPrice | N | Price | 止盈觸發價格 |
-| 30027 | StopLossPrice | N | Price | 止損觸發價格 |
-| 30028 | TpOrderType | N | String | 止盈觸發後的委託類型：`Market` 或 `Limit` |
-| 30029 | SlOrderType | N | String | 止損觸發後的委託類型：`Market` 或 `Limit` |
-| 30030 | TpLimitPrice | N | Price | 止盈限價（當 `TpOrderType=Limit` 時必填）|
-| 30031 | SlLimitPrice | N | Price | 止損限價（當 `SlOrderType=Limit` 時必填）|
+| 99 | StopPx | N | Price | 條件委託觸發價格。觸發方向（高於或低於當前市價）由系統根據委託方向與 `StopPx` 相對市場的位置自動判斷。|
+| 30026 | TakeProfitPrice | N | Price | 附加止盈觸發價格 |
+| 30027 | StopLossPrice | N | Price | 附加止損觸發價格 |
+| 30028 | TpOrderType | N | String | 附加止盈觸發後的委託類型：`Market` 或 `Limit` |
+| 30029 | SlOrderType | N | String | 附加止損觸發後的委託類型：`Market` 或 `Limit` |
+| 30030 | TpLimitPrice | N | Price | 附加止盈限價（當 `TpOrderType=Limit` 時必填）|
+| 30031 | SlLimitPrice | N | Price | 附加止損限價（當 `SlOrderType=Limit` 時必填）|
 
 ### 回應
 

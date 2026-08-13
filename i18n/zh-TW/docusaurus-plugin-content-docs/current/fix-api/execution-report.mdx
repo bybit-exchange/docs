@@ -42,7 +42,7 @@ sidebar_position: 4
 | 30038 | CumValue | 累計已成交金額 |
 | 60 | TransactTime | 最後更新時間 |
 | 30039 | CreateTime | 委託建立時間 |
-| 30040 | CancelType | 取消原因（如 `CancelByUser`、`CancelBySmp`、`CancelByMMP`）|
+| 30040 | [CancelType](../v5/enum#canceltype) | 取消原因（如 `CancelByUser`、`CancelBySmp`）|
 | 30013 | MarketUnit | 市價委託數量單位（`baseCoin` / `quoteCoin`）|
 | 30014 | IsLeverage | 是否使用保證金（`Y`/`N`）|
 
@@ -125,12 +125,12 @@ sidebar_position: 4
 | `0` | New | 委託已接受並在掛單簿等待 |
 | `4` | Canceled | 委託已取消 |
 | `5` | Replaced | 委託已修改 |
-| `6` | PendingCancel | 取消中 |
+| `6` | PendingCancel | 取消中。不會透過 `ExecutionReport` 推送——取消請求由 `OrderCancelAck (XCA)` 確認收到。|
 | `8` | Rejected | 委託或請求被拒絕 |
-| `A` | PendingNew | 新委託處理中 |
+| `A` | PendingNew | 新委託的過渡狀態。`OnlyAcks` 模式下，`NewOrderSingle` 一定會先返回 `PendingNew`，再返回最終的 `New` 或 `Rejected`。`Everything` 模式下，`PendingNew` 與 `New` 均會推送，但可能亂序到達。|
 | `C` | Expired | 委託已過期 |
 | `D` | Deactivated | 條件委託已停用 |
-| `E` | PendingReplace | 修改中 |
+| `E` | PendingReplace | 修改中。不會透過 `ExecutionReport` 推送——修改請求由 `OrderAmendAck (XAA)` 確認收到，後續 `ExecType=5`（Replaced）的 `ExecutionReport` 確認最終修改狀態。|
 | `F` | Trade | 委託成交（部分或全部）|
 | `T` | Triggered | 條件委託已觸發 |
 | `U` | Untriggered | 條件委託等待觸發 |

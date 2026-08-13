@@ -70,11 +70,9 @@ Client                              Server
 
 ### API 金鑰
 
-請至以下位址建立您的 API 金鑰：
+請至以下地址建立您的 API 金鑰：
 - **測試環境：** https://testnet.bybit.com/app/user/api-management
 - **正式環境：** https://www.bybit.com/app/user/api-management
-
-僅支援**自行產生（RSA）金鑰** — 使用 RSA-SHA256 簽名
 
 ### 簽名
 
@@ -122,25 +120,25 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 
 ### 標準標頭欄位
 
-| Tag | 欄位 | 方向 | 必填 | 說明 |
-|-----|-------|-----------|----------|-------------|
-| 8 | BeginString | 雙向 | Y | 固定為 `FIX.4.4` |
-| 9 | BodyLength | 雙向 | Y | 訊息主體長度（位元組）|
-| 35 | MsgType | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
-| 49 | SenderCompID | 雙向 | Y | 用戶端設定為任意唯一識別碼（如您的 API 金鑰）|
-| 56 | TargetCompID | 雙向 | Y | 用戶端設為 `BYBIT`；伺服器設為用戶端的 `SenderCompID` |
-| 34 | MsgSeqNum | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
-| 52 | SendingTime | 雙向 | Y | UTC 發送時間，格式 `YYYYMMDD-HH:MM:SS.sss` |
+| Tag | 欄位 | 類型 | 方向 | 必填 | 說明 |
+|-----|-------|------|-----------|----------|-------------|
+| 8 | BeginString | STRING | 雙向 | Y | 固定為 `FIX.4.4` |
+| 9 | BodyLength | LENGTH | 雙向 | Y | 訊息主體長度（位元組）|
+| 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
+| 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，可為任意唯一字串，無需與 API 金鑰相同（API 金鑰透過 `Username (553)` 單獨傳遞）。|
+| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT`；伺服器設為用戶端的 `SenderCompID` |
+| 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
+| 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
 
 ### Bybit 擴充標頭欄位
 
 **用戶端 → 伺服器（請求時附帶）：**
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 30002 | BapiTimestamp | N | Unix 毫秒時間戳，認證委託請求時必填 |
-| 30001 | BapiRecvWindow | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
-| 30004 | Referer | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 30002 | BapiTimestamp | INT (int64) | N | Unix 毫秒時間戳 |
+| 30001 | BapiRecvWindow | INT | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
+| 30004 | Referer | STRING | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
 
 :::caution
 `BapiTimestamp (30002)` 為當前時間戳，伺服器將驗證其滿足：
@@ -154,12 +152,12 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 
 **伺服器 → 用戶端（每個回應均包含）：**
 
-| Tag | 欄位 | 說明 |
-|-----|-------|-------------|
-| 30005 | TraceId | 伺服器端追蹤識別碼，用於支援與除錯 |
-| 30007 | BapiLimit | 目前視窗的總頻率限制權重 |
-| 30008 | BapiLimitStatus | 目前視窗的剩餘可用權重 |
-| 30009 | BapiLimitResetTimestamp | 視窗重置時間（Unix 毫秒時間戳）|
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 30005 | TraceId | STRING | 伺服器端追蹤識別碼，用於支援與除錯 |
+| 30007 | BapiLimit | INT | 目前視窗的總頻率限制權重 |
+| 30008 | BapiLimitStatus | INT | 目前視窗的剩餘可用權重 |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | 視窗重置時間（Unix 毫秒時間戳）|
 
 :::caution
 `BapiTimestamp (30002)` 與 `BapiLimitResetTimestamp (30009)` 為 64 位元整數。部分 FIX 函式庫預設以 32 位元解析 INT 欄位——請確保您的解析器對這些欄位使用 `int64`。
@@ -173,22 +171,22 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 
 **請求欄位（用戶端 → 伺服器）：**
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 98 | EncryptMethod | Y | 必須為 `0`（None）|
-| 108 | HeartBtInt | Y | 空閒逾時閾值（秒）。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
-| 553 | Username | **Y** | 您的 API 金鑰 |
-| 95 | RawDataLength | **Y** | `RawData` 的位元組長度 |
-| 96 | RawData | **Y** | 簽名（參見[簽名](#簽名)）|
-| 141 | ResetSeqNumFlag | N | `Y` 表示在此次登入時重置序列號 |
-| 25036 | ResponseMode | N | `1` = Everything（預設）；`2` = OnlyAcks |
-| 30023 | Expires | N | API 金鑰到期時間戳（ms，如適用）|
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 98 | EncryptMethod | INT | **Y** | 必須為 `0`（None）|
+| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
+| 553 | Username | STRING | **Y** | 您的 API 金鑰 |
+| 95 | RawDataLength | LENGTH | **Y** | `RawData` 的位元組長度 |
+| 96 | RawData | DATA | **Y** | 簽名（參見[簽名](#簽名)）|
+| 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` 表示在此次登入時重置序列號 |
+| 25036 | ResponseMode | INT | N | `1` = Everything（預設）；`2` = OnlyAcks |
+| 30023 | Expires | INT | N | API 金鑰到期時間戳（ms，如適用）|
 
 **回應欄位（伺服器 → 用戶端）：**
 
-| Tag | 欄位 | 說明 |
-|-----|-------|-------------|
-| 30003 | ConnId | 伺服器分配的唯一連線識別碼 |
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 30003 | ConnId | STRING | 伺服器分配的唯一連線識別碼。聯絡客服排查問題時請提供此值，後續訊息中無需回傳。|
 
 **請求範例：**
 
@@ -209,49 +207,49 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 - 收到 `TestRequest` 後，用戶端必須回傳帶有相同 `TestReqID` 的 `Heartbeat`。
 - 若無回應，伺服器可能終止連線。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 112 | TestReqID | N | 回傳收到的 `TestRequest` 中的 `TestReqID` |
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | N | 回傳收到的 `TestRequest` 中的 `TestReqID` |
 
 ### TestRequest（MsgType = 1）
 
 任一方均可發送 `TestRequest` 以確認連線存活。接收方必須回傳含有相同 `TestReqID` 的 `Heartbeat`。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 112 | TestReqID | Y | 任意字串，將在回應的 `Heartbeat` 中原樣回傳 |
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | Y | 任意字串，將在回應的 `Heartbeat` 中原樣回傳 |
 
 ### Reject（MsgType = 3）
 
 當訊息未通過連線層驗證時（如標頭格式錯誤、序列號異常），伺服器發送此訊息。與應用層拒絕不同。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 45 | RefSeqNum | N | 被拒絕訊息的 `MsgSeqNum` |
-| 371 | RefTagID | N | 導致拒絕的 Tag 編號 |
-| 372 | RefMsgType | N | 被拒絕訊息的 `MsgType` |
-| 373 | SessionRejectReason | N | 數字拒絕原因代碼 |
-| 58 | Text | N | 可讀的拒絕說明 |
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 45 | RefSeqNum | SEQNUM | N | 被拒絕訊息的 `MsgSeqNum` |
+| 371 | RefTagID | INT | N | 導致拒絕的 Tag 編號 |
+| 372 | RefMsgType | STRING | N | 被拒絕訊息的 `MsgType` |
+| 373 | SessionRejectReason | INT | N | 數字拒絕原因代碼 |
+| 58 | Text | STRING | N | 可讀的拒絕說明 |
 
 ### Logout（MsgType = 5）
 
 發起連線終止。接收方應回應自身的 `Logout`，之後 TCP 連線可關閉。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 58 | Text | N | 登出原因（選填）|
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 58 | Text | STRING | N | 登出原因（選填）|
 
 ## 頻率限制
 
 FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標頭均包含目前視窗狀態：
 
-| Tag | 欄位 | 說明 |
-|-----|-------|-------------|
-| 30007 | BapiLimit | 目前視窗的總權重上限 |
-| 30008 | BapiLimitStatus | 剩餘可用權重 |
-| 30009 | BapiLimitResetTimestamp | 視窗重置時間（Unix 毫秒時間戳）|
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 30007 | BapiLimit | INT | 目前視窗的總權重上限 |
+| 30008 | BapiLimitStatus | INT | 剩餘可用權重 |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | 視窗重置時間（Unix 毫秒時間戳）|
 
-當 `BapiLimitStatus` 降至 `0` 時，後續請求將被拒絕，直至視窗重置。
+當 `BapiLimitStatus` 降至 `0` 時，後續請求將被拒絕，直至視窗重置。被拒絕的請求會收到 `ExecType=8` 的 `ExecutionReport`，拒絕原因透過 `Text (58)` 返回。
 
 ## ResponseMode
 

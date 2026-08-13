@@ -6,9 +6,8 @@ sidebar_position: 1
 
 :::info important
 - `Category (30010)` is required and must be `spot`.
-- Provide `ClOrdID (11)` to set a client order ID (`orderLinkId`). It must be unique within the session.
-- For **market orders**, use `MarketUnit (30013)` to specify whether `OrderQty` is denominated in base coin or quote coin.
-- For **limit orders**, `Price (44)` and `TimeInForce (59)` are required.
+- For **market orders**, use `MarketUnit (30013)` to specify whether `OrderQty` is denominated in base coin or quote coin. Market orders are always executed as IOC regardless of `TimeInForce`.
+- For **limit orders**, `Price (44)` is required.
 - `OrderID (37)` is absent in the `ExecutionReport` when the order is **rejected** (`ExecType=8`).
 :::
 
@@ -24,18 +23,18 @@ sidebar_position: 1
 | 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
 | 54 | Side | **Y** | Char | `1` = Buy; `2` = Sell |
 | 40 | OrdType | **Y** | Char | `1` = Market; `2` = Limit |
-| 38 | OrderQty | N | Qty | Order quantity. See `MarketUnit` for market orders |
+| 38 | OrderQty | **Y** | Qty | Order quantity. For market orders, the unit is specified by `MarketUnit`. |
 | 44 | Price | N | Price | Order price. Required for Limit orders |
-| 11 | ClOrdID | N | String | Client order ID (`orderLinkId`). Max 36 characters |
-| 59 | TimeInForce | N | Char | `1`=GTC; `3`=IOC; `4`=FOK; `P`=PostOnly; `R`=RPI. Defaults to GTC |
-| 30013 | MarketUnit | N | String | Unit for `OrderQty` in market orders: `baseCoin` or `quoteCoin` |
+| 11 | ClOrdID | N | String | Client order ID (`orderLinkId`). Max 36 characters. Scoped to account (UID), not session — a ClOrdID held by an active order cannot be reused. ClOrdIDs of terminated orders are eligible for reuse after 360 days. |
+| 59 | TimeInForce | N | Char | `1`=GTC; `3`=IOC; `4`=FOK; `P`=PostOnly; `R`=RPI. Defaults to GTC for limit orders. Market orders are always IOC regardless of this field. |
+| 30013 | MarketUnit | N | String | Unit for `OrderQty` in market orders: `baseCoin` (default for sell) or `quoteCoin` (default for buy) |
 | 30014 | IsLeverage | N | Boolean | `Y` = margin trading; `N` = spot (default) |
 | 30018 | SmpType | N | String | Self-Match Prevention: `None`, `CancelTaker`, `CancelMaker`, `CancelBoth` |
-| 30019 | RpiTakerAccess | N | Boolean | Whether this order may match against RPI quotes |
+| 30019 | RpiTakerAccess | N | Boolean | Whether this order may match against RPI quotes. If `Y`, `OrdType` must be `1` (Market). |
 | 30022 | SlippageToleranceType | N | String | Slippage unit for market orders: `TickSize` or `Percent` |
 | 30034 | SlippageTolerance | N | String | Max slippage value, used with `SlippageToleranceType` |
 | 30024 | OrderFilter | N | String | `Order` (default); `tpslOrder`; `StopOrder` |
-| 99 | StopPx | N | Price | Trigger price for conditional orders |
+| 99 | StopPx | N | Price | Trigger price for conditional orders. The trigger direction (above or below the current price) is determined automatically by the system based on the order side and `StopPx` relative to the market. |
 | 30026 | TakeProfitPrice | N | Price | Take profit trigger price |
 | 30027 | StopLossPrice | N | Price | Stop loss trigger price |
 | 30028 | TpOrderType | N | String | TP order type when triggered: `Market` or `Limit` |

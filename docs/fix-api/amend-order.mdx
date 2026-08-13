@@ -9,6 +9,7 @@ sidebar_position: 2
 - Provide either `OrderID (37)` or `ClOrdID (11)` to identify the order. If both are provided and they conflict, `OrderID` takes precedence.
 - Only include fields that need to change. Omitted fields retain their current values.
 - Only **unfilled** or **partially filled** orders can be amended.
+- **Queue priority:** Amending the price to one closer to the best bid/offer improves queue position. Increasing `OrderQty` causes the order to lose its current queue position. Decreasing `OrderQty` does not affect queue position.
 :::
 
 ### Message Type
@@ -26,8 +27,8 @@ sidebar_position: 2
 | 38 | OrderQty | N | Qty | New order quantity |
 | 44 | Price | N | Price | New order price |
 | 99 | StopPx | N | Price | New trigger price for conditional orders |
-| 30026 | TakeProfitPrice | N | Price | New take profit trigger price |
-| 30027 | StopLossPrice | N | Price | New stop loss trigger price |
+| 30026 | TakeProfitPrice | N | Price | New take profit trigger price. Pass `0` to clear an existing take profit. |
+| 30027 | StopLossPrice | N | Price | New stop loss trigger price. Pass `0` to clear an existing stop loss. |
 | 30030 | TpLimitPrice | N | Price | New TP limit price |
 | 30031 | SlLimitPrice | N | Price | New SL limit price |
 

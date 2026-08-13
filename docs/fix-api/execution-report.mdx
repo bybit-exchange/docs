@@ -42,7 +42,7 @@ These fields describe the overall order state and are present in every `Executio
 | 30038 | CumValue | Cumulative filled value |
 | 60 | TransactTime | Last update timestamp |
 | 30039 | CreateTime | Order creation timestamp |
-| 30040 | CancelType | Cancellation reason (e.g. `CancelByUser`, `CancelBySmp`, `CancelByMMP`) |
+| 30040 | [CancelType](../v5/enum#canceltype) | Cancellation reason |
 | 30013 | MarketUnit | Market order qty unit (`baseCoin` / `quoteCoin`) |
 | 30014 | IsLeverage | Whether order uses margin (`Y`/`N`) |
 
@@ -125,12 +125,12 @@ Optional. Provides per-coin fee aggregates at the order level.
 | `0` | New | Order accepted and resting |
 | `4` | Canceled | Order canceled |
 | `5` | Replaced | Order amended |
-| `6` | PendingCancel | Cancel in progress |
+| `6` | PendingCancel | Cancel in progress. Not delivered in `ExecutionReport` — cancel requests are acknowledged via `OrderCancelAck (XCA)`, which serves as confirmation of receipt. |
 | `8` | Rejected | Order or request rejected |
-| `A` | PendingNew | New order in progress |
+| `A` | PendingNew | Transitional state for new orders. In `OnlyAcks` mode, a `NewOrderSingle` always returns a `PendingNew` report before the final `New` or `Rejected`. In `Everything` mode, both `PendingNew` and `New` reports are delivered but may arrive out of order. |
 | `C` | Expired | Order expired |
 | `D` | Deactivated | Conditional order deactivated |
-| `E` | PendingReplace | Amend in progress |
+| `E` | PendingReplace | Amend in progress. Not delivered in `ExecutionReport` — amend requests are acknowledged via `OrderAmendAck (XAA)`, which serves as confirmation of receipt. The subsequent `ExecutionReport` with `ExecType=5` (Replaced) confirms the final amended state. |
 | `F` | Trade | Order filled (partial or full) |
 | `T` | Triggered | Conditional order triggered |
 | `U` | Untriggered | Conditional order awaiting trigger |

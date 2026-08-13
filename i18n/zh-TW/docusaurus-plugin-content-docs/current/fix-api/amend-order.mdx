@@ -9,6 +9,7 @@ sidebar_position: 2
 - 提供 `OrderID (37)` 或 `ClOrdID (11)` 其中之一來識別委託單。若兩者均提供且不一致，以 `OrderID` 為準。
 - 僅包含需要修改的欄位，未填寫的欄位保持原值。
 - 僅可修改**未成交**或**部分成交**的委託單。
+- **隊列優先級：** 將價格改往更靠近盤口的方向可提高隊列優先級；增加 `OrderQty` 會失去當前隊列位置；減少 `OrderQty` 不影響撮合優先級。
 :::
 
 ### 訊息類型
@@ -20,14 +21,14 @@ sidebar_position: 2
 | Tag | 欄位 | 必填 | 類型 | 說明 |
 |-----|-------|----------|------|-------------|
 | 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
-| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`（大寫）|
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
 | 37 | OrderID | N | String | 伺服器委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
 | 11 | ClOrdID | N | String | 用戶端委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
 | 38 | OrderQty | N | Qty | 新的委託數量 |
 | 44 | Price | N | Price | 新的委託價格 |
 | 99 | StopPx | N | Price | 條件委託的新觸發價格 |
-| 30026 | TakeProfitPrice | N | Price | 新的止盈觸發價格 |
-| 30027 | StopLossPrice | N | Price | 新的止損觸發價格 |
+| 30026 | TakeProfitPrice | N | Price | 新的止盈觸發價格，當傳"0"時, 表示取消當前訂單上設置的止盈 |
+| 30027 | StopLossPrice | N | Price | 新的止損觸發價格，當傳"0"時, 表示取消當前訂單上設置的止損|
 | 30030 | TpLimitPrice | N | Price | 新的止盈限價 |
 | 30031 | SlLimitPrice | N | Price | 新的止損限價 |
 
