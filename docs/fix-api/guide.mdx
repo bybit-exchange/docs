@@ -28,7 +28,7 @@ Key differences from the REST V5 API:
 | Environment | Host | Port |
 |---|---|---|
 | Mainnet | `fix.bybit.com` | `9878` |
-| Testnet | `fix-testnet.bybit.com` | `9878` |
+| Testnet | `fix-oe-testnet.bybit.com` | `9000` |
 
 All connections must use TLS. Plain TCP is not accepted.
 
@@ -128,7 +128,7 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 | 9 | BodyLength | LENGTH | Both | Y | Message body length in bytes |
 | 35 | MsgType | STRING | Both | Y | Message type (see [Message Types](#message-types-reference)) |
 | 49 | SenderCompID | STRING | Both | Y | A client-defined identifier for this connection. Can be any unique string; does not need to match the API key (which is sent separately in `Username (553)`). |
-| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT`; server sets to the client's `SenderCompID` |
+| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT_FIX_SERVER`; server sets to the client's `SenderCompID` |
 | 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number, starting from `1` |
 | 52 | SendingTime | UTCTIMESTAMP | Both | Y | UTC send time in `YYYYMMDD-HH:MM:SS.sss` format |
 
@@ -140,6 +140,7 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 |-----|-------|------|----------|-------------|
 | 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds. Required for authenticated order requests |
 | 30001 | BapiRecvWindow | INT | N | Validity window in ms (default: `5000`, max: `60000`) |
+| 30010 | Category | STRING | Y | Product category for order requests. Currently must be `spot` |
 | 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
 
 :::caution
@@ -182,7 +183,7 @@ The client sends `Logon` to initiate a session. The server responds with its own
 | 96 | RawData | DATA | **Y** | Signature (see [Signature](#signature)) |
 | 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` to reset sequence numbers on this logon |
 | 25036 | ResponseMode | INT | N | `1` = Everything (default); `2` = OnlyAcks |
-| 30023 | Expires | INT | N | API key expiry timestamp (ms), if applicable |
+| 30023 | Expires | INT | N | Signature token expiry timestamp (ms). Must match the `expires` value used in plaintext construction (i.e. `current_unix_ms + 5000`). |
 
 **Response fields (Server → Client):**
 
@@ -193,8 +194,8 @@ The client sends `Logon` to initiate a session. The server responds with its own
 **Request example:**
 
 ```
-8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT|34=1|52=20240101-08:00:00.000|
-30002=1704096000000|30001=5000|98=0|108=30|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|10=xxx|
+8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
 ```
 
 ### Heartbeat (MsgType = 0)
@@ -279,5 +280,6 @@ Use `OnlyAcks` when your application manages state entirely through the synchron
 | `XAR` | [AtomicReplaceRequest](trade/amend-order) | Client → Server | Amend an existing order |
 | `XCA` | OrderCancelAck | Server → Client | Cancel acknowledgement |
 | `XAA` | OrderAmendAck | Server → Client | Amend acknowledgement |
+| `j` | BusinessMessageReject | Server → Client | Application-level rejection (e.g. unsupported message type or missing required field) |
 
 ## [FIX SCHEMA](order.xml)
