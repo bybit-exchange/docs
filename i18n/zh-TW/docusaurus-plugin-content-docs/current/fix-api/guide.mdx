@@ -28,7 +28,7 @@ FIX API 目前僅支援**現貨（Spot）**交易。
 | 環境 | Host | Port |
 |---|---|---|
 | 正式環境 | `fix.bybit.com` | `9878` |
-| 測試環境 | `fix-testnet.bybit.com` | `9878` |
+| 測試環境 | `fix-oe-testnet.bybit.com` | `9000` |
 
 所有連線必須使用 TLS，不接受純文字 TCP 連線。
 
@@ -126,7 +126,7 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | 9 | BodyLength | LENGTH | 雙向 | Y | 訊息主體長度（位元組）|
 | 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
 | 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，可為任意唯一字串，無需與 API 金鑰相同（API 金鑰透過 `Username (553)` 單獨傳遞）。|
-| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT`；伺服器設為用戶端的 `SenderCompID` |
+| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`；伺服器設為用戶端的 `SenderCompID` |
 | 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
 | 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
 
@@ -138,6 +138,7 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 |-----|-------|------|----------|-------------|
 | 30002 | BapiTimestamp | INT (int64) | N | Unix 毫秒時間戳 |
 | 30001 | BapiRecvWindow | INT | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
+| 30010 | Category | STRING | Y | 委託單的產品類別，目前固定填 `spot` |
 | 30004 | Referer | STRING | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
 
 :::caution
@@ -180,7 +181,7 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | 96 | RawData | DATA | **Y** | 簽名（參見[簽名](#簽名)）|
 | 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` 表示在此次登入時重置序列號 |
 | 25036 | ResponseMode | INT | N | `1` = Everything（預設）；`2` = OnlyAcks |
-| 30023 | Expires | INT | N | API 金鑰到期時間戳（ms，如適用）|
+| 30023 | Expires | INT | N | 簽名 token 到期時間戳（ms）。須與構造待簽名字串時使用的 `expires` 值相同（即 `當前 Unix 毫秒時間戳 + 5000`）。|
 
 **回應欄位（伺服器 → 用戶端）：**
 
@@ -191,8 +192,8 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 **請求範例：**
 
 ```
-8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT|34=1|52=20240101-08:00:00.000|
-30002=1704096000000|30001=5000|98=0|108=30|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|10=xxx|
+8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
 ```
 
 ### Heartbeat（MsgType = 0）
@@ -277,3 +278,4 @@ FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標
 | `XAR` | [AtomicReplaceRequest](trade/amend-order) | 用戶端 → 伺服器 | 修改現有委託單 |
 | `XCA` | OrderCancelAck | 伺服器 → 用戶端 | 取消確認 |
 | `XAA` | OrderAmendAck | 伺服器 → 用戶端 | 修改確認 |
+| `j` | BusinessMessageReject | 伺服器 → 用戶端 | 應用層拒絕（如不支援的訊息類型或缺少必填欄位）|
