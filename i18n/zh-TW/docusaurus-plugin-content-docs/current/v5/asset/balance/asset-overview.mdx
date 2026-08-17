@@ -32,7 +32,7 @@ sidebar_position: 4
 |> coinDetail |array |幣種持倉明細。適用於無子分類的帳戶 |
 |>> coin |string |幣種名稱 |
 |>> equity |string |幣種權益金額 |
-|> categories |array |子分類明細。適用於含產品子分類的帳戶（如 `Earn`、`TradingBot`、`CopyTrading`） |
+|> categories |array |子分類明細。適用於含產品子分類的帳戶（如 `Earn`、`TradingBot`、`CopyTrading`、`UnifiedTradingAccount`）。`UnifiedTradingAccount` 的子分類為 `crypto` 和 `stocks` |
 |>> [category](../../enum#assetcategory) |string |子分類名稱 |
 |>> equity |string |該子分類的總權益 |
 |>> coinDetail |array |該子分類下的幣種持倉明細 |
@@ -236,25 +236,37 @@ X-BAPI-RECV-WINDOW: 5000
                 "totalEquity": "213399.38",
                 "valuationCurrency": "USD",
                 "accountType": "UnifiedTradingAccount",
-                "coinDetail": [
+                "snapshotTime": "1772449024908",
+                "categories": [
                     {
-                        "equity": "37283.5394",
-                        "coin": "USDT"
+                        "category": "crypto",
+                        "equity": "210000.00",
+                        "coinDetail": [
+                            {
+                                "equity": "37283.5394",
+                                "coin": "USDT"
+                            },
+                            {
+                                "equity": "2.62897721",
+                                "coin": "BTC"
+                            },
+                            {
+                                "equity": "1",
+                                "coin": "ETH"
+                            }
+                        ]
                     },
                     {
-                        "equity": "399.6",
-                        "coin": "AED"
-                    },
-                    {
-                        "equity": "2.62897721",
-                        "coin": "BTC"
-                    },
-                    {
-                        "equity": "1",
-                        "coin": "ETH"
+                        "category": "stocks",
+                        "equity": "3399.38",
+                        "coinDetail": [
+                            {
+                                "equity": "399.6",
+                                "coin": "AED"
+                            }
+                        ]
                     }
-                ],
-                "snapshotTime": "1772449024908"
+                ]
             },
             {
                 "totalEquity": "4491.24",

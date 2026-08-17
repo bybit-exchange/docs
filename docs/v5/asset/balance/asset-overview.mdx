@@ -32,7 +32,7 @@ This endpoint does not support any regional account, e.g., Bybit KZ, GE, EU, etc
 |> coinDetail |array |Coin-level holdings. Returned for accounts without sub-categories |
 |>> coin |string |Coin name |
 |>> equity |string |Coin equity amount |
-|> categories |array |Sub-category breakdown. Returned for accounts that have product sub-categories (e.g. `Earn`, `TradingBot`, `CopyTrading`) |
+|> categories |array |Sub-category breakdown. Returned for accounts that have product sub-categories (e.g. `Earn`, `TradingBot`, `CopyTrading`, `UnifiedTradingAccount`). For `UnifiedTradingAccount`, categories are `crypto` and `stocks` |
 |>> [category](../../enum#assetcategory) |string |Sub-category name |
 |>> equity |string |Total equity of this sub-category |
 |>> coinDetail |array |Coin-level holdings within this sub-category |
@@ -243,25 +243,37 @@ print(session.get_asset_overview())
                 "totalEquity": "213399.38",
                 "valuationCurrency": "USD",
                 "accountType": "UnifiedTradingAccount",
-                "coinDetail": [
+                "snapshotTime": "1772449024908",
+                "categories": [
                     {
-                        "equity": "37283.5394",
-                        "coin": "USDT"
+                        "category": "crypto",
+                        "equity": "210000.00",
+                        "coinDetail": [
+                            {
+                                "equity": "37283.5394",
+                                "coin": "USDT"
+                            },
+                            {
+                                "equity": "2.62897721",
+                                "coin": "BTC"
+                            },
+                            {
+                                "equity": "1",
+                                "coin": "ETH"
+                            }
+                        ]
                     },
                     {
-                        "equity": "399.6",
-                        "coin": "AED"
-                    },
-                    {
-                        "equity": "2.62897721",
-                        "coin": "BTC"
-                    },
-                    {
-                        "equity": "1",
-                        "coin": "ETH"
+                        "category": "stocks",
+                        "equity": "3399.38",
+                        "coinDetail": [
+                            {
+                                "equity": "399.6",
+                                "coin": "AED"
+                            }
+                        ]
                     }
-                ],
-                "snapshotTime": "1772449024908"
+                ]
             },
             {
                 "totalEquity": "4491.24",
