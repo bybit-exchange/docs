@@ -20,6 +20,7 @@ sidebar_position: 2
 
 | Tag | 欄位 | 必填 | 類型 | 說明 |
 |-----|-------|----------|------|-------------|
+| 30006 | ReqId | N | String | 請求 ID，用戶端自定義；若攜帶，響應會原樣回傳，便於請求/響應對應 |
 | 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
 | 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
 | 37 | OrderID | N | String | 伺服器委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
@@ -38,15 +39,16 @@ sidebar_position: 2
 
 | Tag | 欄位 | 必填 | 說明 |
 |-----|-------|----------|-------------|
-| 37 | OrderID | N | 伺服器委託單 ID |
-| 11 | ClOrdID | N | 用戶端委託單 ID |
-| 150 | ExecType | **Y** | `5` = Replaced（成功）；`8` = Rejected |
-| 39 | OrdStatus | **Y** | 目前委託狀態 |
-| 103 | OrdRejReason | N | 拒絕原因代碼（`ExecType=8` 時）|
-| 58 | Text | N | 錯誤訊息（`ExecType=8` 時）|
+| 30006 | ReqId | N | 若請求攜帶，響應原樣回傳；未攜帶則不返回 |
+| 37 | OrderID | N | 伺服器委託單 ID。**拒絕時不返回** |
+| 11 | ClOrdID | N | 原始訂單的 ClOrdID（`orderLinkId`）。**拒絕時不返回**，需依照發送順序關聯請求與拒絕回應 |
+| 150 | ExecType | N | 受理成功時為 `E`（PendingReplace）。**拒絕時不返回** —— 收到 XAA 但缺少 `150/39`、且帶有 `103/58`，即代表本次改單被拒 |
+| 39 | OrdStatus | N | 受理成功時為 `E`（PendingReplace）。**拒絕時不返回** |
+| 103 | OrdRejReason | N | Bybit 內部錯誤碼（例如 `10001`）。僅在拒絕時存在 |
+| 58 | Text | N | 可讀的拒絕說明。僅在拒絕時存在 |
 
 :::info
-`OrderAmendAck` 僅包含最小狀態欄位，伺服器不會在修改回應中返回完整委託資訊（數量、價格等）。如需確認修改後的委託狀態，請透過後續的 `ExecutionReport` 推播（`ResponseMode=1` 時）或 REST API 查詢。
+`OrderAmendAck` 僅為**受理確認**（`ExecType=E` PendingReplace），僅包含最小狀態欄位，不返回完整委託資訊（數量、價格等）。最終修改狀態由後續 `ExecutionReport (35=8)` 推送給出（在 `ResponseMode=1` 模式下），或可透過 REST API 查詢。
 :::
 
 ---
@@ -61,18 +63,37 @@ sidebar_position: 2
 
 _注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_
 
-### 成功回應範例（已修改）
+### PendingReplace Ack（ExecType=E）
+
+`ExecType=E`（PendingReplace）與 `OrdStatus=E`（PendingReplace）代表伺服器已收到並排隊處理改單，尚未進入終態。
+
+- `OnlyAcks` 模式下這是唯一的回應。
+- `Everything` 模式下這條先到，隨後會推送 `ExecutionReport (35=8)` 攜帶修改後的訂單狀態。
+- 速率限制標頭（`30005` TraceId、`30007` BapiLimit、`30008` BapiLimitStatus、`30009` BapiLimitResetTimestamp）僅出現在這條 ack 上，後續狀態推播不再攜帶。
 
 ```
-8=FIX.4.4|9=100|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
-30005=trace-def456|30007=120|30008=118|30009=1704096120000|
-37=1234567890123456|150=5|39=0|10=xxx|
+8=FIX.4.4|9=221|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260820-03:27:23.303|56=FIX_CLIENT|
+30005=2ee970aa6c710778146861bdcbf27553|30007=10|30008=9|30009=1787196443302|
+11=aeb12cf2-d583-4c2f-9263-564d4fd18e5a|37=2285563603279252224|150=E|39=E|10=251|
+```
+
+### 改單後訂單狀態推送範例（ExecType=0）
+
+```
+8=FIX.4.4|9=360|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260820-05:36:53.344|56=FIX_CLIENT|
+11=f15cca79-6870-4fba-98e0-b94b691963bd|37=2285628580665068288|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.002000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
+151=0.002|30041=100.0000000|14=0|30038=0.0000000|
+60=20260820-05:36:53.339|30039=20260820-05:35:59.278|
+30018=None|30019=N|30046=69504.8|10=020|
 ```
 
 ### 失敗回應範例（已拒絕）
 
+客戶端需依發送順序關聯本次改單請求，並透過 `103` 內部錯誤碼與 `58` 錯誤描述判斷失敗原因。
+
 ```
-8=FIX.4.4|9=110|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
-30005=trace-def457|30007=120|30008=118|30009=1704096120000|
-37=1234567890123456|150=8|39=0|103=99|58=Order not found|10=xxx|
+8=FIX.4.4|9=239|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260820-03:47:07.284|56=FIX_CLIENT|
+30005=43a6c52966d9c0f137d9fedf7e8c12a0|30007=10|30008=9|30009=1787197627283|
+58=The order remains unchanged as the parameters entered match the existing ones.|103=10001|10=085|
 ```

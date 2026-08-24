@@ -19,6 +19,7 @@ sidebar_position: 3
 
 | Tag | 欄位 | 必填 | 類型 | 說明 |
 |-----|-------|----------|------|-------------|
+| 30006 | ReqId | N | String | 請求 ID，用戶端自定義；若攜帶，響應會原樣回傳，便於請求/響應對應 |
 | 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
 | 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
 | 37 | OrderID | N | String | 伺服器委託單 ID，`OrderID` 或 `ClOrdID` 至少填一個 |
@@ -31,15 +32,16 @@ sidebar_position: 3
 
 | Tag | 欄位 | 必填 | 說明 |
 |-----|-------|----------|-------------|
-| 37 | OrderID | N | 伺服器委託單 ID |
-| 11 | ClOrdID | N | 用戶端委託單 ID |
-| 150 | ExecType | **Y** | `4` = Canceled（成功）；`8` = Rejected |
-| 39 | OrdStatus | **Y** | 目前委託狀態 |
-| 103 | OrdRejReason | N | 拒絕原因代碼（`ExecType=8` 時）|
-| 58 | Text | N | 錯誤訊息（`ExecType=8` 時）|
+| 30006 | ReqId | N | 若請求攜帶，響應原樣回傳；未攜帶則不返回 |
+| 37 | OrderID | N | 伺服器委託單 ID。**拒絕時不返回** |
+| 11 | ClOrdID | N | 若請求帶了 `ClOrdID`，響應原樣回傳；若請求未帶，則回帶**原始訂單**的 `orderLinkId`。**拒絕時不返回**，需依發送順序關聯 |
+| 150 | ExecType | N | 受理成功時為 `6`（PendingCancel）。**拒絕時不返回** —— 收到 XCA 但缺少 `150/39`、且帶有 `103/58`，即代表本次撤單被拒 |
+| 39 | OrdStatus | N | 受理成功時為 `6`（PendingCancel）。**拒絕時不返回** |
+| 103 | OrdRejReason | N | Bybit 內部錯誤碼（例如 `170213`）。僅在拒絕時存在 |
+| 58 | Text | N | 可讀的拒絕說明。僅在拒絕時存在 |
 
 :::info
-`OrderCancelAck` 僅包含最小狀態欄位，不返回完整委託資訊。若 `ResponseMode=1`，後續會有 `ExecType=4`（Canceled）的 `ExecutionReport` 推播以確認最終委託狀態。
+`OrderCancelAck` 僅為**受理確認**（`ExecType=6` PendingCancel），僅包含最小狀態欄位。最終取消狀態（`ExecType=4` Canceled 或 `F` PartiallyFilledCanceled）由後續 `ExecutionReport (35=8)` 推送給出，攜帶完整訂單欄位及 `30040 CancelType`；該推送僅在 `ResponseMode=1`（Everything）模式下發送。
 :::
 
 ---
@@ -54,18 +56,40 @@ sidebar_position: 3
 
 _注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_
 
-### 成功回應範例（已取消）
+### 取消中（PendingCancel） Ack（ExecType=6）
+
+- `OnlyAcks` 模式下這是唯一的回應。
+- `Everything` 模式下這條先到，隨後會推送 `ExecutionReport`（`ExecType=4` Canceled 或 `F` PartiallyFilledCanceled）確認最終狀態。
+- 速率限制標頭（`30005` TraceId、`30007` BapiLimit、`30008` BapiLimitStatus、`30009` BapiLimitResetTimestamp）僅出現在這條 ack 上，後續狀態推播不再攜帶。
+- 若請求攜帶 `30006 ReqId`，此 ack 會原樣回帶；後續狀態推送則不會攜帶 `30006`。
 
 ```
-8=FIX.4.4|9=95|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
-30005=trace-ghi789|30007=120|30008=117|30009=1704096180000|
-37=1234567890123456|150=4|39=4|10=xxx|
+8=FIX.4.4|9=265|35=XCA|34=2|49=BYBIT_FIX_SERVER|52=20260824-10:13:20.321|56=FIX_CLIENT|
+30005=56fc3d7313c3739e7ca1f36ddda54c65|30006=f15d0d96-a643-4b13-9186-1a9f3138752a|30007=20|30008=19|30009=1787566400320|
+11=b52e9783-1a34-4264-aae3-bd5e6ca3f522|37=2288666911934089984|150=6|39=6|10=108|
+```
+### 取消失敗回應範例 ACK（已拒絕）
+
+拒絕時 XCA **不返回** `150/39/37/11`，客戶端需依發送順序關聯本次撤單請求，並透過 `103` 內部錯誤碼與 `58` 錯誤描述判斷失敗原因。
+
+```
+8=FIX.4.4|9=184|35=XCA|34=2|49=BYBIT_FIX_SERVER|52=20260820-06:28:36.328|56=FIX_CLIENT|
+30005=2119c192fd5916fa6d5f065567a73293|30007=20|30008=19|30009=1787207316327|
+58=Order does not exist.|103=170213|10=121|
 ```
 
-### 失敗回應範例（已拒絕）
+### 已取消終態推送範例（ExecType=4）
+
+`Everything` 模式下，PendingCancel Ack 之後由 `ExecutionReport (35=8)` 推送最終狀態，攜帶完整訂單欄位及 `30040 CancelType` 說明取消原因（如 `CancelByUser`）；`OrdRejReason (103)` 承載內部原因碼（如 `EC_PerCancelRequest`）。
 
 ```
-8=FIX.4.4|9=110|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
-30005=trace-ghi790|30007=120|30008=117|30009=1704096180000|
-37=1234567890123456|150=8|39=0|103=99|58=Order already filled|10=xxx|
+8=FIX.4.4|9=402|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260824-10:13:20.325|56=FIX_CLIENT|
+11=b52e9783-1a34-4264-aae3-bd5e6ca3f522|37=2288666911934089984|150=4|39=4|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
+151=0.001|30041=50.0000000|14=0|30038=0.0000000|
+60=20260824-10:13:20.320|30039=20260824-10:12:36.590|
+103=EC_PerCancelRequest|30040=CancelByUser|
+30018=None|30019=N|30046=77297.5|10=146|
 ```
+
+

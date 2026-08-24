@@ -20,6 +20,7 @@ sidebar_position: 2
 
 | Tag | Field | Required | Type | Description |
 |-----|-------|----------|------|-------------|
+| 30006 | ReqId | N | String | Client-defined request ID. If provided, echoed back in the response for request/response correlation |
 | 30010 | Category | **Y** | String | Product type. Currently `spot` only |
 | 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
 | 37 | OrderID | N | String | Server-assigned order ID. At least one of `OrderID` or `ClOrdID` required |
@@ -38,15 +39,16 @@ The server responds with an **`OrderAmendAck (XAA)`**:
 
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|
-| 37 | OrderID | N | Server-assigned order ID |
-| 11 | ClOrdID | N | Client order ID |
-| 150 | ExecType | **Y** | `5` = Replaced (success); `8` = Rejected |
-| 39 | OrdStatus | **Y** | Current order status |
-| 103 | OrdRejReason | N | Rejection reason code (when `ExecType=8`) |
-| 58 | Text | N | Error message (when `ExecType=8`) |
+| 30006 | ReqId | N | Echoed back if provided in the request; absent otherwise |
+| 37 | OrderID | N | Server-assigned order ID. **Absent when the amend is rejected** |
+| 11 | ClOrdID | N | Original order's ClOrdID (`orderLinkId`). **Absent when the amend is rejected** — correlate rejects to requests by send order |
+| 150 | ExecType | N | On acceptance: `E` (PendingReplace). **Absent on rejection** — an XAA lacking `150/39` but carrying `103/58` indicates a reject |
+| 39 | OrdStatus | N | On acceptance: `E` (PendingReplace). **Absent on rejection** |
+| 103 | OrdRejReason | N | Bybit internal error code (e.g. `10001`). Present only when the amend is rejected |
+| 58 | Text | N | Human-readable reject reason. Present only when the amend is rejected |
 
 :::info
-`OrderAmendAck` carries only minimal state fields. The server does not return full order details (qty, price, etc.) in the amend response. To verify the updated order state, rely on the subsequent `ExecutionReport` push (when `ResponseMode=1`) or query via REST.
+`OrderAmendAck` is an **acceptance confirmation** (`ExecType=E` PendingReplace) carrying only minimal state fields — the server does not return full order details (qty, price, etc.) in this ack. The terminal amended state is delivered via a subsequent `ExecutionReport (35=8)` push (in `ResponseMode=1`), or can be queried via REST.
 :::
 
 ---
@@ -61,18 +63,37 @@ The server responds with an **`OrderAmendAck (XAA)`**:
 
 _Note: `|` represents SOH (0x01) in actual wire format._
 
-### Response Example (Accepted)
+### PendingReplace Ack (ExecType=E)
+
+Immediate acceptance ack for the amend request. `ExecType=E` (PendingReplace) and `OrdStatus=E` (PendingReplace) mean the server has accepted and queued the amend — the terminal state is not yet delivered.
+
+- In `OnlyAcks` mode this is the only response.
+- In `Everything` mode this arrives first, followed by an `ExecutionReport (35=8)` carrying the amended order state.
+- Rate-limit headers (`30005` TraceId, `30007` BapiLimit, `30008` BapiLimitStatus, `30009` BapiLimitResetTimestamp) appear on this ack only — subsequent state pushes omit them.
 
 ```
-8=FIX.4.4|9=100|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
-30005=trace-def456|30007=120|30008=118|30009=1704096120000|
-37=1234567890123456|150=5|39=0|10=xxx|
+8=FIX.4.4|9=221|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260820-03:27:23.303|56=FIX_CLIENT|
+30005=2ee970aa6c710778146861bdcbf27553|30007=10|30008=9|30009=1787196443302|
+11=aeb12cf2-d583-4c2f-9263-564d4fd18e5a|37=2285563603279252224|150=E|39=E|10=251|
+```
+
+### Amended Order State Push (ExecType=0)
+
+```
+8=FIX.4.4|9=360|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260820-05:36:53.344|56=FIX_CLIENT|
+11=f15cca79-6870-4fba-98e0-b94b691963bd|37=2285628580665068288|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.002000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
+151=0.002|30041=100.0000000|14=0|30038=0.0000000|
+60=20260820-05:36:53.339|30039=20260820-05:35:59.278|
+30018=None|30019=N|30046=69504.8|10=020|
 ```
 
 ### Response Example (Rejected)
 
+On rejection the XAA **omits** `150/39/37/11` — correlate rejects to requests by send order, and read `103` (internal error code) plus `58` (message) for the reason.
+
 ```
-8=FIX.4.4|9=110|35=XAA|49=BYBIT|56=CLIENT|34=3|52=20240101-08:01:00.010|
-30005=trace-def457|30007=120|30008=118|30009=1704096120000|
-37=1234567890123456|150=8|39=0|103=99|58=Order not found|10=xxx|
+8=FIX.4.4|9=239|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260820-03:47:07.284|56=FIX_CLIENT|
+30005=43a6c52966d9c0f137d9fedf7e8c12a0|30007=10|30008=9|30009=1787197627283|
+58=The order remains unchanged as the parameters entered match the existing ones.|103=10001|10=085|
 ```

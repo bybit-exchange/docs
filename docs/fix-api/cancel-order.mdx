@@ -19,6 +19,7 @@ sidebar_position: 3
 
 | Tag | Field | Required | Type | Description |
 |-----|-------|----------|------|-------------|
+| 30006 | ReqId | N | String | Client-defined request ID. If provided, echoed back in the response for request/response correlation |
 | 30010 | Category | **Y** | String | Product type. Currently `spot` only |
 | 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
 | 37 | OrderID | N | String | Server-assigned order ID. At least one of `OrderID` or `ClOrdID` required |
@@ -31,15 +32,16 @@ The server responds with an **`OrderCancelAck (XCA)`**:
 
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|
-| 37 | OrderID | N | Server-assigned order ID |
-| 11 | ClOrdID | N | Client order ID |
-| 150 | ExecType | **Y** | `4` = Canceled (success); `8` = Rejected |
-| 39 | OrdStatus | **Y** | Current order status |
-| 103 | OrdRejReason | N | Rejection reason code (when `ExecType=8`) |
-| 58 | Text | N | Error message (when `ExecType=8`) |
+| 30006 | ReqId | N | Echoed back if provided in the request; absent otherwise |
+| 37 | OrderID | N | Server-assigned order ID. **Absent when the cancel is rejected** |
+| 11 | ClOrdID | N | Echoes the request's `ClOrdID` if provided; otherwise echoes the **original order's** `orderLinkId`. **Absent when the cancel is rejected** — correlate rejects to requests by send order |
+| 150 | ExecType | N | On acceptance: `6` (PendingCancel). **Absent on rejection** — an XCA lacking `150/39` but carrying `103/58` indicates a reject |
+| 39 | OrdStatus | N | On acceptance: `6` (PendingCancel). **Absent on rejection** |
+| 103 | OrdRejReason | N | Bybit internal error code (e.g. `170213`). Present only when the cancel is rejected |
+| 58 | Text | N | Human-readable reject reason. Present only when the cancel is rejected |
 
 :::info
-`OrderCancelAck` carries only minimal state fields. The server does not return full order details in the cancel response. If `ResponseMode=1`, a subsequent `ExecutionReport` push with `ExecType=4` (Canceled) will confirm the final order state.
+`OrderCancelAck` is an **acceptance confirmation** (`ExecType=6` PendingCancel) carrying only minimal state fields. The terminal cancel state (`ExecType=4` Canceled or `F` PartiallyFilledCanceled) is delivered via a subsequent `ExecutionReport (35=8)` push with full order fields and `30040 CancelType`. That push is only emitted in `ResponseMode=1` (Everything).
 :::
 
 ---
@@ -54,18 +56,41 @@ The server responds with an **`OrderCancelAck (XCA)`**:
 
 _Note: `|` represents SOH (0x01) in actual wire format._
 
-### Response Example (Accepted)
+### PendingCancel Ack (ExecType=6)
+
+- In `OnlyAcks` mode this is the only response.
+- In `Everything` mode this arrives first, followed by an `ExecutionReport` (`ExecType=4` Canceled or `F` PartiallyFilledCanceled) confirming the final state.
+- Rate-limit headers (`30005` TraceId, `30007` BapiLimit, `30008` BapiLimitStatus, `30009` BapiLimitResetTimestamp) appear on this ack only — subsequent state pushes omit them.
+- If the request carried `30006 ReqId`, this ack echoes it back; the subsequent state push does **not** carry `30006`.
 
 ```
-8=FIX.4.4|9=95|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
-30005=trace-ghi789|30007=120|30008=117|30009=1704096180000|
-37=1234567890123456|150=4|39=4|10=xxx|
+8=FIX.4.4|9=265|35=XCA|34=2|49=BYBIT_FIX_SERVER|52=20260824-10:13:20.321|56=FIX_CLIENT|
+30005=56fc3d7313c3739e7ca1f36ddda54c65|30006=f15d0d96-a643-4b13-9186-1a9f3138752a|30007=20|30008=19|30009=1787566400320|
+11=b52e9783-1a34-4264-aae3-bd5e6ca3f522|37=2288666911934089984|150=6|39=6|10=108|
 ```
 
-### Response Example (Rejected)
+### Rejected Example ACK (Rejected)
+
+On rejection the XCA **omits** `150/39/37/11` — correlate rejects to requests by send order, and read `103` (internal error code) plus `58` (message) for the reason.
 
 ```
-8=FIX.4.4|9=110|35=XCA|49=BYBIT|56=CLIENT|34=4|52=20240101-08:02:00.010|
-30005=trace-ghi790|30007=120|30008=117|30009=1704096180000|
-37=1234567890123456|150=8|39=0|103=99|58=Order already filled|10=xxx|
+8=FIX.4.4|9=184|35=XCA|34=2|49=BYBIT_FIX_SERVER|52=20260820-06:28:36.328|56=FIX_CLIENT|
+30005=2119c192fd5916fa6d5f065567a73293|30007=20|30008=19|30009=1787207316327|
+58=Order does not exist.|103=170213|10=121|
 ```
+
+
+### Canceled Terminal Push Example (ExecType=4)
+
+In `Everything` mode, after the PendingCancel Ack the server pushes the terminal state via an `ExecutionReport (35=8)` carrying full order fields, `30040 CancelType` (e.g. `CancelByUser`), and an internal reason code in `OrdRejReason (103)` (e.g. `EC_PerCancelRequest`). 
+
+```
+8=FIX.4.4|9=402|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260824-10:13:20.325|56=FIX_CLIENT|
+11=b52e9783-1a34-4264-aae3-bd5e6ca3f522|37=2288666911934089984|150=4|39=4|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
+151=0.001|30041=50.0000000|14=0|30038=0.0000000|
+60=20260824-10:13:20.320|30039=20260824-10:12:36.590|
+103=EC_PerCancelRequest|30040=CancelByUser|
+30018=None|30019=N|30046=77297.5|10=146|
+```
+

@@ -74,7 +74,7 @@ Generate your API key at:
 - **Testnet:** https://testnet.bybit.com/app/user/api-management
 - **Mainnet:** https://www.bybit.com/app/user/api-management
 
-Only **Self-generated (RSA) keys is supported, use RSA-SHA256 signing
+Only **self-generated (RSA) keys** are supported; signing uses RSA-SHA256.
 
 ### Signature
 
@@ -126,11 +126,12 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 |-----|-------|------|-----------|----------|-------------|
 | 8 | BeginString | STRING | Both | Y | Always `FIX.4.4` |
 | 9 | BodyLength | LENGTH | Both | Y | Message body length in bytes |
+| 10 | CheckSum | STRING | Both | Y | Message checksum — sum of all bytes modulo 256, as a 3-digit zero-padded string |
 | 35 | MsgType | STRING | Both | Y | Message type (see [Message Types](#message-types-reference)) |
 | 49 | SenderCompID | STRING | Both | Y | A client-defined identifier for this connection. Can be any unique string; does not need to match the API key (which is sent separately in `Username (553)`). |
 | 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT_FIX_SERVER`; server sets to the client's `SenderCompID` |
 | 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number, starting from `1` |
-| 52 | SendingTime | UTCTIMESTAMP | Both | Y | UTC send time in `YYYYMMDD-HH:MM:SS.sss` format |
+| 52 | SendingTime | UTCTIMESTAMP | Both | Y | Send time |
 
 ### Bybit Extension Header Fields
 
@@ -138,7 +139,8 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 
 | Tag | Field | Type | Required | Description |
 |-----|-------|------|----------|-------------|
-| 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds. Required for authenticated order requests |
+| 30006 | ReqId | STRING | N | Client-defined request ID. If provided, it is **echoed back on the synchronous ack** (ExecutionReport `A`, XCA, XAA, etc.) for request/response correlation; it is **not** carried on asynchronous state pushes (`ExecType=0/4/F` ExecutionReports) |
+| 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds |
 | 30001 | BapiRecvWindow | INT | N | Validity window in ms (default: `5000`, max: `60000`) |
 | 30010 | Category | STRING | Y | Product category for order requests. Currently must be `spot` |
 | 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
@@ -176,8 +178,8 @@ The client sends `Logon` to initiate a session. The server responds with its own
 
 | Tag | Field | Type | Required | Description |
 |-----|-------|------|----------|-------------|
-| 98 | EncryptMethod | INT | Y | Must be `0` (None) |
-| 108 | HeartBtInt | INT | Y | Idle timeout in seconds. If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
+| 98 | EncryptMethod | INT | **Y** | Must be `0` (None) |
+| 108 | HeartBtInt | INT | **Y** | Idle timeout in seconds, must be `10`. If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
 | 553 | Username | STRING | **Y** | Your API key |
 | 95 | RawDataLength | LENGTH | **Y** | Byte length of `RawData` |
 | 96 | RawData | DATA | **Y** | Signature (see [Signature](#signature)) |

@@ -74,6 +74,8 @@ Client                              Server
 - **測試環境：** https://testnet.bybit.com/app/user/api-management
 - **正式環境：** https://www.bybit.com/app/user/api-management
 
+僅支援**自行產生（RSA）金鑰**，簽名採用 RSA-SHA256。
+
 ### 簽名
 
 :::info
@@ -124,11 +126,13 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 |-----|-------|------|-----------|----------|-------------|
 | 8 | BeginString | STRING | 雙向 | Y | 固定為 `FIX.4.4` |
 | 9 | BodyLength | LENGTH | 雙向 | Y | 訊息主體長度（位元組）|
+| 10 | CheckSum | STRING | 雙向 | Y | 訊息校驗和，所有位元組值對 256 取模的 3 位數字串 |
 | 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
 | 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，可為任意唯一字串，無需與 API 金鑰相同（API 金鑰透過 `Username (553)` 單獨傳遞）。|
 | 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`；伺服器設為用戶端的 `SenderCompID` |
 | 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
 | 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
+
 
 ### Bybit 擴充標頭欄位
 
@@ -136,6 +140,7 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 
 | Tag | 欄位 | 類型 | 必填 | 說明 |
 |-----|-------|------|----------|-------------|
+| 30006 | ReqId | STRING | N | 用戶端自定義請求 ID。若攜帶，**同步回應（各類 Ack：ExecutionReport A、XCA、XAA 等）會原樣回帶**便於請求/響應對應；**非同步狀態推送（如 ExecType=0/4/F 的 ExecutionReport）不會攜帶** |
 | 30002 | BapiTimestamp | INT (int64) | N | Unix 毫秒時間戳 |
 | 30001 | BapiRecvWindow | INT | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
 | 30010 | Category | STRING | Y | 委託單的產品類別，目前固定填 `spot` |
@@ -175,7 +180,7 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | Tag | 欄位 | 類型 | 必填 | 說明 |
 |-----|-------|------|----------|-------------|
 | 98 | EncryptMethod | INT | **Y** | 必須為 `0`（None）|
-| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
+| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）,必須為 `10`。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
 | 553 | Username | STRING | **Y** | 您的 API 金鑰 |
 | 95 | RawDataLength | LENGTH | **Y** | `RawData` 的位元組長度 |
 | 96 | RawData | DATA | **Y** | 簽名（參見[簽名](#簽名)）|
@@ -187,13 +192,19 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 
 | Tag | 欄位 | 類型 | 說明 |
 |-----|-------|------|-------------|
-| 30003 | ConnId | STRING | 伺服器分配的唯一連線識別碼。聯絡客服排查問題時請提供此值，後續訊息中無需回傳。|
+| 49 | SenderCompID | STRING | 用戶端自定義的連線識別碼（排錯時可以用這個ID）|
 
 **請求範例：**
 
 ```
 8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
 98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
+```
+**回應範例：**
+
+```
+8=FIX.4.4|9=87|35=A|34=1|49=BYBIT_FIX_SERVER|52=20260820-02:21:43.001|56=FIX_CLIENT|
+98=0|108=10|141=Y|10=028|
 ```
 
 ### Heartbeat（MsgType = 0）
@@ -240,6 +251,16 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 |-----|-------|------|----------|-------------|
 | 58 | Text | STRING | N | 登出原因（選填）|
 
+**Logout請求範例：**
+```
+8=FIX.4.4|9=96|35=5|34=3|49=FIX_CLIENT|52=20260819-11:07:06.815|56=BYBIT_FIX_SERVER|58=client requested logout|10=xxx|
+```
+**Logout 响应 **
+```
+8=FIX.4.4|9=69|35=5|34=3|49=BYBIT_FIX_SERVER|52=20260819-11:07:08.236|56=FIX_CLIENT|10=xxx|
+```
+
+
 ## 頻率限制
 
 FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標頭均包含目前視窗狀態：
@@ -279,3 +300,5 @@ FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標
 | `XCA` | OrderCancelAck | 伺服器 → 用戶端 | 取消確認 |
 | `XAA` | OrderAmendAck | 伺服器 → 用戶端 | 修改確認 |
 | `j` | BusinessMessageReject | 伺服器 → 用戶端 | 應用層拒絕（如不支援的訊息類型或缺少必填欄位）|
+
+## [FIX SCHEMA](order.xml)

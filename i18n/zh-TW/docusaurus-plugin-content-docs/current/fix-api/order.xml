@@ -20,9 +20,9 @@
     30000-30009:  Session/connection fields
       30001: BapiRecvWindow
       30002: BapiTimestamp (X-BAPI-TIMESTAMP)
-      30003: ConnId
       30004: Referer
       30005: TraceId
+      30006: ReqId
       30007: BapiLimit
       30008: BapiLimitStatus
       30009: BapiLimitResetTimestamp
@@ -53,6 +53,8 @@
     <field name="TargetCompID"            required="Y"/>
     <field name="MsgSeqNum"               required="Y"/>
     <field name="SendingTime"             required="Y"/>
+    <!-- request/response correlation: client generates, server echoes back -->
+    <field name="ReqId"                   required="N"/>
     <!-- client request -->
     <field name="BapiTimestamp"           required="N"/>
     <field name="BapiRecvWindow"          required="N"/>
@@ -184,7 +186,6 @@
     <!--
       Covers SBE AuthReq (id=1) / AuthResp (id=2).
       Client sends: Username=apiKey, RawData=signature, ResponseMode.
-      Server acks with ConnId.
     -->
     <message name="Logon" msgtype="A" msgcat="admin">
       <field name="EncryptMethod"    required="Y"/>
@@ -195,7 +196,6 @@
       <field name="ResetSeqNumFlag"  required="N"/>
       <field name="ResponseMode"     required="N"/>
       <field name="Expires"          required="N"/>
-      <field name="ConnId"           required="N"/>
     </message>
 
     <!-- ── Single order requests ─────────────────────────────────── -->
@@ -220,7 +220,7 @@
       <field name="Symbol"           required="Y"/>
       <field name="Side"             required="Y"/>
       <field name="OrdType"          required="Y"/>
-      <field name="OrderQty"         required="N"/>
+      <field name="OrderQty"         required="Y"/>
       <field name="Price"            required="N"/>
       <field name="ClOrdID"          required="N"/>
       <field name="TimeInForce"      required="N"/>
@@ -558,9 +558,9 @@
     <!-- Custom fields: Session/connection (30001-30009) -->
     <field number="30001" name="BapiRecvWindow"          type="INT"/>
     <field number="30002" name="BapiTimestamp"           type="INT"/>  <!-- ms时间戳，部分语言会超int32，需用int64解析 -->
-    <field number="30003" name="ConnId"                  type="STRING"/>
     <field number="30004" name="Referer"                 type="STRING"/>
     <field number="30005" name="TraceId"                 type="STRING"/>
+    <field number="30006" name="ReqId"                   type="STRING"/>  <!-- client-generated request id, echoed back by server for request/response correlation -->
     <field number="30007" name="BapiLimit"               type="INT"/>
     <field number="30008" name="BapiLimitStatus"         type="INT"/>
     <field number="30009" name="BapiLimitResetTimestamp" type="INT"/>  <!-- ms时间戳，部分语言会超int32，需用int64解析 -->
