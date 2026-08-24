@@ -147,7 +147,6 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | 30006 | ReqId | STRING | N | 用戶端自定義請求 ID。若攜帶，**同步回應（各類 Ack：ExecutionReport A、XCA、XAA 等）會原樣回帶**便於請求/響應對應；**非同步狀態推送（如 ExecType=0/4/F 的 ExecutionReport）不會攜帶** |
 | 30002 | BapiTimestamp | INT (int64) | N | Unix 毫秒時間戳 |
 | 30001 | BapiRecvWindow | INT | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
-| 30010 | Category | STRING | Y | 委託單的產品類別，目前固定填 `spot` |
 | 30004 | Referer | STRING | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
 
 :::caution
@@ -197,6 +196,9 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | Tag | 欄位 | 類型 | 說明 |
 |-----|-------|------|-------------|
 | 49 | SenderCompID | STRING | 用戶端自定義的連線識別碼（排錯時可以用這個ID）|
+| 98 | EncryptMethod | INT | 加密方式，固定為 `0`（None）|
+| 108 | HeartBtInt | INT | 伺服器實際採用的心跳間隔（秒），固定為 `10` |
+| 141 | ResetSeqNumFlag | BOOLEAN | 序列號重置標誌，通常為 `Y` |
 
 **請求範例：**
 

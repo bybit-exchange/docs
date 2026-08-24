@@ -20,7 +20,6 @@ sidebar_position: 2
 
 | Tag | Field | Required | Type | Description |
 |-----|-------|----------|------|-------------|
-| 30006 | ReqId | N | String | Client-defined request ID. If provided, echoed back in the response for request/response correlation |
 | 30010 | Category | **Y** | String | Product type. Currently `spot` only |
 | 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
 | 37 | OrderID | N | String | Server-assigned order ID. At least one of `OrderID` or `ClOrdID` required |
@@ -39,7 +38,6 @@ The server responds with an **`OrderAmendAck (XAA)`**:
 
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|
-| 30006 | ReqId | N | Echoed back if provided in the request; absent otherwise |
 | 37 | OrderID | N | Server-assigned order ID. **Absent when the amend is rejected** |
 | 11 | ClOrdID | N | Original order's ClOrdID (`orderLinkId`). **Absent when the amend is rejected** — correlate rejects to requests by send order |
 | 150 | ExecType | N | On acceptance: `E` (PendingReplace). **Absent on rejection** — an XAA lacking `150/39` but carrying `103/58` indicates a reject |

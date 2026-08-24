@@ -146,7 +146,6 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 | 30006 | ReqId | STRING | N | Client-defined request ID. If provided, it is **echoed back on the synchronous ack** (ExecutionReport `A`, XCA, XAA, etc.) for request/response correlation; it is **not** carried on asynchronous state pushes (`ExecType=0/4/F` ExecutionReports) |
 | 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds |
 | 30001 | BapiRecvWindow | INT | N | Validity window in ms (default: `5000`, max: `60000`) |
-| 30010 | Category | STRING | Y | Product category for order requests. Currently must be `spot` |
 | 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
 
 :::caution
@@ -195,7 +194,10 @@ The client sends `Logon` to initiate a session. The server responds with its own
 
 | Tag | Field | Type | Description |
 |-----|-------|------|-------------|
-| 30003 | ConnId | STRING | Unique connection identifier assigned by the server. Include this value in support requests for session-level debugging. Does not need to be echoed in subsequent messages. |
+| 49 | SenderCompID | STRING | Client-defined connection identifier — useful for troubleshooting |
+| 98 | EncryptMethod | INT | Encryption method, fixed to `0` (None) |
+| 108 | HeartBtInt | INT | Heartbeat interval (seconds) actually applied by the server, fixed to `10` |
+| 141 | ResetSeqNumFlag | BOOLEAN | Sequence number reset flag, typically `Y` |
 
 **Request example:**
 

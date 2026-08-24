@@ -10,7 +10,7 @@ sidebar_position: 4
 |------|---------|-----------|
 | **委託確認（Order ACK）** | `NewOrderSingle (D)` 的直接回應 | `0`（New）或 `8`（Rejected）|
 | **成交通知** | 委託成交（部分或全部）| `F`（Trade）|
-| **委託狀態推播** | 被動委託狀態變更 | `4`、`5`、`C` 等 |
+| **委託狀態推播** | 被動委託狀態變更 | `4`、`5` 等 |
 
 用途 2 與 3 僅在 `ResponseMode=1`（Everything）時推送。參見 [ResponseMode](../guide#responsemode)。
 
@@ -85,21 +85,21 @@ sidebar_position: 4
 
 `NoFills (30050)` 包含後續成交條目的數量。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 30051 | FillExecID | **Y** | 執行 ID（`execId`）|
-| 30052 | FillQty | **Y** | 本次成交數量 |
-| 30053 | FillPx | **Y** | 成交價格 |
-| 30054 | FillTime | **Y** | 成交時間 |
-| 30055 | FillCommission | N | 手續費金額 |
-| 30056 | FillCommCurr | N | 手續費幣別 |
-| 30059 | FillCommRate | N | 手續費率 |
-| 30057 | FillValue | N | 成交金額 |
-| 30058 | FillIsMaker | N | `Y` 表示此次成交為掛單方 |
-| 30063 | FillExecType | N | `Trade` 或 `BlockTrade` |
-| 30064 | FillLeavesQty | N | 本次成交後的剩餘數量 |
-| 30065 | FillSeq | N | 用於跨訊息排序的跨序列號 |
-| 30066 | FillBlockTradeId | N | 大宗交易 ID（如適用）|
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 30051 | FillExecID | 執行 ID（`execId`）|
+| 30052 | FillQty | 本次成交數量 |
+| 30053 | FillPx | 成交價格 |
+| 30054 | FillTime | 成交時間 |
+| 30055 | FillCommission | 手續費金額 |
+| 30056 | FillCommCurr | 手續費幣別 |
+| 30059 | FillCommRate | 手續費率 |
+| 30057 | FillValue | 成交金額 |
+| 30058 | FillIsMaker | `Y` 表示此次成交為掛單方 |
+| 30063 | FillExecType | `Trade` 或 `BlockTrade` |
+| 30064 | FillLeavesQty | 本次成交後的剩餘數量 |
+| 30065 | FillSeq | 用於跨訊息排序的跨序列號 |
+| 30066 | FillBlockTradeId | 大宗交易 ID（如適用）|
 
 當一筆委託同時產生多次成交（如掃過多個價位）時，`ExecutionReport` 包含單條訊息且 `NoFills > 1`。委託層級的 `CumQty (14)` 與 `AvgPx (6)` 反映群組內所有成交完成後的聚合狀態。
 
@@ -111,10 +111,10 @@ sidebar_position: 4
 
 `NoFeeDetails (30060)` 包含手續費條目的數量。
 
-| Tag | 欄位 | 必填 | 說明 |
-|-----|-------|----------|-------------|
-| 30061 | FeeCoin | **Y** | 手續費幣別 |
-| 30062 | Fee | **Y** | 以此幣別計算的總手續費金額 |
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 30061 | FeeCoin | 手續費幣別 |
+| 30062 | Fee | 以此幣別計算的總手續費金額 |
 
 ---
 
@@ -128,7 +128,6 @@ sidebar_position: 4
 | `6` | PendingCancel | 取消中。不會透過 `ExecutionReport` 推送——取消請求由 `OrderCancelAck (XCA)` 確認收到。|
 | `8` | Rejected | 委託或請求被拒絕 |
 | `A` | PendingNew | 新委託的過渡狀態。`OnlyAcks` 模式下，`NewOrderSingle` 一定會先返回 `PendingNew`，再返回最終的 `New` 或 `Rejected`。`Everything` 模式下，`PendingNew` 與 `New` 均會推送，但可能亂序到達。|
-| `C` | Expired | 委託已過期 |
 | `D` | Deactivated | 條件委託已停用 |
 | `E` | PendingReplace | 修改中。不會透過 `ExecutionReport` 推送——修改請求由 `OrderAmendAck (XAA)` 確認收到；修改後的訂單狀態由 `ExecType=5`（Replaced）的 `ExecutionReport` 推送給出（該推送中 `OrdStatus` 仍為 `0` New，UTA 的 OrdStatus 不包含 Replaced 值）|
 | `F` | Trade | 委託成交（部分或全部）|

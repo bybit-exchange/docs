@@ -10,7 +10,7 @@ sidebar_position: 4
 |------|---------|-----------|
 | **Order ACK** | Direct response to `NewOrderSingle (D)` | `0` (New) or `8` (Rejected) |
 | **Fill notification** | Order matched (partially or fully) | `F` (Trade) |
-| **Order status push** | Passive order state change | `4`, `5`, `C`, etc. |
+| **Order status push** | Passive order state change | `4`, `5`, etc. |
 
 Roles 2 and 3 are only delivered when `ResponseMode=1` (Everything). See [ResponseMode](../guide#responsemode).
 
@@ -85,21 +85,21 @@ Present only when `ExecType=F` (Trade). Each entry in the group represents one i
 
 `NoFills (30050)` contains the count of fill entries that follow.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 30051 | FillExecID | **Y** | Execution ID (`execId`) |
-| 30052 | FillQty | **Y** | Filled quantity in this execution |
-| 30053 | FillPx | **Y** | Fill price |
-| 30054 | FillTime | **Y** | Fill timestamp |
-| 30055 | FillCommission | N | Fee amount |
-| 30056 | FillCommCurr | N | Fee currency |
-| 30059 | FillCommRate | N | Fee rate |
-| 30057 | FillValue | N | Fill value |
-| 30058 | FillIsMaker | N | `Y` if this fill was the maker side |
-| 30063 | FillExecType | N | `Trade` or `BlockTrade` |
-| 30064 | FillLeavesQty | N | Remaining qty after this fill |
-| 30065 | FillSeq | N | Cross-sequence number for ordering across messages |
-| 30066 | FillBlockTradeId | N | Block trade ID if applicable |
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 30051 | FillExecID | Execution ID (`execId`) |
+| 30052 | FillQty | Filled quantity in this execution |
+| 30053 | FillPx | Fill price |
+| 30054 | FillTime | Fill timestamp |
+| 30055 | FillCommission | Fee amount |
+| 30056 | FillCommCurr | Fee currency |
+| 30059 | FillCommRate | Fee rate |
+| 30057 | FillValue | Fill value |
+| 30058 | FillIsMaker | `Y` if this fill was the maker side |
+| 30063 | FillExecType | `Trade` or `BlockTrade` |
+| 30064 | FillLeavesQty | Remaining qty after this fill |
+| 30065 | FillSeq | Cross-sequence number for ordering across messages |
+| 30066 | FillBlockTradeId | Block trade ID if applicable |
 
 When an order generates multiple fills simultaneously (e.g. sweeps multiple price levels), the `ExecutionReport` contains a single message with `NoFills > 1`. The order-level `CumQty (14)` and `AvgPx (6)` reflect the aggregated state after all fills in the group.
 
@@ -111,10 +111,10 @@ Optional. Provides per-coin fee aggregates at the order level.
 
 `NoFeeDetails (30060)` contains the count of fee entries.
 
-| Tag | Field | Required | Description |
-|-----|-------|----------|-------------|
-| 30061 | FeeCoin | **Y** | Fee currency |
-| 30062 | Fee | **Y** | Total fee amount in this currency |
+| Tag | Field | Description |
+|-----|-------|-------------|
+| 30061 | FeeCoin | Fee currency |
+| 30062 | Fee | Total fee amount in this currency |
 
 ---
 
@@ -128,7 +128,6 @@ Optional. Provides per-coin fee aggregates at the order level.
 | `6` | PendingCancel | Cancel in progress. Not delivered in `ExecutionReport` — cancel requests are acknowledged via `OrderCancelAck (XCA)`, which serves as confirmation of receipt. |
 | `8` | Rejected | Order or request rejected |
 | `A` | PendingNew | Transitional state for new orders. In `OnlyAcks` mode, a `NewOrderSingle` always returns a `PendingNew` report before the final `New` or `Rejected`. In `Everything` mode, both `PendingNew` and `New` reports are delivered but may arrive out of order. |
-| `C` | Expired | Order expired |
 | `D` | Deactivated | Conditional order deactivated |
 | `E` | PendingReplace | Amend in progress. Not delivered in `ExecutionReport` — amend requests are acknowledged via `OrderAmendAck (XAA)`. The amended order state is subsequently delivered via an `ExecutionReport` with `ExecType=5` (Replaced); its `OrdStatus` remains `0` (New) since UTA's OrdStatus has no `Replaced` value. |
 | `F` | Trade | Order filled (partial or full) |

@@ -19,7 +19,6 @@ sidebar_position: 3
 
 | Tag | Field | Required | Type | Description |
 |-----|-------|----------|------|-------------|
-| 30006 | ReqId | N | String | Client-defined request ID. If provided, echoed back in the response for request/response correlation |
 | 30010 | Category | **Y** | String | Product type. Currently `spot` only |
 | 55 | Symbol | **Y** | String | Symbol name, e.g. `BTCUSDT` (uppercase) |
 | 37 | OrderID | N | String | Server-assigned order ID. At least one of `OrderID` or `ClOrdID` required |
@@ -32,7 +31,6 @@ The server responds with an **`OrderCancelAck (XCA)`**:
 
 | Tag | Field | Required | Description |
 |-----|-------|----------|-------------|
-| 30006 | ReqId | N | Echoed back if provided in the request; absent otherwise |
 | 37 | OrderID | N | Server-assigned order ID. **Absent when the cancel is rejected** |
 | 11 | ClOrdID | N | Echoes the request's `ClOrdID` if provided; otherwise echoes the **original order's** `orderLinkId`. **Absent when the cancel is rejected** — correlate rejects to requests by send order |
 | 150 | ExecType | N | On acceptance: `6` (PendingCancel). **Absent on rejection** — an XCA lacking `150/39` but carrying `103/58` indicates a reject |
