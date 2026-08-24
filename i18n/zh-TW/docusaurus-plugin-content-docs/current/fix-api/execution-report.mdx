@@ -10,7 +10,7 @@ sidebar_position: 4
 |------|---------|-----------|
 | **委託確認（Order ACK）** | `NewOrderSingle (D)` 的直接回應 | `0`（New）或 `8`（Rejected）|
 | **成交通知** | 委託成交（部分或全部）| `F`（Trade）|
-| **委託狀態推播** | 被動委託狀態變更 | `4`、`C` 等 |
+| **委託狀態推播** | 被動委託狀態變更 | `4`、`5`、`C` 等 |
 
 用途 2 與 3 僅在 `ResponseMode=1`（Everything）時推送。參見 [ResponseMode](../guide#responsemode)。
 
@@ -124,12 +124,13 @@ sidebar_position: 4
 |-------|------|-------------|
 | `0` | New | 委託已接受並在掛單簿等待 |
 | `4` | Canceled | 委託已取消 |
+| `5` | Replaced | 改單事件。改單受理後由此類型的 `ExecutionReport` 推送最終訂單狀態；OrdStatus 仍為 `0`（New）——UTA 的 OrdStatus 不包含 Replaced 值 |
 | `6` | PendingCancel | 取消中。不會透過 `ExecutionReport` 推送——取消請求由 `OrderCancelAck (XCA)` 確認收到。|
 | `8` | Rejected | 委託或請求被拒絕 |
 | `A` | PendingNew | 新委託的過渡狀態。`OnlyAcks` 模式下，`NewOrderSingle` 一定會先返回 `PendingNew`，再返回最終的 `New` 或 `Rejected`。`Everything` 模式下，`PendingNew` 與 `New` 均會推送，但可能亂序到達。|
 | `C` | Expired | 委託已過期 |
 | `D` | Deactivated | 條件委託已停用 |
-| `E` | PendingReplace | 修改中。修改後的訂單狀態由 `ExecType=0`（New）的 `ExecutionReport` 推送給出|
+| `E` | PendingReplace | 修改中。不會透過 `ExecutionReport` 推送——修改請求由 `OrderAmendAck (XAA)` 確認收到；修改後的訂單狀態由 `ExecType=5`（Replaced）的 `ExecutionReport` 推送給出（該推送中 `OrdStatus` 仍為 `0` New，UTA 的 OrdStatus 不包含 Replaced 值）|
 | `F` | Trade | 委託成交（部分或全部）|
 | `T` | Triggered | 條件委託已觸發 |
 | `U` | Untriggered | 條件委託等待觸發 |

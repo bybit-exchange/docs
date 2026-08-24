@@ -76,6 +76,10 @@ Generate your API key at:
 
 Only **self-generated (RSA) keys** are supported; signing uses RSA-SHA256.
 
+:::caution Whitelist required
+FIX API access requires **whitelist onboarding** at either **UID** or **institutional ID (`ins_id`)** granularity. A non-whitelisted account — even with a valid signature — is rejected during Logon: the server terminates the session by sending `Logout (5)` with `Text (58) = access denied` (see [Logon Rejection](#logon-rejection)). Contact your Bybit RM to request whitelisting.
+:::
+
 ### Signature
 
 :::info
@@ -199,6 +203,23 @@ The client sends `Logon` to initiate a session. The server responds with its own
 8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
 98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
 ```
+
+**Response example:**
+
+```
+8=FIX.4.4|9=87|35=A|34=1|49=BYBIT_FIX_SERVER|52=20260820-02:21:43.001|56=FIX_CLIENT|
+98=0|108=10|141=Y|10=028|
+```
+
+#### Logon Rejection
+
+When the account is **not whitelisted** for FIX API , the server will terminates the session by sending `Logout (5)` with `Text (58)` carrying the rejection reason (e.g. `access denied`):
+Upon receiving a `35=5` + `58` (access denied) message, the client should contact the designated Relationship Manager (RM) to request whitelisting; whitelisting is supported at either the UID or ins_id level.
+
+```
+8=FIX.4.4|9=86|35=5|34=1|49=BYBIT_FIX_SERVER|52=20260824-11:14:10.029|56=FIX_CLIENT|58=access denied|10=123|
+```
+
 
 ### Heartbeat (MsgType = 0)
 

@@ -10,7 +10,7 @@ sidebar_position: 4
 |------|---------|-----------|
 | **Order ACK** | Direct response to `NewOrderSingle (D)` | `0` (New) or `8` (Rejected) |
 | **Fill notification** | Order matched (partially or fully) | `F` (Trade) |
-| **Order status push** | Passive order state change | `4`, `C`, etc. |
+| **Order status push** | Passive order state change | `4`, `5`, `C`, etc. |
 
 Roles 2 and 3 are only delivered when `ResponseMode=1` (Everything). See [ResponseMode](../guide#responsemode).
 
@@ -124,12 +124,13 @@ Optional. Provides per-coin fee aggregates at the order level.
 |-------|------|-------------|
 | `0` | New | Order accepted and resting |
 | `4` | Canceled | Order canceled |
+| `5` | Replaced | Replace event. After an amend is accepted, an `ExecutionReport` with this ExecType carries the amended order state; the accompanying `OrdStatus` is `0` (New) — UTA's OrdStatus does not include a `Replaced` value |
 | `6` | PendingCancel | Cancel in progress. Not delivered in `ExecutionReport` — cancel requests are acknowledged via `OrderCancelAck (XCA)`, which serves as confirmation of receipt. |
 | `8` | Rejected | Order or request rejected |
 | `A` | PendingNew | Transitional state for new orders. In `OnlyAcks` mode, a `NewOrderSingle` always returns a `PendingNew` report before the final `New` or `Rejected`. In `Everything` mode, both `PendingNew` and `New` reports are delivered but may arrive out of order. |
 | `C` | Expired | Order expired |
 | `D` | Deactivated | Conditional order deactivated |
-| `E` | PendingReplace | Amend in progress. The amended order state is subsequently delivered via an `ExecutionReport` with `ExecType=0` (New). |
+| `E` | PendingReplace | Amend in progress. Not delivered in `ExecutionReport` — amend requests are acknowledged via `OrderAmendAck (XAA)`. The amended order state is subsequently delivered via an `ExecutionReport` with `ExecType=5` (Replaced); its `OrdStatus` remains `0` (New) since UTA's OrdStatus has no `Replaced` value. |
 | `F` | Trade | Order filled (partial or full) |
 | `T` | Triggered | Conditional order triggered |
 | `U` | Untriggered | Conditional order awaiting trigger |

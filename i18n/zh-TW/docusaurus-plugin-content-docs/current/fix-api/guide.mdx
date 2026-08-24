@@ -76,6 +76,10 @@ Client                              Server
 
 僅支援**自行產生（RSA）金鑰**，簽名採用 RSA-SHA256。
 
+:::caution 白名單准入
+FIX API 需要**白名單准入**才能連線，支援 **UID** 或 **機構 ID（ins_id）** 粒度的加白。未加白的帳號即使簽名正確，也會在 Logon 階段被伺服器主動 `Logout (5)` 斷連，`Text (58)` 為 `access denied`（參見 [Logon 拒絕情境](#logon-拒絕情境)）。請聯絡對接 RM 申請加白。
+:::
+
 ### 簽名
 
 :::info
@@ -206,6 +210,16 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 8=FIX.4.4|9=87|35=A|34=1|49=BYBIT_FIX_SERVER|52=20260820-02:21:43.001|56=FIX_CLIENT|
 98=0|108=10|141=Y|10=028|
 ```
+
+#### Logon 拒絕情境
+
+當帳號**未加入 FIX API 白名單**時，会收到 `access denied`：
+用戶端應在收到 `35=5` + `58`（access denied） 時,需聯絡對接 RM 申請加白名單,白名單支援 UID 或 ins_id 粒度
+
+```
+8=FIX.4.4|9=86|35=5|34=1|49=BYBIT_FIX_SERVER|52=20260824-11:14:10.029|56=FIX_CLIENT|58=access denied|10=123|
+```
+
 
 ### Heartbeat（MsgType = 0）
 

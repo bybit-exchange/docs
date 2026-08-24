@@ -56,9 +56,10 @@ The server responds with an **`OrderAmendAck (XAA)`**:
 ### Request Example
 
 ```
-8=FIX.4.4|9=120|35=XAR|49=CLIENT|56=BYBIT|34=3|52=20240101-08:01:00.000|
-30002=1704096060000|30001=5000|
-30010=spot|55=BTCUSDT|37=1234567890123456|44=51000.00|10=xxx|
+8=FIX.4.4|9=239|35=XAR|34=3|49=FIX_CLIENT|52=20260824-10:37:21.002|56=BYBIT_FIX_SERVER|
+30002=1787567841002|30001=5000|
+30010=spot|55=BTCUSDT|30006=50fe3e28-f97c-487d-8f5d-8651acde7bc1|
+37=2288679064669883136|11=e05649fe-e1a5-482a-821e-68cc25ed8254|38=0.002|10=140|
 ```
 
 _Note: `|` represents SOH (0x01) in actual wire format._
@@ -70,22 +71,25 @@ Immediate acceptance ack for the amend request. `ExecType=E` (PendingReplace) an
 - In `OnlyAcks` mode this is the only response.
 - In `Everything` mode this arrives first, followed by an `ExecutionReport (35=8)` carrying the amended order state.
 - Rate-limit headers (`30005` TraceId, `30007` BapiLimit, `30008` BapiLimitStatus, `30009` BapiLimitResetTimestamp) appear on this ack only — subsequent state pushes omit them.
+- If the request carried `30006 ReqId`, this ack echoes it back; the subsequent state push does **not** carry `30006`.
 
 ```
-8=FIX.4.4|9=221|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260820-03:27:23.303|56=FIX_CLIENT|
-30005=2ee970aa6c710778146861bdcbf27553|30007=10|30008=9|30009=1787196443302|
-11=aeb12cf2-d583-4c2f-9263-564d4fd18e5a|37=2285563603279252224|150=E|39=E|10=251|
+8=FIX.4.4|9=264|35=XAA|34=2|49=BYBIT_FIX_SERVER|52=20260824-10:37:21.258|56=FIX_CLIENT|
+30005=6bf19e217c37870d49032dbf7cda90dc|30006=50fe3e28-f97c-487d-8f5d-8651acde7bc1|30007=10|30008=9|30009=1787567841257|
+11=e05649fe-e1a5-482a-821e-68cc25ed8254|37=2288679064669883136|150=E|39=E|10=140|
 ```
 
-### Amended Order State Push (ExecType=0)
+### Amended Order State Push (ExecType=5)
+
+In `Everything` mode, after the PendingReplace Ack the server pushes the amended order state via `ExecutionReport (35=8)`. `150=5` (Replaced) indicates the report carries a Replace event; `39=0` (New) means the order's continuing status is still `New` after the amend (UTA's OrdStatus does not include a `Replaced` value). `OrderID` is unchanged (amend is an atomic replace); `38 OrderQty` / `44 Price` reflect the amended values; `30039 CreateTime` remains the original submission time while `60 TransactTime` marks the amend event. Neither rate-limit headers nor `30006 ReqId` are attached to this push.
 
 ```
-8=FIX.4.4|9=360|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260820-05:36:53.344|56=FIX_CLIENT|
-11=f15cca79-6870-4fba-98e0-b94b691963bd|37=2285628580665068288|150=0|39=0|
+8=FIX.4.4|9=360|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260824-10:37:21.263|56=FIX_CLIENT|
+11=e05649fe-e1a5-482a-821e-68cc25ed8254|37=2288679064669883136|150=5|39=0|
 30010=spot|55=BTCUSDT|54=1|40=2|38=0.002000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
 151=0.002|30041=100.0000000|14=0|30038=0.0000000|
-60=20260820-05:36:53.339|30039=20260820-05:35:59.278|
-30018=None|30019=N|30046=69504.8|10=020|
+60=20260824-10:37:21.258|30039=20260824-10:36:45.309|
+30018=None|30019=N|30046=77307.8|10=213|
 ```
 
 ### Response Example (Rejected)
