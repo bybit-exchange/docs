@@ -52,7 +52,7 @@ Every time when you create/amend/cancel an order, the position topic will genera
 |> gamma | string  |Gamma. It is only pushed when you subscribe to the option position.|
 |> vega | string  |Vega. It is only pushed when you subscribe to the option position.|
 |> theta | string  |Theta. It is only pushed when you subscribe to the option position.|
-|> netDeltaRatio | string  |Net delta ratio. Option delta is excluded from the calculation. Calculation: `coinAccountSize = abs(longSize + shortSize)`, `coinBaseSize = max(longSize, abs(shortSize))`, `netDeltaRatio = coinAccountSize / coinBaseSize`|
+|> netDeltaRatio | string  |Net delta ratio. Option delta is excluded from the calculation. Calculation: `coinAccountSize = abs(longSize + shortSize)`, `coinBaseSize = max(longSize, abs(shortSize))`, `netDeltaRatio = coinAccountSize / coinBaseSize`. Returns `""` if delta neutral mode is not enabled. Call [POST /v5/account/set-delta-mode](../../account/set-delta-mode) to enable delta neutral mode.|
 |> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perp: it is the all time cumulative realised P&L</li><li>Option: it is the realised P&L when you hold that position</li></ul>|
 |> [positionStatus](../../enum#positionstatus) |string |Position status. `Normal`, `Liq`, `Adl` |
 |> [adlRankIndicator](../../enum#adlrankindicator) |integer |Auto-deleverage rank indicator. <a href="https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL">What is Auto-Deleveraging?</a>|
