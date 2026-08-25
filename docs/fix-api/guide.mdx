@@ -36,7 +36,7 @@ All connections must use TLS. Plain TCP is not accepted.
 FIX messages use **Tag=Value** pairs separated by the SOH character (ASCII `0x01`). In this documentation the `|` character is used in place of SOH for readability.
 
 ```
-8=FIX.4.4|9=65|35=0|49=CLIENT|56=BYBIT|34=5|52=20240101-08:00:30.000|10=123|
+8=FIX.4.4|9=65|35=0|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=5|52=20240101-08:00:30.000|10=123|
 ```
 
 Every message begins with `BeginString (8)`, `BodyLength (9)`, and `MsgType (35)`, and ends with `CheckSum (10)`.
@@ -132,13 +132,18 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 | 10 | CheckSum | STRING | Both | Y | Message checksum — sum of all bytes modulo 256, as a 3-digit zero-padded string |
 | 35 | MsgType | STRING | Both | Y | Message type (see [Message Types](#message-types-reference)) |
 | 49 | SenderCompID | STRING | Both | Y | Client-defined connection identifier. Format: `^[a-zA-Z0-9\-_]{1,16}$` (letters, digits, `-`, `_`; length 1–16). |
-| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT_FIX_SERVER`; server sets to the client's `SenderCompID` |
-| 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number, starting from `1` |
+| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT_FIX_SERVER` |
+| 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number starting from `1`, **reset on every new session** (see [Sequence Numbers & Gap Handling](#sequence-numbers--gap-handling)) |
 | 52 | SendingTime | UTCTIMESTAMP | Both | Y | Send time |
 
 :::caution SenderCompID uniqueness & session lifecycle
 - Only **one active connection per `SenderCompID`** is allowed at a time.
 - On graceful disconnect the client must send a `Logout (5)` message. Failing to do so blocks the `SenderCompID` from establishing a new session for **`3 × HeartBtInt` (30 seconds)**.
+:::
+
+:::caution Connection quota & rate limits
+- A single UID may use **multiple distinct `SenderCompID`s** to open concurrent connections. **Per-UID Per-machine concurrent-connection cap: 20.**
+- **Per-IP connect rate limit: 30 attempts per second** — excess attempts are rejected.
 :::
 
 ### Bybit Extension Header Fields
@@ -177,6 +182,14 @@ Use your local NTP-synced clock. Default `BapiRecvWindow (30001)` is `5000` ms, 
 
 ## Session Messages
 
+### Sequence Numbers & Gap Handling
+
+Bybit FIX API **does not implement the standard FIX 4.4 gap-fill mechanism** (`ResendRequest (2)` / `SequenceReset (4)` are not supported).
+
+- **`MsgSeqNum` restarts from `1` on every connection.** The server forcibly resets the sequence on every new session; clients are recommended to set `ResetSeqNumFlag (141) = Y` in `Logon (A)` to keep both sides' seq state aligned.
+- **Session resume on reconnect is not supported.** Any messages unconsumed at the time of disconnect are **not** retransmitted on the next connection.
+- If the server detects a `MsgSeqNum` gap, it **closes the connection**; the client should reconnect and re-Logon starting at `seq=1`.
+
 ### Logon (MsgType = A)
 
 The client sends `Logon` to initiate a session. The server responds with its own `Logon` acknowledging the connection.
@@ -206,7 +219,7 @@ The client sends `Logon` to initiate a session. The server responds with its own
 **Request example:**
 
 ```
-8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+8=FIX.4.4|9=130|35=A|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
 98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
 ```
 
@@ -302,6 +315,10 @@ When `BapiLimitStatus` reaches `0`, subsequent requests will be rejected until t
 | `2` (OnlyAcks) | Only direct responses to your requests. Passive push updates (e.g. order fills from another session) are suppressed. |
 
 Use `OnlyAcks` when your application manages state entirely through the synchronous ACK flow and does not need background push updates.
+
+:::info Push behavior with multiple connections
+When a single UID holds multiple concurrent FIX connections, **passive pushes (e.g. fills from a REST-placed order, or order-state changes from another session) are broadcast to every connection in `ResponseMode=1`** — not only to the most recently logged-in session. Clients must handle event deduplication themselves.
+:::
 
 ## Message Types Reference
 

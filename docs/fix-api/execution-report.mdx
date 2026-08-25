@@ -83,11 +83,16 @@ These fields describe the overall order state and are present in every `Executio
 
 Present only when `ExecType=F` (Trade). Each entry in the group represents one individual execution.
 
-`NoFills (30050)` contains the count of fill entries that follow.
+`NoFills (30050)` is a `NumInGroup` field that declares the count of fill entries that follow.
+
+:::caution Repeating group parsing rules
+- **Delimiter tag: `30051 FillExecID`** — every entry in the NoFills group **must start with this tag**. Encountering a new `30051` marks the beginning of the next entry.
+- **Field order**: fields within an entry **must appear in the order declared below**. Optional fields may be omitted, but their relative position is fixed. FIX engines (QuickFIX, Onix, etc.) are order-sensitive — out-of-order tags will trigger a parse error.
+:::
 
 | Tag | Field | Description |
 |-----|-------|-------------|
-| 30051 | FillExecID | Execution ID (`execId`) |
+| 30051 | FillExecID | Execution ID (`execId`) — **delimiter tag; each entry starts with this field** |
 | 30052 | FillQty | Filled quantity in this execution |
 | 30053 | FillPx | Fill price |
 | 30054 | FillTime | Fill timestamp |
@@ -103,17 +108,30 @@ Present only when `ExecType=F` (Trade). Each entry in the group represents one i
 
 When an order generates multiple fills simultaneously (e.g. sweeps multiple price levels), the `ExecutionReport` contains a single message with `NoFills > 1`. The order-level `CumQty (14)` and `AvgPx (6)` reflect the aggregated state after all fills in the group.
 
+**Multiple-fill wire example (`NoFills=2`):**
+
+```
+...30050=2|
+30051=fill_A|30052=0.001|30053=50000|30054=20260101-00:00:00.000|...|
+30051=fill_B|30052=0.002|30053=50001|30054=20260101-00:00:00.001|...
+```
+
+Every occurrence of `30051` starts a new entry; once the group ends, parsing returns to order-level fields (or the next repeating group).
+
 ---
 
 ## Cumulative Fee Details Group (NoFeeDetails)
 
 Optional. Provides per-coin fee aggregates at the order level.
 
-`NoFeeDetails (30060)` contains the count of fee entries.
+`NoFeeDetails (30060)` is a `NumInGroup` field that declares the count of fee entries that follow.
+
+- **Delimiter tag: `30061 FeeCoin`** — every entry must start with this tag.
+- Fields within an entry follow the fixed order `30061 → 30062`; both fields are required.
 
 | Tag | Field | Description |
 |-----|-------|-------------|
-| 30061 | FeeCoin | Fee currency |
+| 30061 | FeeCoin | Fee currency — **delimiter tag; each entry starts with this field** |
 | 30062 | Fee | Total fee amount in this currency |
 
 ---
@@ -187,7 +205,7 @@ Delivered in `Everything` mode after the `PendingNew` ack. Carries the full orde
 ### Order Rejected (ExecType=8)
 
 ```
-8=FIX.4.4|9=130|35=8|49=BYBIT|56=CLIENT|34=2|52=20240101-08:00:01.010|
+8=FIX.4.4|9=130|35=8|49=BYBIT_FIX_SERVER|56=FIX_CLIENT|34=2|52=20240101-08:00:01.010|
 30005=trace-abc125|30007=120|30008=119|30009=1704096060000|
 11=my-order-002|150=8|39=8|103=99|58=Insufficient balance|10=xxx|
 ```

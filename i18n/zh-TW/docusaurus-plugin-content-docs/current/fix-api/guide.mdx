@@ -36,7 +36,7 @@ FIX API 目前僅支援**現貨（Spot）**交易。
 FIX 訊息使用 **Tag=Value** 鍵值對，以 SOH 字元（ASCII `0x01`）分隔。本文件以 `|` 替代 SOH 以提升可讀性。
 
 ```
-8=FIX.4.4|9=65|35=0|49=CLIENT|56=BYBIT|34=5|52=20240101-08:00:30.000|10=123|
+8=FIX.4.4|9=65|35=0|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=5|52=20240101-08:00:30.000|10=123|
 ```
 
 每條訊息以 `BeginString (8)`、`BodyLength (9)`、`MsgType (35)` 開頭，以 `CheckSum (10)` 結尾。
@@ -132,13 +132,18 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | 10 | CheckSum | STRING | 雙向 | Y | 訊息校驗和，所有位元組值對 256 取模的 3 位數字串 |
 | 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
 | 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，格式為 `^[a-zA-Z0-9\-_]{1,16}$`（大小寫字母、數字、`-`、`_`，長度 1~16）。|
-| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`；伺服器設為用戶端的 `SenderCompID` |
-| 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
+| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`|
+| 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始，**每個新 session 重置**（詳見 [序列號與 Gap 處理](#序列號與-gap-處理)）|
 | 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
 
 :::caution SenderCompID 唯一性與會話生命週期
 - 同一 `SenderCompID` 同時**只能建立一條**連線。
 - 正常退出時必須發送 `Logout (5)` 訊息主動登出；未能發送 `Logout` 將導致該 `SenderCompID` 在 **`3 × HeartBtInt`（30 秒）** 內**無法用於新會話**建立。
+:::
+
+:::caution 連線數與速率限制
+- 同一 UID 可使用**多個不同的 `SenderCompID`** 建立多條並發連線。同一 UID 同一台机器 ** 連線數上限：20 條**
+- **單 IP 建連速率上限：30 次/秒**，超過會被拒絕建連。
 :::
 
 ### Bybit 擴充標頭欄位
@@ -177,6 +182,13 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 
 ## 連線訊息
 
+### 序列號與 Gap 處理
+
+Bybit FIX API **不支援標準 FIX 4.4 的 gap fill 機制**（不實作 `ResendRequest (2)` / `SequenceReset (4)`）。
+
+- **每條連線的 `MsgSeqNum` 都從 `1` 重新開始**。伺服器在每次新 session 都會強制重置序列號；用戶端建議在 `Logon (A)` 中設 `ResetSeqNumFlag (141) = Y` 以保持雙方 seq 狀態一致。
+- **不支援斷線續連（session resume）**。連線斷開時尚未消費的訊息**不會**在重連時補發。
+
 ### Logon（MsgType = A）
 
 用戶端發送 `Logon` 以建立連線，伺服器回應自身的 `Logon` 以確認連線。
@@ -206,7 +218,7 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 **請求範例：**
 
 ```
-8=FIX.4.4|9=130|35=A|49=CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+8=FIX.4.4|9=130|35=A|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
 98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
 ```
 **回應範例：**
@@ -302,6 +314,10 @@ FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標
 | `2`（OnlyAcks）| 僅回傳您請求的直接回應，被動推播更新（如來自其他連線的委託成交）將被抑制。 |
 
 當您的應用程式完全透過同步 ACK 流程管理狀態，且不需要背景推播更新時，可使用 `OnlyAcks`。
+
+:::info 多連線推送行為
+若同一 UID 同時建立了多條 FIX 連線，**被動推播（例如 REST 下單的成交回報、其他 session 的訂單狀態變更）會廣播到所有處於 `ResponseMode=1` 的連線**，而非僅推給最近登入的那條。用戶端需自行處理重複事件的去重。
+:::
 
 ## 訊息類型一覽
 
