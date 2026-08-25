@@ -58,6 +58,7 @@ Query real-time position data, such as position size, cumulative realized PNL, e
 |> gamma | string  |Gamma|
 |> vega | string  |Vega|
 |> theta | string  |Theta|
+|> netDeltaRatio | string  |Net delta ratio. Option delta is excluded from the calculation. Calculation: `coinAccountSize = abs(longSize + shortSize)`, `coinBaseSize = max(longSize, abs(shortSize))`, `netDeltaRatio = coinAccountSize / coinBaseSize`. Returns `""` if delta neutral mode is not enabled. Call [POST /v5/account/set-delta-mode](/v5/account/set-delta-mode) to enable delta neutral mode.|
 |> unrealisedPnl | string  |Unrealised PnL|
 |> curRealisedPnl | string  |The realised PnL for the current holding position|
 |> cumRealisedPnl | string  |Cumulative realised pnl <ul><li>Futures & Perps: it is the all time cumulative realised P&L</li><li>Option: always "", meaningless</li></ul>|
