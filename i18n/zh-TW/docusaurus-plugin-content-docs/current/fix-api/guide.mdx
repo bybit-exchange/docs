@@ -131,11 +131,15 @@ signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
 | 9 | BodyLength | LENGTH | 雙向 | Y | 訊息主體長度（位元組）|
 | 10 | CheckSum | STRING | 雙向 | Y | 訊息校驗和，所有位元組值對 256 取模的 3 位數字串 |
 | 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
-| 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，可為任意唯一字串，無需與 API 金鑰相同（API 金鑰透過 `Username (553)` 單獨傳遞）。|
+| 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，格式為 `^[a-zA-Z0-9\-_]{1,16}$`（大小寫字母、數字、`-`、`_`，長度 1~16）。|
 | 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`；伺服器設為用戶端的 `SenderCompID` |
 | 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始 |
 | 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
 
+:::caution SenderCompID 唯一性與會話生命週期
+- 同一 `SenderCompID` 同時**只能建立一條**連線。
+- 正常退出時必須發送 `Logout (5)` 訊息主動登出；未能發送 `Logout` 將導致該 `SenderCompID` 在 **`3 × HeartBtInt`（30 秒）** 內**無法用於新會話**建立。
+:::
 
 ### Bybit 擴充標頭欄位
 
@@ -182,7 +186,7 @@ server_time - recv_window <= BapiTimestamp < server_time + 1000
 | Tag | 欄位 | 類型 | 必填 | 說明 |
 |-----|-------|------|----------|-------------|
 | 98 | EncryptMethod | INT | **Y** | 必須為 `0`（None）|
-| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）,必須為 `10`。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
+| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）。**伺服器固定為 `10`，用戶端傳入的其他值會被覆蓋**。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
 | 553 | Username | STRING | **Y** | 您的 API 金鑰 |
 | 95 | RawDataLength | LENGTH | **Y** | `RawData` 的位元組長度 |
 | 96 | RawData | DATA | **Y** | 簽名（參見[簽名](#簽名)）|

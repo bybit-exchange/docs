@@ -4,14 +4,13 @@
   Complete order lifecycle: requests (create/amend/cancel) + responses (ack/execution reports) + pushes (order updates)
 
   Covers:
-    - Order requests: NewOrderSingle, AtomicReplaceRequest, OrderCancelRequest, BatchCancelOrderRequest
-    - Order responses: ExecutionReport (new order + fills), OrderCancelAck, OrderAmendAck, BatchCancelOrderAck
+    - Order requests: NewOrderSingle, AtomicReplaceRequest, OrderCancelRequest
+    - Order responses: ExecutionReport (new order + fills), OrderCancelAck, OrderAmendAck
     - Order pushes: Order status updates, trade fills
 
   Design decisions:
     - New order ACK + fills + order pushes → ExecutionReport (8) (full order state)
     - Cancel ACK → OrderCancelAck (XCA), Amend ACK → OrderAmendAck (XAA) (minimal fields, server lacks full state)
-    - Batch cancel → XBX request + XBXA ACK (batch create/amend not supported)
     - Rate limit fields moved to header (server fills on every response)
     - Client order ID → ClOrdID (11)
     - symbolId (SBE) → Symbol (55) STRING
@@ -380,56 +379,6 @@
       <field name="Text"         required="N"/>
     </message>
 
-    <!-- ── Batch cancel request ──────────────────────────────────── -->
-
-    <!--
-      Batch cancel for multiple orders.
-      Covers batch order cancellation for spot trading.
-
-      Limits:
-        - Spot: maximum 10 orders per request
-        - Linear/Inverse: maximum 20 orders per request (not supported yet)
-        - Option: maximum 20 orders per request (not supported yet)
-
-      Each order in the group must provide:
-        - Symbol (required)
-        - Either OrderID or ClOrdID (at least one required)
-        - OrderFilter (optional): Order/tpslOrder/StopOrder
-
-      If both OrderID and ClOrdID provided but mismatched, OrderID takes precedence.
-      Response returns individual status for each order via BatchCancelOrderAck.
-    -->
-    <message name="BatchCancelOrderRequest" msgtype="XBX" msgcat="app">
-      <field name="Category" required="Y"/>
-      <group name="NoOrders" required="Y">
-        <field name="Symbol"      required="Y"/>
-        <field name="OrderID"     required="N"/>
-        <field name="ClOrdID"     required="N"/>
-        <field name="OrderFilter" required="N"/>
-      </group>
-    </message>
-
-    <!-- ── Batch cancel ACK ──────────────────────────────────────── -->
-
-    <!--
-      Covers SBE BatchCancelOrderRespV5 (id=16).
-      Outer RetCode/Text = whether the whole batch was accepted.
-      Per-item group uses minimal fields (same as OrderCancelAck) since
-      server cannot provide full order state for cancel operations.
-    -->
-    <message name="BatchCancelOrderAck" msgtype="XBXA" msgcat="app">
-      <field name="RetCode" required="Y"/>
-      <field name="Text"    required="N"/>
-      <group name="NoOrders" required="N">
-        <field name="ExecType"     required="Y"/>
-        <field name="OrdStatus"    required="Y"/>
-        <field name="OrderID"      required="N"/>
-        <field name="ClOrdID"      required="N"/>
-        <field name="OrdRejReason" required="N"/>
-        <field name="Text"         required="N"/>
-      </group>
-    </message>
-
   </messages>
 
   <!-- ============================================================ -->
@@ -457,8 +406,6 @@
       <value enum="XAR"  description="AtomicReplaceRequest"/>
       <value enum="XCA"  description="OrderCancelAck"/>
       <value enum="XAA"  description="OrderAmendAck"/>
-      <value enum="XBX"  description="BatchCancelOrderRequest"/>
-      <value enum="XBXA" description="BatchCancelOrderAck"/>
     </field>
     <field number="37"  name="OrderID"      type="STRING"/>
     <field number="38"  name="OrderQty"     type="QTY"/>
@@ -584,8 +531,6 @@
       <value enum="UNKNOWN"     description="Unknown"/>
     </field>
     <field number="30019" name="RpiTakerAccess"       type="BOOLEAN"/>
-    <field number="30020" name="NoOrders"        type="NUMINGROUP"/>
-    <field number="30021" name="RetCode"         type="INT"/>
     <field number="30022" name="SlippageToleranceType" type="STRING">
       <value enum="TickSize" description="TickSize"/>
       <value enum="Percent"  description="Percent"/>
