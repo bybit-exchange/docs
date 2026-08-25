@@ -18,7 +18,6 @@ FIX API 目前僅支援**現貨（Spot）**交易。
 |---|---|---|
 | 連線 | 無狀態 HTTP | 持久 TCP/TLS 連線 |
 | 編碼 | JSON | Tag=Value（SOH 分隔）|
-| 回應模型 | 同步 | 非同步——請求與回應解耦 |
 | 序列號 | 無 | 連線內嚴格單調遞增 `MsgSeqNum` |
 
 ## 連線設定
@@ -27,7 +26,7 @@ FIX API 目前僅支援**現貨（Spot）**交易。
 
 | 環境 | Host | Port |
 |---|---|---|
-| 正式環境 | `fix.bybit.com` | `9878` |
+| 正式環境 | TBD | TBD |
 | 測試環境 | `fix-oe-testnet.bybit.com` | `9000` |
 
 所有連線必須使用 TLS，不接受純文字 TCP 連線。
@@ -309,10 +308,10 @@ FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標
 | `3` | Reject | 伺服器 → 用戶端 | 連線層訊息拒絕 |
 | `5` | Logout | 雙向 | 連線終止 |
 | `A` | Logon | 雙向 | 連線建立與身分驗證 |
-| `D` | [NewOrderSingle](trade/create-order) | 用戶端 → 伺服器 | 建立新委託單 |
-| `F` | [OrderCancelRequest](trade/cancel-order) | 用戶端 → 伺服器 | 取消現有委託單 |
-| `8` | [ExecutionReport](trade/execution-report) | 伺服器 → 用戶端 | 委託確認、成交回報及被動狀態更新 |
-| `XAR` | [AtomicReplaceRequest](trade/amend-order) | 用戶端 → 伺服器 | 修改現有委託單 |
+| `D` | [NewOrderSingle](create-order) | 用戶端 → 伺服器 | 建立新委託單 |
+| `F` | [OrderCancelRequest](cancel-order) | 用戶端 → 伺服器 | 取消現有委託單 |
+| `8` | [ExecutionReport](execution-report) | 伺服器 → 用戶端 | 委託確認、成交回報及被動狀態更新 |
+| `XAR` | [AtomicReplaceRequest](amend-order) | 用戶端 → 伺服器 | 修改現有委託單 |
 | `XCA` | OrderCancelAck | 伺服器 → 用戶端 | 取消確認 |
 | `XAA` | OrderAmendAck | 伺服器 → 用戶端 | 修改確認 |
 | `j` | BusinessMessageReject | 伺服器 → 用戶端 | 應用層拒絕（如不支援的訊息類型或缺少必填欄位）|

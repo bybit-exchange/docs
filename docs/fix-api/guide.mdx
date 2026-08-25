@@ -18,7 +18,6 @@ Key differences from the REST V5 API:
 |---|---|---|
 | Connection | Stateless HTTP | Persistent TCP/TLS session |
 | Encoding | JSON | Tag=Value (SOH-delimited) |
-| Response model | Synchronous | Asynchronous — requests and responses are decoupled |
 | Sequence | None | Strict monotonic `MsgSeqNum` per session |
 
 ## Connectivity
@@ -27,7 +26,7 @@ Key differences from the REST V5 API:
 
 | Environment | Host | Port |
 |---|---|---|
-| Mainnet | `fix.bybit.com` | `9878` |
+| Mainnet | TBD | TBD |
 | Testnet | `fix-oe-testnet.bybit.com` | `9000` |
 
 All connections must use TLS. Plain TCP is not accepted.
@@ -88,7 +87,7 @@ FIX API supports only **self-generated (RSA) keys**. When creating an API key, s
 
 Compute the signature before sending `Logon (A)`:
 
-**Step 1 — Construct the plaintext**
+**Step 1 — Determine `expires` and construct the plaintext string**
 
 `expires` is the Unix millisecond timestamp at which this authentication token expires. Set it to your current time plus the validity window (default `+5000 ms`):
 
@@ -149,7 +148,7 @@ Every FIX message carries a standard header. Bybit extends the header with addit
 | 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
 
 :::caution
-`BapiTimestamp (30002)` is your current timestamp — **not** `expires`. The server validates:
+`BapiTimestamp (30002)` is your current timestamp. The server validates:
 
 ```
 server_time - recv_window <= BapiTimestamp < server_time + 1000
@@ -215,8 +214,8 @@ The client sends `Logon` to initiate a session. The server responds with its own
 
 #### Logon Rejection
 
-When the account is **not whitelisted** for FIX API , the server will terminates the session by sending `Logout (5)` with `Text (58)` carrying the rejection reason (e.g. `access denied`):
-Upon receiving a `35=5` + `58` (access denied) message, the client should contact the Relationship Manager (RM) to request whitelisting; whitelisting is supported at either the UID or ins_id level.
+When the account is **not whitelisted** for FIX API, the client will receive `access denied`:
+Upon receiving a `35=5` + `58` (access denied) message, the client should contact the RM to request whitelisting; whitelisting is supported at either the UID or ins_id level.
 
 ```
 8=FIX.4.4|9=86|35=5|34=1|49=BYBIT_FIX_SERVER|52=20260824-11:14:10.029|56=FIX_CLIENT|58=access denied|10=123|
@@ -308,10 +307,10 @@ Use `OnlyAcks` when your application manages state entirely through the synchron
 | `3` | Reject | Server → Client | Session-level message rejection |
 | `5` | Logout | Both | Session termination |
 | `A` | Logon | Both | Session initiation and authentication |
-| `D` | [NewOrderSingle](trade/create-order) | Client → Server | Place a new order |
-| `F` | [OrderCancelRequest](trade/cancel-order) | Client → Server | Cancel an existing order |
-| `8` | [ExecutionReport](trade/execution-report) | Server → Client | Order ACK, fill reports, and passive status updates |
-| `XAR` | [AtomicReplaceRequest](trade/amend-order) | Client → Server | Amend an existing order |
+| `D` | [NewOrderSingle](create-order) | Client → Server | Place a new order |
+| `F` | [OrderCancelRequest](cancel-order) | Client → Server | Cancel an existing order |
+| `8` | [ExecutionReport](execution-report) | Server → Client | Order ACK, fill reports, and passive status updates |
+| `XAR` | [AtomicReplaceRequest](amend-order) | Client → Server | Amend an existing order |
 | `XCA` | OrderCancelAck | Server → Client | Cancel acknowledgement |
 | `XAA` | OrderAmendAck | Server → Client | Amend acknowledgement |
 | `j` | BusinessMessageReject | Server → Client | Application-level rejection (e.g. unsupported message type or missing required field) |
