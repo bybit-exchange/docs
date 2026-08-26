@@ -1,0 +1,121 @@
+---
+title: 建立委託單
+sidebar_label: 建立委託單
+sidebar_position: 1
+---
+
+:::info important
+- `Category (30010)` 為必填欄位，且必須為 `spot`。
+- 對於**市價委託**，請使用 `MarketUnit (30013)` 指定 `OrderQty` 的計價幣別為基礎幣或報價幣。
+- 對於**限價委託**，`Price (44)` 為必填。
+- 當委託單被**拒絕**（`ExecType=8`）時，`ExecutionReport` 中不包含 `OrderID (37)` 與 `ClOrdID (11)`；客戶端需依 `ReqId (30006)` 或發送順序關聯請求。
+:::
+
+### 訊息類型
+
+`NewOrderSingle` — MsgType `D`
+
+### 請求欄位
+
+| Tag | 欄位 | 必填 | 類型 | 說明 |
+|-----|-------|----------|------|-------------|
+| 30010 | Category | **Y** | String | 產品類型，目前僅支援 `spot` |
+| 55 | Symbol | **Y** | String | 交易對名稱，例如 `BTCUSDT`|
+| 54 | Side | **Y** | Char | `1` = 買入；`2` = 賣出 |
+| 40 | OrdType | **Y** | Char | `1` = 市價；`2` = 限價 |
+| 38 | OrderQty | **Y** | Qty | 委託數量，市價委託請參見 `MarketUnit` |
+| 44 | Price | N | Price | 委託價格，限價委託必填 |
+| 11 | ClOrdID | N | String | 用戶端委託單 ID（`orderLinkId`），最多 36 個字元。以帳號（UID）為維度，而非 session——活動狀態的委託單（如 New）不可複用相同 ClOrdID；已進入終態的委託單，其 ClOrdID 可在 360 天後重新使用。|
+| 59 | TimeInForce | N | Char | `1`=GTC；`3`=IOC；`4`=FOK；`P`=PostOnly；`R`=RPI，預設為 GTC。另外，市價單總是IOC|
+| 30013 | MarketUnit | N | String | 市價委託時 `OrderQty` 的單位：`baseCoin`（賣單默認）或 `quoteCoin`（買單默認）  |
+| 30014 | IsLeverage | N | Boolean | `Y` = 保證金交易；`N` = 現貨（預設）|
+| 30018 | SmpType | N | String | 自我撮合防護：`None`、`CancelTaker`、`CancelMaker`、`CancelBoth` |
+| 30019 | RpiTakerAccess | N | Boolean | 此委託是否可與 RPI 報價撮合，若設置為true，必須為市價單orderType=Market |
+| 30022 | SlippageToleranceType | N | String | 市價委託滑點單位：`TickSize` 或 `Percent` |
+| 30034 | SlippageTolerance | N | String | 最大滑點值，與 `SlippageToleranceType` 搭配使用 |
+| 30024 | OrderFilter | N | String | `Order`（預設）；`tpslOrder`；`StopOrder` |
+| 99 | StopPx | N | Price | 條件委託觸發價格。觸發方向（高於或低於當前市價）由系統根據委託方向與 `StopPx` 相對市場的位置自動判斷。|
+| 30026 | TakeProfitPrice | N | Price | 附加止盈觸發價格 |
+| 30027 | StopLossPrice | N | Price | 附加止損觸發價格 |
+| 30028 | TpOrderType | N | String | 附加止盈觸發後的委託類型：`Market` 或 `Limit` |
+| 30029 | SlOrderType | N | String | 附加止損觸發後的委託類型：`Market` 或 `Limit` |
+| 30030 | TpLimitPrice | N | Price | 附加止盈限價（當 `TpOrderType=Limit` 時必填）|
+| 30031 | SlLimitPrice | N | Price | 附加止損限價（當 `SlOrderType=Limit` 時必填）|
+
+### 回應
+
+伺服器回應 **`ExecutionReport (8)`**。`ExecType (150)` 欄位表示處理結果：
+
+| ExecType | OrdStatus | 含義 |
+|----------|-----------|---------|
+| `A`(PendingNew)| `A`(PendingNew)| 委託受理過渡態，`NewOrderSingle` 送出後立即返回；隨後推送 `0`（New）或 `8`（Rejected）為最終狀態 |
+| `0`（New）| `0`（New）| 委託已接受並在掛單簿等待成交 |
+| `F`（Trade）| `1` / `2` | 委託立即成交（部分或全部）|
+| `8`（Rejected）| `8`（Rejected）| 委託被拒絕，請查看 `OrdRejReason (103)` 與 `Text (58)` |
+
+**主要回應欄位：**
+
+| Tag | 欄位 | 說明 |
+|-----|-------|-------------|
+| 37 | OrderID | 伺服器分配的委託單 ID，被拒絕時缺失 |
+| 11 | ClOrdID | 您的 `ClOrdID` 原樣回傳。**被拒絕時缺失** |
+| 150 | ExecType | 執行事件類型 |
+| 39 | OrdStatus | 目前委託狀態 |
+| 103 | OrdRejReason | 拒絕原因代碼（`ExecType=8` 時）|
+| 58 | Text | 狀態文字。成功受理時通常為 `OK`；被拒絕時為錯誤描述 |
+| 151 | LeavesQty | 剩餘未成交數量 |
+| 14 | CumQty | 累計已成交數量 |
+| 6 | AvgPx | 平均成交價格 |
+| 60 | TransactTime | 最後更新時間 |
+
+若委託立即成交（`ExecType=F`），成交明細請參見[成交回報](execution-report)。
+
+---
+
+### 請求範例
+
+```
+8=FIX.4.4|9=238|35=D|34=3|49=FIX_CLIENT|52=20260824-09:27:06.073|56=BYBIT_FIX_SERVER|
+30002=1787563626073|30001=5000|
+30010=spot|55=BTCUSDT|54=1|40=2|59=1|38=0.001|44=50000|
+11=13eafa49-4688-4727-9136-021da28c9d0b|30006=5e14153d-363d-4937-b4ec-f4c64e526979|10=037|
+```
+
+_注意：`|` 在實際傳輸格式中代表 SOH（0x01）字元。_
+
+### 委託提交處理中 PendingNew Ack（ExecType=A）
+
+`NewOrderSingle` 送出後立刻收到的極簡 ack。`OnlyAcks` 模式下這是唯一的回應；`Everything` 模式下這條先到，隨後才推送完整的 `ExecType=0`（New）。
+
+- 限流表頭（`30005` TraceId、`30007` BapiLimit、`30008` BapiLimitStatus、`30009` BapiLimitResetTimestamp）**僅在此初始 ack 上返回**，後續狀態推送不再帶。
+- 若請求攜帶 `30006 ReqId`，此 ack 會原樣回帶（例如下方 `30006=5e14153d-...`）；後續狀態推送則不會攜帶 `30006`。
+
+```
+8=FIX.4.4|9=269|35=8|34=2|49=BYBIT_FIX_SERVER|52=20260824-09:27:06.329|56=FIX_CLIENT|
+30005=3cc714d627c389ed2911d77bc9cc1580|30006=5e14153d-363d-4937-b4ec-f4c64e526979|30007=20|30008=19|30009=1787563626328|
+11=13eafa49-4688-4727-9136-021da28c9d0b|37=2288644008836434688|
+150=A|39=A|58=OK|10=163|
+```
+
+### 成功回應範例（已接受）（ExecType=0）
+
+`Everything` 模式下，PendingNew Ack 之後由 `ExecutionReport (35=8)` 推送完整的 New 訂單狀態，攜帶委託全部欄位；此推送不再攜帶速率限制標頭與 `30006 ReqId`。
+
+```
+8=FIX.4.4|9=359|35=8|34=3|49=BYBIT_FIX_SERVER|52=20260824-09:27:06.333|56=FIX_CLIENT|
+11=13eafa49-4688-4727-9136-021da28c9d0b|37=2288644008836434688|150=0|39=0|
+30010=spot|55=BTCUSDT|54=1|40=2|38=0.001000|44=50000.0|59=1|30013=UNKNOWN|30014=N|
+151=0.001|30041=50.0000000|14=0|30038=0.0000000|
+60=20260824-09:27:06.328|30039=20260824-09:27:06.328|
+30018=None|30019=N|30046=77286.8|10=085|
+```
+
+### 失敗回應範例（已拒絕）（ExecType=8）
+
+被拒絕時 `37/11` 缺失，需靠 `30006 ReqId` 或發送順序關聯本次請求；`103` 為 Bybit 內部錯誤碼（例如 `170140` 表示委託金額低於下限）。
+
+```
+8=FIX.4.4|9=248|35=8|34=2|49=BYBIT_FIX_SERVER|52=20260824-09:52:16.540|56=FIX_CLIENT|
+30005=748c8e5b5094fd0e22cdac8441066c87|30006=6dac881c-8f85-4272-8e31-2917612d788e|30007=20|30008=19|30009=1787565136538|
+150=8|39=8|103=170140|58=Order value exceeded lower limit.|10=239|
+```

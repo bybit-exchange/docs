@@ -191,6 +191,12 @@ const config = {
           },
           {
             type: 'doc',
+            docId: 'fix-api/guide',
+            position: 'left',
+            label: 'FIX API',
+          },
+          {
+            type: 'doc',
             docId: 'p2p/guide',
             position: 'left',
             label: 'P2P Trading',

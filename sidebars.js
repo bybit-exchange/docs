@@ -75,6 +75,13 @@ const sidebars = {
       ]
     }
   ],
+  fixSidebar: [
+    'fix-api/guide',
+    'fix-api/create-order',
+    'fix-api/amend-order',
+    'fix-api/cancel-order',
+    'fix-api/execution-report',
+  ],
   v5SideBar: [
     // 'v5/intro',
     'v5/guide',

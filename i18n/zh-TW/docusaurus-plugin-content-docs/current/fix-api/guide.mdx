@@ -1,0 +1,339 @@
+---
+title: FIX API 整合指南
+sidebar_label: 整合指南
+---
+
+## 概覽
+
+Bybit FIX API 透過持久 TCP/TLS 連線，使用 **FIX 4.4** 協議提供現貨交易的低延遲存取。
+適合需要確定性訊息排序、且相比 REST 需要更低每次請求開銷的機構交易者與做市商。
+
+:::info
+FIX API 目前僅支援**現貨（Spot）**交易。
+:::
+
+與 REST V5 API 的主要差異：
+
+| | REST V5 | FIX API |
+|---|---|---|
+| 連線 | 無狀態 HTTP | 持久 TCP/TLS 連線 |
+| 編碼 | JSON | Tag=Value（SOH 分隔）|
+| 序列號 | 無 | 連線內嚴格單調遞增 `MsgSeqNum` |
+
+## 連線設定
+
+### 連線端點
+
+| 環境 | Host | Port |
+|---|---|---|
+| 正式環境 (9月3日) | `fix-oe.bybit.com` | `9000` |
+| 測試環境 ✅ | `fix-oe-testnet.bybit.com` | `9000` |
+
+所有連線必須使用 TLS，不接受純文字 TCP 連線。
+
+### 訊息格式
+
+FIX 訊息使用 **Tag=Value** 鍵值對，以 SOH 字元（ASCII `0x01`）分隔。本文件以 `|` 替代 SOH 以提升可讀性。
+
+```
+8=FIX.4.4|9=65|35=0|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=5|52=20240101-08:00:30.000|10=123|
+```
+
+每條訊息以 `BeginString (8)`、`BodyLength (9)`、`MsgType (35)` 開頭，以 `CheckSum (10)` 結尾。
+`BodyLength` 為從 tag 35 至（不含）`10=` 分隔符的位元組計數。
+`CheckSum` 為訊息所有位元組之值的總和對 256 取模，格式化為補零的 3 位數字串。
+
+### 連線生命週期
+
+```
+Client                              Server
+  |                                   |
+  |--- TCP/TLS connect -------------->|
+  |--- Logon (A) -------------------->|  API 金鑰 + 簽名
+  |<-- Logon (A) --------------------|  ConnId 已分配
+  |                                   |
+  |--- NewOrderSingle (D) ----------->|
+  |<-- ExecutionReport (8) ----------|  非同步確認
+  |                                   |
+  |--- [Heartbeat (0) every N sec] -->|
+  |<-- [Heartbeat (0)] --------------|
+  |                                   |
+  |--- Logout (5) ------------------->|
+  |<-- Logout (5) -------------------|
+  |--- TCP disconnect --------------->|
+```
+
+## 身分驗證
+
+身分驗證在連線建立時透過 `Logon (A)` 訊息完成。
+
+### API 金鑰
+
+請至以下地址建立您的 API 金鑰：
+- **測試環境：** https://testnet.bybit.com/app/user/api-management
+- **正式環境：** https://www.bybit.com/app/user/api-management
+
+僅支援**自行產生（RSA）金鑰**，簽名採用 RSA-SHA256。
+
+:::caution 白名單准入
+FIX API 需要**白名單准入**才能連線，支援 **UID** 或 **機構 ID（ins_id）** 粒度的加白。未加白的帳號即使簽名正確，也會在 Logon 階段被伺服器主動 `Logout (5)` 斷連，`Text (58)` 為 `access denied`（參見 [Logon 拒絕情境](#logon-拒絕情境)）。請聯絡對接 RM 申請加白。
+:::
+
+### 簽名
+
+:::info
+FIX API 僅支援**自行產生（RSA）金鑰**進行身分驗證。請在 API 管理頁面建立金鑰時選擇「自行產生的 API 密鑰」，上傳您的 RSA 公鑰（2048 或 4096 bits），並勾選「啟用 FIX API」。
+:::
+
+在發送 `Logon (A)` 前，依照以下步驟計算簽名：
+
+**步驟一：決定 `expires` 並組合待簽名字串**
+
+`expires` 為此次認證的到期時間，單位為 Unix 毫秒時間戳。建議取當前時間加上有效視窗（預設 `+5000 ms`）：
+
+```
+expires   = 當前 Unix 毫秒時間戳 + 5000
+plaintext = "GET/realtime" + expires
+```
+
+例如，若當前時間為 `1704096000000`：
+
+```
+expires   = 1704096005000
+plaintext = "GET/realtime1704096005000"
+```
+
+**步驟二：以 RSA 私鑰簽名並 Base64 編碼**
+
+使用 RSA-SHA256 演算法，以您的私鑰對 `plaintext` 進行簽名，並將結果進行 Base64 編碼：
+
+```
+signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
+```
+
+**步驟三：填入 Logon 欄位**
+
+| 欄位 | 值 |
+|------|----|
+| `Username (553)` | 您的 API Key |
+| `RawData (96)` | 上一步產生的 Base64 簽名字串 |
+| `RawDataLength (95)` | `RawData` 字串的位元組長度 |
+
+## 訊息標頭
+
+每條 FIX 訊息都包含標準標頭，Bybit 在此基礎上擴充了額外欄位。
+
+### 標準標頭欄位
+
+| Tag | 欄位 | 類型 | 方向 | 必填 | 說明 |
+|-----|-------|------|-----------|----------|-------------|
+| 8 | BeginString | STRING | 雙向 | Y | 固定為 `FIX.4.4` |
+| 9 | BodyLength | LENGTH | 雙向 | Y | 訊息主體長度（位元組）|
+| 10 | CheckSum | STRING | 雙向 | Y | 訊息校驗和，所有位元組值對 256 取模的 3 位數字串 |
+| 35 | MsgType | STRING | 雙向 | Y | 訊息類型（參見[訊息類型一覽](#訊息類型一覽)）|
+| 49 | SenderCompID | STRING | 雙向 | Y | 用戶端自定義的連線識別碼，格式為 `^[a-zA-Z0-9\-_]{1,16}$`（大小寫字母、數字、`-`、`_`，長度 1~16）。|
+| 56 | TargetCompID | STRING | 雙向 | Y | 用戶端設為 `BYBIT_FIX_SERVER`|
+| 34 | MsgSeqNum | SEQNUM | 雙向 | Y | 單調遞增序列號，從 `1` 開始，**每個新 session 重置**（詳見 [序列號與 Gap 處理](#序列號與-gap-處理)）|
+| 52 | SendingTime | UTCTIMESTAMP | 雙向 | Y | 發送時間|
+
+:::caution SenderCompID 唯一性與會話生命週期
+- 同一 `SenderCompID` 同時**只能建立一條**連線。
+- 正常退出時必須發送 `Logout (5)` 訊息主動登出；未能發送 `Logout` 將導致該 `SenderCompID` 在 **`3 × HeartBtInt`（30 秒）** 內**無法用於新會話**建立。
+:::
+
+:::caution 連線數與速率限制
+- 同一 UID 可使用**多個不同的 `SenderCompID`** 建立多條並發連線。同一 UID 同一台机器 ** 連線數上限：20 條**
+- **單 IP 建連速率上限：30 次/秒**，超過會被拒絕建連。
+:::
+
+### Bybit 擴充標頭欄位
+
+**用戶端 → 伺服器（請求時附帶）：**
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 30006 | ReqId | STRING | N | 用戶端自定義請求 ID。若攜帶，**同步回應（各類 Ack：ExecutionReport A、XCA、XAA 等）會原樣回帶**便於請求/響應對應；**非同步狀態推送（如 ExecType=0/4/F 的 ExecutionReport）不會攜帶** |
+| 30002 | BapiTimestamp | INT (int64) | N | Unix 毫秒時間戳 |
+| 30001 | BapiRecvWindow | INT | N | 請求有效視窗（ms），預設 `5000`，最大 `60000` |
+| 30004 | Referer | STRING | N | 經紀商識別碼，等同 REST V5 的 `X-Referer` |
+
+:::caution
+`BapiTimestamp (30002)` 為當前時間戳，伺服器將驗證其滿足：
+
+```
+server_time - recv_window <= BapiTimestamp < server_time + 1000
+```
+
+請使用本地已同步 NTP 的時鐘。`BapiRecvWindow (30001)` 預設值為 `5000` ms，最大值為 `60000` ms。
+:::
+
+**伺服器 → 用戶端（每個回應均包含）：**
+
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 30005 | TraceId | STRING | 伺服器端追蹤識別碼，用於支援與除錯 |
+| 30007 | BapiLimit | INT | 目前視窗的總頻率限制權重 |
+| 30008 | BapiLimitStatus | INT | 目前視窗的剩餘可用權重 |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | 視窗重置時間（Unix 毫秒時間戳）|
+
+:::caution
+`BapiTimestamp (30002)` 與 `BapiLimitResetTimestamp (30009)` 為 64 位元整數。部分 FIX 函式庫預設以 32 位元解析 INT 欄位——請確保您的解析器對這些欄位使用 `int64`。
+:::
+
+## 連線訊息
+
+### 序列號與 Gap 處理
+
+Bybit FIX API **不支援標準 FIX 4.4 的 gap fill 機制**（不實作 `ResendRequest (2)` / `SequenceReset (4)`）。
+
+- **每條連線的 `MsgSeqNum` 都從 `1` 重新開始**。伺服器在每次新 session 都會強制重置序列號；用戶端建議在 `Logon (A)` 中設 `ResetSeqNumFlag (141) = Y` 以保持雙方 seq 狀態一致。
+- **不支援斷線續連（session resume）**。連線斷開時尚未消費的訊息**不會**在重連時補發。
+
+### Logon（MsgType = A）
+
+用戶端發送 `Logon` 以建立連線，伺服器回應自身的 `Logon` 以確認連線。
+
+**請求欄位（用戶端 → 伺服器）：**
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 98 | EncryptMethod | INT | **Y** | 必須為 `0`（None）|
+| 108 | HeartBtInt | INT | **Y** | 空閒逾時閾值（秒）。**伺服器固定為 `10`，用戶端傳入的其他值會被覆蓋**。若伺服器在此時間內未收到用戶端任何訊息，將發送 `TestRequest (1)` 探測連線存活。任何訊息（不限於 `Heartbeat`）均會重置此計時器。|
+| 553 | Username | STRING | **Y** | 您的 API 金鑰 |
+| 95 | RawDataLength | LENGTH | **Y** | `RawData` 的位元組長度 |
+| 96 | RawData | DATA | **Y** | 簽名（參見[簽名](#簽名)）|
+| 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` 表示在此次登入時重置序列號 |
+| 25036 | ResponseMode | INT | N | `1` = Everything（預設）；`2` = OnlyAcks |
+| 30023 | Expires | INT | N | 簽名 token 到期時間戳（ms）。須與構造待簽名字串時使用的 `expires` 值相同（即 `當前 Unix 毫秒時間戳 + 5000`）。|
+
+**回應欄位（伺服器 → 用戶端）：**
+
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 49 | SenderCompID | STRING | 用戶端自定義的連線識別碼（排錯時可以用這個ID）|
+| 98 | EncryptMethod | INT | 加密方式，固定為 `0`（None）|
+| 108 | HeartBtInt | INT | 伺服器實際採用的心跳間隔（秒），固定為 `10` |
+| 141 | ResetSeqNumFlag | BOOLEAN | 序列號重置標誌，通常為 `Y` |
+
+**請求範例：**
+
+```
+8=FIX.4.4|9=130|35=A|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
+```
+**回應範例：**
+
+```
+8=FIX.4.4|9=87|35=A|34=1|49=BYBIT_FIX_SERVER|52=20260820-02:21:43.001|56=FIX_CLIENT|
+98=0|108=10|141=Y|10=028|
+```
+
+#### Logon 拒絕情境
+
+當帳號**未加入 FIX API 白名單**時，会收到 `access denied`：
+用戶端應在收到 `35=5` + `58`（access denied） 時,需聯絡對接 RM 申請加白名單,白名單支援 UID 或 ins_id 粒度
+
+```
+8=FIX.4.4|9=86|35=5|34=1|49=BYBIT_FIX_SERVER|52=20260824-11:14:10.029|56=FIX_CLIENT|58=access denied|10=123|
+```
+
+
+### Heartbeat（MsgType = 0）
+
+`Heartbeat` 是空閒保活訊息，**不是定時發送的心跳包**。只有在 `HeartBtInt` 時間視窗內沒有發送任何其他訊息時，才需要主動發送。
+
+**空閒計時器的運作方式：**
+
+- 任何傳送給伺服器的訊息（下單、撤單、改單等）都會重置空閒計時器。
+- 只有在整個 `HeartBtInt` 視窗內沒有發出任何訊息時，用戶端才需要發送 `Heartbeat`。
+- 伺服器以相同的邏輯反向監控用戶端：若在 `HeartBtInt` 秒內未收到任何訊息，將發送 `TestRequest (1)` 探測連線狀態。
+- 收到 `TestRequest` 後，用戶端必須回傳帶有相同 `TestReqID` 的 `Heartbeat`。
+- 若無回應，伺服器可能終止連線。
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | N | 回傳收到的 `TestRequest` 中的 `TestReqID` |
+
+### TestRequest（MsgType = 1）
+
+任一方均可發送 `TestRequest` 以確認連線存活。接收方必須回傳含有相同 `TestReqID` 的 `Heartbeat`。
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | Y | 任意字串，將在回應的 `Heartbeat` 中原樣回傳 |
+
+### Reject（MsgType = 3）
+
+當訊息未通過連線層驗證時（如標頭格式錯誤、序列號異常），伺服器發送此訊息。與應用層拒絕不同。
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 45 | RefSeqNum | SEQNUM | N | 被拒絕訊息的 `MsgSeqNum` |
+| 371 | RefTagID | INT | N | 導致拒絕的 Tag 編號 |
+| 372 | RefMsgType | STRING | N | 被拒絕訊息的 `MsgType` |
+| 373 | SessionRejectReason | INT | N | 數字拒絕原因代碼 |
+| 58 | Text | STRING | N | 可讀的拒絕說明 |
+
+### Logout（MsgType = 5）
+
+發起連線終止。接收方應回應自身的 `Logout`，之後 TCP 連線可關閉。
+
+| Tag | 欄位 | 類型 | 必填 | 說明 |
+|-----|-------|------|----------|-------------|
+| 58 | Text | STRING | N | 登出原因（選填）|
+
+**Logout請求範例：**
+```
+8=FIX.4.4|9=96|35=5|34=3|49=FIX_CLIENT|52=20260819-11:07:06.815|56=BYBIT_FIX_SERVER|58=client requested logout|10=xxx|
+```
+**Logout 响应 **
+```
+8=FIX.4.4|9=69|35=5|34=3|49=BYBIT_FIX_SERVER|52=20260819-11:07:08.236|56=FIX_CLIENT|10=xxx|
+```
+
+
+## 頻率限制
+
+FIX API 與 REST V5 共用相同的頻率限制池。每個伺服器回應的標頭均包含目前視窗狀態：
+
+| Tag | 欄位 | 類型 | 說明 |
+|-----|-------|------|-------------|
+| 30007 | BapiLimit | INT | 目前視窗的總權重上限 |
+| 30008 | BapiLimitStatus | INT | 剩餘可用權重 |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | 視窗重置時間（Unix 毫秒時間戳）|
+
+當 `BapiLimitStatus` 降至 `0` 時，後續請求將被拒絕，直至視窗重置。被拒絕的請求會收到 `ExecType=8` 的 `ExecutionReport`，拒絕原因透過 `Text (58)` 返回。
+
+## ResponseMode
+
+`Logon (A)` 中的 `ResponseMode (25036)` 控制伺服器主動推送至用戶端的訊息類型：
+
+| 值 | 說明 |
+|-------|-------------|
+| `1`（Everything）| 所有訊息：委託確認、成交回報及被動委託狀態推播。**預設值。** |
+| `2`（OnlyAcks）| 僅回傳您請求的直接回應，被動推播更新（如來自其他連線的委託成交）將被抑制。 |
+
+當您的應用程式完全透過同步 ACK 流程管理狀態，且不需要背景推播更新時，可使用 `OnlyAcks`。
+
+:::info 多連線推送行為
+若同一 UID 同時建立了多條 FIX 連線，**被動推播（例如 REST 下單的成交回報、其他 session 的訂單狀態變更）會廣播到所有處於 `ResponseMode=1` 的連線**，而非僅推給最近登入的那條。用戶端需自行處理重複事件的去重。
+:::
+
+## 訊息類型一覽
+
+| MsgType | 名稱 | 方向 | 說明 |
+|---------|------|-----------|-------------|
+| `0` | Heartbeat | 雙向 | 連線保活 |
+| `1` | TestRequest | 雙向 | 存活探測 |
+| `3` | Reject | 伺服器 → 用戶端 | 連線層訊息拒絕 |
+| `5` | Logout | 雙向 | 連線終止 |
+| `A` | Logon | 雙向 | 連線建立與身分驗證 |
+| `D` | [NewOrderSingle](create-order) | 用戶端 → 伺服器 | 建立新委託單 |
+| `F` | [OrderCancelRequest](cancel-order) | 用戶端 → 伺服器 | 取消現有委託單 |
+| `8` | [ExecutionReport](execution-report) | 伺服器 → 用戶端 | 委託確認、成交回報及被動狀態更新 |
+| `XAR` | [AtomicReplaceRequest](amend-order) | 用戶端 → 伺服器 | 修改現有委託單 |
+| `XCA` | OrderCancelAck | 伺服器 → 用戶端 | 取消確認 |
+| `XAA` | OrderAmendAck | 伺服器 → 用戶端 | 修改確認 |
+| `j` | BusinessMessageReject | 伺服器 → 用戶端 | 應用層拒絕（如不支援的訊息類型或缺少必填欄位）|
+
+## [FIX SCHEMA](order.xml)

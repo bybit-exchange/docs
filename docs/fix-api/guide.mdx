@@ -1,0 +1,339 @@
+---
+title: FIX API Integration Guide
+sidebar_label: Integration Guide
+---
+
+## Overview
+
+Bybit FIX API provides low-latency access to Spot trading using the **FIX 4.4** protocol over persistent TCP/TLS connections.
+It is suited for institutional traders and market makers who need deterministic message ordering and minimal per-request overhead compared to REST.
+
+:::info
+FIX API currently supports **Spot** trading only.
+:::
+
+Key differences from the REST V5 API:
+
+| | REST V5 | FIX API |
+|---|---|---|
+| Connection | Stateless HTTP | Persistent TCP/TLS session |
+| Encoding | JSON | Tag=Value (SOH-delimited) |
+| Sequence | None | Strict monotonic `MsgSeqNum` per session |
+
+## Connectivity
+
+### Endpoints
+
+| Environment | Host | Port |
+|---|---|---|
+| Mainnet (3 Sep) | `fix-oe.bybit.com` | `9000` |
+| Testnet ✅ | `fix-oe-testnet.bybit.com` | `9000` |
+
+All connections must use TLS. Plain TCP is not accepted.
+
+### Message Format
+
+FIX messages use **Tag=Value** pairs separated by the SOH character (ASCII `0x01`). In this documentation the `|` character is used in place of SOH for readability.
+
+```
+8=FIX.4.4|9=65|35=0|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=5|52=20240101-08:00:30.000|10=123|
+```
+
+Every message begins with `BeginString (8)`, `BodyLength (9)`, and `MsgType (35)`, and ends with `CheckSum (10)`.
+`BodyLength` is the byte count from tag 35 through to (but not including) the `10=` delimiter.
+`CheckSum` is the sum of all byte values in the message modulo 256, formatted as a zero-padded 3-digit string.
+
+### Session Lifecycle
+
+```
+Client                              Server
+  |                                   |
+  |--- TCP/TLS connect -------------->|
+  |--- Logon (A) -------------------->|  API key + signature
+  |<-- Logon (A) --------------------|  ConnId assigned
+  |                                   |
+  |--- NewOrderSingle (D) ----------->|
+  |<-- ExecutionReport (8) ----------|  async ACK
+  |                                   |
+  |--- [Heartbeat (0) every N sec] -->|
+  |<-- [Heartbeat (0)] --------------|
+  |                                   |
+  |--- Logout (5) ------------------->|
+  |<-- Logout (5) -------------------|
+  |--- TCP disconnect --------------->|
+```
+
+## Authentication
+
+Authentication is performed during session initiation via the `Logon (A)` message.
+
+### API Key
+
+Generate your API key at:
+- **Testnet:** https://testnet.bybit.com/app/user/api-management
+- **Mainnet:** https://www.bybit.com/app/user/api-management
+
+Only **self-generated (RSA) keys** are supported; signing uses RSA-SHA256.
+
+:::caution Whitelist required
+FIX API access requires **whitelist onboarding** at either **UID** or **institutional ID (`ins_id`)** granularity. A non-whitelisted account — even with a valid signature — is rejected during Logon: the server terminates the session by sending `Logout (5)` with `Text (58) = access denied` (see [Logon Rejection](#logon-rejection)). Contact your Bybit RM to request whitelisting.
+:::
+
+### Signature
+
+:::info
+FIX API supports only **self-generated (RSA) keys**. When creating an API key, select "Self-generated API Key", upload your RSA public key (2048 or 4096 bits), and enable "FIX API".
+:::
+
+Compute the signature before sending `Logon (A)`:
+
+**Step 1 — Determine `expires` and construct the plaintext string**
+
+`expires` is the Unix millisecond timestamp at which this authentication token expires. Set it to your current time plus the validity window (default `+5000 ms`):
+
+```
+expires   = current_unix_ms + 5000
+plaintext = "GET/realtime" + expires
+```
+
+For example, if the current time is `1704096000000`:
+
+```
+expires   = 1704096005000
+plaintext = "GET/realtime1704096005000"
+```
+
+**Step 2 — Sign and Base64-encode**
+
+Sign the plaintext using RSA-SHA256 with your RSA private key, then Base64-encode the result:
+
+```
+signature = base64( RSA_SHA256_sign(privateKey, plaintext) )
+```
+
+**Step 3 — Populate Logon fields**
+
+| Field | Value |
+|-------|----|
+| `Username (553)` | Your API Key |
+| `RawData (96)` | Base64-encoded signature from Step 2 |
+| `RawDataLength (95)` | Byte length of the `RawData` string |
+
+## Message Header
+
+Every FIX message carries a standard header. Bybit extends the header with additional fields.
+
+### Standard Header Fields
+
+| Tag | Field | Type | Direction | Required | Description |
+|-----|-------|------|-----------|----------|-------------|
+| 8 | BeginString | STRING | Both | Y | Always `FIX.4.4` |
+| 9 | BodyLength | LENGTH | Both | Y | Message body length in bytes |
+| 10 | CheckSum | STRING | Both | Y | Message checksum — sum of all bytes modulo 256, as a 3-digit zero-padded string |
+| 35 | MsgType | STRING | Both | Y | Message type (see [Message Types](#message-types-reference)) |
+| 49 | SenderCompID | STRING | Both | Y | Client-defined connection identifier. Format: `^[a-zA-Z0-9\-_]{1,16}$` (letters, digits, `-`, `_`; length 1–16). |
+| 56 | TargetCompID | STRING | Both | Y | Client sets to `BYBIT_FIX_SERVER` |
+| 34 | MsgSeqNum | SEQNUM | Both | Y | Monotonically increasing sequence number starting from `1`, **reset on every new session** (see [Sequence Numbers & Gap Handling](#sequence-numbers--gap-handling)) |
+| 52 | SendingTime | UTCTIMESTAMP | Both | Y | Send time |
+
+:::caution SenderCompID uniqueness & session lifecycle
+- Only **one active connection per `SenderCompID`** is allowed at a time.
+- On graceful disconnect the client must send a `Logout (5)` message. Failing to do so blocks the `SenderCompID` from establishing a new session for **`3 × HeartBtInt` (30 seconds)**.
+:::
+
+:::caution Connection quota & rate limits
+- A single UID may use **multiple distinct `SenderCompID`s** to open concurrent connections. **Per-UID Per-machine concurrent-connection cap: 20.**
+- **Per-IP connect rate limit: 30 attempts per second** — excess attempts are rejected.
+:::
+
+### Bybit Extension Header Fields
+
+**Client → Server (include in requests):**
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 30006 | ReqId | STRING | N | Client-defined request ID. If provided, it is **echoed back on the synchronous ack** (ExecutionReport `A`, XCA, XAA, etc.) for request/response correlation; it is **not** carried on asynchronous state pushes (`ExecType=0/4/F` ExecutionReports) |
+| 30002 | BapiTimestamp | INT (int64) | N | Unix timestamp in milliseconds |
+| 30001 | BapiRecvWindow | INT | N | Validity window in ms (default: `5000`, max: `60000`) |
+| 30004 | Referer | STRING | N | Broker identifier, equivalent to `X-Referer` in REST V5 |
+
+:::caution
+`BapiTimestamp (30002)` is your current timestamp. The server validates:
+
+```
+server_time - recv_window <= BapiTimestamp < server_time + 1000
+```
+
+Use your local NTP-synced clock. Default `BapiRecvWindow (30001)` is `5000` ms, maximum is `60000` ms.
+:::
+
+**Server → Client (returned in every response):**
+
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 30005 | TraceId | STRING | Server-side trace identifier for support and debugging |
+| 30007 | BapiLimit | INT | Total rate limit weight for the current window |
+| 30008 | BapiLimitStatus | INT | Remaining weight in the current window |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | Unix timestamp (ms) when the current rate limit window resets |
+
+:::caution
+`BapiTimestamp (30002)` and `BapiLimitResetTimestamp (30009)` are 64-bit integers. Some FIX libraries default to 32-bit INT parsing — ensure your parser uses `int64` for these fields.
+:::
+
+## Session Messages
+
+### Sequence Numbers & Gap Handling
+
+Bybit FIX API **does not implement the standard FIX 4.4 gap-fill mechanism** (`ResendRequest (2)` / `SequenceReset (4)` are not supported).
+
+- **`MsgSeqNum` restarts from `1` on every connection.** The server forcibly resets the sequence on every new session; clients are recommended to set `ResetSeqNumFlag (141) = Y` in `Logon (A)` to keep both sides' seq state aligned.
+- **Session resume on reconnect is not supported.** Any messages unconsumed at the time of disconnect are **not** retransmitted on the next connection.
+
+### Logon (MsgType = A)
+
+The client sends `Logon` to initiate a session. The server responds with its own `Logon` acknowledging the connection.
+
+**Request fields (Client → Server):**
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 98 | EncryptMethod | INT | **Y** | Must be `0` (None) |
+| 108 | HeartBtInt | INT | **Y** | Idle timeout in seconds. **Fixed to `10` server-side — any client-supplied value is overridden.** If the server receives no message from the client within this window, it sends a `TestRequest (1)` to probe liveness. Any message (not just `Heartbeat`) resets the timer. |
+| 553 | Username | STRING | **Y** | Your API key |
+| 95 | RawDataLength | LENGTH | **Y** | Byte length of `RawData` |
+| 96 | RawData | DATA | **Y** | Signature (see [Signature](#signature)) |
+| 141 | ResetSeqNumFlag | BOOLEAN | N | `Y` to reset sequence numbers on this logon |
+| 25036 | ResponseMode | INT | N | `1` = Everything (default); `2` = OnlyAcks |
+| 30023 | Expires | INT | N | Signature token expiry timestamp (ms). Must match the `expires` value used in plaintext construction (i.e. `current_unix_ms + 5000`). |
+
+**Response fields (Server → Client):**
+
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 49 | SenderCompID | STRING | Client-defined connection identifier — useful for troubleshooting |
+| 98 | EncryptMethod | INT | Encryption method, fixed to `0` (None) |
+| 108 | HeartBtInt | INT | Heartbeat interval (seconds) actually applied by the server, fixed to `10` |
+| 141 | ResetSeqNumFlag | BOOLEAN | Sequence number reset flag, typically `Y` |
+
+**Request example:**
+
+```
+8=FIX.4.4|9=130|35=A|49=FIX_CLIENT|56=BYBIT_FIX_SERVER|34=1|52=20240101-08:00:00.000|
+98=0|108=10|553=YOUR_API_KEY|95=64|96=<SIGNATURE>|141=Y|25036=1|30023=1704096005000|10=xxx|
+```
+
+**Response example:**
+
+```
+8=FIX.4.4|9=87|35=A|34=1|49=BYBIT_FIX_SERVER|52=20260820-02:21:43.001|56=FIX_CLIENT|
+98=0|108=10|141=Y|10=028|
+```
+
+#### Logon Rejection
+
+When the account is **not whitelisted** for FIX API, the client will receive `access denied`:
+Upon receiving a `35=5` + `58` (access denied) message, the client should contact the RM to request whitelisting; whitelisting is supported at either the UID or ins_id level.
+
+```
+8=FIX.4.4|9=86|35=5|34=1|49=BYBIT_FIX_SERVER|52=20260824-11:14:10.029|56=FIX_CLIENT|58=access denied|10=123|
+```
+
+
+### Heartbeat (MsgType = 0)
+
+`Heartbeat` is an idle-keepalive message, not a periodic beacon. It is only needed when no other message has been sent within the `HeartBtInt` window.
+
+**How the idle timer works:**
+
+- Any message sent to the server (order, cancel, amend, etc.) resets the idle timer.
+- Only when the entire `HeartBtInt` window passes with no outbound message should the client send a `Heartbeat`.
+- The server applies the same logic in the other direction: if it receives nothing within `HeartBtInt` seconds, it sends a `TestRequest (1)` to probe liveness.
+- Upon receiving a `TestRequest`, the client must reply with a `Heartbeat` that echoes the same `TestReqID`.
+- If no reply arrives, the server may terminate the session.
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | N | Echo of the `TestReqID` from an incoming `TestRequest` |
+
+### TestRequest (MsgType = 1)
+
+Either side may send a `TestRequest` to verify the session is alive. The receiver must reply with a `Heartbeat` containing the same `TestReqID`.
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 112 | TestReqID | STRING | Y | Arbitrary string echoed back in the response `Heartbeat` |
+
+### Reject (MsgType = 3)
+
+Sent by the server when a message fails session-level validation (e.g. malformed header, unexpected sequence number). This is distinct from an application-level rejection.
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 45 | RefSeqNum | SEQNUM | N | `MsgSeqNum` of the rejected message |
+| 371 | RefTagID | INT | N | Tag number that caused the rejection |
+| 372 | RefMsgType | STRING | N | `MsgType` of the rejected message |
+| 373 | SessionRejectReason | INT | N | Numeric reason code |
+| 58 | Text | STRING | N | Human-readable rejection description |
+
+### Logout (MsgType = 5)
+
+Initiates session termination. The receiver should respond with its own `Logout`, after which the TCP connection may be closed.
+
+| Tag | Field | Type | Required | Description |
+|-----|-------|------|----------|-------------|
+| 58 | Text | STRING | N | Optional reason for logout |
+
+**Logout request example:**
+```
+8=FIX.4.4|9=96|35=5|34=3|49=FIX_CLIENT|52=20260819-11:07:06.815|56=BYBIT_FIX_SERVER|58=client requested logout|10=xxx|
+```
+**Logout response:**
+```
+8=FIX.4.4|9=69|35=5|34=3|49=BYBIT_FIX_SERVER|52=20260819-11:07:08.236|56=FIX_CLIENT|10=xxx|
+```
+
+## Rate Limiting
+
+FIX API uses the same rate limit pool as REST V5. Every server response includes the current window status in its header:
+
+| Tag | Field | Type | Description |
+|-----|-------|------|-------------|
+| 30007 | BapiLimit | INT | Total weight limit for the current window |
+| 30008 | BapiLimitStatus | INT | Remaining weight |
+| 30009 | BapiLimitResetTimestamp | INT (int64) | Window reset time in Unix milliseconds |
+
+When `BapiLimitStatus` reaches `0`, subsequent requests will be rejected until the window resets. Rejected requests receive an `ExecutionReport` with `ExecType=8`; the reason is returned in `Text (58)`.
+
+## ResponseMode
+
+`ResponseMode (25036)` in `Logon (A)` controls which server-originated messages are pushed to the client:
+
+| Value | Description |
+|-------|-------------|
+| `1` (Everything) | All messages: order ACKs, fill reports, and passive order status push updates. **Default.** |
+| `2` (OnlyAcks) | Only direct responses to your requests. Passive push updates (e.g. order fills from another session) are suppressed. |
+
+Use `OnlyAcks` when your application manages state entirely through the synchronous ACK flow and does not need background push updates.
+
+:::info Push behavior with multiple connections
+When a single UID holds multiple concurrent FIX connections, **passive pushes (e.g. fills from a REST-placed order, or order-state changes from another session) are broadcast to every connection in `ResponseMode=1`** — not only to the most recently logged-in session. Clients must handle event deduplication themselves.
+:::
+
+## Message Types Reference
+
+| MsgType | Name | Direction | Description |
+|---------|------|-----------|-------------|
+| `0` | Heartbeat | Both | Session keepalive |
+| `1` | TestRequest | Both | Liveness probe |
+| `3` | Reject | Server → Client | Session-level message rejection |
+| `5` | Logout | Both | Session termination |
+| `A` | Logon | Both | Session initiation and authentication |
+| `D` | [NewOrderSingle](create-order) | Client → Server | Place a new order |
+| `F` | [OrderCancelRequest](cancel-order) | Client → Server | Cancel an existing order |
+| `8` | [ExecutionReport](execution-report) | Server → Client | Order ACK, fill reports, and passive status updates |
+| `XAR` | [AtomicReplaceRequest](amend-order) | Client → Server | Amend an existing order |
+| `XCA` | OrderCancelAck | Server → Client | Cancel acknowledgement |
+| `XAA` | OrderAmendAck | Server → Client | Amend acknowledgement |
+| `j` | BusinessMessageReject | Server → Client | Application-level rejection (e.g. unsupported message type or missing required field) |
+
+## [FIX SCHEMA](order.xml)
