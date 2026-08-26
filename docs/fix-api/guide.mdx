@@ -188,7 +188,6 @@ Bybit FIX API **does not implement the standard FIX 4.4 gap-fill mechanism** (`R
 
 - **`MsgSeqNum` restarts from `1` on every connection.** The server forcibly resets the sequence on every new session; clients are recommended to set `ResetSeqNumFlag (141) = Y` in `Logon (A)` to keep both sides' seq state aligned.
 - **Session resume on reconnect is not supported.** Any messages unconsumed at the time of disconnect are **not** retransmitted on the next connection.
-- If the server detects a `MsgSeqNum` gap, it **closes the connection**; the client should reconnect and re-Logon starting at `seq=1`.
 
 ### Logon (MsgType = A)
 
