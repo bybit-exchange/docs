@@ -28,6 +28,8 @@ sidebar_position: 6
 |[status](../../enum#transferstatus) |false |string |劃轉狀態. `SUCCESS`,`FAILED`,`PENDING` |
 |startTime |false |integer |開始時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_ |
 |endTime |false |integer |結束時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_|
+|fromMemberId |false |string |劃出UID|
+|toMemberId |false |string |劃入UID|
 |limit |false |integer |每頁數量限制. [`1`, `50`]. 默認: `20`|
 |cursor |false |string |游標，用於翻頁|
 
@@ -40,6 +42,8 @@ sidebar_position: 6
 |> amount |string |劃轉金額 |
 |> fromMemberId |string |劃出UID |
 |> toMemberId |string |劃入UID |
+|> withdrawReqId |string |扣錢流水id（內部使用）， 可以用於跟[查詢交易日誌](../../account/transaction-log)裡的`id`做映射 |
+|> depositReqId |string |加錢流水id（內部使用）， 可以用於跟[查詢交易日誌](../../account/transaction-log)裡的`id`做映射 |
 |> fromAccountType |string |劃出賬戶類型 |
 |> toAccountType |string |劃入賬戶類型 |
 |> timestamp |string |劃轉創建時間戳 (毫秒) |
@@ -119,7 +123,7 @@ client
     "result": {
         "list": [
             {
-                "transferId": "universalTransfer_4c3cfe2f-85cb-11ed-ac09-9e37823c81cd_533285",
+                "transferId": "30effa41-501f-4020-acd8-e57d9f81e23d",
                 "coin": "USDC",
                 "amount": "1000",
                 "timestamp": "1672134373000",
@@ -127,7 +131,9 @@ client
                 "fromAccountType": "UNIFIED",
                 "toAccountType": "UNIFIED",
                 "fromMemberId": "533285",
-                "toMemberId": "592324"
+                "toMemberId": "592324",
+                "withdrawReqId": "30effa41-501f-4020-acd8-e57d9f81e23d",
+                "depositReqId": "c1fb8ebe-e309-472c-8485-c1b78f2048bb"
             }
         ],
         "nextPageCursor": "eyJtaW5JRCI6MTc4OTYwNSwibWF4SUQiOjE3ODk2MDV9"

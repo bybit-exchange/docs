@@ -30,6 +30,8 @@ Query universal transfer records
 |[status](../../enum#transferstatus) |false |string |Transfer status. `SUCCESS`,`FAILED`,`PENDING` |
 |startTime |false |integer |The start timestamp (ms) _Note: the query logic is actually effective based on **second** level_ |
 |endTime |false |integer |The end timestamp (ms) _Note: the query logic is actually effective based on **second** level_|
+|fromMemberId |false |string |From UID|
+|toMemberId |false |string |To UID|
 |limit |false |integer |Limit for data size per page. [`1`, `50`]. Default: `20`|
 |cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set|
 
@@ -41,7 +43,9 @@ Query universal transfer records
 |> coin |string |Transferred coin |
 |> amount |string |Transferred amount |
 |> fromMemberId |string |From UID |
-|> toMemberId |string |TO UID |
+|> toMemberId |string |To UID |
+|> withdrawReqId |string |Deduction req ID (internal use), can be used to map the `id` in [Get Transaction Log](../../account/transaction-log) |
+|> depositReqId |string |Credit req ID (internal use), can be used to map the `id` in [Get Transaction Log](../../account/transaction-log) |
 |> fromAccountType |string |From account type |
 |> toAccountType |string |To account type |
 |> timestamp |string |Transfer created timestamp (ms) |
@@ -121,7 +125,7 @@ client
     "result": {
         "list": [
             {
-                "transferId": "universalTransfer_4c3cfe2f-85cb-11ed-ac09-9e37823c81cd_533285",
+                "transferId": "30effa41-501f-4020-acd8-e57d9f81e23d",
                 "coin": "USDC",
                 "amount": "1000",
                 "timestamp": "1672134373000",
@@ -129,7 +133,9 @@ client
                 "fromAccountType": "UNIFIED",
                 "toAccountType": "UNIFIED",
                 "fromMemberId": "533285",
-                "toMemberId": "592324"
+                "toMemberId": "592324",
+                "withdrawReqId": "30effa41-501f-4020-acd8-e57d9f81e23d",
+                "depositReqId": "c1fb8ebe-e309-472c-8485-c1b78f2048bb"
             }
         ],
         "nextPageCursor": "eyJtaW5JRCI6MTc4OTYwNSwibWF4SUQiOjE3ODk2MDV9"
