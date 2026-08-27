@@ -1,0 +1,57 @@
+---
+title: Trade
+sidebar_label: Trade
+sidebar_position: 2
+---
+
+Subscribe to the Event Contract public trade stream. Pushed in real-time after each trade.
+
+Push frequency: **real-time**
+
+**Topic:**<br/>
+`publicTrade.{symbol}` e.g., `publicTrade.ETHUSDT-28AUG26-2450-2570-OUT`
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|topic |string |Topic name|
+|type |string |Data type: `snapshot`|
+|ts |number |Timestamp (ms) when the system generates the data|
+|data |array |Object. Sorted by trade time in ascending order.|
+|> T |number |Timestamp (ms) when the order is filled|
+|> s |string |Symbol name|
+|> r |string |Payout ratio (trade price)|
+|> a |string |Trade amount (order value)|
+|> i |string |Trade ID|
+|> seq |integer |Cross sequence|
+
+### Subscribe Example
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT"
+    ]
+}
+```
+
+### Response Example
+
+```json
+{
+    "topic": "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT",
+    "ts": 1787794797536,
+    "type": "snapshot",
+    "data": [
+        {
+            "T": 1787794797534,
+            "s": "ETHUSDT-28AUG26-2450-2570-OUT",
+            "r": "3.5",
+            "a": "100",
+            "i": "ea89cadf-6471-5fd4-8248-20b470d8478b",
+            "seq": 49139
+        }
+    ]
+}
+```

@@ -1,0 +1,126 @@
+---
+title: Get Event Contract Trade History
+sidebar_label: Get Event Contract Trade History
+sidebar_position: 5
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Query Event Contract trade (execution) records. Returns records in the past 2 years.
+
+:::info
+* Only **Event Contract maker accounts** are allowed to access this endpoint.
+* Default query window: **7 days** if `startTime`/`endTime` are not specified.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/event/trades" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |**true** |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`|
+|orderId |false |string |Order ID filter|
+|orderLinkId |false |string |User-defined order ID|
+|startTime |false |integer |Start time in milliseconds. Default: 7 days ago|
+|endTime |false |integer |End time in milliseconds. Default: now|
+|limit |false |integer |Number of items per page. Default: `50`, Range: [`1`, `100`]|
+|cursor |false |string |Pagination cursor|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|list |array |Event Contract trade record list|
+|> orderId |string |Order ID|
+|> orderLinkId |string |User-defined order ID|
+|> execId |string |Execution ID|
+|> symbol |string |Symbol name|
+|> baseCoin |string |Base coin|
+|> settleCoin |string |Settle coin|
+|> side |string |Side: `Buy` or `Sell`|
+|> execType |string |Execution type: `Trade` (normal trade), `Funding` (funding fee)|
+|> execPrice |string |Execution price (payout ratio)|
+|> execValue |string |Execution value|
+|> execFee |string |Execution fee|
+|> execFeeRate |string |Execution fee rate|
+|> orderPrice |string |Order price|
+|> feeCoin |string |Fee coin|
+|> transTime |string |Transaction time in milliseconds|
+|> timeInForce |string |Time in force, e.g. `GTC`, `IOC`, `FOK`|
+|> crossSeq |string |Cross sequence number|
+|> ecPayout |string |Event Contract payout (settlement payout for this execution)|
+|> ecDurationWindow |string |Duration window in seconds|
+|> settleTimeMs |string |Settlement time in milliseconds|
+|> ecOrderValue |string |Event Contract order value|
+|> ecContractType |string |Event contract type: `UpDown`, `Target`, `Range`|
+|> ecDirection |string |Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)|
+|> ecTargetPrice |string |Target price. Target type only.|
+|> ecLowerBound |string |Lower bound. Range type only.|
+|> ecUpperBound |string |Upper bound. Range type only.|
+|> extraFees |string |Extra fees (JSON string if applicable)|
+|cursor |string |Cursor for next page pagination|
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/event/trades?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "orderId": "1234567890",
+                "orderLinkId": "my-order-001",
+                "execId": "exec-001",
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+                "baseCoin": "BTC",
+                "settleCoin": "USDT",
+                "side": "Buy",
+                "execType": "Trade",
+                "execPrice": "1.95",
+                "execValue": "50",
+                "execFee": "0.5",
+                "execFeeRate": "0.01",
+                "orderPrice": "1.95",
+                "feeCoin": "USDT",
+                "transTime": "1694402559843",
+                "timeInForce": "GTC",
+                "crossSeq": "31413030",
+                "ecPayout": "0",
+                "ecDurationWindow": "300",
+                "settleTimeMs": "1694515498753",
+                "ecOrderValue": "50",
+                "ecContractType": "UpDown",
+                "ecDirection": "UP",
+                "ecTargetPrice": "",
+                "ecLowerBound": "",
+                "ecUpperBound": "",
+                "extraFees": ""
+            }
+        ],
+        "cursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1694402560000
+}
+```
