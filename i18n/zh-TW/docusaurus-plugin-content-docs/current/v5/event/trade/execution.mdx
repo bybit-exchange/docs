@@ -4,9 +4,6 @@ sidebar_label: 查詢Event Contract成交記錄
 sidebar_position: 5
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 查詢 Event Contract 成交（執行）記錄，支持查詢過去 2 年內的數據。
 
 :::info
@@ -39,7 +36,7 @@ import TabItem from '@theme/TabItem';
 |> baseCoin |string |標的幣種|
 |> settleCoin |string |結算幣種|
 |> side |string |方向：`Buy` 或 `Sell`|
-|> execType |string |成交類型：`Trade`（正常成交）、`Funding`（資金費用）|
+|> [execType](../../../enum#exectype) |string |成交類型：`Trade`、`Settle`|
 |> execPrice |string |成交價格（賠付比率）|
 |> execValue |string |成交金額|
 |> execFee |string |成交手續費|
@@ -47,7 +44,7 @@ import TabItem from '@theme/TabItem';
 |> orderPrice |string |訂單價格|
 |> feeCoin |string |手續費幣種|
 |> transTime |string |成交時間（毫秒）|
-|> timeInForce |string |訂單有效期，如 `GTC`、`IOC`、`FOK`|
+|> [timeInForce](../../../enum#timeinforce) |string |訂單有效期，如 `GTC`、`IOC`、`FOK`|
 |> crossSeq |string |跨業務序號|
 |> ecPayout |string |Event Contract 賠付金額（本次成交的結算賠付）|
 |> ecDurationWindow |string |持續時間窗口（秒）|
@@ -65,9 +62,6 @@ import TabItem from '@theme/TabItem';
 
 ### 請求示例
 
-<Tabs groupId="programming-languages">
-<TabItem value="http" label="HTTP">
-
 ```http
 GET /v5/event/trades?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1
 Host: api.bybit.com
@@ -76,9 +70,6 @@ X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1694402559000
 X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### 返回示例
 

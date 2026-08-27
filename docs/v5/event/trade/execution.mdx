@@ -4,9 +4,6 @@ sidebar_label: Get Event Contract Trade History
 sidebar_position: 5
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 Query Event Contract trade (execution) records. Returns records in the past 2 years.
 
 :::info
@@ -39,7 +36,7 @@ Query Event Contract trade (execution) records. Returns records in the past 2 ye
 |> baseCoin |string |Base coin|
 |> settleCoin |string |Settle coin|
 |> side |string |Side: `Buy` or `Sell`|
-|> execType |string |Execution type: `Trade` (normal trade), `Funding` (funding fee)|
+|> [execType](../../../enum#exectype) |string |Execution type: `Trade`, `Settle`|
 |> execPrice |string |Execution price (payout ratio)|
 |> execValue |string |Execution value|
 |> execFee |string |Execution fee|
@@ -47,7 +44,7 @@ Query Event Contract trade (execution) records. Returns records in the past 2 ye
 |> orderPrice |string |Order price|
 |> feeCoin |string |Fee coin|
 |> transTime |string |Transaction time in milliseconds|
-|> timeInForce |string |Time in force, e.g. `GTC`, `IOC`, `FOK`|
+|> [timeInForce](../../../enum#timeinforce) |string |Time in force, e.g. `GTC`, `IOC`, `FOK`|
 |> crossSeq |string |Cross sequence number|
 |> ecPayout |string |Event Contract payout (settlement payout for this execution)|
 |> ecDurationWindow |string |Duration window in seconds|
@@ -65,9 +62,6 @@ Query Event Contract trade (execution) records. Returns records in the past 2 ye
 
 ### Request Example
 
-<Tabs groupId="programming-languages">
-<TabItem value="http" label="HTTP">
-
 ```http
 GET /v5/event/trades?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1
 Host: api.bybit.com
@@ -76,9 +70,6 @@ X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
 X-BAPI-TIMESTAMP: 1694402559000
 X-BAPI-RECV-WINDOW: 5000
 ```
-
-</TabItem>
-</Tabs>
 
 ### Response Example
 

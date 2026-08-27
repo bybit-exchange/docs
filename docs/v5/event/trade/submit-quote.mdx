@@ -1,0 +1,64 @@
+---
+title: Submit Quote
+sidebar_label: Submit Quote
+sidebar_position: 6
+---
+
+Submit a payout ratio quote for an Event Contract symbol.
+
+:::info
+* Only **Event Contract maker accounts** are allowed to access this endpoint.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/event/quotes" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |**true** |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`|
+|orderLinkId |**true** |string |User-defined order ID|
+|grossPayoutRatio |**true** |string |Gross payout ratio reported by the institution|
+|amount |**true** |string |Amount for this quote (settle coin)|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|orderLinkId |string |User-defined order ID|
+|orderId |string |Order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/event/quotes HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderLinkId": "xxxx",
+    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+    "grossPayoutRatio": "0.5",
+    "amount": "100"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderLinkId": "xxxxxx",
+        "orderId": "xxxxxxxxxxefffff"
+    },
+    "retExtInfo": {},
+    "time": 1672217377164
+}
+```

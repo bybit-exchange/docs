@@ -1,0 +1,117 @@
+---
+title: Execution
+sidebar_label: Execution
+sidebar_position: 2
+---
+
+Subscribe to the `execution` topic to receive real-time Event Contract execution (trade) updates.
+
+**Topic:** `execution`
+
+:::info
+* Authentication is required before subscribing to private topics.
+* Pushed when an Event Contract order is filled (fully or partially).
+:::
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|id |string |Message ID|
+|topic |string |Topic name|
+|creationTime |number |Data created timestamp (ms)|
+|data |array |Object|
+|> category |string |Product type. `event`|
+|> transId |string |Transaction ID|
+|> execId |string |Execution ID|
+|> orderId |string |Order ID|
+|> orderLinkId |string |User-defined order ID|
+|> symbol |string |Symbol name|
+|> symbolId |integer |Symbol ID|
+|> baseCoin |string |Base coin|
+|> quoteCoin |string |Quote coin|
+|> settleCoin |string |Settle coin|
+|> side |string |Side: `Buy` or `Sell`|
+|> feeCoin |string |Fee coin|
+|> [execType](../../../../enum#exectype) |string |Execution type: `Trade`, `Settle`|
+|> execPrice |string |Execution price (payout ratio)|
+|> execValue |string |Execution value|
+|> execFee |string |Execution fee|
+|> execFeeRate |string |Execution fee rate|
+|> orderPrice |string |Order price|
+|> ecContractType |integer |Event contract type|
+|> ecDirection |integer |Direction|
+|> ecDurationWindow |integer |Duration window in seconds|
+|> ecTargetPrice |string |Target price. Target type only.|
+|> ecLowerBound |string |Lower bound. Range type only.|
+|> ecUpperBound |string |Upper bound. Range type only.|
+|> ecOrderValue |string |Event Contract order value|
+|> ecIndexPrice |string |Index price at execution|
+|> ecPayout |string |Event Contract payout amount for this execution|
+|> entryPrice |string |Entry price|
+|> settlePrice |string |Settlement price|
+|> grossPayoutRatio |string |Gross payout ratio|
+|> sessionRpl |string |Session realised PnL|
+|> transTime |string |Transaction time in milliseconds|
+|> settleTimeMs |string |Settlement time in milliseconds|
+|> crossSeq |string |Cross sequence number|
+|> [timeInForce](../../../../enum#timeinforce) |string |Time in force, e.g. `GoodTillCancel`|
+|> extraFees |array |Extra fees|
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "execution"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+    "topic": "execution",
+    "id": "1509583_ETHUSDT-5MIN-UP_1311",
+    "creationTime": 1787635282379,
+    "data": [
+        {
+            "category": "event",
+            "transId": "0176bba4-66fa-542b-af33-cea000a83dc0",
+            "execId": "0176bba4-66fa-542b-af33-cea000a83dc0",
+            "orderId": "746a6c87-a6dd-4008-8889-37e694046681",
+            "orderLinkId": "cjm1119",
+            "symbol": "ETHUSDT-5MIN-UP",
+            "symbolId": 500000,
+            "baseCoin": "ETH",
+            "quoteCoin": "USDT",
+            "settleCoin": "USDT",
+            "side": "Sell",
+            "feeCoin": "USDT",
+            "execType": "Trade",
+            "execPrice": "3.5",
+            "execValue": "100",
+            "execFee": "4.28571429",
+            "execFeeRate": "0.04285715",
+            "orderPrice": "3.5",
+            "ecContractType": 1,
+            "ecDirection": 1,
+            "ecDurationWindow": 300,
+            "ecTargetPrice": "",
+            "ecLowerBound": "",
+            "ecUpperBound": "",
+            "ecOrderValue": "5000",
+            "ecPayout": "350",
+            "entryPrice": "3.5",
+            "settlePrice": "2503.50730825",
+            "grossPayoutRatio": "3.5",
+            "sessionRpl": "0",
+            "transTime": "1787635282374",
+            "settleTimeMs": "1787635582374",
+            "crossSeq": "1311",
+            "timeInForce": "GoodTillCancel",
+            "extraFees": []
+        }
+    ]
+}
+```

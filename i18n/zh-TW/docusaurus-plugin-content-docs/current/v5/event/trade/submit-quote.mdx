@@ -1,0 +1,64 @@
+---
+title: 提交報價
+sidebar_label: 提交報價
+sidebar_position: 6
+---
+
+為 Event Contract 交易對提交賠付比率報價。
+
+:::info
+* 僅 **Event Contract maker 帳戶**可訪問此接口。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/event/quotes" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:-----|:---------|:-----|:-----|
+|symbol |**true** |string |交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`|
+|orderLinkId |**true** |string |用戶自定義訂單 ID|
+|grossPayoutRatio |**true** |string |機構報出的毛賠付比率|
+|amount |**true** |string |本次報價金額（結算幣種）|
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:-----|:-----|:-----|
+|orderLinkId |string |用戶自定義訂單 ID|
+|orderId |string |訂單 ID|
+
+---
+
+### 請求示例
+
+```http
+POST /v5/event/quotes HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderLinkId": "xxxx",
+    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+    "grossPayoutRatio": "0.5",
+    "amount": "100"
+}
+```
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderLinkId": "xxxxxx",
+        "orderId": "xxxxxxxxxxefffff"
+    },
+    "retExtInfo": {},
+    "time": 1672217377164
+}
+```
