@@ -24,6 +24,7 @@ Get the trading fee rate.
 |> baseCoin |string |Base coin. `SOL`, `BTC`, `ETH` <ul><li>Spot and Derivatives does not have this field</li></ul>|
 |> takerFeeRate |string |Taker fee rate|
 |> makerFeeRate |string |Maker fee rate|
+|> rpiMakerFeeRate |string |Maker fee rate for RPI orders|
 
 <a href="/api-explorer/v5/account/fee-rate"><Button>RUN >></Button></a>
 
@@ -35,7 +36,7 @@ Get the trading fee rate.
 <TabItem value="http" label="HTTP">
 
 ```http
-GET /v5/account/fee-rate?symbol=ETHUSDT HTTP/1.1
+GET /v5/account/fee-rate?category=spot&symbol=BTCUSDT HTTP/1.1
 Host: api.bybit.com
 X-BAPI-SIGN: XXXXXXX
 X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
@@ -93,15 +94,17 @@ client
     "retCode": 0,
     "retMsg": "OK",
     "result": {
+        "category": "spot",
         "list": [
             {
-                "symbol": "ETHUSDT",
-                "takerFeeRate": "0.0006",
-                "makerFeeRate": "0.0001"
+                "symbol": "BTCUSDT",
+                "takerFeeRate": "0.001",
+                "makerFeeRate": "0.001",
+                "rpiMakerFeeRate": "0.001"
             }
         ]
     },
     "retExtInfo": {},
-    "time": 1676360412576
+    "time": 1787901023267
 }
 ```
