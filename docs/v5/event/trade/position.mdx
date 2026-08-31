@@ -1,0 +1,86 @@
+---
+title: Get Event Contract Position Info
+sidebar_label: Get Event Contract Position Info
+sidebar_position: 3
+---
+
+Query real-time Event Contract position data. Covers UpDown, Target, and Range contract types.
+
+:::info
+* Only **Event Contract maker accounts** are allowed to access this endpoint.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/event/positions" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |false |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`. If not passed, returns all Event Contract positions|
+|baseCoin |false |string |Base coin filter, e.g. `BTC`|
+|settleCoin |false |string |Settle coin filter, e.g. `USDT`|
+|limit |false |integer |Number of items per page. Default: `20`, Range: [`1`, `50`]|
+|cursor |false |string |Pagination cursor. Use `nextPageCursor` from the response to retrieve the next page|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|list |array |Event Contract position list|
+|> symbol |string |Symbol name|
+|> baseCoin |string |Base coin|
+|> settleCoin |string |Settle coin|
+|> side |string |Position side: `Buy` (long), `Sell` (short)|
+|> ecContractType |string |Event contract type: `UpDown`, `Target`, `Range`|
+|> ecDirection |string |Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)|
+|> avgPayoutRatio |string |Average payout ratio|
+|> positionValue |string |Position value (cumulative executed value)|
+|> ecSettleTime |string |Expected settlement time in milliseconds|
+|> cumClosedPnl |string |Cumulative settled profit and loss|
+|> createdTime |string |Position creation timestamp in milliseconds|
+|> updatedTime |string |Position update timestamp in milliseconds|
+|> seq |long |Cross sequence number for ordering|
+|nextPageCursor |string |Cursor for next page pagination|
+
+---
+
+### Request Example
+
+```http
+GET /v5/event/positions?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+                "baseCoin": "BTC",
+                "settleCoin": "USDT",
+                "side": "Buy",
+                "ecContractType": "UpDown",
+                "ecDirection": "UP",
+                "avgPayoutRatio": "1.85",
+                "positionValue": "100",
+                "ecSettleTime": "1694515498753",
+                "cumClosedPnl": "50.5",
+                "createdTime": "1694402559843",
+                "updatedTime": "1694515498753",
+                "seq": 31413030
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1694402560000
+}
+```

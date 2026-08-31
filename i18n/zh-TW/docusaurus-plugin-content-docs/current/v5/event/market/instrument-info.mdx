@@ -1,0 +1,240 @@
+---
+title: 查詢合約信息
+sidebar_label: 查詢合約信息
+sidebar_position: 1
+---
+
+查詢 Event Contract 合約信息，支持分頁。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/event/instruments-info" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:-----|:---------|:-----|:-----|
+|symbol |否 |string |交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`|
+|status |否 |string |`PreLaunch`、`Trading`、`Delivering`、`Closed`|
+|limit |否 |integer |每頁數量。默認：`50`，範圍：[`1`, `100`]|
+|cursor |否 |string |分頁游標，使用上一次返回的 `nextPageCursor`|
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:-----|:-----|:-----|
+|nextPageCursor |string |下一頁分頁游標|
+|list |array |合約列表|
+|> symbol |string |交易對名稱|
+|> symbolId |integer |交易對 ID|
+|> baseCoin |string |標的幣種|
+|> quoteCoin |string |計價幣種|
+|> settleCoin |string |結算幣種|
+|> eventContractType |string |事件合約類型：`Up_Down`、`Target`、`Range`|
+|> durationWindow |string |持續時間窗口（秒）。非 Up_Down 類型返回空字符串|
+|> rvThreshold |string |波動率閾值|
+|> rebate |string |返傭比率。Up_Down 類型為 `0`|
+|> takerFeeRate |string |Taker 手續費率|
+|> makerFeeRate |string |Maker 手續費率|
+|> launchTime |string |上線時間（毫秒）|
+|> deliveryTime |string |交割時間（毫秒）|
+|> status |string |合約狀態：`PreLaunch`、`Trading`、`Delivering`、`Closed`|
+|> targetPrice |string |目標價格，僅 Target 類型適用。Up_Down 和 Range 類型返回 `"0"`|
+|> lowerBound |string |[Range 類型] 範圍下限（不含）。低於此值則 Range Out 獲勝。Up_Down 和 Target 類型返回 `"0"`|
+|> upperBound |string |[Range 類型] 範圍上限（不含）。高於此值則 Range Out 獲勝。Up_Down 和 Target 類型返回 `"0"`|
+|> callOptionSymbolId |integer |對應的 Call 期權 symbolId。(1) Range 上限：填入上限 Strike 對應的 call option symbolId；(2) Target ABOVE：填入 Strike 對應的 call option symbolId；(3) Up_Down 及 Target BELOW：填 `0`|
+|> putOptionSymbolId |integer |對應的 Put 期權 symbolId。(1) Range 下限：填入下限 Strike 對應的 put option symbolId；(2) Target BELOW：填入 Strike 對應的 put option symbolId；(3) Up_Down 及 Target ABOVE：填 `0`|
+|> feeRateRule |array |費率配置|
+|>> minSecToDelivery |integer |區間起始——距結算的秒數下限|
+|>> maxSecToDelivery |integer |區間結束——距結算的秒數上限|
+|>> baseMarkup |string |基礎 Markup|
+|> lotSizeFilter |object |訂單規模配置|
+|>> minOrderAmount |string |最小訂單金額|
+|>> maxOrderAmount |string |最大訂單金額|
+|>> orderAmountTickSize |string |訂單金額步長|
+|>> quoteMaxValidMs |integer |單次報價最長有效期（毫秒）|
+|>> quoteMinIntervalPerUserMs |integer |每個 UID 報價請求的最小時間間隔（毫秒）|
+|> quotationLimit |array |報價限額配置|
+|>> minSecToDelivery |integer |區間起始——距結算的秒數下限|
+|>> maxSecToDelivery |integer |區間結束——距結算的秒數上限|
+|>> quoteMaxAmountPerUser |string |每個 UID 累計最大報價金額|
+|>> quoteMinAmountPerUser |string |每個 UID 累計最小報價金額|
+|>> quoteMinAmount |string |單次最小報價金額|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/event/instruments-info?status=Trading&limit=10 HTTP/1.1
+Host: api.bybit.com
+```
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "0%2C10",
+        "list": [
+            {
+                "symbolId": 500017,
+                "symbol": "BTCUSDT-15MIN-DOWN",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Up_Down",
+                "durationWindow": 900,
+                "rvThreshold": "0.60",
+                "rebate": "0",
+                "takerFeeRate": "0.0088",
+                "makerFeeRate": "0",
+                "launchTime": "1786000980000",
+                "deliveryTime": "1798779602000",
+                "status": "Trading",
+                "targetPrice": "0",
+                "lowerBound": "0",
+                "upperBound": "0",
+                "callOptionSymbolId": 0,
+                "putOptionSymbolId": 0,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0600"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "20000",
+                        "quoteMinAmountPerUser": "10000",
+                        "quoteMinAmount": "50"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "800",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 60000,
+                    "quoteMinIntervalPerUserMs": 200
+                }
+            },
+            {
+                "symbolId": 500241,
+                "symbol": "ETHUSDT-22AUG26-1850-2000-OUT",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Range",
+                "durationWindow": "",
+                "rvThreshold": "0.62",
+                "rebate": "0.25",
+                "takerFeeRate": "0.008",
+                "makerFeeRate": "0",
+                "launchTime": "1787018820000",
+                "deliveryTime": "1787385600000",
+                "status": "Trading",
+                "targetPrice": "0",
+                "lowerBound": "1850",
+                "upperBound": "2000",
+                "callOptionSymbolId": 32101659,
+                "putOptionSymbolId": 32101656,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "baseMarkup": "0.0230"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0180"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "quoteMaxAmountPerUser": "6000000",
+                        "quoteMinAmountPerUser": "5000",
+                        "quoteMinAmount": "500"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "990",
+                        "quoteMinAmountPerUser": "3000",
+                        "quoteMinAmount": "500"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "500",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 6000000,
+                    "quoteMinIntervalPerUserMs": 5000
+                }
+            },
+            {
+                "symbolId": 500239,
+                "symbol": "ETHUSDT-22AUG26-1850-BELOW",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Target",
+                "durationWindow": "",
+                "rvThreshold": "0.62",
+                "rebate": "0.25",
+                "takerFeeRate": "0.008",
+                "makerFeeRate": "0",
+                "launchTime": "1787051280000",
+                "deliveryTime": "1787385600000",
+                "status": "Trading",
+                "targetPrice": "1850",
+                "lowerBound": "0",
+                "upperBound": "0",
+                "callOptionSymbolId": 0,
+                "putOptionSymbolId": 32101656,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "baseMarkup": "0.0230"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0180"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "quoteMaxAmountPerUser": "990000",
+                        "quoteMinAmountPerUser": "5000",
+                        "quoteMinAmount": "500"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "9000000",
+                        "quoteMinAmountPerUser": "3000",
+                        "quoteMinAmount": "500"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "500",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 6000000,
+                    "quoteMinIntervalPerUserMs": 5000
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787108703481
+}
+```

@@ -1,0 +1,86 @@
+---
+title: 查詢Event Contract倉位信息
+sidebar_label: 查詢Event Contract倉位信息
+sidebar_position: 3
+---
+
+查詢實時 Event Contract 倉位數據，涵蓋 UpDown、Target 及 Range 合約類型。
+
+:::info
+* 僅 **Event Contract maker 帳戶**可訪問此接口。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/event/positions" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:-----|:---------|:-----|:-----|
+|symbol |否 |string |交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`。不傳則返回所有 Event Contract 倉位|
+|baseCoin |否 |string |標的幣種篩選，如 `BTC`|
+|settleCoin |否 |string |結算幣種篩選，如 `USDT`|
+|limit |否 |integer |每頁數量。默認：`20`，範圍：[`1`, `50`]|
+|cursor |否 |string |分頁游標，使用返回結果中的 `nextPageCursor` 獲取下一頁|
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:-----|:-----|:-----|
+|list |array |Event Contract 倉位列表|
+|> symbol |string |交易對名稱|
+|> baseCoin |string |標的幣種|
+|> settleCoin |string |結算幣種|
+|> side |string |倉位方向：`Buy`（做多）、`Sell`（做空）|
+|> ecContractType |string |事件合約類型：`UpDown`、`Target`、`Range`|
+|> ecDirection |string |方向：`UP`/`DOWN`（UpDown 類型），`ABOVE`/`BELOW`（Target 類型），`RANGE_IN`/`RANGE_OUT`（Range 類型）|
+|> avgPayoutRatio |string |平均賠付比率|
+|> positionValue |string |倉位價值（累計成交金額）|
+|> ecSettleTime |string |預計結算時間（毫秒）|
+|> cumClosedPnl |string |累計已結算盈虧|
+|> createdTime |string |倉位創建時間（毫秒）|
+|> updatedTime |string |倉位更新時間（毫秒）|
+|> seq |long |跨業務序號，用於排序|
+|nextPageCursor |string |下一頁分頁游標|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/event/positions?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+                "baseCoin": "BTC",
+                "settleCoin": "USDT",
+                "side": "Buy",
+                "ecContractType": "UpDown",
+                "ecDirection": "UP",
+                "avgPayoutRatio": "1.85",
+                "positionValue": "100",
+                "ecSettleTime": "1694515498753",
+                "cumClosedPnl": "50.5",
+                "createdTime": "1694402559843",
+                "updatedTime": "1694515498753",
+                "seq": 31413030
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1694402560000
+}
+```

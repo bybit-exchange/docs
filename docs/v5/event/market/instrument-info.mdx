@@ -1,0 +1,240 @@
+---
+title: Get Instrument Info
+sidebar_label: Get Instrument Info
+sidebar_position: 1
+---
+
+Query Event Contract instrument information with pagination support.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/event/instruments-info" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |false |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`|
+|status |false |string |`PreLaunch`, `Trading`, `Delivering`, `Closed`|
+|limit |false |integer |Items per page. Default: `50`, range: [`1`, `100`]|
+|cursor |false |string |Pagination cursor. Use `nextPageCursor` from the previous response|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|nextPageCursor |string |Cursor for next page|
+|list |array |Instrument list|
+|> symbol |string |Symbol name|
+|> symbolId |integer |Symbol ID|
+|> baseCoin |string |Base coin|
+|> quoteCoin |string |Quote coin|
+|> settleCoin |string |Settle coin|
+|> eventContractType |string |Event Contract type: `Up_Down`, `Target`, `Range`|
+|> durationWindow |string |Duration window in seconds. Empty string for non-Up_Down types|
+|> rvThreshold |string |Volatility threshold|
+|> rebate |string |Rebate rate. `0` for Up_Down type|
+|> takerFeeRate |string |Taker fee rate|
+|> makerFeeRate |string |Maker fee rate|
+|> launchTime |string |Launch time in milliseconds|
+|> deliveryTime |string |Delivery time in milliseconds|
+|> status |string |Symbol status: `PreLaunch`, `Trading`, `Delivering`, `Closed`|
+|> targetPrice |string |Target price. Target type only. `"0"` for Up_Down and Range|
+|> lowerBound |string |[Range only] Lower bound of the range (exclusive). If the price is below this value, Range Out wins. `"0"` for Up_Down and Target|
+|> upperBound |string |[Range only] Upper bound of the range (exclusive). If the price is above this value, Range Out wins. `"0"` for Up_Down and Target|
+|> callOptionSymbolId |integer |Maps to the corresponding Call option symbolId. (1) Range upper bound: call option symbolId for the upper bound Strike; (2) Target ABOVE: call option symbolId for the Strike; (3) Up_Down and Target BELOW: `0`|
+|> putOptionSymbolId |integer |Maps to the corresponding Put option symbolId. (1) Range lower bound: put option symbolId for the lower bound Strike; (2) Target BELOW: put option symbolId for the Strike; (3) Up_Down and Target ABOVE: `0`|
+|> feeRateRule |array |Fee rate config|
+|>> minSecToDelivery |integer |Interval start — seconds from now to settlement|
+|>> maxSecToDelivery |integer |Interval end — seconds from now to settlement|
+|>> baseMarkup |string |Base markup|
+|> lotSizeFilter |object |Lot size config|
+|>> minOrderAmount |string |Minimum order amount|
+|>> maxOrderAmount |string |Maximum order amount|
+|>> orderAmountTickSize |string |Order amount tick size|
+|>> quoteMaxValidMs |integer |Maximum validity period for a single quote (milliseconds)|
+|>> quoteMinIntervalPerUserMs |integer |Minimum interval between quote requests per UID (milliseconds)|
+|> quotationLimit |array |Quotation limit config|
+|>> minSecToDelivery |integer |Interval start — seconds from now to settlement|
+|>> maxSecToDelivery |integer |Interval end — seconds from now to settlement|
+|>> quoteMaxAmountPerUser |string |Maximum cumulative quote amount per UID|
+|>> quoteMinAmountPerUser |string |Minimum cumulative quote amount per UID|
+|>> quoteMinAmount |string |Minimum amount per single quote|
+
+---
+
+### Request Example
+
+```http
+GET /v5/event/instruments-info?status=Trading&limit=10 HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "nextPageCursor": "0%2C10",
+        "list": [
+            {
+                "symbolId": 500017,
+                "symbol": "BTCUSDT-15MIN-DOWN",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Up_Down",
+                "durationWindow": 900,
+                "rvThreshold": "0.60",
+                "rebate": "0",
+                "takerFeeRate": "0.0088",
+                "makerFeeRate": "0",
+                "launchTime": "1786000980000",
+                "deliveryTime": "1798779602000",
+                "status": "Trading",
+                "targetPrice": "0",
+                "lowerBound": "0",
+                "upperBound": "0",
+                "callOptionSymbolId": 0,
+                "putOptionSymbolId": 0,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0600"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "20000",
+                        "quoteMinAmountPerUser": "10000",
+                        "quoteMinAmount": "50"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "800",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 60000,
+                    "quoteMinIntervalPerUserMs": 200
+                }
+            },
+            {
+                "symbolId": 500241,
+                "symbol": "ETHUSDT-22AUG26-1850-2000-OUT",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Range",
+                "durationWindow": "",
+                "rvThreshold": "0.62",
+                "rebate": "0.25",
+                "takerFeeRate": "0.008",
+                "makerFeeRate": "0",
+                "launchTime": "1787018820000",
+                "deliveryTime": "1787385600000",
+                "status": "Trading",
+                "targetPrice": "0",
+                "lowerBound": "1850",
+                "upperBound": "2000",
+                "callOptionSymbolId": 32101659,
+                "putOptionSymbolId": 32101656,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "baseMarkup": "0.0230"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0180"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "quoteMaxAmountPerUser": "6000000",
+                        "quoteMinAmountPerUser": "5000",
+                        "quoteMinAmount": "500"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "990",
+                        "quoteMinAmountPerUser": "3000",
+                        "quoteMinAmount": "500"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "500",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 6000000,
+                    "quoteMinIntervalPerUserMs": 5000
+                }
+            },
+            {
+                "symbolId": 500239,
+                "symbol": "ETHUSDT-22AUG26-1850-BELOW",
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "eventContractType": "Target",
+                "durationWindow": "",
+                "rvThreshold": "0.62",
+                "rebate": "0.25",
+                "takerFeeRate": "0.008",
+                "makerFeeRate": "0",
+                "launchTime": "1787051280000",
+                "deliveryTime": "1787385600000",
+                "status": "Trading",
+                "targetPrice": "1850",
+                "lowerBound": "0",
+                "upperBound": "0",
+                "callOptionSymbolId": 0,
+                "putOptionSymbolId": 32101656,
+                "feeRateRule": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "baseMarkup": "0.0230"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "baseMarkup": "0.0180"
+                    }
+                ],
+                "quotationLimit": [
+                    {
+                        "minSecToDelivery": 0,
+                        "maxSecToDelivery": 259200,
+                        "quoteMaxAmountPerUser": "990000",
+                        "quoteMinAmountPerUser": "5000",
+                        "quoteMinAmount": "500"
+                    },
+                    {
+                        "minSecToDelivery": 259200,
+                        "maxSecToDelivery": 315360000,
+                        "quoteMaxAmountPerUser": "9000000",
+                        "quoteMinAmountPerUser": "3000",
+                        "quoteMinAmount": "500"
+                    }
+                ],
+                "lotSizeFilter": {
+                    "minOrderAmount": "5",
+                    "maxOrderAmount": "500",
+                    "orderAmountTickSize": "1",
+                    "quoteMaxValidMs": 6000000,
+                    "quoteMinIntervalPerUserMs": 5000
+                }
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787108703481
+}
+```

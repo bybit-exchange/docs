@@ -1,0 +1,110 @@
+---
+title: Order
+sidebar_label: Order
+sidebar_position: 3
+---
+
+Subscribe to the `order` or `order.event` topic to receive real-time Event Contract order updates.
+
+**Topic:** `order` / `order.event`
+
+:::info
+* Authentication is required before subscribing to private topics.
+* Pushed when an Event Contract order status changes (e.g., filled, partially filled, cancelled).
+:::
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|id |string |Message ID|
+|topic |string |Topic name|
+|creationTime |number |Data created timestamp (ms)|
+|data |array |Object|
+|> category |string |Product type. `event`|
+|> orderId |string |Order ID|
+|> orderLinkId |string |User-defined order ID|
+|> symbol |string |Symbol name|
+|> symbolId |integer |Symbol ID|
+|> side |string |Side: `Buy` or `Sell`|
+|> baseCoin |string |Base coin|
+|> quoteCoin |string |Quote coin|
+|> settleCoin |string |Settle coin|
+|> orderStatus |string |Order status: `New`, `PartiallyFilled`, `Filled`, `Cancelled`, `Rejected`|
+|> ecContractType |string |Event contract type: `UpDown`, `Target`, `Range`|
+|> ecDirection |string |Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)|
+|> ecDurationWindow |integer |Duration window in seconds|
+|> ecTargetPrice |string |Target price. Target type only.|
+|> ecLowerBound |string |Lower bound. Range type only.|
+|> ecUpperBound |string |Upper bound. Range type only.|
+|> ecOrderValue |string |Event Contract order value|
+|> ecIndexPrice |string |Index price at order creation|
+|> ecSettleTime |string |Expected settlement time in milliseconds|
+|> payoutRatio |string |Order payout ratio (price)|
+|> orderAvgPayoutRatio |string |Average payout ratio of filled portion|
+|> cumExecValue |string |Cumulative executed value|
+|> cumExecFee |string |Cumulative executed fee|
+|> leavesValue |string |Remaining order value|
+|> cumPayout |string |Cumulative payout|
+|> createType |integer |Order create type|
+|> cancelType |string |Cancel type|
+|> rejectReason |string |Reject reason|
+|> extraFees |array |Extra fees|
+|> transTime |string |Transaction time in milliseconds|
+|> createdTime |string |Order creation time in milliseconds|
+|> updatedTime |string |Order update time in milliseconds|
+
+### Subscribe Example
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "order"
+    ]
+}
+```
+
+### Stream Example
+
+```json
+{
+    "topic": "order",
+    "id": "1509583_ETHUSDT-5MIN-UP_1311",
+    "creationTime": 1787635282379,
+    "data": [
+        {
+            "category": "event",
+            "orderId": "746a6c87-a6dd-4008-8889-37e694046681",
+            "orderLinkId": "cjm1119",
+            "symbol": "ETHUSDT-5MIN-UP",
+            "symbolId": 500000,
+            "side": "Sell",
+            "baseCoin": "ETH",
+            "quoteCoin": "USDT",
+            "settleCoin": "USDT",
+            "orderStatus": "PartiallyFilled",
+            "ecContractType": "UpDown",
+            "ecDirection": "UP",
+            "ecDurationWindow": 300,
+            "ecTargetPrice": "",
+            "ecLowerBound": "",
+            "ecUpperBound": "",
+            "ecOrderValue": "5000",
+            "ecIndexPrice": "2503.50730825",
+            "ecSettleTime": "1787635582374",
+            "payoutRatio": "3.5",
+            "orderAvgPayoutRatio": "3.5000035",
+            "cumExecValue": "200",
+            "cumExecFee": "8.57142858",
+            "leavesValue": "4800",
+            "cumPayout": "700",
+            "createType": 1,
+            "cancelType": "UNKNOWN",
+            "rejectReason": "EC_NoError",
+            "extraFees": [],
+            "transTime": "1787635282374",
+            "createdTime": "1787635103917",
+            "updatedTime": "1787635103917"
+        }
+    ]
+}
+```

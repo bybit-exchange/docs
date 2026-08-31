@@ -1,0 +1,124 @@
+---
+title: 查詢Event Contract歷史訂單
+sidebar_label: 查詢Event Contract歷史訂單
+sidebar_position: 1
+---
+
+查詢事件合約歷史訂單，支持查詢過去 2 年內的訂單記錄。
+
+:::info
+* 僅 **Event Contract maker 帳戶**可訪問此接口。
+* 結果按 `createdTime` 降序排列。
+* 若未指定 `startTime`/`endTime`，默認查詢窗口為 **7 天**。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/event/order-list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:-----|:---------|:-----|:-----|
+|symbol |否 |string |交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`|
+|orderId |否 |string |訂單 ID|
+|orderLinkId |否 |string |用戶自定義訂單 ID|
+|startTime |否 |integer |開始時間（毫秒）。默認：7 天前|
+|endTime |否 |integer |結束時間（毫秒）。默認：當前時間|
+|limit |否 |integer |每頁數量。默認：`50`，範圍：[`1`, `100`]|
+|cursor |否 |string |分頁游標|
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:-----|:-----|:-----|
+|list |array |Event Contract 歷史訂單列表|
+|> orderId |string |訂單 ID|
+|> orderLinkId |string |用戶自定義訂單 ID|
+|> orderStatus |string |訂單狀態：`Filled`（已成交）、`Cancelled`（已取消）、`Rejected`（已拒絕）、`PartiallyFilledCanceled`（部分成交後取消）|
+|> symbol |string |交易對名稱|
+|> symbolId |string |交易對 ID|
+|> baseCoin |string |標的幣種|
+|> quoteCoin |string |計價幣種|
+|> settleCoin |string |結算幣種|
+|> ecDirection |string |方向：`UP`/`DOWN`（UpDown 類型），`ABOVE`/`BELOW`（Target 類型），`RANGE_IN`/`RANGE_OUT`（Range 類型）|
+|> ecDurationWindow |string |持續時間窗口（秒）|
+|> ecTargetPrice |string |目標價格，僅 Target 類型適用|
+|> ecContractType |string |事件合約類型：`UpDown`、`Target`、`Range`|
+|> ecLowerBound |string |下限價格，僅 Range 類型適用|
+|> ecUpperBound |string |上限價格，僅 Range 類型適用|
+|> settleTimeMs |string |結算時間（毫秒）|
+|> ecOrderValue |string |Event Contract 訂單金額|
+|> ecIndexPrice |string |下單時的指數價格|
+|> orderAvgPayoutRatio |string |已成交部分的平均賠付比率|
+|> cumExecValue |string |累計成交金額|
+|> payoutRatio |string |訂單賠付比率（價格）|
+|> tradeFee |string |交易手續費|
+|> transTime |string |成交時間（毫秒）|
+|> createTime |string |訂單創建時間（毫秒）|
+|> updateTime |string |訂單更新時間（毫秒）|
+|> cumPayout |string |累計賠付金額|
+|> cumExecFee |string |累計已結算手續費|
+|> cancelType |string |取消類型，未取消時為空|
+|> createType |string |訂單創建類型，如 `CreateByUser`|
+|> rejectReason |string |拒絕原因，未拒絕時為空|
+|> extraFees |string |額外費用（適用時為 JSON 字符串）|
+|cursor |string |下一頁分頁游標|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/event/order-list?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "orderId": "1234567890",
+                "orderLinkId": "",
+                "orderStatus": "Filled",
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+                "symbolId": "100001",
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "ecDirection": "UP",
+                "ecDurationWindow": "300",
+                "ecTargetPrice": "",
+                "ecContractType": "UpDown",
+                "ecLowerBound": "",
+                "ecUpperBound": "",
+                "settleTimeMs": "1694515498753",
+                "ecOrderValue": "50",
+                "ecIndexPrice": "26000.5",
+                "orderAvgPayoutRatio": "1.85",
+                "cumExecValue": "50",
+                "payoutRatio": "1.95",
+                "tradeFee": "50",
+                "transTime": "1694402559843",
+                "createTime": "1694402559843",
+                "updateTime": "1694515498753",
+                "cumPayout": "92.5",
+                "cumExecFee": "0.5",
+                "cancelType": "",
+                "createType": "CreateByUser",
+                "rejectReason": "",
+                "extraFees": ""
+            }
+        ],
+        "cursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1694402560000
+}
+```

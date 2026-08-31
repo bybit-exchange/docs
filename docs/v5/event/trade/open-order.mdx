@@ -1,0 +1,106 @@
+---
+title: Get Event Contract Active Orders
+sidebar_label: Get Event Contract Active Orders
+sidebar_position: 2
+---
+
+Query real-time unfilled or partially filled Event Contract orders.
+
+:::info
+* Only **Event Contract maker accounts** are allowed to access this endpoint.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/event/order-realtime" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |false |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`|
+|orderId |false |string |Order ID. If both `orderId` and `orderLinkId` are passed, `orderId` takes priority|
+|orderLinkId |false |string |User-defined order ID|
+|limit |false |integer |Number of items per page. Default: `20`, Range: [`1`, `50`]|
+|cursor |false |string |Pagination cursor. Use `nextPageCursor` from the response to retrieve the next page|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|list |array |Event Contract active order list|
+|> orderId |string |Order ID|
+|> orderLinkId |string |User-defined order ID|
+|> symbol |string |Symbol name|
+|> symbolId |string |Symbol ID|
+|> side |string |Order side: `Buy` or `Sell`|
+|> orderStatus |string |Order status: `New` (order created), `PartiallyFilled` (partially filled), `Untriggered` (awaiting trigger)|
+|> payoutRatio |string |Order payout ratio (price)|
+|> cumExecValue |string |Cumulative executed value|
+|> cumExecFee |string |Cumulative executed fee|
+|> leavesValue |string |Remaining order value|
+|> ecContractType |string |Event contract type: `UpDown`, `Target`, `Range`|
+|> ecDirection |string |Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)|
+|> ecOrderValue |string |Event Contract order value|
+|> ecSettleTime |string |Expected settlement time in milliseconds|
+|> ecTargetPrice |string |Target price. Target type only.|
+|> ecLowerBound |string |Lower bound. Range type only.|
+|> ecUpperBound |string |Upper bound. Range type only.|
+|> ecDurationWindow |string |Duration window in seconds|
+|> ecIndexPrice |string |Index price at order creation|
+|> orderAvgPayoutRatio |string |Average payout ratio of filled portion|
+|> createType |string |Order create type, e.g. `CreateByUser`|
+|> createdTime |string |Order creation timestamp in milliseconds|
+|> updatedTime |string |Order update timestamp in milliseconds|
+|nextPageCursor |string |Cursor for next page pagination|
+
+---
+
+### Request Example
+
+```http
+GET /v5/event/order-realtime?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=20 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "orderId": "1234567890",
+                "orderLinkId": "my-order-001",
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
+                "symbolId": "100001",
+                "side": "Buy",
+                "orderStatus": "New",
+                "payoutRatio": "1.95",
+                "cumExecValue": "0",
+                "cumExecFee": "0",
+                "leavesValue": "50",
+                "ecContractType": "UpDown",
+                "ecDirection": "UP",
+                "ecOrderValue": "50",
+                "ecSettleTime": "1694515498753",
+                "ecTargetPrice": "",
+                "ecLowerBound": "",
+                "ecUpperBound": "",
+                "ecDurationWindow": "300",
+                "ecIndexPrice": "26000.5",
+                "orderAvgPayoutRatio": "0",
+                "createType": "CreateByUser",
+                "createdTime": "1694402559843",
+                "updatedTime": "1694402559843"
+            }
+        ],
+        "nextPageCursor": ""
+    },
+    "retExtInfo": {},
+    "time": 1694402560000
+}
+```

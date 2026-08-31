@@ -1,0 +1,60 @@
+---
+title: Cancel Quote
+sidebar_label: Cancel Quote
+sidebar_position: 7
+---
+
+Cancel a submitted Event Contract quote.
+
+:::info
+* Only **Event Contract maker accounts** are allowed to access this endpoint.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/event/cancel" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|orderLinkId |false |string |User-defined order ID (Quote ID)|
+|orderId |false |string |Order ID|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|orderLinkId |string |User-defined order ID|
+|orderId |string |Order ID|
+
+---
+
+### Request Example
+
+```http
+POST /v5/event/cancel HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1694402559000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderLinkId": "xxxxxx",
+    "orderId": "xxxxxxxxxxefffff"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "orderLinkId": "xxxxxx",
+        "orderId": "xxxxxxxxxxefffff"
+    },
+    "retExtInfo": {},
+    "time": 1672217377164
+}
+```

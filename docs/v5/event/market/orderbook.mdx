@@ -1,0 +1,58 @@
+---
+title: Get Orderbook
+sidebar_label: Get Orderbook
+sidebar_position: 2
+---
+
+Query 25-level orderbook data for an Event Contract symbol.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/event/orderbook" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----------|:---------|:-----|:---------|
+|symbol |**true** |string |Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|s |string |Symbol name|
+|r |array |Orderbook entries. Up to 25 levels. Each entry is `[payoutRatio, orderValue]`|
+|ts |integer |Matching engine timestamp in milliseconds|
+|u |integer |Update ID|
+|seq |integer |Cross sequence number|
+|cts |integer |Creation timestamp in milliseconds|
+
+---
+
+### Request Example
+
+```http
+GET /v5/event/orderbook?symbol=ETHUSDT-28AUG26-2450-2570-OUT HTTP/1.1
+Host: api.bybit.com
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "s": "BTCUSDT-5MIN-UP",
+        "r": [
+            [
+                "0.90",
+                "50000"
+            ]
+        ],
+        "ts": 1716863719031,
+        "u": 230704,
+        "seq": 1432604333,
+        "cts": 1716863718905
+    },
+    "retExtInfo": {},
+    "time": 1716863719382
+}
+```

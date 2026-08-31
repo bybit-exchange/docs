@@ -1,0 +1,58 @@
+---
+title: 查詢訂單簿
+sidebar_label: 查詢訂單簿
+sidebar_position: 2
+---
+
+查詢 Event Contract 交易對的 25 檔訂單簿數據。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/event/orderbook" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:-----|:---------|:-----|:-----|
+|symbol |**true** |string |交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`|
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:-----|:-----|:-----|
+|s |string |交易對名稱|
+|r |array |訂單簿條目，最多 25 檔。每條格式為 `[賠付比率, 訂單金額]`|
+|ts |integer |撮合引擎時間戳（毫秒）|
+|u |integer |更新 ID|
+|seq |integer |跨業務序號|
+|cts |integer |創建時間戳（毫秒）|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/event/orderbook?symbol=ETHUSDT-28AUG26-2450-2570-OUT HTTP/1.1
+Host: api.bybit.com
+```
+
+### 返回示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "s": "BTCUSDT-5MIN-UP",
+        "r": [
+            [
+                "0.90",
+                "50000"
+            ]
+        ],
+        "ts": 1716863719031,
+        "u": 230704,
+        "seq": 1432604333,
+        "cts": 1716863718905
+    },
+    "retExtInfo": {},
+    "time": 1716863719382
+}
+```

@@ -1,0 +1,97 @@
+---
+title: Orderbook
+sidebar_label: Orderbook
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Subscribe to the Event Contract orderbook stream. Supports **25 levels**.
+
+Push frequency: **20ms**
+
+**Topic:**<br/>
+`orderbook.25.{symbol}` e.g., `orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT`
+
+### Process snapshot/delta
+
+Once you have subscribed successfully, you will receive a `snapshot`. The WebSocket will keep pushing `delta` messages every time the orderbook changes. If you receive a new `snapshot` message, you will have to reset your local orderbook.
+
+To apply `delta` updates:
+* If you receive a size of `0`, delete the entry
+* If you receive an entry that does not exist, insert it
+* If the entry exists, update the size
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----------|:-----|:---------|
+|topic |string |Topic name|
+|type |string |Data type: `snapshot`, `delta`|
+|ts |number |Timestamp (ms) when the system generates the data|
+|data |map |Object|
+|> s |string |Symbol name|
+|> r |array |Payout ratio orderbook entries. Up to 25 levels.|
+|>> r[0] |string |Payout ratio (price)|
+|>> r[1] |string |Order value (size). Size `0` means the entry should be deleted.|
+|> u |integer |Update ID. If `u`=1, it is a snapshot caused by a service restart — overwrite your local orderbook.|
+|> seq |integer |Cross sequence. Smaller seq means earlier data.|
+|cts |number |Timestamp from the matching engine when this data is produced|
+
+### Subscribe Example
+
+```json
+{
+    "op": "subscribe",
+    "args": [
+        "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT"
+    ]
+}
+```
+
+### Response Example
+
+<Tabs groupId="message-type">
+<TabItem value="snapshot" label="Snapshot">
+
+```json
+{
+    "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",
+    "ts": 1787794783020,
+    "type": "snapshot",
+    "data": {
+        "s": "ETHUSDT-28AUG26-2450-2570-OUT",
+        "r": [
+            ["3.5", "14900"],
+            ["2.28", "500"],
+            ["2.07", "500"]
+        ],
+        "u": 702,
+        "seq": 49115
+    },
+    "cts": 1787794647814
+}
+```
+
+</TabItem>
+<TabItem value="delta" label="Delta">
+
+```json
+{
+    "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",
+    "ts": 1787798930119,
+    "type": "delta",
+    "data": {
+        "s": "ETHUSDT-28AUG26-2450-2570-OUT",
+        "r": [
+            ["2.39", "0"]
+        ],
+        "u": 724,
+        "seq": 50266
+    },
+    "cts": 1787798930117
+}
+```
+
+</TabItem>
+</Tabs>
