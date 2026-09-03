@@ -1,0 +1,65 @@
+---
+title: 查詢股票持倉
+sidebar_label: 查詢股票持倉
+sidebar_position: 7
+---
+查詢當前 MM 賬號下所有正股持倉快照，包含總持倉、可用持倉、在途、成本。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/positions" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |股票代碼，例如 `AAPL-US`。按標的過濾；不傳則返回全部持倉 |
+|showZero |false |boolean |是否返回零持倉，默認 `false` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|data |array&lt;object&gt; |持倉列表 |
+|> symbol |string |股票代碼 |
+|> qty |string |總持倉數量（股） |
+|> availableQty |string |可用持倉數量（可賣出 / 可轉出） |
+|> pendingQty |string |在途持倉數量（待結算或訂單鎖定） |
+|> updatedAt |integer |快照更新毫秒時間戳 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/positions?showZero=false HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "data": [
+            {
+                "symbol": "AAPL",
+                "qty": "100",
+                "availableQty": "80",
+                "pendingQty": "20",
+                "updatedAt": 1724534400000
+            }
+        ]
+    },
+    "time": 1724534400123
+}
+```

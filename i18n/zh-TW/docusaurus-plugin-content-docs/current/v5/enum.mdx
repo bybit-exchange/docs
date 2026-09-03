@@ -850,3 +850,69 @@ _期權_:
 * `Success`
 * `Settled`
 * `Fail`
+
+### stocks
+
+### stocks-side
+* `BUY`&emsp;買入
+* `SELL`&emsp;賣出
+
+### stocks-type
+* `MARKET`&emsp;市價單。`BUY` 時以 `notional`（USDC 金額）計；`SELL` 時以 `qty`（股數）計
+* `LIMIT`&emsp;限價單。需填 `qty` 和 `limitPrice`
+* `STOP`&emsp;止損單。需填 `qty` 和 `stopPrice`；觸發後以市價成交
+* `STOP_LIMIT`&emsp;止損限價單。需填 `qty`、`stopPrice` 和 `limitPrice`；觸發後以限價委託
+
+### stocks-timeInForce
+* `DAY`&emsp;當日有效，北美主市場收盤時自動撤單
+* `GTC`&emsp;撤銷前持續有效（Good Till Cancelled）
+
+**注意：** `SELL` 方向僅支持 `DAY` 和 `GTC`。
+
+### stocks-tradingSession
+* `RTH`&emsp;Regular Trading Hours，正常交易時段（默認值）
+* `24H`&emsp;全天候交易時段，包含盤前 / 盤後 / 夜盤
+
+### stocks-orderStatus
+* `PENDING`&emsp;訂單已接收，排隊等待執行。下單接口返回的初始狀態
+* `queued`&emsp;排隊中——訂單已提交，等待市場開盤後執行
+* `active`&emsp;掛單中——訂單已生效，正在等待成交條件觸發
+* `filled`&emsp;已成交——訂單全部成交完成
+* `partial_filled`&emsp;部分成交後撤單——訂單被取消 / 失敗，但撤單前已有部分成交
+* `cancelled`&emsp;已撤銷——訂單被取消 / 失敗，且無任何成交
+
+### stocks-convertType
+* `MINT`&emsp;正股 → mStocks Token
+* `REDEEM`&emsp;mStocks Token → 正股
+
+### stocks-convertStatus
+* `PENDING`&emsp;處理中
+* `SUCCESS`&emsp;處理完成
+* `FAILED`&emsp;處理失敗
+
+### stocks-accountType
+* `all`&emsp;自動選擇賬戶（默認值）
+* `uta`&emsp;指定劃入統一交易賬戶（UTA）
+* `fund`&emsp;指定劃入資金賬戶
+
+### stocks-flow
+* `CEX`&emsp;中心化交易所鏈路，Mint / Burn 均通過 Bybit 主站處理
+* `DEX`&emsp;去中心化鏈路，Mint 到指定合約地址；Burn 流程見 `burnScene`
+
+### stocks-burnScene
+* `DEP`&emsp;Bybit 主站（Deposit）Burn
+* `NDP`&emsp;不經主站（Non-Deposit）Burn
+
+### stocks-symbolType
+* `US_STOCK`&emsp;美股。當前業務僅支持這一種
+
+### stocks-statusCode
+* `PRE`&emsp;盤前（04:00–09:30 ET，僅 XNYS/XNAS）
+* `CORE`&emsp;盤中（09:30–16:00 ET，XNYS/XNAS）
+* `POST`&emsp;盤後（16:00–20:00 ET，僅 XNYS/XNAS）
+* `OVERNIGHT`&emsp;夜盤（20:00 ET–次日 04:00 ET，OCEA）
+* `CLOSED`&emsp;休市（週末 / 假日 / 時段外）
+
+### stocks-tradingHolidayType
+* `HOLIDAY`&emsp;法定假日，全天休市
+* `EARLY_CLOSE`&emsp;提前收盤，`endTime` 為當日實際收盤時間

@@ -1,0 +1,62 @@
+---
+title: Cancel Stock Order
+sidebar_label: Cancel Stock Order
+sidebar_position: 2
+---
+Cancel a stock buy or sell order by order number.
+
+:::info important
+- Only non-terminal orders (`queued` / `active`) can be cancelled. Orders in `filled` state will return an error.
+- The cancel request is dispatched asynchronously to the router. A successful response does not mean the order has been cancelled on the venue. Please poll the [Get Stock Order Detail](./order-detail) endpoint to confirm the final status.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/rwa/stocks/order/cancel" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderNo |**true** |string |System order number |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |Echo of the order number |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/order/cancel HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "orderNo": "SB227696733955111526412"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412"
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```

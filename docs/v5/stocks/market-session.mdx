@@ -1,0 +1,66 @@
+---
+title: Get Market Session
+sidebar_label: Get Market Session
+sidebar_position: 9
+---
+Query the current trading session state of the stock market and the list of non-tradable periods (early close and holidays).
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/market/session" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Stock symbol, e.g. `AAPL-US` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|[symbolType](../enum#stocks-symboltype) |string |Stock type. `US_STOCK` |
+|[statusCode](../enum#stocks-statuscode) |string |Current session state. `PRE`, `CORE`, `POST`, `OVERNIGHT`, `CLOSED` |
+|serverTime |integer |Server UTC epoch ms. Used to eliminate client local time drift |
+|currentPhaseEndTime |integer |Current phase end time (epoch ms) |
+|nextMarketOpenTime |integer |Next main-market open time (epoch ms) |
+|stocksTradingHoliday |array&lt;object&gt; |All non-tradable periods |
+|> [type](../enum#stocks-tradingholidaytype) |string |Type. `EARLY_CLOSE`, `HOLIDAY` |
+|> startTime |string |Start time |
+|> endTime |string |End time |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/market/session?symbol=TSLA-US HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787662431425
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "symbolType": "US_STOCK",
+        "statusCode": "POST",
+        "serverTime": 1787662431425,
+        "currentPhaseEndTime": 1787299200000,
+        "nextMarketOpenTime": 1787319000000,
+        "stocksTradingHoliday": [
+            { "type": "HOLIDAY", "startTime": 1756684800000, "endTime": 1756771200000 }
+        ]
+    },
+    "time": 1787662431500
+}
+```

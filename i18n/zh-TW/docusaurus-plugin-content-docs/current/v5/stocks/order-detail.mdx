@@ -1,0 +1,91 @@
+---
+title: 查詢股票委託單詳情
+sidebar_label: 查詢股票委託單詳情
+sidebar_position: 3
+---
+根據訂單號或客戶端訂單號查詢單筆股票買賣訂單的完整狀態、參數與成交明細。用於 MM 側對賬、狀態輪詢與失敗原因定位。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/order/detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderNo |false |string |系統訂單號。`orderNo` 與 `clientOrderId` 二選一 |
+|clientOrderId |false |string |客戶端冪等 ID。`orderNo` 與 `clientOrderId` 二選一 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |系統訂單號 |
+|clientOrderId |string |客戶端訂單號（若下單時提供） |
+|symbol |string |股票代碼 |
+|quoteToken |string |計價資產 |
+|[side](../enum#stocks-side) |string |方向 |
+|[type](../enum#stocks-type) |string |訂單類型 |
+|qty |string |委託數量（股），下單為 `notional` 時可能為 `null` |
+|notional |string |委託名義額（USDC），僅 `side=BUY` 且 `type=MARKET` 時非空 |
+|limitPrice |string |限價，非限價單為 `null` |
+|stopPrice |string |觸發價，非止損單為 `null` |
+|[timeInForce](../enum#stocks-timeinforce) |string |有效期 |
+|[tradingSession](../enum#stocks-tradingsession) |string |交易時段 |
+|tokenize |boolean |是否自動 tokenize |
+|[orderStatus](../enum#stocks-orderstatus) |string |當前訂單狀態 |
+|filledQty |string |累計成交數量（股） |
+|filledNotional |string |累計成交金額（USDC） |
+|avgPrice |string |成交均價（USD），未成交為 `"0"` |
+|failReason |string |失敗原因，`orderStatus=FAILED` 時非空 |
+|orderTime |integer |客戶端下單毫秒時間戳 |
+|updatedAt |integer |訂單最近變更毫秒時間戳 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/order/detail?orderNo=SB227696733955111526412 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412",
+        "clientOrderId": "",
+        "symbol": "TSLA-US",
+        "quoteToken": "USDC",
+        "side": "BUY",
+        "type": "LIMIT",
+        "qty": "2",
+        "notional": "",
+        "limitPrice": "350",
+        "stopPrice": "",
+        "timeInForce": "DAY",
+        "tradingSession": "RTH",
+        "tokenize": false,
+        "orderStatus": "cancelled",
+        "filledQty": "0",
+        "filledNotional": "0",
+        "avgPrice": "0",
+        "failReason": "",
+        "orderTime": 1786171659000,
+        "updatedAt": 1786419757000
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```

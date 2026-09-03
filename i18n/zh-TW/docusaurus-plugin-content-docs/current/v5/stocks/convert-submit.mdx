@@ -1,0 +1,141 @@
+---
+title: 提交 Convert
+sidebar_label: 提交 Convert
+sidebar_position: 5
+---
+提交一筆 Convert 訂單。支持 `MINT`（正股 → mStocks Token）與 `REDEEM`（mStocks Token → 正股）兩種方向。提交時需帶上從 [Convert 列表](./convert-list) 拿到的匯率快照 `frontMultiplier`，服務端會校驗是否與當前生效匯率一致，防止行情跳變導致的成交異常。
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/rwa/stocks/convert/submit" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[convertType](../enum#stocks-converttype) |**true** |string |方向：`MINT`, `REDEEM` |
+|symbol |**true** |string |底層股票代碼，如 `AAPL-US` |
+|inputAmount |**true** |string |輸入數量（`MINT` 時為正股數量，`REDEEM` 時為 Token 數量） |
+|frontMultiplier |**true** |string |前端快照的轉換比例 |
+|[accountType](../enum#stocks-accounttype) |false |string |僅 `REDEEM` 生效：`all`（默認）, `uta`, `fund` |
+|requestId |**true** |string |冪等鍵，長度 ≤ 36，字母數字與 `-` `_`。同一 MM 賬號下 24 小時內唯一 |
+|contractAddr |**true** |string |`MINT` 時代幣接收地址，`REDEEM` 時代幣提供地址 |
+|[flow](../enum#stocks-flow) |**true** |string |`CEX`, `DEX`。對於 `MINT`，CEX / DEX 都是 mint 到指定地址，流程一致；對於 `REDEEM`（burn），CEX 與 DEX 流程不一致 |
+|[burnScene](../enum#stocks-burnscene) |false |string |DEX 鏈路 burn 時的場景。`DEP`（走 Bybit 主站）；`NDP`（不走 Bybit 主站） |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |Convert 訂單號 |
+|[status](../enum#stocks-convertstatus) |string |Convert 初始狀態 |
+|[convertType](../enum#stocks-converttype) |string |回顯方向 |
+|symbol |string |回顯標的 |
+|inputAmount |string |回顯輸入量 |
+|outputAmount |string |輸出量 |
+|appliedMultiplier |string |實際生效的轉換比例 |
+|submittedAt |integer |服務端受理毫秒時間戳 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/convert/submit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "convertType": "MINT",
+    "symbol": "TSLA-US",
+    "inputAmount": "1",
+    "frontMultiplier": "1",
+    "requestId": "mm-cvt-20260825-0001"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "MM20240825001",
+        "status": "PENDING",
+        "convertType": "MINT",
+        "symbol": "AAPL",
+        "inputAmount": "100",
+        "outputAmount": "1",
+        "appliedMultiplier": "100",
+        "submittedAt": 1724534400000
+    },
+    "time": 1724534400123
+}
+```
+
+### 場景示例
+
+```json
+// 場景 1：CEX Mint（正股 → Token）
+{
+    "convertType": "MINT",
+    "symbol": "AAPL-US",
+    "inputAmount": "5",
+    "frontMultiplier": "10",
+    "flow": "CEX",
+    "contractAddr": "0xabc...",
+    "requestId": "mm-001"
+}
+
+// 場景 2：CEX Burn（Token → 正股）
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "CEX",
+    "accountType": "all",
+    "requestId": "mm-002"
+}
+
+// 場景 3：DEX Mint（正股 → Token）
+{
+    "convertType": "MINT",
+    "symbol": "AAPL-US",
+    "inputAmount": "5",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "contractAddr": "0xabc...",
+    "requestId": "mm-003"
+}
+
+// 場景 4a：DEX Burn，走 Bybit 主站（DEP）
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "burnScene": "DEP",
+    "requestId": "mm-004"
+}
+
+// 場景 4b：DEX Burn，不走主站，鏈上直接劃轉（NDP）
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "burnScene": "NDP",
+    "requestId": "mm-005"
+}
+```

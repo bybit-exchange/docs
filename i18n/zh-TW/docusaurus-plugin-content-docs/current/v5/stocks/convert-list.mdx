@@ -1,0 +1,67 @@
+---
+title: Convert 列表
+sidebar_label: Convert 列表
+sidebar_position: 4
+---
+獲取當前支持的 Convert 交易對及實時匯率快照，用於提交 Convert 前的報價展示與前端快照校驗。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/convert/list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |按標的過濾，如 `AAPL-US`；不傳則返回全部 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|data |array&lt;object&gt; |Convert 交易對列表 |
+|> symbol |string |底層股票代碼，如 `AAPL-US` |
+|> tokenSymbol |string |對應的 mStocks Token，如 `AAPLM` |
+|> multiplier |string |當前生效的轉換比例（1 股正股 → 若干 Token） |
+|> mintEnabled |boolean |是否允許 MINT 方向（正股→Token） |
+|> redeemEnabled |boolean |是否允許 REDEEM 方向（Token→正股） |
+|> minInputAmount |string |單筆最小輸入量 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/convert/list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "data": [
+            {
+                "symbol": "AAPL-US",
+                "tokenSymbol": "AAPLM",
+                "multiplier": "10",
+                "mintEnabled": true,
+                "redeemEnabled": true,
+                "minInputAmount": "0.1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```

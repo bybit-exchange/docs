@@ -1,0 +1,76 @@
+---
+title: 查詢 Convert 訂單詳情
+sidebar_label: 查詢 Convert 訂單詳情
+sidebar_position: 6
+---
+根據訂單號或冪等鍵查詢單筆 Convert 訂單的完整狀態與結算結果。用於 MM 側對賬、狀態輪詢與失敗原因定位。
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/convert/detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderNo |false |string |Convert 訂單號。`orderNo` 與 `requestId` 二選一 |
+|requestId |false |string |提交時使用的冪等鍵。`orderNo` 與 `requestId` 二選一 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |Convert 訂單號 |
+|requestId |string |客戶端冪等鍵 |
+|[status](../enum#stocks-convertstatus) |string |當前訂單狀態 |
+|[convertType](../enum#stocks-converttype) |string |方向 |
+|symbol |string |底層股票代碼 |
+|tokenSymbol |string |對應的 mStocks Token |
+|inputAmount |string |輸入量 |
+|outputAmount |string |實際輸出量，未完成時為預估值 |
+|appliedMultiplier |string |實際生效的轉換比例 |
+|[accountType](../enum#stocks-accounttype) |string |賬戶類型，僅 `REDEEM` 有效 |
+|failReason |string |失敗原因，`status=FAILED` 時非空 |
+|submittedAt |integer |服務端受理毫秒時間戳 |
+|updatedAt |integer |訂單最近變更毫秒時間戳 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/convert/detail?orderNo=CVT1755590600987654321 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "CVT1755590600987654321",
+        "requestId": "mm-cvt-20260819-0007",
+        "status": "SUCCESS",
+        "convertType": "MINT",
+        "symbol": "AAPL-US",
+        "tokenSymbol": "AAPLM",
+        "inputAmount": "5",
+        "outputAmount": "50",
+        "appliedMultiplier": "10",
+        "accountType": null,
+        "failReason": null,
+        "submittedAt": 1755590600180,
+        "updatedAt": 1755590620400
+    },
+    "time": 1724534400123
+}
+```
