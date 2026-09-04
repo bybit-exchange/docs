@@ -1,0 +1,70 @@
+---
+title: 交易日曆數據
+sidebar_label: 交易日曆數據
+sidebar_position: 8
+---
+查詢當前股市交易時段狀態以及不可交易時間段列表（提前收盤、法定假日）。
+
+:::info
+本接口僅面向做市商（Market Maker）開放。
+:::
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/market/session" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |股票代碼，例如 `AAPL-US` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|[symbolType](../enum#stocks-symboltype) |string |股票類型。`US_STOCK` |
+|[statusCode](../enum#stocks-statuscode) |string |當前股票所處狀態。`PRE`, `CORE`, `POST`, `OVERNIGHT`, `CLOSED` |
+|serverTime |integer |服務端 UTC epoch ms，用來消除用戶本地時間誤差 |
+|currentPhaseEndTime |integer |當前時段結束時間（epoch ms） |
+|nextMarketOpenTime |integer |下次主市場開盤時間（epoch ms） |
+|stocksTradingHoliday |array&lt;object&gt; |所有不可交易時間段 |
+|> [type](../enum#stocks-tradingholidaytype) |string |類型。`EARLY_CLOSE`, `HOLIDAY` |
+|> startTime |string |開始時間 |
+|> endTime |string |結束時間 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/market/session?symbol=TSLA-US HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787662431425
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "symbolType": "US_STOCK",
+        "statusCode": "POST",
+        "serverTime": 1787662431425,
+        "currentPhaseEndTime": 1787299200000,
+        "nextMarketOpenTime": 1787319000000,
+        "stocksTradingHoliday": [
+            { "type": "HOLIDAY", "startTime": 1756684800000, "endTime": 1756771200000 }
+        ]
+    },
+    "time": 1787662431500
+}
+```

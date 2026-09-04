@@ -1,0 +1,89 @@
+---
+title: 股票下單
+sidebar_label: 股票下單
+sidebar_position: 1
+---
+本接口提交一筆股票買入或賣出訂單。買入以 USDC 計價，賣出以標的股數計價。
+
+:::info
+- 本接口僅面向做市商（Market Maker）開放。
+- **支持的訂單類型 (`type`):** `MARKET`, `LIMIT`, `STOP`, `STOP_LIMIT`
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/rwa/stocks/order" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |股票代碼，例如 `TSLA-US`、`AAPL-US`|
+|quoteToken |**true** |string |計價資產，當前僅支持 `USDC`|
+|[side](../enum#stocks-side) |**true** |string |方向：`BUY`, `SELL`|
+|[type](../enum#stocks-type) |**true** |string |訂單類型：`MARKET`, `LIMIT`, `STOP`, `STOP_LIMIT`|
+|qty |false |string |委託數量（股）。`SELL` **必傳**；`BUY` 的 `LIMIT`/`STOP`/`STOP_LIMIT` **必傳**；與 `notional` 互斥|
+|notional |false |string |名義額（USDC）。僅 `side=BUY` 且 `type=MARKET` 時使用；與 `qty` 互斥|
+|limitPrice |false |string |限價。`type=LIMIT` 或 `STOP_LIMIT` 時**必傳**|
+|stopPrice |false |string |觸發價。`type=STOP` 或 `STOP_LIMIT` 時**必傳**|
+|[timeInForce](../enum#stocks-timeinforce) |**true** |string |有效期。`SELL` 僅支持 `DAY` / `GTC`|
+|[tradingSession](../enum#stocks-tradingsession) |false |string |交易時段：`RTH`（默認）, `24H`|
+|tokenize |false |boolean |是否在成交後自動 tokenize，默認 `false`；僅對 `BUY` 生效|
+|orderTime |**true** |integer |客戶端下單毫秒時間戳|
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |系統訂單號 |
+|[orderStatus](../enum#stocks-orderstatus) |string |訂單初始狀態 |
+|acceptedTime |integer |服務端受理毫秒時間戳 |
+
+:::info
+下單請求返回 ack 僅表示請求被成功接受。請通過[查詢股票委託單詳情](./order-detail)接口輪詢最終訂單狀態。
+:::
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787656687706
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "symbol": "TSLA-US",
+    "quoteToken": "USDC",
+    "side": "BUY",
+    "type": "LIMIT",
+    "qty": "2",
+    "limitPrice": "300.00",
+    "timeInForce": "DAY",
+    "tradingSession": "RTH",
+    "orderTime": 1787656687706
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412",
+        "orderStatus": "PENDING",
+        "acceptedTime": 1787657753833
+    },
+    "retExtInfo": {},
+    "time": 1755590400200
+}
+```

@@ -1,0 +1,71 @@
+---
+title: Get Convert List
+sidebar_label: Get Convert List
+sidebar_position: 4
+---
+Query the currently supported Convert symbols and live rate snapshots. Used for quote display and front-end snapshot validation before submitting a Convert request.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/convert/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Filter by symbol, e.g. `AAPL-US`. Returns all supported symbols if omitted |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|data |array&lt;object&gt; |Convert symbol list |
+|> symbol |string |Underlying stock symbol, e.g. `AAPL-US` |
+|> tokenSymbol |string |Corresponding mStocks Token, e.g. `AAPLM` |
+|> multiplier |string |Currently effective conversion ratio (1 share of underlying → N Tokens) |
+|> mintEnabled |boolean |Whether MINT (underlying → Token) is allowed |
+|> redeemEnabled |boolean |Whether REDEEM (Token → underlying) is allowed |
+|> minInputAmount |string |Minimum input amount per submission |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/convert/list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "data": [
+            {
+                "symbol": "AAPL-US",
+                "tokenSymbol": "AAPLM",
+                "multiplier": "10",
+                "mintEnabled": true,
+                "redeemEnabled": true,
+                "minInputAmount": "0.1"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```

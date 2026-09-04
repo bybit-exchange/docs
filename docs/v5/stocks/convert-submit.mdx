@@ -1,0 +1,145 @@
+---
+title: Submit Convert
+sidebar_label: Submit Convert
+sidebar_position: 5
+---
+Submit a Convert order. Supports both directions: `MINT` (underlying → mStocks Token) and `REDEEM` (mStocks Token → underlying). The client must attach the rate snapshot `multiplier` obtained from [Get Convert List](./convert-list); the server validates it against the currently effective ratio to prevent execution anomalies caused by rate jumps.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/rwa/stocks/convert/submit" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[convertType](../enum#stocks-converttype) |**true** |string |Direction. `MINT`, `REDEEM` |
+|symbol |**true** |string |Underlying stock symbol, e.g. `AAPL-US` |
+|inputAmount |**true** |string |Input amount. Number of underlying shares when `MINT`; number of Tokens when `REDEEM` |
+|frontMultiplier |**true** |string |Conversion ratio from the front-end snapshot |
+|[accountType](../enum#stocks-accounttype) |false |string |Only effective when `REDEEM`. `all` (default), `uta`, `fund` |
+|requestId |**true** |string |Idempotency key. Length ≤ 36. Alphanumeric plus `-` `_`. Must be unique within 24 hours for the same MM account |
+|contractAddr |**true** |string |Token receive address when `MINT`; Token provide address when `REDEEM` |
+|[flow](../enum#stocks-flow) |**true** |string |`CEX`, `DEX`. `MINT` flows are identical across CEX/DEX (mint to the specified address). `REDEEM` (burn) flows differ between CEX and DEX |
+|[burnScene](../enum#stocks-burnscene) |false |string |Scene for DEX burn. `DEP` (through Bybit main site), `NDP` (not through Bybit main site) |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |Convert order number |
+|[status](../enum#stocks-convertstatus) |string |Initial Convert status |
+|[convertType](../enum#stocks-converttype) |string |Echo of direction |
+|symbol |string |Echo of symbol |
+|inputAmount |string |Echo of input amount |
+|outputAmount |string |Output amount |
+|appliedMultiplier |string |Actually applied conversion ratio |
+|submittedAt |integer |Server accepted timestamp in milliseconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/convert/submit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "convertType": "MINT",
+    "symbol": "TSLA-US",
+    "inputAmount": "1",
+    "frontMultiplier": "1",
+    "requestId": "mm-cvt-20260825-0001"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "MM20240825001",
+        "status": "PENDING",
+        "convertType": "MINT",
+        "symbol": "AAPL",
+        "inputAmount": "100",
+        "outputAmount": "1",
+        "appliedMultiplier": "100",
+        "submittedAt": 1724534400000
+    },
+    "time": 1724534400123
+}
+```
+
+### Scenario Examples
+
+```json
+// Scenario 1: CEX Mint (Underlying → Token)
+{
+    "convertType": "MINT",
+    "symbol": "AAPL-US",
+    "inputAmount": "5",
+    "frontMultiplier": "10",
+    "flow": "CEX",
+    "contractAddr": "0xabc...",
+    "requestId": "mm-001"
+}
+
+// Scenario 2: CEX Burn (Token → Underlying)
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "CEX",
+    "accountType": "all",
+    "requestId": "mm-002"
+}
+
+// Scenario 3: DEX Mint (Underlying → Token)
+{
+    "convertType": "MINT",
+    "symbol": "AAPL-US",
+    "inputAmount": "5",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "contractAddr": "0xabc...",
+    "requestId": "mm-003"
+}
+
+// Scenario 4a: DEX Burn through Bybit main site (DEP)
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "burnScene": "DEP",
+    "requestId": "mm-004"
+}
+
+// Scenario 4b: DEX Burn not through main site — on-chain transfer (NDP)
+{
+    "convertType": "REDEEM",
+    "symbol": "AAPL-US",
+    "inputAmount": "50",
+    "frontMultiplier": "10",
+    "flow": "DEX",
+    "burnScene": "NDP",
+    "requestId": "mm-005"
+}
+```

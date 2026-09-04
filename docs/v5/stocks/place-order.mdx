@@ -1,0 +1,89 @@
+---
+title: Place Stock Order
+sidebar_label: Place Stock Order
+sidebar_position: 1
+---
+This endpoint submits a stock buy or sell order. Buy orders are quoted in USDC, while sell orders are quoted in the number of underlying shares.
+
+:::info
+- This endpoint is only available for Market Maker.
+- **Supported order type:** `MARKET`, `LIMIT`, `STOP`, `STOP_LIMIT`
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/rwa/stocks/order" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |**true** |string |Stock symbol, e.g. `TSLA-US`, `AAPL-US`|
+|quoteToken |**true** |string |Quote asset. Currently only `USDC` is supported|
+|[side](../enum#stocks-side) |**true** |string |`BUY`, `SELL`|
+|[type](../enum#stocks-type) |**true** |string |Order type. `MARKET`, `LIMIT`, `STOP`, `STOP_LIMIT`|
+|qty |false |string |Order quantity. **Required** for `SELL`; **required** for `BUY` with `type=LIMIT`/`STOP`/`STOP_LIMIT`. Mutually exclusive with `notional`|
+|notional |false |string |Notional amount (USDC). Only valid when `side=BUY` and `type=MARKET`. Mutually exclusive with `qty`|
+|limitPrice |false |string |Limit price. **Required** when `type=LIMIT` or `STOP_LIMIT`|
+|stopPrice |false |string |Trigger price. **Required** when `type=STOP` or `STOP_LIMIT`|
+|[timeInForce](../enum#stocks-timeinforce) |**true** |string |Time in force. `SELL` only supports `DAY` / `GTC`|
+|[tradingSession](../enum#stocks-tradingsession) |false |string |Trading session. `RTH` (default), `24H`|
+|tokenize |false |boolean |Whether to auto tokenize after the order is filled. Default: `false`. Only valid for `BUY`|
+|orderTime |**true** |integer |Client order timestamp in milliseconds|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |System order number |
+|[orderStatus](../enum#stocks-orderstatus) |string |Initial order status |
+|acceptedTime |integer |Server accepted timestamp in milliseconds |
+
+:::info
+The acknowledgement of a place order request indicates that the request was successfully accepted. Please poll the [Get Stock Order Detail](./order-detail) endpoint to confirm the final order status.
+:::
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/order HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787656687706
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "symbol": "TSLA-US",
+    "quoteToken": "USDC",
+    "side": "BUY",
+    "type": "LIMIT",
+    "qty": "2",
+    "limitPrice": "300.00",
+    "timeInForce": "DAY",
+    "tradingSession": "RTH",
+    "orderTime": 1787656687706
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412",
+        "orderStatus": "PENDING",
+        "acceptedTime": 1787657753833
+    },
+    "retExtInfo": {},
+    "time": 1755590400200
+}
+```

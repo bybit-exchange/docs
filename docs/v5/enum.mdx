@@ -848,3 +848,69 @@ with the example of BTCUSDT:
 * `Success`
 * `Settled`
 * `Fail`
+
+### stocks
+
+### stocks-side
+* `BUY`&emsp;Buy
+* `SELL`&emsp;Sell
+
+### stocks-type
+* `MARKET`&emsp;Market order. Uses `notional` (USDC amount) when `BUY`; uses `qty` (shares) when `SELL`
+* `LIMIT`&emsp;Limit order. Requires `qty` and `limitPrice`
+* `STOP`&emsp;Stop order. Requires `qty` and `stopPrice`. Executes as market after the trigger
+* `STOP_LIMIT`&emsp;Stop-limit order. Requires `qty`, `stopPrice` and `limitPrice`. Places a limit order after the trigger
+
+### stocks-timeInForce
+* `DAY`&emsp;Day order. Auto-cancelled at the main US market close
+* `GTC`&emsp;Good Till Cancelled
+
+**Note:** `SELL` only supports `DAY` and `GTC`.
+
+### stocks-tradingSession
+* `RTH`&emsp;Regular Trading Hours (default)
+* `24H`&emsp;24-hour session, including pre-market, post-market and overnight
+
+### stocks-orderStatus
+* `PENDING`&emsp;Order accepted and queued for execution. Returned as the initial status by Place Order
+* `queued`&emsp;Queued — order submitted, waiting for market open to execute
+* `active`&emsp;Active — order is live and waiting for fill conditions
+* `filled`&emsp;Filled — order fully filled
+* `partial_filled`&emsp;Cancelled after partial fill — order was cancelled/failed with some prior fills
+* `cancelled`&emsp;Cancelled — order was cancelled/failed with no fills
+
+### stocks-convertType
+* `MINT`&emsp;Underlying → mStocks Token
+* `REDEEM`&emsp;mStocks Token → Underlying
+
+### stocks-convertStatus
+* `PENDING`&emsp;Processing
+* `SUCCESS`&emsp;Completed
+* `FAILED`&emsp;Failed
+
+### stocks-accountType
+* `all`&emsp;Auto-select account (default)
+* `uta`&emsp;Route into the Unified Trading Account (UTA)
+* `fund`&emsp;Route into the Funding Account
+
+### stocks-flow
+* `CEX`&emsp;Centralized exchange flow. Both Mint and Burn are processed through the Bybit main site
+* `DEX`&emsp;Decentralized flow. Mint to the specified contract address; Burn flow depends on `burnScene`
+
+### stocks-burnScene
+* `DEP`&emsp;Burn through the Bybit main site (Deposit)
+* `NDP`&emsp;Burn without going through the main site (Non-Deposit)
+
+### stocks-symbolType
+* `US_STOCK`&emsp;US stock. Currently the only supported instrument type
+
+### stocks-statusCode
+* `PRE`&emsp;Pre-market (04:00–09:30 ET, XNYS/XNAS only)
+* `CORE`&emsp;Regular hours (09:30–16:00 ET, XNYS/XNAS)
+* `POST`&emsp;Post-market (16:00–20:00 ET, XNYS/XNAS only)
+* `OVERNIGHT`&emsp;Overnight session (20:00 ET–next day 04:00 ET, OCEA)
+* `CLOSED`&emsp;Closed (weekends, holidays, off-hours)
+
+### stocks-tradingHolidayType
+* `HOLIDAY`&emsp;Statutory holiday. Market closed all day
+* `EARLY_CLOSE`&emsp;Early close. `endTime` is the actual close time of that day

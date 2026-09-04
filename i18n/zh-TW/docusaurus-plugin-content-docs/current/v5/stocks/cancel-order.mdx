@@ -1,0 +1,63 @@
+---
+title: 撤銷股票委託單
+sidebar_label: 撤銷股票委託單
+sidebar_position: 2
+---
+根據訂單號撤銷一筆股票買賣訂單。
+
+:::info 重要
+- 本接口僅面向做市商（Market Maker）開放。
+- 僅非終態訂單（`queued` / `active`）可撤銷。
+- 撤單請求異步派發到 router，接口返回不代表已實際撤銷，需通過[查詢股票委託單詳情](./order-detail)輪詢最終狀態。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/rwa/stocks/order/cancel" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderNo |**true** |string |系統訂單號 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|orderNo |string |回顯訂單號 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/rwa/stocks/order/cancel HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "orderNo": "SB227696733955111526412"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412"
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```

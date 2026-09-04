@@ -1,0 +1,95 @@
+---
+title: Get Stock Order Detail
+sidebar_label: Get Stock Order Detail
+sidebar_position: 3
+---
+Query the full status, parameters and fill details of a single stock order by order number or client order ID. Used for MM reconciliation, status polling and failure diagnosis.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/order/detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderNo |false |string |System order number. Either `orderNo` or `clientOrderId` is **required** |
+|clientOrderId |false |string |Client idempotency ID. Either `orderNo` or `clientOrderId` is **required** |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |System order number |
+|clientOrderId |string |Client order ID (if provided at placement) |
+|symbol |string |Stock symbol |
+|quoteToken |string |Quote asset |
+|[side](../enum#stocks-side) |string |Order side |
+|[type](../enum#stocks-type) |string |Order type |
+|qty |string |Order quantity (shares). May be `null` when the order was placed with `notional` |
+|notional |string |Order notional amount (USDC). Non-empty only when `side=BUY` and `type=MARKET` |
+|limitPrice |string |Limit price. `null` for non-limit orders |
+|stopPrice |string |Trigger price. `null` for non-stop orders |
+|[timeInForce](../enum#stocks-timeinforce) |string |Time in force |
+|[tradingSession](../enum#stocks-tradingsession) |string |Trading session |
+|tokenize |boolean |Whether to auto tokenize |
+|[orderStatus](../enum#stocks-orderstatus) |string |Current order status |
+|filledQty |string |Cumulative filled quantity (shares) |
+|filledNotional |string |Cumulative filled amount (USDC) |
+|avgPrice |string |Average fill price (USD). `"0"` when not filled |
+|failReason |string |Failure reason. Non-empty when `orderStatus=FAILED` |
+|orderTime |integer |Client order timestamp in milliseconds |
+|updatedAt |integer |Last update timestamp in milliseconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/order/detail?orderNo=SB227696733955111526412 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "SB227696733955111526412",
+        "clientOrderId": "",
+        "symbol": "TSLA-US",
+        "quoteToken": "USDC",
+        "side": "BUY",
+        "type": "LIMIT",
+        "qty": "2",
+        "notional": "",
+        "limitPrice": "350",
+        "stopPrice": "",
+        "timeInForce": "DAY",
+        "tradingSession": "RTH",
+        "tokenize": false,
+        "orderStatus": "cancelled",
+        "filledQty": "0",
+        "filledNotional": "0",
+        "avgPrice": "0",
+        "failReason": "",
+        "orderTime": 1786171659000,
+        "updatedAt": 1786419757000
+    },
+    "retExtInfo": {},
+    "time": 1787657753833
+}
+```
