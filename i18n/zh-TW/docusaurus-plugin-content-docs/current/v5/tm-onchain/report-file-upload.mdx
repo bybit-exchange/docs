@@ -1,0 +1,62 @@
+---
+title: 上報文件上傳完成
+sidebar_label: 上報文件上傳完成
+sidebar_position: 7
+---
+
+通知服務端指定 `resourceId` 對應的文件已成功 PUT 到 S3。這是文件上傳三步流程的第 **3** 步。**每秒最多 10 次請求**
+
+:::info 重要
+- 必須在 S3 PUT 上傳成功後才能調用本接口。
+- 未調用本接口的 `resourceId` 在 [提交工單](./appeal-commit) 時將視為無效資源。
+- 完整流程請參見 [獲取文件上傳簽名](./file-upload-sign)。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/file/report-file-upload" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|resourceId |**true** |string |[獲取文件上傳簽名](./file-upload-sign) 返回的資源 ID |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|shortTimeUrl |string |文件的短時訪問 URL，可用於接入方本地預覽 / 校驗 |
+|sign |string |短時訪問 URL 的簽名 |
+|encryptedContentMd5 |string |文件加密後的 MD5，可與本地計算的 MD5 比對校驗完整性 |
+
+---
+
+### 請求示例
+
+```http
+POST /v5/file/report-file-upload HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "resourceId": "1234567890"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "shortTimeUrl": "https://s3.amazonaws.com/xxx?X-Amz-Signature=...",
+        "sign": "abc123...",
+        "encryptedContentMd5": "e3b0c44298fc1c149afbf4c8996fb924"
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

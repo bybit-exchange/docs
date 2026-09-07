@@ -1,0 +1,189 @@
+---
+title: 獲取文件上傳簽名
+sidebar_label: 獲取文件上傳簽名
+sidebar_position: 6
+---
+
+獲取 S3 預簽名上傳地址與 `resourceId`。這是文件上傳三步流程的第 **1** 步。**每秒最多 10 次請求**
+
+:::info 文件上傳三步流程
+1. **獲取上傳簽名**（本接口）→ 拿到 `resourceId` 與 S3 預簽名地址 `urlSign`
+2. **PUT 上傳到 S3** → 使用返回的 `urlSign` 直接把文件 PUT 到 S3
+3. [**上報上傳完成**](./report-file-upload) → 通知服務端上傳完成
+
+上傳完成後，將 `resourceId` 填入 [提交工單](./appeal-commit) 的 `itemsData[].resources[].resourceId`。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/file/get-file-upload-sign" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[fileType](../enum#tm-onchain-filetype) |**true** |string |文件業務類型：`fiat-pdf`、`fiat-image`、`fiat-video` |
+|fileMd5 |**true** |string |文件內容的 MD5 值（base64 編碼）。計算方式：`base64(md5(file_content))`，MD5 為 raw binary 而非 hex |
+|fileLen |**true** |integer |當前文件字節數。上限：`fiat-pdf` / `fiat-image` / `fiat-video` 均為 `104857600`（100 MB） |
+|fileName |**true** |string |文件完整名稱，如 `evidence.pdf`、`screenshot.png`、`video.mp4` |
+|fileMimeType |**true** |string |文件 `Content-Type`。<ul><li>`fiat-pdf`: `application/pdf`</li><li>`fiat-image`: `image/jpeg`、`image/png`、`image/jpg`</li><li>`fiat-video`: `video/mp4`、`video/quicktime`、`video/3gpp`、`video/x-msvideo`、`video/avi`、`video/rm`、`video/rmvb`、`video/wmv`</li></ul> |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|resourceId |string |資源 ID，用於後續 `report-file-upload` 與 [提交工單](./appeal-commit) 的 `resources[].resourceId` |
+|urlSign |string |S3 預簽名上傳 URL，用第 2 步 PUT 上傳；簽名為短時有效，拿到後應盡快使用 |
+
+---
+
+### 請求示例
+
+```http
+POST /v5/file/get-file-upload-sign HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "fileType": "fiat-image",
+    "fileMd5": "1B2M2Y8AsgTpgAmY7PhCfg==",
+    "fileLen": 204800,
+    "fileName": "screenshot.png",
+    "fileMimeType": "image/png"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "resourceId": "1234567890",
+        "urlSign": "https://s3.amazonaws.com/xxx?X-Amz-Algorithm=..."
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```
+
+### 第 2 步：PUT 上傳到 S3
+
+拿到 `urlSign` 後，使用 HTTP `PUT` 方法將文件內容上傳到該地址。**注意：這一步不經過 Bybit 網關，直接 PUT 到 S3，不需要 `X-BAPI-*` 頭。**
+
+必需的請求頭：
+
+| Header | 值 |
+|--------|-----|
+| `Content-Type` | 與請求參數中的 `fileMimeType` 一致 |
+| `Content-MD5` | 與請求參數中的 `fileMd5` 一致（`base64(md5(file_content))`） |
+| `x-amz-acl` | `private` |
+
+```javascript
+const uploadRes = await fetch(urlSign, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': file.type,
+        'Content-MD5': base64Md5,   // base64(md5(file_content))
+        'x-amz-acl': 'private',
+    },
+    body: file,
+});
+
+if (!uploadRes.ok) {
+    // 上傳失敗，需要處理
+    throw new Error('S3 upload failed');
+}
+```
+
+### 第 3 步
+
+見 [上報文件上傳完成](./report-file-upload)。
+
+### 完整示例（Vue + JS）
+
+```html
+<template>
+    <div>
+        <input type="file" @change="uploadFile" />
+    </div>
+</template>
+
+<script>
+import CryptoJS from 'crypto-js';
+
+async function base64Md5(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const wordArray = CryptoJS.lib.WordArray.create(arrayBuffer);
+    const md5 = CryptoJS.MD5(wordArray);
+    const binaryStr = md5.words
+        .map(word =>
+            String.fromCharCode(
+                (word >> 24) & 0xff,
+                (word >> 16) & 0xff,
+                (word >> 8) & 0xff,
+                word & 0xff,
+            ),
+        )
+        .join('');
+    return btoa(binaryStr);
+}
+
+export default {
+    methods: {
+        async uploadFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const md5 = await base64Md5(file);
+
+            // 1. 獲取上傳簽名
+            const signRes = await fetch('/v5/file/get-file-upload-sign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fileType: 'fiat-image',
+                    fileMd5: md5,
+                    fileLen: file.size,
+                    fileName: file.name,
+                    fileMimeType: file.type,
+                }),
+            });
+            const { result: signResult } = await signRes.json();
+            const { resourceId, urlSign } = signResult;
+
+            // 2. PUT 上傳到 S3
+            const uploadRes = await fetch(urlSign, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': file.type,
+                    'Content-MD5': md5,
+                    'x-amz-acl': 'private',
+                },
+                body: file,
+            });
+            if (!uploadRes.ok) {
+                alert('upload failed');
+                return;
+            }
+
+            // 3. 上報上傳完成
+            const reportRes = await fetch('/v5/file/report-file-upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ resourceId }),
+            });
+            const reportData = await reportRes.json();
+            if (reportData.retCode === 0) {
+                alert('upload success');
+                // resourceId 可用於後續 commit 工單
+            } else {
+                alert('upload failed: ' + reportData.retMsg);
+            }
+        },
+    },
+};
+</script>
+```

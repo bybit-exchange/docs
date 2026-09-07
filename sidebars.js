@@ -572,6 +572,18 @@ const sidebars = {
             }
           ]
         },
+        {
+          type: 'category',
+          label: 'TM-Onchain',
+          items: [
+            'v5/tm-onchain/ws-appeal',
+            'v5/tm-onchain/appeal-list',
+            'v5/tm-onchain/appeal-detail',
+            'v5/tm-onchain/appeal-commit',
+            'v5/tm-onchain/file-upload-sign',
+            'v5/tm-onchain/report-file-upload',
+          ]
+        },
       ]
     },
     {

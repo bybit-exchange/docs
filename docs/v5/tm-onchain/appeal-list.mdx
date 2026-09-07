@@ -1,0 +1,83 @@
+---
+title: Get Appeal List
+sidebar_label: Get Appeal List
+sidebar_position: 3
+---
+
+Query the compliance appeal list under the master account that owns the current API Key. Results are sorted by creation time in descending order, and only appeals created within the last 180 days are returned. **Up to 10 requests per second**
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/compliance/appeal/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|[appealTypes](../enum#tm-onchain-appealtype) |false |array&lt;string&gt; |Filter by appeal type: `TM_Onchain` / `TM_Onchain_KYB`. Returns all when omitted |
+|page |false |long |Page number, starts from `1`, default `1` |
+|pageSize |false |long |Page size, default `20`, max `100` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|total |string |Total number of matching appeals |
+|page |string |Current page number |
+|pageSize |string |Current page size |
+|cases |array&lt;object&gt; |Appeal list |
+|> appealId |string |Unique appeal ID, used by subsequent detail / commit calls |
+|> [appealType](../enum#tm-onchain-appealtype) |string |Appeal type: `TM_Onchain` / `TM_Onchain_KYB` |
+|> [triggerType](../enum#tm-onchain-triggertype) |string |Trigger type: `Auto-approve` / `Auto-create-Initial` / `Manual` |
+|> uid |string |Master account UID |
+|> triggerUid |string |UID of the sub-account that triggered this appeal |
+|> createdAt |string |Appeal creation time (Unix seconds) |
+|> [direction](../enum#tm-onchain-direction) |string |Transaction direction enum |
+|> accountRestriction |object |Account restriction info |
+|>> [ban](../enum#tm-onchain-bandescription) |array&lt;string&gt; |List of ban descriptions in English |
+|>> [unban](../enum#tm-onchain-bandescription) |array&lt;string&gt; |List of unban descriptions in English |
+|> [fundStatus](../enum#tm-onchain-fundstatus) |string |Fund action status enum; empty string when no fund action |
+|> [resultStatus](../enum#tm-onchain-resultstatus) |string |Appeal status enum |
+
+---
+
+### Request Example
+
+```http
+GET /v5/compliance/appeal/list?appealTypes=TM_Onchain&page=1&pageSize=20 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "total": "1",
+        "page": "1",
+        "pageSize": "20",
+        "cases": [
+            {
+                "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+                "appealType": "TM_Onchain",
+                "triggerType": "Auto-create-Initial",
+                "uid": "305461592",
+                "triggerUid": "100669644",
+                "createdAt": "1787053595",
+                "direction": "withdraw",
+                "accountRestriction": {
+                    "ban": ["Withdraw Ban", "Trading Ban (Allow to Close Position)"],
+                    "unban": []
+                },
+                "fundStatus": "Deposit Intercepted",
+                "resultStatus": "PENDING"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

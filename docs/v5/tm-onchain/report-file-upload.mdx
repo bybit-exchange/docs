@@ -1,0 +1,62 @@
+---
+title: Report File Upload
+sidebar_label: Report File Upload
+sidebar_position: 7
+---
+
+Notify the server that the file for the given `resourceId` has been successfully PUT to S3. This is **step 3** of the three-step file upload flow. **Up to 10 requests per second**
+
+:::info Important
+- Only call this endpoint after the S3 PUT upload succeeds.
+- A `resourceId` that has not been reported is treated as an invalid resource by [Commit Appeal](./appeal-commit).
+- For the full flow, see [Get File Upload Sign](./file-upload-sign).
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/file/report-file-upload" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|resourceId |**true** |string |Resource ID returned by [Get File Upload Sign](./file-upload-sign) |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|shortTimeUrl |string |Short-lived access URL for the file. Useful for local preview / verification |
+|sign |string |Signature for the short-lived access URL |
+|encryptedContentMd5 |string |Encrypted MD5 of the file. Can be compared against the locally computed MD5 to verify integrity |
+
+---
+
+### Request Example
+
+```http
+POST /v5/file/report-file-upload HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "resourceId": "1234567890"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "shortTimeUrl": "https://s3.amazonaws.com/xxx?X-Amz-Signature=...",
+        "sign": "abc123...",
+        "encryptedContentMd5": "e3b0c44298fc1c149afbf4c8996fb924"
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

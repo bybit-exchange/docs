@@ -848,3 +848,67 @@ with the example of BTCUSDT:
 * `Success`
 * `Settled`
 * `Fail`
+
+### tm-onchain-appealType
+* `TM_Onchain`&emsp;On-chain transaction monitoring appeal
+* `TM_Onchain_KYB`&emsp;On-chain transaction monitoring KYB appeal
+
+### tm-onchain-resultStatus
+* `PENDING`&emsp;Materials pending submission (non-terminal)
+* `COMMITTED`&emsp;Submitted, under review (non-terminal)
+* `REJECTED`&emsp;Materials rejected, need to resubmit (non-terminal)
+* `PASS`&emsp;Approved (terminal)
+* `REFUSE`&emsp;Rejected (terminal)
+* `DISUSED`&emsp;Appeal disused (terminal)
+
+### tm-onchain-triggerType
+* `Auto-approve`
+* `Auto-create-Initial`
+* `Manual`
+
+### tm-onchain-direction
+* `deposit`
+* `withdraw`
+
+### tm-onchain-fundStatus
+* Empty string&emsp;No fund action
+* `Deposit Intercepted`
+* `Refund`
+* `Guilty`
+* `Recharge`
+
+### tm-onchain-styleBox
+* `UPLOAD`&emsp;Upload image (jpg/png) or PDF. Submit via `itemsData[].resources[]`
+* `MIXUPLOAD`&emsp;Upload media (image / audio / video / PDF). Submit via `itemsData[].resources[]`
+* `INPUT`&emsp;Multi-line text. Submit via `itemsData[].content`
+* `SINGLEINPUT`&emsp;Single-line text. Submit via `itemsData[].content`
+* `SELECT`&emsp;Single-select dropdown. Submit via `itemsData[].content` (option value)
+* `RADIO`&emsp;Radio button group. Submit via `itemsData[].content` (option value)
+* `CHECKBOX`&emsp;Multi-select. Submit via `itemsData[].mulContent[]` (list of option values)
+* `COUNTRYNAME`&emsp;Country dropdown. Submit via `itemsData[].content` (English full name, e.g. `Australia`)
+* `DATEPICKER`&emsp;Date picker. Submit via `itemsData[].content` (date string)
+* `COMMENT`&emsp;Display-only, no submission
+
+### tm-onchain-banDescription
+Values that may appear in `accountRestriction.ban` / `unban`, mapped from the backend `ban_tag_value`:
+
+| ban_tag_value | description |
+|--------|------|
+| `login` | `Account Ban` |
+| `all_withdraw` | `Withdraw Ban` |
+| `non-principal` | `Withdraw Ban (Allow to Withdraw Deposited)` |
+| `all_trade` | `Trading Ban (All)` |
+| `lighten_up` | `Trading Ban (Allow to Close Position)` |
+| `transfer_service_user` | `Transfer Ban (User)` |
+| `bybitcard_service` | `Bybit Card Ban (All)` |
+| `fiat_service` | `Fiat Ban (All)` |
+| `card_service_buy` | `Fiat Bank Card Ban (Buy)` |
+| `fiat_exchange` | `Fiat Deposit and Withdrawal Ban` |
+| `fiat_exchange_recharge` | `Fiat Deposit Ban` |
+| `fiat_exchange_extract` | `Fiat Withdrawal Ban` |
+| `p2p_service` | `P2P Ban (All)` |
+
+### tm-onchain-fileType
+* `fiat-image`&emsp;Image (jpg / png)
+* `fiat-pdf`&emsp;PDF
+* `fiat-video`&emsp;Video (mp4, etc.)
