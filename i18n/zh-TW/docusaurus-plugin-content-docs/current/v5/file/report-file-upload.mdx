@@ -8,7 +8,7 @@ sidebar_position: 7
 
 :::info 重要
 - 必須在 S3 PUT 上傳成功後才能調用本接口。
-- 未調用本接口的 `resourceId` 在 [提交工單](./appeal-commit) 時將視為無效資源。
+- 未調用本接口的 `resourceId` 在 [提交工單](../tm-onchain/appeal-commit) 時將視為無效資源。
 - 完整流程請參見 [獲取文件上傳簽名](./file-upload-sign)。
 :::
 
@@ -23,9 +23,9 @@ sidebar_position: 7
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
-|shortTimeUrl |string |文件的短時訪問 URL，可用於接入方本地預覽 / 校驗 |
-|sign |string |短時訪問 URL 的簽名 |
-|encryptedContentMd5 |string |文件加密後的 MD5，可與本地計算的 MD5 比對校驗完整性 |
+|shortTimeUrl |string |文件的短時訪問 URL，用於接入方後續預覽 / 下載已上傳的文件；需與 `sign` 拼接使用 |
+|sign |string |短時訪問 URL 的簽名（含 `exp=` 過期時間戳與 `hmac=`），需附加到 `shortTimeUrl` 上作為 query 參數才能訪問 |
+|encryptedContentMd5 |string |服務端對文件加密後計算的 MD5（非原文 MD5），**與本地計算的 MD5 不相等**，用於服務端側完整性追蹤 |
 
 ---
 
@@ -41,7 +41,7 @@ X-BAPI-SIGN: XXXXX
 Content-Type: application/json
 
 {
-    "resourceId": "1234567890"
+    "resourceId": "f1e8a33e-67cb-4683-803f-bb61238e435c"
 }
 ```
 
@@ -50,11 +50,11 @@ Content-Type: application/json
 ```json
 {
     "retCode": 0,
-    "retMsg": "OK",
+    "retMsg": "success",
     "result": {
-        "shortTimeUrl": "https://s3.amazonaws.com/xxx?X-Amz-Signature=...",
-        "sign": "abc123...",
-        "encryptedContentMd5": "e3b0c44298fc1c149afbf4c8996fb924"
+        "shortTimeUrl": "https://fiat-ua-testnet.bycsi.com/user/appeal/2026-09-07f1e8a33e-67cb-4683-803f-bb61238e435c.png",
+        "sign": "exp=1788771243~hmac=a78b4bf589406d115a75a020f771870072023cbc30f651fe603d69711a437e22",
+        "encryptedContentMd5": "LcTyh50nY2jm/tBnZWpKug=="
     },
     "retExtInfo": {},
     "time": 1787053595200

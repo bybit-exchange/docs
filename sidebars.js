@@ -580,10 +580,16 @@ const sidebars = {
             'v5/tm-onchain/appeal-list',
             'v5/tm-onchain/appeal-detail',
             'v5/tm-onchain/appeal-commit',
-            'v5/tm-onchain/file-upload-sign',
-            'v5/tm-onchain/report-file-upload',
           ]
         },
+      ]
+    },
+    {
+      type: 'category',
+      label: 'File',
+      items: [
+        'v5/file/file-upload-sign',
+        'v5/file/report-file-upload',
       ]
     },
     {
