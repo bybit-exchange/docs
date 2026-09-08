@@ -866,12 +866,13 @@ _期權_:
 ### stocks-timeInForce
 * `DAY`&emsp;當日有效，北美主市場收盤時自動撤單
 * `GTC`&emsp;撤銷前持續有效（Good Till Cancelled）
+* `IOC`&emsp;立即成交，未成交部分立即取消
 
-**注意：** `SELL` 方向僅支持 `DAY` 和 `GTC`。
+**注意：** `SELL` 方向僅支持 `DAY` 和 `GTC`。`IOC` 支持但有約束（`LIMIT` + 整股 + `RTH`）。
 
 ### stocks-tradingSession
 * `RTH`&emsp;Regular Trading Hours，正常交易時段（默認值）
-* `24H`&emsp;全天候交易時段，包含盤前 / 盤後 / 夜盤
+* `24H`&emsp;全天候交易時段，包含盤前 / 盤後 / 夜盤。非 `RTH` 時段只允許 `LIMIT` 單
 
 ### stocks-orderStatus
 * `PENDING`&emsp;訂單已接收，排隊等待執行。下單接口返回的初始狀態
@@ -907,11 +908,11 @@ _期權_:
 * `US_STOCK`&emsp;美股。當前業務僅支持這一種
 
 ### stocks-statusCode
-* `PRE`&emsp;盤前（04:00–09:30 ET，僅 XNYS/XNAS）
-* `CORE`&emsp;盤中（09:30–16:00 ET，XNYS/XNAS）
-* `POST`&emsp;盤後（16:00–20:00 ET，僅 XNYS/XNAS）
-* `OVERNIGHT`&emsp;夜盤（20:00 ET–次日 04:00 ET，OCEA）
-* `CLOSED`&emsp;休市（週末 / 假日 / 時段外）
+* `1`&emsp;盤前（04:00–09:30 ET，僅 XNYS/XNAS）
+* `2`&emsp;盤中（09:30–16:00 ET，XNYS/XNAS）
+* `3`&emsp;盤後（16:00–20:00 ET，僅 XNYS/XNAS）
+* `4`&emsp;夜盤（20:00 ET–次日 04:00 ET，OCEA）
+* `5`&emsp;休市（週末 / 假日 / 時段外）
 
 ### stocks-tradingHolidayType
 * `HOLIDAY`&emsp;法定假日，全天休市

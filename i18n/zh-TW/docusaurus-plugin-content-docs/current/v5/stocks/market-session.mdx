@@ -21,7 +21,7 @@ sidebar_position: 8
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |[symbolType](../enum#stocks-symboltype) |string |股票類型。`US_STOCK` |
-|[statusCode](../enum#stocks-statuscode) |string |當前股票所處狀態。`PRE`, `CORE`, `POST`, `OVERNIGHT`, `CLOSED` |
+|[statusCode](../enum#stocks-statuscode) |integer |當前股票所處狀態。`1`: 盤前，`2`: 盤中，`3`: 盤後，`4`: 夜盤，`5`: 休市 |
 |serverTime |integer |服務端 UTC epoch ms，用來消除用戶本地時間誤差 |
 |currentPhaseEndTime |integer |當前時段結束時間（epoch ms） |
 |nextMarketOpenTime |integer |下次主市場開盤時間（epoch ms） |
@@ -57,7 +57,7 @@ X-BAPI-SIGN: XXXXX
     "retMsg": "ok",
     "result": {
         "symbolType": "US_STOCK",
-        "statusCode": "POST",
+        "statusCode": 4,
         "serverTime": 1787662431425,
         "currentPhaseEndTime": 1787299200000,
         "nextMarketOpenTime": 1787319000000,

@@ -24,8 +24,8 @@ sidebar_position: 1
 |notional |false |string |名義額（USDC）。僅 `side=BUY` 且 `type=MARKET` 時使用；與 `qty` 互斥|
 |limitPrice |false |string |限價。`type=LIMIT` 或 `STOP_LIMIT` 時**必傳**|
 |stopPrice |false |string |觸發價。`type=STOP` 或 `STOP_LIMIT` 時**必傳**|
-|[timeInForce](../enum#stocks-timeinforce) |**true** |string |有效期。`SELL` 僅支持 `DAY` / `GTC`|
-|[tradingSession](../enum#stocks-tradingsession) |false |string |交易時段：`RTH`（默認）, `24H`|
+|[timeInForce](../enum#stocks-timeinforce) |**true** |string |有效期：`DAY` / `GTC` / `IOC`。`SELL` 僅支持 `DAY` / `GTC`；`IOC` 需滿足 `type=LIMIT` + 整股 `qty` + `tradingSession=RTH` |
+|[tradingSession](../enum#stocks-tradingsession) |false |string |交易時段：`RTH`（默認）, `24H`。非 `RTH` 時段只允許 `LIMIT` 單 |
 |tokenize |false |boolean |是否在成交後自動 tokenize，默認 `false`；僅對 `BUY` 生效|
 |orderTime |**true** |integer |客戶端下單毫秒時間戳|
 

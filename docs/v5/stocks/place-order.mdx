@@ -24,8 +24,8 @@ This endpoint submits a stock buy or sell order. Buy orders are quoted in USDC, 
 |notional |false |string |Notional amount (USDC). Only valid when `side=BUY` and `type=MARKET`. Mutually exclusive with `qty`|
 |limitPrice |false |string |Limit price. **Required** when `type=LIMIT` or `STOP_LIMIT`|
 |stopPrice |false |string |Trigger price. **Required** when `type=STOP` or `STOP_LIMIT`|
-|[timeInForce](../enum#stocks-timeinforce) |**true** |string |Time in force. `SELL` only supports `DAY` / `GTC`|
-|[tradingSession](../enum#stocks-tradingsession) |false |string |Trading session. `RTH` (default), `24H`|
+|[timeInForce](../enum#stocks-timeinforce) |**true** |string |Time in force: `DAY` / `GTC` / `IOC`. `SELL` only supports `DAY` / `GTC`; `IOC` requires `type=LIMIT` + whole-share `qty` + `tradingSession=RTH` |
+|[tradingSession](../enum#stocks-tradingsession) |false |string |Trading session. `RTH` (default), `24H`. Non-`RTH` sessions accept `LIMIT` orders only |
 |tokenize |false |boolean |Whether to auto tokenize after the order is filled. Default: `false`. Only valid for `BUY`|
 |orderTime |**true** |integer |Client order timestamp in milliseconds|
 

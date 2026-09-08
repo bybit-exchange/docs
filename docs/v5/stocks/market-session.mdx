@@ -21,7 +21,7 @@ This endpoint is only available for Market Maker.
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |[symbolType](../enum#stocks-symboltype) |string |Stock type. `US_STOCK` |
-|[statusCode](../enum#stocks-statuscode) |string |Current session state. `PRE`, `CORE`, `POST`, `OVERNIGHT`, `CLOSED` |
+|[statusCode](../enum#stocks-statuscode) |integer |Current session state. `1`: pre-market, `2`: regular hours, `3`: post-market, `4`: overnight, `5`: closed |
 |serverTime |integer |Server UTC epoch ms. Used to eliminate client local time drift |
 |currentPhaseEndTime |integer |Current phase end time (epoch ms) |
 |nextMarketOpenTime |integer |Next main-market open time (epoch ms) |
@@ -57,7 +57,7 @@ X-BAPI-SIGN: XXXXX
     "retMsg": "ok",
     "result": {
         "symbolType": "US_STOCK",
-        "statusCode": "POST",
+        "statusCode": 4,
         "serverTime": 1787662431425,
         "currentPhaseEndTime": 1787299200000,
         "nextMarketOpenTime": 1787319000000,

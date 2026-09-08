@@ -21,9 +21,9 @@ This endpoint is only available for Market Maker.
 |frontMultiplier |**true** |string |Conversion ratio from the front-end snapshot |
 |[accountType](../enum#stocks-accounttype) |false |string |Only effective when `REDEEM`. `all` (default), `uta`, `fund` |
 |requestId |**true** |string |Idempotency key. Length ≤ 36. Alphanumeric plus `-` `_`. Must be unique within 24 hours for the same MM account |
-|contractAddr |**true** |string |Token receive address when `MINT`; Token provide address when `REDEEM` |
+|contractAddr |false |string |Token receive address when `MINT`; Token provide address when `REDEEM`. **Do not send when `flow=DEX` and `burnScene=NDP`** |
 |[flow](../enum#stocks-flow) |**true** |string |`CEX`, `DEX`. `MINT` flows are identical across CEX/DEX (mint to the specified address). `REDEEM` (burn) flows differ between CEX and DEX |
-|[burnScene](../enum#stocks-burnscene) |false |string |Scene for DEX burn. `DEP` (through Bybit main site), `NDP` (not through Bybit main site) |
+|[burnScene](../enum#stocks-burnscene) |false |string |Scene for **DEX `REDEEM` (burn)**: `DEP` (through Bybit main site), `NDP` (not through Bybit main site) |
 
 ### Response Parameters
 | Parameter | Type | Comments|

@@ -21,9 +21,9 @@ sidebar_position: 5
 |frontMultiplier |**true** |string |前端快照的轉換比例 |
 |[accountType](../enum#stocks-accounttype) |false |string |僅 `REDEEM` 生效：`all`（默認）, `uta`, `fund` |
 |requestId |**true** |string |冪等鍵，長度 ≤ 36，字母數字與 `-` `_`。同一 MM 賬號下 24 小時內唯一 |
-|contractAddr |**true** |string |`MINT` 時代幣接收地址，`REDEEM` 時代幣提供地址 |
+|contractAddr |false |string |`MINT` 時代幣接收地址，`REDEEM` 時代幣提供地址。**當 `flow=DEX` 且 `burnScene=NDP` 時不要傳** |
 |[flow](../enum#stocks-flow) |**true** |string |`CEX`, `DEX`。對於 `MINT`，CEX / DEX 都是 mint 到指定地址，流程一致；對於 `REDEEM`（burn），CEX 與 DEX 流程不一致 |
-|[burnScene](../enum#stocks-burnscene) |false |string |DEX 鏈路 burn 時的場景。`DEP`（走 Bybit 主站）；`NDP`（不走 Bybit 主站） |
+|[burnScene](../enum#stocks-burnscene) |false |string |**DEX `REDEEM`（burn）** 場景：`DEP`（走 Bybit 主站）；`NDP`（不走 Bybit 主站） |
 
 ### 響應參數
 | 參數 | 類型 | 說明|

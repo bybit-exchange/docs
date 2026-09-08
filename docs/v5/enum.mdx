@@ -863,12 +863,13 @@ with the example of BTCUSDT:
 ### stocks-timeInForce
 * `DAY`&emsp;Day order. Auto-cancelled at the main US market close
 * `GTC`&emsp;Good Till Cancelled
+* `IOC`&emsp;Immediate or Cancel. Any unfilled portion is cancelled immediately
 
-**Note:** `SELL` only supports `DAY` and `GTC`.
+**Note:** `SELL` only supports `DAY` and `GTC`. `IOC` is supported but constrained to `LIMIT` + whole-share + `RTH`.
 
 ### stocks-tradingSession
 * `RTH`&emsp;Regular Trading Hours (default)
-* `24H`&emsp;24-hour session, including pre-market, post-market and overnight
+* `24H`&emsp;24-hour session, including pre-market, post-market and overnight. Non-`RTH` sessions accept `LIMIT` orders only
 
 ### stocks-orderStatus
 * `PENDING`&emsp;Order accepted and queued for execution. Returned as the initial status by Place Order
@@ -904,11 +905,11 @@ with the example of BTCUSDT:
 * `US_STOCK`&emsp;US stock. Currently the only supported instrument type
 
 ### stocks-statusCode
-* `PRE`&emsp;Pre-market (04:00–09:30 ET, XNYS/XNAS only)
-* `CORE`&emsp;Regular hours (09:30–16:00 ET, XNYS/XNAS)
-* `POST`&emsp;Post-market (16:00–20:00 ET, XNYS/XNAS only)
-* `OVERNIGHT`&emsp;Overnight session (20:00 ET–next day 04:00 ET, OCEA)
-* `CLOSED`&emsp;Closed (weekends, holidays, off-hours)
+* `1`&emsp;Pre-market (04:00–09:30 ET, XNYS/XNAS only)
+* `2`&emsp;Regular hours (09:30–16:00 ET, XNYS/XNAS)
+* `3`&emsp;Post-market (16:00–20:00 ET, XNYS/XNAS only)
+* `4`&emsp;Overnight session (20:00 ET–next day 04:00 ET, OCEA)
+* `5`&emsp;Closed (weekends, holidays, off-hours)
 
 ### stocks-tradingHolidayType
 * `HOLIDAY`&emsp;Statutory holiday. Market closed all day
