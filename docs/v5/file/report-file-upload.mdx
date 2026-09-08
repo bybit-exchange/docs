@@ -1,0 +1,62 @@
+---
+title: Report File Upload
+sidebar_label: Report File Upload
+sidebar_position: 7
+---
+
+Notify the server that the file for the given `resourceId` has been successfully PUT to S3. This is **step 3** of the three-step file upload flow. **Up to 10 requests per second**
+
+:::info Important
+- Only call this endpoint after the S3 PUT upload succeeds.
+- A `resourceId` that has not been reported is treated as an invalid resource by [Commit Appeal](../tm-onchain/appeal-commit).
+- For the full flow, see [Get File Upload Sign](./file-upload-sign).
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/file/report-file-upload" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|resourceId |**true** |string |Resource ID returned by [Get File Upload Sign](./file-upload-sign) |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|shortTimeUrl |string |Short-lived access URL for previewing / downloading the uploaded file; must be used together with `sign` |
+|sign |string |Signature for the short-lived URL (contains `exp=` expiry timestamp and `hmac=`); append as query parameters to `shortTimeUrl` to access the file |
+|encryptedContentMd5 |string |Server-side MD5 computed after encrypting the file (**not equal to the local MD5**); used for server-side integrity tracking |
+
+---
+
+### Request Example
+
+```http
+POST /v5/file/report-file-upload HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "resourceId": "f1e8a33e-67cb-4683-803f-bb61238e435c"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "shortTimeUrl": "https://fiat-ua-testnet.bycsi.com/user/appeal/2026-09-07f1e8a33e-67cb-4683-803f-bb61238e435c.png",
+        "sign": "exp=1788771243~hmac=a78b4bf589406d115a75a020f771870072023cbc30f651fe603d69711a437e22",
+        "encryptedContentMd5": "LcTyh50nY2jm/tBnZWpKug=="
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

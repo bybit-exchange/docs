@@ -1,0 +1,83 @@
+---
+title: 獲取工單列表
+sidebar_label: 獲取工單列表
+sidebar_position: 3
+---
+
+查詢當前 API Key 所屬母帳戶下的合規工單列表，按工單創建時間倒序返回，僅返回近 180 天內創建的工單。**每秒最多 10 次請求**
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/compliance/appeal/list" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[appealTypes](../enum#tm-onchain-appealtype) |false |array&lt;string&gt; |工單類型過濾：`TM_Onchain` / `TM_Onchain_KYB`；不填返回全部 |
+|page |false |long |頁碼，從 `1` 開始，默認 `1` |
+|pageSize |false |long |每頁條數，默認 `20`，最大 `100` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|total |string |符合條件的工單總數 |
+|page |string |當前頁碼 |
+|pageSize |string |當前每頁條數 |
+|cases |array&lt;object&gt; |工單列表 |
+|> appealId |string |工單唯一 ID，後續詳情 / 提交接口使用 |
+|> [appealType](../enum#tm-onchain-appealtype) |string |工單類型：`TM_Onchain` / `TM_Onchain_KYB` |
+|> [triggerType](../enum#tm-onchain-triggertype) |string |觸發類型：`Auto-approve` / `Auto-create-Initial` / `Manual` |
+|> uid |string |母帳戶 UID |
+|> triggerUid |string |觸發工單的子帳戶 UID |
+|> createdAt |string |工單創建時間（Unix 秒） |
+|> [direction](../enum#tm-onchain-direction) |string |交易方向枚舉 |
+|> accountRestriction |object |帳戶封禁信息 |
+|>> [ban](../enum#tm-onchain-bandescription) |array&lt;string&gt; |封禁項英文描述列表 |
+|>> [unban](../enum#tm-onchain-bandescription) |array&lt;string&gt; |解封項英文描述列表 |
+|> [fundStatus](../enum#tm-onchain-fundstatus) |string |資金處置狀態枚舉；無資金處置時為空字符串 |
+|> [resultStatus](../enum#tm-onchain-resultstatus) |string |工單狀態枚舉 |
+
+---
+
+### 請求示例
+
+```http
+GET /v5/compliance/appeal/list?appealTypes=TM_Onchain&page=1&pageSize=20 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "total": "1",
+        "page": "1",
+        "pageSize": "20",
+        "cases": [
+            {
+                "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+                "appealType": "TM_Onchain",
+                "triggerType": "Auto-create-Initial",
+                "uid": "305461592",
+                "triggerUid": "100669644",
+                "createdAt": "1787053595",
+                "direction": "withdraw",
+                "accountRestriction": {
+                    "ban": ["Withdraw Ban", "Trading Ban (Allow to Close Position)"],
+                    "unban": []
+                },
+                "fundStatus": "Deposit Intercepted",
+                "resultStatus": "PENDING"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```
