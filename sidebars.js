@@ -572,26 +572,28 @@ const sidebars = {
             }
           ]
         },
-        {
-          type: 'category',
-          label: 'Compliance',
-          items: [
-            'v5/tm-onchain/ws-appeal',
-            'v5/tm-onchain/appeal-list',
-            'v5/tm-onchain/appeal-detail',
-            'v5/tm-onchain/appeal-commit',
-          ]
-        },
+        // TODO: TM-Onchain not ready for public release yet, hide until launch
+        // {
+        //   type: 'category',
+        //   label: 'Compliance',
+        //   items: [
+        //     'v5/tm-onchain/ws-appeal',
+        //     'v5/tm-onchain/appeal-list',
+        //     'v5/tm-onchain/appeal-detail',
+        //     'v5/tm-onchain/appeal-commit',
+        //   ]
+        // },
       ]
     },
-    {
-      type: 'category',
-      label: 'File',
-      items: [
-        'v5/file/file-upload-sign',
-        'v5/file/report-file-upload',
-      ]
-    },
+    // TODO: File Upload not ready for public release yet, hide until launch
+    // {
+    //   type: 'category',
+    //   label: 'File',
+    //   items: [
+    //     'v5/file/file-upload-sign',
+    //     'v5/file/report-file-upload',
+    //   ]
+    // },
     {
       type: 'category',
       label: 'Finance',
