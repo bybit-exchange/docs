@@ -83,12 +83,15 @@ function setHeaders(postman, contentType, accept, cookie, headerParams, body, ot
    * @type {string}
    */
   if (headerParams.length != 0) {
-    var apiKey = "CFEJUGQEQPPHGOHGHM";
+    // Placeholders. Users must fill in their own API key / secret via the
+    // authentication panel; requests sent with the empty defaults will be
+    // rejected by the gateway with retCode 10001 (apiKey missing).
+    var apiKey = "";
     if (headerParams[0].hasOwnProperty("value")) {
       apiKey = headerParams[0]["value"];
     }
 
-    var secret = "VDFZSSPUTKRJMXAVMJXBHEXIPZNZJIZUBVRQ";
+    var secret = "";
     if (headerParams[1].hasOwnProperty("value")) {
       secret = headerParams[1]["value"];
     }
