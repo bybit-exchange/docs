@@ -915,3 +915,97 @@ _期權_:
 * `fiat-image`&emsp;圖片（jpg / png）
 * `fiat-pdf`&emsp;PDF
 * `fiat-video`&emsp;視頻（mp4 等）
+
+### tm-onchain-documentCode
+[獲取工單詳情](./tm-onchain/appeal-detail) 返回的 `documentCode` 材料編碼，客戶端在 [提交工單](./tm-onchain/appeal-commit) 時按 `documentCode` 提交對應材料。[styleBox](#tm-onchain-stylebox) 一列標明期望的填寫格式。
+
+**交易詳情**
+* `OnchainTransactionPurpose`&emsp;`CHECKBOX` — 與對手方的交易目的（必填）。多選，取值見 [values](#tm-onchain-onchaintransactionpurpose-values)
+* `OnchainCounterpartyRelationship`&emsp;`CHECKBOX` — 你與對手方的關係（必填）。多選，取值見 [values](#tm-onchain-onchaincounterpartyrelationship-values)
+* `OnchainBybitWalletAddressProof`&emsp;`UPLOAD` — Bybit 錢包地址的分享/接收證明（聊天記錄、郵件、截圖、錄屏或所有權證明）。最多 10 個文件，單個 ≤ 5 MB，僅支持 `.jpg` / `.jpeg` / `.png` / `.pdf`
+
+**KYC 資訊**
+* `AnnualIncome`&emsp;`SELECT` — 年收入區間（美元，必填）。單選，取值見 [values](#tm-onchain-annualincome-values)
+* `OccupationEdd`&emsp;`SELECT` — 當前就業 / 職業狀況（必填）。單選，取值見 [values](#tm-onchain-occupationedd-values)
+* `SourceOfWealthEDD`&emsp;`CHECKBOX` — 財富累積的主要來源（必填）。多選，取值見 [values](#tm-onchain-sourceofwealthedd-values)
+* `EDDSourceOfWealthWD`&emsp;`UPLOAD` — 財富來源證明文件：近 3 個月銀行流水、最新完稅證明或近 3 個月工資單。優先提供原始 PDF 或官方出具的文件。必填；最多 10 個文件，單個 ≤ 5 MB，僅支持 `.jpg` / `.jpeg` / `.png` / `.pdf`
+* `AddressStreet`&emsp;`SINGLEINPUT` — 居住地街道地址（必填）。最多 200 字元
+* `City`&emsp;`SINGLEINPUT` — 居住城市 / 城鎮。最多 100 字元
+* `Province`&emsp;`SINGLEINPUT` — 州 / 省 / 地區（如適用）
+* `PostalCode`&emsp;`SINGLEINPUT` — 郵政編碼（必填）。最多 20 字元
+* `Country`&emsp;`COUNTRYNAME` — 居住國家（必填）。填寫符合 [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) 的英文國家全稱，例如 `Australia`
+
+**關聯平台 / 交易所**
+* `OnchainDepositWalletName`&emsp;`SINGLEINPUT` — 對手方地址所屬的平台 / 交易所名稱（必填）。最多 1000 字元
+* `RelationshipwithCounterparty`&emsp;`SELECT` — 你與對手方所屬平台 / 交易所的關係（必填）。單選，取值見 [values](#tm-onchain-relationshipwithcounterparty-values)
+
+### tm-onchain-OnchainTransactionPurpose-values
+`documentCode=OnchainTransactionPurpose` 的取值。以取值列表通過 `itemsData[].mulContent[]` 提交。
+* `1`&emsp;償還債務
+* `2`&emsp;借款 / 收到貸款
+* `3`&emsp;個人加密投資 / 交易
+* `4`&emsp;OTC / 幣幣兌換業務
+* `5`&emsp;第三方加密交易活動
+* `6`&emsp;在自有錢包 / 交易所帳戶之間轉帳
+* `7`&emsp;工資發放
+* `8`&emsp;投資 / 資金配置
+* `9`&emsp;家庭支援
+* `10`&emsp;購買商品 & 服務（需附 `detailContent`）
+* `11`&emsp;其他（需附 `detailContent`）
+
+### tm-onchain-OnchainCounterpartyRelationship-values
+`documentCode=OnchainCounterpartyRelationship` 的取值。以取值列表通過 `itemsData[].mulContent[]` 提交。
+* `1`&emsp;本人 / 自有錢包 / 自有帳戶
+* `2`&emsp;家庭成員
+* `3`&emsp;朋友 / 熟人
+* `4`&emsp;僱主
+* `5`&emsp;僱員
+* `6`&emsp;商業合作夥伴
+* `7`&emsp;客戶（與交易所服務無關）
+* `8`&emsp;供應商（與交易所服務無關）
+* `9`&emsp;客戶 — OTC / 線下兌換
+* `10`&emsp;服務提供方 — OTC / 線下兌換
+* `11`&emsp;第三方代收 / 匯總（需附 `detailContent`）
+* `12`&emsp;未知第三方
+* `13`&emsp;其他（需附 `detailContent`）
+
+### tm-onchain-AnnualIncome-values
+`documentCode=AnnualIncome` 的取值。取值通過 `itemsData[].content` 提交。
+* `1`&emsp;低於 10,000 美元
+* `2`&emsp;10,000 – 50,000 美元
+* `3`&emsp;50,001 – 100,000 美元
+* `4`&emsp;100,001 – 250,000 美元
+* `5`&emsp;250,001 – 500,000 美元
+* `6`&emsp;500,000 美元以上
+
+### tm-onchain-OccupationEdd-values
+`documentCode=OccupationEdd` 的取值。取值通過 `itemsData[].content` 提交。
+* `1`&emsp;受薪員工
+* `2`&emsp;個體 / 企業主
+* `3`&emsp;學生
+* `4`&emsp;退休
+* `5`&emsp;無業
+* `6`&emsp;自由職業
+* `7`&emsp;其他（需附 `detailContent`）
+
+### tm-onchain-SourceOfWealthEDD-values
+`documentCode=SourceOfWealthEDD` 的取值。以取值列表通過 `itemsData[].mulContent[]` 提交。
+* `1`&emsp;工資收入 / 儲蓄（含自僱收入）
+* `2`&emsp;經營收入（若公司成立或經營未滿一年且尚未產生收入，請選擇其他選項）
+* `3`&emsp;投資收益（如股票、債券、外匯）
+* `4`&emsp;加密投資收益
+* `5`&emsp;遺產
+* `6`&emsp;贈與 / 捐贈
+* `7`&emsp;貸款 / 授信
+* `8`&emsp;資產出售
+* `9`&emsp;被動收入（含房產租賃、股息）
+* `10`&emsp;社會福利 / 退休金
+* `11`&emsp;其他（需附 `detailContent`）
+
+### tm-onchain-RelationshipwithCounterparty-values
+`documentCode=RelationshipwithCounterparty` 的取值。取值通過 `itemsData[].content` 提交。
+* `1`&emsp;普通用戶
+* `2`&emsp;股東或受益所有人
+* `3`&emsp;員工
+* `4`&emsp;商業合作夥伴
+* `5`&emsp;無關聯

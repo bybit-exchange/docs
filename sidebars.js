@@ -514,6 +514,24 @@ const sidebars = {
               ]
             },
           ]
+        },
+        {
+          type: 'category',
+          label: 'Compliance',
+          items: [
+            'v5/tm-onchain/ws-appeal',
+            'v5/tm-onchain/appeal-list',
+            'v5/tm-onchain/appeal-detail',
+            'v5/tm-onchain/appeal-commit',
+            {
+              type: 'category',
+              label: 'File',
+              items: [
+                'v5/file/file-upload-sign',
+                'v5/file/report-file-upload',
+              ]
+            },
+          ]
         }
       ]
     },
@@ -572,24 +590,6 @@ const sidebars = {
             }
           ]
         },
-        {
-          type: 'category',
-          label: 'Compliance',
-          items: [
-            'v5/tm-onchain/ws-appeal',
-            'v5/tm-onchain/appeal-list',
-            'v5/tm-onchain/appeal-detail',
-            'v5/tm-onchain/appeal-commit',
-          ]
-        },
-      ]
-    },
-    {
-      type: 'category',
-      label: 'File',
-      items: [
-        'v5/file/file-upload-sign',
-        'v5/file/report-file-upload',
       ]
     },
     {

@@ -912,3 +912,97 @@ Values that may appear in `accountRestriction.ban` / `unban`, mapped from the ba
 * `fiat-image`&emsp;Image (jpg / png)
 * `fiat-pdf`&emsp;PDF
 * `fiat-video`&emsp;Video (mp4, etc.)
+
+### tm-onchain-documentCode
+Material codes returned in the `documentCode` field of [Get Appeal Detail](./tm-onchain/appeal-detail). The client submits each material keyed by its `documentCode` in [Commit Appeal](./tm-onchain/appeal-commit). The [styleBox](#tm-onchain-stylebox) column indicates the expected input format.
+
+**Transaction Details**
+* `OnchainTransactionPurpose`&emsp;`CHECKBOX` — Purpose of the transaction with the counterparty (required). Multi-select; see [values](#tm-onchain-onchaintransactionpurpose-values)
+* `OnchainCounterpartyRelationship`&emsp;`CHECKBOX` — Your relationship with the counterparty (required). Multi-select; see [values](#tm-onchain-onchaincounterpartyrelationship-values)
+* `OnchainBybitWalletAddressProof`&emsp;`UPLOAD` — Proof of how the Bybit wallet address was shared (chat, email, screenshot, screen recording, or proof of ownership). Max 10 files, ≤ 5 MB each; `.jpg` / `.jpeg` / `.png` / `.pdf` only
+
+**KYC Information**
+* `AnnualIncome`&emsp;`SELECT` — Annual income range in USD (required). Single-select; see [values](#tm-onchain-annualincome-values)
+* `OccupationEdd`&emsp;`SELECT` — Current employment / occupational status (required). Single-select; see [values](#tm-onchain-occupationedd-values)
+* `SourceOfWealthEDD`&emsp;`CHECKBOX` — Primary sources contributing to accumulated wealth (required). Multi-select; see [values](#tm-onchain-sourceofwealthedd-values)
+* `EDDSourceOfWealthWD`&emsp;`UPLOAD` — Source-of-wealth documents: last 3 months of bank statement, latest income tax statement, or last 3 months of salary slip. Original PDF or officially issued documents preferred. Required; max 10 files, ≤ 5 MB each; `.jpg` / `.jpeg` / `.png` / `.pdf` only
+* `AddressStreet`&emsp;`SINGLEINPUT` — Residential street address (required). Max 200 chars
+* `City`&emsp;`SINGLEINPUT` — Residential city / town. Max 100 chars
+* `Province`&emsp;`SINGLEINPUT` — State / province / region (if applicable)
+* `PostalCode`&emsp;`SINGLEINPUT` — Postal / ZIP code (required). Max 20 chars
+* `Country`&emsp;`COUNTRYNAME` — Country of residence (required). Full English country name per [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), e.g. `Australia`
+
+**Associated Platform / Exchange**
+* `OnchainDepositWalletName`&emsp;`SINGLEINPUT` — Platform / exchange name of the counterparty's address (required). Max 1000 chars
+* `RelationshipwithCounterparty`&emsp;`SELECT` — Your relationship with the counterparty's platform / exchange (required). Single-select; see [values](#tm-onchain-relationshipwithcounterparty-values)
+
+### tm-onchain-OnchainTransactionPurpose-values
+Option values for `documentCode=OnchainTransactionPurpose`. Submit as a list of option values via `itemsData[].mulContent[]`.
+* `1`&emsp;Debt repayment
+* `2`&emsp;Borrowing / Loan receipt
+* `3`&emsp;Personal crypto investment / Trading
+* `4`&emsp;OTC / Crypto exchange business activity
+* `5`&emsp;Third-party crypto trading activity
+* `6`&emsp;Transfer between your own wallets or exchange accounts
+* `7`&emsp;Salary payment
+* `8`&emsp;Investment / Capital allocation
+* `9`&emsp;Family support
+* `10`&emsp;Purchase of goods & services (requires `detailContent`)
+* `11`&emsp;Others (requires `detailContent`)
+
+### tm-onchain-OnchainCounterpartyRelationship-values
+Option values for `documentCode=OnchainCounterpartyRelationship`. Submit as a list of option values via `itemsData[].mulContent[]`.
+* `1`&emsp;Self / Own wallet / Own account
+* `2`&emsp;Family member
+* `3`&emsp;Friend / Acquaintance
+* `4`&emsp;Employer
+* `5`&emsp;Employee
+* `6`&emsp;Business partner
+* `7`&emsp;Customer / Client (not related to exchange services)
+* `8`&emsp;Vendor / Supplier (not related to exchange services)
+* `9`&emsp;Client — OTC / Offline exchange
+* `10`&emsp;Service provider — OTC / Offline exchange
+* `11`&emsp;Third-party collection / Aggregation (requires `detailContent`)
+* `12`&emsp;Unknown third party
+* `13`&emsp;Others (requires `detailContent`)
+
+### tm-onchain-AnnualIncome-values
+Option values for `documentCode=AnnualIncome`. Submit the option value via `itemsData[].content`.
+* `1`&emsp;Below USD 10,000
+* `2`&emsp;USD 10,000 – USD 50,000
+* `3`&emsp;USD 50,001 – USD 100,000
+* `4`&emsp;USD 100,001 – USD 250,000
+* `5`&emsp;USD 250,001 – USD 500,000
+* `6`&emsp;Above USD 500,000
+
+### tm-onchain-OccupationEdd-values
+Option values for `documentCode=OccupationEdd`. Submit the option value via `itemsData[].content`.
+* `1`&emsp;Salaried employee
+* `2`&emsp;Self-employed / Business owner
+* `3`&emsp;Student
+* `4`&emsp;Retired
+* `5`&emsp;Unemployed
+* `6`&emsp;Freelancer
+* `7`&emsp;Others (requires `detailContent`)
+
+### tm-onchain-SourceOfWealthEDD-values
+Option values for `documentCode=SourceOfWealthEDD`. Submit as a list of option values via `itemsData[].mulContent[]`.
+* `1`&emsp;Employment income / Savings (including self-employment)
+* `2`&emsp;Business income (if the company was incorporated or has operated for less than one year with no income, pick another option instead)
+* `3`&emsp;Investment profits (e.g., stocks, bonds, forex)
+* `4`&emsp;Crypto investment profits
+* `5`&emsp;Inheritance
+* `6`&emsp;Gifts / Donation
+* `7`&emsp;Loan / Credit
+* `8`&emsp;Sale of assets
+* `9`&emsp;Passive income (including real estate leasing and dividends)
+* `10`&emsp;Social benefits / Pension
+* `11`&emsp;Others (requires `detailContent`)
+
+### tm-onchain-RelationshipwithCounterparty-values
+Option values for `documentCode=RelationshipwithCounterparty`. Submit the option value via `itemsData[].content`.
+* `1`&emsp;Regular user
+* `2`&emsp;Shareholder or Beneficial owner
+* `3`&emsp;Employee
+* `4`&emsp;Business partner
+* `5`&emsp;No affiliation
