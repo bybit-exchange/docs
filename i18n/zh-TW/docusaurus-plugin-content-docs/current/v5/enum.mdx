@@ -435,49 +435,30 @@ _期權:_
 * `TRANSFER_OUT`&emsp;從統一錢包轉出到別的錢包
 * `TRADE`
 * `SETTLEMENT`&emsp;USDT永續的資金費結算; USDC永續的資金費結算以及USDC合約的8小時倉位結算
-* `DELIVERY`&emsp;USDC交割合約和期權到期交割、Event Contract 結算
+* `DELIVERY`&emsp;USDC交割合約和期權到期交割、事件合約結算
 * `LIQUIDATION`
 * `ADL`&emsp;自動減倉
 * `AIRDROP`
 * `BONUS`&emsp;體驗金發放
 * `BONUS_RECOLLECT`&emsp;體驗金過期
+* `BONUS_TRANSFER_IN`&emsp;卡券金額轉入
+* `BONUS_TRANSFER_OUT`&emsp;卡券金額轉出
 * `FEE_REFUND`&emsp;手續費返還
 * `INTEREST`&emsp;借貸產生的利息
 * `CURRENCY_BUY`&emsp;閃兌, 以及系統對借款的清算(統一帳戶借貸)
 * `CURRENCY_SELL`&emsp;閃兌, 以及系統對借款的清算(統一帳戶借貸)
+* `SPOT_REPAYMENT_SELL`&emsp;一鍵還款時的賣出
+* `SPOT_REPAYMENT_BUY`&emsp;一鍵還款時的買入
 * `DIVIDEND_SETTLEMENT`&emsp;股票合約分紅
 * `FORWARD_SPLIT_SETTLE`&emsp;拆股尾差結算
 * `REVERSE_SPLIT_SETTLE`&emsp;合股尾差結算
-* `SPOT_REPAYMENT_SELL`&emsp;一鍵還款時的賣出
-* `SPOT_REPAYMENT_BUY`&emsp;一鍵還款時的買入
 * `BORROW`&emsp;手工借幣和自動借幣
 * `REPAY`&emsp;手工還幣和自動還幣
 * `CONVERT`&emsp;貨幣兌換還款
-* `INTEREST_REFUND`&emsp;固定利率利息
-* `BORROWED_AMOUNT_INS_LOAN`&emsp;OTC放款
-* `PRINCIPLE_REPAYMENT_INS_LOAN`&emsp;主動償還本金
-* `INTEREST_REPAYMENT_INS_LOAN`&emsp;主動償還利息
-* `AUTO_SOLD_COLLATERAL_INS_LOAN`&emsp;OTC強平賣出抵押品(機構借貸)
-* `AUTO_BUY_LIABILITY_INS_LOAN`&emsp;OTC強平買入借款資產(機構借貸)
-* `AUTO_PRINCIPLE_REPAYMENT_INS_LOAN`&emsp;被動償還本金
-* `AUTO_INTEREST_REPAYMENT_INS_LOAN`&emsp;被動償還利息
-* `TRANSFER_IN_INS_LOAN`&emsp;機構借貸強平時自動劃入
-* `TRANSFER_OUT_INS_LOAN`&emsp;機構借貸強平時自動劃出
-* `TOKENS_SUBSCRIPTION`&emsp;槓桿代幣申購
-* `TOKENS_REDEMPTION`&emsp;槓桿代幣贖回
-* `AUTO_DEDUCTION`&emsp;資金自動轉出 (鏈回滾)
-* `FLEXIBLE_STAKING_SUBSCRIPTION`&emsp;Byfi靈活質押申購
-* `FLEXIBLE_STAKING_REDEMPTION`&emsp;Byfi靈活質押贖回
-* `FIXED_STAKING_SUBSCRIPTION`&emsp;Byfi固定質押申購
-* `FLEXIBLE_STAKING_REFUND`&emsp;Byfi靈活質押退款
-* `FIXED_STAKING_REFUND`&emsp;Byfi固定質押退款
-* `PREMARKET_TRANSFER_OUT`&emsp;盤前交易質押金上帳
-* `PREMARKET_DELIVERY_SELL_NEW_COIN`&emsp;盤前交易交割新幣
-* `PREMARKET_DELIVERY_BUY_NEW_COIN`&emsp;盤前交易新幣種劃給買家
-* `PREMARKET_DELIVERY_PLEDGE_PAY_SELLER`&emsp;交割履約-質押款交付
-* `PREMARKET_DELIVERY_PLEDGE_BACK`&emsp;交割履約-退回賣家質押幣
-* `PREMARKET_ROLLBACK_PLEDGE_BACK`&emsp;交割違約-退還買家質押款
-* `PREMARKET_ROLLBACK_PLEDGE_PENALTY_TO_BUYER`&emsp;交割違約-違約金劃給買家
+* `EARNING_REDEMPTION_SELL`&emsp;理財作為保證金強平流水(賣)
+* `EARNING_REDEMPTION_BUY`&emsp;理財作為保證金強平流水(買)
+* `FLOATING_TO_FIXED_BORROW`
+* `FLOATING_TO_FIXED_REPAY`
 * `CUSTODY_NETWORK_FEE`&emsp;fireblocks業務
 * `CUSTODY_SETTLE_FEE`&emsp;fireblocks業務
 * `CUSTODY_LOCK`&emsp;fireblocks / copper 業務
@@ -485,8 +466,13 @@ _期權:_
 * `CUSTODY_UNLOCK_REFUND`&emsp;fireblocks / copper 業務
 * `LOANS_BORROW_FUNDS`&emsp;質押借貸放款
 * `LOANS_PLEDGE_ASSET`&emsp;質押借貸還款
-* `BONUS_TRANSFER_IN`&emsp;卡券金額轉入
-* `BONUS_TRANSFER_OUT`&emsp;卡券金額轉出
+* `FIXED_SAVING_PRINCIPAL_REDEMPTION`&emsp;Bycustody固定存款贖回
+#### 理財相關
+* `FLEXIBLE_STAKING_SUBSCRIPTION`&emsp;Byfi靈活質押申購
+* `FLEXIBLE_STAKING_REDEMPTION`&emsp;Byfi靈活質押贖回
+* `FIXED_STAKING_SUBSCRIPTION`&emsp;Byfi固定質押申購
+* `FLEXIBLE_STAKING_REFUND`&emsp;Byfi靈活質押退款
+* `FIXED_STAKING_REFUND`&emsp;Byfi固定質押退款
 * `PEF_TRANSFER_IN`&emsp;私募基金申購
 * `PEF_TRANSFER_OUT`&emsp;私募基金贖回
 * `PEF_PROFIT_SHARE`&emsp;私募基金分潤
@@ -502,57 +488,22 @@ _期權:_
 * `LIQUIDITY_MINING_REFUND`&emsp;流動性挖礦退款
 * `PWM_SUBSCRIPTION`&emsp;私人財富管理申購
 * `PWM_REFUND`&emsp;私人財富管理退款
-* `DEFI_INVESTMENT_SUBSCRIPTION`&emsp;DEFI申購
-* `DEFI_INVESTMENT_REFUND`&emsp;DEFI退款
-* `DEFI_INVESTMENT_REDEMPTION`&emsp;DEFI贖回
-* `INSTITUTION_LOAN_IN`&emsp;借款放款（INS借款）
-* `INSTITUTION_PAYBACK_PRINCIPAL_OUT`&emsp;還本金（INS借款）
-* `INSTITUTION_PAYBACK_INTEREST_OUT`&emsp;還利息（INS借款）
-* `INSTITUTION_EXCHANGE_SELL`&emsp;強平兌換兌換（INS借款）
-* `INSTITUTION_EXCHANGE_BUY`&emsp;強平兌換兌入（INS借款）
-* `INSTITUTION_LIQ_PRINCIPAL_OUT`&emsp;被動還款本金（INS借款）
-* `INSTITUTION_LIQ_INTEREST_OUT`&emsp;被動還利息（INS借款）
+* `BYUSDT_MINT`&emsp;BYUSDT 活期儲蓄代幣
+* `BYUSDT_REDEMPTION`&emsp;BYUSDT 活期儲蓄贖回
+* `BYUSDT_INTEREST`&emsp;BYUSDT 活期儲蓄利息
+#### 機構借貸相關
+* `INSTITUTION_LOAN_IN`&emsp;借款放款
+* `INSTITUTION_PAYBACK_PRINCIPAL_OUT`&emsp;還本金
+* `INSTITUTION_PAYBACK_INTEREST_OUT`&emsp;還利息
+* `INSTITUTION_EXCHANGE_SELL`&emsp;強平兌換兌換
+* `INSTITUTION_EXCHANGE_BUY`&emsp;強平兌換兌入
+* `INSTITUTION_LIQ_PRINCIPAL_OUT`&emsp;被動還款本金
+* `INSTITUTION_LIQ_INTEREST_OUT`&emsp;被動還利息
 * `INSTITUTION_LOAN_TRANSFER_IN`&emsp;機構借貸強平轉入
 * `INSTITUTION_LOAN_TRANSFER_OUT`&emsp;機構借貸強平轉出
 * `INSTITUTION_LOAN_WITHOUT_WITHDRAW`&emsp;機構借貸本金轉出
 * `INSTITUTION_LOAN_RESERVE_IN`&emsp;機構借貸借款轉入
 * `INSTITUTION_LOAN_RESERVE_OUT`&emsp;機構借貸還款
-* `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`&emsp;MNT回收
-* `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`&emsp;MNT返回
-* `EU_FIAT_HEDGE_TRADING_TRADER_IN`&emsp;歐盟站法貨幣對沖交易流入
-* `EU_FIAT_HEDGE_TRADING_TRADER_OUT`&emsp;歐盟站法貨幣對沖交易資金流出
-* `SPREAD_FEE_OUT`&emsp;EU Broker點差收入
-* `BYUSDT_MINT`&emsp;BYUSDT 活期儲蓄代幣
-* `BYUSDT_REDEMPTION`&emsp;BYUSDT 活期儲蓄贖回
-* `BYUSDT_INTEREST`&emsp;BYUSDT 活期儲蓄利息
-* `EARNING_REDEMPTION_SELL`&emsp;理財作為保證金強平流水(賣)
-* `EARNING_REDEMPTION_BUY`&emsp;理財作為保證金強平流水(買)
-* `BROKER_ABACCOUNT_FEE`
-* `DBS_CASH_OUT`
-* `DBS_CASH_IN`
-* `CUSTODY_CASH_RECOVER_TR`
-* `ALPHA_SMALL_TOKEN_REFUND`
-* `FLOATING_TO_FIXED_BORROW`
-* `FLOATING_TO_FIXED_REPAY`
-* `IDN_CONVERT_IN`
-* `IDN_CONVERT_OUT`
-
-### type(contract-translog)
-* `TRANSFER_IN`&emsp;從其他錢包轉入到(反向)合約錢包
-* `TRANSFER_OUT`&emsp;從(反向)合約錢包轉出到別的錢包
-* `TRADE`
-* `SETTLEMENT`&emsp;USDT永續/反向永續的資金費結算
-* `DELIVERY`&emsp;反向期貨合約的交割
-* `LIQUIDATION`
-* `ADL`&emsp;自動減倉
-* `AIRDROP`
-* `BONUS`&emsp;體驗金發放
-* `BONUS_RECOLLECT`&emsp;體驗金過期
-* `FEE_REFUND`&emsp;手續費返還
-* `CURRENCY_BUY`&emsp;閃兌
-* `CURRENCY_SELL`&emsp;閃兌
-* `AUTO_DEDUCTION`&emsp;資金自動轉出 (鏈回滾)
-* `Others`
 
 ### unifiedMarginStatus
 * `1`&emsp;經典帳戶
@@ -560,13 +511,6 @@ _期權:_
 * `4`&emsp;[統一帳戶1.0](acct-mode#統一帳戶10) (pro版本)
 * `5`&emsp;[統一帳戶2.0](acct-mode#統一帳戶20)
 * `6`&emsp;[統一帳戶2.0](acct-mode#統一帳戶20) (pro版本)
-
-### ltStatus
-* `1`&emsp;槓桿代幣支持申贖
-* `2`&emsp;槓桿代幣支持申購，但無法贖回
-* `3`&emsp;槓桿代幣支持贖回，但是無法申購
-* `4`&emsp;槓桿代幣無法申贖
-* `5`&emsp;調倉中
 
 ### convertAccountType
 * `eb_convert_uta`&emsp;統一帳戶錢包
