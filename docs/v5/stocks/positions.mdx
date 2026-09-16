@@ -1,0 +1,69 @@
+---
+title: Get Stock Positions
+sidebar_label: Get Stock Positions
+sidebar_position: 7
+---
+Query all underlying stock position snapshots under the current MM account, including total holdings, available holdings, pending shares.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/positions" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Stock symbol, e.g. `AAPL-US`. Filter by symbol; returns all positions if omitted |
+|showZero |false |boolean |Whether to return zero-quantity positions. Default: `false` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|data |array&lt;object&gt; |Position list |
+|> symbol |string |Stock symbol |
+|> qty |string |Total position quantity (shares) |
+|> availableQty |string |Available position (sellable / transferable) |
+|> pendingQty |string |Pending position (locked by pending settlements or orders) |
+|> updatedAt |integer |Snapshot update timestamp in milliseconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/positions?showZero=false HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "data": [
+            {
+                "symbol": "AAPL",
+                "qty": "100",
+                "availableQty": "80",
+                "pendingQty": "20",
+                "updatedAt": 1724534400000
+            }
+        ]
+    },
+    "time": 1724534400123
+}
+```

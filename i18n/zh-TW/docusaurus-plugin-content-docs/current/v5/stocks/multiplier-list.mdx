@@ -1,0 +1,71 @@
+---
+title: 查詢 Multiplier 列表
+sidebar_label: 查詢 Multiplier 列表
+sidebar_position: 9
+---
+分頁查詢 mStocks Token 對應的歷史 / 最新 `multiplier` 取值。
+
+:::info
+本接口僅面向做市商（Market Maker）開放。
+:::
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/rwa/stocks/market/getMultiplierList" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |股票代碼，例如 `AAPL-US`。按標的過濾；不傳則返回全部 |
+|current |**true** |integer |當前頁碼 |
+|pageSize |**true** |integer |每頁條數，默認 `10` |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|current |integer |當前頁碼 |
+|pageSize |integer |每頁條數 |
+|total |integer |總條數 |
+|list |array&lt;object&gt; |Multiplier 記錄列表 |
+|> mstockSymbol |string |mStocks Token 代碼，例如 `AAPLM` |
+|> multiplier |string |當前生效的轉換比例 |
+|> effectiveTime |integer |最近生效時間（epoch ms），`0` 表示初始值 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/market/getMultiplierList?current=1&pageSize=10 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "current": 1,
+        "pageSize": 10,
+        "total": 26,
+        "list": [
+            { "mstockSymbol": "TSLAM", "multiplier": "1.1", "effectiveTime": 0 },
+            { "mstockSymbol": "AAPLM", "multiplier": "1",   "effectiveTime": 0 },
+            { "mstockSymbol": "SPCXM", "multiplier": "1",   "effectiveTime": 0 }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1788947231747
+}
+```

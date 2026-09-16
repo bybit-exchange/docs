@@ -1,0 +1,80 @@
+---
+title: Get Convert Detail
+sidebar_label: Get Convert Detail
+sidebar_position: 6
+---
+Query the full status and settlement result of a single Convert order by order number or idempotency key. Used for MM reconciliation, status polling and failure diagnosis.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/convert/detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderNo |false |string |Convert order number. Either `orderNo` or `requestId` is **required** |
+|requestId |false |string |Idempotency key used at submission. Either `orderNo` or `requestId` is **required** |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|orderNo |string |Convert order number |
+|requestId |string |Client idempotency key |
+|[status](../enum#stocks-convertstatus) |string |Current order status |
+|[convertType](../enum#stocks-converttype) |string |Direction |
+|symbol |string |Underlying stock symbol |
+|tokenSymbol |string |Corresponding mStocks Token |
+|inputAmount |string |Input amount |
+|outputAmount |string |Actual output amount. Estimated value when not settled |
+|appliedMultiplier |string |Actually applied conversion ratio |
+|[accountType](../enum#stocks-accounttype) |string |Account type. Only effective for `REDEEM` |
+|failReason |string |Failure reason. Non-empty when `status=FAILED` |
+|submittedAt |integer |Server accepted timestamp in milliseconds |
+|updatedAt |integer |Last update timestamp in milliseconds |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/convert/detail?orderNo=CVT1755590600987654321 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "orderNo": "CVT1755590600987654321",
+        "requestId": "mm-cvt-20260819-0007",
+        "status": "SUCCESS",
+        "convertType": "MINT",
+        "symbol": "AAPL-US",
+        "tokenSymbol": "AAPLM",
+        "inputAmount": "5",
+        "outputAmount": "50",
+        "appliedMultiplier": "10",
+        "accountType": null,
+        "failReason": null,
+        "submittedAt": 1755590600180,
+        "updatedAt": 1755590620400
+    },
+    "time": 1724534400123
+}
+```
