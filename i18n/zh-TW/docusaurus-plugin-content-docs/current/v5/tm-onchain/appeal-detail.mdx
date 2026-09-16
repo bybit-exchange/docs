@@ -1,0 +1,79 @@
+---
+title: 獲取工單詳情
+sidebar_label: 獲取工單詳情
+sidebar_position: 4
+---
+
+獲取指定工單需要提交的材料清單。**每秒最多 10 次請求**
+
+
+### HTTP請求
+<APIEndpoint method="GET" url="/v5/compliance/appeal/detail" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|appealId |**true** |string |工單 ID，取自 [列表接口](./appeal-list) 或 [WebSocket 推送](./ws-appeal) |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|appealId |string |工單唯一 ID |
+|[appealType](../enum#tm-onchain-appealtype) |string |工單類型：`TM_Onchain` / `TM_Onchain_KYB` |
+|[status](../enum#tm-onchain-resultstatus) |string |工單狀態枚舉 |
+|createdAt |string |工單創建時間（Unix 秒） |
+|documents |array&lt;object&gt; |待提交材料列表，順序即建議的填寫順序 |
+|> documentCode |string |材料唯一編碼，提交時原樣回傳 |
+|> [styleBox](../enum#tm-onchain-stylebox) |string |表單類型枚舉，決定提交時使用哪個字段 |
+|> title |string |材料標題（英文） |
+|relatedOrder |array&lt;object&gt; |關聯訂單信息；`TM_Onchain` / `TM_Onchain_KYB` 未開啟該展示，固定為空 |
+|> orderId |string |訂單號 |
+|> amount |string |訂單金額，含幣種 |
+|> bizType |string |業務類型 |
+|> paymentMethod |string |支付方式 |
+|> date |string |訂單創建時間（UTC） |
+|> merchantName |string |商戶名稱 |
+|> goodsName |string |商品名稱 |
+
+---
+
+### 請求示例
+
+```http
+GET /v5/compliance/appeal/detail?appealId=01K599X8PGM0HYJCWFR6CSN3ZD HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+        "appealType": "TM_Onchain",
+        "status": "PENDING",
+        "createdAt": "1787053595",
+        "documents": [
+            {
+                "documentCode": "OnchainAttachScreenshot",
+                "styleBox": "UPLOAD",
+                "title": "Please upload screenshots of your withdrawal transaction"
+            },
+            {
+                "documentCode": "OnchainTransactionPurpose",
+                "styleBox": "SELECT",
+                "title": "Purpose of the transaction"
+            }
+        ],
+        "relatedOrder": []
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

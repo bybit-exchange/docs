@@ -1,0 +1,73 @@
+---
+title: WebSocket Appeal Status Push
+sidebar_label: WebSocket Appeal Status Push
+sidebar_position: 2
+---
+
+When an appeal status changes, the server actively pushes the update to the master account.
+
+:::info
+- This is a **private channel** push. Authentication is required before subscribing.
+- For the general authentication and subscription flow, refer to [WebSocket Subscribe](/v5/ws/connect#authentication).
+:::
+
+### Connection
+
+| Item | Value |
+|------|-------|
+| URL | `wss://stream.bybit.com/v5/private` |
+| Subscribe | `{"op": "subscribe", "args": ["fiat.compliance.appeal"]}` |
+| Topic | `fiat.compliance.appeal` |
+
+### Push Trigger
+
+| Scenario | Push Status | Description |
+|----------|-------------|-------------|
+| Appeal created | `PENDING` | Materials need to be submitted |
+| Materials rejected | `REJECTED` | Resubmit with corrections |
+| Approved | `PASS` | Terminal |
+| Refused | `REFUSE` | Terminal |
+| Appeal disused | `DISUSED` | Terminal |
+
+:::info
+`COMMITTED` (under review) status is **not pushed**. No action needed while waiting for the review result.
+:::
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|topic |string |Topic name, always `fiat.compliance.appeal` |
+|data |Object |Push payload |
+|> appealId |string |Unique appeal ID |
+|> [appealType](../enum#tm-onchain-appealtype) |string |Appeal type: `TM_Onchain` / `TM_Onchain_KYB` |
+|> uid |long |Master account UID |
+|> triggerUid |long |UID of the sub-account that triggered this appeal |
+|> createdAt |long |Appeal creation time (Unix seconds) |
+|> [direction](../enum#tm-onchain-direction) |string |Transaction direction enum |
+|> [resultStatus](../enum#tm-onchain-resultstatus) |string |Appeal status enum |
+|> accountRestriction |object |Account restriction info |
+|>> [ban](../enum#tm-onchain-bandescription) |array |List of ban descriptions in English; empty array when no ban |
+|>> [unban](../enum#tm-onchain-bandescription) |array |List of unban descriptions in English; empty array when no unban |
+|> [fundStatus](../enum#tm-onchain-fundstatus) |string |Fund action status enum; empty string when no fund action |
+
+### Push Example
+
+```json
+{
+    "topic": "fiat.compliance.appeal",
+    "data": {
+        "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+        "appealType": "TM_Onchain",
+        "uid": 10001234,
+        "triggerUid": 574968702,
+        "createdAt": 1783937150,
+        "direction": "withdraw",
+        "resultStatus": "PENDING",
+        "accountRestriction": {
+            "ban": ["Withdraw Ban", "Trading Ban (Allow to Close Position)"],
+            "unban": []
+        },
+        "fundStatus": "Deposit Intercepted"
+    }
+}
+```

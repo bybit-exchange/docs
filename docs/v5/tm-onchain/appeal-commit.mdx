@@ -1,0 +1,81 @@
+---
+title: Commit Appeal
+sidebar_label: Commit Appeal
+sidebar_position: 5
+---
+
+Submit the required materials for an appeal. The same appeal can be committed while in `PENDING` / `REJECTED` status; after a successful commit it moves to `COMMITTED` (under review) and **cannot be re-committed**. File materials must first go through the [file upload flow](../file/file-upload-sign) to obtain a `resourceId`. **Up to 10 requests per second**
+
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/compliance/appeal/commit" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|appealId |**true** |string |Appeal ID |
+|decisionType |false |integer |`0` = normal submit (default); `1` = refuse submit, appeal will be disused |
+|itemsData |**true** |array&lt;object&gt; |Submission content per material, one element per material |
+|> documentCode |**true** |string |Material code, must match the `documentCode` returned by the detail endpoint |
+|> resources |Conditional |array&lt;object&gt; |File resource list, used when `styleBox` is `UPLOAD` / `MIXUPLOAD` |
+|>> resourceId |**true** |string |Resource ID returned after a successful file upload |
+|>> [fileType](../enum#tm-onchain-filetype) |**true** |string |File type: `fiat-image` / `fiat-pdf` / `fiat-video` |
+|> content |Conditional |string |Text or single-selection value, used when `styleBox` is `INPUT` / `SINGLEINPUT` / `SELECT` / `RADIO` / `DATEPICKER` / `COUNTRYNAME` |
+|> mulContent |Conditional |array&lt;string&gt; |Multi-selection values, used when `styleBox` is `CHECKBOX` |
+|> detailContent |Conditional |string |Additional explanation for the selected option; required when the chosen option asks for supplementary details |
+
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object |Always an empty object `{}` |
+
+---
+
+### Request Example
+
+```http
+POST /v5/compliance/appeal/commit HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+    "decisionType": 0,
+    "itemsData": [
+        {
+            "documentCode": "OnchainAttachScreenshot",
+            "resources": [
+                {
+                    "resourceId": "1234567890",
+                    "fileType": "fiat-image"
+                }
+            ]
+        },
+        {
+            "documentCode": "OnchainWithdrawPurpose",
+            "content": "investment"
+        },
+        {
+            "documentCode": "OnchainTransactionDescription",
+            "content": "Regular withdrawal to my personal cold wallet for long-term holding."
+        }
+    ]
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

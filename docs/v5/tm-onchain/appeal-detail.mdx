@@ -1,0 +1,79 @@
+---
+title: Get Appeal Detail
+sidebar_label: Get Appeal Detail
+sidebar_position: 4
+---
+
+Get the list of materials that need to be submitted for a specific appeal. **Up to 10 requests per second**
+
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/compliance/appeal/detail" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|appealId |**true** |string |Appeal ID, obtained from the [list endpoint](./appeal-list) or the [WebSocket push](./ws-appeal) |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|appealId |string |Unique appeal ID |
+|[appealType](../enum#tm-onchain-appealtype) |string |Appeal type: `TM_Onchain` / `TM_Onchain_KYB` |
+|[status](../enum#tm-onchain-resultstatus) |string |Appeal status enum |
+|createdAt |string |Appeal creation time (Unix seconds) |
+|documents |array&lt;object&gt; |List of materials to submit, in the suggested filling order |
+|> documentCode |string |Unique material code, echoed as-is on submit |
+|> [styleBox](../enum#tm-onchain-stylebox) |string |Form type enum, determines which field to use on submit |
+|> title |string |Material title (English) |
+|relatedOrder |array&lt;object&gt; |Related order info; not enabled for `TM_Onchain` / `TM_Onchain_KYB`, always empty |
+|> orderId |string |Order ID |
+|> amount |string |Order amount with currency |
+|> bizType |string |Business type |
+|> paymentMethod |string |Payment method |
+|> date |string |Order creation time (UTC) |
+|> merchantName |string |Merchant name |
+|> goodsName |string |Goods name |
+
+---
+
+### Request Example
+
+```http
+GET /v5/compliance/appeal/detail?appealId=01K599X8PGM0HYJCWFR6CSN3ZD HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+        "appealType": "TM_Onchain",
+        "status": "PENDING",
+        "createdAt": "1787053595",
+        "documents": [
+            {
+                "documentCode": "OnchainAttachScreenshot",
+                "styleBox": "UPLOAD",
+                "title": "Please upload screenshots of your withdrawal transaction"
+            },
+            {
+                "documentCode": "OnchainTransactionPurpose",
+                "styleBox": "SELECT",
+                "title": "Purpose of the transaction"
+            }
+        ],
+        "relatedOrder": []
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```

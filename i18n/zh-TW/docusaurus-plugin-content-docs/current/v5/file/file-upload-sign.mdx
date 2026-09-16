@@ -1,0 +1,113 @@
+---
+title: 獲取文件上傳簽名
+sidebar_label: 獲取文件上傳簽名
+sidebar_position: 6
+---
+
+獲取 S3 預簽名上傳地址與 `resourceId`。這是文件上傳三步流程的第 **1** 步。**每秒最多 10 次請求**
+
+:::info 文件上傳三步流程
+1. **獲取上傳簽名**（本接口）→ 拿到 `resourceId` 與 S3 預簽名地址 `urlSign`
+2. **PUT 上傳到 S3** → 使用返回的 `urlSign` 直接把文件 PUT 到 S3
+3. [**上報上傳完成**](./report-file-upload) → 通知服務端上傳完成
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/file/get-file-upload-sign" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|[fileType](../enum#tm-onchain-filetype) |**true** |string |文件業務類型：`fiat-pdf`、`fiat-image`、`fiat-video` |
+|fileMd5 |**true** |string |文件內容的 MD5 值（base64 編碼）。計算方式：`base64(md5(file_content))`，MD5 為 **raw binary（16 字節），不是 hex**。<br/>可自校的例子：<ul><li>空字符串 `""` → `1B2M2Y8AsgTpgAmY7PhCfg==`</li><li>`"abc"`（3 字節）→ `kAFQmDzST7DWlj99KOF/cg==`</li></ul> |
+|fileLen |**true** |integer |當前文件字節數。上限：`fiat-pdf` / `fiat-image` / `fiat-video` 均為 `104857600`（100 MB） |
+|fileName |**true** |string |文件完整名稱，如 `evidence.pdf`、`screenshot.png`、`video.mp4` |
+|fileMimeType |**true** |string |文件 `Content-Type`。<ul><li>`fiat-pdf`: `application/pdf`</li><li>`fiat-image`: `image/jpeg`、`image/png`、`image/jpg`</li><li>`fiat-video`: `video/mp4`、`video/quicktime`、`video/3gpp`、`video/x-msvideo`、`video/avi`、`video/rm`、`video/rmvb`、`video/wmv`</li></ul> |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|resourceId |string |資源 ID，用於後續 `report-file-upload` 與 [提交工單](../tm-onchain/appeal-commit) 的 `resources[].resourceId` |
+|urlSign |string |S3 預簽名上傳 URL，用第 2 步 PUT 上傳；有效期 **30 分鐘**（URL 內含 `X-Amz-Expires=1800`），過期後需重新調用本接口 |
+
+---
+
+### 請求示例
+
+```http
+POST /v5/file/get-file-upload-sign HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787053595000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+    "fileType": "fiat-image",
+    "fileMd5": "2kKrf8GF2KJkDRtNGMDSXA==",
+    "fileLen": 67,
+    "fileName": "test.png",
+    "fileMimeType": "image/png"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "resourceId": "f1e8a33e-67cb-4683-803f-bb61238e435c",
+        "urlSign": "https://testnet-pay-security-xxx.s3.ap-southeast-1.amazonaws.com/user/appeal/2026-09-07f1e8a33e-67cb-4683-803f-bb61238e435c.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...&X-Amz-Date=20260907T082401Z&X-Amz-Expires=1800&X-Amz-SignedHeaders=content-length%3Bcontent-md5%3Bcontent-type%3Bhost%3Bx-amz-acl&x-id=PutObject&X-Amz-Signature=..."
+    },
+    "retExtInfo": {},
+    "time": 1787053595200
+}
+```
+
+### 第 2 步：PUT 上傳到 S3
+
+拿到 `urlSign` 後，使用 HTTP `PUT` 方法將文件內容上傳到該地址。**注意：這一步不經過 Bybit 網關，直接 PUT 到 S3，不需要 `X-BAPI-*` 頭。**
+
+必需的請求頭：
+
+| Header | 值 |
+|--------|-----|
+| `Content-Type` | **必須與 Step 1 的 `fileMimeType` 完全一致**（大小寫、參數都不可變） |
+| `Content-MD5` | **必須與 Step 1 的 `fileMd5` 完全一致**（`base64(md5(file_content))`） |
+| `x-amz-acl` | **必須為 `private`**|
+
+
+```javascript
+const uploadRes = await fetch(urlSign, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': fileMimeType,
+        'Content-MD5': fileMd5,
+        'x-amz-acl': 'private',
+    },
+    body: file,
+});
+
+if (!uploadRes.ok) {
+    throw new Error('S3 upload failed: ' + uploadRes.status);
+}
+```
+
+輔助函數：瀏覽器端用 `crypto-js` 計算 `base64(md5(file_content))`：
+
+```javascript
+import CryptoJS from 'crypto-js';
+
+async function computeFileMd5(file) {
+    const buffer = await file.arrayBuffer();
+    const wordArray = CryptoJS.lib.WordArray.create(buffer);
+    return CryptoJS.MD5(wordArray).toString(CryptoJS.enc.Base64);
+}
+```
+
+### 第 3 步
+
+見 [上報文件上傳完成](./report-file-upload)。

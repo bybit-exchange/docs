@@ -404,6 +404,7 @@ _Options:_
 * `stock`&emsp;linear
 * `forex`&emsp;linear&emsp;Foreign exchange
 * `ETF`&emsp;linear&emsp;ETF
+* `mstocks`&emsp;spot
 
 ### curAuctionPhase
 * `NotStarted`&emsp;Pre-market trading is not started
@@ -450,6 +451,8 @@ _Options:_
 * `AIRDROP`
 * `BONUS`&emsp;Bonus claimed
 * `BONUS_RECOLLECT`&emsp;Bonus expired
+* `BONUS_TRANSFER_IN`
+* `BONUS_TRANSFER_OUT`
 * `FEE_REFUND`&emsp;Trading fee refunded
 * `INTEREST`&emsp;Interest occurred due to borrowing
 * `CURRENCY_BUY`&emsp;Currency convert, and the liquidation for borrowing asset(UTA loan)
@@ -462,28 +465,10 @@ _Options:_
 * `BORROW`&emsp;Manual loan borrow and auto loan borrow
 * `REPAY`&emsp;Manual loan repay and auto loan repay
 * `CONVERT`&emsp;Currency convert repayment
-* `BORROWED_AMOUNT_INS_LOAN`
-* `PRINCIPLE_REPAYMENT_INS_LOAN`
-* `INTEREST_REPAYMENT_INS_LOAN`
-* `AUTO_SOLD_COLLATERAL_INS_LOAN`&emsp;the liquidation for borrowing asset(INS loan)
-* `AUTO_BUY_LIABILITY_INS_LOAN`&emsp;the liquidation for borrowing asset(INS loan)
-* `AUTO_PRINCIPLE_REPAYMENT_INS_LOAN`
-* `AUTO_INTEREST_REPAYMENT_INS_LOAN`
-* `TRANSFER_IN_INS_LOAN`&emsp;Transfer In when in the liquidation of OTC loan
-* `TRANSFER_OUT_INS_LOAN`&emsp;Transfer Out when in the liquidation of OTC loan
-* `AUTO_DEDUCTION`&emsp;Asset auto deducted by system (roll back)
-* `FLEXIBLE_STAKING_SUBSCRIPTION`&emsp;Byfi flexible stake subscription
-* `FLEXIBLE_STAKING_REDEMPTION`&emsp;Byfi flexible stake redemption
-* `FIXED_STAKING_SUBSCRIPTION`&emsp;Byfi fixed stake subscription
-* `FLEXIBLE_STAKING_REFUND`&emsp;Byfi flexiable stake refund
-* `FIXED_STAKING_REFUND`&emsp;Byfi fixed stake refund
-* `PREMARKET_TRANSFER_OUT`
-* `PREMARKET_DELIVERY_SELL_NEW_COIN`
-* `PREMARKET_DELIVERY_BUY_NEW_COIN`
-* `PREMARKET_DELIVERY_PLEDGE_PAY_SELLER`
-* `PREMARKET_DELIVERY_PLEDGE_BACK`
-* `PREMARKET_ROLLBACK_PLEDGE_BACK`
-* `PREMARKET_ROLLBACK_PLEDGE_PENALTY_TO_BUYER`
+* `EARNING_REDEMPTION_SELL`&emsp;force sell when liquidation
+* `EARNING_REDEMPTION_BUY`&emsp;force buy when liquidation
+* `FLOATING_TO_FIXED_BORROW`
+* `FLOATING_TO_FIXED_REPAY`
 * `CUSTODY_NETWORK_FEE`&emsp;fireblocks business
 * `CUSTODY_SETTLE_FEE`&emsp;fireblocks business
 * `CUSTODY_LOCK`&emsp;fireblocks / copper business
@@ -491,8 +476,13 @@ _Options:_
 * `CUSTODY_UNLOCK_REFUND`&emsp;fireblocks business
 * `LOANS_BORROW_FUNDS`&emsp;crypto loan
 * `LOANS_PLEDGE_ASSET`&emsp;crypto loan repayment
-* `BONUS_TRANSFER_IN`
-* `BONUS_TRANSFER_OUT`
+* `FIXED_SAVING_PRINCIPAL_REDEMPTION`&emsp;Bycustody fixed saving redemption
+#### Earn Related
+* `FLEXIBLE_STAKING_SUBSCRIPTION`&emsp;Byfi flexible stake subscription
+* `FLEXIBLE_STAKING_REDEMPTION`&emsp;Byfi flexible stake redemption
+* `FIXED_STAKING_SUBSCRIPTION`&emsp;Byfi fixed stake subscription
+* `FLEXIBLE_STAKING_REFUND`&emsp;Byfi flexiable stake refund
+* `FIXED_STAKING_REFUND`&emsp;Byfi fixed stake refund
 * `PEF_TRANSFER_IN`
 * `PEF_TRANSFER_OUT`
 * `PEF_PROFIT_SHARE`
@@ -508,54 +498,22 @@ _Options:_
 * `LIQUIDITY_MINING_REFUND`&emsp;tranfer in for liquidity mining
 * `PWM_SUBSCRIPTION`&emsp;tranfer out for PWM
 * `PWM_REFUND`&emsp;tranfer in for PWM
-* `DEFI_INVESTMENT_SUBSCRIPTION`&emsp;tranfer out for DEFI subscription
-* `DEFI_INVESTMENT_REFUND`&emsp;transfer in for DEFI refund
-* `DEFI_INVESTMENT_REDEMPTION`&emsp;tranfer in for DEFI redemption
-* `INSTITUTION_LOAN_IN`&emsp;Borrowed Amount (INS Loan)
-* `INSTITUTION_PAYBACK_PRINCIPAL_OUT`&emsp;Principal repayment (INS Loan)
-* `INSTITUTION_PAYBACK_INTEREST_OUT`&emsp;Interest repayment (INS Loan) 
-* `INSTITUTION_EXCHANGE_SELL`&emsp;Auto sold collateral (INS Loan)
-* `INSTITUTION_EXCHANGE_BUY`&emsp;Auto buy liability (INS Loan)
-* `INSTITUTION_LIQ_PRINCIPAL_OUT`&emsp;Forced principal repayment, i.e. liquidation (INS Loan)
-* `INSTITUTION_LIQ_INTEREST_OUT`&emsp;Forced interest repayment, i.e. liquidation (INS Loan)
-* `INSTITUTION_LOAN_TRANSFER_IN`&emsp;Transfer in (INS Loan)
-* `INSTITUTION_LOAN_TRANSFER_OUT`&emsp;Transfer out (INS Loan)
-* `INSTITUTION_LOAN_WITHOUT_WITHDRAW`&emsp;Transfer out (INS Loan)
-* `INSTITUTION_LOAN_RESERVE_IN`&emsp;Reserve fund in (INS Loan)
-* `INSTITUTION_LOAN_RESERVE_OUT`&emsp;Reserve fund out (INS Loan)
-* `SPREAD_FEE_OUT`&emsp;Spread fee for EU Broker
-* `PLATFORM_TOKEN_MNT_LIQRECALLEDMMNT`&emsp;Recall MNT
-* `PLATFORM_TOKEN_MNT_LIQRETURNEDMNT`&emsp;Return MNT
-* `BROKER_ABACCOUNT_FEE`&emsp;Borker AB fee deduction
-* `EARNING_REDEMPTION_SELL`
-* `EARNING_REDEMPTION_BUY`
-* `DBS_CASH_OUT`
-* `DBS_CASH_IN`
-* `CUSTODY_CASH_RECOVER_TR`
-* `ALPHA_SMALL_TOKEN_REFUND`
-* `TWAP_BUDGET_AIRDROP`
-* `TWAP_BUDGET_RECALL`
-* `FLOATING_TO_FIXED_BORROW`
-* `FLOATING_TO_FIXED_REPAY`
-* `IDN_CONVERT_IN`
-* `IDN_CONVERT_OUT`
-
-### type(contract-translog)
-* `TRANSFER_IN`&emsp;Assets that transferred into (inverse) derivatives wallet
-* `TRANSFER_OUT`&emsp;Assets that transferred out from (inverse) derivatives wallet
-* `TRADE`
-* `SETTLEMENT`&emsp;USDT / Inverse Perp funding settlement
-* `DELIVERY`&emsp;Inverse Futures delivery
-* `LIQUIDATION`
-* `ADL`&emsp;Auto-Deleveraging
-* `AIRDROP`
-* `BONUS`&emsp;Bonus claimed
-* `BONUS_RECOLLECT`&emsp;Bonus expired
-* `FEE_REFUND`&emsp;Trading fee refunded
-* `CURRENCY_BUY`&emsp;Currency convert
-* `CURRENCY_SELL`&emsp;Currency convert
-* `AUTO_DEDUCTION`&emsp;Asset auto deducted by system (roll back)
-* `Others`
+* `BYUSDT_MINT`&emsp;BYUSDT mint
+* `BYUSDT_REDEMPTION`&emsp;BYUSDT redemption
+* `BYUSDT_INTEREST`&emsp;BYUSDT interest
+#### Institution Loan Related
+* `INSTITUTION_LOAN_IN`&emsp;Borrowed Amount
+* `INSTITUTION_PAYBACK_PRINCIPAL_OUT`&emsp;Principal repayment
+* `INSTITUTION_PAYBACK_INTEREST_OUT`&emsp;Interest repayment 
+* `INSTITUTION_EXCHANGE_SELL`&emsp;Auto sold collateral
+* `INSTITUTION_EXCHANGE_BUY`&emsp;Auto buy liability
+* `INSTITUTION_LIQ_PRINCIPAL_OUT`&emsp;Forced principal repayment, i.e. liquidation
+* `INSTITUTION_LIQ_INTEREST_OUT`&emsp;Forced interest repayment, i.e. liquidation
+* `INSTITUTION_LOAN_TRANSFER_IN`&emsp;Transfer in
+* `INSTITUTION_LOAN_TRANSFER_OUT`&emsp;Transfer out
+* `INSTITUTION_LOAN_WITHOUT_WITHDRAW`&emsp;Transfer out
+* `INSTITUTION_LOAN_RESERVE_IN`&emsp;Reserve fund in
+* `INSTITUTION_LOAN_RESERVE_OUT`&emsp;Reserve fund out
 
 ### unifiedMarginStatus
 * `1`&emsp;Classic account
@@ -914,3 +872,66 @@ with the example of BTCUSDT:
 ### stocks-tradingHolidayType
 * `HOLIDAY`&emsp;Statutory holiday. Market closed all day
 * `EARLY_CLOSE`&emsp;Early close. `endTime` is the actual close time of that day
+### tm-onchain-appealType
+* `TM_Onchain`&emsp;On-chain transaction monitoring appeal
+* `TM_Onchain_KYB`&emsp;On-chain transaction monitoring KYB appeal
+
+### tm-onchain-resultStatus
+* `PENDING`&emsp;Materials pending submission (non-terminal)
+* `COMMITTED`&emsp;Submitted, under review (non-terminal)
+* `REJECTED`&emsp;Materials rejected, need to resubmit (non-terminal)
+* `PASS`&emsp;Approved (terminal)
+* `REFUSE`&emsp;Rejected (terminal)
+* `DISUSED`&emsp;Appeal disused (terminal)
+
+### tm-onchain-triggerType
+* `Auto-approve`
+* `Auto-create-Initial`
+* `Manual`
+
+### tm-onchain-direction
+* `deposit`
+* `withdraw`
+
+### tm-onchain-fundStatus
+* Empty string&emsp;No fund action
+* `Deposit Intercepted`
+* `Refund`
+* `Guilty`
+* `Recharge`
+
+### tm-onchain-styleBox
+* `UPLOAD`&emsp;Upload image (jpg/png) or PDF. Submit via `itemsData[].resources[]`
+* `MIXUPLOAD`&emsp;Upload media (image / audio / video / PDF). Submit via `itemsData[].resources[]`
+* `INPUT`&emsp;Multi-line text. Submit via `itemsData[].content`
+* `SINGLEINPUT`&emsp;Single-line text. Submit via `itemsData[].content`
+* `SELECT`&emsp;Single-select dropdown. Submit via `itemsData[].content` (option value)
+* `RADIO`&emsp;Radio button group. Submit via `itemsData[].content` (option value)
+* `CHECKBOX`&emsp;Multi-select. Submit via `itemsData[].mulContent[]` (list of option values)
+* `COUNTRYNAME`&emsp;Country dropdown. Submit via `itemsData[].content` (English full name, e.g. `Australia`)
+* `DATEPICKER`&emsp;Date picker. Submit via `itemsData[].content` (date string)
+* `COMMENT`&emsp;Display-only, no submission
+
+### tm-onchain-banDescription
+Values that may appear in `accountRestriction.ban` / `unban`, mapped from the backend `ban_tag_value`:
+
+| ban_tag_value | description |
+|--------|------|
+| `login` | `Account Ban` |
+| `all_withdraw` | `Withdraw Ban` |
+| `non-principal` | `Withdraw Ban (Allow to Withdraw Deposited)` |
+| `all_trade` | `Trading Ban (All)` |
+| `lighten_up` | `Trading Ban (Allow to Close Position)` |
+| `transfer_service_user` | `Transfer Ban (User)` |
+| `bybitcard_service` | `Bybit Card Ban (All)` |
+| `fiat_service` | `Fiat Ban (All)` |
+| `card_service_buy` | `Fiat Bank Card Ban (Buy)` |
+| `fiat_exchange` | `Fiat Deposit and Withdrawal Ban` |
+| `fiat_exchange_recharge` | `Fiat Deposit Ban` |
+| `fiat_exchange_extract` | `Fiat Withdrawal Ban` |
+| `p2p_service` | `P2P Ban (All)` |
+
+### tm-onchain-fileType
+* `fiat-image`&emsp;Image (jpg / png)
+* `fiat-pdf`&emsp;PDF
+* `fiat-video`&emsp;Video (mp4, etc.)

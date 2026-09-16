@@ -1,0 +1,73 @@
+---
+title: WebSocket 工單狀態推送
+sidebar_label: WebSocket 工單狀態推送
+sidebar_position: 2
+---
+
+當工單狀態發生變更時，服務端主動推送給母帳戶。
+
+:::info
+- 本推送為**私有頻道**推送，需要先認證後訂閱。
+- 認證與訂閱的通用流程請參考 [訂閱 WebSocket](/v5/ws/connect#鑒權)。
+:::
+
+### 接入方式
+
+| 項 | 值 |
+|----|-----|
+| 連接地址 | `wss://stream.bybit.com/v5/private` |
+| 訂閱 | `{"op": "subscribe", "args": ["fiat.compliance.appeal"]}` |
+| Topic | `fiat.compliance.appeal` |
+
+### 推送時機
+
+| 場景 | 推送狀態 | 說明 |
+|------|----------|------|
+| 工單創建 | `PENDING` | 需要提交材料 |
+| 材料被駁回 | `REJECTED` | 需補充材料重新提交 |
+| 審核通過 | `PASS` | 終態 |
+| 審核拒絕 | `REFUSE` | 終態 |
+| 工單廢棄 | `DISUSED` | 終態 |
+
+:::info
+`COMMITTED`（審核中）狀態**不推送**。此時無需操作，等待審核結果推送即可。
+:::
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|topic |string |Topic 名，固定為 `fiat.compliance.appeal` |
+|data |Object |推送業務內容 |
+|> appealId |string |工單唯一 ID |
+|> [appealType](../enum#tm-onchain-appealtype) |string |工單類型：`TM_Onchain` / `TM_Onchain_KYB` |
+|> uid |long |母帳戶 UID |
+|> triggerUid |long |觸發工單的子帳戶 UID |
+|> createdAt |long |工單創建時間（Unix 秒） |
+|> [direction](../enum#tm-onchain-direction) |string |交易方向枚舉 |
+|> [resultStatus](../enum#tm-onchain-resultstatus) |string |工單狀態枚舉 |
+|> accountRestriction |object |帳戶封禁信息 |
+|>> [ban](../enum#tm-onchain-bandescription) |array |封禁項英文描述列表；無封禁時為空數組 |
+|>> [unban](../enum#tm-onchain-bandescription) |array |解封項英文描述列表；無解封時為空數組 |
+|> [fundStatus](../enum#tm-onchain-fundstatus) |string |資金處置狀態枚舉；無資金處置時為空字符串 |
+
+### 推送示例
+
+```json
+{
+    "topic": "fiat.compliance.appeal",
+    "data": {
+        "appealId": "01K599X8PGM0HYJCWFR6CSN3ZD",
+        "appealType": "TM_Onchain",
+        "uid": 10001234,
+        "triggerUid": 574968702,
+        "createdAt": 1783937150,
+        "direction": "withdraw",
+        "resultStatus": "PENDING",
+        "accountRestriction": {
+            "ban": ["Withdraw Ban", "Trading Ban (Allow to Close Position)"],
+            "unban": []
+        },
+        "fundStatus": "Deposit Intercepted"
+    }
+}
+```
