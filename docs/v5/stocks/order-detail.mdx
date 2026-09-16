@@ -3,7 +3,7 @@ title: Get Stock Order Detail
 sidebar_label: Get Stock Order Detail
 sidebar_position: 3
 ---
-Query the full status, parameters and fill details of a single stock order by order number or client order ID. Used for MM reconciliation, status polling and failure diagnosis.
+Query the full status, parameters and fill details of a single stock order by order number or client idempotency key. Used for MM reconciliation, status polling and failure diagnosis.
 
 :::info
 This endpoint is only available for Market Maker.
@@ -15,14 +15,14 @@ This endpoint is only available for Market Maker.
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|orderNo |false |string |System order number. Either `orderNo` or `clientOrderId` is **required** |
-|clientOrderId |false |string |Client idempotency ID. Either `orderNo` or `clientOrderId` is **required** |
+|orderNo |false |string |System order number. Either `orderNo` or `requestId` is **required** |
+|requestId |false |string |Client idempotency key. Either `orderNo` or `requestId` is **required** |
 
 ### Response Parameters
 | Parameter | Type | Comments|
 |:----- |:-----|----- |
 |orderNo |string |System order number |
-|clientOrderId |string |Client order ID (if provided at placement) |
+|requestId |string |Client idempotency key (if provided at placement) |
 |symbol |string |Stock symbol |
 |quoteToken |string |Quote asset |
 |[side](../enum#stocks-side) |string |Order side |
@@ -69,7 +69,7 @@ X-BAPI-SIGN: XXXXX
     "retMsg": "ok",
     "result": {
         "orderNo": "SB227696733955111526412",
-        "clientOrderId": "",
+        "requestId": "mm-ord-20260819-0007",
         "symbol": "TSLA-US",
         "quoteToken": "USDC",
         "side": "BUY",

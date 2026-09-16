@@ -3,7 +3,7 @@ title: 查詢股票委託單詳情
 sidebar_label: 查詢股票委託單詳情
 sidebar_position: 3
 ---
-根據訂單號或客戶端訂單號查詢單筆股票買賣訂單的完整狀態、參數與成交明細。用於 MM 側對賬、狀態輪詢與失敗原因定位。
+根據訂單號或客戶端冪等鍵查詢單筆股票買賣訂單的完整狀態、參數與成交明細。用於 MM 側對賬、狀態輪詢與失敗原因定位。
 
 :::info
 本接口僅面向做市商（Market Maker）開放。
@@ -15,14 +15,14 @@ sidebar_position: 3
 ### 請求參數
 | 參數 | 是否必需 | 類型 | 說明|
 |:----- |:-------|:-----|------ |
-|orderNo |false |string |系統訂單號。`orderNo` 與 `clientOrderId` 二選一 |
-|clientOrderId |false |string |客戶端冪等 ID。`orderNo` 與 `clientOrderId` 二選一 |
+|orderNo |false |string |系統訂單號。`orderNo` 與 `requestId` 二選一 |
+|requestId |false |string |客戶端冪等鍵。`orderNo` 與 `requestId` 二選一 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
 |:----- |:-----|----- |
 |orderNo |string |系統訂單號 |
-|clientOrderId |string |客戶端訂單號（若下單時提供） |
+|requestId |string |客戶端冪等鍵（若下單時提供） |
 |symbol |string |股票代碼 |
 |quoteToken |string |計價資產 |
 |[side](../enum#stocks-side) |string |方向 |
@@ -69,7 +69,7 @@ X-BAPI-SIGN: XXXXX
     "retMsg": "ok",
     "result": {
         "orderNo": "SB227696733955111526412",
-        "clientOrderId": "",
+        "requestId": "mm-ord-20260819-0007",
         "symbol": "TSLA-US",
         "quoteToken": "USDC",
         "side": "BUY",

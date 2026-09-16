@@ -28,6 +28,7 @@ This endpoint submits a stock buy or sell order. Buy orders are quoted in USDC, 
 |[tradingSession](../enum#stocks-tradingsession) |false |string |Trading session. `RTH` (default), `24H`. Non-`RTH` sessions accept `LIMIT` orders only |
 |tokenize |false |boolean |Whether to auto tokenize after the order is filled. Default: `false`. Only valid for `BUY`|
 |orderTime |**true** |integer |Client order timestamp in milliseconds|
+|requestId |**true** |string |Idempotency key. Length ≤ 36. Alphanumeric plus `-` `_`. Must be unique within 24 hours for the same MM account |
 
 ### Response Parameters
 | Parameter | Type | Comments|
@@ -35,6 +36,7 @@ This endpoint submits a stock buy or sell order. Buy orders are quoted in USDC, 
 |orderNo |string |System order number |
 |[orderStatus](../enum#stocks-orderstatus) |string |Initial order status |
 |acceptedTime |integer |Server accepted timestamp in milliseconds |
+|requestId |string |Echo of the client idempotency key |
 
 :::info
 The acknowledgement of a place order request indicates that the request was successfully accepted. Please poll the [Get Stock Order Detail](./order-detail) endpoint to confirm the final order status.
@@ -65,7 +67,8 @@ Content-Type: application/json
     "limitPrice": "300.00",
     "timeInForce": "DAY",
     "tradingSession": "RTH",
-    "orderTime": 1787656687706
+    "orderTime": 1787656687706,
+    "requestId": "mm-ord-20260819-0007"
 }
 ```
 
@@ -81,7 +84,8 @@ Content-Type: application/json
     "result": {
         "orderNo": "SB227696733955111526412",
         "orderStatus": "PENDING",
-        "acceptedTime": 1787657753833
+        "acceptedTime": 1787657753833,
+        "requestId": "mm-ord-20260819-0007"
     },
     "retExtInfo": {},
     "time": 1755590400200

@@ -1,0 +1,71 @@
+---
+title: Get Multiplier List
+sidebar_label: Get Multiplier List
+sidebar_position: 9
+---
+Query the historical / latest `multiplier` values applied to mStocks Tokens, paged.
+
+:::info
+This endpoint is only available for Market Maker.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/rwa/stocks/market/getMultiplierList" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|symbol |false |string |Stock symbol, e.g. `AAPL-US`. Filter by symbol; returns all symbols if omitted |
+|current |**true** |integer |Current page number |
+|pageSize |**true** |integer |Page size. Default `10` |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|current |integer |Current page number |
+|pageSize |integer |Page size |
+|total |integer |Total number of records |
+|list |array&lt;object&gt; |List of multiplier records |
+|> mstockSymbol |string |mStocks Token symbol, e.g. `AAPLM` |
+|> multiplier |string |Currently effective conversion ratio |
+|> effectiveTime |integer |Latest effective time (epoch ms). `0` means the initial multiplier |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/rwa/stocks/market/getMultiplierList?current=1&pageSize=10 HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1787657753833
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "current": 1,
+        "pageSize": 10,
+        "total": 26,
+        "list": [
+            { "mstockSymbol": "TSLAM", "multiplier": "1.1", "effectiveTime": 0 },
+            { "mstockSymbol": "AAPLM", "multiplier": "1",   "effectiveTime": 0 },
+            { "mstockSymbol": "SPCXM", "multiplier": "1",   "effectiveTime": 0 }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1788947231747
+}
+```

@@ -28,6 +28,7 @@ sidebar_position: 1
 |[tradingSession](../enum#stocks-tradingsession) |false |string |交易時段：`RTH`（默認）, `24H`。非 `RTH` 時段只允許 `LIMIT` 單 |
 |tokenize |false |boolean |是否在成交後自動 tokenize，默認 `false`；僅對 `BUY` 生效|
 |orderTime |**true** |integer |客戶端下單毫秒時間戳|
+|requestId |**true** |string |冪等鍵，長度 ≤ 36，字母數字與 `-` `_`。同一 MM 賬號下 24 小時內唯一 |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
@@ -35,6 +36,7 @@ sidebar_position: 1
 |orderNo |string |系統訂單號 |
 |[orderStatus](../enum#stocks-orderstatus) |string |訂單初始狀態 |
 |acceptedTime |integer |服務端受理毫秒時間戳 |
+|requestId |string |回顯客戶端冪等鍵 |
 
 :::info
 下單請求返回 ack 僅表示請求被成功接受。請通過[查詢股票委託單詳情](./order-detail)接口輪詢最終訂單狀態。
@@ -65,7 +67,8 @@ Content-Type: application/json
     "limitPrice": "300.00",
     "timeInForce": "DAY",
     "tradingSession": "RTH",
-    "orderTime": 1787656687706
+    "orderTime": 1787656687706,
+    "requestId": "mm-ord-20260819-0007"
 }
 ```
 
@@ -81,7 +84,8 @@ Content-Type: application/json
     "result": {
         "orderNo": "SB227696733955111526412",
         "orderStatus": "PENDING",
-        "acceptedTime": 1787657753833
+        "acceptedTime": 1787657753833,
+        "requestId": "mm-ord-20260819-0007"
     },
     "retExtInfo": {},
     "time": 1755590400200
