@@ -43,6 +43,8 @@ Splits a large order into multiple smaller sub-orders that are placed sequential
 
 Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) to get more details.
 
+**Note:** The number of sub-orders is capped at **200**. This applies to the count implied by `size` ÷ `subSize` (or `positionValue` ÷ `subPositionValue`) as well as to an explicit `orderCount`; a larger count is rejected with `10001 order count is too big`.
+
 **Order preferences:**
 
 | Preference | Execution behavior |
@@ -59,7 +61,9 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
 
 **Execution logic:** At each `interval`, the strategy samples market activity based on the selected mode → calculates sub-order quantity using `participationRate` → places the order → repeats until `maxQty` (`size`) is reached or `maxDuration` (`duration`) expires. Setting `interval` to `0` executes once immediately (OneTime mode).
 
-**Note:** POV supports Perpetuals only (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`). Spot is not supported. When `interval` > `0`, at least one of `size` or `duration` must be provided.
+**Note:** POV supports Spot (`UTA_SPOT`), Perpetuals (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`) and Futures (`UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`).
+
+**Stop conditions:** At least one of the following must be set, otherwise the request is rejected: `duration` > `0`, `size` > `0`, `positionValue` > `0`, or `interval` = `0` (One-Time execution). `size` and `positionValue` are mutually exclusive.
 
 **Execution modes (`povParams.mode`):**
 
@@ -215,7 +219,7 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
             <td>subSize</td><td>false</td><td>string</td><td>Quantity per sub-order. Mutually exclusive with <code>orderCount</code>; <code>subSize</code> takes priority if both are set</td>
         </tr>
         <tr>
-            <td>orderCount</td><td>false</td><td>integer</td><td>Number of sub-orders. Mutually exclusive with <code>subSize</code> or <code>subPositionValue</code></td>
+            <td>orderCount</td><td>false</td><td>integer</td><td>Number of sub-orders, range: [1, 200]. Mutually exclusive with <code>subSize</code> or <code>subPositionValue</code></td>
         </tr>
         <tr>
             <td>subPositionValue</td><td>false</td><td>string</td><td>Order value per sub-order. Mutually exclusive with <code>orderCount</code>; <code>subPositionValue</code> takes priority if both are set</td>
@@ -243,7 +247,7 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
             <th>Parameter</th><th>Required</th><th>Type</th><th>Comments</th>
         </tr>
         <tr>
-            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
+            <td>category</td><td><b>true</b></td><td>string</td><td>Product type. <code>UTA_USDT</code>(USDT Perpetual), <code>UTA_USDC</code>(USDC Perpetual), <code>UTA_SPOT</code>(Spot), <code>UTA_INVERSE</code>(Inverse Perpetual), <code>UTA_INVERSE_FUTURE</code>(Inverse Futures), <code>UTA_USDT_FUTURE</code>(USDT Futures)</td>
         </tr>
          <tr>
             <td>strategyType</td><td><b>true</b></td><td>string</td><td>Strategy type. <code>pov</code></td>
@@ -255,10 +259,13 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
             <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>, <code>Sell</code></td>
         </tr>
         <tr>
-            <td>size</td><td>false</td><td>string</td><td>Total order quantity (coin). <b>Required</b> either "size" or "duration"</td>
+            <td>size</td><td>false</td><td>string</td><td>Total order quantity (coin). Mutually exclusive with <code>positionValue</code>. Acts as a stop condition</td>
         </tr>
         <tr>
-            <td>duration</td><td>false</td><td>integer</td><td>Total execution duration in seconds. Range: [900, 86400]. <b>Required</b> either "size" or "duration"</td>
+            <td>positionValue</td><td>false</td><td>string</td><td>Total order quantity (value, denominated in the quote currency). Mutually exclusive with <code>size</code>. Acts as a stop condition</td>
+        </tr>
+        <tr>
+            <td>duration</td><td>false</td><td>integer</td><td>Total execution duration in seconds. Range: [900, 86400]. Acts as a stop condition</td>
         </tr>
         <tr>
             <td>interval</td><td>false</td><td>integer</td><td>Sub-order placement interval in seconds. "0": one time execution, otherwise, range: [5, 3600]</td>
@@ -268,6 +275,9 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
         </tr>
         <tr>
             <td>positionIdx</td><td>false</td><td>integer</td><td>Position index. <code>0</code>: one-way mode, <code>1</code>: buy side of hedge mode, <code>2</code>: sell side of hedge mode. <b>Required</b> for hedge mode</td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>Spot leverage type. <code>0</code>: normal, <code>1</code>: borrow to trade (<code>UTA_SPOT</code> only)</td>
         </tr>
         <tr>
             <td>povParams</td><td><b>true</b></td><td>object</td><td>Param object</td>
