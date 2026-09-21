@@ -43,6 +43,8 @@ sidebar_position: 1
 
 請參閱 [冰山委託](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) 了解更多細節。
 
+**注意：** 子訂單筆數上限為 **200**。此上限同時適用於由 `size` ÷ `subSize`（或 `positionValue` ÷ `subPositionValue`）推導出的筆數，以及顯式指定的 `orderCount`；超出時將返回 `10001 order count is too big`。
+
 **訂單偏好：**
 
 | 偏好 | 執行行為 |
@@ -59,7 +61,9 @@ sidebar_position: 1
 
 **執行邏輯：** 每隔 `interval` 秒，策略依照所選模式對市場活動進行取樣 → 依據 `participationRate` 計算子訂單數量 → 下單 → 重複直至達到 `maxQty`（`size`）或 `maxDuration`（`duration`）到期為止。將 `interval` 設為 `0` 時，策略僅執行一次即終止（OneTime 模式）。
 
-**注意：** POV 僅支援永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`），不支援現貨。`interval` > `0` 時，`size` 與 `duration` 至少須填寫一項。
+**注意：** POV 支援現貨（`UTA_SPOT`）、永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`）與交割合約（`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`）。
+
+**停止條件：** 以下至少須設置一項，否則請求將被拒絕：`duration` > `0`、`size` > `0`、`positionValue` > `0`，或 `interval` = `0`（單次執行）。`size` 與 `positionValue` 互斥。
 
 **執行模式（`povParams.mode`）：**
 
@@ -215,7 +219,7 @@ sidebar_position: 1
             <td>subSize</td><td>false</td><td>string</td><td>每筆子訂單數量。與 <code>orderCount</code> 互斥；若兩者均設置，<code>subSize</code> 優先</td>
         </tr>
         <tr>
-            <td>orderCount</td><td>false</td><td>integer</td><td>子訂單筆數。與 <code>subSize</code>或者<code>subPositionValue</code> 互斥</td>
+            <td>orderCount</td><td>false</td><td>integer</td><td>子訂單筆數，範圍：[1, 200]。與 <code>subSize</code>或者<code>subPositionValue</code> 互斥</td>
         </tr>
         <tr>
             <td>subPositionValue</td><td>false</td><td>string</td><td>每筆子訂單價值。與 <code>orderCount</code> 互斥；若兩者均設置，<code>subPositionValue</code> 優先</td>
@@ -243,7 +247,7 @@ sidebar_position: 1
             <th>參數</th><th>是否必需</th><th>類型</th><th>說明</th>
         </tr>
         <tr>
-            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
+            <td>category</td><td><b>true</b></td><td>string</td><td>產品類型。<code>UTA_USDT</code>（USDT 永續）、<code>UTA_USDC</code>（USDC 永續）、<code>UTA_SPOT</code>（現貨）、<code>UTA_INVERSE</code>（反向永續）、<code>UTA_INVERSE_FUTURE</code>（反向交割）、<code>UTA_USDT_FUTURE</code>（USDT 交割）</td>
         </tr>
          <tr>
             <td>strategyType</td><td><b>true</b></td><td>string</td><td>策略類型。<code>pov</code></td>
@@ -255,10 +259,13 @@ sidebar_position: 1
             <td>side</td><td><b>true</b></td><td>string</td><td><code>Buy</code>、<code>Sell</code></td>
         </tr>
         <tr>
-            <td>size</td><td>false</td><td>string</td><td>總下單數量（幣）。"size" 和 "duration" <b>二選一</b></td>
+            <td>size</td><td>false</td><td>string</td><td>總下單數量（幣）。與 <code>positionValue</code> 互斥。可作為停止條件</td>
         </tr>
         <tr>
-            <td>duration</td><td>false</td><td>integer</td><td>總執行時間（秒）。範圍：[900, 86400]。"size" 和 "duration" <b>二選一</b></td>
+            <td>positionValue</td><td>false</td><td>string</td><td>總下單金額（以計價幣種計）。與 <code>size</code> 互斥。可作為停止條件</td>
+        </tr>
+        <tr>
+            <td>duration</td><td>false</td><td>integer</td><td>總執行時間（秒）。範圍：[900, 86400]。可作為停止條件</td>
         </tr>
         <tr>
             <td>interval</td><td>false</td><td>integer</td><td>子訂單掛出間隔（秒）。<code>"0"</code>：單次執行；否則範圍：[5, 3600]</td>
@@ -268,6 +275,9 @@ sidebar_position: 1
         </tr>
         <tr>
             <td>positionIdx</td><td>false</td><td>integer</td><td>持倉方向索引。<code>0</code>：單向持倉，<code>1</code>：雙向持倉多頭，<code>2</code>：雙向持倉空頭。雙向持倉模式下<b>必填</b></td>
+        </tr>
+        <tr>
+            <td>leverageType</td><td>false</td><td>integer</td><td>現貨槓桿類型。<code>0</code>：普通，<code>1</code>：槓桿交易（僅 <code>UTA_SPOT</code>）</td>
         </tr>
         <tr>
             <td>povParams</td><td><b>true</b></td><td>object</td><td>參數物件</td>
