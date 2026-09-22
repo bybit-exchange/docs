@@ -1,0 +1,145 @@
+---
+title: Get Option Base Coins
+sidebar_label: Get Option Base Coins
+sidebar_position: 20
+---
+
+Query option base coins, including their display names, launch times, and whether they currently have tradable option symbols.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/market/option-base-coins" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|underlyingType |false |string |Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil. Supports multiple values separated by commas, e.g. `0,2`. Returns all types if not passed. |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|list |array |List of option base coins |
+|> baseCoin |string |Base coin |
+|> quoteCoin |string |Quote coin |
+|> settleCoin |string |Settle coin |
+|> optionShowName |string |Option display name |
+|> optionOnlineTime |integer |Option launch time, a 64-bit UTC timestamp in milliseconds |
+|> hasSymbol |integer |Whether this base coin currently has tradable option symbols. `1`: Yes; `0`: No. Returns `0` when `optionOnlineTime` is `0` or is in the future. |
+|> underlyingType |integer |Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/option-base-coins?underlyingType=0,2 HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "list": [
+            {
+                "baseCoin": "BTC",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "BTC-Options",
+                "optionOnlineTime": 1739952000000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "SPCX",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "SPCX-Options",
+                "optionOnlineTime": 1789675200000,
+                "hasSymbol": 1,
+                "underlyingType": 2
+            },
+            {
+                "baseCoin": "ETH",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "ETH-Options",
+                "optionOnlineTime": 1739952000000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "NVDA",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "NVDA-Options",
+                "optionOnlineTime": 1789675200000,
+                "hasSymbol": 1,
+                "underlyingType": 2
+            },
+            {
+                "baseCoin": "SOL",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "SOL-Options",
+                "optionOnlineTime": 1739347200000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "XAUT",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "XAUT-Options",
+                "optionOnlineTime": 1774944000000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "HYPE",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "HYPE-Options",
+                "optionOnlineTime": 1785830400000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "XRP",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "XRP-Options",
+                "optionOnlineTime": 1761033600000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "MNT",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "MNT-Options",
+                "optionOnlineTime": 1761638400000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            },
+            {
+                "baseCoin": "DOGE",
+                "quoteCoin": "USDT",
+                "settleCoin": "USDT",
+                "optionShowName": "DOGE-Options",
+                "optionOnlineTime": 1761638400000,
+                "hasSymbol": 1,
+                "underlyingType": 0
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1790055708162
+}
+```

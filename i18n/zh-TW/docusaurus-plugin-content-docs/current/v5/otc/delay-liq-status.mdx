@@ -1,0 +1,59 @@
+---
+title: 查詢延遲強平狀態
+sidebar_label: 查詢延遲強平狀態
+sidebar_position: 10
+---
+查詢機構借貸帳戶當前的風險率（LTV）、強平狀態及延遲強平時間信息。
+
+:::info
+* API Key 必須屬於機構借貸帳戶。
+* 限流：每個 UID 的此接口每秒最多 2 次請求（`2 req/s/uid/path`）。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/ins-loan/delay-liq-status" />
+
+### 請求參數
+無。
+
+### 返回參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|ltv | string | 當前風險率（LTV，貸款價值比） |
+|liquidationStatus | integer | 強平狀態 <ul><li>`0`：正常</li><li>`1`：被動強平中</li><li>`2`：回調強平中</li><li>`3`：延遲強平中</li></ul> |
+|delayLiqStartTime | string | 延遲強平開始時間，Unix 時間戳（毫秒）。僅當 `liquidationStatus` = `3` 時有值，正常狀態下返回 `"0"`。 |
+|delayLiqRemainingSec | string | 延遲強平寬限期的剩餘秒數。僅當 `liquidationStatus` = `3` 時有值，正常狀態下返回空字串。 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins-loan/delay-liq-status HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1789012718462
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "ltv": "0.8523",
+        "liquidationStatus": 0,
+        "delayLiqStartTime": "0",
+        "delayLiqRemainingSec": ""
+    },
+    "retExtInfo": {},
+    "time": 1789012718462
+}
+```
