@@ -1,0 +1,59 @@
+---
+title: Get Delay Liquidation Status
+sidebar_label: Get Delay Liquidation Status
+sidebar_position: 10
+---
+Query the current LTV, liquidation status, and delay liquidation timing information for an institutional loan account.
+
+:::info
+* The API key must belong to an institutional lending account.
+* Rate limit: 2 requests per second per UID per endpoint (`2 req/s/uid/path`).
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/ins-loan/delay-liq-status" />
+
+### Request Parameters
+None.
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|ltv | string | Current LTV (Loan-to-Value) ratio |
+|liquidationStatus | integer | Liquidation status <ul><li>`0`: Normal</li><li>`1`: Passive liquidation in progress</li><li>`2`: Callback liquidation in progress</li><li>`3`: Delay liquidation in progress</li></ul> |
+|delayLiqStartTime | string | Delay liquidation start time (Unix timestamp in milliseconds). Only populated when `liquidationStatus` = `3`. Returns `"0"` in normal status. |
+|delayLiqRemainingSec | string | Remaining seconds of the delay liquidation grace period. Only populated when `liquidationStatus` = `3`. Returns an empty string in normal status. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins-loan/delay-liq-status HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1789012718462
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "",
+    "result": {
+        "ltv": "0.8523",
+        "liquidationStatus": 0,
+        "delayLiqStartTime": "0",
+        "delayLiqRemainingSec": ""
+    },
+    "retExtInfo": {},
+    "time": 1789012718462
+}
+```
