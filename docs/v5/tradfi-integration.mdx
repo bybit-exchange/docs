@@ -7,27 +7,196 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 :::info
-* TradFi CFD does not support to trade via Open API.
-* TradFi perpetuals & xstocks support to trade via Open API.
+* The Bybit-native **Spot**, **Futures**, and **Options** products covered in this guide support trading via the V5 API.
+* TradFi **CFD** products use MetaTrader 5 (MT5) and are not supported by the V5 API.
 :::
 
-This guide explains how to integrate with Bybit's TradFi (Traditional Finance) products via the existing V5 API, including how to distinguish between CFD instruments and Bybit-native TradFi, how to sign required agreements, and how to trade.
+This guide covers trading products linked to traditional assets, including stock and ETF perpetuals, commodity and forex perpetuals, tokenized stocks, tokenized gold, and options. It maps their Web UI entries under **TradFi** and **Trade** to the V5 APIs used to query specifications and trade supported products.
 
+## Web UI Entries and API Support
 
-Bybit offers two paths for trading traditional assets:
+### TradFi (Futures, Options & CFD)
 
-### TradFi (CFD & Futures)
-Access via the Web UI
-- **TradFi → CFD**：This section covers forex, commodities, and stock CFDs.
-- **TradFi → Futures**：Commodities perpetuals, Stock perpetuals (e.g., TSLAUSDT), ETF perpetuals (e.g.,QQQUSDT)
+Open **TradFi** in the Web navigation menu to access the following derivatives products:
 
-![TradFi(CFD & Futures) Web UI Entry](/img/tradfi-webui-entry.png)
+| Web UI entry | Products | API integration |
+|:---|:---|:---|
+| **TradFi → Futures** | USDT-settled perpetual contracts, including stocks, ETFs, commodities, and forex | Bybit-native; V5 `category=linear` |
+| **TradFi → Options** | USDT-settled options, including stock underlyings such as `SPCX` and `NVDA` | Bybit-native; V5 `category=option` |
+| **TradFi → CFD** | MT5 CFDs, with groups such as metals, stocks, indices, forex, and commodities | MT5; not available through the V5 API |
 
-### Bybit Platform (Native)
-- **Trade → Spot**: xStock tokens (e.g., TSLAX, AAPLX, GOOGLX)
-- **Trade → Options**: Options contracts settled in USDT, including tokenised gold options (XAUTUSDT-Options)
+<Tabs groupId="tradfi-web-ui">
+<TabItem value="futures" label="Futures" default>
 
-![Bybit Trading Menu](/img/tradfi-bybit-trading.png)
+![TradFi menu with Futures highlighted and the perpetual contract list displayed](/img/tradfi-futures-menu.png)
+
+</TabItem>
+<TabItem value="options" label="Options">
+
+![TradFi Options menu showing the SPCX and NVDA underlyings](/img/tradfi-options-menu.png)
+
+</TabItem>
+<TabItem value="cfd" label="CFD">
+
+![TradFi menu with CFD selected and the MT5 CFD product list displayed](/img/tradfi-cfd-menu.png)
+
+</TabItem>
+</Tabs>
+
+TradFi perpetuals use V5 `category=linear`, and options use `category=option`. Use the API parameters described below to discover the corresponding instruments; menu labels are not necessarily API enum values. **All**, **Trending**, and **New** are Web UI filters without dedicated `symbolType` values.
+
+### Trade (Spot, Futures & Options)
+
+All products listed in this section are Bybit-native and support trading through the existing V5 [Trade API](/v5/order/create-order). Use `category=spot` for spot pairs, `category=linear` for the perpetual contracts listed below, and `category=option` for options.
+
+- **Trade → Spot → xStocks**: Tokenized stocks, such as `TSLAX`, `AAPLX`, and `GOOGLX`.
+- **Trade → Spot → RWA**: Includes tokenized gold (`XAUT/USDT`), alongside xStocks and other RWA-related assets.
+- **Trade → Futures → USDT → RWA**: Includes USDT-settled perpetuals on tokenized gold, such as `XAUTUSDT` and `PAXGUSDT`. These use V5 `category=linear`.
+- **Trade → Options**: Includes USDT-settled options on tokenized gold (`XAUT`). These use V5 `category=option`; query their specifications with `baseCoin=XAUT`.
+
+<Tabs groupId="trade-web-ui">
+<TabItem value="spot" label="Spot (xStocks)" default>
+
+After signing in, select **xStocks** under **Trade → Spot** to view tokenized-stock pairs, including `AAPLX/USDT`, `NVDAX/USDT`, and `SPCXX/USDT`:
+
+![Trade Spot menu with Spot and the xStocks category highlighted, showing tokenized-stock pairs](/img/tradfi-xstocks-menu.png)
+
+</TabItem>
+<TabItem value="spot-xaut" label="Spot (XAUT)">
+
+Select **RWA** under **Trade → Spot** to find `XAUT/USDT` (Tether Gold). This broader list also includes xStocks and other assets:
+
+![Trade Spot menu with RWA selected, showing XAUT/USDT alongside xStocks and other assets](/img/tradfi-xaut-spot-rwa-menu.png)
+
+</TabItem>
+<TabItem value="futures-gold" label="Futures (XAUT / PAXG)">
+
+Under **Trade → Futures**, select **USDT → RWA** to find `XAUTUSDT` (Tether Gold) and `PAXGUSDT` (Pax Gold) perpetuals:
+
+![Trade Futures menu with USDT and RWA selected, showing PAXGUSDT and XAUTUSDT perpetuals](/img/tradfi-gold-futures-rwa-menu.png)
+
+</TabItem>
+<TabItem value="options" label="Options (XAUT)">
+
+The **Trade → Options** menu includes `XAUT` alongside other option underlyings, such as `BTC`, `ETH`, and `SOL`:
+
+![Trade Options menu showing XAUT alongside BTC, ETH, and SOL, with available expiry dates](/img/tradfi-trade-options-menu.png)
+
+</TabItem>
+</Tabs>
+
+xStocks use V5 `category=spot` and `symbolType=xstocks`. Query XAUT spot with `category=spot` and `symbol=XAUTUSDT`.
+
+The Spot and Futures **RWA** menus are theme filters, with no corresponding `symbolType=RWA` value. These lists also contain other RWA-related crypto assets.
+
+## Discover TradFi Instruments via API
+
+### TradFi Futures: Filter by symbolType
+
+Use [Get Instruments Info](/v5/market/instrument) with `category=linear` and a [symbolType](/v5/enum#symboltype) value to retrieve perpetual contract specifications.
+
+<APIEndpoint method="GET" url="/v5/market/instruments-info" />
+
+| Futures group | `category` | `symbolType` | Example symbols |
+|:---|:---|:---|:---|
+| Stocks | `linear` | `stock` | `TSLAUSDT`, `NVDAUSDT` |
+| ETF | `linear` | `ETF` | `QQQUSDT`, `SPYUSDT` |
+| Commodities | `linear` | `commodity` | `XAUUSDT`, `XAGUSDT`, `CLUSDT`, `BZUSDT` |
+| Pre-IPO | `linear` | `stock` (also pass `status=PreLaunch`) | `OPENAIUSDT`, `ANTHROPICUSDT`, `MOONSHOTUSDT` |
+| FX | `linear` | `forex` | `EURUSDUSDT`, `GBPUSDUSDT`, `USDJPYUSDT` |
+
+Pass one `symbolType` per request, using the enum's exact spelling (`ETF` is uppercase). These products return the standard linear contract fields, including `contractType`, `leverageFilter`, `priceFilter`, `lotSizeFilter`, and `fundingInterval`. Use `fullName`, `marketRegion`, and `underlyingTicker`, where available, to identify the underlying asset.
+
+Example requests:
+
+```http
+GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=ETF&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=stock&status=PreLaunch&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=forex&limit=1000
+```
+
+If `nextPageCursor` is non-empty, pass it as `cursor` in the next request to retrieve the remaining instruments.
+
+:::info Pre-IPO
+To query pre-market stock contracts shown under **Pre-IPO**, use `category=linear`, `symbolType=stock`, and `status=PreLaunch`. Default list queries omit `PreLaunch` contracts.
+
+Check `isPreListing` and `preListingInfo.curAuctionPhase` for the trading state. A contract with `status=PreLaunch` can already be in `ContinuousTrading`.
+:::
+
+![TradFi menu with Futures and the Pre-IPO filter highlighted, showing the pre-IPO contract list](/img/tradfi-pre-ipo-menu.png)
+
+### Options: Discover Base Coins, Then Query Contracts
+
+For stock options under **TradFi → Options**, first use [Get Option Base Coins](/v5/market/option-base-coins) to discover underlyings. Its `underlyingType` parameter classifies the underlying asset; `2` selects stocks.
+
+<APIEndpoint method="GET" url="/v5/market/option-base-coins" />
+
+```http
+GET /v5/market/option-base-coins?underlyingType=2
+```
+
+Check `hasSymbol=1` for base coins with tradable option contracts, such as `SPCX` and `NVDA`. Then call [Get Instruments Info](/v5/market/instrument) with `category=option` and the returned `baseCoin`:
+
+```http
+GET /v5/market/instruments-info?category=option&baseCoin=SPCX&limit=1000
+GET /v5/market/instruments-info?category=option&baseCoin=NVDA&limit=1000
+```
+
+For tokenized-gold options under **Trade → Options**, use `baseCoin=XAUT` with the same `category=option`:
+
+```http
+GET /v5/market/instruments-info?category=option&baseCoin=XAUT&limit=1000
+```
+
+Use the returned `symbol` to identify each expiry, strike, and call/put contract. Option specifications include `optionsType`, `deliveryTime`, `quoteCoin`, `settleCoin`, `priceFilter`, and `lotSizeFilter`. Follow `nextPageCursor` when present.
+
+The `symbolType` filter does not apply to `category=option`. `underlyingType` belongs to the **Get Option Base Coins** endpoint; use `baseCoin` to filter contracts in **Get Instruments Info**.
+
+### xStocks: Related Spot Instruments
+
+For tokenized-stock pairs such as `NVDAXUSDT` and `AAPLXUSDT`, use `category=spot` and `symbolType=xstocks` in API queries:
+
+```http
+GET /v5/market/instruments-info?category=spot&symbolType=xstocks
+```
+
+Use the returned `symbol` and spot trading rules; xStocks and stock perpetuals have separate instrument specifications. See [Get Instruments Info](/v5/market/instrument) for details.
+
+### Tokenized Gold: XAUT Spot
+
+For `XAUT/USDT` under **Trade → Spot → RWA**, query its spot specifications by `symbol`:
+
+```http
+GET /v5/market/instruments-info?category=spot&symbol=XAUTUSDT
+```
+
+XAUT spot returns an empty `symbolType` and is not included in the `symbolType=xstocks` filter. Use the returned spot trading rules. The same `XAUTUSDT` symbol also identifies a perpetual contract under `category=linear`, so always specify the appropriate `category`.
+
+### Tokenized Gold: Perpetual and Expiry Contracts
+
+For the USDT perpetuals under **Trade → Futures → USDT → RWA**, use `category=linear` and the full `symbol`:
+
+```http
+GET /v5/market/instruments-info?category=linear&symbol=XAUTUSDT
+GET /v5/market/instruments-info?category=linear&symbol=PAXGUSDT
+```
+
+These contracts return `contractType=LinearPerpetual` and an empty `symbolType`. They are not included in `symbolType=commodity` queries. `XAUUSDT` under **TradFi → Futures** is a separate commodity perpetual.
+
+To discover other contracts on the same tokenized-gold underlyings, query by `baseCoin`:
+
+```http
+GET /v5/market/instruments-info?category=linear&baseCoin=XAUT&limit=1000
+GET /v5/market/instruments-info?category=linear&baseCoin=PAXG&limit=1000
+```
+
+The results include USDC-settled perpetuals (`XAUTPERP`, `PAXGPERP`) and XAUT expiry contracts. Check `contractType` (`LinearPerpetual` or `LinearFutures`), `quoteCoin`, `settleCoin`, and `deliveryTime` to identify each contract. Use the returned `symbol`, and follow `nextPageCursor` when present.
+
+### CFD: MT5 Products
+
+The **TradFi → CFD** groups, including Stocks, Indices, Forex, Metals, and Commodities, belong to MT5. They are not V5 `symbolType` values, and their CFD instruments cannot be queried or traded through the V5 endpoints in this guide. For example, the CFD symbol `XAUUSD.s` shown in the screenshot and the V5 perpetual symbol `XAUUSDT` identify different products.
 
 ## Legal Review
 
@@ -73,22 +242,23 @@ None
 
 #### Request Example
 
+The following examples sign the metals agreement (`categoryV2=1`), which is also used for stock perpetuals.
+
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
 
 ```http
 POST /v5/user/agreement HTTP/1.1
-Host: api.bybit.com
+Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXXX
 X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1772695036541
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 40
 
 {
     "agree": true,
-    "categoryV2": 2
+    "categoryV2": 1
 }
 ```
 
@@ -103,7 +273,7 @@ session = HTTP(
     api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 print(session.sign_agreement(
-    category=2,
+    categoryV2=1,
     agree=True
 ))
 ```
@@ -123,28 +293,53 @@ print(session.sign_agreement(
 }
 ```
 
+## Trade via Existing API
+
+The spot, perpetual, expiry, and option products described above use the standard V5 [Trade](/v5/order/create-order) endpoints. Complete the applicable trading agreements before placing orders; the agreement flow above covers the specified perpetual products. Check each endpoint's supported categories and product-specific parameters:
+
+- [Place Order](/v5/order/create-order)
+- [Amend Order](/v5/order/amend-order)
+- [Cancel Order](/v5/order/cancel-order)
+- [Get Open & Closed Orders](/v5/order/open-order)
+- [Cancel All Orders](/v5/order/cancel-all)
+- [Get Order History (2 years)](/v5/order/order-list)
+- [Get Trade History (2 years)](/v5/order/execution)
+- [Batch Place Order](/v5/order/batch-place)
+- [Batch Amend Order](/v5/order/batch-amend)
+- [Batch Cancel Order](/v5/order/batch-cancel)
+- [Pre Check Order](/v5/order/pre-check-order)
+
+Pass the appropriate `category` and a `symbol` returned by **Get Instruments Info**:
+
+- **Futures**: `category=linear`, with the full perpetual or expiry contract symbol returned by **Get Instruments Info**, such as `TSLAUSDT`, `QQQUSDT`, `XAUUSDT`, `XAUTUSDT`, `PAXGUSDT`, or `XAUTPERP`.
+- **Options**: `category=option`, with the full option contract symbol, including expiry, strike, and call/put. Do not submit only the base coin `NVDA`, `SPCX`, or `XAUT` as the order's `symbol`.
+- **Spot**: `category=spot`, with the tokenized-stock pair, such as `NVDAXUSDT` or `AAPLXUSDT`, or the tokenized-gold pair `XAUTUSDT`.
+
 ## Index Price Calculation Rule
 
-The index price of a perpetual contract is the **volume-weighted sum** of the top six (6) spot trading pairs across major exchanges. Weights are refreshed hourly based on each pair's 24-hour trading volume.
+TradFi perpetual index prices are calculated from weighted index components. The sources and weights depend on the instrument and market session; components can include price feeds, exchange indices, and futures prices.
 
-Key mechanisms:
-- **Price source**: live last-traded price; if liquidity is low or the trade price is abnormal, an orderbook-weighted price is used instead.
-- **Median deviation filter**: if a component deviates from the cross-exchange median by more than 5% (1% for BTC/ETH, 3% for XAU/XAG), it is temporarily excluded and its weight is smoothly redistributed to the remaining components.
-- **Inactivity rule**: a pair with no trades for over 15 minutes is dropped until trading resumes.
-- **Extreme market fallback**: when no reasonable spot price is available, the index is derived from the perpetual's last traded price and orderbook depth (EMA-smoothed).
-- **Special assets**: BBSOL, CMETH, METH, USDE, etc. additionally reference a redemption price with a minimum price floor.
+- **Market open**: the index is updated every second using a weighted average of its components.
+- **Market closed**: components that stop updating, such as certain equity or commodity feeds from Pyth, may be temporarily excluded to reduce the effect of stale prices.
+- **Session transitions**: a smoothing mechanism helps maintain index price continuity.
 
-For full formulas and worked examples, refer to the Help Center: [Index Price Calculation](https://www.bybit.com/en/help-center/article/Index-Price-Calculation).
+For the methodology and market-session rules, see [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts). For general calculation formulas and price protection mechanisms, see [Index Price Calculation](https://www.bybit.com/en/help-center/article/Index-Price-Calculation). Component and weight changes are published in [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price).
 
-For index component additions, weight adjustments, and other index-related changes, see the [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price) page.
+To query the current components and weights, use [Get Index Price Components](/v5/market/index-components):
+
+<APIEndpoint method="GET" url="/v5/market/index-price-components" />
+
+```http
+GET /v5/market/index-price-components?indexName=CLUSDT
+```
+
+The response includes each component's source (`exchange`), reference symbol (`spotPair`), equivalent price, multiplier, and weight. The field name `spotPair` can also identify a futures reference or price feed.
 
 ## Index Price Rollover Mechanism
 
-The index price of perpetual futures is derived from the respective underlying futures contracts. As commodities do not have a traditional spot market, the external reference price is determined based on designated futures contracts.
+For commodity perpetuals whose index references dated futures contracts, such as `CLUSDT`, the reference must roll to a later-dated contract as the earlier contract approaches expiry. The index reference changes; the Bybit perpetual contract itself does not expire as part of this rollover.
 
-Before the underlying contract expires, a rollover (contract transition) is performed: the reference price gradually shifts from the front-month contract to the next-month contract over several days, according to a predefined weight schedule.
-
-The weight allocation during the rollover period follows this schedule:
+A gradual rollover shifts weight from the front-month contract to the next-month contract over several days. The following five-day allocation is an illustrative example; the actual dates and weights depend on the applicable rollover schedule:
 
 <div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
 
@@ -158,94 +353,11 @@ The weight allocation during the rollover period follows this schedule:
 
 </div>
 
-For example, a rollover schedule for `CLUSDT` may look like:
+The screenshot below illustrates `CLUSDT` index components during a rollover. It is a historical example; query **Get Index Price Components** for the current reference contracts and weights.
 
-<div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
+![Historical CLUSDT index components during a rollover](/img/tradfi-index-component.jpg)
 
-| Expiry Date (CL/WTIOIL) | Time (UTC+0) | Near-Month Contract Weight (%) | Far-Month Contract Weight (%) |
-|:---|:---|:---|:---|
-| 2026-05-08 | 1:00 AM | 80 | 20 |
-| 2026-05-09 | 1:00 AM | 60 | 40 |
-| 2026-05-12 | 1:00 AM | 40 | 60 |
-| 2026-05-13 | 1:00 AM | 20 | 80 |
-| 2026-05-14 | 1:00 AM | 0 | 100 |
-
-</div>
-
-For example, `CLUSDT` (Crude Oil) uses this mechanism to transition between its designated underlying futures contracts (e.g., from `WTIK6` to `WTIM6`).
-
-In addition, `CLUSDT` undergoes a monthly **Pyth index rollover**, starting from the **fifth trading day** of each month. This rollover only updates the Pyth index components. 
-
-For example, the following shows the `CLUSDT` index components on **Day 1** of the rollover:
-![CLUSDT Index Component](/img/tradfi-index-component.jpg)
-
-:::info
-1. For the latest rollover schedules and full details, please refer to the Help Center article: [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8).
-
-2. The underlying of Pyth is West Texas Intermediate (WTI) crude oil; Pyth price data for the contract can be referenced at [Pyth Data Explorer](https://pythdata.app/explore/Commodities.WTIM6%2FUSD).
-
-3. On weekends when Pyth markets are closed, Friday's closing price is used as the index price component.
-
-4. For `CLUSDT`, the anchor price used in index price calculation is Pyth WTI.
-
-5. When Pyth markets are closed on weekends, the Pyth weight is automatically excluded from the index price calculation. The remaining components' weights are then proportionally rescaled to calculate the index price. This applies to all commodity perpetuals (e.g., crude oil, metals) and stock perpetuals.
-:::
-
-To query the current components and their weights contributing to an index price, use the [Get Index Price Components](/v5/market/index-components) endpoint:
-
-<APIEndpoint method="GET" url="/v5/market/index-price-components" />
-
-Query parameter: `indexName={symbol}`
-
-The response includes each component's exchange, spot pair, equivalent price, multiplier, and weight used in the index calculation.
-
-## Instruments Info for xStock, Stock & Commodities
-
-Use the [Get Instruments Info](/v5/market/instrument) endpoint together with the `symbolType` filter to retrieve trading rules and metadata for TradFi instruments. See the [symbolType enum](/v5/enum#symboltype) for all supported values.
-
-<APIEndpoint method="GET" url="/v5/market/instruments-info" />
-
-<div style={{width: 'fit-content'}}>
-
-| Product | `category` | `symbolType` | Example Symbols | Notable Fields |
-|:---|:---|:---|:---|:---|
-| xStock tokens | `spot` | `xstocks` | `TSLAXUSDT`, `AAPLXUSDT`, `NVDAXUSDT` | `xstockMultiplier` |
-| Stock perpetuals | `linear` | `stock` | `TSLAUSDT` | — |
-| Commodity perpetuals | `linear` | `commodity` | `XAUUSDT`, `XAGUSDT`, `CLUSDT` | — |
-
-</div>
-
-Stock and commodity perpetuals return standard linear contract fields (leverage, tick size, funding interval, etc.).
-
-Example request:
-
-```
-GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
-```
-
-## Trade via Existing API
-
-After signing the agreement, you can trade TradFi-related instruments (metals perpetuals, crude oil perpetuals, etc.) using the standard [Trade](/v5/order/create-order) endpoints. No separate API is needed — use the same order placement, amendment, and cancellation interfaces:
-
-- [Place Order](/v5/order/create-order)
-- [Amend Order](/v5/order/amend-order)
-- [Cancel Order](/v5/order/cancel-order)
-- [Get Open & Closed Orders](/v5/order/open-order)
-- [Cancel All Orders](/v5/order/cancel-all)
-- [Get Order History (2 years)](/v5/order/order-list)
-- [Get Trade History (2 years)](/v5/order/execution)
-- [Batch Place Order](/v5/order/batch-place)
-- [Batch Amend Order](/v5/order/batch-amend)
-- [Batch Cancel Order](/v5/order/batch-cancel)
-- [Get Borrow Quota (Spot)](/v5/order/spot-borrow-quota)
-- [Pre Check Order](/v5/order/pre-check-order)
-
-Simply pass the appropriate `category` and `symbol` in your request:
-
-- **xStock tokens**: `category=spot`, `symbol` e.g., `TSLAXUSDT`, `AAPLXUSDT`
-- **Stock perpetuals**: `category=linear`, `symbol` e.g., `TSLAUSDT`
-- **Metals perpetuals**: `category=linear`, `symbol` e.g., `XAUUSDT`, `XAGUSDT`
-- **Crude oil perpetual**: `category=linear`, `symbol`: `CLUSDT`
+For Pyth components, use the returned reference symbol to locate the feed in [Pyth Data Explorer](https://pythdata.app/explore). Refer to the applicable [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price) for index changes and schedules. Market-closure handling follows the index rules above.
 
 ## Stock Split & Reverse Split FAQ
 
@@ -253,7 +365,7 @@ For full details, refer to the Help Center: [Stock Splits and Reverse Stock Spli
 
 **Q1: What will be the status of the contract in the instrumentInfo while it is undergoing the adjustment?**
 
-The contract status will remain `"Trading"` throughout the adjustment window.
+The contract status remains `"Trading"` in **Get Instruments Info** during the adjustment window. Trading is nevertheless suspended during the adjustment; use the announced suspension and resumption times, rather than this field alone, to determine availability.
 
 **Q2: What happens to the price feed during the adjustment window?**
 

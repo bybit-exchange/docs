@@ -7,27 +7,196 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 :::info
-* TradFi CFD 暫不支持API交易
-* TradFi 永續 以及 xstocks 支持API交易
+* 本指南涵蓋的 Bybit 原生 **Spot**、**Futures** 與 **Options** 產品均支持透過 V5 API 交易。
+* TradFi **CFD** 使用 MetaTrader 5（MT5），不支持透過 V5 API 查詢或交易。
 :::
 
-本指南說明如何透過現有的 V5 API 接入 Bybit 的 TradFi（傳統金融）產品，包括如何區分 CFD 交易產品與 Bybit 平台原生的 TradFi、如何簽署所需協議，以及如何進行交易。
+本指南涵蓋與傳統資產相關的交易產品，包括股票及 ETF 永續合約、大宗商品及外匯永續合約、股票代幣、代幣化黃金與期權，並說明 **TradFi** 與 **Trade** 下的 Web UI 入口，以及查詢產品規格和交易所需的 V5 API。
 
-Bybit 提供兩條傳統資產交易路徑：
+## Web UI 入口與 API 支持範圍
 
-### TradFi (CFD & Futures)
-透過 Web UI 進入
-- **TradFi → CFD**：此區塊涵蓋外匯、大宗商品及股票 CFD。
-- **TradFi → Futures**：大宗商品永續合約、股票永續合約（如 TSLAUSDT）、ETF 永續合約 (e.g.,QQQUSDT)
+### TradFi（Futures、Options 與 CFD）
 
-![TradFi(CFD & Futures) Web UI 入口](/img/tradfi-webui-entry.png)
+在 Web 導覽列開啟 **TradFi**，可進入以下衍生品區塊：
 
-### Bybit 平台（原生）
-透過主選單 **Trade** 進入，包含所有標準的 Bybit 產品類型：
-- **Trade → Spot**：xStock 代幣（如 TSLAX、AAPLX、GOOGLX）
-- **Trade → Options**：以 USDT 結算的期權合約，包括代幣化黃金期權（XAUTUSDT-Options）
+| Web UI 入口 | 產品 | API 接入方式 |
+|:---|:---|:---|
+| **TradFi → Futures** | 以 USDT 結算的永續合約，包括股票、ETF、大宗商品及外匯 | Bybit 原生；V5 `category=linear` |
+| **TradFi → Options** | 以 USDT 結算的期權，包括 `SPCX`、`NVDA` 等股票標的 | Bybit 原生；V5 `category=option` |
+| **TradFi → CFD** | MT5 差價合約，包含貴金屬、股票、指數、外匯及大宗商品等分類 | MT5；不支持 V5 API |
 
-透過主選單 **Trade** 進入，包含所有標準的 Bybit 產品類型：
+<Tabs groupId="tradfi-web-ui">
+<TabItem value="futures" label="Futures" default>
+
+![TradFi 選單，標示 Futures 入口並展示永續合約列表](/img/tradfi-futures-menu.png)
+
+</TabItem>
+<TabItem value="options" label="Options">
+
+![TradFi Options 選單，展示 SPCX 與 NVDA 標的](/img/tradfi-options-menu.png)
+
+</TabItem>
+<TabItem value="cfd" label="CFD">
+
+![TradFi 選單，選中 CFD 並展示 MT5 差價合約產品列表](/img/tradfi-cfd-menu.png)
+
+</TabItem>
+</Tabs>
+
+TradFi 永續合約使用 V5 `category=linear`，期權使用 `category=option`。選單名稱不一定是 API 列舉值，請按下文說明使用對應參數查詢產品。**All**、**Trending**、**New** 為 Web UI 篩選項，沒有專用的 `symbolType` 值。
+
+### Trade（Spot、Futures 與 Options）
+
+本節列出的產品均為 Bybit 原生產品，支持透過現有的 V5 [交易 API](/v5/order/create-order) 進行交易。現貨交易對使用 `category=spot`，下列永續合約使用 `category=linear`，期權使用 `category=option`。
+
+- **Trade → Spot → xStocks**：股票代幣，例如 `TSLAX`、`AAPLX`、`GOOGLX`。
+- **Trade → Spot → RWA**：包含代幣化黃金（`XAUT/USDT`）、xStocks 及其他 RWA 相關資產。
+- **Trade → Futures → USDT → RWA**：包含以 USDT 結算的代幣化黃金永續合約，例如 `XAUTUSDT`、`PAXGUSDT`，使用 V5 `category=linear`。
+- **Trade → Options**：包含以 USDT 結算的代幣化黃金（`XAUT`）期權。使用 V5 `category=option`，並透過 `baseCoin=XAUT` 查詢合約規格。
+
+<Tabs groupId="trade-web-ui">
+<TabItem value="spot" label="Spot (xStocks)" default>
+
+登入後，在 **Trade → Spot** 下選擇 **xStocks**，即可查看 `AAPLX/USDT`、`NVDAX/USDT`、`SPCXX/USDT` 等股票代幣交易對：
+
+![Trade Spot 選單，標示 Spot 入口及 xStocks 分類，並展示股票代幣交易對](/img/tradfi-xstocks-menu.png)
+
+</TabItem>
+<TabItem value="spot-xaut" label="Spot (XAUT)">
+
+在 **Trade → Spot** 下選擇 **RWA**，即可找到 `XAUT/USDT`（Tether Gold）。此列表範圍較廣，也包含 xStocks 及其他資產：
+
+![Trade Spot 選單，選中 RWA 並展示 XAUT/USDT、xStocks 及其他資產](/img/tradfi-xaut-spot-rwa-menu.png)
+
+</TabItem>
+<TabItem value="futures-gold" label="Futures (XAUT / PAXG)">
+
+在 **Trade → Futures** 下選擇 **USDT → RWA**，即可找到 `XAUTUSDT`（Tether Gold）與 `PAXGUSDT`（Pax Gold）永續合約：
+
+![Trade Futures 選單，選中 USDT 與 RWA，並展示 PAXGUSDT、XAUTUSDT 永續合約](/img/tradfi-gold-futures-rwa-menu.png)
+
+</TabItem>
+<TabItem value="options" label="Options (XAUT)">
+
+**Trade → Options** 選單包含 `XAUT`，並同時展示 `BTC`、`ETH`、`SOL` 等其他期權標的：
+
+![Trade Options 選單，展示 XAUT、BTC、ETH、SOL 標的及可選到期日](/img/tradfi-trade-options-menu.png)
+
+</TabItem>
+</Tabs>
+
+xStocks 使用 V5 `category=spot` 與 `symbolType=xstocks`；XAUT 現貨則使用 `category=spot` 與 `symbol=XAUTUSDT` 查詢。
+
+Spot 與 Futures 下的 **RWA** 選單是主題篩選項，沒有對應的 `symbolType=RWA` 列舉值。這些列表也包含其他 RWA 相關加密資產。
+
+## 透過 API 查詢 TradFi 產品
+
+### TradFi Futures：按 symbolType 篩選
+
+使用 [查詢可交易產品的規格信息](/v5/market/instrument) 介面，傳入 `category=linear` 與 [symbolType](/v5/enum#symboltype) 列舉值，取得永續合約規格。
+
+<APIEndpoint method="GET" url="/v5/market/instruments-info" />
+
+| Futures 分類 | `category` | `symbolType` | 範例 symbol |
+|:---|:---|:---|:---|
+| Stocks（股票） | `linear` | `stock` | `TSLAUSDT`、`NVDAUSDT` |
+| ETF | `linear` | `ETF` | `QQQUSDT`、`SPYUSDT` |
+| Commodities（大宗商品） | `linear` | `commodity` | `XAUUSDT`、`XAGUSDT`、`CLUSDT`、`BZUSDT` |
+| Pre-IPO | `linear` | `stock`（另傳 `status=PreLaunch`） | `OPENAIUSDT`、`ANTHROPICUSDT`、`MOONSHOTUSDT` |
+| FX（外匯） | `linear` | `forex` | `EURUSDUSDT`、`GBPUSDUSDT`、`USDJPYUSDT` |
+
+每次請求傳入一個 `symbolType`，並使用列舉值的準確拼寫（`ETF` 為大寫）。這些產品返回標準的 linear 合約欄位，包括 `contractType`、`leverageFilter`、`priceFilter`、`lotSizeFilter` 與 `fundingInterval`。可透過有值的 `fullName`、`marketRegion`、`underlyingTicker` 識別標的資產。
+
+請求範例：
+
+```http
+GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=ETF&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=stock&status=PreLaunch&limit=1000
+GET /v5/market/instruments-info?category=linear&symbolType=forex&limit=1000
+```
+
+若 `nextPageCursor` 非空，請在下一次請求中將其作為 `cursor` 傳入，以取得剩餘產品。
+
+:::info Pre-IPO
+如需查詢 **Pre-IPO** 下的盤前股票合約，請使用 `category=linear`、`symbolType=stock` 與 `status=PreLaunch`。預設列表查詢不包含 `PreLaunch` 合約。
+
+請透過 `isPreListing` 與 `preListingInfo.curAuctionPhase` 確認交易狀態。`status=PreLaunch` 的合約可能已處於 `ContinuousTrading`。
+:::
+
+![TradFi 選單，標示 Futures 入口及 Pre-IPO 篩選項，並展示 Pre-IPO 合約列表](/img/tradfi-pre-ipo-menu.png)
+
+### Options：先查基礎幣種，再查具體合約
+
+**TradFi → Options** 下的股票期權，可先透過 [查詢期權基礎幣種](/v5/market/option-base-coins) 取得標的。此介面的 `underlyingType` 按標的資產類型篩選，其中 `2` 代表股票。
+
+<APIEndpoint method="GET" url="/v5/market/option-base-coins" />
+
+```http
+GET /v5/market/option-base-coins?underlyingType=2
+```
+
+檢查 `hasSymbol=1`，以識別當前有可交易期權合約的基礎幣種，例如 `SPCX`、`NVDA`。然後使用 [查詢可交易產品的規格信息](/v5/market/instrument)，傳入 `category=option` 及返回的 `baseCoin`：
+
+```http
+GET /v5/market/instruments-info?category=option&baseCoin=SPCX&limit=1000
+GET /v5/market/instruments-info?category=option&baseCoin=NVDA&limit=1000
+```
+
+**Trade → Options** 下的代幣化黃金期權同樣使用 `category=option`，傳入 `baseCoin=XAUT` 即可查詢：
+
+```http
+GET /v5/market/instruments-info?category=option&baseCoin=XAUT&limit=1000
+```
+
+使用返回的 `symbol` 識別不同到期日、行權價及看漲／看跌的具體合約。期權規格包含 `optionsType`、`deliveryTime`、`quoteCoin`、`settleCoin`、`priceFilter` 與 `lotSizeFilter`。若返回 `nextPageCursor`，請繼續分頁查詢。
+
+`symbolType` 篩選不適用於 `category=option`。`underlyingType` 屬於**查詢期權基礎幣種**介面；在**查詢可交易產品的規格信息**中，應使用 `baseCoin` 篩選期權合約。
+
+### xStocks：相關現貨產品
+
+如需查詢 `NVDAXUSDT`、`AAPLXUSDT` 等股票代幣交易對，請在 API 請求中使用 `category=spot` 與 `symbolType=xstocks`：
+
+```http
+GET /v5/market/instruments-info?category=spot&symbolType=xstocks
+```
+
+請使用返回的 `symbol` 與現貨交易規則；xStocks 與股票永續合約各有獨立的產品規格，詳見 [查詢可交易產品的規格信息](/v5/market/instrument)。
+
+### 代幣化黃金：XAUT 現貨
+
+如需查詢 **Trade → Spot → RWA** 下的 `XAUT/USDT`，請透過 `symbol` 取得現貨規格：
+
+```http
+GET /v5/market/instruments-info?category=spot&symbol=XAUTUSDT
+```
+
+XAUT 現貨返回的 `symbolType` 為空字串，不包含在 `symbolType=xstocks` 的篩選結果中。請使用返回的現貨交易規則。同一個 `XAUTUSDT` 代碼在 `category=linear` 下代表永續合約，因此查詢及交易時務必傳入對應的 `category`。
+
+### 代幣化黃金：永續與交割合約
+
+如需查詢 **Trade → Futures → USDT → RWA** 下的 USDT 永續合約，請使用 `category=linear` 與完整 `symbol`：
+
+```http
+GET /v5/market/instruments-info?category=linear&symbol=XAUTUSDT
+GET /v5/market/instruments-info?category=linear&symbol=PAXGUSDT
+```
+
+這些合約返回 `contractType=LinearPerpetual`，`symbolType` 為空字串，不包含在 `symbolType=commodity` 的查詢結果中。**TradFi → Futures** 下的 `XAUUSDT` 則是另一個大宗商品永續合約。
+
+如需查詢相同代幣化黃金標的的其他合約，請使用 `baseCoin`：
+
+```http
+GET /v5/market/instruments-info?category=linear&baseCoin=XAUT&limit=1000
+GET /v5/market/instruments-info?category=linear&baseCoin=PAXG&limit=1000
+```
+
+結果包含以 USDC 結算的永續合約（`XAUTPERP`、`PAXGPERP`）及 XAUT 交割合約。請檢查 `contractType`（`LinearPerpetual` 或 `LinearFutures`）、`quoteCoin`、`settleCoin` 與 `deliveryTime`，以識別具體合約。請使用返回的 `symbol`；若返回 `nextPageCursor`，請繼續分頁查詢。
+
+### CFD：MT5 產品
+
+**TradFi → CFD** 下的 Stocks、Indices、Forex、Metals、Commodities 等分類屬於 MT5，並非 V5 的 `symbolType` 列舉值。這些 CFD 產品不能透過本指南中的 V5 介面查詢或交易。例如，截圖中的 CFD 代碼 `XAUUSD.s` 與 V5 永續合約代碼 `XAUUSDT` 代表不同產品。
 
 ## 法律條款審閱
 
@@ -73,22 +242,23 @@ Bybit 提供兩條傳統資產交易路徑：
 
 #### 請求示例
 
+以下範例簽署貴金屬協議（`categoryV2=1`），股票永續合約也使用此協議。
+
 <Tabs groupId="programming-languages">
 <TabItem value="http" label="HTTP">
 
 ```http
 POST /v5/user/agreement HTTP/1.1
-Host: api.bybit.com
+Host: api-testnet.bybit.com
 X-BAPI-SIGN: XXXXXX
 X-BAPI-API-KEY: XXXXXX
 X-BAPI-TIMESTAMP: 1772695036541
 X-BAPI-RECV-WINDOW: 5000
 Content-Type: application/json
-Content-Length: 40
 
 {
     "agree": true,
-    "categoryV2": 2
+    "categoryV2": 1
 }
 ```
 
@@ -103,7 +273,7 @@ session = HTTP(
     api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 )
 print(session.sign_agreement(
-    category=2,
+    categoryV2=1,
     agree=True
 ))
 ```
@@ -123,28 +293,53 @@ print(session.sign_agreement(
 }
 ```
 
+## 透過現有 API 交易
+
+上述現貨、永續、交割及期權產品均使用標準的 V5 [交易](/v5/order/create-order) 介面。下單前請完成適用的交易協議；上文的簽署流程適用於其中列明的永續合約產品。請以各介面支持的 `category` 及產品專用參數為準：
+
+- [創建委託單](/v5/order/create-order)
+- [修改委託單](/v5/order/amend-order)
+- [撤銷委託單](/v5/order/cancel-order)
+- [查詢實時委託單](/v5/order/open-order)
+- [撤銷所有委託單](/v5/order/cancel-all)
+- [查詢歷史訂單 (2年)](/v5/order/order-list)
+- [查詢成交紀錄 (2年)](/v5/order/execution)
+- [批量創建委託單](/v5/order/batch-place)
+- [批量修改委託單](/v5/order/batch-amend)
+- [批量撤銷委託單](/v5/order/batch-cancel)
+- [預檢查訂單](/v5/order/pre-check-order)
+
+請傳入對應的 `category`，以及**查詢可交易產品的規格信息**返回的 `symbol`：
+
+- **Futures**：`category=linear`，使用**查詢可交易產品的規格信息**返回的完整永續或交割合約代碼，例如 `TSLAUSDT`、`QQQUSDT`、`XAUUSDT`、`XAUTUSDT`、`PAXGUSDT` 或 `XAUTPERP`。
+- **Options**：`category=option`，使用包含到期日、行權價及看漲／看跌類型的完整期權合約代碼。下單時不能僅將基礎幣種 `NVDA`、`SPCX` 或 `XAUT` 作為 `symbol`。
+- **Spot**：`category=spot`，使用股票代幣交易對（例如 `NVDAXUSDT`、`AAPLXUSDT`）或代幣化黃金交易對 `XAUTUSDT`。
+
 ## 指數價格計算規則
 
-永續合約的指數價格為主流交易所中**24 小時成交量排名前六（6）** 現貨交易對的**成交量加權總和**，權重每小時依各交易對的 24 小時成交量重新計算。
+TradFi 永續合約的指數價格由各成分加權計算，來源及權重依產品與交易時段而定。成分可包含價格數據源、交易所指數及期貨價格。
 
-主要保護機制：
-- **價格來源**：採用最新成交價；若流動性不足或成交價異常，則改用訂單簿加權價（Orderbook-Weighted Price）。
-- **中位數偏離過濾**：若任一成分價偏離跨交易所中位數超過 5%（BTC/ETH 為 1%、黃金/白銀如 XAUUSDT/XAGUSDT 為 3%），該成分將暫時被剔除，其權重以平滑算法逐步重新分配至其他成分。
-- **無交易剔除**：交易對連續 15 分鐘無成交即剔除,直至恢復成交後重新納入。
-- **極端市況回退**：在無法取得合理現貨價時，指數將改以永續合約的最新成交價及訂單簿深度（經 EMA 平滑）推導計算。
-- **特殊資產**：BBSOL、CMETH、METH、USDE 等資產會額外納入贖回價（Redemption Price）並設定最低價格保護。
+- **市場開市**：每秒更新指數價格，以各成分的加權平均計算。
+- **市場休市**：停止更新的成分（例如 Pyth 提供的部分股票或大宗商品價格）可能被暫時剔除，以減少過時價格的影響。
+- **時段切換**：透過平滑機制維持指數價格的連續性。
 
-完整公式與計算範例請參閱幫助中心文章：[指數價格計算](https://www.bybit.com/en/help-center/article/Index-Price-Calculation)。
+計算方式及交易時段規則請參閱 [TradFi 永續合約介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts)。一般計算公式及價格保護機制請參閱 [指數價格計算](https://www.bybit.com/en/help-center/article/Index-Price-Calculation)。成分及權重變更請參閱 [指數價格公告](https://www.bybit.com/en/announcement-info/index-price)。
 
-如需查詢指數成分新增、權重調整及其他指數相關變更，請參閱 [指數價格公告](https://www.bybit.com/en/announcement-info/index-price) 頁面。
+如需查詢當前成分及權重，請使用 [查詢指數價格成分](/v5/market/index-components)：
+
+<APIEndpoint method="GET" url="/v5/market/index-price-components" />
+
+```http
+GET /v5/market/index-price-components?indexName=CLUSDT
+```
+
+響應包含各成分的來源（`exchange`）、參考代碼（`spotPair`）、等價價格、乘數及權重。`spotPair` 欄位也可能表示期貨參考合約或價格數據源。
 
 ## 指數價格展期機制（Index Price Rollover Mechanism）
 
-永續期貨的指數價格源自各自的標的期貨合約。由於大宗商品並無傳統的現貨市場，因此外部參考價格將根據指定的期貨合約來確定。
+對於指數參考有到期日期貨合約的大宗商品永續合約（例如 `CLUSDT`），當參考合約接近到期時，需將參考價格切換至較遠月份的合約。展期改變的是指數參考成分，Bybit 永續合約本身不會因此到期。
 
-在標的合約到期前，系統會進行展期換月（contract rollover）：參考價格將依照預定的權重時程，於數日內從前月合約（front-month）逐步過渡至下月合約（next-month）。
-
-展期期間的權重分配依照下表進行：
+漸進式展期會在數日內，將前月合約的權重逐步移至下月合約。以下五日分配僅為示意，實際日期及權重以適用的展期時程為準：
 
 <div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
 
@@ -158,94 +353,11 @@ print(session.sign_agreement(
 
 </div>
 
-以 `CLUSDT` 為例，換月時間表如下：
+以下截圖展示 `CLUSDT` 展期期間的指數成分，僅作歷史範例。當前參考合約及權重請透過**查詢指數價格成分**取得。
 
-<div style={{width: 'fit-content', whiteSpace: 'nowrap'}}>
+![CLUSDT 展期期間的歷史指數成分範例](/img/tradfi-index-component.jpg)
 
-| 到期日（CL/WTIOIL） | 時間（UTC+0） | 近月合約權重（%） | 遠月合約權重（%） |
-|:---|:---|:---|:---|
-| 2026-05-08 | 1:00 AM | 80 | 20 |
-| 2026-05-09 | 1:00 AM | 60 | 40 |
-| 2026-05-12 | 1:00 AM | 40 | 60 |
-| 2026-05-13 | 1:00 AM | 20 | 80 |
-| 2026-05-14 | 1:00 AM | 0 | 100 |
-
-</div>
-
-以 `CLUSDT`（原油）為例，即依循此機制在其指定的標的期貨合約之間過渡（例如由 `WTIK6` 過渡至 `WTIM6`）。
-
-此外，`CLUSDT` 每月會進行一次 **Pyth 指數成分換月**，從每月**第五個交易日**開始。此換月僅更新 Pyth 指數成分。
-
-以下為換月**第 1 日** `CLUSDT` 指數成分示例：
-![CLUSDT Index Component](/img/tradfi-index-component.jpg)
-
-:::info
-1. 如需取得最新的展期時程與完整說明，請參閱幫助中心文章：[TradFi 永續合約介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts?category=4d5d8649cba144c1a8)。
-
-2. 標的為西德州原油（WTI），合約的 Pyth 行情可參考 [Pyth Data Explorer](https://pythdata.app/explore/Commodities.WTIM6%2FUSD)。
-
-3. Pyth 遇週末休市時，以週五收盤價作為指數成分計算依據。
-
-4. 對於 `CLUSDT`，計算指數價格時所使用的錨定價格（Anchor Price）為 Pyth WTI。
-
-5. 在周末 Pyth 市場收盤時，系統會自動剔除 Pyth 的權重，並按剩餘成分的權重比例重新計算指數價格。此機制適用於所有大宗商品合約（如原油、金屬等）及美股合約。
-:::
-
-如需查詢指數的當前成分及各成分的權重，可使用 [查詢指數價格成分](/v5/market/index-components) 介面：
-
-<APIEndpoint method="GET" url="/v5/market/index-price-components" />
-
-查詢參數：`indexName={symbol}`
-
-響應包含每個成分的交易所名稱、現貨交易對、等價價格、乘數，以及在指數計算中所占的權重。
-
-## xStock、股票永續合約與大宗商品的可交易產品的規格信息
-
-請使用 [查詢可交易產品的規格信息](/v5/market/instrument) 介面，並搭配 `symbolType` 參數來取得 TradFi 可交易產品的配置規則信息。完整列舉值請參閱 [symbolType 列舉值](/v5/enum#symboltype)。
-
-<APIEndpoint method="GET" url="/v5/market/instruments-info" />
-
-<div style={{width: 'fit-content'}}>
-
-| 產品類型 | `category` | `symbolType` | 範例 symbol | 特有欄位 |
-|:---|:---|:---|:---|:---|
-| xStock 代幣 | `spot` | `xstocks` | `TSLAXUSDT`、`AAPLXUSDT`、`NVDAXUSDT` | `xstockMultiplier` |
-| 股票永續合約 | `linear` | `stock` | `TSLAUSDT` | — |
-| 大宗商品永續合約 | `linear` | `commodity` | `XAUUSDT`、`XAGUSDT`、`CLUSDT` | — |
-
-</div>
-
-股票與大宗商品永續合約皆回傳標準的 linear 合約欄位（槓桿、最小價格變動單位、資金費率間隔等）。
-
-請求範例：
-
-```
-GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
-```
-
-## 透過現有 API 交易
-
-簽署協議後，您可以使用標準的 [交易](/v5/order/create-order) 介面來交易 TradFi 相關的交易對（貴金屬永續合約、原油永續合約等），無需使用獨立的 API — 使用相同的下單、修改與撤單介面即可：
-
-- [創建委託單](/v5/order/create-order)
-- [修改委託單](/v5/order/amend-order)
-- [撤銷委託單](/v5/order/cancel-order)
-- [查詢實時委託單](/v5/order/open-order)
-- [撤銷所有委託單](/v5/order/cancel-all)
-- [查詢歷史訂單 (2年)](/v5/order/order-list)
-- [查詢成交紀錄 (2年)](/v5/order/execution)
-- [批量創建委託單](/v5/order/batch-place)
-- [批量修改委託單](/v5/order/batch-amend)
-- [批量撤銷委託單](/v5/order/batch-cancel)
-- [查詢現貨可借額度](/v5/order/spot-borrow-quota)
-- [預檢查訂單](/v5/order/pre-check-order)
-
-僅需在請求中傳入對應的 `category` 與 `symbol`：
-
-- **xStock 代幣**：`category=spot`，`symbol` 如 `TSLAXUSDT`、`AAPLXUSDT`
-- **股票永續合約**：`category=linear`，`symbol` 如 `TSLAUSDT`
-- **貴金屬永續合約**：`category=linear`，`symbol` 如 `XAUUSDT`、`XAGUSDT`
-- **原油永續合約**：`category=linear`，`symbol`：`CLUSDT`
+如需查看 Pyth 成分，可使用返回的參考代碼，在 [Pyth Data Explorer](https://pythdata.app/explore) 查找對應數據源。指數變更及時程請參閱適用的 [指數價格公告](https://www.bybit.com/en/announcement-info/index-price)。市場休市期間的處理方式依上文指數規則執行。
 
 ## 股票拆分與反向拆分常見問題
 
@@ -253,7 +365,7 @@ GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000
 
 **Q1：調整期間合約在 instrumentInfo 中的狀態是什麼？**
 
-調整窗口期間合約狀態仍為 `"Trading"`。
+調整窗口期間，**查詢可交易產品的規格信息**中的合約狀態仍為 `"Trading"`，但調整期間會暫停交易。請按公告中的暫停及恢復時間判斷交易是否可用，不應僅依賴此欄位。
 
 **Q2：調整窗口期間價格數據會如何？**
 
