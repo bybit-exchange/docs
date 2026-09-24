@@ -1,0 +1,138 @@
+---
+title: 批量創建導出報告請求
+sidebar_label: 批量創建導出報告請求
+sidebar_position: 2.1
+slug: /tax/batch-create
+---
+
+一次請求批量導出多種類型的報稅報告。報告以異步方式生成，可使用返回的 `batchId` [查詢任務狀態及下載地址](batch-query.mdx)。
+
+**批量導出流程：**
+
+1. 調用 BatchCreate 提交多個報稅報告導出條目，並獲取 `batchId`。
+2. 使用 `batchId` 輪詢 [BatchQuery](batch-query.mdx)，直到所有子任務均達到終態（`2` 或 `-1`）。
+3. 使用狀態為 `2` 的子任務返回的 `url` 下載報告。
+
+:::info
+- API Key 權限：**Exchange History（讀寫權限）**。
+- 限流：每個 UID 每個接口 **5 次/秒**。
+- `items` 至少包含一個條目。
+- `startTime` 必須在最近 **18 個月**內，且早於 `endTime`。時間跨度不得超過 **12 個月**。
+- 存在未完成批次時，不可提交新批次，否則接口返回錯誤碼 `400004`。
+:::
+
+### HTTP 請求
+
+POST `/v5/fht/compliance/tax/private/batch_create`
+
+### 請求參數
+
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:------- |:----- |------ |
+|startTime |<b>true</b> |integer (int64) |報告開始時間，UNIX 時間戳，單位為秒。必須在最近 18 個月內。 |
+|endTime |<b>true</b> |integer (int64) |報告結束時間，UNIX 時間戳，單位為秒。必須晚於 `startTime`，且時間跨度不得超過 12 個月。 |
+|items |<b>true</b> |array |待導出報告的對象列表，至少包含一個條目。 |
+|> type |<b>true</b> |string |報告類型。傳入 `ALL` 可導出當前站點支持的所有報告類型，參見[支持的報告類型](#報告類型)。 |
+|> number |<b>true</b> |string |報告子類編號，與 `type` 組合使用。`type=ALL` 時仍須傳入此字段，但其值會被忽略，可傳入空字符串（`""`）。參見[支持的報告類型](#報告類型)。 |
+|sourceInstitution |false |string |調用機構標識。 |
+|exportFileType |false |string |導出文件格式：`orc` 為 ORC 列式格式（默認），`csv` 為 CSV 文本格式。 |
+
+#### 報告類型
+
+支持的 `type` 和 `number` 組合取決於站點。`bybit` 表示 Bybit，`eu` 表示 Bybit EU。
+
+| type | number | 報告 | 支持站點 |
+|:----- |:----- |:----- |:----- |
+|`ALL` |忽略此值，可傳入 `""` |當前站點支持的所有報告 |`bybit`, `eu` |
+|`TRADE` |`1` |現貨交易 |`bybit`, `eu` |
+|`TRADE` |`2` |合約交易 |`bybit` |
+|`TRADE` |`3` |USDC 期權交易 |`bybit` |
+|`TRADE` |`4` |NFT 交易 |`bybit` |
+|`TRADE` |`5` |閃兌 |`bybit`, `eu` |
+|`TRADE` |`6` |一鍵買幣 |`bybit`, `eu` |
+|`P&L` |`1` |已平倉盈虧 |`bybit` |
+|`EARN` |`1` |質押 |`bybit`, `eu` |
+|`EARN` |`2` |流動性挖礦 - 流動性 |`bybit` |
+|`EARN` |`3` |流動性挖礦 - 收益 |`bybit` |
+|`EARN` |`4` |流動性挖礦 - 兌換 |`bybit` |
+|`EARN` |`5` |雙幣投資 |`bybit` |
+|`EARN` |`6` |DeFi 挖礦 |`bybit` |
+|`EARN` |`7` |Launchpool |`bybit`, `eu` |
+|`EARN` |`8` |鯊魚鰭 |`bybit` |
+|`EARN` |`9` |鏈上賺幣 |`bybit`, `eu` |
+|`EARN` |`11` |雙贏訂單 |`bybit`, `eu` |
+|`EARN` |`12` |折扣買幣訂單 |`bybit`, `eu` |
+|`EARN` |`13` |智能槓桿 |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`1` |加密貨幣充值 |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`2` |P2P |`bybit` |
+|`DEPOSIT&WITHDRAWAL` |`3` |法幣充值及提現 |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`4` |快捷訂單 |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`5` |第三方充值 |`bybit` |
+|`DEPOSIT&WITHDRAWAL` |`6` |提現 |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`7` |NFT 充值及提現 |`bybit` |
+|`BONUS` |`1` |優惠券 |`bybit`, `eu` |
+|`BONUS` |`2` |獎勵金 |`bybit`, `eu` |
+|`AIRDROP` |`1` |空投 |`bybit`, `eu` |
+|`CARD` |`1` |Bybit Card 交易 |`bybit`, `eu` |
+
+### 響應參數
+
+| 參數 | 類型 | 說明 |
+|:----- |:----- |----- |
+|batchId |string |UUID 格式的批次唯一 ID，用於查詢批次內的任務狀態及下載地址。 |
+
+### 請求示例
+
+```http
+POST /v5/fht/compliance/tax/private/batch_create HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1790035200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "startTime": 1756684800,
+    "endTime": 1788220800,
+    "items": [
+        { "type": "TRADE", "number": "1" },
+        { "type": "EARN", "number": "1" },
+        { "type": "DEPOSIT&WITHDRAWAL", "number": "1" }
+    ],
+    "sourceInstitution": "INST_A",
+    "exportFileType": "csv"
+}
+```
+
+#### 導出所有報告類型
+
+如需導出當前站點支持的所有報告類型，可使用以下請求體。`type=ALL` 時，`number` 字段仍為必填，但其值會被忽略。
+
+```json
+{
+    "startTime": 1756684800,
+    "endTime": 1788220800,
+    "items": [
+        { "type": "ALL", "number": "" }
+    ],
+    "exportFileType": "csv"
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "batchId": "b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10"
+    }
+}
+```
+
+### 錯誤碼
+
+參見[報稅錯誤碼](../../v5/error.mdx#報稅)。

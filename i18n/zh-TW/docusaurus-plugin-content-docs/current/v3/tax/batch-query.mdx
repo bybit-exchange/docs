@@ -1,0 +1,94 @@
+---
+title: 查詢批量報告導出狀態
+sidebar_label: 查詢批量報告導出狀態
+sidebar_position: 3.1
+slug: /tax/batch-query
+---
+
+使用[批量創建導出報告請求](batch-create.mdx)返回的 `batchId`，查詢該批次內所有子任務的狀態及下載地址。
+
+:::info
+- 限流：每個 UID 每個接口 **20 次/秒**。
+- 建議每 **30 秒**輪詢一次。
+- 當前已認證用戶必須有權訪問該批次。
+- 子任務的 `status` 為 `2` 時，`url` 返回下載地址；其他狀態下，`url` 為空字符串。
+- 所有子任務的狀態均為 `2`（成功）或 `-1`（失敗）時，該批次處理完成。請逐項檢查狀態，確認報告是否成功生成。
+:::
+
+### HTTP 請求
+
+GET `/v5/fht/compliance/tax/private/batch_query`
+
+### 請求參數
+
+通過 URL 查詢字符串傳入參數。
+
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:------- |:----- |------ |
+|batchId |<b>true</b> |string |[批量創建導出報告請求](batch-create.mdx)返回的批次 ID，格式為 UUID。 |
+
+### 響應參數
+
+| 參數 | 類型 | 說明 |
+|:----- |:----- |----- |
+|items |array |批次內的子任務對象列表。 |
+|> type |string |報告類型，參見[支持的報告類型](batch-create.mdx#報告類型)。 |
+|> number |string |報告子類編號，與 `type` 組合使用。 |
+|> status |integer (int32) |<ul><li>`0`：隊列中</li><li>`1`：生成中</li><li>`2`：成功</li><li>`-1`：失敗</li></ul> |
+|> url |string |下載地址。`status` 為 `2` 時有值，其他狀態下為空字符串。 |
+|> queryId |string |該子任務的報告生成查詢 ID，在任務處理中或完成後有值。 |
+
+### 請求示例
+
+```http
+GET /v5/fht/compliance/tax/private/batch_query?batchId=b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1790035230000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "items": [
+            {
+                "type": "TRADE",
+                "number": "1",
+                "status": 2,
+                "url": "https://example.com/tax/trade-spot.csv",
+                "queryId": "q-trade-spot-abc"
+            },
+            {
+                "type": "EARN",
+                "number": "1",
+                "status": 1,
+                "url": "",
+                "queryId": "q-earn-1-def"
+            },
+            {
+                "type": "DEPOSIT&WITHDRAWAL",
+                "number": "1",
+                "status": 0,
+                "url": "",
+                "queryId": ""
+            }
+        ]
+    }
+}
+```
+
+### 錯誤碼
+
+| retCode | 說明 |
+|:----- |----- |
+|10007 |用戶未登錄。 |
+|10001 |批次 ID 不存在，或當前用戶無權訪問該批次。 |
+|20000 |未找到屬於當前已認證用戶的批次。 |
+|20001 |數據庫查詢失敗。 |

@@ -1,0 +1,94 @@
+---
+title: Get Batch Export Report Status
+sidebar_label: Get Batch Export Report Status
+sidebar_position: 3.1
+slug: /tax/batch-query
+---
+
+Query the status and download URL of every task in a batch using the `batchId` returned by [Batch Request Export Reports](batch-create.mdx).
+
+:::info
+- Rate limit: **20 requests per second**, per UID and endpoint.
+- The recommended polling interval is **30 seconds**.
+- The batch must be accessible to the authenticated user.
+- When a task's `status` is `2`, its `url` contains the download URL. For all other statuses, `url` is an empty string.
+- The batch has finished processing when every task has status `2` (succeeded) or `-1` (failed). Check each task's status to determine whether its report was generated successfully.
+:::
+
+### HTTP Request
+
+GET `/v5/fht/compliance/tax/private/batch_query`
+
+### Request Parameters
+
+Pass the parameter in the query string.
+
+| Parameter | Required | Type | Comments |
+|:----- |:------- |:----- |------ |
+|batchId |<b>true</b> |string |Batch ID in UUID format, returned by [Batch Request Export Reports](batch-create.mdx). |
+
+### Response Parameters
+
+| Parameter | Type | Comments |
+|:----- |:----- |----- |
+|items |array |List of task objects in the batch. |
+|> type |string |Report type. See [supported report types](batch-create.mdx#report-types). |
+|> number |string |Report subcategory number, used together with `type`. |
+|> status |integer (int32) |<ul><li>`0`: Queued</li><li>`1`: Processing</li><li>`2`: Succeeded</li><li>`-1`: Failed</li></ul> |
+|> url |string |Download URL. Populated when `status` is `2`; otherwise, an empty string. |
+|> queryId |string |Report generation query ID for the task. Populated while the task is processing or after completion. |
+
+### Request Example
+
+```http
+GET /v5/fht/compliance/tax/private/batch_query?batchId=b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1790035230000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "items": [
+            {
+                "type": "TRADE",
+                "number": "1",
+                "status": 2,
+                "url": "https://example.com/tax/trade-spot.csv",
+                "queryId": "q-trade-spot-abc"
+            },
+            {
+                "type": "EARN",
+                "number": "1",
+                "status": 1,
+                "url": "",
+                "queryId": "q-earn-1-def"
+            },
+            {
+                "type": "DEPOSIT&WITHDRAWAL",
+                "number": "1",
+                "status": 0,
+                "url": "",
+                "queryId": ""
+            }
+        ]
+    }
+}
+```
+
+### Error Codes
+
+| retCode | Comments |
+|:----- |----- |
+|10007 |User is not logged in. |
+|10001 |The batch ID does not exist or is not accessible to the current user. |
+|20000 |Batch not found for the authenticated user. |
+|20001 |Database query failed. |

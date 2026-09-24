@@ -1,0 +1,138 @@
+---
+title: Batch Request Export Reports
+sidebar_label: Batch Request Export Reports
+sidebar_position: 2.1
+slug: /tax/batch-create
+---
+
+Request to export multiple types of tax reports in a batch. Reports are generated asynchronously. Use the returned `batchId` to [query task status and download URLs](batch-query.mdx).
+
+**Batch workflow:**
+
+1. Call BatchCreate to submit multiple tax report export items and obtain `batchId`.
+2. Poll [BatchQuery](batch-query.mdx) with `batchId` until every child task reaches a terminal status (`2` or `-1`).
+3. Use the `url` returned for child tasks whose status is `2`.
+
+:::info
+- API key permission: **Exchange History (read/write)**.
+- Rate limit: **5 requests per second**, per UID and endpoint.
+- `items` must contain at least one item.
+- `startTime` must be within the last **18 months** and earlier than `endTime`. The time range must not exceed **12 months**.
+- A new batch cannot be submitted while an unfinished batch exists. The API returns error code `400004` in this case.
+:::
+
+### HTTP Request
+
+POST `/v5/fht/compliance/tax/private/batch_create`
+
+### Request Parameters
+
+| Parameter | Required | Type | Comments |
+|:----- |:------- |:----- |------ |
+|startTime |<b>true</b> |integer (int64) |Report start time. UNIX timestamp in seconds, within the last 18 months. |
+|endTime |<b>true</b> |integer (int64) |Report end time. UNIX timestamp in seconds. Must be later than `startTime`, with a time range of at most 12 months. |
+|items |<b>true</b> |array |List of report objects to export. At least one item is required. |
+|> type |<b>true</b> |string |Report type. Use `ALL` to export all supported report types for the current site. See [supported report types](#report-types). |
+|> number |<b>true</b> |string |Report subcategory number, used together with `type`. The field is still required when `type=ALL`, but its value is ignored; pass an empty string (`""`). See [supported report types](#report-types). |
+|sourceInstitution |false |string |Identifier of the institution making the request. |
+|exportFileType |false |string |Export file format: `orc` for ORC columnar format (default), or `csv` for CSV text format. |
+
+#### Report Types
+
+The supported `type` and `number` combinations depend on the site. `bybit` refers to Bybit; `eu` refers to Bybit EU.
+
+| type | number | Report | Supported sites |
+|:----- |:----- |:----- |:----- |
+|`ALL` |Ignored; use `""` |All supported reports for the current site |`bybit`, `eu` |
+|`TRADE` |`1` |Spot trading |`bybit`, `eu` |
+|`TRADE` |`2` |Contract trading |`bybit` |
+|`TRADE` |`3` |USDC Options trading |`bybit` |
+|`TRADE` |`4` |NFT trading |`bybit` |
+|`TRADE` |`5` |Convert |`bybit`, `eu` |
+|`TRADE` |`6` |One-Click Buy |`bybit`, `eu` |
+|`P&L` |`1` |Closed PnL |`bybit` |
+|`EARN` |`1` |Staking |`bybit`, `eu` |
+|`EARN` |`2` |Liquidity Mining - Liquidity |`bybit` |
+|`EARN` |`3` |Liquidity Mining - Yield |`bybit` |
+|`EARN` |`4` |Liquidity Mining - Swap |`bybit` |
+|`EARN` |`5` |Dual Asset |`bybit` |
+|`EARN` |`6` |DeFi Mining |`bybit` |
+|`EARN` |`7` |Launchpool |`bybit`, `eu` |
+|`EARN` |`8` |Shark Fin |`bybit` |
+|`EARN` |`9` |On-Chain Earn |`bybit`, `eu` |
+|`EARN` |`11` |Double Win orders |`bybit`, `eu` |
+|`EARN` |`12` |Discount Buy orders |`bybit`, `eu` |
+|`EARN` |`13` |Smart Leverage |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`1` |Crypto deposits |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`2` |P2P |`bybit` |
+|`DEPOSIT&WITHDRAWAL` |`3` |Fiat deposits and withdrawals |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`4` |Express orders |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`5` |Third-party deposits |`bybit` |
+|`DEPOSIT&WITHDRAWAL` |`6` |Withdrawals |`bybit`, `eu` |
+|`DEPOSIT&WITHDRAWAL` |`7` |NFT deposits and withdrawals |`bybit` |
+|`BONUS` |`1` |Coupons |`bybit`, `eu` |
+|`BONUS` |`2` |Bonuses |`bybit`, `eu` |
+|`AIRDROP` |`1` |Airdrops |`bybit`, `eu` |
+|`CARD` |`1` |Bybit Card transactions |`bybit`, `eu` |
+
+### Response Parameters
+
+| Parameter | Type | Comments |
+|:----- |:----- |----- |
+|batchId |string |Unique batch ID in UUID format. Use it to query the batch's task status and download URLs. |
+
+### Request Example
+
+```http
+POST /v5/fht/compliance/tax/private/batch_create HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN-TYPE: 2
+X-BAPI-SIGN: xxxxxxxxxxxxxx
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1790035200000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "startTime": 1756684800,
+    "endTime": 1788220800,
+    "items": [
+        { "type": "TRADE", "number": "1" },
+        { "type": "EARN", "number": "1" },
+        { "type": "DEPOSIT&WITHDRAWAL", "number": "1" }
+    ],
+    "sourceInstitution": "INST_A",
+    "exportFileType": "csv"
+}
+```
+
+#### Export All Report Types
+
+To export all report types supported by the current site, use the following request body. `number` is required but its value is ignored when `type=ALL`.
+
+```json
+{
+    "startTime": 1756684800,
+    "endTime": 1788220800,
+    "items": [
+        { "type": "ALL", "number": "" }
+    ],
+    "exportFileType": "csv"
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "ok",
+    "result": {
+        "batchId": "b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10"
+    }
+}
+```
+
+### Error Codes
+
+See [Tax Error Codes](../../v5/error.mdx#tax).
