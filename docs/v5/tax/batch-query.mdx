@@ -10,7 +10,7 @@ Query the status and download URL of every task in a batch using the `batchId` r
 - Rate limit: **20 requests per second**, per UID and endpoint.
 - The recommended polling interval is **30 seconds**.
 - The batch must be accessible to the authenticated user.
-- When a task's `status` is `2`, its `url` contains the download URL. For all other statuses, `url` is an empty string.
+- When a task's `status` is `2`, its `url` contains a JSON-encoded string with `Basepath` and `Files`. For all other statuses, `url` is an empty string.
 - The batch has finished processing when every task has status `2` (succeeded) or `-1` (failed). Check each task's status to determine whether its report was generated successfully.
 :::
 
@@ -34,7 +34,7 @@ Pass the parameter in the query string.
 |> type |string |Report type. See [supported report types](batch-create.mdx#report-types). |
 |> number |string |Report subcategory number, used together with `type`. |
 |> status |integer (int32) |<ul><li>`0`: Queued</li><li>`1`: Processing</li><li>`2`: Succeeded</li><li>`-1`: Failed</li></ul> |
-|> url |string |Download URL. Populated when `status` is `2`; otherwise, an empty string. |
+|> url |string |Download URL. Populated when `status` is `2`; otherwise, an empty string. URL of files (Basepath + Files). To shorten the time it takes to generate the report, it could generate multiple files. *Do take note of this and combine the several files using the same base path when requesting the data export* |
 |> queryId |string |Report generation query ID for the task. Populated while the task is processing or after completion. |
 
 ### Request Example
@@ -54,32 +54,34 @@ X-BAPI-RECV-WINDOW: 5000
 ```json
 {
     "retCode": 0,
-    "retMsg": "ok",
+    "retMsg": "",
     "result": {
         "items": [
             {
                 "type": "TRADE",
                 "number": "1",
                 "status": 2,
-                "url": "https://example.com/tax/trade-spot.csv",
-                "queryId": "q-trade-spot-abc"
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/_SUCCESS\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00000-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00997-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\"]}",
+                "queryId": "2104839833489960960"
             },
             {
                 "type": "EARN",
                 "number": "1",
-                "status": 1,
-                "url": "",
-                "queryId": "q-earn-1-def"
+                "status": 2,
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/_SUCCESS\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00000-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00001-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\"]}",
+                "queryId": "2104839833871642624"
             },
             {
                 "type": "DEPOSIT&WITHDRAWAL",
                 "number": "1",
-                "status": 0,
-                "url": "",
-                "queryId": ""
+                "status": 2,
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/_SUCCESS\",\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/part-00000-a8f75a9b-637f-4865-af11-5e4609e4a415-c000.csv\"]}",
+                "queryId": "2104839834236547072"
             }
         ]
-    }
+    },
+    "retExtInfo": {},
+    "time": 1790669270665
 }
 ```
 
