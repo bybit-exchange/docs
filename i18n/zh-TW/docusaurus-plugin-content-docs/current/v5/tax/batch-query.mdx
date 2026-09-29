@@ -4,13 +4,13 @@ sidebar_label: 查詢批量報告導出狀態
 sidebar_position: 3.1
 ---
 
-使用[批量創建導出報告請求](batch-create.mdx)返回的 `batchId`，查詢該批次內所有子任務的狀態及下載地址。
+使用[批量創建導出報告請求](batch-create.mdx)返回的 `batchId`，查詢該批次內所有子任務的狀態及下載文件信息。
 
 :::info
 - 限流：每個 UID 每個接口 **20 次/秒**。
 - 建議每 **30 秒**輪詢一次。
 - 當前已認證用戶必須有權訪問該批次。
-- 子任務的 `status` 為 `2` 時，`url` 返回下載地址；其他狀態下，`url` 為空字符串。
+- 子任務的 `status` 為 `2` 時，`url` 返回包含 `Basepath` 和 `Files` 的 JSON 字符串；其他狀態下，`url` 為空字符串。
 - 所有子任務的狀態均為 `2`（成功）或 `-1`（失敗）時，該批次處理完成。請逐項檢查狀態，確認報告是否成功生成。
 :::
 
@@ -34,7 +34,7 @@ GET `/v5/fht/compliance/tax/private/batch_query`
 |> type |string |報告類型，參見[支持的報告類型](batch-create.mdx#報告類型)。 |
 |> number |string |報告子類編號，與 `type` 組合使用。 |
 |> status |integer (int32) |<ul><li>`0`：隊列中</li><li>`1`：生成中</li><li>`2`：成功</li><li>`-1`：失敗</li></ul> |
-|> url |string |下載地址。`status` 為 `2` 時有值，其他狀態下為空字符串。 |
+|> url |string |下載地址。`status` 為 `2` 時有值，其他狀態下為空字符串。 文件的URL網址 (Basepath+Files)。為了縮短生成報告所需的時間，它可以生成多個文件。*請注意這一點，並在請求數據導出時使用相同的基本路徑組合多個文件* |
 |> queryId |string |該子任務的報告生成查詢 ID，在任務處理中或完成後有值。 |
 
 ### 請求示例
@@ -54,32 +54,34 @@ X-BAPI-RECV-WINDOW: 5000
 ```json
 {
     "retCode": 0,
-    "retMsg": "ok",
+    "retMsg": "",
     "result": {
         "items": [
             {
                 "type": "TRADE",
                 "number": "1",
                 "status": 2,
-                "url": "https://example.com/tax/trade-spot.csv",
-                "queryId": "q-trade-spot-abc"
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/_SUCCESS\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00000-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00997-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\"]}",
+                "queryId": "2104839833489960960"
             },
             {
                 "type": "EARN",
                 "number": "1",
-                "status": 1,
-                "url": "",
-                "queryId": "q-earn-1-def"
+                "status": 2,
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/_SUCCESS\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00000-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00001-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\"]}",
+                "queryId": "2104839833871642624"
             },
             {
                 "type": "DEPOSIT&WITHDRAWAL",
                 "number": "1",
-                "status": 0,
-                "url": "",
-                "queryId": ""
+                "status": 2,
+                "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/_SUCCESS\",\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/part-00000-a8f75a9b-637f-4865-af11-5e4609e4a415-c000.csv\"]}",
+                "queryId": "2104839834236547072"
             }
         ]
-    }
+    },
+    "retExtInfo": {},
+    "time": 1790669270665
 }
 ```
 
