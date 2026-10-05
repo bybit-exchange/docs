@@ -1,0 +1,132 @@
+---
+title: 查詢/設定自動儲蓄設定
+sidebar_label: 查詢/設定自動儲蓄設定
+sidebar_position: 1
+---
+
+查詢或設定活期理財自動儲蓄。
+
+:::note
+* `GET` 查詢自動儲蓄開關、持倉上限及 APR。
+* `POST` 開啟或關閉自動儲蓄。
+:::
+
+:::info
+* API key 權限：`Earn`
+* 查詢自動儲蓄設定：每個 UID 每秒 10 次請求
+* 設定自動儲蓄設定：每個 UID 每秒 5 次請求
+:::
+
+## 查詢自動儲蓄設定
+
+查詢使用者的活期理財自動儲蓄設定及各幣種目前 APR。省略 `coins` 可回傳所有支援的幣種；最多可指定 50 個幣種。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/earn/flexible-saving/auto-savings" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|:-----|
+|coins|false|array|欲查詢的幣種。以重複的查詢參數傳入，例如 `coins=BTC&coins=ETH`。省略時查詢所有支援的幣種。最多 `50` 個|
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:-----|
+|selectedAll|boolean|是否已全域啟用自動儲蓄|
+|coins|array|支援或指定幣種的自動儲蓄設定|
+|> coin|string|幣種名稱|
+|> isSelected|boolean|是否已為此幣種啟用自動儲蓄|
+|> maxStakingAmount|string|此幣種可進行自動儲蓄的最大持倉數量|
+|> apr|string|目前 APR，以小數利率表示。例如 `0.05` 代表 5%|
+
+---
+
+### 請求示例
+
+```http
+GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "selectedAll": false,
+        "coins": [
+            {
+                "coin": "BTC",
+                "isSelected": true,
+                "maxStakingAmount": "10",
+                "apr": "0.05"
+            },
+            {
+                "coin": "ETH",
+                "isSelected": false,
+                "maxStakingAmount": "100",
+                "apr": "0.04"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```
+
+## 設定自動儲蓄設定
+
+為單一幣種或所有支援的幣種啟用或停用活期理財自動儲蓄。省略 `coin` 或傳入空字串可更新全域設定。
+
+啟用時，將 `purchaseImmediately` 設為 `true` 可非同步申購資金帳戶中的可用餘額。設定為 `false` 或省略時，僅會更新設定。停用自動儲蓄時，此參數會被忽略。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/earn/flexible-saving/auto-savings" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|:-----|
+|coin|false|string|要更新的幣種。省略或傳入空字串可更新全域設定|
+|isSelected|**true**|boolean|是否啟用自動儲蓄|
+|purchaseImmediately|false|boolean|啟用時，非同步申購資金帳戶中的可用餘額。預設：`false`。停用時會被忽略|
+
+### 響應參數
+無
+
+---
+
+### 請求示例
+
+```http
+POST /v5/earn/flexible-saving/auto-savings HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin": "BTC",
+    "isSelected": true,
+    "purchaseImmediately": false
+}
+```
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

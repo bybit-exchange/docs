@@ -1,0 +1,132 @@
+---
+title: Get/Set Auto Savings Settings
+sidebar_label: Get/Set Auto Savings Settings
+sidebar_position: 1
+---
+
+Query or update Flexible Saving auto savings settings.
+
+:::note
+* `GET` queries the auto savings switch, position limit, and APR.
+* `POST` enables or disables auto savings.
+:::
+
+:::info
+* API key permission: `Earn`
+* Get Auto Savings Settings: 10 requests per second per UID
+* Set Auto Savings Settings: 5 requests per second per UID
+:::
+
+## Get Auto Savings Settings
+
+Query the user's Flexible Saving auto savings settings and current APR by coin. Omit `coins` to return all supported coins. You can specify up to 50 coins.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/earn/flexible-saving/auto-savings" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|:-----|
+|coins|false|array|Coin names to query. Pass repeated query parameters, for example `coins=BTC&coins=ETH`. Omit to query all supported coins. Maximum: `50`|
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+|selectedAll|boolean|Whether auto savings is enabled globally|
+|coins|array|Supported or requested coins and their auto savings settings|
+|> coin|string|Coin name|
+|> isSelected|boolean|Whether auto savings is enabled for this coin|
+|> maxStakingAmount|string|Maximum auto savings position amount, expressed in this coin|
+|> apr|string|Current APR as a decimal rate. For example, `0.05` means 5%|
+
+---
+
+### Request Example
+
+```http
+GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "selectedAll": false,
+        "coins": [
+            {
+                "coin": "BTC",
+                "isSelected": true,
+                "maxStakingAmount": "10",
+                "apr": "0.05"
+            },
+            {
+                "coin": "ETH",
+                "isSelected": false,
+                "maxStakingAmount": "100",
+                "apr": "0.04"
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```
+
+## Set Auto Savings Settings
+
+Enable or disable Flexible Saving auto savings for one coin or all supported coins. Omit `coin` or pass an empty string to update the global setting.
+
+When enabling, set `purchaseImmediately` to `true` to asynchronously subscribe the available Funding Account balance. When it is `false` or omitted, only the setting is updated. This parameter is ignored when disabling auto savings.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/earn/flexible-saving/auto-savings" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|:-----|
+|coin|false|string|Coin to update. Omit or pass an empty string to update the global setting|
+|isSelected|**true**|boolean|Whether to enable auto savings|
+|purchaseImmediately|false|boolean|When enabling, asynchronously subscribe the available Funding Account balance. Default: `false`. Ignored when disabling|
+
+### Response Parameters
+None
+
+---
+
+### Request Example
+
+```http
+POST /v5/earn/flexible-saving/auto-savings HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "coin": "BTC",
+    "isSelected": true,
+    "purchaseImmediately": false
+}
+```
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```
