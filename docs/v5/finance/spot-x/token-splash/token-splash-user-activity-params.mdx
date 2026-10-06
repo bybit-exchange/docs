@@ -31,6 +31,7 @@ Query the authenticated user's participation details and trade-task progress for
 |> tradeTask |object |Trade task details and the user's current progress |
 |>> tradeRequiredAmount |string |Total trade volume required to earn the full reward |
 |>> tradeUnit |string |The coin unit for the trade task |
+|>> tradeToken |string |Token counted by the trade task. For an on-chain trade task, this is the activity token ID; for other trade tasks, this is the configured trade token |
 |>> tradedAmount |string |Trade volume the user has accumulated so far |
 |>> maxRewardAmount |string |Maximum reward the user can earn if the full required volume is traded |
 |>> estimatedRewardAmount |string |Estimated reward based on current progress, truncated to 4 decimal places. Formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount` |
@@ -84,6 +85,7 @@ X-BAPI-SIGN: XXXXX
                 "tradeTask": {
                     "tradeRequiredAmount": "0.5",
                     "tradeUnit": "BTC",
+                    "tradeToken": "BTC",
                     "tradedAmount": "0.3",
                     "maxRewardAmount": "200",
                     "estimatedRewardAmount": "120.0000",
