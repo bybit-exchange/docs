@@ -31,6 +31,7 @@ sidebar_position: 2
 |> tradeTask |object |交易任務詳情及用戶當前進度 |
 |>> tradeRequiredAmount |string |達到全額獎勵所需的交易量 |
 |>> tradeUnit |string |交易任務的幣種單位 |
+|>> tradeToken |string |交易任務統計的代幣。對於鏈上交易任務，該字段為活動代幣 ID；對於其他交易任務，該字段為配置的交易代幣 |
 |>> tradedAmount |string |用戶目前已累計的交易量 |
 |>> maxRewardAmount |string |完成全部所需交易量可獲得的最大獎勵 |
 |>> estimatedRewardAmount |string |基於當前進度的預估獎勵，截斷至 4 位小數。計算公式：`min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount` |
@@ -84,6 +85,7 @@ X-BAPI-SIGN: XXXXX
                 "tradeTask": {
                     "tradeRequiredAmount": "0.5",
                     "tradeUnit": "BTC",
+                    "tradeToken": "BTC",
                     "tradedAmount": "0.3",
                     "maxRewardAmount": "200",
                     "estimatedRewardAmount": "120.0000",
