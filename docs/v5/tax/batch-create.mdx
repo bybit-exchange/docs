@@ -16,7 +16,7 @@ Request to export multiple types of tax reports in a batch. Reports are generate
 - API key permission: **Exchange History (read/write)**.
 - Rate limit: **5 requests per second**, per UID and endpoint.
 - `items` must contain at least one item.
-- `startTime` must be within the last **18 months** and earlier than `endTime`. The time range must not exceed **12 months**.
+- `startTime` must be earlier than `endTime`. The time range must not exceed **12 months**.
 - A new batch cannot be submitted while an unfinished batch exists. The API returns error code `400004` in this case.
 :::
 
@@ -28,7 +28,7 @@ POST `/v5/fht/compliance/tax/private/batch_create`
 
 | Parameter | Required | Type | Comments |
 |:----- |:------- |:----- |------ |
-|startTime |<b>true</b> |integer (int64) |Report start time. UNIX timestamp in seconds, within the last 18 months. |
+|startTime |<b>true</b> |integer (int64) |Report start time. UNIX timestamp in seconds. |
 |endTime |<b>true</b> |integer (int64) |Report end time. UNIX timestamp in seconds. Must be later than `startTime`, with a time range of at most 12 months. |
 |items |<b>true</b> |array |List of report objects to export. At least one item is required. |
 |> type |<b>true</b> |string |Report type. Use `ALL` to export all supported report types for the current site. See [supported report types](#report-types). |
