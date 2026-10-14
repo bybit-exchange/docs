@@ -1,0 +1,84 @@
+---
+title: Get Instrument Summary
+sidebar_label: Get Instrument Summary
+sidebar_position: 4.6
+---
+
+Query summary information and trading increments for linear and option instruments.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/market/instrument-summary" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |Product type. `linear`, `option` |
+|symbol |false |string |Symbol name |
+|[symbolType](../enum#symboltype) |false |string |Instrument type |
+|marketRegion |false |string |Market region: `HK`, `US`, `CN`, `KR`, etc. |
+|baseCoin |false |string |Base coin, e.g. `NVDA`, `TSLA` |
+|limit |false |integer |Limit for data size per page. [`1`, `1000`]. Default: `500` |
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|------ |
+|category |string |Product type |
+|nextPageCursor |string |Cursor for the next page |
+|list |array |Object |
+|> symbol |string |Symbol name |
+|> symbolType |string |Instrument type |
+|> displayName |string |Display name shown in the UI |
+|> baseCoin |string |Base coin |
+|> settleCoin |string |Settlement coin |
+|> fullName |string |Full name. Returns an empty string for `option` |
+|> marketRegion |string |Market region of the underlying asset, used to determine its trading calendar and market hours. `US`: United States; `CN`: Mainland China; `HK`: Hong Kong; `KR`: South Korea. Returns an empty string for `option` or when not applicable |
+|> underlyingTicker |string |Stock ticker, security code, or asset symbol in the underlying asset's native market. Returns an empty string for `option` |
+|> priceIndex |string |The corresponding TradFi perpetual symbol used as the price index; for example, NVDA options use `NVDAUSDT`. Returns an empty string for `linear` |
+|> qtyStep |string |Quantity step |
+|> tickSize |string |Price tick size |
+|> deliveryTime |string |Delivery timestamp (ms). Returns `0` for `linear` |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/instrument-summary?category=linear HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "0GUSDT",
+        "symbolType": "",
+        "displayName": "0GUSDT",
+        "baseCoin": "0G",
+        "settleCoin": "USDT",
+        "fullName": "0G",
+        "marketRegion": "",
+        "underlyingTicker": "",
+        "qtyStep": "0.1",
+        "tickSize": "0.0001",
+        "priceIndex": "",
+        "deliveryTime": "0"
+      }
+    ],
+    "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"
+  },
+  "retExtInfo": {},
+  "time": 1791944863432
+}
+```

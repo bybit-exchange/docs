@@ -1,0 +1,84 @@
+---
+title: 查詢交易對摘要
+sidebar_label: 查詢交易對摘要
+sidebar_position: 4.6
+---
+
+查詢線性合約與期權交易對的摘要資訊及交易精度。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/market/instrument-summary" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|[category](../enum#category) |**true** |string |產品類型：`linear`、`option` |
+|symbol |false |string |交易對名稱 |
+|[symbolType](../enum#symboltype) |false |string |交易對類型 |
+|marketRegion |false |string |市場區域：`HK`、`US`、`CN`、`KR` 等 |
+|baseCoin |false |string |基礎幣種，例如 `NVDA`、`TSLA` |
+|limit |false |integer |每頁資料筆數。[`1`, `1000`]。預設：`500` |
+|cursor |false |string |游標。使用響應中的 `nextPageCursor` 取得下一頁 |
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|------ |
+|category |string |產品類型 |
+|nextPageCursor |string |下一頁游標 |
+|list |array |物件 |
+|> symbol |string |交易對名稱 |
+|> symbolType |string |交易對類型 |
+|> displayName |string |與 UI 一致的顯示名稱 |
+|> baseCoin |string |基礎幣種 |
+|> settleCoin |string |結算幣種 |
+|> fullName |string |完整名稱。`option` 時返回空字串 |
+|> marketRegion |string |標的資產所屬的市場區域，用於判斷其交易日曆與市場交易時段。`US`：美國市場；`CN`：中國大陸市場；`HK`：香港市場；`KR`：韓國市場。`option` 或不適用時返回空字串 |
+|> underlyingTicker |string |標的資產在其原生市場中的股票代號、證券代碼或資產符號。`option` 時返回空字串 |
+|> priceIndex |string |對應的 TradFi 永續合約價格指數；例如 NVDA 期權對應 `NVDAUSDT`。`linear` 時返回空字串 |
+|> qtyStep |string |數量步長 |
+|> tickSize |string |價格最小變動單位 |
+|> deliveryTime |string |交割時間戳（毫秒）。`linear` 時返回 `0` |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/instrument-summary?category=linear HTTP/1.1
+Host: api.bybit.com
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "symbol": "0GUSDT",
+        "symbolType": "",
+        "displayName": "0GUSDT",
+        "baseCoin": "0G",
+        "settleCoin": "USDT",
+        "fullName": "0G",
+        "marketRegion": "",
+        "underlyingTicker": "",
+        "qtyStep": "0.1",
+        "tickSize": "0.0001",
+        "priceIndex": "",
+        "deliveryTime": "0"
+      }
+    ],
+    "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"
+  },
+  "retExtInfo": {},
+  "time": 1791944863432
+}
+```
