@@ -1,0 +1,81 @@
+---
+title: 查詢邀請使用者紀錄
+sidebar_label: 查詢邀請使用者紀錄
+sidebar_position: 14
+---
+
+查詢已驗證邀請使用者的邀請紀錄。
+
+:::info
+- 需要鑑權。呼叫者由 API Key 識別；請勿在請求體中傳入呼叫者的使用者 ID。
+- 空的 `userIdList` 不會按受邀人 ID 篩選。
+- 時間使用 `YYYY-MM-DD HH:mm:ss`。無效或空的值會以 `0` 傳至下游；請勿只根據此接口層推斷最終查詢時間範圍。
+- 請求與回應的欄位名稱使用 Proto 明確定義的 camelCase JSON 名稱。邀請紀錄使用本接口專用負載；最終閘道序列化、HTTP 錯誤行為及整數／列舉值的表示方式尚未驗證。
+:::
+
+### HTTP請求
+<APIEndpoint method="POST" url="/v5/referral/user/invitations" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|:-----|
+| userIdList | false | array | 受邀人 ID 列表。空列表不會按受邀人 ID 篩選。 |
+|> userId | false | integer | 受邀人 ID |
+| startTime | false | string | 開始時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效或空值會以 `0` 傳至下游。 |
+| endTime | false | string | 結束時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效或空值會以 `0` 傳至下游。 |
+| page | false | integer | 頁碼。`0` 會視為 `1`。 |
+| pageSize | false | integer | 每頁紀錄數。`0` 或大於 `200` 的值會視為 `10`。 |
+| friendStatus | false | integer | 受邀人狀態。請參閱 [friendStatus](../enum#friendstatus)。 |
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|:-----|
+| records | array | 邀請紀錄 |
+|> userIdMask | string | 已遮罩的受邀人 ID |
+|> signTime | integer | 受邀人註冊時間戳 |
+|> userStatus | integer | 受邀人狀態。請參閱 [friendStatus](../enum#friendstatus)。 |
+|> totalCommission | string | 累計返佣金額，最多保留八位小數。來源值無效時會發生錯誤。 |
+|> userId | string | 受邀人未加密的十進位使用者 ID。另有 `userIdMask`；請確認是否應公開此值。 |
+|> taskProgress | string | 任務完成進度 |
+|> notShowCommission | boolean | 部分新 EU 站受邀人及非 Boost 的 JPN 站受邀人為 `true`；Boost 流程保留預設 `false`。 |
+|> totalBaseRewards | string | 目前接口不會填入此欄位，維持預設空字串。其是否出現在閘道 JSON 中尚未驗證。 |
+| total | integer | 總紀錄數 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/referral/user/invitations HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+  "userIdList": [],
+  "startTime": "2026-01-01 00:00:00",
+  "endTime": "2026-01-31 23:59:59",
+  "page": 1,
+  "pageSize": 10,
+  "friendStatus": 0
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+以下僅示意欄位結構，並非預設 ProtoJSON 序列化結果，也未經閘道驗證。
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "",
+  "result": {"records": [], "total": 0}
+}
+```

@@ -1,0 +1,84 @@
+---
+title: Get Referral User Invitations
+sidebar_label: Get Referral User Invitations
+sidebar_position: 14
+---
+
+Query invitation records for the authenticated referral user.
+
+:::info
+- Authentication is required. The caller is identified from the API key; do not provide the caller's user ID in the request body.
+- An empty `userIdList` does not filter by invitee ID.
+- Time values use `YYYY-MM-DD HH:mm:ss`. Invalid or empty values are passed downstream as `0`; do not infer the final search window from this endpoint layer alone.
+- Request and response property names use the proto's explicit camelCase JSON names. Invitation records use this endpoint's dedicated payload; final gateway serialization, HTTP error behavior, and integer/enum representation remain unverified.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/referral/user/invitations" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|:-----|
+| userIdList | false | array | Invitee ID list. An empty list does not apply an invitee-ID filter. |
+|> userId | false | integer | Invitee ID |
+| startTime | false | string | Query start time in `YYYY-MM-DD HH:mm:ss` format. Invalid or empty values are passed downstream as `0`. |
+| endTime | false | string | Query end time in `YYYY-MM-DD HH:mm:ss` format. Invalid or empty values are passed downstream as `0`. |
+| page | false | integer | Page number. `0` is treated as `1`. |
+| pageSize | false | integer | Number of records per page. `0` or a value greater than `200` is treated as `10`. |
+| friendStatus | false | integer | Invitee status. See [friendStatus](../enum#friendstatus). |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+| records | array | Invitation records |
+|> userIdMask | string | Masked invitee ID |
+|> signTime | integer | Invitee registration timestamp |
+|> userStatus | integer | Invitee status. See [friendStatus](../enum#friendstatus). |
+|> totalCommission | string | Total commission amount, formatted to at most eight decimal places. Invalid source values cause an error. |
+|> userId | string | The invitee's unencrypted decimal user ID. `userIdMask` is supplied separately; confirm that exposing this value is intended. |
+|> taskProgress | string | Task completion progress |
+|> notShowCommission | boolean | `true` for some new EU-site invitees and non-Boost JPN-site invitees; the Boost path leaves the default `false`. |
+|> totalBaseRewards | string | Not populated by the current endpoint; remains the default empty string. Whether it appears in gateway JSON is unverified. |
+| total | integer | Total number of records |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/referral/user/invitations HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+  "userIdList": [],
+  "startTime": "2026-01-01 00:00:00",
+  "endTime": "2026-01-31 23:59:59",
+  "page": 1,
+  "pageSize": 10,
+  "friendStatus": 0
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+The following illustrates the field structure only; it is not a default ProtoJSON serialization or a gateway-validated response.
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "",
+  "result": {
+    "records": [],
+    "total": 0
+  }
+}
+```
