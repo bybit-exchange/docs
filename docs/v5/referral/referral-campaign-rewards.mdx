@@ -1,0 +1,95 @@
+---
+title: Get Referral Campaign Rewards
+sidebar_label: Get Referral Campaign Rewards
+sidebar_position: 12
+---
+
+Get the referral rules and configured campaign tasks and rewards for the current site. This endpoint returns static campaign configuration only; it does not return the user's task progress, reward claims, or payout records.
+
+:::info
+- Authentication is required. The user and site are derived from the authenticated gateway context; do not provide a user ID or site selector in the request body.
+- The response envelope, `rebateRule`, and each embedded campaign JSON string use camelCase field names. Campaigns are returned in base, fiat, then earn order when active. Each `tasks` entry has `schemaVersion: 2`.
+- A reward-configuration lookup failure skips only that task. Other tasks and campaigns are retained.
+- `rebateRule` is site configuration and does not indicate the tier matched by the current user.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/referral/campaign/rewards" />
+
+### Request Parameters
+No request parameters are required. Send an empty JSON object.
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+| rebateRule | object | Referral rules configured for the site |
+|> depositAmount | integer | Deposit threshold. Currency and precision are not specified. |
+|> tradeAmount | integer | Trading threshold. Currency and precision are not specified. |
+|> rebateRatioRules | array | Tiered referral commission rules |
+|>> rebateRatio | integer | Referral commission rate, from 0 to 100 |
+|>> referralCount | integer | Required number of qualified invitees |
+|>> hasTradeCondition | boolean | Whether the tier requires trading volume |
+|>> tradeAmountCondition | integer | Trading-volume threshold for the tier |
+|> rebateDurationDays | integer | Number of days that the referral commission lasts |
+|> tradefiDepositAmount | integer | Currently not populated; a default value of `0` does not confirm a threshold |
+|> tradefiTradeAmount | integer | Currently not populated; a default value of `0` does not confirm a threshold |
+| tasks | array | Campaign JSON strings, in base, fiat, then earn order. Parse each string to access the fields below. |
+|> schemaVersion | integer | Campaign JSON schema version. The current value is always `2`. |
+|> source | string | Campaign source: `base`, `fiat`, or `earn` |
+|> campaignId | string | Campaign configuration ID; not a user reward-record ID |
+|> tasks | array | Configured tasks and one-hop M1/M2 related tasks. May be empty if task details cannot be assembled. |
+|>> id | integer | Task ID |
+|>> awardType | integer | Task reward type. See [awardType](../enum#awardtype). Type `100` retrieves reward-packet details; reward details are not currently assembled for types `95` and `97`. This value does not mean that a reward has been claimed. |
+|>> ruleTitle | array \| null | English title of each valid rule. `null` when there are no valid rules. |
+|>> ruleDescription | array \| null | English description of each valid rule. Corresponds to `ruleTitle` by index. |
+|>> ruleParam | array \| null | First parameter of each valid rule. Corresponds to `ruleTitle` by index. |
+|>> taskAwards | array | Rewards for completing the task |
+|>> m1Awards | array | M1 rewards with `UserRelateType=REFERRAL` |
+|>>> id | integer | Regular reward ID or reward packet ID |
+|>>> name | string | English reward name. Reward packets use `UP TO &lt;value_usd&gt;` or `EARN &lt;value_usd&gt;`. |
+|>>> type | string | English reward type. Always `Packet` for reward packets. |
+|>>> productLine | string | English product type. Empty for reward packets. |
+|>>> startTime | string | Start time in UTC RFC 3339 format. Empty when unavailable or for reward packets. |
+|>>> endTime | string | End time in UTC RFC 3339 format. Empty when unavailable. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/referral/campaign/rewards HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "",
+  "result": {
+    "rebateRule": {
+      "depositAmount": 0,
+      "tradeAmount": 0,
+      "rebateRatioRules": [],
+      "rebateDurationDays": 30
+    },
+    "tasks": [
+      "{\"schemaVersion\":2,\"source\":\"base\",\"campaignId\":\"sample\",\"tasks\":[{\"id\":7,\"awardType\":100,\"ruleTitle\":[\"Deposit\"],\"ruleDescription\":[\"Deposit $100\"],\"ruleParam\":[\"100\"],\"taskAwards\":[{\"id\":92,\"name\":\"EARN 10\",\"type\":\"Packet\",\"productLine\":\"\",\"startTime\":\"\",\"endTime\":\"\"}],\"m1Awards\":[]}]}"
+    ]
+  },
+  "retExtInfo": {},
+  "time": 1753286400000
+}
+```

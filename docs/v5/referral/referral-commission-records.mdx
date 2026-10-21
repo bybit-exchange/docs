@@ -1,0 +1,99 @@
+---
+title: Get Referral Commission Records
+sidebar_label: Get Referral Commission Records
+sidebar_position: 11
+---
+
+Query referral commission records for the authenticated inviter.
+
+:::info
+- Authentication is required. The inviter is identified from the API key; do not provide a user ID for the inviter in the request body.
+- `userId` in the response is a masked invitee ID.
+- An empty `userIdList` does not filter by invitee ID.
+- Time filters use `YYYY-MM-DD HH:mm:ss`. When either value cannot be parsed, an empty string is passed downstream; downstream handling is not established here. The endpoint does not apply a default past-week time range.
+- Request and response property names use the proto's explicit camelCase JSON names; actual gateway serialization has not been independently verified.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/referral/commission/records" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|:-----|
+| userIdList | false | array | Invitee ID list. An empty list returns records without filtering by invitee ID. |
+|> userId | false | integer | Invitee ID |
+| startTime | false | string | Start time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified. |
+| endTime | false | string | End time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified. |
+| page | false | integer | One-based page number. `0` is treated as `1`. |
+| pageSize | false | integer | Number of records per page. `0` or a value greater than `200` is treated as `10`. |
+| productLine | false | integer | Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha. |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+| records | array | Referral commission records |
+|> userId | string | Masked invitee ID, in the format of first character + `***` + last character |
+|> paymentTime | integer | Commission payment time as a Unix timestamp in seconds |
+|> rate | string | Commission rate |
+|> businessUnit | integer | Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha. Unrecognized values are returned as `0`. |
+|> commissionOriginCoin | string | Original commission currency |
+|> commissionOriginAmount | string | Commission amount in the original currency |
+|> commissionUsdtAmount | string | Commission value in USDT |
+|> commissionStatus | integer | Commission status: `0` unknown, `1` awaiting credit, `2` settled. Unrecognized values are returned as `0`. |
+|> isBoostM2 | boolean | Whether the invitee associated with the commission is a Boost user. This field may not be present. |
+| total | integer | Total number of records |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/referral/commission/records HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{
+  "userIdList": [201, 202],
+  "startTime": "2025-03-01 10:20:30",
+  "endTime": "2025-03-08 11:22:33",
+  "page": 3,
+  "pageSize": 200,
+  "productLine": 1
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+The following illustrates the field structure only; it is not a default ProtoJSON serialization or a gateway-validated response.
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "",
+  "result": {
+    "records": [
+      {
+        "userId": "1***6",
+        "paymentTime": 1740916800,
+        "rate": "0.20",
+        "businessUnit": 1,
+        "commissionOriginCoin": "BTC",
+        "commissionOriginAmount": "1.25",
+        "commissionUsdtAmount": "250",
+        "commissionStatus": 2
+      }
+    ],
+    "total": 29
+  },
+  "retExtInfo": {},
+  "time": 1753286400000
+}
+```
