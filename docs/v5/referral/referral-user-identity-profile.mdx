@@ -1,0 +1,82 @@
+---
+title: Get Referral User Identity Profile
+sidebar_label: Get Referral User Identity Profile
+sidebar_position: 13
+---
+
+Get the authenticated user's referral identity, relationship indicators, and available commission information.
+
+:::info
+- Authentication is required. The user ID is derived from the API key; do not provide a user ID in the request body.
+- If the user is an affiliate, `isAffiliate` is `true` and M1 inviter status is not queried.
+- `inviterAffiliateUserId` and `inviterUserId` are relationship indicators: `1` when the respective record exists and `0` otherwise; they are not user IDs. The relationships are queried independently, and missing records are not errors.
+- `commissionInfo` is returned only when an M1 inviter record's user ID matches the authenticated user and the commission query succeeds. It uses this endpoint's dedicated commission-info payload; its fields copy the source commission result and may therefore be `0` when the source value is `0`.
+- Request and response property names use the proto's explicit camelCase JSON names. Actual gateway serialization, including int64 and enum representation, has not been independently verified.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/referral/user/identity-profile" />
+
+### Request Parameters
+No request parameters are required. Send an empty JSON object.
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+| isAffiliate | boolean | Whether the current user is an affiliate |
+| isM1 | boolean | Whether the current user is an M1 inviter. This is checked only when the user is not an affiliate. |
+| inviterAffiliateId | integer | Affiliate ID from the affiliate direct-customer relationship. `0` if no relationship is found. |
+| inviterAffiliateUserId | integer | Affiliate direct-customer relationship indicator: `1` when a record exists, otherwise `0`. This is not the affiliate user's actual ID. |
+| inviterUserId | integer | Invitation relationship indicator: `1` when a record exists for the current user as invitee, otherwise `0`. This is not the inviter's actual ID. |
+| commissionInfo | object | Commission information for this endpoint. Returned only when a matching M1 inviter record and commission data are available. |
+|> totalCommission | string | Total accumulated commission amount |
+|> yesterdayCommission | string | Commission amount earned yesterday |
+|> totalFriends | integer | Total number of invited friends |
+|> qualifiedFriends | integer | Number of invitees eligible for commission |
+|> walletBalance | string | Commission wallet balance |
+|> qualifiedFriendsQuarterTotalTradeVolume | string | Current-quarter trading volume of qualified invitees |
+|> curQuarterActiveFriendsCount | integer | Number of active invitees in the current quarter. Copied from the source commission result and may be `0` when the source value is `0`. |
+|> hasOldReferral | integer | Legacy referral-commission programme indicator |
+|> degradeType | integer | Commission downgrade status: `0` unknown or not downgraded, `1` downgraded due to active invitee count, `2` downgraded due to invitee trading volume. |
+|> commissionRate | string | Current commission rate |
+|> upgradeUnifiedAccount | integer | Unified Trading Account status: `0` unknown, `1` upgraded, `2` upgrading, `3` not upgraded. |
+|> withdrawalSwitch | integer | Commission withdrawal switch: `1` enabled, `2` disabled. Copied from the source commission result and may be `0` when the source value is `0`. |
+|> lastQuarterQualifiedFriendsCount | integer | Number of qualified invitees in the previous quarter. Copied from the source commission result and may be `0` when the source value is `0`. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/referral/user/identity-profile HTTP/1.1
+Host: api.bybit.com
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1753286400000
+X-BAPI-RECV-WINDOW: 5000
+X-BAPI-SIGN: XXXXX
+Content-Type: application/json
+
+{}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "isAffiliate": false,
+    "isM1": false,
+    "inviterAffiliateId": 0,
+    "inviterAffiliateUserId": 0,
+    "inviterUserId": 0
+  },
+  "retExtInfo": {},
+  "time": 1672211918471
+}
+```
