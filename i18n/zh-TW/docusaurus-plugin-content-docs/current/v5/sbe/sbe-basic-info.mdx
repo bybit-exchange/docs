@@ -41,11 +41,20 @@ Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)**:
 - 微秒級時間戳精度
 - 在編碼與解碼時皆有較低的 CPU 消耗
 
-## SBE 連接數限制
-
-- **現貨:** 每個專屬 MMWS host 限制 1500 條連接.
-- **合約 (linear + inverse):** 每個專屬 MMWS host 限制 3000 條連接.
+## 行情連接限制
+### SBE 連接數限制
+- **現貨:** 每個新加坡或者東京專屬 MMWS host 限制 1500 條連接.
+- **合約 (linear + inverse):** 每個新加坡或者東京專屬 MMWS host 限制 3000 條連接.
 - 一旦超過連接上限, 新連接會返回 **HTTP 429**。
+
+### JSON 連接數限制（2026年11月3日開始生效）
+- **現貨:** 每個東京專屬 MMWS host 限制 1500 條連接.
+- **合約 (linear + inverse):** 每個東京專屬 MMWS host 限制 3000 條連接.
+- 一旦超過連接上限, 新連接會返回 **HTTP 429**。
+
+### SBE & JSON Args限制（2026年11月26日開始生效）
+- 針對每個東京專屬域名，現貨單個連接支持最多100個args
+- 針對每個東京專屬域名，合約單個連接支持最多100個args
 
 ## 盤前合約的推送行為
 - 直到`ContinuousTrading`(連續競價)階段, orderbook 和 publicTrade 數據才會下發

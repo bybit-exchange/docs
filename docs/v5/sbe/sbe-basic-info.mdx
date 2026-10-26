@@ -40,10 +40,20 @@ Compared with JSON WebSocket feeds, SBE provides:
 - Microsecond timestamp precision
 - Lower CPU usage for both encoding and decoding
 
-## SBE Connection Limit
-- **Spot:** 1500 connections limit per dedicated MMWS host.
-- **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
+## Market Data Limit
+### SBE Connection
+- **Spot:** 1500 connections limit per Singapore or Tokyo dedicated MMWS host.
+- **Futures (linear + inverse):** 3000 connections limit per Singapore or Tokyo dedicated MMWS host.
 - Once you breach the connection limit, new connections return **HTTP 429**.
+
+### JSON Connection (effective from 3 Nov, 2026)
+- **Spot:** 1500 connections limit per Tokyo dedicated MMWS host.
+- **Futures (linear + inverse):** 3000 connections limit per Tokyo dedicated MMWS host.
+- Once you breach the connection limit, new connections return **HTTP 429**.
+
+### SBE & JSON Args (effective from 26 Nov, 2026)
+- Spot can input up to 100 args for per connection for Tokyo dedicated MMWS host
+- Futures can input up to 100 args for a single connection for Tokyo dedicated MMWS host
 
 ## Behavior Of PreLaunch Contracts
 - There is no feed until `ContinuousTrading` stage for orderbook & publicTrade
