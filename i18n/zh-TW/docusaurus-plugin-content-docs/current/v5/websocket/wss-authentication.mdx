@@ -4,60 +4,78 @@ sidebar_label: 訂閱WebSocket
 slug: /v5/ws/connect
 ---
 
-**[WebSocket公共頻道](../websocket/public/orderbook#):**
+## WebSocket 連接地址
 
-- **主網:**<br/>
-現貨: `wss://stream.bybit.com/v5/public/spot`<br/>
-USDT, USDC永續 & USDC交割: `wss://stream.bybit.com/v5/public/linear`<br/>
-反向合約: `wss://stream.bybit.com/v5/public/inverse`<br/>
-期權: `wss://stream.bybit.com/v5/public/option`<br/>
-RFQ: `wss://stream.bybit.com/v5/public/rfq`<br/>
-價差交易: `wss://stream.bybit.com/v5/public/spread`<br/>
-事件合約: `wss://stream.bybit.com/v5/public/event`
+請選擇對應的連接環境。
 
-- **測試網:**<br/>
-現貨: `wss://stream-testnet.bybit.com/v5/public/spot`<br/>
-USDT和USDC永續: `wss://stream-testnet.bybit.com/v5/public/linear`<br/>
-反向合約: `wss://stream-testnet.bybit.com/v5/public/inverse`<br/>
-期權: `wss://stream-testnet.bybit.com/v5/public/option`<br/>
-RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`<br/>
-價差交易: `wss://stream-testnet.bybit.com/v5/public/spread`<br/>
-事件合約: `wss://stream-testnet.bybit.com/v5/public/event`
+<Tabs groupId="ws-environment">
+<TabItem value="mainnet" label="主網" default>
 
-**事件合約備註：** 目前僅對做市商（MM）開放，未來可能考慮向公眾開放。
+**[WebSocket 公共頻道](../websocket/public/orderbook#)**
 
-**[WebSocket私有頻道](../websocket/private/order#):**
-- **主網:**<br/>
-`wss://stream.bybit.com/v5/private`
+| 市場 | WebSocket URL |
+| --- | --- |
+| 現貨 | <code>wss://stream.bybit.com/v5/public/spot</code> |
+| USDT、USDC 永續及 USDT 交割 | <code>wss://stream.bybit.com/v5/public/linear</code> |
+| 反向合約 | <code>wss://stream.bybit.com/v5/public/inverse</code> |
+| 價差交易 | <code>wss://stream.bybit.com/v5/public/spread</code> |
+| RFQ | <code>wss://stream.bybit.com/v5/public/rfq</code> |
+| 期權 | <code>wss://stream.bybit.com/v5/public/option</code> |
+| 事件合約 | <code>wss://stream.bybit.com/v5/public/event</code> |
 
-- **測試網:**<br/>
-`wss://stream-testnet.bybit.com/v5/private`
+**私有頻道、WebSocket 交易及系統狀態**
 
-**[WebSocket交易](../websocket/trade/guideline#):**
-- **主網:**<br/>
-`wss://stream.bybit.com/v5/trade` (價差交易不支持)
+| 連接類型 | WebSocket URL |
+| --- | --- |
+| [WebSocket 私有頻道](../websocket/private/order#) | <code>wss://stream.bybit.com/v5/private</code> |
+| [WebSocket 交易](../websocket/trade/guideline#) | <code>wss://stream.bybit.com/v5/trade</code> |
+| [取得系統狀態](../websocket/system/system-status#) | <code>wss://stream.bybit.com/v5/public/misc/status</code> |
 
-- **測試網:**<br/>
-`wss://stream-testnet.bybit.com/v5/trade` (價差交易不支持)
+</TabItem>
+<TabItem value="testnet" label="測試網">
 
+**[WebSocket 公共頻道](../websocket/public/orderbook#)**
 
-**[Websocket取得系統狀態](../websocket/system/system-status#):**
-- **主網:**<br/>
-`wss://stream.bybit.com/v5/public/misc/status`
+| 市場 | WebSocket URL |
+| --- | --- |
+| 現貨 | <code>wss://stream-testnet.bybit.com/v5/public/spot</code> |
+| USDT 和 USDC 永續 | <code>wss://stream-testnet.bybit.com/v5/public/linear</code> |
+| 反向合約 | <code>wss://stream-testnet.bybit.com/v5/public/inverse</code> |
+| 價差交易 | <code>wss://stream-testnet.bybit.com/v5/public/spread</code> |
+| RFQ | <code>wss://stream-testnet.bybit.com/v5/public/rfq</code> |
+| 期權 | <code>wss://stream-testnet.bybit.com/v5/public/option</code> |
+| 事件合約 | <code>wss://stream-testnet.bybit.com/v5/public/event</code> |
 
-- **測試網:**<br/>
-`wss://stream-testnet.bybit.com/v5/public/misc/status`
+**私有頻道、WebSocket 交易及系統狀態**
 
-:::info
-* 土耳其站：如果您的帳戶是在 www.bybit.tr 註冊, 請使用`stream.bybit.tr`進行主網連接
-* 印尼站：如果您的帳戶是在 www.bybit.id 註冊, 請使用`stream.bybit.id`進行主網連接
-* 哈薩克斯坦站：如果您的帳戶是在 www.bybit.kz, 請使用 `stream.bybit.kz` 進行主網連接
-* 喬治亞站：如果您的帳戶是在 www.bybitgeorgia.ge 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
-* 日本站：如果您的帳戶是在 www.manepa.jp 註冊, 請使用 `stream.manepa.jp` 進行主網連接
-* 巴西國際站：巴西國際賬號用戶請繼續使用 `stream.bybit.com`，用戶側沒有額外代碼修改
-* 阿根廷國際站：阿根廷國際賬號用戶請繼續使用 `stream.bybit.com`，用戶側沒有額外代碼修改
-* 香港站：如果您的帳戶是在 www.spark-fintech.com 註冊, 請使用 `stream.spark-fintech.com` 進行主網連接進行主網連接
-:::
+| 連接類型 | WebSocket URL |
+| --- | --- |
+| [WebSocket 私有頻道](../websocket/private/order#) | <code>wss://stream-testnet.bybit.com/v5/private</code> |
+| [WebSocket 交易](../websocket/trade/guideline#) | <code>wss://stream-testnet.bybit.com/v5/trade</code> |
+| [取得系統狀態](../websocket/system/system-status#) | <code>wss://stream-testnet.bybit.com/v5/public/misc/status</code> |
+
+</TabItem>
+</Tabs>
+
+**備註：** 事件合約目前僅對做市商（MM）開放，未來可能考慮向公眾開放。WebSocket 交易不支援價差交易。
+
+<details>
+<summary>地區主網域名</summary>
+
+主網連接請使用與帳戶註冊站點對應的 WebSocket 域名。
+
+| 註冊站點 | 主網域名 |
+| --- | --- |
+| 土耳其站（www.bybit.tr） | <code>stream.bybit.tr</code> |
+| 印尼站（www.bybit.id） | <code>stream.bybit.id</code> |
+| 哈薩克斯坦站（www.bybit.kz） | <code>stream.bybit.kz</code> |
+| 喬治亞站（www.bybitgeorgia.ge） | <code>stream.bybitgeorgia.ge</code> |
+| 日本站（www.manepa.jp） | <code>stream.manepa.jp</code> |
+| 香港站（www.spark-fintech.com） | <code>stream.spark-fintech.com</code> |
+
+巴西或阿根廷國際站帳戶請繼續使用 <code>stream.bybit.com</code>；用戶端無須修改代碼。
+
+</details>
 
 :::tip 自定義私有連接存活時長
 針對私有頻道和交易, 您可以自定義連接存活時長, 通過增加參數`max_active_time`, 最小支持`30s` (30秒), 最大支持`600s` (10分鐘). 如果您需要按分鐘級別配置, 您也可以傳遞`1m`, `2m`等. 例如, <i>wss://stream-testnet.bybit.com/v5/private?max_active_time=1m</i>.
@@ -148,9 +166,11 @@ ws.send(
 
 ## 公有頻道訂閱參數限制
 不管是期貨、現貨、期權, 對於單個連接, args裡的數組元素長度總和不能超過21,000個字符
-* 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求，但單個連接沒有args訂閱限制
+* 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求
 * 期權單個連接，至多訂閱2000個args
-* 期貨和價差交易單個連接沒有args限制
+* 價差交易單個連接沒有args限制
+* 現貨單個連接支持最多100個args (2026年11月26日開始生效)
+* 合約單個連接支持最多100個args (2026年11月26日開始生效)
 
 ## 如何發送心跳
 

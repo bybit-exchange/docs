@@ -4,59 +4,79 @@ sidebar_label: Connect
 slug: /v5/ws/connect
 ---
 
-**[WebSocket public stream](../websocket/public/orderbook#):**
+## WebSocket endpoints
 
-- **Mainnet:**<br/>
-Spot: `wss://stream.bybit.com/v5/public/spot`<br/>
-USDT, USDC perpetual & USDT Futures: `wss://stream.bybit.com/v5/public/linear`<br/>
-Inverse contract: `wss://stream.bybit.com/v5/public/inverse`<br/>
-Spread trading: `wss://stream.bybit.com/v5/public/spread`<br/>
-RFQ: `wss://stream.bybit.com/v5/public/rfq`<br/>
-USDT/USDC Options: `wss://stream.bybit.com/v5/public/option`<br/>
-Event Trading: `wss://stream.bybit.com/v5/public/event`
+Choose the environment for your connection.
 
-- **Testnet:**<br/>
-Spot: `wss://stream-testnet.bybit.com/v5/public/spot`<br/>
-USDT,USDC perpetual & USDT Futures: `wss://stream-testnet.bybit.com/v5/public/linear`<br/>
-Inverse contract: `wss://stream-testnet.bybit.com/v5/public/inverse`<br/>
-Spread trading: `wss://stream-testnet.bybit.com/v5/public/spread`<br/>
-RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`<br/>
-USDT/USDC Options: `wss://stream-testnet.bybit.com/v5/public/option`<br/>
-Event Trading: `wss://stream-testnet.bybit.com/v5/public/event`
+<Tabs groupId="ws-environment">
+<TabItem value="mainnet" label="Mainnet" default>
 
-**Event Trading remarks:** Currently only available to market makers (MM). Public access may be considered in the future.
+**[Public stream](../websocket/public/orderbook#)**
 
-**[WebSocket private stream](../websocket/private/order#):**
-- **Mainnet:**<br/>
-`wss://stream.bybit.com/v5/private`
+| Market | WebSocket URL |
+| --- | --- |
+| Spot | <code>wss://stream.bybit.com/v5/public/spot</code> |
+| USDT/USDC perpetual & USDT Futures | <code>wss://stream.bybit.com/v5/public/linear</code> |
+| Inverse contract | <code>wss://stream.bybit.com/v5/public/inverse</code> |
+| Spread trading | <code>wss://stream.bybit.com/v5/public/spread</code> |
+| RFQ | <code>wss://stream.bybit.com/v5/public/rfq</code> |
+| USDT/USDC Options | <code>wss://stream.bybit.com/v5/public/option</code> |
+| Event Trading | <code>wss://stream.bybit.com/v5/public/event</code> |
 
-- **Testnet:**<br/>
-`wss://stream-testnet.bybit.com/v5/private`
+**Private stream, Order Entry & system status**
 
-**[WebSocket Order Entry](../websocket/trade/guideline#):**
-- **Mainnet:**<br/>
-`wss://stream.bybit.com/v5/trade` (Spread trading is not supported)
+| Connection | WebSocket URL |
+| --- | --- |
+| [Private stream](../websocket/private/order#) | <code>wss://stream.bybit.com/v5/private</code> |
+| [Order Entry](../websocket/trade/guideline#) | <code>wss://stream.bybit.com/v5/trade</code> |
+| [GET System Status](../websocket/system/system-status#) | <code>wss://stream.bybit.com/v5/public/misc/status</code> |
 
-- **Testnet:**<br/>
-`wss://stream-testnet.bybit.com/v5/trade` (Spread trading is not supported)
+</TabItem>
+<TabItem value="testnet" label="Testnet">
 
-**[WebSocket GET System Status](../websocket/system/system-status#):**
-- **Mainnet:**<br/>
-`wss://stream.bybit.com/v5/public/misc/status`
+**[Public stream](../websocket/public/orderbook#)**
 
-- **Testnet:**<br/>
-`wss://stream-testnet.bybit.com/v5/public/misc/status`
+| Market | WebSocket URL |
+| --- | --- |
+| Spot | <code>wss://stream-testnet.bybit.com/v5/public/spot</code> |
+| USDT/USDC perpetual & USDT Futures | <code>wss://stream-testnet.bybit.com/v5/public/linear</code> |
+| Inverse contract | <code>wss://stream-testnet.bybit.com/v5/public/inverse</code> |
+| Spread trading | <code>wss://stream-testnet.bybit.com/v5/public/spread</code> |
+| RFQ | <code>wss://stream-testnet.bybit.com/v5/public/rfq</code> |
+| USDT/USDC Options | <code>wss://stream-testnet.bybit.com/v5/public/option</code> |
+| Event Trading | <code>wss://stream-testnet.bybit.com/v5/public/event</code> |
 
-:::info
-* If your account is registered from www.bybit.tr, please use `stream.bybit.tr` for mainnet access
-* If your account is registered from www.bybit.id, please use `stream.bybit.id` for mainnet access
-* If your account is registered from www.bybit.kz, please use `stream.bybit.kz` for mainnet access
-* If your account is registered from www.bybitgeorgia.ge, please use `stream.bybitgeorgia.ge` for mainnet access
-* If your account is registered from www.manepa.jp, please use `stream.manepa.jp` for mainnet access
-* If you are international account users from Bybit Brazil, please processed to use `stream.bybit.com`, no code change from usder end.
-* If you are international account users from Bybit Argentina, please processed to use `stream.bybit.com`, no code change from usder end.
-* If your account is registered from www.spark-fintech.com, please use `stream.spark-fintech.com` for mainnet access
-:::
+**Private stream, Order Entry & system status**
+
+| Connection | WebSocket URL |
+| --- | --- |
+| [Private stream](../websocket/private/order#) | <code>wss://stream-testnet.bybit.com/v5/private</code> |
+| [Order Entry](../websocket/trade/guideline#) | <code>wss://stream-testnet.bybit.com/v5/trade</code> |
+| [GET System Status](../websocket/system/system-status#) | <code>wss://stream-testnet.bybit.com/v5/public/misc/status</code> |
+
+</TabItem>
+</Tabs>
+
+**Notes:** Event Trading is currently available to market makers (MM) only; public access may be considered in the future. Order Entry does not support Spread trading.
+
+<details>
+<summary>Regional mainnet hostnames</summary>
+
+For mainnet access, use the hostname associated with your account registration site.
+
+| Registration site | Mainnet hostname |
+| --- | --- |
+| www.bybit.tr | <code>stream.bybit.tr</code> |
+| www.bybit.id | <code>stream.bybit.id</code> |
+| www.bybit.kz | <code>stream.bybit.kz</code> |
+| www.bybitgeorgia.ge | <code>stream.bybitgeorgia.ge</code> |
+| www.manepa.jp | <code>stream.manepa.jp</code> |
+| www.spark-fintech.com | <code>stream.spark-fintech.com</code> |
+
+International account users from Bybit Brazil or Argentina should continue to use <code>stream.bybit.com</code>; no code change is required.
+
+</details>
+
 
 :::tip Customise Private Connection Alive Time
 For private stream and order entry, you can customise alive duration by adding a param `max_active_time`, the lowest value is `30s` (30 seconds), the highest value is `600s` (10 minutes). You can also pass `1m`, `2m` etc when you try to configure by minute level. e.g., <i>wss://stream-testnet.bybit.com/v5/private?max_active_time=1m</i>.
@@ -145,11 +165,14 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 * Do not frequently connect and disconnect the connection.
 * Do not build over 500 connections in 5 minutes. This is counted per WebSocket domain.
 
-## Public channel - Args limits
+## Public channel
+### Args limits
 Regardless of Perpetual, Futures, Options or Spot, for one public connection, you cannot have length of "args" array over 21,000 characters.
-* Spot can input up to 10 args for each subscription request sent to one connection
+* Spot can input up to **10 args for each subscription** request sent to one connection
 * Options can input up to 2000 args for a single connection
-* No args limit for Futures and Spread for now
+* No args limit for Spread
+* Spot can input up to 100 args for a single connection (effecive from 26 Nov, 2026)
+* Futures can input up to 100 args for a single connection (effecive from 26 Nov, 2026)
 
 ## How to Send the Heartbeat Packet
 
