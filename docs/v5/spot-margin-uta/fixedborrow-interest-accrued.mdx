@@ -1,0 +1,75 @@
+---
+title: Query Fixed-Rate Borrow Penalty Interest
+sidebar_label: Query Fixed-Rate Borrow Penalty Interest
+sidebar_position: 21
+---
+
+Query fixed-rate borrow penalty interest records. Results are returned in descending order by record creation time, then record ID. Without a `cursor`, the query returns records from the latest 30 days.
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixedborrow-interest-accrued" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId |false |string |Fixed-rate borrow order ID |
+|orderCurrency |false |string |Borrow coin name, e.g. `USDT` |
+|limit |false |string |Limit for data size per page. [1, 100]. Default: `10` |
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|list |array |Object |
+|> refId |string |Penalty interest detail ID |
+|> currency |string |Borrow coin |
+|> orderId |string |Fixed-rate borrow order ID |
+|> loanAmt |string |Outstanding principal used to calculate this penalty period |
+|> interest |string |Penalty interest deducted for this record |
+|> interestRate |string |Annual penalty rate, equal to the contract annual rate multiplied by the penalty multiplier |
+|> ts |string |Penalty interest detail creation time (ms) |
+|nextPageCursor |string |Refer to the `cursor` request parameter |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixedborrow-interest-accrued?orderCurrency=USDT&limit=10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "refId": "26",
+                "currency": "USDT",
+                "orderId": "FIXED_BORROW_example",
+                "loanAmt": "6.019203532535780822",
+                "interest": "0.000206137107278623",
+                "interestRate": "0.30",
+                "ts": "1792117143000"
+            }
+        ],
+        "nextPageCursor": "eyJ0aW1lIjoxNzkyMTE3MTQzLCJpZCI6MjZ9"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

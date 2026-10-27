@@ -1,0 +1,56 @@
+---
+title: Cancel Fixed-Rate Borrow Order
+sidebar_label: Cancel Fixed-Rate Borrow Order
+sidebar_position: 22
+---
+
+Request cancellation of an eligible fixed-rate borrow order. The order must be in a cancellable state. The response does not include a final order status; query the order later to confirm its status.
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/spot-margin-trade/fixedborrow-order-cancel" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|orderId |**true** |string |Fixed-rate borrow order ID |
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |object |Empty object. Check `retCode` to confirm the cancellation request was accepted |
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/fixedborrow-order-cancel HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderId": "FIXED_BORROW_example"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```
