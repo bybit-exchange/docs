@@ -1,0 +1,75 @@
+---
+title: 查詢固定利率借款罰息
+sidebar_label: 查詢固定利率借款罰息
+sidebar_position: 21
+---
+
+查詢固定利率借款罰息紀錄。結果依紀錄建立時間倒序、紀錄 ID 倒序返回。未傳入 `cursor` 時，查詢最近 30 天的紀錄。
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/fixedborrow-interest-accrued" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId |false |string |固定利率借款訂單 ID |
+|orderCurrency |false |string |借款幣種，例如 `USDT` |
+|limit |false |string |每頁返回數量，[1, 100]，默認：`10` |
+|cursor |false |string |翻頁游標，使用上一次響應中的 `nextPageCursor` 獲取下一頁數據 |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|list |array |Object |
+|> refId |string |罰息明細 ID |
+|> currency |string |借款幣種 |
+|> orderId |string |固定利率借款訂單 ID |
+|> loanAmt |string |用於計算本期罰息的未償還本金 |
+|> interest |string |本筆紀錄扣除的罰息 |
+|> interestRate |string |罰息年利率，等於合約年利率乘以罰息倍數 |
+|> ts |string |罰息明細建立時間（ms） |
+|nextPageCursor |string |參考請求參數 `cursor` |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/fixedborrow-interest-accrued?orderCurrency=USDT&limit=10 HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "list": [
+            {
+                "refId": "26",
+                "currency": "USDT",
+                "orderId": "FIXED_BORROW_example",
+                "loanAmt": "6.019203532535780822",
+                "interest": "0.000206137107278623",
+                "interestRate": "0.30",
+                "ts": "1792117143000"
+            }
+        ],
+        "nextPageCursor": "eyJ0aW1lIjoxNzkyMTE3MTQzLCJpZCI6MjZ9"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

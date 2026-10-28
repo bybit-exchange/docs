@@ -1,0 +1,161 @@
+---
+title: Query Corporate Action
+sidebar_label: Get Corporate Actions
+sidebar_position: 21
+---
+
+Query current corporate actions for TradFi options, including forward splits, reverse splits, and dividends.
+
+Corporate actions are retained for 14 days and are returned in descending order of `effectiveTime`.
+
+> **Covers: TradFi Options**
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/market/corporate-action" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|:-----|
+|category |false |string |Product category. `option` |
+|baseCoin |false |string |Underlying asset ticker, such as `AAPL` |
+|actionType |false |string |Corporate action type. `ForwardSplit`, `ReverseSplit`, or `Dividend` |
+|limit |false |integer |Limit for data size per page |
+|cursor |false |string |Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of results |
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|:-----|
+|nextPageCursor |string |Cursor for the next page |
+|list |array |List of corporate action records |
+|> category |string |Product category |
+|> symbol |string |Symbol name, such as `NVDAUSDT` |
+|> baseCoin |string |Underlying asset ticker, such as `NVDA` |
+|> actionType |string |Corporate action type. `ForwardSplit`, `ReverseSplit`, or `Dividend` |
+|> status |string |Corporate action status |
+|> effectiveTime |integer |Effective timestamp (ms) |
+|> details |object |Corporate-action-specific details. See the applicable action type below |
+|>> splitFactor |string |Split factor. Only returned for forward or reverse splits |
+|>> splitType |string |Split direction: `FORWARD` or `REVERSE`. Only returned for splits |
+|>> dividendAmountPerShare |string |Dividend amount per share. Only returned for dividends |
+|>> dividendCurrency |string |Currency of `dividendAmountPerShare`. Only returned for dividends |
+|>> installmentCount |integer |Number of dividend installments. Only returned for dividends |
+|>> installmentAmountPerShare |string |Dividend amount per share in each installment. Only returned for dividends |
+|>> installmentCoin |string |Settlement coin for the installment. Only returned for dividends |
+|>> firstSettlementTimeUtc |integer |First dividend installment settlement timestamp (ms). Only returned for dividends |
+|>> installments |array |Dividend installment details. Only returned for dividends |
+|>>> installmentNo |integer |Installment sequence number |
+|>>> settlementTimeUtc |integer |Installment settlement timestamp (ms) |
+|>>> status |string |Installment status |
+
+For forward and reverse splits in `PROCESSING` status, `effectiveTime` is `limitStartTime`. For dividends in `PROCESSING` status, it is `firstSettlementTimeUtc`.
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/market/corporate-action?category=option&baseCoin=AAPL HTTP/1.1
+Host: api-testnet.bybit.com
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from pybit.unified_trading import HTTP
+
+session = HTTP(testnet=True)
+print(session.get_corporate_action(
+    category="option",
+    baseCoin="AAPL",
+))
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+**Forward split or reverse split**
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [
+      {
+        "category": "option",
+        "symbol": "AAPLUSDT",
+        "baseCoin": "AAPL",
+        "actionType": "ForwardSplit",
+        "status": "Completed",
+        "effectiveTime": 1788278400000,
+        "details": {
+          "splitFactor": "4",
+          "splitType": "FORWARD"
+        }
+      }
+    ],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1788300000000
+}
+```
+
+**Dividend**
+
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [
+      {
+        "symbol": "AAPLUSDT",
+        "baseCoin": "AAPL",
+        "actionType": "Dividend",
+        "status": "Announced",
+        "effectiveTime": 1788278400000,
+        "details": {
+          "dividendAmountPerShare": "0.25",
+          "dividendCurrency": "USD",
+          "installmentCount": 4,
+          "installmentAmountPerShare": "5.00000",
+          "installmentCoin": "USDT",
+          "firstSettlementTimeUtc": 1788134400000,
+          "installments": [
+            {
+              "installmentNo": 1,
+              "settlementTimeUtc": 1788134400000,
+              "status": "SUCCESS"
+            },
+            {
+              "installmentNo": 2,
+              "settlementTimeUtc": 1788138000000,
+              "status": "WAITING"
+            },
+            {
+              "installmentNo": 3,
+              "settlementTimeUtc": 1788141600000,
+              "status": "WAITING"
+            },
+            {
+              "installmentNo": 4,
+              "settlementTimeUtc": 1788145200000,
+              "status": "WAITING"
+            }
+          ]
+        }
+      }
+    ],
+    "nextPageCursor": ""
+  },
+  "retExtInfo": {},
+  "time": 1788300000000
+}
+```

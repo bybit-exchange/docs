@@ -1,0 +1,56 @@
+---
+title: 取消固定利率借款訂單
+sidebar_label: 取消固定利率借款訂單
+sidebar_position: 22
+---
+
+申請取消符合條件的固定利率借款訂單。訂單必須處於可取消狀態。響應不包含最終訂單狀態，請後續查詢訂單以確認其最終狀態。
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/spot-margin-trade/fixedborrow-order-cancel" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明|
+|:----- |:-------|:-----|------ |
+|orderId |**true** |string |固定利率借款訂單 ID |
+
+### 響應參數
+| 參數 | 類型 | 說明|
+|:----- |:-----|----- |
+|result |object |空物件。請檢查 `retCode` 以確認取消請求是否已受理 |
+
+---
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/fixedborrow-order-cancel HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "orderId": "FIXED_BORROW_example"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {},
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

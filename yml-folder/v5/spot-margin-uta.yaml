@@ -159,3 +159,88 @@ paths:
       responses:
         "200":
           description: successful operation
+  /v5/spot-margin-trade/fixedborrow-interest-accrued:
+    get:
+      tags:
+        - uta-margin-trade
+      summary: Query Fixed-Rate Borrow Penalty Interest
+      description: Query fixed-rate borrow penalty interest records. Results are returned in descending order by record creation time, then record ID.
+      operationId: fixedborrow-interest-accrued
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: orderId
+          in: query
+          description: Fixed-rate borrow order ID
+          required: false
+          schema:
+            type: string
+        - name: orderCurrency
+          in: query
+          description: Borrow coin name
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: "Limit for data size per page. [1, 100]. Default: 10"
+          required: false
+          schema:
+            type: string
+            default: "10"
+        - name: cursor
+          in: query
+          description: Cursor. Use the nextPageCursor token from the response to retrieve the next page.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+  /v5/spot-margin-trade/fixedborrow-order-cancel:
+    post:
+      tags:
+        - uta-margin-trade
+      summary: Cancel Fixed-Rate Borrow Order
+      description: Request cancellation of an eligible fixed-rate borrow order. Query the order later to confirm its final status.
+      operationId: fixedborrow-order-cancel
+      parameters:
+        - name: apiKey
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+        - name: secret
+          in: header
+          description: A UTA sub account API key is provided by default
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+              properties:
+                orderId:
+                  type: string
+                  minLength: 1
+                  description: Fixed-rate borrow order ID
+                  example: FIXED_BORROW_example
+      responses:
+        "200":
+          description: successful operation
