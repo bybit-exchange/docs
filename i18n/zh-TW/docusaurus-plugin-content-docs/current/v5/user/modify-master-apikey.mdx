@@ -9,6 +9,7 @@ sidebar_position: 6
 在調用接口時，使用的API key至少需要擁有以下其中一種權限
 * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 * 針對讀写  (Read_Write) API ，禁止新增或刪除 FiatP2P、FiatBitPay 及 FiatConvertBroker 權限。
+* `ComplianceAppeal` 僅可授予 Bybit global 母帳戶的可讀可寫 API Key（`readOnly=0`）。不支援子帳戶、其他站點、OAuth 及 TaxAPI Key。
 :::
 
 :::info
@@ -37,6 +38,7 @@ sidebar_position: 6
 |> Affiliate |false |array |代理商查詢權限. ["Affiliate"] <ul><li>該權限僅作用於代理商</li><li>如果您需要該權限, 請確保移除所有其他權限項</li></ul> |
 |> Derivatives |false |array |統一帳戶權限. ["DerivativesTrade"]|
 |> BlockTrade |false |array |大宗商品交易權限. ["BlockTrade"] |
+|> Compliance |false |array |用於查詢 TM Onchain 申訴狀態及提交相關材料的合規權限。傳入 `["ComplianceAppeal"]` 授予，傳入 `[]` 撤銷。更新其他權限類別時，須帶入目前值以保留此權限。將 `readOnly` 改為 `1` 前，須清除此類別。|
 
 ### 返回參數
 | 參數 | 類型 | 說明|
@@ -61,6 +63,7 @@ sidebar_position: 6
 |> BlockTrade |array |大宗交易的權限|
 |> NFT |array |**廢棄**, 總是[]|
 |> CopyTrading |array |**廢棄**, 總是[]|
+|> Compliance |array |更新後的合規權限 `ComplianceAppeal`，用於查詢 TM Onchain 申訴狀態及提交相關材料。僅 Bybit global 母帳戶的可讀可寫 API Key（`readOnly=0`）可擁有；未授予或撤銷時返回 `[]`。|
 |ips |array |綁定的IP|
 
 ### 請求示例
@@ -100,6 +103,9 @@ Content-Type: application/json
             "BlockTrade": [],
             "Exchange": [
                 "ExchangeHistory"
+            ],
+            "Compliance": [
+                "ComplianceAppeal"
             ],
             "NFT": [
                 "NFTQueryProductList"
@@ -141,6 +147,9 @@ print(session.modify_master_api_key(
             "Exchange": [
                 "ExchangeHistory"
             ],
+            "Compliance": [
+                "ComplianceAppeal"
+            ],
             "NFT": [
                 "NFTQueryProductList"
             ]
@@ -172,6 +181,7 @@ client
       CopyTrading: ['CopyTrading'],
       BlockTrade: [],
       Exchange: ['ExchangeHistory'],
+      Compliance: ['ComplianceAppeal'],
       NFT: ['NFTQueryProductList'],
     },
   })
@@ -222,6 +232,9 @@ client
             "BlockTrade": [],
             "Exchange": [
                 "ExchangeHistory"
+            ],
+            "Compliance": [
+                "ComplianceAppeal"
             ],
             "NFT": [
                 "NFTQueryProductList"
