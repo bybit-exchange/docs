@@ -38,6 +38,7 @@ sidebar_position: 5
 |> ByXPost |array |社區帖子, `ByXPost`. 不支持子帳戶，總是`[]`|
 |> Affiliate |array |代理商權限. 僅代理商可以擁有此權限, 否則總是`[]` |
 |> BlockTrade |array |大宗交易的權限. 不支持子帳戶，總是[]|
+|> Compliance |array |合規權限 `ComplianceAppeal`，用於查詢 TM Onchain 申訴狀態及提交相關材料。僅主站母帳戶的可讀可寫 API Key（`readOnly=0`）可擁有此權限。此權限預設不授予（包括現有 API Key）；未授予時返回 `[]`。|
 |ips |array |綁定的IP|
 |type |integer |Api key類型. `1`：個人使用, `2`：綁定到第三方應用 |
 |deadlineDay |integer |API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶 |
@@ -168,6 +169,9 @@ client
             ],
             "ByXPost": [
                 "ByXPost"
+            ],
+            "Compliance": [
+                "ComplianceAppeal"
             ]
         },
         "ips": [
