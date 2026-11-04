@@ -20,6 +20,7 @@ Submit a payout ratio quote for an Event Contract symbol.
 |orderLinkId |**true** |string |User-defined order ID|
 |grossPayoutRatio |**true** |string |Gross payout ratio reported by the institution|
 |amount |**true** |string |Amount for this quote (settle coin)|
+|cancelAfterMs |false |integer |Automatically cancel the order after this many milliseconds. `0` uses the instrument's [`quoteMaxValidMs`](../market/instrument-info) configuration. A non-zero value must not exceed `quoteMaxValidMs`|
 
 ### Response Parameters
 | Parameter | Type | Comments |
@@ -44,7 +45,8 @@ Content-Type: application/json
     "orderLinkId": "xxxx",
     "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",
     "grossPayoutRatio": "0.5",
-    "amount": "100"
+    "amount": "100",
+    "cancelAfterMs": 5000
 }
 ```
 
