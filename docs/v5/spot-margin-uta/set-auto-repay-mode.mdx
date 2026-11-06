@@ -6,10 +6,11 @@ sidebar_position: 11
 Set spot automatic repayment mode
 
 :::info
-1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
-2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
-3. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency. 
-4. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](../account/no-convert-repay)
+1. If `currency` is not passed, `autoRepayMode` sets the global automatic repayment switch for all currencies. When it is set to `1`, automatic repayment applies to all currently borrowable currencies and to currencies that become borrowable later. For example, if BTC, ETH, and EOS are borrowable when the switch is enabled, a newly added borrowable currency such as PEPE is automatically included without another API request.
+2. If `currency` is passed, `autoRepayMode` sets automatic repayment for that currency only. This single-currency behavior is unchanged.
+3. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
+4. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency.
+5. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](../account/no-convert-repay)
 :::
 
 ### HTTP Request
@@ -18,7 +19,7 @@ Set spot automatic repayment mode
 ### Request Parameters
 | Parameter | Required | Type | Comments|
 |:----- |:-------|:-----|------ |
-|currency |false| string |Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.|
+|currency |false| string |Coin name, uppercase only. If omitted, `autoRepayMode` sets the global automatic repayment switch for all currencies. When enabled, it also applies to currencies that become borrowable in the future. If passed, only the specified currency is updated.|
 |autoRepayMode |**true**| string |<ul><li>`1`: On</li><li>`0`: Off</li></ul>|
 
 ---
