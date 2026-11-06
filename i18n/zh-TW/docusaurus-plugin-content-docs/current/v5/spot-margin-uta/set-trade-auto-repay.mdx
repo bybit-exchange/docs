@@ -1,0 +1,62 @@
+---
+title: 設定交易自動還款開關
+sidebar_label: 設定交易自動還款開關
+sidebar_position: 24
+---
+
+開啟或關閉合格現貨交易將幣種存入統一帳戶後的自動還款功能。開啟後，入帳幣種可在無資產兌換的情況下償還同幣種的浮動利率負債。此設定預設為關閉。
+
+:::info
+交易自動還款僅在全倉和組合保證金模式下運行。逐倉帳戶可以保存此設定，但在維持逐倉模式期間不會執行交易自動還款。此設定與透過 [設定現貨自動還款模式](set-auto-repay-mode) 設定的定時自動還款相互獨立。
+:::
+
+### HTTP 請求
+<APIEndpoint method="POST" url="/v5/spot-margin-trade/set-trade-auto-repay" />
+
+### 請求參數
+| 參數 | 是否必需 | 類型 | 說明 |
+|:----- |:-------|:-----|------ |
+|autoRepay |**true** |string |`1`：開啟交易自動還款；`0`：關閉交易自動還款。 |
+
+---
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|autoRepay |string |保存的開關狀態。`1`：開啟；`0`：關閉。 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/set-trade-auto-repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "autoRepay": "1"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "autoRepay": "1"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

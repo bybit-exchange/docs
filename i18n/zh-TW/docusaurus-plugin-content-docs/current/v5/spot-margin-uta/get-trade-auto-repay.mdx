@@ -1,0 +1,55 @@
+---
+title: 查詢交易自動還款開關
+sidebar_label: 查詢交易自動還款開關
+sidebar_position: 23
+---
+
+查詢已驗證統一帳戶的交易自動還款開關。
+
+:::info
+此保存的設定僅適用於全倉和組合保證金模式，在逐倉模式下不生效。此開關與 [查詢現貨自動還款模式](get-auto-repay-mode) 返回的定時自動還款設定相互獨立。
+:::
+
+### HTTP 請求
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/get-trade-auto-repay" />
+
+### 請求參數
+無。
+
+---
+
+### 響應參數
+| 參數 | 類型 | 說明 |
+|:----- |:-----|----- |
+|autoRepay |string |保存的開關狀態。`1`：開啟；`0`：關閉。 |
+
+### 請求示例
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/get-trade-auto-repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### 響應示例
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "autoRepay": "1"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

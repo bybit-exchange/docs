@@ -1,0 +1,62 @@
+---
+title: Set Trade Auto Repay
+sidebar_label: Set Trade Auto Repay
+sidebar_position: 24
+---
+
+Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. When enabled, the credited coin can repay its own flexible-rate liability without asset conversion. This setting is disabled by default.
+
+:::info
+Trade auto repayment runs only in Cross and Portfolio margin modes. An Isolated margin account can save this setting, but no trade auto repayment runs while it remains in Isolated mode. This setting is separate from scheduled automatic repayment configured through [Set Auto Repay Mode](set-auto-repay-mode).
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/spot-margin-trade/set-trade-auto-repay" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments |
+|:----- |:-------|:-----|------ |
+|autoRepay |**true** |string |`1`: enable trade auto repayment; `0`: disable trade auto repayment. |
+
+---
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|autoRepay |string |Saved switch state. `1`: enabled; `0`: disabled. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/spot-margin-trade/set-trade-auto-repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "autoRepay": "1"
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "autoRepay": "1"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```

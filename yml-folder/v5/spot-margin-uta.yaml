@@ -244,3 +244,180 @@ paths:
       responses:
         "200":
           description: successful operation
+  /v5/spot-margin-trade/get-trade-auto-repay:
+    get:
+      tags:
+        - uta-margin-trade
+      summary: Get Trade Auto Repay
+      description: Retrieve the authenticated Unified account's trade auto repayment switch. The saved setting takes effect only in Cross and Portfolio margin modes; it has no effect in Isolated mode. This switch is separate from the scheduled auto repayment settings returned by `get-auto-repay-mode`.
+      operationId: getTradeAutoRepay
+      security:
+        - ApiKeyAuth: []
+          ApiSignAuth: []
+          ApiTimestampAuth: []
+          ApiRecvWindowAuth: []
+      responses:
+        "200":
+          description: Request accepted; a non-zero `retCode` indicates a business error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTradeAutoRepayResponse"
+              examples:
+                enabled:
+                  summary: Trade auto repayment enabled
+                  value:
+                    retCode: 0
+                    retMsg: success
+                    result:
+                      autoRepay: "1"
+                    retExtInfo: {}
+                    time: 1792117143000
+        "400":
+          description: Invalid HTTP request or parameter format.
+        "401":
+          description: API authentication failed.
+        "403":
+          description: API key lacks read permission or the request is restricted.
+        "404":
+          description: Endpoint not found.
+        "429":
+          description: Rate limit exceeded.
+  /v5/spot-margin-trade/set-trade-auto-repay:
+    post:
+      tags:
+        - uta-margin-trade
+      summary: Set Trade Auto Repay
+      description: Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. The credited coin can repay its own flexible-rate liability without asset conversion. Trade auto repayment runs only in Cross and Portfolio margin modes; the setting has no effect in Isolated mode. This setting is separate from scheduled auto repayment configured through `set-auto-repay-mode`, and is disabled by default.
+      operationId: setTradeAutoRepay
+      security:
+        - ApiKeyAuth: []
+          ApiSignAuth: []
+          ApiTimestampAuth: []
+          ApiRecvWindowAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetTradeAutoRepayRequest"
+            examples:
+              enable:
+                summary: Enable trade auto repayment
+                value:
+                  autoRepay: "1"
+              disable:
+                summary: Disable trade auto repayment
+                value:
+                  autoRepay: "0"
+      responses:
+        "200":
+          description: Request accepted; a non-zero `retCode` indicates a business error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetTradeAutoRepayResponse"
+              examples:
+                enabled:
+                  summary: Trade auto repayment enabled
+                  value:
+                    retCode: 0
+                    retMsg: success
+                    result:
+                      autoRepay: "1"
+                    retExtInfo: {}
+                    time: 1792117143000
+        "400":
+          description: Invalid HTTP request or parameter format.
+        "401":
+          description: API authentication failed.
+        "403":
+          description: API key lacks write permission or the request is restricted.
+        "404":
+          description: Endpoint not found.
+        "429":
+          description: Rate limit exceeded.
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-BAPI-API-KEY
+    ApiSignAuth:
+      type: apiKey
+      in: header
+      name: X-BAPI-SIGN
+    ApiTimestampAuth:
+      type: apiKey
+      in: header
+      name: X-BAPI-TIMESTAMP
+    ApiRecvWindowAuth:
+      type: apiKey
+      in: header
+      name: X-BAPI-RECV-WINDOW
+      description: Request validity window in milliseconds; the API defaults to 5000.
+  schemas:
+    SetTradeAutoRepayRequest:
+      type: object
+      required:
+        - autoRepay
+      properties:
+        autoRepay:
+          type: string
+          pattern: "^[01]$"
+          description: '"1" enables trade auto repayment; "0" disables it.'
+          example: "1"
+    SetTradeAutoRepayResponse:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          description: Business return code. 0 means success; 34022101 means invalid autoRepay.
+          example: 0
+        retMsg:
+          type: string
+          description: Business return message.
+          example: success
+        result:
+          type: object
+          properties:
+            autoRepay:
+              type: string
+              pattern: "^[01]$"
+              description: Saved switch state; "1" means enabled and "0" means disabled.
+              example: "1"
+        retExtInfo:
+          type: object
+          description: Extended return information.
+        time:
+          type: integer
+          format: int64
+          description: Server timestamp in milliseconds.
+          example: 1792117143000
+    GetTradeAutoRepayResponse:
+      type: object
+      properties:
+        retCode:
+          type: integer
+          description: Business return code. 0 means success.
+          example: 0
+        retMsg:
+          type: string
+          description: Business return message.
+          example: success
+        result:
+          type: object
+          properties:
+            autoRepay:
+              type: string
+              pattern: "^[01]$"
+              description: Saved switch state; "1" means enabled and "0" means disabled.
+              example: "1"
+        retExtInfo:
+          type: object
+          description: Extended return information.
+        time:
+          type: integer
+          format: int64
+          description: Server timestamp in milliseconds.
+          example: 1792117143000

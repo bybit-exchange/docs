@@ -1,0 +1,53 @@
+---
+id: set-trade-auto-repay
+title: "Set Trade Auto Repay"
+description: "Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. The credited coin can repay its own flexible-rate liability without asset conversion. Trade auto repayment runs only in Cross and Portfolio margin modes; the setting has no effect in Isolated mode. This setting is separate from scheduled auto repayment configured through `set-auto-repay-mode`, and is disabled by default."
+sidebar_label: Set Trade Auto Repay
+hide_title: true
+hide_table_of_contents: true
+api: {"tags":["uta-margin-trade"],"description":"Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. The credited coin can repay its own flexible-rate liability without asset conversion. Trade auto repayment runs only in Cross and Portfolio margin modes; the setting has no effect in Isolated mode. This setting is separate from scheduled auto repayment configured through `set-auto-repay-mode`, and is disabled by default.","operationId":"setTradeAutoRepay","security":[{"ApiKeyAuth":[],"ApiSignAuth":[],"ApiTimestampAuth":[],"ApiRecvWindowAuth":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["autoRepay"],"properties":{"autoRepay":{"type":"string","pattern":"^[01]$","description":"\"1\" enables trade auto repayment; \"0\" disables it.","example":"1"}}},"examples":{"enable":{"summary":"Enable trade auto repayment","value":{"autoRepay":"1"}},"disable":{"summary":"Disable trade auto repayment","value":{"autoRepay":"0"}}}}}},"responses":{"200":{"description":"Request accepted; a non-zero `retCode` indicates a business error.","content":{"application/json":{"schema":{"type":"object","properties":{"retCode":{"type":"integer","description":"Business return code. 0 means success; 34022101 means invalid autoRepay.","example":0},"retMsg":{"type":"string","description":"Business return message.","example":"success"},"result":{"type":"object","properties":{"autoRepay":{"type":"string","pattern":"^[01]$","description":"Saved switch state; \"1\" means enabled and \"0\" means disabled.","example":"1"}}},"retExtInfo":{"type":"object","description":"Extended return information."},"time":{"type":"integer","format":"int64","description":"Server timestamp in milliseconds.","example":1792117143000}}},"examples":{"enabled":{"summary":"Trade auto repayment enabled","value":{"retCode":0,"retMsg":"success","result":{"autoRepay":"1"},"retExtInfo":{},"time":1792117143000}}}}}},"400":{"description":"Invalid HTTP request or parameter format."},"401":{"description":"API authentication failed."},"403":{"description":"API key lacks write permission or the request is restricted."},"404":{"description":"Endpoint not found."},"429":{"description":"Rate limit exceeded."}},"method":"post","path":"/v5/spot-margin-trade/set-trade-auto-repay","servers":[{"url":"https://api-testnet.bybit.com","description":"Testnet server"}],"securitySchemes":{"ApiKeyAuth":{"type":"apiKey","in":"header","name":"X-BAPI-API-KEY"},"ApiSignAuth":{"type":"apiKey","in":"header","name":"X-BAPI-SIGN"},"ApiTimestampAuth":{"type":"apiKey","in":"header","name":"X-BAPI-TIMESTAMP"},"ApiRecvWindowAuth":{"type":"apiKey","in":"header","name":"X-BAPI-RECV-WINDOW","description":"Request validity window in milliseconds; the API defaults to 5000."}},"jsonRequestBodyExample":{"autoRepay":"1"},"info":{"description":"Collection of v5 Restul API\n","version":"3.0.0","title":"Bybit Open API v5 explorer - Spot margin trade"},"postman":{"name":"Set Trade Auto Repay","description":{"content":"Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. The credited coin can repay its own flexible-rate liability without asset conversion. Trade auto repayment runs only in Cross and Portfolio margin modes; the setting has no effect in Isolated mode. This setting is separate from scheduled auto repayment configured through `set-auto-repay-mode`, and is disabled by default.","type":"text/plain"},"url":{"path":["v5","spot-margin-trade","set-trade-auto-repay"],"host":["{{baseUrl}}"],"query":[],"variable":[]},"header":[{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],"method":"POST","body":{"mode":"raw","raw":"\"\"","options":{"raw":{"language":"json"}}},"auth":{"type":"apikey","apikey":[{"type":"any","value":"X-BAPI-API-KEY","key":"key"},{"type":"any","value":"<API Key>","key":"value"},{"type":"any","value":"header","key":"in"}]}}}
+sidebar_class_name: "post api-method"
+info_path: api-explorer/v5/spot-margin-uta/bybit-open-api-v-5-explorer-spot-margin-trade
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem"
+import SchemaTabs from "@theme/SchemaTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import TabItem from "@theme/TabItem";
+
+## Set Trade Auto Repay
+
+
+
+Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. The credited coin can repay its own flexible-rate liability without asset conversion. Trade auto repayment runs only in Cross and Portfolio margin modes; the setting has no effect in Isolated mode. This setting is separate from scheduled auto repayment configured through `set-auto-repay-mode`, and is disabled by default.
+
+<MimeTabs><TabItem label={"application/json"} value={"application/json-schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Request Body</strong><strong style={{"fontSize":"var(--ifm-code-font-size)","color":"var(--openapi-required)"}}> required</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"autoRepay"} required={true} schemaDescription={"\"1\" enables trade auto repayment; \"0\" disables it."} schemaName={"string"} qualifierMessage={"**Possible values:** Value must match regular expression `^[01]$`"} defaultValue={undefined}></SchemaItem></ul></details></TabItem></MimeTabs><div><ApiTabs><TabItem label={"200"} value={"200"}><div>
+
+Request accepted; a non-zero `retCode` indicates a business error.
+
+</div><div><MimeTabs schemaType={"response"}><TabItem label={"application/json"} value={"application/json"}><SchemaTabs><TabItem label={"Schema"} value={"Schema"}><details style={{}} data-collapsed={false} open={true}><summary style={{"textAlign":"left"}}><strong>Schema</strong></summary><div style={{"textAlign":"left","marginLeft":"1rem"}}></div><ul style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"retCode"} required={false} schemaDescription={"Business return code. 0 means success; 34022101 means invalid autoRepay."} schemaName={"integer"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"retMsg"} required={false} schemaDescription={"Business return message."} schemaName={"string"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={true} className={"schemaItem"}><details style={{}}><summary style={{}}><strong>result</strong><span style={{"opacity":"0.6"}}> object</span></summary><div style={{"marginLeft":"1rem"}}><SchemaItem collapsible={false} name={"autoRepay"} required={false} schemaDescription={"Saved switch state; \"1\" means enabled and \"0\" means disabled."} schemaName={"string"} qualifierMessage={"**Possible values:** Value must match regular expression `^[01]$`"} defaultValue={undefined}></SchemaItem></div></details></SchemaItem><SchemaItem collapsible={false} name={"retExtInfo"} required={false} schemaDescription={"Extended return information."} schemaName={"object"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem><SchemaItem collapsible={false} name={"time"} required={false} schemaDescription={"Server timestamp in milliseconds."} schemaName={"int64"} qualifierMessage={undefined} defaultValue={undefined}></SchemaItem></ul></details></TabItem><TabItem label={"Example (from schema)"} value={"Example (from schema)"}><ResponseSamples responseExample={"{\n  \"retCode\": 0,\n  \"retMsg\": \"success\",\n  \"result\": {\n    \"autoRepay\": \"1\"\n  },\n  \"retExtInfo\": {},\n  \"time\": 1792117143000\n}"} language={"json"}></ResponseSamples></TabItem><TabItem label={"Enabled"} value={"Enabled"}><p> Trade auto repayment enabled</p><ResponseSamples responseExample={"{\n  \"retCode\": 0,\n  \"retMsg\": \"success\",\n  \"result\": {\n    \"autoRepay\": \"1\"\n  },\n  \"retExtInfo\": {},\n  \"time\": 1792117143000\n}"} language={"json"}></ResponseSamples></TabItem></SchemaTabs></TabItem></MimeTabs></div></TabItem><TabItem label={"400"} value={"400"}><div>
+
+Invalid HTTP request or parameter format.
+
+</div><div></div></TabItem><TabItem label={"401"} value={"401"}><div>
+
+API authentication failed.
+
+</div><div></div></TabItem><TabItem label={"403"} value={"403"}><div>
+
+API key lacks write permission or the request is restricted.
+
+</div><div></div></TabItem><TabItem label={"404"} value={"404"}><div>
+
+Endpoint not found.
+
+</div><div></div></TabItem><TabItem label={"429"} value={"429"}><div>
+
+Rate limit exceeded.
+
+</div><div></div></TabItem></ApiTabs></div>
+      
