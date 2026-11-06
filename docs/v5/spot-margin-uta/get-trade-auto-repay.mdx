@@ -1,0 +1,55 @@
+---
+title: Get Trade Auto Repay
+sidebar_label: Get Trade Auto Repay
+sidebar_position: 23
+---
+
+Retrieve the authenticated Unified account's trade auto repayment switch.
+
+:::info
+This saved setting applies only to Cross and Portfolio margin modes. It has no effect in Isolated mode. It is separate from the scheduled automatic repayment settings returned by [Get Auto Repay Mode](get-auto-repay-mode).
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/spot-margin-trade/get-trade-auto-repay" />
+
+### Request Parameters
+None.
+
+---
+
+### Response Parameters
+| Parameter | Type | Comments |
+|:----- |:-----|----- |
+|autoRepay |string |Saved switch state. `1`: enabled; `0`: disabled. |
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/spot-margin-trade/get-trade-auto-repay HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1792117143000
+X-BAPI-RECV-WINDOW: 5000
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "success",
+    "result": {
+        "autoRepay": "1"
+    },
+    "retExtInfo": {},
+    "time": 1792117143000
+}
+```
