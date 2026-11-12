@@ -145,7 +145,7 @@ const config = {
     ({
       announcementBar: {
         id: 'migration',
-        content: 'Bybit will move the trading and matching engine service to AWS Tokyo apne1-az4 on 12 Nov. 2026',
+        content: 'Bybit successfully migrated its trading and matching engine service to AWS Tokyo (apne1-az4) on 12 Nov. 2026.',
         backgroundColor: '#f6fe07',
         textColor: '#050505',
         isCloseable: true,
