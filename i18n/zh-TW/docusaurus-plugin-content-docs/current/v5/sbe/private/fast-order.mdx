@@ -26,7 +26,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 
 | 環境 | URL |
 |:---|:---|
-| 測試網 | `wss://stream-testnet.bybits.org/v5/private-sbe` |
+| 測試網 | `wss://stream-testnet.bybit.com/v5/private-sbe` |
 | 主網 | `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe` |
 
 - SBE 訊息以**二進位幀**（`opcode = 2`）發送。
@@ -351,7 +351,6 @@ import (
 // ---------- Config ----------
 
 const (
-	MMWSURLTestnetBybits = "wss://stream-testnet.bybits.org/v5/private-sbe"
 	MMWSURLTestnetBybit  = "wss://stream-testnet.bybit.com/v5/private-sbe"
 	MMWSURLMainnet       = "wss://stream.bybit.com/v5/private-sbe"
 )
@@ -731,7 +730,7 @@ func run(ctx context.Context, url string) error {
 // ---------- Entry ----------
 
 func main() {
-	url := flag.String("url", MMWSURLTestnetBybits, "WebSocket URL")
+	url := flag.String("url", MMWSURLTestnetBybit, "WebSocket URL")
 	flag.Parse()
 
 	if APIKey == "YOUR_API_KEY" || APISecret == "YOUR_API_SECRET" {
@@ -760,7 +759,7 @@ import struct
 from typing import Tuple, Dict, Any
 import websockets
 
-MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private-sbe"
+MMWS_URL_TESTNET = "wss://stream-testnet.bybit.com/v5/private-sbe"
 # MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private-sbe"
 
 # TODO: 填入您的真實密鑰
