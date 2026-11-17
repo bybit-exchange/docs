@@ -487,6 +487,7 @@ const sidebars = {
           items: [
             'v5/institution/connection/mmws',
             // 'v5/institution/connection/mmgw',
+            'v5/institution/connection-limit',
             {
               type: 'doc',
               id: 'v5/institution/whitelist-ip',
