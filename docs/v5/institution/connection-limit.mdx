@@ -1,0 +1,140 @@
+---
+title: Get Institution Connection Limit
+sidebar_label: Get Institution Connection Limit
+sidebar_position: 6
+---
+
+> API rate limit: 1 req per minute
+
+:::info
+This endpoint must be requested with a master account API key.
+:::
+
+### HTTP Request
+<APIEndpoint method="GET" url="/v5/ins/connection-limit" />
+
+### Request Parameters
+None
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|result |array |Object|
+|> host |string |Host|
+|> endpointDomain |string |Dedicated endpoint domain|
+|> spot |object |Spot connection limits|
+|>> json |object |JSON WebSocket connection limits|
+|>>> max |integer |Maximum number of connections|
+|>>> current |integer |Current number of connections|
+|>> sbe |object |SBE connection limits|
+|>>> max |integer |Maximum number of connections|
+|>>> current |integer |Current number of connections|
+|> derivative |object |Derivatives connection limits|
+|>> json |object |JSON WebSocket connection limits|
+|>>> max |integer |Maximum number of connections|
+|>>> current |integer |Current number of connections|
+|>> sbe |object |SBE connection limits|
+|>>> max |integer |Maximum number of connections|
+|>>> current |integer |Current number of connections|
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+GET /v5/ins/connection-limit HTTP/1.1
+Host: api.bybit.com
+X-BAPI-SIGN: XXXXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1794457439807
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": [
+        {
+            "host": "SELF_USE",
+            "endpointDomain": "8ipum71s9p2t5m25.bybit-ws-tkyo.com",
+            "spot": {
+                "json": {
+                    "max": 1500,
+                    "current": 0
+                },
+                "sbe": {
+                    "max": 1500,
+                    "current": 0
+                }
+            },
+            "derivative": {
+                "json": {
+                    "max": 3000,
+                    "current": 0
+                },
+                "sbe": {
+                    "max": 3000,
+                    "current": 0
+                }
+            }
+        },
+        {
+            "host": "SELF_USE",
+            "endpointDomain": "primary-nggxtax0ux4uwvfu.bybit-ws-tkyo.com",
+            "spot": {
+                "json": {
+                    "max": 1500,
+                    "current": 5
+                },
+                "sbe": {
+                    "max": 1500,
+                    "current": 7
+                }
+            },
+            "derivative": {
+                "json": {
+                    "max": 3000,
+                    "current": 14
+                },
+                "sbe": {
+                    "max": 3000,
+                    "current": 15
+                }
+            }
+        },
+        {
+            "host": "SELF_USE",
+            "endpointDomain": "vgx0s429h1x03zkn.bybit-tkyo.com",
+            "spot": {
+                "json": {
+                    "max": 1500,
+                    "current": 0
+                },
+                "sbe": {
+                    "max": 1500,
+                    "current": 0
+                }
+            },
+            "derivative": {
+                "json": {
+                    "max": 3000,
+                    "current": 0
+                },
+                "sbe": {
+                    "max": 3000,
+                    "current": 0
+                }
+            }
+        }
+    ],
+    "retExtInfo": {},
+    "time": 1794457439807
+}
+```
