@@ -1,0 +1,165 @@
+---
+title: Query Card Limits
+sidebar_label: Query Card Limits
+sidebar_position: 3
+---
+
+Query limits for the authenticated user's card, based on the user, card product, and card type. Returns system limits, user-configured limits, and current usage.
+
+:::tip
+Only limits for cards belonging to the authenticated user can be queried
+
+All amounts are JSON numbers in the currency specified by `baseFiat`. Values that are not provided can be `null`.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/card/limit/get" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|cardId |true |string |Card ID belonging to the authenticated user. Cannot be missing, `null`, empty, or whitespace-only|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Business return code. `0`: success; non-zero: failure|
+|retMsg |string |Return message|
+|result |object |Query result. `null` on failure|
+|> limitItems |array |Limit item list. The number of items depends on the product and available limit data|
+|>> baseFiat |string |Base fiat currency code for all amounts in this item. Can be `null`|
+|>> itemType |string |Limit type. `SPENDING`: Spending, `ATM_WITHDRAW`: ATM withdrawal. Other types are returned as their original strings, including `"3"`: Total cash, `"4"`: Cash-like spending other than ordinary payments, `"5"`: QR Pay. Can be `null`|
+|>> singleAllowed |number |System limit per transaction. Can be `null`|
+|>> singleCustomLimit |number |User-configured limit per transaction. Can be `null`|
+|>> dailyUsed |number |Accumulated usage for the current day. Can be `null`|
+|>> dailyAllowed |number |System daily limit. Can be `null`|
+|>> dailyCustomLimit |number |User-configured daily limit. Can be `null`|
+|>> monthlyUsed |number |Accumulated usage for the current month. Can be `null`|
+|>> monthlyAllowed |number |System monthly limit. Can be `null`|
+|>> monthlyCustomLimit |number |User-configured monthly limit. Can be `null`|
+|>> yearlyUsed |number |Accumulated usage for the current year. Can be `null`|
+|>> yearlyAllowed |number |System yearly limit. Can be `null`|
+|>> lifeTimeUsed |number |Accumulated lifetime usage. Can be `null`|
+|>> lifeTimeAllowed |number |System lifetime limit. Can be `null`|
+|retExtInfo |object |Extended information. Defaults to `{}`|
+|time |integer |Response time (Unix ms timestamp)|
+
+### Error Codes
+| retCode | retMsg | Comments|
+|:----- |:-----|----- |
+|913110400 |CARD NOT EXISTS |Card does not exist or does not belong to the authenticated user|
+|913110000 |cardId cannot be blank |`cardId` is missing, `null`, empty, or whitespace-only|
+|913100000 |SYSTEM ERROR |Request binding failure or system error|
+
+Global error responses may omit `retExtInfo` and `time`.
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/limit/get HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "cardId": "180585395564494848"
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/limit/get"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+body = {
+    "cardId": "180585395564494848"
+}
+response = requests.post(url, headers=headers, json=body)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/limit/get';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+const body = { cardId: '180585395564494848' };
+
+axios.post(url, body, { headers })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "limitItems": [
+            {
+                "baseFiat": "USD",
+                "itemType": "SPENDING",
+                "singleAllowed": 2500,
+                "singleCustomLimit": null,
+                "dailyUsed": 1000,
+                "dailyAllowed": 5000,
+                "dailyCustomLimit": null,
+                "monthlyUsed": 5000,
+                "monthlyAllowed": 50000,
+                "monthlyCustomLimit": null,
+                "yearlyUsed": null,
+                "yearlyAllowed": null,
+                "lifeTimeUsed": null,
+                "lifeTimeAllowed": null
+            },
+            {
+                "baseFiat": "USD",
+                "itemType": "ATM_WITHDRAW",
+                "singleAllowed": 500,
+                "singleCustomLimit": null,
+                "dailyUsed": 200,
+                "dailyAllowed": 1000,
+                "dailyCustomLimit": null,
+                "monthlyUsed": 1000,
+                "monthlyAllowed": 10000,
+                "monthlyCustomLimit": null,
+                "yearlyUsed": null,
+                "yearlyAllowed": null,
+                "lifeTimeUsed": null,
+                "lifeTimeAllowed": null
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```

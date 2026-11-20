@@ -1,0 +1,179 @@
+---
+title: Query Card List
+sidebar_label: Query Card List
+sidebar_position: 2
+---
+
+Query the authenticated user's virtual and physical cards. By default, only non-final cards and cards being processed are returned.
+
+:::tip
+Only cards belonging to the authenticated user are returned.
+
+The request body can be omitted or set to `{}`. Pagination parameters are not accepted.
+:::
+
+### HTTP Request
+<APIEndpoint method="POST" url="/v5/card/list" />
+
+### Request Parameters
+| Parameter | Required | Type | Comments|
+|:----- |:-------|:-----|------ |
+|includeFinalCards |false |boolean |Whether to include cancelled and invalid cards. `true`: include final cards. Omitted, `false`, or `null`: use the default filtering|
+
+### Response Parameters
+| Parameter | Type | Comments|
+|:----- |:-----|----- |
+|retCode |integer |Business return code. `0`: success; non-zero: failure|
+|retMsg |string |Return message|
+|result |object |Query result. `null` on failure|
+|> pageNo |integer |Current page number. Fixed at `1`|
+|> pageSize |integer |Number of cards returned|
+|> totalPage |integer |Total number of pages. Fixed at `1`|
+|> totalCount |integer |Total number of matching cards|
+|> data |array |Card list. Empty array when no cards match|
+|>> cardId |string |Card ID|
+|>> cardProductCode |integer |Card product code. Identifies the product together with `productId`|
+|>> productId |integer |Card product ID|
+|>> cardHolderName |string |Cardholder name printed on the card|
+|>> cardType |integer |Card type. `1`: Virtual card, `2`: Physical card|
+|>> maskedCardNumber |string |Masked card number|
+|>> pan6 |string |Card number prefix, usually the first 6 digits|
+|>> pan4 |string |Card number suffix, usually the last 4 digits|
+|>> cardExpireDate |string |Card expiry date, in `MM/yy` format|
+|>> cardCurrency |string |Card currency code|
+|>> status |integer |Card status. `0`: Undefined, `1`: Inactive, `2`: Active, `3`: Frozen, `4`: Banned, `5`: Cancelled, `6`: Invalid, `7`: Created|
+|>> subStatus |integer |Card sub-status code. Examples: `200`: Active, `300`: Regular freeze, `501`: Cancelled by user, `601`: Expired|
+|>> countryAlpha3 |string |Country Alpha-3 code, e.g. `AUS`|
+|>> cardActivateTime |integer |Card activation time (Unix ms timestamp)|
+|>> createTime |integer |Card creation time (Unix ms timestamp)|
+|>> allowOnlineTransaction |boolean |Whether online transactions are allowed|
+|>> allowAtmWithdrawal |boolean |Whether ATM withdrawals are allowed|
+|>> supportedCurrencyList |array |List of supported currency codes. Entries can be `null`|
+|>> shippingInfo |object |Physical card shipping information. `null` for virtual cards|
+|>>> delvProvider |string |Delivery provider|
+|>>> trackingNo |string |Tracking number|
+|>>> shipmentTime |integer |Shipment time (Unix ms timestamp)|
+|>>> shippingStatus |string |Shipping status|
+|>>> shippingStatusDetail |string |Detailed shipping status|
+|>>> trackingUrl |string |Tracking URL|
+|>>> allowToChangeAddress |boolean |Whether the shipping address can be changed|
+|>>> deliverReminderCode |string |Delivery reminder code|
+|>> isGooglePayAvailable |boolean |Whether the product supports Google Pay. `false` when the configuration is missing|
+|>> isApplePayAvailable |boolean |Whether the product supports Apple Pay. `false` when the configuration is missing|
+|retExtInfo |object |Extended information. Defaults to `{}`|
+|time |integer |Response time (Unix ms timestamp)|
+
+Card detail fields can be `null`, except `isGooglePayAvailable` and `isApplePayAvailable`, which are always returned as booleans. Shipping fields can be `null`; shipping addresses are not returned. Some physical cards without shipping records still return an object with empty fields.
+
+### Error Codes
+| retCode | retMsg | Comments|
+|:----- |:-----|----- |
+|913100000 |SYSTEM ERROR |Request binding failure or system error|
+
+Global error responses may omit `retExtInfo` and `time`.
+
+---
+
+### Request Example
+
+<Tabs groupId="programming-languages">
+<TabItem value="http" label="HTTP">
+
+```http
+POST /v5/card/list HTTP/1.1
+Host: api-testnet.bybit.com
+X-BAPI-SIGN: XXXXX
+X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx
+X-BAPI-TIMESTAMP: 1672211918471
+X-BAPI-RECV-WINDOW: 5000
+Content-Type: application/json
+
+{
+    "includeFinalCards": true
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import requests
+
+url = "https://api-testnet.bybit.com/v5/card/list"
+headers = {
+    "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",
+    "X-BAPI-SIGN": "XXXXX",
+    "X-BAPI-TIMESTAMP": "1672211918471",
+    "X-BAPI-RECV-WINDOW": "5000"
+}
+body = {
+    "includeFinalCards": True
+}
+response = requests.post(url, headers=headers, json=body)
+print(response.json())
+```
+
+</TabItem>
+<TabItem value="Node" label="Node.js">
+
+```n4js
+const axios = require('axios');
+
+const url = 'https://api-testnet.bybit.com/v5/card/list';
+const headers = {
+  'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',
+  'X-BAPI-SIGN': 'XXXXX',
+  'X-BAPI-TIMESTAMP': '1672211918471',
+  'X-BAPI-RECV-WINDOW': '5000'
+};
+const body = { includeFinalCards: true };
+
+axios.post(url, body, { headers })
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+</TabItem>
+</Tabs>
+
+### Response Example
+
+```json
+{
+    "retCode": 0,
+    "retMsg": "OK",
+    "result": {
+        "pageNo": 1,
+        "pageSize": 1,
+        "totalPage": 1,
+        "totalCount": 1,
+        "data": [
+            {
+                "cardId": "180585395564494848",
+                "cardProductCode": 1,
+                "productId": 4,
+                "cardHolderName": "TEST HOLDER",
+                "cardType": 1,
+                "maskedCardNumber": "539900******5497",
+                "pan6": "539900",
+                "pan4": "5497",
+                "cardExpireDate": "12/29",
+                "cardCurrency": "USD",
+                "status": 2,
+                "subStatus": 200,
+                "countryAlpha3": "AUS",
+                "cardActivateTime": 1672211918471,
+                "createTime": 1672211918471,
+                "allowOnlineTransaction": true,
+                "allowAtmWithdrawal": true,
+                "supportedCurrencyList": ["USD"],
+                "shippingInfo": null,
+                "isGooglePayAvailable": false,
+                "isApplePayAvailable": false
+            }
+        ]
+    },
+    "retExtInfo": {},
+    "time": 1672211918471
+}
+```
