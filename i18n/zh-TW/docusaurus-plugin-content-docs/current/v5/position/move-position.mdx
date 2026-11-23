@@ -30,6 +30,7 @@ sidebar_position: 12
 |> price |**true** |string |訂單價格 <ul><li>`linear`和`inverse`: 價格需要位於[95% * 標記價格, 105% * 標記價格]之間</li><li>`spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](../market/instrument)的價格上下限和精度</li></ul>|
 |> side |**true** |string |是`fromUid`的交易方向 <ul><li>例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小</li></ul>|
 |> qty |**true** |string |交易數量<ul><li>該數字需要滿足[查詢可交易產品的規格信息](../market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`</li></ul>|
+|> reduceOnly | false | boolean | <strong>用於確保減倉或者平倉時不會開出反方向的倉位</strong><br /><br /><strong>用法和要求</strong><ol><li>僅作用於<code>fromUid</code> 並且僅支持合約和期權</li><li>When <code>reduceOnly=true</code>, <code>fromUid</code>必須有持倉. 對於多頭, <code>side</code>必須是<code>Sell</code>.</li><li>如果<code>qty</code>超過持倉大小, 則整個倉位會被平掉</li><li>對於<code>reduceOnly=true</code>的symbol，需要<b>撤銷所有掛單</b>，避免移倉過程中出現掛單成交的情況.</li><li>這條腿無法成功執行的話，所有腿都將執行失敗</li></ol> |
 
 ### 響應參數
 | 參數 | 類型 | 說明|
